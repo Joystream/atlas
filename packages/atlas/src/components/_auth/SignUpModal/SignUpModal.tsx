@@ -6,12 +6,12 @@ import shallow from 'zustand/shallow'
 import { Button } from '@/components/_buttons/Button'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
 import { DialogModal } from '@/components/_overlays/DialogModal'
+import { AccountFormData, MemberFormData, RegisterError, useCreateMember } from '@/hooks/useCreateMember'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { media } from '@/styles'
 
-import { useCreateMember } from './SignUpModal.hooks'
-import { AccountFormData, MemberFormData, SignUpSteps } from './SignUpModal.types'
+import { SignUpSteps } from './SignUpModal.types'
 import {
   SignUpCreatingMemberStep,
   SignUpEmailStep,
@@ -92,9 +92,13 @@ export const SignUpModal = () => {
       if (emailAlreadyTakenError && memberId) {
         createNewOrionAccount({
           data: { ...signUpFormData, email, confirmedTerms, memberId },
-          onError: (step) => {
-            goToStep(step)
-            if (step === SignUpSteps.SignUpEmail) setEmailAlreadyTakenError(true)
+          onError: (error) => {
+            if (error === RegisterError.EmailAlreadyExists) {
+              setEmailAlreadyTakenError(true)
+              goToStep(SignUpSteps.SignUpEmail)
+              return
+            }
+            goToStep(SignUpSteps.CreateMember)
           },
           onStart: () => goToStep(SignUpSteps.Creating),
           onSuccess: (amountOfTokens) => {
@@ -116,9 +120,13 @@ export const SignUpModal = () => {
       if (!emailAlreadyTakenError && memberId) {
         createNewOrionAccount({
           data: { ...signUpFormData, password, memberId },
-          onError: (step) => {
-            goToStep(step)
-            if (step === SignUpSteps.SignUpEmail) setEmailAlreadyTakenError(true)
+          onError: (error) => {
+            if (error === RegisterError.EmailAlreadyExists) {
+              setEmailAlreadyTakenError(true)
+              goToStep(SignUpSteps.SignUpEmail)
+              return
+            }
+            goToStep(SignUpSteps.CreateMember)
           },
           onStart: () => goToStep(SignUpSteps.Creating),
           onSuccess: (amountOfTokens) => {
@@ -138,8 +146,8 @@ export const SignUpModal = () => {
       if (!memberId) {
         createNewMember({
           data: { ...signUpFormData, mnemonic },
-          onError: (step) => {
-            goToStep(step)
+          onError: () => {
+            goToStep(SignUpSteps.CreateMember)
           },
         }).then((memberId) => {
           if (memberId) {

@@ -4,9 +4,12 @@ import shallow from 'zustand/shallow'
 
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
-import { RegisterError, useRegister } from '@/hooks/useRegister'
+import { registerAccount } from '@/providers/auth/auth.helpers'
+import { useAuth } from '@/providers/auth/auth.hooks'
 import { useAuthStore } from '@/providers/auth/auth.store'
+import { OrionAccountError } from '@/providers/auth/auth.types'
 import { useJoystream } from '@/providers/joystream'
+import { useSnackbar } from '@/providers/snackbars'
 
 import { ModalSteps, SignInStepProps } from './ExternalSignInSteps.types'
 
@@ -22,8 +25,9 @@ export const ExternalSignInModalEmailStep: FC<SignInModalEmailStepProps> = ({
   goToStep,
   memberId,
 }) => {
-  const handleRegister = useRegister()
+  const { handleLogin } = useAuth()
   const { joystream } = useJoystream()
+  const { displaySnackbar } = useSnackbar()
   const { setAuthModalOpenName } = useAuthStore(
     (state) => ({
       authModalOpenName: state.authModalOpenName,
@@ -34,30 +38,61 @@ export const ExternalSignInModalEmailStep: FC<SignInModalEmailStepProps> = ({
   const { handleSubmit, setError, formState, register } = useFormContext<{ email: string }>()
   const handleConfirm = useCallback(async () => {
     const account = await joystream?.selectedAccountId
-    if (!joystream?.signMessage || !account || !memberId) return
+    if (!joystream?.signMessage || !account || !memberId || !formState.isValid) return
     const userAddress = typeof account === 'object' ? account.address : account
-    await handleSubmit((data) => {
+    await handleSubmit(async (data) => {
       goToStep(ModalSteps.ExtensionSigning)
-      handleRegister({
-        type: 'extension',
-        email: data.email,
-        address: userAddress,
-        signature: (data) =>
-          joystream?.signMessage({
-            type: 'payload',
-            data,
-          }),
-        memberId,
-      })
-        .then(() => setAuthModalOpenName(undefined))
-        .catch((error) => {
-          goToStep(ModalSteps.Email)
-          if (error.message === RegisterError.EmailAlreadyExists) {
+
+      try {
+        const address = await registerAccount({
+          type: 'external',
+          email: data.email,
+          address: userAddress,
+          signature: (data) =>
+            joystream?.signMessage({
+              type: 'payload',
+              data,
+            }),
+          memberId,
+        })
+
+        if (address) {
+          await handleLogin({
+            type: 'external',
+            address,
+            sign: (data) =>
+              joystream?.signMessage({
+                type: 'payload',
+                data,
+              }),
+          })
+        }
+        setAuthModalOpenName(undefined)
+      } catch (error) {
+        if (error instanceof OrionAccountError) {
+          if (error.message === 'Account with the provided e-mail address already exists.') {
+            displaySnackbar({
+              title: 'Something went wrong',
+              description: `Account with the provided e-mail address already exists. Use different e-mail.`,
+              iconType: 'error',
+            })
+            goToStep(ModalSteps.Email)
             setError('email', { type: 'custom', message: 'Email already exists' })
           }
-        })
+        }
+      }
     })()
-  }, [goToStep, handleRegister, handleSubmit, joystream, memberId, setAuthModalOpenName, setError])
+  }, [
+    displaySnackbar,
+    formState.isValid,
+    goToStep,
+    handleLogin,
+    handleSubmit,
+    joystream,
+    memberId,
+    setAuthModalOpenName,
+    setError,
+  ])
 
   // send updates to SignInModal on state of primary button
   useEffect(() => {

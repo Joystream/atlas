@@ -7,13 +7,13 @@ import { Checkbox } from '@/components/_inputs/Checkbox'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { absoluteRoutes } from '@/config/routes'
+import { AccountFormData } from '@/hooks/useCreateMember'
 import { useMountEffect } from '@/hooks/useMountEffect'
 
 import { CheckboxWrapper, StyledLink, StyledSignUpForm } from './SignUpSteps.styles'
 import { SignUpStepsCommonProps } from './SignUpSteps.types'
 
 import { AuthenticationModalStepTemplate } from '../../AuthenticationModalStepTemplate'
-import { AccountFormData } from '../SignUpModal.types'
 
 const zodSchema = z
   .object({

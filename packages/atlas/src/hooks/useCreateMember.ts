@@ -4,19 +4,35 @@ import BN from 'bn.js'
 import { useCallback } from 'react'
 import { useMutation } from 'react-query'
 
+import { ImageInputFile } from '@/components/_inputs/MultiFileSelect'
 import { FAUCET_URL } from '@/config/env'
 import { MemberId } from '@/joystream-lib/types'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
+import { keyring, registerAccount } from '@/providers/auth/auth.helpers'
 import { useAuth } from '@/providers/auth/auth.hooks'
 import { useAuthStore } from '@/providers/auth/auth.store'
+import { OrionAccountError } from '@/providers/auth/auth.types'
 import { useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransactionManagerStore } from '@/providers/transactions/transactions.store'
 import { UploadAvatarServiceError, uploadAvatarImage } from '@/utils/image'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
-import { AccountFormData, MemberFormData, SignUpSteps } from './SignUpModal.types'
-import { OrionAccountError, keyring, registerAccount } from './SignUpModal.utils'
+export type MemberFormData = {
+  handle: string
+  avatar?: ImageInputFile
+  captchaToken?: string
+  mnemonic: string
+  confirmedCopy: boolean
+}
+
+export type AccountFormData = {
+  email: string
+  password: string
+  mnemonic: string
+  confirmedTerms: boolean
+  memberId: string
+}
 
 type NewMemberResponse = {
   memberId: MemberId
@@ -36,12 +52,18 @@ type FaucetParams = {
   captchaToken: string | undefined
 }
 
+export enum RegisterError {
+  EmailAlreadyExists = 'EmailAlreadyExists',
+  UnknownError = 'UnknownError',
+}
+
 type SignUpParams<T> = {
   data: T
   onStart?: () => void
   onSuccess?: (amountOfTokens?: number) => void
-  onError?: (step: SignUpSteps) => void
+  onError?: (step?: RegisterError) => void
 }
+
 export const useCreateMember = () => {
   const { handleLogin } = useAuth()
   // const { refetchUserMemberships } = useUser()
@@ -93,7 +115,7 @@ export const useCreateMember = () => {
             description: 'Avatar could not be uploaded. Try again later',
             iconType: 'error',
           })
-          onError?.(SignUpSteps.CreateMember)
+          onError?.()
           SentryLogger.error('Failed to upload member avatar', 'SignUpModal', error)
           return
         }
@@ -139,7 +161,7 @@ export const useCreateMember = () => {
             break
         }
 
-        onError?.(SignUpSteps.CreateMember)
+        onError?.()
         return
       }
     },
@@ -159,7 +181,7 @@ export const useCreateMember = () => {
         // const { data: memberShipData } = await refetchUserMemberships()
         // const lastCreatedMembership = memberShipData.memberships[memberShipData.memberships.length - 1]
 
-        await registerAccount(data.email, data.password, data.mnemonic, data.memberId)
+        await registerAccount({ type: 'internal', ...data })
         setAnonymousUserId('')
 
         if (!joystream) {
@@ -180,7 +202,7 @@ export const useCreateMember = () => {
               description: `Account with the provided e-mail address already exists. Use different e-mail.`,
               iconType: 'error',
             })
-            onError?.(SignUpSteps.SignUpEmail)
+            onError?.(RegisterError.EmailAlreadyExists)
           } else {
             displaySnackbar({
               title: 'Something went wrong',
@@ -189,7 +211,7 @@ export const useCreateMember = () => {
               }`,
               iconType: 'error',
             })
-            onError?.(SignUpSteps.CreateMember)
+            onError?.(RegisterError.UnknownError)
           }
 
           SentryLogger.error('Failed to create an account', 'SignUpModal', error)

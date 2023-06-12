@@ -7,9 +7,9 @@ import { SvgActionCheck, SvgActionClose, SvgActionHide, SvgActionMinus, SvgActio
 import { IconWrapper } from '@/components/IconWrapper'
 import { Text } from '@/components/Text'
 import { AuthenticationModalStepTemplate } from '@/components/_auth/AuthenticationModalStepTemplate'
-import { AccountFormData } from '@/components/_auth/SignUpModal/SignUpModal.types'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input, InputProps } from '@/components/_inputs/Input'
+import { AccountFormData } from '@/hooks/useCreateMember'
 import { cVar } from '@/styles'
 
 import {

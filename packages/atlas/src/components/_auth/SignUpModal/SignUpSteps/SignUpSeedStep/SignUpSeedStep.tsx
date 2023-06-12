@@ -7,10 +7,10 @@ import { AuthenticationModalStepTemplate } from '@/components/_auth/Authenticati
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { FormField } from '@/components/_inputs/FormField'
 import { useClipboard } from '@/hooks/useClipboard'
+import { MemberFormData } from '@/hooks/useCreateMember'
 
 import { StyledTextArea, StyledTextButton } from './SignupSeedStep.styles'
 
-import { MemberFormData } from '../../SignUpModal.types'
 import { CheckboxWrapper, StyledSignUpForm } from '../SignUpSteps.styles'
 import { SignUpStepsCommonProps } from '../SignUpSteps.types'
 
@@ -102,7 +102,7 @@ export const SignUpSeedStep: FC<SignUpSeedStepProps> = ({
             <CheckboxWrapper isAccepted={value}>
               <Checkbox
                 onChange={(val) => onChange(val)}
-                caption={errors.confirmedCopy?.message as string}
+                caption={errors.confirmedCopy?.message}
                 error={!!errors.confirmedCopy}
                 value={value}
                 label="I have saved my mnemonic seed safely"

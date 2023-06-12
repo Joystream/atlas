@@ -16,10 +16,10 @@ import { Input } from '@/components/_inputs/Input'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
 import { atlasConfig } from '@/config'
 import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
+import { MemberFormData } from '@/hooks/useCreateMember'
 
 import { Anchor, StyledAvatar, StyledForm } from './SignUpMembershipStep.styles'
 
-import { MemberFormData } from '../../SignUpModal.types'
 import { SignUpStepsCommonProps } from '../SignUpSteps.types'
 
 type SignInModalMembershipStepProps = SignUpStepsCommonProps & {
