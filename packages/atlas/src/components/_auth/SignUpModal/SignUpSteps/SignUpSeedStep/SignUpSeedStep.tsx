@@ -10,11 +10,11 @@ import { useClipboard } from '@/hooks/useClipboard'
 
 import { StyledTextArea, StyledTextButton } from './SignupSeedStep.styles'
 
-import { SignUpFormData } from '../../SignUpModal.types'
+import { MemberFormData } from '../../SignUpModal.types'
 import { CheckboxWrapper, StyledSignUpForm } from '../SignUpSteps.styles'
 import { SignUpStepsCommonProps } from '../SignUpSteps.types'
 
-type FormData = Pick<SignUpFormData, 'confirmedCopy' | 'mnemonic'>
+type FormData = Pick<MemberFormData, 'confirmedCopy' | 'mnemonic'>
 
 type SignUpSeedStepProps = {
   onSeedSubmit: (mnemonic: string, confirmedCopy: boolean) => void
@@ -102,7 +102,7 @@ export const SignUpSeedStep: FC<SignUpSeedStepProps> = ({
             <CheckboxWrapper isAccepted={value}>
               <Checkbox
                 onChange={(val) => onChange(val)}
-                caption={errors.confirmedCopy?.message}
+                caption={errors.confirmedCopy?.message as string}
                 error={!!errors.confirmedCopy}
                 value={value}
                 label="I have saved my mnemonic seed safely"
