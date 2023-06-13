@@ -194,6 +194,7 @@ export const SignUpModal = () => {
       {currentStep === SignUpSteps.SignUpEmail && (
         <SignUpEmailStep
           {...commonProps}
+          isOverflowing={overflow || !smMatch}
           isEmailAlreadyTakenError={emailAlreadyTakenError}
           onEmailSubmit={handleEmailChange}
           email={signUpFormData.email}
