@@ -3,7 +3,10 @@ import { FC } from 'react'
 import { Dialog, DialogProps } from '@/components/_overlays/Dialog'
 import { Modal, ModalProps } from '@/components/_overlays/Modal'
 
-export type DialogModalProps = Pick<ModalProps, 'show' | 'size' | 'onClickOutside' | 'confetti'> &
+export type DialogModalProps = Pick<
+  ModalProps,
+  'show' | 'size' | 'onClickOutside' | 'confetti' | 'disableBackdropAnimation'
+> &
   Omit<DialogProps, 'size'>
 
 export const DialogModal: FC<DialogModalProps> = ({

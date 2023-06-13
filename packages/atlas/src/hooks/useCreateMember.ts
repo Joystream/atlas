@@ -66,8 +66,6 @@ type SignUpParams<T> = {
 
 export const useCreateMember = () => {
   const { handleLogin } = useAuth()
-  // const { refetchUserMemberships } = useUser()
-  // const [emailAlreadyRegisteredMemberId, setEmailAlreadyRegisteredMemberId] = useState('')
   const setAnonymousUserId = useAuthStore((store) => store.actions.setAnonymousUserId)
   const { joystream } = useJoystream()
   const addBlockAction = useTransactionManagerStore((state) => state.actions.addBlockAction)
@@ -178,9 +176,6 @@ export const useCreateMember = () => {
       const address = keypair.address
 
       try {
-        // const { data: memberShipData } = await refetchUserMemberships()
-        // const lastCreatedMembership = memberShipData.memberships[memberShipData.memberships.length - 1]
-
         await registerAccount({ type: 'internal', ...data })
         setAnonymousUserId('')
 

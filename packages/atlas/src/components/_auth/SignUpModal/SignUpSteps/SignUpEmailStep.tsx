@@ -83,7 +83,7 @@ export const SignUpEmailStep: FC<SignUpEmailStepProps> = ({
 
   useMountEffect(() => {
     if (isEmailAlreadyTakenError) {
-      setError('email', { message: 'Email already taken' })
+      setError('email', { message: 'Email already taken.' })
     }
   })
 

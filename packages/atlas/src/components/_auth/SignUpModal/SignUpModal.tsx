@@ -188,6 +188,7 @@ export const SignUpModal = () => {
   const smMatch = useMediaMatch('sm')
   return (
     <StyledDialogModal
+      disableBackdropAnimation
       show={currentStep !== null}
       dividers={overflow || !smMatch}
       primaryButton={

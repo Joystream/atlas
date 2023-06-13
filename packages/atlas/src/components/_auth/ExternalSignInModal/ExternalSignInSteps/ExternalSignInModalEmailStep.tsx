@@ -38,7 +38,7 @@ export const ExternalSignInModalEmailStep: FC<SignInModalEmailStepProps> = ({
   const { handleSubmit, setError, formState, register } = useFormContext<{ email: string }>()
   const handleConfirm = useCallback(async () => {
     const account = await joystream?.selectedAccountId
-    if (!joystream?.signMessage || !account || !memberId || !formState.isValid) return
+    if (!joystream?.signMessage || !account || !memberId) return
     const userAddress = typeof account === 'object' ? account.address : account
     await handleSubmit(async (data) => {
       goToStep(ModalSteps.ExtensionSigning)
@@ -82,17 +82,7 @@ export const ExternalSignInModalEmailStep: FC<SignInModalEmailStepProps> = ({
         }
       }
     })()
-  }, [
-    displaySnackbar,
-    formState.isValid,
-    goToStep,
-    handleLogin,
-    handleSubmit,
-    joystream,
-    memberId,
-    setAuthModalOpenName,
-    setError,
-  ])
+  }, [displaySnackbar, goToStep, handleLogin, handleSubmit, joystream, memberId, setAuthModalOpenName, setError])
 
   // send updates to SignInModal on state of primary button
   useEffect(() => {

@@ -19,6 +19,7 @@ export type ModalProps = PropsWithChildren<{
   size?: ModalSize
   onClickOutside?: (event?: MouseEvent) => void
   className?: string
+  disableBackdropAnimation?: boolean
 }> &
   Pick<DialogProps, 'onExitClick' | 'additionalActionsNode' | 'additionalActionsNodeMobilePosition'>
 
@@ -29,6 +30,7 @@ export const Modal: FC<ModalProps> = ({
   onClickOutside,
   className,
   noBoxShadow,
+  disableBackdropAnimation,
   confetti,
 }) => {
   const { modalContainerRef, incrementOverlaysOpenCount, decrementOverlaysOpenCount, lastOverlayId } =
@@ -61,16 +63,20 @@ export const Modal: FC<ModalProps> = ({
 
   return (
     <Portal containerRef={modalContainerRef}>
-      <CSSTransition
-        in={show}
-        timeout={parseInt(cVar('animationTimingMedium', true))}
-        classNames={transitions.names.fade}
-        mountOnEnter
-        unmountOnExit
-        appear
-      >
-        <ModalBackdrop onClick={onClickOutside} />
-      </CSSTransition>
+      {disableBackdropAnimation ? (
+        show && <ModalBackdrop onClick={onClickOutside} />
+      ) : (
+        <CSSTransition
+          in={show}
+          timeout={parseInt(cVar('animationTimingMedium', true))}
+          classNames={transitions.names.fade}
+          mountOnEnter
+          unmountOnExit
+          appear
+        >
+          <ModalBackdrop onClick={onClickOutside} />
+        </CSSTransition>
+      )}
       {confetti && (
         <CSSTransition
           in={show}
