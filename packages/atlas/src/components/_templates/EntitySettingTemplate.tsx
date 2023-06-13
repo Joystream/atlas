@@ -5,12 +5,12 @@ import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { cVar, media, sizes } from '@/styles'
 
-type MembershipSettingTemplateProps = PropsWithChildren<{
+type EntitySettingTemplateProps = PropsWithChildren<{
   title: string
   description?: string
 }>
 
-export const MembershipSettingTemplate: FC<MembershipSettingTemplateProps> = ({ children, title, description }) => {
+export const EntitySettingTemplate: FC<EntitySettingTemplateProps> = ({ children, title, description }) => {
   return (
     <StyledLayoutGrid>
       <GridItem colStart={{ base: 1 }} colSpan={{ base: 12, sm: 5, lg: 4 }} rowStart={{ base: 1 }}>

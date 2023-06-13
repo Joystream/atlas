@@ -32,7 +32,7 @@ const studioNavbarItems: NavItemType[] = [
     icon: <SvgSidebarChannel />,
     name: 'Channel',
     expandedName: 'My channel',
-    to: absoluteRoutes.studio.editChannel(),
+    to: absoluteRoutes.studio.myChannel(),
   },
   {
     icon: <SvgSidebarUpload />,
