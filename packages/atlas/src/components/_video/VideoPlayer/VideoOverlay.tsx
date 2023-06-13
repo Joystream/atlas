@@ -3,7 +3,9 @@ import { FC, useEffect, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useBasicVideos } from '@/api/hooks/video'
+import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { BasicVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { publicVideoFilter } from '@/config/contentFilter'
 import { cVar, transitions } from '@/styles'
 import { getRandomIntInclusive } from '@/utils/number'
 
@@ -20,6 +22,7 @@ type VideoOverlayProps = {
   isPlayNextDisabled?: boolean
   playRandomVideoOnEnded?: boolean
   isMinimized?: boolean
+  currentVideoTimestamp?: Date
 }
 export const VideoOverlay: FC<VideoOverlayProps> = ({
   playerState,
@@ -31,28 +34,41 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
   isPlayNextDisabled,
   isMinimized,
   playRandomVideoOnEnded = true,
+  currentVideoTimestamp,
 }) => {
   const [randomNextVideo, setRandomNextVideo] = useState<BasicVideoFieldsFragment | null>(null)
-  const { videos } = useBasicVideos(
+  const { videos, refetch } = useBasicVideos(
     {
+      limit: 1,
+      orderBy: VideoOrderByInput.ChannelCreatedAtAsc,
       where: {
+        ...publicVideoFilter,
         channel: {
           id_eq: channelId,
         },
+        createdAt_gt: currentVideoTimestamp,
       },
     },
-    { context: { delay: 2000 } }
+    { notifyOnNetworkStatusChange: true }
   )
 
   useEffect(() => {
-    if (!videos?.length || videos.length <= 1) {
+    if (!videos?.length || videos.length === 0) {
+      refetch({
+        where: {
+          channel: {
+            id_eq: channelId,
+          },
+          createdAt_lt: currentVideoTimestamp,
+        },
+      })
       return
     }
     const filteredVideos = videos.filter((video) => video.id !== videoId)
     const randomNumber = getRandomIntInclusive(0, filteredVideos.length - 1)
 
     setRandomNextVideo(filteredVideos[randomNumber])
-  }, [videoId, videos])
+  }, [channelId, currentVideoTimestamp, refetch, videoId, videos])
 
   return (
     <SwitchTransition>
