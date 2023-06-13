@@ -3,19 +3,11 @@ import { FC, RefObject, useCallback, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-import { SvgActionCheck, SvgActionClose, SvgActionHide, SvgActionMinus, SvgActionShow } from '@/assets/icons'
-import { IconWrapper } from '@/components/IconWrapper'
-import { Text } from '@/components/Text'
+import { SvgActionHide, SvgActionShow } from '@/assets/icons'
 import { AuthenticationModalStepTemplate } from '@/components/_auth/AuthenticationModalStepTemplate'
+import { PasswordCriterias } from '@/components/_auth/PasswordCriterias'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input, InputProps } from '@/components/_inputs/Input'
-import { cVar } from '@/styles'
-
-import {
-  PasswordRequirementItem,
-  PasswordRequirementsList,
-  PasswordRequirementsWrapper,
-} from './SignUpPasswordStep.styles'
 
 import { SignUpFormData } from '../../SignUpModal.types'
 import { StyledSignUpForm } from '../SignUpSteps.styles'
@@ -47,30 +39,6 @@ type PasswordStepForm = {
 }
 type PasswordInputNames = keyof PasswordStepForm
 
-type ValidationState = 'pending' | 'success' | 'error'
-
-type PasswordRequirementsErrors = {
-  length: ValidationState
-  upperCase: ValidationState
-  number: ValidationState
-  specialCharacter: ValidationState
-}
-
-const PASSWORD_REQUIREMENTS_ERRORS_INITIAL_STATE: PasswordRequirementsErrors = {
-  length: 'pending',
-  upperCase: 'pending',
-  number: 'pending',
-  specialCharacter: 'pending',
-}
-
-const getValidationState = (isError: boolean) => {
-  if (isError) {
-    return 'error'
-  } else {
-    return 'success'
-  }
-}
-
 type SignUpPasswordStepProps = {
   onPasswordSubmit: (password: string) => void
   password?: string
@@ -87,7 +55,6 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
 }) => {
   const {
     register,
-    watch,
     handleSubmit,
     formState: { errors },
   } = useForm<PasswordStepForm>({
@@ -103,9 +70,6 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
     confirmPassword: false,
   })
 
-  const [passwordRequirementsErrors, setPasswordRequirementsErrors] = useState<PasswordRequirementsErrors>(
-    PASSWORD_REQUIREMENTS_ERRORS_INITIAL_STATE
-  )
   const handleGoToNextStep = useCallback(() => {
     handleSubmit((data) => {
       onPasswordSubmit(data.password)
@@ -121,23 +85,6 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
 
   // used to scroll the form to the bottom upon first handle field focus - this is done to let the user see password requirements
   const hasDoneInitialScroll = useRef(false)
-
-  useEffect(() => {
-    const subscription = watch(({ password }) => {
-      if (!password) {
-        setPasswordRequirementsErrors(PASSWORD_REQUIREMENTS_ERRORS_INITIAL_STATE)
-        return
-      }
-
-      setPasswordRequirementsErrors(() => ({
-        length: getValidationState(password.length <= 9),
-        number: getValidationState(/^[^0-9]*$/.test(password)),
-        upperCase: getValidationState(/^[^A-Z]*$/.test(password)),
-        specialCharacter: getValidationState(/^[^!@#$%^&*()_+]*$/.test(password)),
-      }))
-    })
-    return () => subscription.unsubscribe()
-  }, [watch])
 
   const handleTogglePassword = (name: PasswordInputNames) => {
     setIsFieldVisible((fields) => ({ ...fields, [name]: !fields[name] }))
@@ -181,61 +128,8 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
         <FormField label="Repeat Password" error={errors.confirmPassword?.message}>
           <Input placeholder="Repeat password" {...getInputProps('confirmPassword')} autoComplete="off" />
         </FormField>
-        <PasswordRequirementsWrapper>
-          <Text as="h2" variant="h200">
-            Password must:
-          </Text>
-          <PasswordRequirementsList>
-            <PasswordCriteria
-              validationState={passwordRequirementsErrors.length}
-              text="Be between 9 and 64 character"
-            />
-            <PasswordCriteria
-              validationState={passwordRequirementsErrors.upperCase}
-              text="Include an uppercase character"
-            />
-            <PasswordCriteria validationState={passwordRequirementsErrors.number} text="Include a number" />
-            <PasswordCriteria
-              validationState={passwordRequirementsErrors.specialCharacter}
-              text="Include a special character (eg. !, ?, %)"
-            />
-          </PasswordRequirementsList>
-        </PasswordRequirementsWrapper>
+        <PasswordCriterias />
       </StyledSignUpForm>
     </AuthenticationModalStepTemplate>
-  )
-}
-
-type PasswordCriteriaProps = {
-  validationState: ValidationState
-  text: string
-}
-
-const getIconWrapperProps = (state: ValidationState) => {
-  switch (state) {
-    case 'pending':
-      return {
-        backgroundColor: undefined,
-        icon: <SvgActionMinus />,
-      }
-    case 'success':
-      return {
-        backgroundColor: cVar('colorBackgroundSuccess'),
-        icon: <SvgActionCheck />,
-      }
-    case 'error':
-      return {
-        backgroundColor: cVar('colorBackgroundError'),
-        icon: <SvgActionClose />,
-      }
-  }
-}
-
-const PasswordCriteria: FC<PasswordCriteriaProps> = ({ text, validationState }) => {
-  const iconWrapperProps = getIconWrapperProps(validationState)
-  return (
-    <PasswordRequirementItem as="li" color="colorText" variant="t200">
-      <IconWrapper size="small" {...iconWrapperProps} /> {text}
-    </PasswordRequirementItem>
   )
 }

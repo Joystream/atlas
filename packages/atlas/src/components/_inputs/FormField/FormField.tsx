@@ -19,6 +19,7 @@ import { Switch, SwitchProps } from '../Switch'
 
 export type FormFieldProps = PropsWithChildren<{
   headerNode?: ReactNode
+  footerNode?: ReactNode
   label?: string
   optional?: boolean
   error?: string
@@ -43,6 +44,7 @@ export const FormField = memo(
         tooltip,
         error,
         disableErrorAnimation,
+        footerNode,
       },
       ref
     ) => {
@@ -131,6 +133,7 @@ export const FormField = memo(
               </Text>
             </FormFieldFooter>
           ) : null}
+          {footerNode}
         </FormFieldWrapper>
       )
     }
