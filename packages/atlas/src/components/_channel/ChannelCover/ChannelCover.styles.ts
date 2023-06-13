@@ -33,6 +33,7 @@ export const CoverImage = styled(AssetImage)`
 
 export const CoverWrapper = styled.div`
   position: relative;
+  overflow: hidden;
 `
 
 export const EditableControls = styled.div`

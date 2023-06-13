@@ -9,6 +9,7 @@ export const BASE_PATHS = {
 
 export type MemberSettingsTabs = 'Public profile' | 'Wallet' | 'Notifications'
 export type MemberTabs = 'NFTs owned' | 'Activity' | 'About'
+export type MyChannelTabs = 'General' | 'Notifications'
 
 const withQueryParameters = (basePath: string, query: Record<string, string> = {}) => {
   if (Object.values(query).length) {
@@ -49,7 +50,7 @@ export const relativeRoutes = {
   studio: {
     index: () => '',
     newChannel: () => 'channel/new',
-    editChannel: () => 'channel',
+    myChannel: (query?: { [QUERY_PARAMS.TAB]?: MyChannelTabs }) => withQueryParameters('channel', query),
     videos: () => 'videos',
     crtWelcome: () => 'crt-welcome',
     crtTokenPreview: () => 'crt-preview',
