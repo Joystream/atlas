@@ -1,6 +1,4 @@
 import { useApolloClient } from '@apollo/client'
-import { JOYSTREAM_ADDRESS_PREFIX } from '@joystream/types/.'
-import { Keyring } from '@polkadot/keyring'
 import { u8aToHex } from '@polkadot/util'
 import { cryptoWaitReady } from '@polkadot/util-crypto'
 import axios from 'axios'
@@ -11,6 +9,7 @@ import { GetCurrentAccountQuery, useGetCurrentAccountLazyQuery } from '@/api/que
 import { atlasConfig } from '@/config'
 import { ORION_AUTH_URL } from '@/config/env'
 import { useMountEffect } from '@/hooks/useMountEffect'
+import { keyring } from '@/joystream-lib/lib'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useJoystream } from '@/providers/joystream/joystream.provider'
 import { useWallet } from '@/providers/wallet/wallet.hooks'
@@ -29,8 +28,6 @@ import { AuthContextValue, LogInErrors } from './auth.types'
 
 const AuthContext = createContext<undefined | AuthContextValue>(undefined)
 AuthContext.displayName = 'AuthContext'
-
-export const keyring = new Keyring({ type: 'sr25519', ss58Format: JOYSTREAM_ADDRESS_PREFIX })
 
 export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const [isAuthenticating, setIsAuthenticating] = useState(true)
@@ -230,9 +227,10 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       refetchCurrentUser: refetch,
       currentUser: currentUser,
       handleLogout,
+      encodedSeed,
       isLoggedIn: !!currentUser && !isAuthenticating,
     }),
-    [currentUser, handleLogin, handleLogout, isAuthenticating, loggedAddress, refetch]
+    [currentUser, encodedSeed, handleLogin, handleLogout, isAuthenticating, loggedAddress, refetch]
   )
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>

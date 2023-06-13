@@ -10,6 +10,7 @@ export type AuthContextValue = {
   refetchCurrentUser: () => Promise<ApolloQueryResult<GetCurrentAccountQuery>>
   handleLogout: () => Promise<void>
   isLoggedIn: boolean
+  encodedSeed: string | null
 }
 
 export type UserSigner = 'external' | 'internal'

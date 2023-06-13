@@ -4,20 +4,13 @@ import { CSSTransition } from 'react-transition-group'
 
 import { transitions } from '@/styles'
 
-import {
-  IconWrapper,
-  StyledSvgAlertsInformative24,
-  TooltipContainer,
-  TooltipContent,
-  TooltipHeader,
-  TooltipText,
-} from './Tooltip.styles'
+import { IconWrapper, TooltipContainer, TooltipContent, TooltipHeader, TooltipText } from './Tooltip.styles'
 
 type Placement = 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end' | 'top' | 'bottom'
 export type TooltipProps = PropsWithChildren<{
   text?: string
   headerText?: string
-  icon?: boolean
+  icon?: ReactNode
   placement?: Placement
   offsetX?: number
   offsetY?: number
@@ -59,11 +52,7 @@ export const Tooltip: FC<TooltipProps> = ({
   ) : (
     <TooltipContent headerText={!!headerText}>
       <TooltipHeader headerText={!!headerText}>
-        {icon && (
-          <IconWrapper>
-            <StyledSvgAlertsInformative24 />
-          </IconWrapper>
-        )}
+        {icon && <IconWrapper>{icon}</IconWrapper>}
         {headerText && (
           <TooltipText as="span" variant="h100">
             {headerText}

@@ -12,7 +12,7 @@ import { ORION_AUTH_URL } from '@/config/env'
 import { getWalletsList } from '@/providers/wallet/wallet.helpers'
 import { SentryLogger } from '@/utils/logs'
 
-import { AuthModals } from './auth.types'
+import { AuthModals, LogInErrors } from './auth.types'
 
 export const prepareEncryptionArtifacts = async (email: string, password: string, mnemonic: string) => {
   try {
@@ -80,7 +80,10 @@ export const getArtifacts = async (id: string, email: string, password: string) 
       decryptedSeed,
     }
   } catch (error) {
-    SentryLogger.error('Error when fetching artifacts', 'useLogIn', error)
+    if (isAxiosError(error) && error.response?.status === 404) {
+      throw new Error(LogInErrors.ArtifactsNotFound)
+    }
+    throw new Error(LogInErrors.UnknownError)
   }
 }
 
