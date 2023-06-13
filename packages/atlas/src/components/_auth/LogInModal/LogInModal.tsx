@@ -110,7 +110,11 @@ export const LogInModal = () => {
             <FormField
               label="Password"
               error={errors.password?.message}
-              footerNode={<ForgotPasswordText as="p">Forgot password?</ForgotPasswordText>}
+              footerNode={
+                <ForgotPasswordText as="p" onClick={() => setAuthModalOpenName('forgotPassword')}>
+                  Forgot password?
+                </ForgotPasswordText>
+              }
             >
               <Input
                 {...register('password')}

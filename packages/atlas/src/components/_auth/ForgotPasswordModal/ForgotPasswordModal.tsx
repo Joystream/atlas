@@ -1,14 +1,25 @@
 import { zodResolver } from '@hookform/resolvers/zod/dist/zod'
+import { u8aToHex } from '@polkadot/util'
+import { mnemonicToEntropy } from '@polkadot/util-crypto'
+import axios from 'axios'
 import { useCallback, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import shallow from 'zustand/shallow'
 
+import { useGetCurrentAccountLazyQuery } from '@/api/queries/__generated__/accounts.generated'
+import { AuthenticationModalStepTemplate } from '@/components/_auth/AuthenticationModalStepTemplate'
 import { EmailAndSeedStep } from '@/components/_auth/ForgotPasswordModal/steps/EmailAndSeedStep'
 import { NewPasswordStep } from '@/components/_auth/ForgotPasswordModal/steps/NewPasswordStep'
 import { Button } from '@/components/_buttons/Button'
 import { DialogModal } from '@/components/_overlays/DialogModal'
+import { atlasConfig } from '@/config'
+import { ORION_AUTH_URL } from '@/config/env'
+import { keyring } from '@/hooks/useRegister'
+import { encryptSeed, loginRequest, logoutRequest } from '@/providers/auth/auth.helpers'
 import { useAuthStore } from '@/providers/auth/auth.store'
+import { useSnackbar } from '@/providers/snackbars'
+import { SentryLogger } from '@/utils/logs'
 
 import { ForgotPasswordModalForm, ForgotPasswordStep } from './ForgotPasswordModal.types'
 
@@ -20,7 +31,7 @@ const commonPasswordValidation = z
 const schema = z.object({
   [ForgotPasswordStep.EmailAndSeedStep]: z.object({
     email: z.string().min(3, { message: 'Enter email address.' }).email({ message: 'Enter valid email address.' }),
-    seed: z
+    mnemonic: z
       .string()
       .min(1, 'Enter mnemonic.')
       .regex(/^(\w+\s){11}\w+$/, { message: 'Mnemonic should contain 12 words separated by spaces.' }),
@@ -43,8 +54,13 @@ const schema = z.object({
 
 export const ForgotPasswordModal = () => {
   const [currentStep, setCurrentStep] = useState(ForgotPasswordStep.EmailAndSeedStep)
+  const [isLoading, setIsLoading] = useState(false)
+  const [accountId, setAccountId] = useState<string>()
+  const { displaySnackbar } = useSnackbar()
   const setAuthModalName = useAuthStore((state) => state.actions.setAuthModalOpenName)
   const isLastStep = currentStep === ForgotPasswordStep.NewPasswordStep
+  const [lazyCurrentAccountQuery] = useGetCurrentAccountLazyQuery()
+
   const form = useForm<ForgotPasswordModalForm>({
     resolver: zodResolver(isLastStep ? schema : schema.pick({ [currentStep]: true })),
   })
@@ -55,17 +71,120 @@ export const ForgotPasswordModal = () => {
     }),
     shallow
   )
-  const handleEmailAndSeedStepSubmit = () => setCurrentStep(ForgotPasswordStep.NewPasswordStep)
+  const handleEmailAndSeedStepSubmit = async (data: ForgotPasswordModalForm) => {
+    setIsLoading(true)
 
-  const handleNewPasswordStep = useCallback((data: ForgotPasswordModalForm) => {
-    console.log('data', data)
-  }, [])
+    try {
+      const time = Date.now() - 10_000
+
+      const keypair = keyring.addFromMnemonic(data['EmailAndSeedStep'].mnemonic)
+      const address = keypair.address
+      const loginPayload = {
+        joystreamAccountId: address,
+        gatewayName: atlasConfig.general.appName,
+        timestamp: time,
+        action: 'login' as const,
+      }
+      const loginSignature = await keypair.sign(JSON.stringify(loginPayload))
+      const loginResponse = await loginRequest(u8aToHex(loginSignature), loginPayload)
+      const accData = await lazyCurrentAccountQuery()
+
+      if (accData.data?.accountData.email !== data['EmailAndSeedStep'].email) {
+        form.setError(`${ForgotPasswordStep.EmailAndSeedStep}.email`, {
+          message: 'Provided email do not match mnemonic.',
+        })
+        logoutRequest().catch(() => undefined)
+        return
+      }
+
+      setAccountId(loginResponse.data.accountId)
+      setCurrentStep(ForgotPasswordStep.NewPasswordStep)
+    } catch (error) {
+      displaySnackbar({
+        title: 'Something went wrong',
+        description: `We encountered unexpected error. Please try again.`,
+        iconType: 'error',
+      })
+      SentryLogger.error('Failed to login when recovering password', 'ForgotPasswordModal', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleNewPasswordStep = useCallback(
+    async (data: ForgotPasswordModalForm) => {
+      if (!accountId) {
+        return
+      }
+      setCurrentStep(ForgotPasswordStep.LoadingStep)
+      const time = Date.now() - 10_000
+
+      const keypair = keyring.addFromMnemonic(data['EmailAndSeedStep'].mnemonic)
+      const address = keypair.address
+
+      const entropy = mnemonicToEntropy(data['EmailAndSeedStep'].mnemonic)
+
+      const seed = u8aToHex(entropy)
+
+      const newArtifacts = await encryptSeed({
+        ...data['EmailAndSeedStep'],
+        seed,
+        password: data['NewPasswordStep'].password,
+      })
+      const forgetPayload = {
+        joystreamAccountId: address,
+        gatewayName: atlasConfig.general.appName,
+        timestamp: time,
+        action: 'changeAccount',
+        gatewayAccountId: accountId,
+        newArtifacts,
+      }
+      const forgetPayloadSignature = await keypair.sign(JSON.stringify(forgetPayload))
+
+      try {
+        await axios.post<{ accountId: string }>(
+          `${ORION_AUTH_URL}/change-account`,
+          {
+            signature: u8aToHex(forgetPayloadSignature),
+            payload: forgetPayload,
+          },
+          {
+            withCredentials: true,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        displaySnackbar({
+          title: 'Password has been changed',
+          description: 'You can now log in to your account using the new password',
+          iconType: 'success',
+        })
+        setAuthModalName('logIn')
+      } catch (error) {
+        displaySnackbar({
+          title: 'Something went wrong',
+          description: `We encountered unexpected error. Please try again.`,
+          iconType: 'error',
+        })
+        SentryLogger.error('Failed to change password', 'ForgotPasswordModal', error)
+      } finally {
+        setCurrentStep(ForgotPasswordStep.NewPasswordStep)
+      }
+    },
+    [accountId, displaySnackbar, setAuthModalName]
+  )
 
   return (
     <DialogModal
-      show={true}
+      show={authModalOpenName === 'forgotPassword'}
       primaryButton={{
-        text: currentStep === ForgotPasswordStep.NewPasswordStep ? 'Change password' : 'Continue',
+        disabled: isLoading,
+        text: isLoading
+          ? 'Checking...'
+          : currentStep === ForgotPasswordStep.NewPasswordStep
+          ? 'Change password'
+          : 'Continue',
         onClick: () => {
           form.handleSubmit(
             currentStep === ForgotPasswordStep.EmailAndSeedStep ? handleEmailAndSeedStepSubmit : handleNewPasswordStep
@@ -89,7 +208,17 @@ export const ForgotPasswordModal = () => {
       <FormProvider {...form}>
         {currentStep === ForgotPasswordStep.EmailAndSeedStep && <EmailAndSeedStep />}
         {currentStep === ForgotPasswordStep.NewPasswordStep && <NewPasswordStep />}
+        {currentStep === ForgotPasswordStep.LoadingStep && (
+          <AuthenticationModalStepTemplate
+            title="Changing password"
+            subtitle="Please wait while we change your password. This should take no more than 10 seconds."
+            loader
+            hasNavigatedBack
+          />
+        )}
       </FormProvider>
     </DialogModal>
   )
 }
+
+// dwad!aA@13

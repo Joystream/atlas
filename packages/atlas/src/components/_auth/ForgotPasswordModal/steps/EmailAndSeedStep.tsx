@@ -23,9 +23,13 @@ export const EmailAndSeedStep = () => {
         <FormField
           label="Wallet seed"
           description="Its the seed that you were asked to save when creating your membership."
-          error={formState.errors.EmailAndSeedStep?.seed?.message}
+          error={formState.errors.EmailAndSeedStep?.mnemonic?.message}
         >
-          <TextArea rows={2} placeholder="Wallet seed" {...register(`${ForgotPasswordStep.EmailAndSeedStep}.seed`)} />
+          <TextArea
+            rows={2}
+            placeholder="Wallet seed"
+            {...register(`${ForgotPasswordStep.EmailAndSeedStep}.mnemonic`)}
+          />
         </FormField>
         <FormField
           label="Email"

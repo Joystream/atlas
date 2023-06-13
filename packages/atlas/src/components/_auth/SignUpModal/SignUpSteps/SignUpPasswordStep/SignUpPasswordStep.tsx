@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FC, RefObject, useCallback, useEffect, useRef, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 import { SvgActionHide, SvgActionShow } from '@/assets/icons'
@@ -53,11 +53,7 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
   dialogContentRef,
   onPasswordSubmit,
 }) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<PasswordStepForm>({
+  const form = useForm<PasswordStepForm>({
     shouldFocusError: true,
     defaultValues: {
       password,
@@ -65,6 +61,11 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
     },
     resolver: zodResolver(zodSchema),
   })
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = form
   const [isFieldVisible, setIsFieldVisible] = useState<Record<PasswordInputNames, boolean>>({
     password: false,
     confirmPassword: false,
@@ -107,29 +108,31 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
   )
 
   return (
-    <AuthenticationModalStepTemplate
-      title="Sign up"
-      hasNavigatedBack={hasNavigatedBack}
-      subtitle="Please note that there is no option for us to recover your password if you forget it."
-    >
-      <StyledSignUpForm>
-        <FormField label="Password" error={errors.password?.message}>
-          <Input
-            placeholder="Password"
-            {...getInputProps('password')}
-            autoComplete="off"
-            onClick={() => {
-              if (hasDoneInitialScroll.current || !dialogContentRef?.current) return
-              hasDoneInitialScroll.current = true
-              dialogContentRef.current.scrollTo({ top: dialogContentRef.current.scrollHeight, behavior: 'smooth' })
-            }}
-          />
-        </FormField>
-        <FormField label="Repeat Password" error={errors.confirmPassword?.message}>
-          <Input placeholder="Repeat password" {...getInputProps('confirmPassword')} autoComplete="off" />
-        </FormField>
-        <PasswordCriterias />
-      </StyledSignUpForm>
-    </AuthenticationModalStepTemplate>
+    <FormProvider {...form}>
+      <AuthenticationModalStepTemplate
+        title="Sign up"
+        hasNavigatedBack={hasNavigatedBack}
+        subtitle="Please note that there is no option for us to recover your password if you forget it."
+      >
+        <StyledSignUpForm>
+          <FormField label="Password" error={errors.password?.message}>
+            <Input
+              placeholder="Password"
+              {...getInputProps('password')}
+              autoComplete="off"
+              onClick={() => {
+                if (hasDoneInitialScroll.current || !dialogContentRef?.current) return
+                hasDoneInitialScroll.current = true
+                dialogContentRef.current.scrollTo({ top: dialogContentRef.current.scrollHeight, behavior: 'smooth' })
+              }}
+            />
+          </FormField>
+          <FormField label="Repeat Password" error={errors.confirmPassword?.message}>
+            <Input placeholder="Repeat password" {...getInputProps('confirmPassword')} autoComplete="off" />
+          </FormField>
+          <PasswordCriterias />
+        </StyledSignUpForm>
+      </AuthenticationModalStepTemplate>
+    </FormProvider>
   )
 }
