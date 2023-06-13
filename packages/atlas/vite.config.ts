@@ -11,6 +11,7 @@ import {
   AtlasHtmlMetaTagsPlugin,
   AtlasWebmanifestPlugin,
   EmbeddedFallbackPlugin,
+  OptimizePlugin,
   PolkadotWorkerMetaFixPlugin,
 } from './plugins'
 
@@ -46,6 +47,7 @@ export default defineConfig({
     AtlasHtmlMetaTagsPlugin,
     AtlasWebmanifestPlugin,
     EmbeddedFallbackPlugin,
+    OptimizePlugin,
     ViteYaml(),
     react({
       exclude: /\.stories\.[tj]sx?$/,

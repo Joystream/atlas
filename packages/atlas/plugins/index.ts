@@ -118,3 +118,19 @@ export const EmbeddedFallbackPlugin: PluginOption = {
     })
   },
 }
+
+export const OptimizePlugin: PluginOption = {
+  name: 'optimize-init-plugin',
+  transformIndexHtml: {
+    enforce: 'pre',
+    transform: (html) => {
+      const optimizeEnv = 'VITE_OPTIMIZE_ID'
+      const optimizeId = process.env[optimizeEnv]
+      const optimizeScript = optimizeId
+        ? `<script src="https://www.googleoptimize.com/optimize.js?id=${optimizeId}"></script>`
+        : ''
+
+      return html.replace('<optimize-script />', optimizeScript)
+    },
+  },
+}

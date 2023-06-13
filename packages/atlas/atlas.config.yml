@@ -465,6 +465,8 @@ analytics:
     id: '$VITE_USERSNAP_ID'
   GA: # Google Analytics
     id: '$VITE_GA_ID'
+  optimize:
+    id: '$VITE_OPTIMIZE_ID'
   segment: # Segment Analytics
     id: '$VITE_SEGMENT_ID'
 
