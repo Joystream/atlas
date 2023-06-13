@@ -1,18 +1,13 @@
-import { JOYSTREAM_ADDRESS_PREFIX } from '@joystream/types/.'
-import { Keyring } from '@polkadot/keyring'
 import { KeyringPair } from '@polkadot/keyring/types'
-import { hexToU8a, u8aToHex } from '@polkadot/util'
-import { cryptoWaitReady, mnemonicToEntropy } from '@polkadot/util-crypto'
+import { u8aToHex } from '@polkadot/util'
+import { cryptoWaitReady } from '@polkadot/util-crypto'
 import axios from 'axios'
-import { Buffer } from 'buffer'
-import { AES, enc, lib, mode } from 'crypto-js'
 import { useCallback } from 'react'
 
 import { ORION_AUTH_URL } from '@/config/env'
-import { scryptHash } from '@/providers/auth/auth.helpers'
+import { keyring } from '@/joystream-lib/lib'
+import { prepareEncryptionArtifacts } from '@/providers/auth/auth.helpers'
 import { useAuth } from '@/providers/auth/auth.hooks'
-
-export const keyring = new Keyring({ type: 'sr25519', ss58Format: JOYSTREAM_ADDRESS_PREFIX })
 
 type EncryptionArtifacts = {
   id: string
@@ -71,30 +66,12 @@ export const useRegister = () => {
       let keypair: KeyringPair | null = null
       if (params.type === 'emailPassword') {
         const { email, password, mnemonic } = params
-        const entropy = mnemonicToEntropy(mnemonic)
-        const seed = u8aToHex(entropy)
+        const artifacts = await prepareEncryptionArtifacts(email, password, mnemonic)
 
-        const id = (await scryptHash(`${email}:${password}`, '0x0818ee04c541716831bdd0f598fa4bbb')).toString('hex')
-        const cipherIv = lib.WordArray.random(16).toString(enc.Hex)
-        const cipherKey = await scryptHash(`${email}:${password}`, Buffer.from(hexToU8a(cipherIv)))
-        const keyWA = enc.Hex.parse(cipherKey.toString('hex'))
-        const ivWA = enc.Hex.parse(cipherIv)
-        const wordArray = enc.Hex.parse(seed)
-
-        const encrypted = AES.encrypt(wordArray, keyWA, { iv: ivWA, mode: mode.CBC })
-
-        await axios.post(`${ORION_AUTH_URL}/artifacts`, {
-          cipherIv,
-          id,
-          encryptedSeed: encrypted.ciphertext.toString(enc.Hex),
-        })
+        await axios.post(`${ORION_AUTH_URL}/artifacts`, artifacts)
 
         keypair = keyring.addFromMnemonic(mnemonic)
-        registerPayload.encryptionArtifacts = {
-          cipherIv,
-          id,
-          encryptedSeed: encrypted.ciphertext.toString(enc.Hex),
-        }
+        registerPayload.encryptionArtifacts = artifacts
         registerPayload.joystreamAccountId = keypair.address
         registerSignature = u8aToHex(keypair.sign(JSON.stringify(registerPayload)))
       }
@@ -122,7 +99,7 @@ export const useRegister = () => {
         if (e.response.data.message === 'Account with the provided e-mail address already exists.') {
           throw new Error(RegisterError.EmailAlreadyExists)
         }
-        throw new Error(RegisterError.EmailAlreadyExists)
+        throw new Error(RegisterError.UnknownError)
       }
 
       await handleLogin({

@@ -5,6 +5,7 @@ import { useCallback, useState } from 'react'
 import { useMutation } from 'react-query'
 
 import { FAUCET_URL } from '@/config/env'
+import { keyring } from '@/joystream-lib/lib'
 import { MemberId } from '@/joystream-lib/types'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useAuth } from '@/providers/auth/auth.hooks'
@@ -17,7 +18,7 @@ import { UploadAvatarServiceError, uploadAvatarImage } from '@/utils/image'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import { MemberFormData, SignUpFormData, SignUpSteps } from './SignUpModal.types'
-import { OrionAccountError, keyring, registerAccount } from './SignUpModal.utils'
+import { OrionAccountError, registerAccount } from './SignUpModal.utils'
 
 type NewMemberResponse = {
   memberId: MemberId

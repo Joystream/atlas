@@ -1,13 +1,10 @@
-import { JOYSTREAM_ADDRESS_PREFIX } from '@joystream/types/.'
-import { Keyring } from '@polkadot/keyring'
-import { hexToU8a, u8aToHex } from '@polkadot/util'
-import { cryptoWaitReady, mnemonicToEntropy } from '@polkadot/util-crypto'
+import { u8aToHex } from '@polkadot/util'
+import { cryptoWaitReady } from '@polkadot/util-crypto'
 import axios from 'axios'
-import { Buffer } from 'buffer'
-import { AES, enc, lib, mode } from 'crypto-js'
 
 import { ORION_AUTH_URL } from '@/config/env'
-import { scryptHash } from '@/providers/auth/auth.helpers'
+import { keyring } from '@/joystream-lib/lib'
+import { prepareEncryptionArtifacts } from '@/providers/auth/auth.helpers'
 import { isAxiosError } from '@/utils/error'
 
 type OrionAccountErrorArgs = {
@@ -26,23 +23,11 @@ export class OrionAccountError extends Error {
   }
 }
 
-export const keyring = new Keyring({ type: 'sr25519', ss58Format: JOYSTREAM_ADDRESS_PREFIX })
-
 export const registerAccount = async (email: string, password: string, mnemonic: string, memberId: string) => {
   try {
     await cryptoWaitReady()
-    const entropy = mnemonicToEntropy(mnemonic)
 
-    const seed = u8aToHex(entropy)
-
-    const id = (await scryptHash(`${email}:${password}`, '0x0818ee04c541716831bdd0f598fa4bbb')).toString('hex')
-    const cipherIv = lib.WordArray.random(16).toString(enc.Hex)
-    const cipherKey = await scryptHash(`${email}:${password}`, Buffer.from(hexToU8a(cipherIv)))
-    const keyWA = enc.Hex.parse(cipherKey.toString('hex'))
-    const ivWA = enc.Hex.parse(cipherIv)
-    const wordArray = enc.Hex.parse(seed)
-
-    const encrypted = AES.encrypt(wordArray, keyWA, { iv: ivWA, mode: mode.CBC })
+    const artifacts = await prepareEncryptionArtifacts(email, password, mnemonic)
 
     const keypair = keyring.addFromMnemonic(mnemonic)
 
@@ -53,11 +38,7 @@ export const registerAccount = async (email: string, password: string, mnemonic:
       timestamp: Date.now() - 20_000,
       action: 'createAccount',
       email,
-      encryptionArtifacts: {
-        id,
-        encryptedSeed: encrypted.ciphertext.toString(enc.Hex),
-        cipherIv,
-      },
+      encryptionArtifacts: artifacts,
     }
     const registerSignature = u8aToHex(keypair.sign(JSON.stringify(registerPayload)))
     await axios.post(
