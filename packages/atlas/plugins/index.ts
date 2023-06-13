@@ -125,7 +125,7 @@ export const OptimizePlugin: PluginOption = {
     enforce: 'pre',
     transform: (html) => {
       const optimizeEnv = 'VITE_OPTIMIZE_ID'
-      const optimizeId = process.env[optimizeEnv]
+      const optimizeId = process.env[optimizeEnv] || loadEnv('production', path.join(process.cwd(), 'src'))[optimizeEnv]
       const optimizeScript = optimizeId
         ? `<script src="https://www.googleoptimize.com/optimize.js?id=${optimizeId}"></script>`
         : ''
