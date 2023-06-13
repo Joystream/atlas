@@ -108,7 +108,7 @@ export const GeneralTab = ({ actionBarPortal }: { actionBarPortal: RefObject<HTM
                     onConfirm={handleAvatarChange}
                     onError={() =>
                       displaySnackbar({
-                        title: 'Cannot load the image. Choose another.',
+                        title: 'Cannot load the image. Please choose another one.',
                         iconType: 'error',
                       })
                     }

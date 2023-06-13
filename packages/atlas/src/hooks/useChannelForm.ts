@@ -82,9 +82,7 @@ export const useChannelForm = (props: FormType) => {
   const isAvatarUploading = useUploadsStore(
     (state) =>
       avatarContentId
-        ? state.uploadsStatus[avatarContentId]?.lastStatus === 'processing' ||
-          state.uploadsStatus[avatarContentId]?.lastStatus === 'inProgress' ||
-          state.uploadsStatus[avatarContentId]?.lastStatus === 'reconnecting'
+        ? ['processing', 'inProgress', 'reconnecting'].includes(state.uploadsStatus[avatarContentId]?.lastStatus ?? '')
         : null,
     shallow
   )
