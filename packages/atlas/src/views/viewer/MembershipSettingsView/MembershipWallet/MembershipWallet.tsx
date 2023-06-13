@@ -1,10 +1,11 @@
-import { FC, ReactNode, useState } from 'react'
+import { FC, ReactNode, useCallback, useState } from 'react'
 
 import { SvgActionCheck, SvgActionCopy, SvgActionDownload, SvgActionEdit } from '@/assets/icons'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
 import { absoluteRoutes } from '@/config/routes'
+import { useClipboard } from '@/hooks/useClipboard'
 import { useAuth } from '@/providers/auth/auth.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 
@@ -59,9 +60,18 @@ const CONNECTING_WALLET_STEPS: WalletStepListItemComponentProps[] = [
 
 export const MembershipWallet = () => {
   const { activeMembership } = useUser()
+  const [isCopyClicked, setIsCopyClicked] = useState(false)
+  const { copyToClipboard } = useClipboard()
   const { currentUser } = useAuth()
   const [isChangePasswordDialogOpen, setIsChangePasswordDialogOpen] = useState(false)
   const [isExportSeedDialogOpen, setIsExportSeedDialogOpen] = useState(false)
+  const handleCopyToClipBoard = useCallback(() => {
+    if (!currentUser?.joystreamAccount) {
+      return
+    }
+    setIsCopyClicked(true)
+    copyToClipboard(currentUser?.joystreamAccount)
+  }, [copyToClipboard, currentUser?.joystreamAccount])
   return (
     <>
       <ExportSeedDialog onClose={() => setIsExportSeedDialogOpen(false)} show={isExportSeedDialogOpen} />
@@ -79,7 +89,9 @@ export const MembershipWallet = () => {
               actionButton={{
                 icon: <SvgActionCopy />,
                 disabled: false,
-                tooltipText: 'Copy',
+                onMouseLeave: () => setIsCopyClicked(false),
+                tooltipText: isCopyClicked ? 'Copied' : 'Copy',
+                onClick: handleCopyToClipBoard,
                 dontFocusOnClick: true,
               }}
             />

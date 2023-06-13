@@ -11,6 +11,7 @@ import {
   GetMembershipsQuery,
   GetMembershipsQueryVariables,
 } from '@/api/queries/__generated__/memberships.generated'
+import { SvgActionCheck } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
@@ -316,6 +317,14 @@ export const MembershipPublicProfile: FC = () => {
             text: isSubmitting ? 'Please wait...' : 'Publish changes',
             type: 'submit',
           }}
+          primaryButtonTooltip={
+            isDirty
+              ? undefined
+              : {
+                  text: 'All changes saved. Nothing to publish.',
+                  icon: <SvgActionCheck />,
+                }
+          }
           secondaryButton={{
             text: 'Cancel',
             to: isDirty ? undefined : absoluteRoutes.viewer.member(activeMembership?.handle),
