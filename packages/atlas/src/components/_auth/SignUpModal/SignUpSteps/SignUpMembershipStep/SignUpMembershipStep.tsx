@@ -16,16 +16,16 @@ import { Input } from '@/components/_inputs/Input'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
 import { atlasConfig } from '@/config'
 import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
+import { MemberFormData } from '@/hooks/useCreateMember'
 
 import { Anchor, StyledAvatar, StyledForm } from './SignUpMembershipStep.styles'
 
-import { MemberFormData, SignUpFormData } from '../../SignUpModal.types'
 import { SignUpStepsCommonProps } from '../SignUpSteps.types'
 
 type SignInModalMembershipStepProps = SignUpStepsCommonProps & {
   onSubmit: (data: MemberFormData) => void
   dialogContentRef?: RefObject<HTMLDivElement>
-} & Pick<SignUpFormData, 'avatar' | 'handle'>
+} & Pick<MemberFormData, 'avatar' | 'handle'>
 
 export const SignUpMembershipStep: FC<SignInModalMembershipStepProps> = ({
   setPrimaryButtonProps,
@@ -81,7 +81,7 @@ export const SignUpMembershipStep: FC<SignInModalMembershipStepProps> = ({
   // send updates to SignInModal on state of primary button
   useEffect(() => {
     setPrimaryButtonProps({
-      text: isSubmitting ? 'Please wait...' : 'Sign up',
+      text: 'Continue',
       disabled: isSubmitting,
       onClick: requestFormSubmit,
     })

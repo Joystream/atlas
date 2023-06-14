@@ -5,14 +5,16 @@ import { useAuthStore } from '@/providers/auth/auth.store'
 
 export const AuthModals = () => {
   const { authModalOpenName } = useAuthStore()
-  switch (authModalOpenName) {
-    case 'logIn':
-      return <LogInModal />
-    case 'externalLogIn':
-      return <ExternalSignInModal />
-    case 'signUp':
-      return <SignUpModal />
-    default:
-      return null
+
+  if (authModalOpenName) {
+    return (
+      <>
+        <LogInModal />
+        <ExternalSignInModal />
+        <SignUpModal />
+      </>
+    )
   }
+
+  return null
 }

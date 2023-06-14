@@ -1,17 +1,17 @@
 import styled from '@emotion/styled'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useOverflowDetector } from 'react-detectable-overflow'
 import shallow from 'zustand/shallow'
 
 import { Button } from '@/components/_buttons/Button'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
 import { DialogModal } from '@/components/_overlays/DialogModal'
+import { AccountFormData, MemberFormData, RegisterError, useCreateMember } from '@/hooks/useCreateMember'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { media } from '@/styles'
 
-import { useCreateMember } from './SignUpModal.hooks'
-import { MemberFormData, SignUpFormData, SignUpSteps } from './SignUpModal.types'
+import { SignUpSteps } from './SignUpModal.types'
 import {
   SignUpCreatingMemberStep,
   SignUpEmailStep,
@@ -22,7 +22,7 @@ import {
 } from './SignUpSteps'
 import { SignUpStepsCommonProps } from './SignUpSteps/SignUpSteps.types'
 
-const SIGNUP_FORM_DATA_INITIAL_STATE = {
+const SIGNUP_FORM_DATA_INITIAL_STATE: AccountFormData & MemberFormData = {
   email: '',
   password: '',
   mnemonic: '',
@@ -31,14 +31,16 @@ const SIGNUP_FORM_DATA_INITIAL_STATE = {
   captchaToken: undefined,
   confirmedTerms: false,
   confirmedCopy: false,
+  memberId: '',
 }
 
 export const SignUpModal = () => {
-  const [currentStep, setCurrentStep] = useState<SignUpSteps | null>(null)
+  const [currentStep, setCurrentStep] = useState<SignUpSteps>(0)
   const [emailAlreadyTakenError, setEmailAlreadyTakenError] = useState(false)
   const [hasNavigatedBack, setHasNavigatedBack] = useState(false)
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogButtonProps>({ text: 'Continue' })
   const [amountOfTokens, setAmountofTokens] = useState<number>()
+  const [memberId, setMemberId] = useState<string | null>(null)
 
   const { authModalOpenName, setAuthModalOpenName } = useAuthStore(
     (state) => ({
@@ -49,19 +51,9 @@ export const SignUpModal = () => {
   )
   const { ref, overflow } = useOverflowDetector<HTMLDivElement>({})
 
-  // handle opening/closing of modal and setting initial step
-  useEffect(() => {
-    if (authModalOpenName !== 'signUp') {
-      setCurrentStep(null)
-      return
-    }
-    if (currentStep != null) return
-
-    setCurrentStep(0)
-  }, [currentStep, authModalOpenName])
-
-  const [signUpFormData, setSignupFormData] = useState<SignUpFormData>(SIGNUP_FORM_DATA_INITIAL_STATE)
-  const createMember = useCreateMember()
+  const [signUpFormData, setSignupFormData] =
+    useState<Omit<AccountFormData & MemberFormData, 'memberId'>>(SIGNUP_FORM_DATA_INITIAL_STATE)
+  const { createNewMember, createNewOrionAccount } = useCreateMember()
 
   const goToNextStep = useCallback(() => {
     setCurrentStep((previousIdx) => (previousIdx ?? -1) + 1)
@@ -83,15 +75,19 @@ export const SignUpModal = () => {
     [currentStep]
   )
 
-  const handleEmailChange = useCallback(
+  const handleEmailStepSubmit = useCallback(
     (email: string, confirmedTerms: boolean) => {
       setSignupFormData((userForm) => ({ ...userForm, email, confirmedTerms }))
-      if (emailAlreadyTakenError) {
-        createMember({
-          data: { ...signUpFormData, email, confirmedTerms },
-          onError: (step) => {
-            goToStep(step)
-            if (step === SignUpSteps.SignUpEmail) setEmailAlreadyTakenError(true)
+      if (emailAlreadyTakenError && memberId) {
+        createNewOrionAccount({
+          data: { ...signUpFormData, email, confirmedTerms, memberId },
+          onError: (error) => {
+            if (error === RegisterError.EmailAlreadyExists) {
+              setEmailAlreadyTakenError(true)
+              goToStep(SignUpSteps.SignUpEmail)
+              return
+            }
+            goToStep(SignUpSteps.CreateMember)
           },
           onStart: () => goToStep(SignUpSteps.Creating),
           onSuccess: (amountOfTokens) => {
@@ -103,42 +99,63 @@ export const SignUpModal = () => {
       }
       goToNextStep()
     },
-    [createMember, emailAlreadyTakenError, goToNextStep, goToStep, signUpFormData]
+    [createNewOrionAccount, emailAlreadyTakenError, goToNextStep, goToStep, memberId, signUpFormData]
   )
 
-  const handlePasswordChange = useCallback(
+  const handlePasswordStepSubmit = useCallback(
     (password: string) => {
       goToNextStep()
       setSignupFormData((userForm) => ({ ...userForm, password }))
+      if (!emailAlreadyTakenError && memberId) {
+        createNewOrionAccount({
+          data: { ...signUpFormData, password, memberId },
+          onError: (error) => {
+            if (error === RegisterError.EmailAlreadyExists) {
+              setEmailAlreadyTakenError(true)
+              goToStep(SignUpSteps.SignUpEmail)
+              return
+            }
+            goToStep(SignUpSteps.CreateMember)
+          },
+          onStart: () => goToStep(SignUpSteps.Creating),
+          onSuccess: (amountOfTokens) => {
+            setAmountofTokens(amountOfTokens)
+            goToNextStep()
+          },
+        })
+        return
+      }
     },
-    [goToNextStep]
+    [createNewOrionAccount, emailAlreadyTakenError, goToNextStep, goToStep, memberId, signUpFormData]
   )
 
-  const handleSeedChange = useCallback(
-    (seed: string, confirmedCopy: boolean) => {
+  const handleSeedStepSubmit = useCallback(
+    (mnemonic: string, confirmedCopy: boolean) => {
+      setSignupFormData((userForm) => ({ ...userForm, mnemonic, confirmedCopy }))
+      if (!memberId) {
+        createNewMember({
+          data: { ...signUpFormData, mnemonic },
+          onError: () => {
+            goToStep(SignUpSteps.CreateMember)
+          },
+        }).then((memberId) => {
+          if (memberId) {
+            setMemberId(memberId)
+          }
+        })
+      }
+
       goToNextStep()
-      setSignupFormData((userForm) => ({ ...userForm, mnemonic: seed, confirmedCopy }))
     },
-    [goToNextStep]
+    [createNewMember, goToNextStep, goToStep, memberId, signUpFormData]
   )
 
-  const handleMemberFormData = useCallback(
+  const handleMemberStepSubmit = useCallback(
     (data: MemberFormData) => {
+      goToNextStep()
       setSignupFormData((userForm) => ({ ...userForm, handle: data.handle, avatar: data.avatar }))
-      createMember({
-        data: { ...signUpFormData, ...data },
-        onError: (step) => {
-          goToStep(step)
-          setEmailAlreadyTakenError(true)
-        },
-        onStart: () => goToNextStep(),
-        onSuccess: (amountOfTokens) => {
-          setAmountofTokens(amountOfTokens)
-          goToNextStep()
-        },
-      })
     },
-    [createMember, goToNextStep, goToStep, signUpFormData]
+    [goToNextStep]
   )
 
   const commonProps: SignUpStepsCommonProps = useMemo(
@@ -150,7 +167,7 @@ export const SignUpModal = () => {
     [goToNextStep, hasNavigatedBack]
   )
   const backButtonVisible =
-    currentStep === SignUpSteps.CreateMember ||
+    currentStep === SignUpSteps.SignUpEmail ||
     currentStep === SignUpSteps.SignUpPassword ||
     currentStep === SignUpSteps.SignUpSeed
 
@@ -160,7 +177,8 @@ export const SignUpModal = () => {
   const smMatch = useMediaMatch('sm')
   return (
     <StyledDialogModal
-      show={currentStep !== null}
+      disableBackdropAnimation
+      show={authModalOpenName === 'signUp'}
       dividers={overflow || !smMatch}
       primaryButton={
         isSuccess
@@ -191,11 +209,28 @@ export const SignUpModal = () => {
       additionalActionsNodeMobilePosition="bottom"
       contentRef={ref}
     >
+      {currentStep === SignUpSteps.CreateMember && (
+        <SignUpMembershipStep
+          {...commonProps}
+          dialogContentRef={ref}
+          onSubmit={handleMemberStepSubmit}
+          avatar={signUpFormData.avatar}
+          handle={signUpFormData.handle}
+        />
+      )}
+      {currentStep === SignUpSteps.SignUpSeed && (
+        <SignUpSeedStep
+          {...commonProps}
+          onSeedSubmit={handleSeedStepSubmit}
+          mnemonic={signUpFormData.mnemonic}
+          confirmedCopy={signUpFormData.confirmedCopy}
+        />
+      )}
       {currentStep === SignUpSteps.SignUpEmail && (
         <SignUpEmailStep
           {...commonProps}
           isEmailAlreadyTakenError={emailAlreadyTakenError}
-          onEmailSubmit={handleEmailChange}
+          onEmailSubmit={handleEmailStepSubmit}
           email={signUpFormData.email}
           confirmedTerms={signUpFormData.confirmedTerms}
         />
@@ -204,27 +239,11 @@ export const SignUpModal = () => {
         <SignUpPasswordStep
           {...commonProps}
           dialogContentRef={ref}
-          onPasswordSubmit={handlePasswordChange}
+          onPasswordSubmit={handlePasswordStepSubmit}
           password={signUpFormData.password}
         />
       )}
-      {currentStep === SignUpSteps.SignUpSeed && (
-        <SignUpSeedStep
-          {...commonProps}
-          onSeedSubmit={handleSeedChange}
-          mnemonic={signUpFormData.mnemonic}
-          confirmedCopy={signUpFormData.confirmedCopy}
-        />
-      )}
-      {currentStep === SignUpSteps.CreateMember && (
-        <SignUpMembershipStep
-          {...commonProps}
-          dialogContentRef={ref}
-          onSubmit={handleMemberFormData}
-          avatar={signUpFormData.avatar}
-          handle={signUpFormData.handle}
-        />
-      )}
+
       {currentStep === SignUpSteps.Creating && <SignUpCreatingMemberStep {...commonProps} />}
       {currentStep === SignUpSteps.Success && (
         <SignUpSuccessStep avatarUrl={signUpFormData.avatar?.url || ''} amountOfTokens={amountOfTokens} />

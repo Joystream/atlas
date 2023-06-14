@@ -75,6 +75,7 @@ export const LogInModal = () => {
 
   return (
     <DialogModal
+      disableBackdropAnimation
       show={authModalOpenName === 'logIn'}
       primaryButton={{
         text: isLoading ? 'Waiting...' : 'Log in',
