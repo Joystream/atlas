@@ -1,6 +1,9 @@
 import { JOYSTREAM_ADDRESS_PREFIX } from '@joystream/types'
 import { ScryptOpts, scrypt } from '@noble/hashes/scrypt'
 import { Keyring } from '@polkadot/keyring'
+import { KeyringPair } from '@polkadot/keyring/types'
+import { hexToU8a, u8aToHex } from '@polkadot/util'
+import { cryptoWaitReady, mnemonicToEntropy } from '@polkadot/util-crypto'
 import axios, { isAxiosError } from 'axios'
 import { entropyToMnemonic } from 'bip39'
 import { Buffer } from 'buffer'
@@ -10,7 +13,9 @@ import { ORION_AUTH_URL } from '@/config/env'
 import { getWalletsList } from '@/providers/wallet/wallet.helpers'
 import { SentryLogger } from '@/utils/logs'
 
-import { AuthModals } from './auth.types'
+import { AuthModals, OrionAccountError, RegisterParams, RegisterPayload } from './auth.types'
+
+export const keyring = new Keyring({ type: 'sr25519', ss58Format: JOYSTREAM_ADDRESS_PREFIX })
 
 export const handleAnonymousAuth = async (userId?: string | null) => {
   try {
@@ -37,8 +42,6 @@ export const handleAnonymousAuth = async (userId?: string | null) => {
 }
 
 export const getArtifacts = async (id: string, email: string, password: string) => {
-  const keyring = new Keyring({ type: 'sr25519', ss58Format: JOYSTREAM_ADDRESS_PREFIX })
-
   try {
     const res = await axios.get<{ cipherIv: string; encryptedSeed: string }>(
       `${ORION_AUTH_URL}/artifacts?id=${id}&email=${encodeURIComponent(email)}`
@@ -104,4 +107,74 @@ export const logoutRequest = () => axios.post(`${ORION_AUTH_URL}/logout`, {}, { 
 export const getCorrectLoginModal = (): AuthModals => {
   const hasAtleastOneWallet = getWalletsList().some((wallet) => wallet.installed)
   return hasAtleastOneWallet ? 'externalLogIn' : 'logIn'
+}
+
+export const registerAccount = async (params: RegisterParams) => {
+  try {
+    await cryptoWaitReady()
+
+    const registerPayload: RegisterPayload = {
+      gatewayName: 'Gleev',
+      memberId: params.memberId,
+      joystreamAccountId: '',
+      timestamp: Date.now() - 30_000,
+      action: 'createAccount',
+      email: params.email,
+    }
+    let registerSignature = null
+    let keypair: KeyringPair | null = null
+    if (params.type === 'internal') {
+      const { email, password, mnemonic } = params
+      const entropy = mnemonicToEntropy(mnemonic)
+      const seed = u8aToHex(entropy)
+
+      const id = (await scryptHash(`${email}:${password}`, '0x0818ee04c541716831bdd0f598fa4bbb')).toString('hex')
+      const cipherIv = lib.WordArray.random(16).toString(enc.Hex)
+      const cipherKey = await scryptHash(`${email}:${password}`, Buffer.from(hexToU8a(cipherIv)))
+      const keyWA = enc.Hex.parse(cipherKey.toString('hex'))
+      const ivWA = enc.Hex.parse(cipherIv)
+      const wordArray = enc.Hex.parse(seed)
+      const encrypted = AES.encrypt(wordArray, keyWA, { iv: ivWA, mode: mode.CBC })
+
+      keypair = keyring.addFromMnemonic(mnemonic)
+      registerPayload.encryptionArtifacts = {
+        cipherIv,
+        id,
+        encryptedSeed: encrypted.ciphertext.toString(enc.Hex),
+      }
+      registerPayload.joystreamAccountId = keypair.address
+      registerSignature = u8aToHex(keypair.sign(JSON.stringify(registerPayload)))
+    }
+
+    if (params.type === 'external') {
+      registerPayload.joystreamAccountId = params.address
+      registerPayload.email = params.email
+      registerSignature = await params.signature(JSON.stringify(registerPayload))
+    }
+    await axios.post(
+      `${ORION_AUTH_URL}/account`,
+      {
+        payload: registerPayload,
+        signature: registerSignature,
+      },
+      {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+
+    return registerPayload.joystreamAccountId
+  } catch (error) {
+    if (!isAxiosError<{ message?: string }>(error)) {
+      throw new OrionAccountError({ details: error, message: 'Something went wrong' })
+    }
+    const errorMessage = error.response?.data?.message
+    throw new OrionAccountError({
+      details: error,
+      message: errorMessage || 'Something went wrong',
+      status: error.response?.status,
+    })
+  }
 }

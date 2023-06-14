@@ -7,14 +7,14 @@ import { AuthenticationModalStepTemplate } from '@/components/_auth/Authenticati
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { FormField } from '@/components/_inputs/FormField'
 import { useClipboard } from '@/hooks/useClipboard'
+import { MemberFormData } from '@/hooks/useCreateMember'
 
 import { StyledTextArea, StyledTextButton } from './SignupSeedStep.styles'
 
-import { SignUpFormData } from '../../SignUpModal.types'
 import { CheckboxWrapper, StyledSignUpForm } from '../SignUpSteps.styles'
 import { SignUpStepsCommonProps } from '../SignUpSteps.types'
 
-type FormData = Pick<SignUpFormData, 'confirmedCopy' | 'mnemonic'>
+type FormData = Pick<MemberFormData, 'confirmedCopy' | 'mnemonic'>
 
 type SignUpSeedStepProps = {
   onSeedSubmit: (mnemonic: string, confirmedCopy: boolean) => void

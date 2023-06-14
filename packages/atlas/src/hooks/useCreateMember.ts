@@ -1,23 +1,38 @@
 import { cryptoWaitReady } from '@polkadot/util-crypto'
 import axios, { isAxiosError } from 'axios'
 import BN from 'bn.js'
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import { useMutation } from 'react-query'
 
+import { ImageInputFile } from '@/components/_inputs/MultiFileSelect'
 import { FAUCET_URL } from '@/config/env'
 import { MemberId } from '@/joystream-lib/types'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
+import { keyring, registerAccount } from '@/providers/auth/auth.helpers'
 import { useAuth } from '@/providers/auth/auth.hooks'
 import { useAuthStore } from '@/providers/auth/auth.store'
+import { OrionAccountError } from '@/providers/auth/auth.types'
 import { useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransactionManagerStore } from '@/providers/transactions/transactions.store'
-import { useUser } from '@/providers/user/user.hooks'
 import { UploadAvatarServiceError, uploadAvatarImage } from '@/utils/image'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
-import { MemberFormData, SignUpFormData, SignUpSteps } from './SignUpModal.types'
-import { OrionAccountError, keyring, registerAccount } from './SignUpModal.utils'
+export type MemberFormData = {
+  handle: string
+  avatar?: ImageInputFile
+  captchaToken?: string
+  mnemonic: string
+  confirmedCopy: boolean
+}
+
+export type AccountFormData = {
+  email: string
+  password: string
+  mnemonic: string
+  confirmedTerms: boolean
+  memberId: string
+}
 
 type NewMemberResponse = {
   memberId: MemberId
@@ -37,16 +52,20 @@ type FaucetParams = {
   captchaToken: string | undefined
 }
 
-type CreateMemberArgs = {
-  data: SignUpFormData
-  onStart: () => void
-  onSuccess: (amountOfTokens?: number) => void
-  onError: (step: SignUpSteps) => void
+export enum RegisterError {
+  EmailAlreadyExists = 'EmailAlreadyExists',
+  UnknownError = 'UnknownError',
 }
+
+type SignUpParams<T> = {
+  data: T
+  onStart?: () => void
+  onSuccess?: (amountOfTokens?: number) => void
+  onError?: (step?: RegisterError) => void
+}
+
 export const useCreateMember = () => {
   const { handleLogin } = useAuth()
-  const { refetchUserMemberships } = useUser()
-  const [emailAlreadyRegisteredMemberId, setEmailAlreadyRegisteredMemberId] = useState('')
   const setAnonymousUserId = useAuthStore((store) => store.actions.setAnonymousUserId)
   const { joystream } = useJoystream()
   const addBlockAction = useTransactionManagerStore((state) => state.actions.addBlockAction)
@@ -60,8 +79,12 @@ export const useCreateMember = () => {
   )
 
   const createNewMember = useCallback(
-    async (address: string, data: MemberFormData) => {
+    async (params: SignUpParams<MemberFormData>) => {
+      const { data, onError, onStart, onSuccess } = params
+      onStart?.()
       let fileUrl
+      const keypair = keyring.addFromMnemonic(data.mnemonic)
+      const address = keypair.address
 
       if (data.avatar?.blob) {
         fileUrl = await avatarMutation(data.avatar.blob)
@@ -73,79 +96,16 @@ export const useCreateMember = () => {
         avatar: fileUrl,
         captchaToken: data.captchaToken,
       }
-      const response = await faucetMutation(body)
-      return response.data
-    },
-    [avatarMutation, faucetMutation]
-  )
-
-  const handleSubmit = useCallback(
-    async ({ data, onError, onStart, onSuccess }: CreateMemberArgs) => {
-      onStart()
-
-      await cryptoWaitReady()
-      const keypair = keyring.addFromMnemonic(data.mnemonic)
-
-      const address = keypair.address
-
       try {
-        const callback = async () => {
-          try {
-            const { data: memberShipData } = await refetchUserMemberships()
-            const lastCreatedMembership = memberShipData.memberships[memberShipData.memberships.length - 1]
+        const response = await faucetMutation(body)
+        addBlockAction({
+          targetBlock: response.data.block,
+          callback: () => {
+            onSuccess?.()
+          },
+        })
 
-            if (lastCreatedMembership) {
-              await registerAccount(data.email, data.password, data.mnemonic, memberId.toString())
-              setAnonymousUserId('')
-            }
-
-            if (!joystream) {
-              ConsoleLogger.error('No joystream instance')
-              return
-            }
-            const { lockedBalance } = await joystream.getAccountBalance(address)
-            const amountOfTokens = hapiBnToTokenNumber(new BN(lockedBalance))
-            onSuccess(amountOfTokens)
-            handleLogin({ type: 'internal', ...data })
-          } catch (error) {
-            if (error instanceof OrionAccountError) {
-              const errorCode = error.status
-              const errorMessage = error.message
-              if (errorMessage === 'Account with the provided e-mail address already exists.') {
-                displaySnackbar({
-                  title: 'Something went wrong',
-                  description: `Account with the provided e-mail address already exists. Use different e-mail.`,
-                  iconType: 'error',
-                })
-                setEmailAlreadyRegisteredMemberId(memberId)
-                onError(SignUpSteps.SignUpEmail)
-              } else {
-                displaySnackbar({
-                  title: 'Something went wrong',
-                  description: `There was a problem with creating your account. Please try again later.${
-                    errorCode ? ` Error code: ${errorCode}` : ''
-                  }`,
-                  iconType: 'error',
-                })
-                onError(SignUpSteps.CreateMember)
-              }
-
-              SentryLogger.error('Failed to create an account', 'SignUpModal', error)
-            }
-          }
-        }
-
-        // skip member creation in case of email already exists error
-        if (emailAlreadyRegisteredMemberId) {
-          await registerAccount(data.email, data.password, data.mnemonic, emailAlreadyRegisteredMemberId.toString())
-          setAnonymousUserId('')
-          onSuccess()
-          handleLogin({ type: 'internal', ...data })
-          return
-        }
-        const { block, memberId } = await createNewMember(address, data)
-
-        addBlockAction({ targetBlock: block, callback })
+        return String(response.data.memberId)
       } catch (error) {
         if (error instanceof UploadAvatarServiceError) {
           displaySnackbar({
@@ -153,7 +113,7 @@ export const useCreateMember = () => {
             description: 'Avatar could not be uploaded. Try again later',
             iconType: 'error',
           })
-          onError(SignUpSteps.CreateMember)
+          onError?.()
           SentryLogger.error('Failed to upload member avatar', 'SignUpModal', error)
           return
         }
@@ -199,20 +159,64 @@ export const useCreateMember = () => {
             break
         }
 
-        onError(SignUpSteps.CreateMember)
+        onError?.()
         return
       }
     },
-    [
-      addBlockAction,
-      createNewMember,
-      displaySnackbar,
-      emailAlreadyRegisteredMemberId,
-      handleLogin,
-      joystream,
-      refetchUserMemberships,
-      setAnonymousUserId,
-    ]
+    [addBlockAction, avatarMutation, displaySnackbar, faucetMutation]
   )
-  return handleSubmit
+
+  const createNewOrionAccount = useCallback(
+    async ({ data, onError, onStart, onSuccess }: SignUpParams<AccountFormData>) => {
+      onStart?.()
+
+      await cryptoWaitReady()
+      const keypair = keyring.addFromMnemonic(data.mnemonic)
+
+      const address = keypair.address
+
+      try {
+        await registerAccount({ type: 'internal', ...data })
+        setAnonymousUserId('')
+
+        if (!joystream) {
+          ConsoleLogger.error('No joystream instance')
+          return
+        }
+        const { lockedBalance } = await joystream.getAccountBalance(address)
+        const amountOfTokens = hapiBnToTokenNumber(new BN(lockedBalance))
+        onSuccess?.(amountOfTokens)
+        handleLogin({ type: 'internal', ...data })
+      } catch (error) {
+        if (error instanceof OrionAccountError) {
+          const errorCode = error.status
+          const errorMessage = error.message
+          if (errorMessage === 'Account with the provided e-mail address already exists.') {
+            displaySnackbar({
+              title: 'Something went wrong',
+              description: `Account with the provided e-mail address already exists. Use different e-mail.`,
+              iconType: 'error',
+            })
+            onError?.(RegisterError.EmailAlreadyExists)
+          } else {
+            displaySnackbar({
+              title: 'Something went wrong',
+              description: `There was a problem with creating your account. Please try again later.${
+                errorCode ? ` Error code: ${errorCode}` : ''
+              }`,
+              iconType: 'error',
+            })
+            onError?.(RegisterError.UnknownError)
+          }
+
+          SentryLogger.error('Failed to create an account', 'SignUpModal', error)
+        }
+      }
+    },
+    [displaySnackbar, handleLogin, joystream, setAnonymousUserId]
+  )
+  return {
+    createNewMember,
+    createNewOrionAccount,
+  }
 }
