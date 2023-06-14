@@ -16,10 +16,18 @@ export const DialogModal: FC<DialogModalProps> = ({
   size,
   confetti,
   children,
+  disableBackdropAnimation,
   ...dialogProps
 }) => {
   return (
-    <Modal show={show} onExitClick={onExitClick} size={size} onClickOutside={onClickOutside} confetti={confetti}>
+    <Modal
+      show={show}
+      onExitClick={onExitClick}
+      size={size}
+      onClickOutside={onClickOutside}
+      confetti={confetti}
+      disableBackdropAnimation={disableBackdropAnimation}
+    >
       <Dialog {...dialogProps} onExitClick={onExitClick}>
         {children}
       </Dialog>

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useOverflowDetector } from 'react-detectable-overflow'
 import shallow from 'zustand/shallow'
 
@@ -35,7 +35,7 @@ const SIGNUP_FORM_DATA_INITIAL_STATE: AccountFormData & MemberFormData = {
 }
 
 export const SignUpModal = () => {
-  const [currentStep, setCurrentStep] = useState<SignUpSteps | null>(null)
+  const [currentStep, setCurrentStep] = useState<SignUpSteps>(0)
   const [emailAlreadyTakenError, setEmailAlreadyTakenError] = useState(false)
   const [hasNavigatedBack, setHasNavigatedBack] = useState(false)
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogButtonProps>({ text: 'Continue' })
@@ -50,17 +50,6 @@ export const SignUpModal = () => {
     shallow
   )
   const { ref, overflow } = useOverflowDetector<HTMLDivElement>({})
-
-  // handle opening/closing of modal and setting initial step
-  useEffect(() => {
-    if (authModalOpenName !== 'signUp') {
-      setCurrentStep(null)
-      return
-    }
-    if (currentStep != null) return
-
-    setCurrentStep(0)
-  }, [currentStep, authModalOpenName])
 
   const [signUpFormData, setSignupFormData] =
     useState<Omit<AccountFormData & MemberFormData, 'memberId'>>(SIGNUP_FORM_DATA_INITIAL_STATE)
@@ -189,7 +178,7 @@ export const SignUpModal = () => {
   return (
     <StyledDialogModal
       disableBackdropAnimation
-      show={currentStep !== null}
+      show={authModalOpenName === 'signUp'}
       dividers={overflow || !smMatch}
       primaryButton={
         isSuccess
