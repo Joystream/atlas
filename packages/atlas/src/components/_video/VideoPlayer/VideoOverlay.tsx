@@ -3,7 +3,7 @@ import { FC, useEffect, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useBasicVideos } from '@/api/hooks/video'
-import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
+import { VideoOrderByInput, VideoWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { BasicVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { publicVideoFilter } from '@/config/contentFilter'
 import { cVar, transitions } from '@/styles'
@@ -24,6 +24,7 @@ type VideoOverlayProps = {
   isMinimized?: boolean
   currentVideoCreatedAt?: Date
 }
+
 export const VideoOverlay: FC<VideoOverlayProps> = ({
   playerState,
   onPlayAgain,
@@ -37,7 +38,7 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
   currentVideoCreatedAt,
 }) => {
   const [randomNextVideo, setRandomNextVideo] = useState<BasicVideoFieldsFragment | null>(null)
-  const { videos: newerVideos, loading: loadingNewestVideos } = useBasicVideos({
+  const commonFiltersFactory = (where?: VideoWhereInput) => ({
     limit: 1,
     orderBy: VideoOrderByInput.ChannelCreatedAtAsc,
     where: {
@@ -45,25 +46,15 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
       channel: {
         id_eq: channelId,
       },
-      createdAt_gt: currentVideoCreatedAt,
+      ...where,
     },
   })
-  const { videos: olderVideos } = useBasicVideos(
-    {
-      limit: 1,
-      orderBy: VideoOrderByInput.ChannelCreatedAtAsc,
-      where: {
-        ...publicVideoFilter,
-        channel: {
-          id_eq: channelId,
-        },
-        createdAt_lt: currentVideoCreatedAt,
-      },
-    },
-    {
-      skip: loadingNewestVideos || !!newerVideos?.length,
-    }
+  const { videos: newerVideos, loading: loadingNewestVideos } = useBasicVideos(
+    commonFiltersFactory({ createdAt_gt: currentVideoCreatedAt })
   )
+  const { videos: olderVideos } = useBasicVideos(commonFiltersFactory({ createdAt_lt: currentVideoCreatedAt }), {
+    skip: loadingNewestVideos || !!newerVideos?.length,
+  })
 
   useEffect(() => {
     const videos = newerVideos?.length ? newerVideos : olderVideos
