@@ -37,7 +37,18 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
   currentVideoCreatedAt,
 }) => {
   const [randomNextVideo, setRandomNextVideo] = useState<BasicVideoFieldsFragment | null>(null)
-  const { videos, refetch } = useBasicVideos(
+  const { videos: newerVideos, loading: loadingNewestVideos } = useBasicVideos({
+    limit: 1,
+    orderBy: VideoOrderByInput.ChannelCreatedAtAsc,
+    where: {
+      ...publicVideoFilter,
+      channel: {
+        id_eq: channelId,
+      },
+      createdAt_gt: currentVideoCreatedAt,
+    },
+  })
+  const { videos: olderVideos } = useBasicVideos(
     {
       limit: 1,
       orderBy: VideoOrderByInput.ChannelCreatedAtAsc,
@@ -46,29 +57,24 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
         channel: {
           id_eq: channelId,
         },
-        createdAt_gt: currentVideoCreatedAt,
+        createdAt_lt: currentVideoCreatedAt,
       },
     },
-    { notifyOnNetworkStatusChange: true }
+    {
+      skip: loadingNewestVideos || !!newerVideos?.length,
+    }
   )
 
   useEffect(() => {
+    const videos = newerVideos?.length ? newerVideos : olderVideos
     if (!videos?.length || videos.length === 0) {
-      refetch({
-        where: {
-          channel: {
-            id_eq: channelId,
-          },
-          createdAt_lt: currentVideoCreatedAt,
-        },
-      })
       return
     }
     const filteredVideos = videos.filter((video) => video.id !== videoId)
     const randomNumber = getRandomIntInclusive(0, filteredVideos.length - 1)
 
     setRandomNextVideo(filteredVideos[randomNumber])
-  }, [channelId, currentVideoCreatedAt, refetch, videoId, videos])
+  }, [channelId, currentVideoCreatedAt, newerVideos, olderVideos, videoId])
 
   return (
     <SwitchTransition>
