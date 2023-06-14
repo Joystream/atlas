@@ -7,12 +7,13 @@ import { Checkbox } from '@/components/_inputs/Checkbox'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { absoluteRoutes } from '@/config/routes'
+import { AccountFormData } from '@/hooks/useCreateMember'
+import { useMountEffect } from '@/hooks/useMountEffect'
 
 import { CheckboxWrapper, StyledLink, StyledSignUpForm } from './SignUpSteps.styles'
 import { SignUpStepsCommonProps } from './SignUpSteps.types'
 
 import { AuthenticationModalStepTemplate } from '../../AuthenticationModalStepTemplate'
-import { SignUpFormData } from '../SignUpModal.types'
 
 const zodSchema = z
   .object({
@@ -40,7 +41,7 @@ type SignUpEmailStepProps = {
   isEmailAlreadyTakenError?: boolean
   isOverflowing: boolean
 } & SignUpStepsCommonProps &
-  Pick<SignUpFormData, 'email' | 'confirmedTerms'>
+  Pick<AccountFormData, 'email' | 'confirmedTerms'>
 
 export const SignUpEmailStep: FC<SignUpEmailStepProps> = ({
   setPrimaryButtonProps,
@@ -55,9 +56,11 @@ export const SignUpEmailStep: FC<SignUpEmailStepProps> = ({
     register,
     handleSubmit,
     control,
+    setError,
     formState: { errors },
   } = useForm<EmailStepForm>({
     criteriaMode: 'all',
+    mode: 'onBlur',
     resolver: zodResolver(zodSchema),
     shouldFocusError: true,
     defaultValues: {
@@ -79,6 +82,12 @@ export const SignUpEmailStep: FC<SignUpEmailStepProps> = ({
       onClick: handleGoToNextStep,
     })
   }, [handleGoToNextStep, isEmailAlreadyTakenError, setPrimaryButtonProps])
+
+  useMountEffect(() => {
+    if (isEmailAlreadyTakenError) {
+      setError('email', { message: 'Email already taken.' })
+    }
+  })
 
   return (
     <AuthenticationModalStepTemplate

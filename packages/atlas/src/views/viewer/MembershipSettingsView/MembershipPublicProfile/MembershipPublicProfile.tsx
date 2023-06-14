@@ -18,6 +18,7 @@ import { Input } from '@/components/_inputs/Input'
 import { ImageInputFile } from '@/components/_inputs/MultiFileSelect'
 import { TextArea } from '@/components/_inputs/TextArea'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
+import { EntitySettingTemplate } from '@/components/_templates/EntitySettingTemplate'
 import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
@@ -31,8 +32,6 @@ import { uploadAvatarImage } from '@/utils/image'
 import { ConsoleLogger } from '@/utils/logs'
 
 import { StyledActionBar, TextFieldsWrapper, Wrapper } from './MembershipPublicProfile.styles'
-
-import { MembershipSettingTemplate } from '../MembershipSettingTemplate'
 
 export type EditMemberFormInputs = {
   handle: string | null
@@ -232,7 +231,7 @@ export const MembershipPublicProfile: FC = () => {
   const isHandleInputActiveElement = document.activeElement === handleInputRef.current
 
   return (
-    <MembershipSettingTemplate
+    <EntitySettingTemplate
       title="Profile info"
       description="This membership information is stored on Joystream blockchain and can be displayed in all apps connected to the chain."
     >
@@ -332,6 +331,6 @@ export const MembershipPublicProfile: FC = () => {
           }}
         />
       </form>
-    </MembershipSettingTemplate>
+    </EntitySettingTemplate>
   )
 }

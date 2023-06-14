@@ -2,8 +2,8 @@ import { FC, RefObject } from 'react'
 
 import { AuthenticationModalStepTemplate } from '@/components/_auth/AuthenticationModalStepTemplate'
 import { PasswordForm } from '@/components/_auth/PasswordForm/PasswordForm'
+import { AccountFormData } from '@/hooks/useCreateMember'
 
-import { SignUpFormData } from '../../SignUpModal.types'
 import { SignUpStepsCommonProps } from '../SignUpSteps.types'
 
 type SignUpPasswordStepProps = {
@@ -11,7 +11,7 @@ type SignUpPasswordStepProps = {
   password?: string
   dialogContentRef?: RefObject<HTMLDivElement>
 } & SignUpStepsCommonProps &
-  Pick<SignUpFormData, 'password'>
+  Pick<AccountFormData, 'password'>
 
 export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
   setPrimaryButtonProps,

@@ -4,6 +4,7 @@ import { SvgActionCheck, SvgActionCopy, SvgActionDownload, SvgActionEdit } from 
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
+import { EntitySettingTemplate } from '@/components/_templates/EntitySettingTemplate'
 import { absoluteRoutes } from '@/config/routes'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useAuth } from '@/providers/auth/auth.hooks'
@@ -20,7 +21,6 @@ import {
 
 import { ChangePasswordDialog } from '../ChangePasswordDialog'
 import { ExportSeedDialog } from '../ExportSeedDialog'
-import { MembershipSettingTemplate } from '../MembershipSettingTemplate'
 import { StyledActionBar } from '../MembershipSettingsView.styles'
 
 const CONNECTING_WALLET_STEPS: WalletStepListItemComponentProps[] = [
@@ -76,7 +76,7 @@ export const MembershipWallet = () => {
     <>
       <ExportSeedDialog onClose={() => setIsExportSeedDialogOpen(false)} show={isExportSeedDialogOpen} />
       <ChangePasswordDialog onClose={() => setIsChangePasswordDialogOpen(false)} show={isChangePasswordDialogOpen} />
-      <MembershipSettingTemplate
+      <EntitySettingTemplate
         title="Membership address"
         description="When your public membership was created, it was linked to a new substrate account address built on polkadot protocol.  This account holds all assets like tokens and NFTs that your membership accumulates. "
       >
@@ -116,8 +116,8 @@ export const MembershipWallet = () => {
             </Button>
           </FormField>
         </FormFieldsWrapper>
-      </MembershipSettingTemplate>
-      <MembershipSettingTemplate
+      </EntitySettingTemplate>
+      <EntitySettingTemplate
         title="Login credentials"
         description="We encrypt your password and won't share your private data with anyone."
       >
@@ -137,8 +137,8 @@ export const MembershipWallet = () => {
         >
           Change password
         </ChangePasswordButton>
-      </MembershipSettingTemplate>
-      <MembershipSettingTemplate
+      </EntitySettingTemplate>
+      <EntitySettingTemplate
         title="External wallet"
         description="You can use external wallet to log in to your account."
       >
@@ -152,7 +152,7 @@ export const MembershipWallet = () => {
             ))}
           </WalletStepsOrderedList>
         </FormField>
-      </MembershipSettingTemplate>
+      </EntitySettingTemplate>
       <StyledActionBar
         primaryButtonTooltip={{
           text: 'All changes saved. Nothing to publish.',
