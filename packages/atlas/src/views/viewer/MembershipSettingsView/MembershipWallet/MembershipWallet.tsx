@@ -62,7 +62,7 @@ export const MembershipWallet = () => {
   const { activeMembership } = useUser()
   const [isCopyClicked, setIsCopyClicked] = useState(false)
   const { copyToClipboard } = useClipboard()
-  const { currentUser } = useAuth()
+  const { currentUser, isWalletUser } = useAuth()
   const [isChangePasswordDialogOpen, setIsChangePasswordDialogOpen] = useState(false)
   const [isExportSeedDialogOpen, setIsExportSeedDialogOpen] = useState(false)
   const handleCopyToClipBoard = useCallback(() => {
@@ -74,9 +74,17 @@ export const MembershipWallet = () => {
   }, [copyToClipboard, currentUser?.joystreamAccount])
   return (
     <>
-      <ExportSeedDialog onClose={() => setIsExportSeedDialogOpen(false)} show={isExportSeedDialogOpen} />
-      <ChangePasswordDialog onClose={() => setIsChangePasswordDialogOpen(false)} show={isChangePasswordDialogOpen} />
+      {!isWalletUser && (
+        <>
+          <ExportSeedDialog onClose={() => setIsExportSeedDialogOpen(false)} show={isExportSeedDialogOpen} />
+          <ChangePasswordDialog
+            onClose={() => setIsChangePasswordDialogOpen(false)}
+            show={isChangePasswordDialogOpen}
+          />
+        </>
+      )}
       <EntitySettingTemplate
+        isFirst
         title="Membership address"
         description="When your public membership was created, it was linked to a new substrate account address built on polkadot protocol.  This account holds all assets like tokens and NFTs that your membership accumulates. "
       >
@@ -96,28 +104,31 @@ export const MembershipWallet = () => {
               }}
             />
           </FormField>
-          <FormField
-            tooltip={{
-              multiline: true,
-              text: 'Wallet seed can be used to restore your account in case if you loose your password',
-            }}
-            label="Wallet seed"
-            description="You can access your wallet outside of our app, for example in an external signer wallet using your wallet seed. Keep your seed a secret."
-          >
-            <Button
-              icon={<SvgActionDownload />}
-              variant="secondary"
-              size="large"
-              onClick={() => {
-                setIsExportSeedDialogOpen(true)
+          {!isWalletUser && (
+            <FormField
+              tooltip={{
+                multiline: true,
+                text: 'Wallet seed can be used to restore your account in case if you loose your password',
               }}
+              label="Wallet seed"
+              description="You can access your wallet outside of our app, for example in an external signer wallet using your wallet seed. Keep your seed a secret."
             >
-              Export seed
-            </Button>
-          </FormField>
+              <Button
+                icon={<SvgActionDownload />}
+                variant="secondary"
+                size="large"
+                onClick={() => {
+                  setIsExportSeedDialogOpen(true)
+                }}
+              >
+                Export seed
+              </Button>
+            </FormField>
+          )}
         </FormFieldsWrapper>
       </EntitySettingTemplate>
       <EntitySettingTemplate
+        isLast={isWalletUser}
         title="Login credentials"
         description="We encrypt your password and won't share your private data with anyone."
       >
@@ -125,34 +136,41 @@ export const MembershipWallet = () => {
           <FormField label="Email address">
             <UnEditableInput disabled disabledAttributeOnly defaultValue={currentUser?.email} />
           </FormField>
-          <FormField label="Password">
-            <UnEditableInput disabled disabledAttributeOnly type="password" defaultValue="*********" />
-          </FormField>
+          {!isWalletUser && (
+            <FormField label="Password">
+              <UnEditableInput disabled disabledAttributeOnly type="password" defaultValue="*********" />
+            </FormField>
+          )}
         </FormFieldsWrapper>
-        <ChangePasswordButton
-          icon={<SvgActionEdit />}
-          variant="secondary"
-          size="large"
-          onClick={() => setIsChangePasswordDialogOpen(true)}
-        >
-          Change password
-        </ChangePasswordButton>
+        {!isWalletUser && (
+          <ChangePasswordButton
+            icon={<SvgActionEdit />}
+            variant="secondary"
+            size="large"
+            onClick={() => setIsChangePasswordDialogOpen(true)}
+          >
+            Change password
+          </ChangePasswordButton>
+        )}
       </EntitySettingTemplate>
-      <EntitySettingTemplate
-        title="External wallet"
-        description="You can use external wallet to log in to your account."
-      >
-        <FormField
-          label="Connect external wallet"
-          description="Connecting external wallet allows you to access your assets like NFTs and Tokens outside of our app and login to other Apps connected to Joystream Network."
+      {!isWalletUser && (
+        <EntitySettingTemplate
+          isLast
+          title="External wallet"
+          description="You can use external wallet to log in to your account."
         >
-          <WalletStepsOrderedList>
-            {CONNECTING_WALLET_STEPS.map(({ title, description }, idx) => (
-              <WalletStepListItemComponent key={idx} title={title} description={description} />
-            ))}
-          </WalletStepsOrderedList>
-        </FormField>
-      </EntitySettingTemplate>
+          <FormField
+            label="Connect external wallet"
+            description="Connecting external wallet allows you to access your assets like NFTs and Tokens outside of our app and login to other Apps connected to Joystream Network."
+          >
+            <WalletStepsOrderedList>
+              {CONNECTING_WALLET_STEPS.map(({ title, description }, idx) => (
+                <WalletStepListItemComponent key={idx} title={title} description={description} />
+              ))}
+            </WalletStepsOrderedList>
+          </FormField>
+        </EntitySettingTemplate>
+      )}
       <StyledActionBar
         primaryButtonTooltip={{
           text: 'All changes saved. Nothing to publish.',

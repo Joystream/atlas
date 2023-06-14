@@ -4,6 +4,7 @@ import { GetCurrentAccountQuery } from '@/api/queries/__generated__/accounts.gen
 
 export type AuthContextValue = {
   handleLogin: (params: LoginParams) => Promise<string>
+  isWalletUser: boolean
   isAuthenticating: boolean
   loggedAddress: string | null
   currentUser?: GetCurrentAccountQuery['accountData'] | null

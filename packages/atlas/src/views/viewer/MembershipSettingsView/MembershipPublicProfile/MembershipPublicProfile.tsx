@@ -232,6 +232,8 @@ export const MembershipPublicProfile: FC = () => {
 
   return (
     <EntitySettingTemplate
+      isFirst
+      isLast
       title="Profile info"
       description="This membership information is stored on Joystream blockchain and can be displayed in all apps connected to the chain."
     >

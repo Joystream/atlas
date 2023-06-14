@@ -219,18 +219,21 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     }
   }, [anonymousUserId, setAnonymousUserId, setEncodedSeed])
 
+  const isWalletUser = useMemo(() => encodedSeed === null && !!currentUser, [currentUser, encodedSeed])
+
   const contextValue: AuthContextValue = useMemo(
     () => ({
       handleLogin,
       isAuthenticating,
       loggedAddress,
       refetchCurrentUser: refetch,
-      currentUser: currentUser,
+      currentUser,
+      isWalletUser,
       handleLogout,
       encodedSeed,
       isLoggedIn: !!currentUser && !isAuthenticating,
     }),
-    [currentUser, encodedSeed, handleLogin, handleLogout, isAuthenticating, loggedAddress, refetch]
+    [currentUser, encodedSeed, handleLogin, handleLogout, isAuthenticating, isWalletUser, loggedAddress, refetch]
   )
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>

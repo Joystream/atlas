@@ -8,11 +8,19 @@ import { cVar, media, sizes } from '@/styles'
 type EntitySettingTemplateProps = PropsWithChildren<{
   title: string
   description?: string
+  isFirst?: boolean
+  isLast?: boolean
 }>
 
-export const EntitySettingTemplate: FC<EntitySettingTemplateProps> = ({ children, title, description }) => {
+export const EntitySettingTemplate: FC<EntitySettingTemplateProps> = ({
+  children,
+  title,
+  description,
+  isLast,
+  isFirst,
+}) => {
   return (
-    <StyledLayoutGrid>
+    <StyledLayoutGrid isFirst={isFirst} isLast={isLast}>
       <GridItem colStart={{ base: 1 }} colSpan={{ base: 12, sm: 5, lg: 4 }} rowStart={{ base: 1 }}>
         <Text variant="h400" as="h3" margin={{ bottom: 4 }}>
           {title}
@@ -28,18 +36,12 @@ export const EntitySettingTemplate: FC<EntitySettingTemplateProps> = ({ children
   )
 }
 
-export const StyledLayoutGrid = styled(LayoutGrid)`
+export const StyledLayoutGrid = styled(LayoutGrid)<{ isFirst?: boolean; isLast?: boolean }>`
   row-gap: ${sizes(8)};
-  padding: ${sizes(10)} 0;
+  padding: ${({ isFirst }) => (isFirst ? `0 0 ${sizes(10)} 0` : `${sizes(10)} 0`)};
+  box-shadow: ${({ isLast }) => (isLast ? 'unset' : cVar('effectDividersBottom'))};
+
   ${media.sm} {
-    padding: ${sizes(6)} 0;
-  }
-
-  :first-of-type {
-    padding-top: 0;
-  }
-
-  :not(:last-of-type) {
-    box-shadow: ${cVar('effectDividersBottom')};
+    padding: ${({ isFirst }) => (isFirst ? `0 0 ${sizes(6)} 0` : `${sizes(6)} 0`)};
   }
 `
