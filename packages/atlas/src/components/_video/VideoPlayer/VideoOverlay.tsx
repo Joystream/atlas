@@ -22,7 +22,7 @@ type VideoOverlayProps = {
   isPlayNextDisabled?: boolean
   playRandomVideoOnEnded?: boolean
   isMinimized?: boolean
-  currentVideoTimestamp?: Date
+  currentVideoCreatedAt?: Date
 }
 export const VideoOverlay: FC<VideoOverlayProps> = ({
   playerState,
@@ -34,7 +34,7 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
   isPlayNextDisabled,
   isMinimized,
   playRandomVideoOnEnded = true,
-  currentVideoTimestamp,
+  currentVideoCreatedAt,
 }) => {
   const [randomNextVideo, setRandomNextVideo] = useState<BasicVideoFieldsFragment | null>(null)
   const { videos, refetch } = useBasicVideos(
@@ -46,7 +46,7 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
         channel: {
           id_eq: channelId,
         },
-        createdAt_gt: currentVideoTimestamp,
+        createdAt_gt: currentVideoCreatedAt,
       },
     },
     { notifyOnNetworkStatusChange: true }
@@ -59,7 +59,7 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
           channel: {
             id_eq: channelId,
           },
-          createdAt_lt: currentVideoTimestamp,
+          createdAt_lt: currentVideoCreatedAt,
         },
       })
       return
@@ -68,7 +68,7 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
     const randomNumber = getRandomIntInclusive(0, filteredVideos.length - 1)
 
     setRandomNextVideo(filteredVideos[randomNumber])
-  }, [channelId, currentVideoTimestamp, refetch, videoId, videos])
+  }, [channelId, currentVideoCreatedAt, refetch, videoId, videos])
 
   return (
     <SwitchTransition>

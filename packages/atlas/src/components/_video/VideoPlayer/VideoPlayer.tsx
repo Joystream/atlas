@@ -886,7 +886,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
         )}
         <VideoOverlay
           videoId={videoId}
-          currentVideoTimestamp={video?.createdAt}
+          currentVideoCreatedAt={video?.createdAt}
           isFullScreen={isFullScreen}
           isPlayNextDisabled={playNextDisabled}
           playerState={playerState}
