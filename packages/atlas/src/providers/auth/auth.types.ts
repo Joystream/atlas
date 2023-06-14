@@ -12,8 +12,6 @@ export type AuthContextValue = {
   isLoggedIn: boolean
 }
 
-export type UserSigner = 'external' | 'internal'
-
 // Login handler types
 export enum LogInErrors {
   ArtifactsNotFound = 'ArtifactsNotFound',
@@ -38,3 +36,53 @@ export type ExternalLogin = {
 export type LoginParams = InternalLogin | ExternalLogin
 
 export type AuthModals = 'logIn' | 'externalLogIn' | 'signUp' | 'forgotPassword'
+
+type EncryptionArtifacts = {
+  id: string
+  encryptedSeed: string
+  cipherIv: string
+}
+
+export type RegisterPayload = {
+  joystreamAccountId: string
+  gatewayName: string
+  timestamp: number
+  action: 'createAccount'
+  memberId: string
+  email: string
+  encryptionArtifacts?: EncryptionArtifacts
+}
+
+type ExtensionParams = {
+  type: 'external'
+  signature: (payload: string) => Promise<string | undefined>
+  email: string
+  address: string
+  memberId: string
+}
+
+type EmailPasswordParams = {
+  type: 'internal'
+  email: string
+  password: string
+  mnemonic: string
+  memberId: string
+}
+
+export type RegisterParams = ExtensionParams | EmailPasswordParams
+
+type OrionAccountErrorArgs = {
+  message?: string
+  details?: unknown
+  status?: number
+}
+
+export class OrionAccountError extends Error {
+  details: unknown
+  status?: number
+  constructor({ message, details, status }: OrionAccountErrorArgs) {
+    super(message)
+    this.details = details
+    this.status = status
+  }
+}

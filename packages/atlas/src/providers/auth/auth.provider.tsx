@@ -127,7 +127,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     async (params) => {
       setIsAuthenticating(true)
       await cryptoWaitReady()
-      const time = Date.now() - 1000
+      const time = Date.now() - 30_000
       const payload = {
         joystreamAccountId: '',
         gatewayName: atlasConfig.general.appName,

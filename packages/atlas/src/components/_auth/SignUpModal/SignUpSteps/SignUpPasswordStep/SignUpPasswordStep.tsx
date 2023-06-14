@@ -8,8 +8,8 @@ import { AuthenticationModalStepTemplate } from '@/components/_auth/Authenticati
 import { PasswordCriterias } from '@/components/_auth/PasswordCriterias'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input, InputProps } from '@/components/_inputs/Input'
+import { AccountFormData } from '@/hooks/useCreateMember'
 
-import { SignUpFormData } from '../../SignUpModal.types'
 import { StyledSignUpForm } from '../SignUpSteps.styles'
 import { SignUpStepsCommonProps } from '../SignUpSteps.types'
 
@@ -44,7 +44,7 @@ type SignUpPasswordStepProps = {
   password?: string
   dialogContentRef?: RefObject<HTMLDivElement>
 } & SignUpStepsCommonProps &
-  Pick<SignUpFormData, 'password'>
+  Pick<AccountFormData, 'password'>
 
 export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
   setPrimaryButtonProps,
@@ -79,7 +79,7 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
 
   useEffect(() => {
     setPrimaryButtonProps({
-      text: 'Continue',
+      text: 'Sign up',
       onClick: () => handleGoToNextStep(),
     })
   }, [handleGoToNextStep, setPrimaryButtonProps])
