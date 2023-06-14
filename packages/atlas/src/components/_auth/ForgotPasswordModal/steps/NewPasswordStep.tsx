@@ -37,7 +37,7 @@ export const NewPasswordStep = () => {
   )
 
   return (
-    <AuthenticationModalStepTemplate hasNavigatedBack={false} title="Change password" subtitle="NewPasswordStep">
+    <AuthenticationModalStepTemplate hasNavigatedBack={false} title="Change password" subtitle="Set your new password.">
       <GapContainer>
         <FormField label="New password" error={formState.errors.NewPasswordStep?.password?.message}>
           <Input placeholder="Password" {...getInputProps(`${ForgotPasswordStep.NewPasswordStep}.password`)} />

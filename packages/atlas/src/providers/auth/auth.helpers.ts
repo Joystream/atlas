@@ -1,7 +1,8 @@
 import { JOYSTREAM_ADDRESS_PREFIX } from '@joystream/types'
 import { ScryptOpts, scrypt } from '@noble/hashes/scrypt'
 import { Keyring } from '@polkadot/keyring'
-import { hexToU8a } from '@polkadot/util'
+import { hexToU8a, u8aToHex } from '@polkadot/util'
+import { mnemonicToEntropy } from '@polkadot/util-crypto'
 import axios, { isAxiosError } from 'axios'
 import { entropyToMnemonic as _entropyToMnemonic } from 'bip39'
 import { Buffer } from 'buffer'
@@ -131,24 +132,27 @@ export const getCorrectLoginModal = (): AuthModals => {
   return hasAtleastOneWallet ? 'externalLogIn' : 'logIn'
 }
 
-type EncryptSeedParams = {
-  seed: string
-  email: string
-  password: string
-}
+export const prepareEncryptionArtifacts = async (email: string, password: string, mnemonic: string) => {
+  try {
+    const entropy = mnemonicToEntropy(mnemonic)
 
-export const encryptSeed = async ({ seed, email, password }: EncryptSeedParams) => {
-  const id = (await scryptHash(`${email}:${password}`, '0x0818ee04c541716831bdd0f598fa4bbb')).toString('hex')
-  const cipherIv = lib.WordArray.random(16).toString(enc.Hex)
-  const cipherKey = await scryptHash(`${email}:${password}`, Buffer.from(hexToU8a(cipherIv)))
-  const keyWA = enc.Hex.parse(cipherKey.toString('hex'))
-  const ivWA = enc.Hex.parse(cipherIv)
-  const wordArray = enc.Hex.parse(seed)
-  const encrypted = AES.encrypt(wordArray, keyWA, { iv: ivWA, mode: mode.CBC })
+    const seed = u8aToHex(entropy)
 
-  return {
-    id,
-    encryptedSeed: encrypted.ciphertext.toString(enc.Hex),
-    cipherIv,
+    const id = (await scryptHash(`${email}:${password}`, '0x0818ee04c541716831bdd0f598fa4bbb')).toString('hex')
+    const cipherIv = lib.WordArray.random(16).toString(enc.Hex)
+    const cipherKey = await scryptHash(`${email}:${password}`, Buffer.from(hexToU8a(cipherIv)))
+    const keyWA = enc.Hex.parse(cipherKey.toString('hex'))
+    const ivWA = enc.Hex.parse(cipherIv)
+    const wordArray = enc.Hex.parse(seed)
+
+    const encrypted = AES.encrypt(wordArray, keyWA, { iv: ivWA, mode: mode.CBC })
+
+    return {
+      id,
+      cipherIv,
+      encryptedSeed: encrypted.ciphertext.toString(enc.Hex),
+    }
+  } catch (error) {
+    SentryLogger.error('Error during preparing encryption artifacts', 'prepareEncryptionArtifacts', error)
   }
 }

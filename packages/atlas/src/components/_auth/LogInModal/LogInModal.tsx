@@ -15,7 +15,7 @@ import { useAuthStore } from '@/providers/auth/auth.store'
 import { LogInErrors } from '@/providers/auth/auth.types'
 import { useSnackbar } from '@/providers/snackbars'
 
-import { Container, ForgotPasswordText } from './LogInModal.styles'
+import { Container, ForgotPasswordButton } from './LogInModal.styles'
 
 import { AuthenticationModalStepTemplate } from '../AuthenticationModalStepTemplate'
 
@@ -107,15 +107,7 @@ export const LogInModal = () => {
             <FormField label="Email" error={errors.email?.message}>
               <Input {...register('email')} placeholder="Email" />
             </FormField>
-            <FormField
-              label="Password"
-              error={errors.password?.message}
-              footerNode={
-                <ForgotPasswordText as="p" onClick={() => setAuthModalOpenName('forgotPassword')}>
-                  Forgot password?
-                </ForgotPasswordText>
-              }
-            >
+            <FormField label="Password" error={errors.password?.message}>
               <Input
                 {...register('password')}
                 placeholder="Password"
@@ -135,6 +127,9 @@ export const LogInModal = () => {
                 }}
               />
             </FormField>
+            <ForgotPasswordButton onClick={() => setAuthModalOpenName('forgotPassword')}>
+              Forgot password?
+            </ForgotPasswordButton>
           </Container>
         </AuthenticationModalStepTemplate>
       ) : (

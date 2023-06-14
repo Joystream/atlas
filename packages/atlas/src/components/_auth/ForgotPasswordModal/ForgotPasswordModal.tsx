@@ -1,6 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod/dist/zod'
 import { u8aToHex } from '@polkadot/util'
-import { mnemonicToEntropy } from '@polkadot/util-crypto'
 import axios from 'axios'
 import { useCallback, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -16,7 +15,7 @@ import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
 import { ORION_AUTH_URL } from '@/config/env'
 import { keyring } from '@/hooks/useRegister'
-import { encryptSeed, loginRequest, logoutRequest } from '@/providers/auth/auth.helpers'
+import { loginRequest, logoutRequest, prepareEncryptionArtifacts } from '@/providers/auth/auth.helpers'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useSnackbar } from '@/providers/snackbars'
 import { SentryLogger } from '@/utils/logs'
@@ -93,7 +92,9 @@ export const ForgotPasswordModal = () => {
         form.setError(`${ForgotPasswordStep.EmailAndSeedStep}.email`, {
           message: 'Provided email do not match mnemonic.',
         })
-        logoutRequest().catch(() => undefined)
+        logoutRequest().catch((error) => {
+          SentryLogger.error('Failed to logout when recovering password', 'ForgotPasswordModal', error)
+        })
         return
       }
 
@@ -114,34 +115,34 @@ export const ForgotPasswordModal = () => {
   const handleNewPasswordStep = useCallback(
     async (data: ForgotPasswordModalForm) => {
       if (!accountId) {
+        displaySnackbar({
+          title: 'Something went wrong',
+          description: `We couldn't find account associated with given credentials. Please try again.`,
+          iconType: 'error',
+        })
         return
       }
       setCurrentStep(ForgotPasswordStep.LoadingStep)
       const time = Date.now() - 10_000
-
-      const keypair = keyring.addFromMnemonic(data['EmailAndSeedStep'].mnemonic)
-      const address = keypair.address
-
-      const entropy = mnemonicToEntropy(data['EmailAndSeedStep'].mnemonic)
-
-      const seed = u8aToHex(entropy)
-
-      const newArtifacts = await encryptSeed({
-        ...data['EmailAndSeedStep'],
-        seed,
-        password: data['NewPasswordStep'].password,
-      })
-      const forgetPayload = {
-        joystreamAccountId: address,
-        gatewayName: atlasConfig.general.appName,
-        timestamp: time,
-        action: 'changeAccount',
-        gatewayAccountId: accountId,
-        newArtifacts,
-      }
-      const forgetPayloadSignature = await keypair.sign(JSON.stringify(forgetPayload))
-
       try {
+        const keypair = keyring.addFromMnemonic(data['EmailAndSeedStep'].mnemonic)
+        const address = keypair.address
+
+        const newArtifacts = await prepareEncryptionArtifacts(
+          data['EmailAndSeedStep'].email,
+          data['NewPasswordStep'].password,
+          data['EmailAndSeedStep'].mnemonic
+        )
+        const forgetPayload = {
+          joystreamAccountId: address,
+          gatewayName: atlasConfig.general.appName,
+          timestamp: time,
+          action: 'changeAccount',
+          gatewayAccountId: accountId,
+          newArtifacts,
+        }
+        const forgetPayloadSignature = await keypair.sign(JSON.stringify(forgetPayload))
+
         await axios.post<{ accountId: string }>(
           `${ORION_AUTH_URL}/change-account`,
           {
@@ -220,5 +221,3 @@ export const ForgotPasswordModal = () => {
     </DialogModal>
   )
 }
-
-// dwad!aA@13

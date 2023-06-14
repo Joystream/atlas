@@ -9,6 +9,6 @@ export const Container = styled.div`
   gap: ${sizes(6)};
 `
 
-export const ForgotPasswordText = styled(TextButton)`
-  margin: 0 0 0 auto;
+export const ForgotPasswordButton = styled(TextButton)`
+  margin: ${sizes(-2)} 0 0 auto;
 `
