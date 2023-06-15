@@ -86,7 +86,7 @@ export const MembershipWallet = () => {
       <EntitySettingTemplate
         isFirst
         title="Membership address"
-        description="When your public membership was created, it was linked to a new substrate account address built on polkadot protocol.  This account holds all assets like tokens and NFTs that your membership accumulates. "
+        description="When your public membership was created, it was linked to a new substrate account address built on polkadot protocol. This account holds all assets like tokens and NFTs that your membership accumulates. "
       >
         <FormFieldsWrapper>
           <FormField label="Membership address">
