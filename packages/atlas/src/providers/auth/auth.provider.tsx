@@ -18,11 +18,11 @@ import { SentryLogger } from '@/utils/logs'
 
 import {
   decodeSessionEncodedSeedToMnemonic,
+  entropyToMnemonic,
   getArtifactId,
   getArtifacts,
   handleAnonymousAuth,
   logoutRequest,
-  seedToMnemonic,
 } from './auth.helpers'
 import { AuthContextValue, LogInErrors } from './auth.types'
 
@@ -132,7 +132,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         action: 'login',
       }
       let signatureOverPayload = null
-      let localSeed: string | null = null
+      let localEntropy: string | null = null
       if (params.type === 'internal') {
         const { email, password } = params
         const id = await getArtifactId(email, password)
@@ -141,8 +141,8 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
           setIsAuthenticating(false)
           throw new Error(LogInErrors.ArtifactsNotFound)
         }
-        const { keypair, decryptedSeed } = data
-        localSeed = decryptedSeed
+        const { keypair, decryptedEntropy } = data
+        localEntropy = decryptedEntropy
         payload.joystreamAccountId = keypair.address
         signatureOverPayload = u8aToHex(keypair.sign(JSON.stringify(payload)))
       }
@@ -176,9 +176,9 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         )
 
         setAnonymousUserId(null)
-        if (localSeed) {
-          saveEncodedSeed(localSeed)
-          setApiActiveAccount('seed', seedToMnemonic(localSeed))
+        if (localEntropy) {
+          saveEncodedSeed(localEntropy)
+          setApiActiveAccount('seed', entropyToMnemonic(localEntropy))
         } else {
           setApiActiveAccount('address', payload.joystreamAccountId)
         }

@@ -37,7 +37,7 @@ export type ExternalLogin = {
 
 export type LoginParams = InternalLogin | ExternalLogin
 
-export type AuthModals = 'logIn' | 'externalLogIn' | 'signUp'
+export type AuthModals = 'logIn' | 'externalLogIn' | 'signUp' | 'forgotPassword'
 
 type EncryptionArtifacts = {
   id: string
