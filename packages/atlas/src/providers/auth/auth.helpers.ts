@@ -3,9 +3,9 @@ import { ScryptOpts, scrypt } from '@noble/hashes/scrypt'
 import { Keyring } from '@polkadot/keyring'
 import { KeyringPair } from '@polkadot/keyring/types'
 import { hexToU8a, u8aToHex } from '@polkadot/util'
-import { cryptoWaitReady, mnemonicToEntropy } from '@polkadot/util-crypto'
+import { mnemonicToEntropy as _mnemonicToEntropy, cryptoWaitReady } from '@polkadot/util-crypto'
 import axios, { isAxiosError } from 'axios'
-import { entropyToMnemonic } from 'bip39'
+import { entropyToMnemonic as _entropyToMnemonic } from 'bip39'
 import { Buffer } from 'buffer'
 import { AES, enc, lib, mode } from 'crypto-js'
 
@@ -46,22 +46,23 @@ export const getArtifacts = async (id: string, email: string, password: string) 
     const res = await axios.get<{ cipherIv: string; encryptedSeed: string }>(
       `${ORION_AUTH_URL}/artifacts?id=${id}&email=${encodeURIComponent(email)}`
     )
-    const { cipherIv, encryptedSeed } = res.data
+    const { cipherIv, encryptedSeed: encryptedEntropy } = res.data
     const cipherKey = await scryptHash(`${email}:${password}`, Buffer.from(cipherIv, 'hex'))
-    const decryptedSeed = aes256CbcDecrypt(encryptedSeed, cipherKey, Buffer.from(cipherIv, 'hex'))
-    const mnemonic = seedToMnemonic(decryptedSeed)
+    const decryptedEntropy = aes256CbcDecrypt(encryptedEntropy, cipherKey, Buffer.from(cipherIv, 'hex'))
+    const mnemonic = entropyToMnemonic(decryptedEntropy)
+
     const keypair = keyring.addFromMnemonic(mnemonic)
     return {
       keypair,
-      decryptedSeed,
+      decryptedEntropy,
     }
   } catch (error) {
     SentryLogger.error('Error when fetching artifacts', 'useLogIn', error)
   }
 }
 
-export const seedToMnemonic = (hexSeed: string) =>
-  entropyToMnemonic(Buffer.from(hexSeed.slice(2, hexSeed.length), 'hex'))
+export const entropyToMnemonic = (hexSeed: string) =>
+  _entropyToMnemonic(Buffer.from(hexSeed.slice(2, hexSeed.length), 'hex'))
 
 export async function scryptHash(
   data: string,
@@ -93,7 +94,7 @@ export const decodeSessionEncodedSeedToMnemonic = async (encodedSeed: string) =>
 
     const { cipherKey, cipherIv } = data
     const decryptedSeed = aes256CbcDecrypt(encodedSeed, Buffer.from(cipherKey, 'hex'), Buffer.from(cipherIv, 'hex'))
-    return entropyToMnemonic(Buffer.from(decryptedSeed.slice(2, decryptedSeed.length), 'hex'))
+    return _entropyToMnemonic(Buffer.from(decryptedSeed.slice(2, decryptedSeed.length), 'hex'))
   } catch (e) {
     if (isAxiosError(e) && e.response?.data.message === 'isAxiosError') {
       logoutRequest()
@@ -102,11 +103,58 @@ export const decodeSessionEncodedSeedToMnemonic = async (encodedSeed: string) =>
   }
 }
 
+export const loginRequest = (
+  signature: string,
+  payload: {
+    joystreamAccountId: string
+    gatewayName: string
+    timestamp: number
+    action: 'login'
+  }
+) =>
+  axios.post<{ accountId: string }>(
+    `${ORION_AUTH_URL}/login`,
+    {
+      signature,
+      payload,
+    },
+    {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
 export const logoutRequest = () => axios.post(`${ORION_AUTH_URL}/logout`, {}, { withCredentials: true })
 
 export const getCorrectLoginModal = (): AuthModals => {
   const hasAtleastOneWallet = getWalletsList().some((wallet) => wallet.installed)
   return hasAtleastOneWallet ? 'externalLogIn' : 'logIn'
+}
+
+export const prepareEncryptionArtifacts = async (email: string, password: string, mnemonic: string) => {
+  try {
+    const entropy = _mnemonicToEntropy(mnemonic)
+    const seed = u8aToHex(entropy)
+
+    const id = (await scryptHash(`${email}:${password}`, '0x0818ee04c541716831bdd0f598fa4bbb')).toString('hex')
+    const cipherIv = lib.WordArray.random(16).toString(enc.Hex)
+    const cipherKey = await scryptHash(`${email}:${password}`, Buffer.from(hexToU8a(cipherIv)))
+    const keyWA = enc.Hex.parse(cipherKey.toString('hex'))
+    const ivWA = enc.Hex.parse(cipherIv)
+    const wordArray = enc.Hex.parse(seed)
+
+    const encrypted = AES.encrypt(wordArray, keyWA, { iv: ivWA, mode: mode.CBC })
+
+    return {
+      id,
+      cipherIv,
+      encryptedSeed: encrypted.ciphertext.toString(enc.Hex),
+    }
+  } catch (error) {
+    SentryLogger.error('Error during preparing encryption artifacts', 'prepareEncryptionArtifacts', error)
+  }
 }
 
 export const registerAccount = async (params: RegisterParams) => {
@@ -125,23 +173,10 @@ export const registerAccount = async (params: RegisterParams) => {
     let keypair: KeyringPair | null = null
     if (params.type === 'internal') {
       const { email, password, mnemonic } = params
-      const entropy = mnemonicToEntropy(mnemonic)
-      const seed = u8aToHex(entropy)
-
-      const id = (await scryptHash(`${email}:${password}`, '0x0818ee04c541716831bdd0f598fa4bbb')).toString('hex')
-      const cipherIv = lib.WordArray.random(16).toString(enc.Hex)
-      const cipherKey = await scryptHash(`${email}:${password}`, Buffer.from(hexToU8a(cipherIv)))
-      const keyWA = enc.Hex.parse(cipherKey.toString('hex'))
-      const ivWA = enc.Hex.parse(cipherIv)
-      const wordArray = enc.Hex.parse(seed)
-      const encrypted = AES.encrypt(wordArray, keyWA, { iv: ivWA, mode: mode.CBC })
+      const encryptionArtifacts = await prepareEncryptionArtifacts(email, password, mnemonic)
 
       keypair = keyring.addFromMnemonic(mnemonic)
-      registerPayload.encryptionArtifacts = {
-        cipherIv,
-        id,
-        encryptedSeed: encrypted.ciphertext.toString(enc.Hex),
-      }
+      registerPayload.encryptionArtifacts = encryptionArtifacts
       registerPayload.joystreamAccountId = keypair.address
       registerSignature = u8aToHex(keypair.sign(JSON.stringify(registerPayload)))
     }

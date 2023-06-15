@@ -3,6 +3,8 @@ import { LogInModal } from '@/components/_auth/LogInModal'
 import { SignUpModal } from '@/components/_auth/SignUpModal'
 import { useAuthStore } from '@/providers/auth/auth.store'
 
+import { ForgotPasswordModal } from '../ForgotPasswordModal/ForgotPasswordModal'
+
 export const AuthModals = () => {
   const { authModalOpenName } = useAuthStore()
 
@@ -12,6 +14,7 @@ export const AuthModals = () => {
         <LogInModal />
         <ExternalSignInModal />
         <SignUpModal />
+        <ForgotPasswordModal />
       </>
     )
   }
