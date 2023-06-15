@@ -4,7 +4,6 @@ import { u8aToHex } from '@polkadot/util'
 import axios from 'axios'
 import { FC, useCallback, useRef, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { z } from 'zod'
 
 import { SvgActionHide, SvgActionShow } from '@/assets/icons'
 import { PasswordCriterias } from '@/components/_auth/PasswordCriterias'
@@ -18,6 +17,7 @@ import { decodeSessionEncodedSeedToMnemonic, prepareEncryptionArtifacts } from '
 import { useAuth } from '@/providers/auth/auth.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 import { media, sizes } from '@/styles'
+import { passwordAndRepeatPasswordSchema } from '@/utils/formValidationOptions'
 import { SentryLogger } from '@/utils/logs'
 
 type ChangePasswordArgs = {
@@ -68,26 +68,6 @@ export const changePassword = async ({
   }
 }
 
-const commonPasswordValidation = z
-  .string()
-  .regex(/^(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#$%^&*()_+]).*$/, { message: 'Password has to meet requirements.' })
-  .min(9, { message: 'Password has to meet requirements.' })
-
-const zodSchema = z
-  .object({
-    password: commonPasswordValidation,
-    confirmPassword: commonPasswordValidation,
-  })
-  .refine(
-    (data) => {
-      return data.password === data.confirmPassword
-    },
-    {
-      path: ['confirmPassword'],
-      message: 'Password address has to match.',
-    }
-  )
-
 type ChangePasswordDialogProps = {
   onClose: () => void
   show: boolean
@@ -105,7 +85,7 @@ export const ChangePasswordDialog: FC<ChangePasswordDialogProps> = ({ onClose, s
 
   const form = useForm<PasswordStepForm>({
     shouldFocusError: true,
-    resolver: zodResolver(zodSchema),
+    resolver: zodResolver(passwordAndRepeatPasswordSchema),
   })
 
   const [isFieldVisible, setIsFieldVisible] = useState<Record<PasswordInputNames, boolean>>({

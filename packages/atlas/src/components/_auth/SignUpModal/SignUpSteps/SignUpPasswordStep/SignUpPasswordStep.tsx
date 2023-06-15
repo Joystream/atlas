@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FC, RefObject, useCallback, useEffect, useRef, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { z } from 'zod'
 
 import { SvgActionHide, SvgActionShow } from '@/assets/icons'
 import { AuthenticationModalStepTemplate } from '@/components/_auth/AuthenticationModalStepTemplate'
@@ -9,29 +8,10 @@ import { PasswordCriterias } from '@/components/_auth/PasswordCriterias'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input, InputProps } from '@/components/_inputs/Input'
 import { AccountFormData } from '@/hooks/useCreateMember'
+import { passwordAndRepeatPasswordSchema } from '@/utils/formValidationOptions'
 
 import { StyledSignUpForm } from '../SignUpSteps.styles'
 import { SignUpStepsCommonProps } from '../SignUpSteps.types'
-
-const commonPasswordValidation = z
-  .string()
-  .regex(/^(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#$%^&*()_+]).*$/, { message: 'Password has to meet requirements.' })
-  .min(9, { message: 'Password has to meet requirements.' })
-
-const zodSchema = z
-  .object({
-    password: commonPasswordValidation,
-    confirmPassword: commonPasswordValidation,
-  })
-  .refine(
-    (data) => {
-      return data.password === data.confirmPassword
-    },
-    {
-      path: ['confirmPassword'],
-      message: 'Password address has to match.',
-    }
-  )
 
 type PasswordStepForm = {
   password: string
@@ -59,7 +39,7 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
       password,
       confirmPassword: password,
     },
-    resolver: zodResolver(zodSchema),
+    resolver: zodResolver(passwordAndRepeatPasswordSchema),
   })
   const {
     handleSubmit,
