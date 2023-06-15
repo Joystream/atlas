@@ -18,10 +18,10 @@ import { SentryLogger } from '@/utils/logs'
 
 import {
   decodeSessionEncodedSeedToMnemonic,
+  getArtifactId,
   getArtifacts,
   handleAnonymousAuth,
   logoutRequest,
-  scryptHash,
   seedToMnemonic,
 } from './auth.helpers'
 import { AuthContextValue, LogInErrors } from './auth.types'
@@ -135,7 +135,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       let localSeed: string | null = null
       if (params.type === 'internal') {
         const { email, password } = params
-        const id = (await scryptHash(`${email}:${password}`, '0x0818ee04c541716831bdd0f598fa4bbb')).toString('hex')
+        const id = await getArtifactId(email, password)
         const data = await getArtifacts(id, email, password)
         if (!data) {
           setIsAuthenticating(false)

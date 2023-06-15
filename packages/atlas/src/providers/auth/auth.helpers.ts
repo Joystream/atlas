@@ -14,13 +14,17 @@ import { SentryLogger } from '@/utils/logs'
 
 import { AuthModals, LogInErrors, OrionAccountError, RegisterParams, RegisterPayload } from './auth.types'
 
+export const getArtifactId = async (email: string, password: string) => {
+  return (await scryptHash(`${email}:${password}`, '0x0818ee04c541716831bdd0f598fa4bbb')).toString('hex')
+}
+
 export const prepareEncryptionArtifacts = async (email: string, password: string, mnemonic: string) => {
   try {
     const entropy = mnemonicToEntropy(mnemonic)
 
     const seed = u8aToHex(entropy)
 
-    const id = (await scryptHash(`${email}:${password}`, '0x0818ee04c541716831bdd0f598fa4bbb')).toString('hex')
+    const id = await getArtifactId(email, password)
     const cipherIv = lib.WordArray.random(16).toString(enc.Hex)
     const cipherKey = await scryptHash(`${email}:${password}`, Buffer.from(hexToU8a(cipherIv)))
     const keyWA = enc.Hex.parse(cipherKey.toString('hex'))
@@ -150,23 +154,11 @@ export const registerAccount = async (params: RegisterParams) => {
     let keypair: KeyringPair | null = null
     if (params.type === 'internal') {
       const { email, password, mnemonic } = params
-      const entropy = mnemonicToEntropy(mnemonic)
-      const seed = u8aToHex(entropy)
 
-      const id = (await scryptHash(`${email}:${password}`, '0x0818ee04c541716831bdd0f598fa4bbb')).toString('hex')
-      const cipherIv = lib.WordArray.random(16).toString(enc.Hex)
-      const cipherKey = await scryptHash(`${email}:${password}`, Buffer.from(hexToU8a(cipherIv)))
-      const keyWA = enc.Hex.parse(cipherKey.toString('hex'))
-      const ivWA = enc.Hex.parse(cipherIv)
-      const wordArray = enc.Hex.parse(seed)
-      const encrypted = AES.encrypt(wordArray, keyWA, { iv: ivWA, mode: mode.CBC })
+      const encryptionArtifacts = await prepareEncryptionArtifacts(email, password, mnemonic)
 
       keypair = keyring.addFromMnemonic(mnemonic)
-      registerPayload.encryptionArtifacts = {
-        cipherIv,
-        id,
-        encryptedSeed: encrypted.ciphertext.toString(enc.Hex),
-      }
+      registerPayload.encryptionArtifacts = encryptionArtifacts
       registerPayload.joystreamAccountId = keypair.address
       registerSignature = u8aToHex(keypair.sign(JSON.stringify(registerPayload)))
     }
