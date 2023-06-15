@@ -3,7 +3,6 @@ import debouncePromise from 'awesome-debounce-promise'
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useMutation } from 'react-query'
-import { useNavigate } from 'react-router'
 import useResizeObserver from 'use-resize-observer'
 
 import {
@@ -40,7 +39,6 @@ export type EditMemberFormInputs = {
 }
 
 export const MembershipPublicProfile: FC = () => {
-  const navigate = useNavigate()
   const handleInputRef = useRef<HTMLInputElement | null>(null)
   const [isImageValid, setIsImageValid] = useState(true)
   const [isHandleValidating, setIsHandleValidating] = useState(false)
@@ -153,7 +151,7 @@ export const MembershipPublicProfile: FC = () => {
   const metadata = createMemberInputMetadata(watch())
   const { fullFee: fee, loading: feeLoading } = useFee(
     'updateMemberTx',
-    memberId ? [memberId, watch('handle'), metadata] : undefined
+    memberId && isDirty ? [memberId, watch('handle'), metadata] : undefined
   )
   const handleEditMember = handleSubmit(async (data) => {
     if (!joystream || !activeMembership || !isDirty) {
@@ -173,7 +171,10 @@ export const MembershipPublicProfile: FC = () => {
       }
     }
 
-    const success = await handleTransaction({
+    await handleTransaction({
+      onTxSync: async () => {
+        await refetchUserMemberships()
+      },
       txFactory: async (updateStatus) => {
         const memberInputMetadata: MemberInputMetadata = {
           ...(dirtyFields.handle ? { name: data.handle } : {}),
@@ -191,13 +192,6 @@ export const MembershipPublicProfile: FC = () => {
         title: 'Profile updated successfully',
       },
     })
-    const {
-      data: { memberships },
-    } = await refetchUserMemberships()
-    const updatedMembership = memberships.find((m) => m.id === activeMembership.id)
-    if (success) {
-      navigate(absoluteRoutes.viewer.member(updatedMembership?.handle))
-    }
   })
 
   const { ref, ...handleRest } = useMemo(
