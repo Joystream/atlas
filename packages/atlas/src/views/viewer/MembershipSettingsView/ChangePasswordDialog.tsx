@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { u8aToHex } from '@polkadot/util'
 import axios from 'axios'
-import { FC, useCallback, useRef, useState } from 'react'
+import { FC, useCallback, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
 import { SvgActionHide, SvgActionShow } from '@/assets/icons'
@@ -93,8 +93,12 @@ export const ChangePasswordDialog: FC<ChangePasswordDialogProps> = ({ onClose, s
     confirmPassword: false,
   })
 
+  const handleClose = () => {
+    form.reset({ password: '', confirmPassword: '' })
+    onClose()
+  }
+
   const [isSubmitting, setIsSubmiting] = useState(false)
-  const dialogContentRef = useRef<HTMLDivElement>(null)
   const { currentUser, encodedSeed } = useAuth()
 
   const handleChangePassword = useCallback(() => {
@@ -128,8 +132,6 @@ export const ChangePasswordDialog: FC<ChangePasswordDialogProps> = ({ onClose, s
     })()
   }, [currentUser, displaySnackbar, encodedSeed, form, onClose])
 
-  const hasDoneInitialScroll = useRef(false)
-
   const handleTogglePassword = (name: PasswordInputNames) => {
     setIsFieldVisible((fields) => ({ ...fields, [name]: !fields[name] }))
   }
@@ -152,9 +154,8 @@ export const ChangePasswordDialog: FC<ChangePasswordDialogProps> = ({ onClose, s
   return (
     <StyledDialogModal
       show={show}
-      onExitClick={onClose}
+      onExitClick={handleClose}
       title="Change password"
-      contentRef={dialogContentRef}
       primaryButton={{
         text: isSubmitting ? 'Waiting...' : 'Change password',
         disabled: isSubmitting,
@@ -162,21 +163,12 @@ export const ChangePasswordDialog: FC<ChangePasswordDialogProps> = ({ onClose, s
       }}
       secondaryButton={{
         text: 'Cancel',
-        onClick: onClose,
+        onClick: handleClose,
       }}
     >
       <Wrapper>
         <FormField label="New password" error={form.formState.errors.password?.message}>
-          <Input
-            placeholder="New password"
-            {...getInputProps('password')}
-            autoComplete="off"
-            onClick={() => {
-              if (hasDoneInitialScroll.current || !dialogContentRef?.current) return
-              hasDoneInitialScroll.current = true
-              dialogContentRef.current.scrollTo({ top: dialogContentRef.current.scrollHeight, behavior: 'smooth' })
-            }}
-          />
+          <Input placeholder="New password" {...getInputProps('password')} autoComplete="off" />
         </FormField>
         <FormField label="Repeat Password" error={form.formState.errors.confirmPassword?.message}>
           <Input placeholder="Repeat password" {...getInputProps('confirmPassword')} autoComplete="off" />
