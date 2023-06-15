@@ -7,6 +7,7 @@ import { entropyToMnemonic as _entropyToMnemonic } from 'bip39'
 import { Buffer } from 'buffer'
 import { AES, enc, lib, mode } from 'crypto-js'
 
+import { atlasConfig } from '@/config'
 import { ORION_AUTH_URL } from '@/config/env'
 import { keyring } from '@/joystream-lib/lib'
 import { getWalletsList } from '@/providers/wallet/wallet.helpers'
@@ -215,5 +216,53 @@ export const registerAccount = async (params: RegisterParams) => {
       message: errorMessage || 'Something went wrong',
       status: error.response?.status,
     })
+  }
+}
+
+type ChangePasswordArgs = {
+  joystreamAccountId: string
+  gatewayAccountId: string
+  email: string
+  encodedSeed: string
+  newPassword: string
+}
+export const changePassword = async ({
+  email,
+  encodedSeed,
+  newPassword,
+  joystreamAccountId,
+  gatewayAccountId,
+}: ChangePasswordArgs) => {
+  try {
+    const mnemonic = await decodeSessionEncodedSeedToMnemonic(encodedSeed)
+    if (!mnemonic) {
+      throw Error(`Couldn't get mnemonic`)
+    }
+
+    const timestamp = Date.now()
+    const keypair = keyring.addFromMnemonic(mnemonic)
+    const newArtifacts = await prepareEncryptionArtifacts(email, newPassword, mnemonic)
+
+    const changePasswordPayload = {
+      joystreamAccountId,
+      gatewayName: atlasConfig.general.appName,
+      timestamp,
+      action: 'changeAccount',
+      gatewayAccountId,
+      newArtifacts,
+    }
+
+    const signatureOverPayload = u8aToHex(keypair.sign(JSON.stringify(changePasswordPayload)))
+
+    return axios.post(
+      `${ORION_AUTH_URL}/change-account`,
+      {
+        signature: signatureOverPayload,
+        payload: changePasswordPayload,
+      },
+      { withCredentials: true }
+    )
+  } catch (error) {
+    SentryLogger.error('Something went wrong during changing password', 'changePassword', error)
   }
 }

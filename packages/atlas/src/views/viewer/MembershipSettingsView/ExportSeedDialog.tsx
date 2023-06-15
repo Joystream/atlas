@@ -2,11 +2,12 @@ import styled from '@emotion/styled'
 import { FC, useCallback, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
-import { SvgActionHide, SvgActionShow, SvgAlertsWarning24 } from '@/assets/icons'
+import { SvgAlertsWarning24 } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
-import { getArtifacts, scryptHash, seedToMnemonic } from '@/providers/auth/auth.helpers'
+import { useHidePasswordInInput } from '@/hooks/useHidePasswordInInput'
+import { entropyToMnemonic, getArtifactId, getArtifacts } from '@/providers/auth/auth.helpers'
 import { useAuth } from '@/providers/auth/auth.hooks'
 import { LogInErrors } from '@/providers/auth/auth.types'
 import { useSnackbar } from '@/providers/snackbars'
@@ -15,12 +16,12 @@ import { cVar, sizes } from '@/styles'
 import { StyledDialogModal } from './MembershipSettingsView.styles'
 
 export const getMnemonicFileFromEmailAndPassword = async (email: string, password: string) => {
-  const id = (await scryptHash(`${email}:${password}`, '0x0818ee04c541716831bdd0f598fa4bbb')).toString('hex')
+  const id = await getArtifactId(email, password)
   const data = await getArtifacts(id, email, password)
-  if (!data?.decryptedSeed) {
+  if (!data?.decryptedEntropy) {
     throw Error("Couldn't fetch artifacts")
   }
-  const mnemonic = seedToMnemonic(data?.decryptedSeed)
+  const mnemonic = entropyToMnemonic(data?.decryptedEntropy)
   const blobText = new Blob([JSON.stringify({ mnemonic })], { type: 'text/plain' })
 
   const url = URL.createObjectURL(blobText)
@@ -29,6 +30,7 @@ export const getMnemonicFileFromEmailAndPassword = async (email: string, passwor
   link.download = 'mnemonic.json'
   link.click()
 
+  link.remove()
   URL.revokeObjectURL(url)
 }
 
@@ -48,9 +50,10 @@ export const ExportSeedDialog: FC<ExportSeedDialogProps> = ({ onClose, show }) =
     shouldFocusError: true,
   })
   const { currentUser } = useAuth()
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false)
   const { displaySnackbar } = useSnackbar()
   const [isSubmitting, setIsSubmiting] = useState(false)
+
+  const hidePasswordProps = useHidePasswordInInput()
 
   const handleClose = useCallback(() => {
     reset({ password: '' })
@@ -108,6 +111,7 @@ export const ExportSeedDialog: FC<ExportSeedDialogProps> = ({ onClose, show }) =
       >
         <Input
           placeholder="Password"
+          {...hidePasswordProps}
           {...register('password', {
             validate: {
               required: (value) => {
@@ -117,13 +121,6 @@ export const ExportSeedDialog: FC<ExportSeedDialogProps> = ({ onClose, show }) =
               },
             },
           })}
-          type={isPasswordVisible ? 'text' : 'password'}
-          actionButton={{
-            children: isPasswordVisible ? 'Hide' : 'Show',
-            dontFocusOnClick: true,
-            icon: isPasswordVisible ? <SvgActionHide /> : <SvgActionShow />,
-            onClick: () => setIsPasswordVisible((visible) => !visible),
-          }}
           autoComplete="off"
         />
       </FormField>
