@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { formatDuration } from 'date-fns'
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useMutation } from 'react-query'
@@ -25,13 +24,11 @@ import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { useYppStore } from '@/providers/ypp/ypp.store'
 import { SentryLogger } from '@/utils/logs'
-import { pluralizeNoun } from '@/utils/misc'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/YppLandingView.hooks'
 
 import { useGetYppChannelRequirements, useYppGoogleAuth } from './YppAuthorizationModal.hooks'
 import {
   Anchor,
-  CategoriesText,
   Content,
   DescriptionText,
   HeaderIconsWrapper,
@@ -39,7 +36,7 @@ import {
   RequirementsButtonSkeleton,
   StyledSvgAppLogoShort,
 } from './YppAuthorizationModal.styles'
-import { YppAuthorizationErrorCode, YppAuthorizationStepsType } from './YppAuthorizationModal.types'
+import { YppAuthorizationStepsType } from './YppAuthorizationModal.types'
 import {
   DetailsFormData,
   YppAuthorizationDetailsFormStep,
@@ -90,7 +87,6 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   const setSelectedChannelId = useYppStore((store) => store.actions.setSelectedChannelId)
   const setReferrerId = useYppStore((store) => store.actions.setReferrerId)
   const setShouldContinueYppFlow = useYppStore((store) => store.actions.setShouldContinueYppFlow)
-  const { data: fetchedChannelRequirements } = useGetYppChannelRequirements()
   const { mutateAsync: yppChannelMutation } = useMutation('ypp-channels-post', (finalFormData: FinalFormData | null) =>
     axios.post(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels`, finalFormData)
   )
@@ -131,6 +127,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     channelsLoaded,
     onChangeStep: onChangeStep,
   })
+  const requirements = useGetYppChannelRequirements()
 
   useEffect(() => {
     contentRef.current?.scrollTo({ top: 0 })
@@ -261,71 +258,6 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     if (selectedChannel?.id) setActiveChannel(selectedChannel.id)
   }, [decrementOverlaysOpenCount, selectedChannel?.id, setActiveChannel])
 
-  const convertHoursRequirementTime = (hours: number) => {
-    if (hours > 24 * 30) {
-      return formatDuration({ months: Math.round(hours / (24 * 30)) })
-    }
-    if (hours > 24) {
-      return formatDuration({ days: Math.round(hours / 24) })
-    }
-    return formatDuration({ hours: hours })
-  }
-
-  const requirements = useMemo(
-    () => [
-      ...(atlasConfig.general.appContentFocus
-        ? [
-            {
-              text: (
-                <>
-                  The main topic of your videos is{' '}
-                  <Text variant="t200-strong" as="span">
-                    {atlasConfig.general.appContentFocus}
-                  </Text>
-                  <CategoriesText variant="t100" as="span" color="colorTextMuted">
-                    {atlasConfig.general.appName} video categories:{' '}
-                    {atlasConfig.content.categories.map((category) => category.name).join(', ')}
-                  </CategoriesText>
-                </>
-              ),
-              fulfilled: true,
-            },
-          ]
-        : []),
-      {
-        text: `Your YouTube channel is at least ${convertHoursRequirementTime(
-          fetchedChannelRequirements?.MINIMUM_CHANNEL_AGE_HOURS || 0
-        )} old`,
-        fulfilled: !ytRequirementsErrors.some(
-          (error) => error === YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_CREATION_DATE
-        ),
-      },
-      {
-        text: `Your YouTube channel has at least ${pluralizeNoun(
-          fetchedChannelRequirements?.MINIMUM_VIDEO_COUNT ?? 0,
-          'video',
-          true
-        )}, all published at least ${convertHoursRequirementTime(
-          fetchedChannelRequirements?.MINIMUM_VIDEO_AGE_HOURS || 0
-        )} ago`,
-        fulfilled: !ytRequirementsErrors.some(
-          (error) => error === YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_VIDEOS
-        ),
-      },
-      {
-        text: `Your YouTube channel has at least ${pluralizeNoun(
-          fetchedChannelRequirements?.MINIMUM_SUBSCRIBERS_COUNT ?? 0,
-          'subscriber',
-          true
-        )} and subscriptions are made public.`,
-        fulfilled: !ytRequirementsErrors.some(
-          (error) => error === YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_SUBSCRIBERS
-        ),
-      },
-    ],
-    [fetchedChannelRequirements, ytRequirementsErrors]
-  )
-
   const authorizationStep = useMemo(() => {
     switch (currentStep) {
       case 'requirements': {
@@ -370,7 +302,12 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
           title: 'Requirements',
           description: `Before you can apply to the program, make sure your YouTube channel meets the below conditions.`,
           primaryButton: getPrimaryButton(),
-          component: <YppAuthorizationRequirementsStep requirements={requirements} />,
+          component: (
+            <YppAuthorizationRequirementsStep
+              requirements={requirements}
+              requirmentsErrorCodes={ytRequirementsErrors}
+            />
+          ),
         }
       }
 
@@ -476,6 +413,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     alreadyRegisteredChannel?.channelTitle,
     alreadyRegisteredChannel?.ownerMemberHandle,
     requirements,
+    ytRequirementsErrors,
     isLoading,
     yppCurrentChannel,
     activeMembership?.channels.length,

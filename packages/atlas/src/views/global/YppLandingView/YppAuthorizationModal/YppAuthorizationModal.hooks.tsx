@@ -1,7 +1,7 @@
 import { useApolloClient } from '@apollo/client'
 import axios from 'axios'
 import { isArray } from 'lodash-es'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery } from 'react-query'
 import { useSearchParams } from 'react-router-dom'
 
@@ -28,6 +28,7 @@ import {
   YppAuthorizationStepsType,
   YppRequirementsErrorCode,
 } from './YppAuthorizationModal.types'
+import { Requirements } from './YppAuthorizationSteps'
 
 const GOOGLE_CONSOLE_CLIENT_ID = atlasConfig.features.ypp.googleConsoleClientId
 const GOOGLE_AUTH_PARAMS = {
@@ -304,10 +305,23 @@ export const useYppGoogleAuth = ({
   }
 }
 
-export const useGetYppChannelRequirements = () =>
-  useQuery('ypp-requirements-fetch', () =>
+export const useGetYppChannelRequirements = () => {
+  const { data } = useQuery('ypp-requirements-fetch', () =>
     axios
       .get<ChannelRequirements>(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/induction/requirements`)
       .then((res) => res.data)
       .catch((error) => SentryLogger.error("Couldn't fetch requirements", 'YppAuthorizationModal.hooks', error))
   )
+
+  const requirements: Requirements = useMemo(
+    () => ({
+      MINIMUM_SUBSCRIBERS_COUNT: data?.MINIMUM_SUBSCRIBERS_COUNT,
+      MINIMUM_VIDEO_COUNT: data?.MINIMUM_VIDEO_COUNT,
+      MINIMUM_VIDEO_AGE_HOURS: data?.MINIMUM_VIDEO_AGE_HOURS,
+      MINIMUM_CHANNEL_AGE_HOURS: data?.MINIMUM_CHANNEL_AGE_HOURS,
+    }),
+    [data]
+  )
+
+  return requirements
+}
