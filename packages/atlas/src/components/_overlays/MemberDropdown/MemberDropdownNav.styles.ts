@@ -61,26 +61,22 @@ export const Filter = styled.div`
 
 export const MemberInfoContainer = styled.div`
   position: relative;
-  ${paddingStyles}
-
   border-bottom: 1px solid ${cVar('colorBorderMutedAlpha')};
+
+  ${paddingStyles}
 `
 
-export const AvatarsGroupContainer = styled.div`
+export const AvatarContainer = styled.div`
   display: grid;
   justify-content: start;
   grid-template-columns: auto auto;
-  gap: ${sizes(4)};
-  margin-bottom: ${sizes(6)};
+  gap: ${sizes(2)};
+  margin-bottom: ${sizes(2)};
 `
 
-export const StyledAvatar = styled(Avatar)<{ isDisabled: boolean }>`
-  width: 40px;
-  height: 40px;
-  clip-path: path(
-    'm 40 0 h -40 v 40 h 20.5041 c -0.3291 -1.2785 -0.5041 -2.6188 -0.5041 -4 c 0 -8.8366 7.1634 -16 16 -16 c 1.3812 0 2.7215 0.175 4 0.5041 v -20.5041 z'
-  );
-  opacity: ${({ isDisabled }) => (isDisabled ? 0.25 : 1)};
+export const StyledAvatar = styled(Avatar)`
+  width: 48px;
+  height: 48px;
   transition: opacity ${cVar('animationTransitionMedium')};
 `
 
@@ -90,6 +86,7 @@ export const AvatarButton = styled.button`
   border: none;
   padding: 0;
   background: none;
+  align-self: start;
 
   :hover {
     ${StyledAvatar} {
@@ -126,11 +123,32 @@ export const FixedSizeContainer = styled.div<FixedSizeContainerProps>`
   width: ${({ width }) => (width ? (typeof width === 'number' ? `${width}px` : width) : 'unset')};
 `
 
-export const UserBalance = styled.div`
-  display: inline-grid;
-  grid-auto-flow: column;
-  grid-auto-columns: max-content;
+export const AddressContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
+  border-radius: ${cVar('radiusSmall')};
+  background-color: ${cVar('colorCoreNeutral800Lighten')};
+  padding: ${sizes(2)};
+  overflow: hidden;
+  width: 100%;
+  grid-column: 1/3;
+
+  span {
+  }
+
+  path {
+    fill: ${cVar('colorText')};
+  }
+
+  svg {
+    cursor: pointer;
+  }
+`
+
+export const UserBalance = styled.div`
+  display: flex;
+  align-items: start;
   gap: ${sizes(1)};
   margin-top: ${sizes(2)};
 `

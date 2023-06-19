@@ -41,7 +41,7 @@ export const MemberDropdownList: FC<MemberDropdownListProps> = ({
         <ListItem
           onClick={() => onSwitchToNav(type)}
           nodeStart={<SvgActionChevronL />}
-          label={type === 'channel' ? 'Switch channel' : 'Switch member'}
+          label={type === 'channel' ? 'Switch channels' : 'My channels'}
         />
       </SwitchMemberItemListContainer>
       <SectionContainer>
@@ -52,17 +52,15 @@ export const MemberDropdownList: FC<MemberDropdownListProps> = ({
             nodeStart={<Avatar assetUrl={channel.avatarPhoto?.resolvedUrl} size={32} />}
             label={channel?.title ?? ''}
             caption={channel ? `${channel?.followsNum} followers` : undefined}
-            selected={channel.id === channelId}
+            selected={type === 'channel' ? channel.id === channelId : false}
           />
         ))}
-        {type === 'channel' && (
-          <ListItem
-            nodeStart={<IconWrapper icon={<SvgActionChannel />} />}
-            onClick={() => onAddNewChannel?.()}
-            label="Add new channel..."
-            to={absoluteRoutes.studio.newChannel()}
-          />
-        )}
+        <ListItem
+          nodeStart={<IconWrapper icon={<SvgActionChannel />} />}
+          onClick={() => onAddNewChannel?.()}
+          label="Add new channel..."
+          to={absoluteRoutes.studio.newChannel()}
+        />
       </SectionContainer>
     </>
   )

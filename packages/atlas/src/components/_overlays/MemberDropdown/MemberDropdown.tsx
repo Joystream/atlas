@@ -2,9 +2,11 @@ import bezier from 'bezier-easing'
 import { BN } from 'bn.js'
 import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { mergeRefs } from 'react-merge-refs'
+import { useNavigate } from 'react-router'
 import { useTransition } from 'react-spring'
 import useResizeObserver from 'use-resize-observer'
 
+import { absoluteRoutes } from '@/config/routes'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useAuth } from '@/providers/auth/auth.hooks'
 import { useSubscribeAccountBalance } from '@/providers/joystream'
@@ -26,7 +28,8 @@ export type MemberDropdownProps = {
 
 export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
   ({ publisher, isActive, closeDropdown, onChannelChange }, ref) => {
-    const { channelId, activeMembership, memberships, setActiveChannel, membershipsLoading } = useUser()
+    const navigate = useNavigate()
+    const { channelId, activeMembership, memberships, setActiveChannel } = useUser()
     const { handleLogout } = useAuth()
     const [showWithdrawDialog, setShowWithdrawDialog] = useState(false)
     const [disableScrollDuringAnimation, setDisableScrollDuringAnimation] = useState(false)
@@ -34,7 +37,6 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     const [showSendDialog, setShowSendDialog] = useState(false)
     const { url: memberAvatarUrl } = getMemberAvatar(activeMembership)
     const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
-
     const memoizedChannelStateBloatBond = useMemo(() => {
       return new BN(selectedChannel?.channelStateBloatBond || 0)
     }, [selectedChannel?.channelStateBloatBond])
@@ -75,12 +77,19 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
 
     const handleChannelChange = useCallback(
       (channelId: string) => {
-        setDropdownType('channel')
-        setIsList(false)
-        setActiveChannel(channelId)
-        onChannelChange?.(channelId)
+        if (dropdownType === 'channel') {
+          setDropdownType('channel')
+          setIsList(false)
+          setActiveChannel(channelId)
+          onChannelChange?.(channelId)
+        }
+
+        if (dropdownType === 'member') {
+          navigate(absoluteRoutes.viewer.channel(channelId))
+          closeDropdown?.()
+        }
       },
-      [onChannelChange, setActiveChannel]
+      [closeDropdown, dropdownType, navigate, onChannelChange, setActiveChannel]
     )
 
     const handleSwitch = useCallback((type: 'channel' | 'member', changeToList: boolean) => {
@@ -156,9 +165,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                       channelBalance={channelBalance}
                       lockedAccountBalance={lockedAccountBalance}
                       activeMembership={activeMembership}
-                      membershipLoading={membershipsLoading}
                       hasOneMember={hasOneMember}
-                      onSwitchDropdownType={setDropdownType}
                       onSwitchToList={(type) => handleSwitch(type, true)}
                       onCloseDropdown={closeDropdown}
                       publisher={publisher}
