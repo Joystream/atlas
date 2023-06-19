@@ -93,7 +93,7 @@ export const StudioWelcomeView: FC = () => {
       }
       buttons={[
         isLoggedIn
-          ? { size: 'large', to: absoluteRoutes.studio.newChannel(), children: 'Create channel' }
+          ? { size: 'large', onClick: () => setAuthModalOpenName('createChannel'), children: 'Create channel' }
           : { size: 'large', onClick: () => setAuthModalOpenName(getCorrectLoginModal()), children: 'Log in' },
         {
           size: 'large',

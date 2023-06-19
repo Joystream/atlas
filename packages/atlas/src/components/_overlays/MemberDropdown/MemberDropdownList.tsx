@@ -5,7 +5,6 @@ import { SvgActionChannel, SvgActionChevronL } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
 import { IconWrapper } from '@/components/IconWrapper'
 import { ListItem } from '@/components/ListItem'
-import { absoluteRoutes } from '@/config/routes'
 
 import { SectionContainer } from './MemberDropdown.styles'
 import { SwitchMemberItemListContainer } from './MemberDropdownList.styles'
@@ -60,7 +59,6 @@ export const MemberDropdownList: FC<MemberDropdownListProps> = ({
             nodeStart={<IconWrapper icon={<SvgActionChannel />} />}
             onClick={() => onAddNewChannel?.()}
             label="Add new channel..."
-            to={absoluteRoutes.studio.newChannel()}
           />
         )}
       </SectionContainer>

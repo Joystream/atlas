@@ -20,9 +20,8 @@ import { useSnackbar } from '@/providers/snackbars'
 import { useUser } from '@/providers/user/user.hooks'
 import { requiredValidation } from '@/utils/formValidationOptions'
 import { SentryLogger } from '@/utils/logs'
-import { StyledAvatar } from '@/views/studio/CreateEditChannelView/CreateEditChannelView.styles'
 
-import { InputsWrapper } from './GeneralTab.styles'
+import { InputsWrapper, StyledAvatar } from './GeneralTab.styles'
 
 const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
   { name: 'Public', value: true },
@@ -217,7 +216,7 @@ export const GeneralTab = ({ actionBarPortal }: { actionBarPortal: RefObject<HTM
             feeLoading={feeLoading}
             primaryButton={{
               text: 'Publish changes',
-              onClick: handleSubmit,
+              onClick: () => handleSubmit(),
             }}
             secondaryButton={
               isDirty && nodeConnectionStatus === 'connected'
