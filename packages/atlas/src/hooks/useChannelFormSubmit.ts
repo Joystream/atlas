@@ -7,7 +7,13 @@ import { AppActionActionType } from '@/api/queries/__generated__/baseTypes.gener
 import { GetExtendedFullChannelsQueryHookResult } from '@/api/queries/__generated__/channels.generated'
 import { FullChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { atlasConfig } from '@/config'
-import { ChannelAssets, ChannelExtrinsicResult, ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib/types'
+import {
+  ChannelAssets,
+  ChannelAssetsIds,
+  ChannelExtrinsicResult,
+  ChannelInputAssets,
+  ChannelInputMetadata,
+} from '@/joystream-lib/types'
 import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
 import { useOperatorsContext } from '@/providers/assets/assets.provider'
 import { useBloatFeesAndPerMbFees, useBucketsConfigForNewChannel, useJoystream } from '@/providers/joystream'
@@ -68,7 +74,7 @@ export const useCreateEditChannelSubmit = () => {
   return useCallback(
     async (
       data: CreateEditChannelData,
-      onTxSync?: () => void,
+      onTxSync?: (result: { block: number } & { channelId: string; assetsIds: ChannelAssetsIds }) => void,
       onUploadAssets?: (field: 'avatar.contentId' | 'cover.contentId', data: string) => void,
       onCompleted?: () => void
     ) => {
@@ -230,7 +236,7 @@ export const useCreateEditChannelSubmit = () => {
                 proxyCallback(updateStatus)
               ),
         onTxSync: (result) => {
-          onTxSync?.()
+          onTxSync?.(result)
           return refetchDataAndUploadAssets(result)
         },
       })
