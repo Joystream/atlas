@@ -15,13 +15,10 @@ import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { useBloatFeesAndPerMbFees, useFee, useJoystream } from '@/providers/joystream'
 import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { useUser } from '@/providers/user/user.hooks'
-import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { createId } from '@/utils/createId'
 import { SentryLogger } from '@/utils/logs'
-import {
-  CreateEditChannelFormInputs,
-  useCreateEditChannelSubmit,
-} from '@/views/studio/CreateEditChannelView/CreateEditChannelView.hooks'
+
+import { CreateEditChannelFormInputs, useCreateEditChannelSubmit } from './useChannelFormSubmit'
 
 export const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
   { name: 'Public', value: true },
@@ -48,7 +45,7 @@ export const useChannelForm = (props: FormType) => {
   const firstRender = useRef(true)
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropModalImperativeHandle>(null)
-  const { memberId, accountId, channelId } = useUser()
+  const { memberId, accountId, channelId, refetchUserMemberships } = useUser()
   const cachedChannelId = useRef(channelId)
   const { joystream } = useJoystream()
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
@@ -95,8 +92,6 @@ export const useChannelForm = (props: FormType) => {
         : null,
     shallow
   )
-
-  const { isWorkspaceOpen, setIsWorkspaceOpen } = useVideoWorkspace()
 
   useEffect(() => {
     if (newChannel) {
@@ -189,6 +184,71 @@ export const useChannelForm = (props: FormType) => {
   )
 
   // set default values for editing channel
+  const handleSubmit = (onCompleted?: (channelId: string) => void) =>
+    createSubmitHandler(async (data) => {
+      if (!joystream || !memberId || !accountId) {
+        return
+      }
+
+      if (!channelBucketsCount && !newChannel) {
+        SentryLogger.error('Channel buckets count is not set', 'CreateEditChannelView')
+        return
+      }
+
+      const metadata: ChannelInputMetadata = {
+        ...(dirtyFields.title ? { title: data.title?.trim() ?? '' } : {}),
+        ...(dirtyFields.description ? { description: data.description?.trim() ?? '' } : {}),
+        ...(dirtyFields.language || newChannel ? { language: data.language } : {}),
+        ...(dirtyFields.isPublic || newChannel ? { isPublic: data.isPublic } : {}),
+        ownerAccount: accountId ?? '',
+      }
+      let channelId = ''
+      await handleChannelSubmit(
+        {
+          metadata,
+          channel,
+          newChannel,
+          assets: {
+            avatarPhoto: data.avatar,
+            coverPhoto: data.cover,
+          },
+          refetchChannel: isEditType(props) ? props.refetchChannel : undefined,
+          fee: newChannel ? createChannelFee : updateChannelFee,
+        },
+        (result) => {
+          reset(getValues())
+          channelId = result.channelId
+        },
+        setValue,
+        () => {
+          if (atlasConfig.features.ypp.googleConsoleClientId && atlasConfig.features.ypp.youtubeSyncApiUrl) {
+            setTimeout(() => setShowConnectToYtDialog(true), 2000)
+          }
+
+          // not sure why, but even tho Orion should be in sync initial refetches return empty state
+          // that's why I've introduced this logic to make sure state is in sync before taking actions
+          let refetchTries = 0
+          const tryFetchMember = async () => {
+            refetchUserMemberships().then((res) => {
+              if (res.data.memberships.some((member) => member.channels.some((channel) => channel.id === channelId))) {
+                onCompleted?.(channelId)
+                return
+              } else if (refetchTries < 3) {
+                setTimeout(() => {
+                  refetchTries++
+                  tryFetchMember()
+                }, 2000)
+              }
+
+              onCompleted?.(channelId)
+            })
+          }
+
+          tryFetchMember()
+        }
+      )
+    })()
+
   useEffect(() => {
     if (newChannel || !channel) {
       return
@@ -225,46 +285,6 @@ export const useChannelForm = (props: FormType) => {
       cachedChannelId.current = channel.id
     }
   }, [channel, newChannel, reset])
-
-  const handleSubmit = createSubmitHandler(async (data) => {
-    if (!joystream || !memberId || !accountId) {
-      return
-    }
-
-    if (!channelBucketsCount && !newChannel) {
-      SentryLogger.error('Channel buckets count is not set', 'CreateEditChannelView')
-      return
-    }
-
-    setIsWorkspaceOpen(false)
-    const metadata: ChannelInputMetadata = {
-      ...(dirtyFields.title ? { title: data.title?.trim() ?? '' } : {}),
-      ...(dirtyFields.description ? { description: data.description?.trim() ?? '' } : {}),
-      ...(dirtyFields.language || newChannel ? { language: data.language } : {}),
-      ...(dirtyFields.isPublic || newChannel ? { isPublic: data.isPublic } : {}),
-      ownerAccount: accountId ?? '',
-    }
-
-    await handleChannelSubmit(
-      {
-        metadata,
-        channel,
-        newChannel,
-        assets: {
-          avatarPhoto: data.avatar,
-          coverPhoto: data.cover,
-        },
-        refetchChannel: isEditType(props) ? props.refetchChannel : undefined,
-        fee: newChannel ? createChannelFee : updateChannelFee,
-      },
-      () => reset(getValues()),
-      setValue,
-      () =>
-        atlasConfig.features.ypp.googleConsoleClientId &&
-        atlasConfig.features.ypp.youtubeSyncApiUrl &&
-        setTimeout(() => setShowConnectToYtDialog(true), 2000)
-    )
-  })
 
   const handleCoverChange: ImageCropModalProps['onConfirm'] = (
     croppedBlob,
@@ -341,7 +361,6 @@ export const useChannelForm = (props: FormType) => {
     hasAvatarUploadFailed,
     hasCoverUploadFailed,
     hideActionBar,
-    isWorkspaceOpen,
     showConnectToYtDialog,
     actions: {
       handleDeleteCover,
