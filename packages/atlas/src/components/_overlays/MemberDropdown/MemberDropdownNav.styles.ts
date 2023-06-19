@@ -3,7 +3,6 @@ import styled from '@emotion/styled'
 import { animated } from 'react-spring'
 
 import { Avatar } from '@/components/Avatar'
-import { IconWrapper } from '@/components/IconWrapper'
 import { Text } from '@/components/Text'
 import { cVar, sizes } from '@/styles'
 
@@ -99,21 +98,6 @@ export const AvatarButton = styled.button`
   }
 `
 
-export const AddAvatar = styled.div`
-  width: 100%;
-  height: 100%;
-  background-color: ${cVar('colorBackgroundAlpha')};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
-
-export const StyledIconWrapper = styled(IconWrapper)`
-  position: absolute;
-  right: -${sizes(2)};
-  bottom: -${sizes(2)};
-`
-
 type FixedSizeContainerProps = {
   height?: number | string
   width?: number | string
@@ -177,8 +161,6 @@ export const TextLink = styled(Text)`
   }
 `
 
-export const AnimatedTextLink = styled(animated(TextLink))``
-
 export const BalanceContainer = styled.div`
   clear: both;
   margin-top: ${sizes(1)};
@@ -196,10 +178,5 @@ export const AnimatedSectionContainer = styled(animated(SectionContainer))`
 
 export const MemberHandleText = styled(Text)`
   word-break: break-word;
-  display: block;
-`
-
-export const ChannelsSectionTitle = styled(Text)`
-  padding: ${sizes(2)} ${sizes(4)};
   display: block;
 `
