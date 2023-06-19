@@ -223,22 +223,17 @@ type ChangePasswordArgs = {
   joystreamAccountId: string
   gatewayAccountId: string
   email: string
-  encodedSeed: string
+  mnemonic: string
   newPassword: string
 }
 export const changePassword = async ({
   email,
-  encodedSeed,
   newPassword,
+  mnemonic,
   joystreamAccountId,
   gatewayAccountId,
 }: ChangePasswordArgs) => {
   try {
-    const mnemonic = await decodeSessionEncodedSeedToMnemonic(encodedSeed)
-    if (!mnemonic) {
-      throw Error(`Couldn't get mnemonic`)
-    }
-
     const timestamp = Date.now()
     const keypair = keyring.addFromMnemonic(mnemonic)
     const newArtifacts = await prepareEncryptionArtifacts(email, newPassword, mnemonic)

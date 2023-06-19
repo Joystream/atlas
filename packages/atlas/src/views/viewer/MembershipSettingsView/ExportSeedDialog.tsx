@@ -53,12 +53,13 @@ export const ExportSeedDialog: FC<ExportSeedDialogProps> = ({ onClose, show }) =
   const { displaySnackbar } = useSnackbar()
   const [isSubmitting, setIsSubmiting] = useState(false)
 
-  const hidePasswordProps = useHidePasswordInInput()
+  const [hidePasswordProps, resetHidePassword] = useHidePasswordInInput()
 
   const handleClose = useCallback(() => {
     reset({ password: '' })
     onClose()
-  }, [onClose, reset])
+    resetHidePassword()
+  }, [onClose, reset, resetHidePassword])
 
   const handlePrimaryButtonClick = useCallback(() => {
     handleSubmit(async ({ password }) => {
