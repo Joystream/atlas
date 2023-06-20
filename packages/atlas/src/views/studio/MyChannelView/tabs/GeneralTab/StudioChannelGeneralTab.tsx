@@ -1,7 +1,9 @@
+import BN from 'bn.js'
 import { RefObject } from 'react'
 import { Controller, FieldError } from 'react-hook-form'
 
 import { useFullChannel } from '@/api/hooks/channel'
+import { SvgActionCheck } from '@/assets/icons'
 import { ActionBar } from '@/components/ActionBar'
 import { Portal } from '@/components/Portal'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
@@ -15,6 +17,7 @@ import { EntitySettingTemplate } from '@/components/_templates/EntitySettingTemp
 import { atlasConfig } from '@/config'
 import { useChannelForm } from '@/hooks/useChannelForm'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { useSnackbar } from '@/providers/snackbars'
 import { useUser } from '@/providers/user/user.hooks'
@@ -28,7 +31,7 @@ const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
   { name: 'Unlisted (channel will not appear in feeds and search)', value: false },
 ]
 
-export const GeneralTab = ({ actionBarPortal }: { actionBarPortal: RefObject<HTMLDivElement> }) => {
+export const StudioChannelGeneralTab = ({ actionBarPortal }: { actionBarPortal: RefObject<HTMLDivElement> }) => {
   const { channelId } = useUser()
   const { displaySnackbar } = useSnackbar()
   const smMatch = useMediaMatch('sm')
@@ -55,7 +58,6 @@ export const GeneralTab = ({ actionBarPortal }: { actionBarPortal: RefObject<HTM
     form,
     hasCoverUploadFailed,
     hasAvatarUploadFailed,
-    hideActionBar,
     fee,
     actions: { handleDeleteAvatar, handleAvatarChange, handleDeleteCover, handleCoverChange, handleSubmit },
     refs: { coverDialogRef, avatarDialogRef },
@@ -66,6 +68,27 @@ export const GeneralTab = ({ actionBarPortal }: { actionBarPortal: RefObject<HTM
     reset,
     formState: { errors, isDirty },
   } = form
+  const [openDialog, closeDialog] = useConfirmationModal({
+    title: 'Discard changes?',
+    description:
+      'You have unsaved changes which are going to be lost if you change the tab. Are you sure you want to continue?',
+    type: 'warning',
+    primaryButton: {
+      text: 'Discard changes',
+      onClick: () => {
+        closeDialog()
+        reset()
+        displaySnackbar({
+          title: 'Change were discarded',
+          iconType: 'info',
+        })
+      },
+    },
+    secondaryButton: {
+      text: 'Cancel',
+      onClick: () => closeDialog(),
+    },
+  })
 
   if (error) {
     return <ViewErrorFallback />
@@ -152,7 +175,10 @@ export const GeneralTab = ({ actionBarPortal }: { actionBarPortal: RefObject<HTM
               )}
             />
             <FormField label="Channel description">
-              <TextArea {...register('description')} />
+              <TextArea
+                {...register('description')}
+                placeholder="Description of your channel to share with the audience..."
+              />
             </FormField>
           </InputsWrapper>
         </EntitySettingTemplate>
@@ -209,27 +235,41 @@ export const GeneralTab = ({ actionBarPortal }: { actionBarPortal: RefObject<HTM
           </InputsWrapper>
         </EntitySettingTemplate>
       </form>
-      {!hideActionBar && (
-        <Portal containerRef={actionBarPortal}>
-          <ActionBar
-            fee={fee}
-            feeLoading={feeLoading}
-            primaryButton={{
-              text: 'Publish changes',
-              onClick: () => handleSubmit(),
-            }}
-            secondaryButton={
-              isDirty && nodeConnectionStatus === 'connected'
-                ? {
-                    text: 'Cancel',
-                    onClick: () => reset(),
-                  }
-                : undefined
-            }
-            skipFeeCheck
-          />
-        </Portal>
-      )}
+      <Portal containerRef={actionBarPortal}>
+        <ActionBar
+          fee={isDirty ? fee : new BN(0)}
+          feeLoading={feeLoading}
+          primaryButton={{
+            text: 'Publish changes',
+            onClick: () =>
+              isDirty
+                ? handleSubmit(() => {
+                    displaySnackbar({
+                      title: 'All changes are saved',
+                      iconType: 'success',
+                    })
+                  })
+                : undefined,
+          }}
+          primaryButtonTooltip={
+            isDirty
+              ? undefined
+              : {
+                  text: 'All changes saved. Nothing to publish.',
+                  icon: <SvgActionCheck />,
+                }
+          }
+          secondaryButton={
+            isDirty && nodeConnectionStatus === 'connected'
+              ? {
+                  text: 'Cancel',
+                  onClick: () => openDialog(),
+                }
+              : undefined
+          }
+          skipFeeCheck
+        />
+      </Portal>
     </>
   )
 }

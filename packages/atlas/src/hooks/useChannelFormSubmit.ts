@@ -241,7 +241,7 @@ export const useCreateEditChannelSubmit = () => {
         },
       })
 
-      if (completed && data.newChannel) {
+      if (completed) {
         onCompleted?.()
       }
     },

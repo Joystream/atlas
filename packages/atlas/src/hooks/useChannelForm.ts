@@ -1,5 +1,7 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 import shallow from 'zustand/shallow'
 
 import {
@@ -40,6 +42,19 @@ type FormType = EditChannelProps | NewChannelProps
 const isEditType = (props: FormType): props is EditChannelProps => props.type === 'edit'
 const DEFAULT_LANGUAGE = atlasConfig.derived.popularLanguagesSelectValues[0].value
 
+const channelSchema = z.object({
+  title: z
+    .string()
+    .min(1, 'Title is required')
+    .min(3, 'Title should be at least 3 characters long')
+    .max(40, 'Title can be only 40 characters long'),
+  isPublic: z.boolean(),
+  description: z.string().optional(),
+  language: z.any(),
+  avatar: z.any(),
+  cover: z.any(),
+})
+
 export const useChannelForm = (props: FormType) => {
   const [showConnectToYtDialog, setShowConnectToYtDialog] = useState(false)
   const firstRender = useRef(true)
@@ -56,6 +71,7 @@ export const useChannelForm = (props: FormType) => {
 
   const form = useForm<CreateEditChannelFormInputs>({
     mode: 'onSubmit',
+    resolver: zodResolver(channelSchema),
     defaultValues: {
       avatar: { contentId: null, assetDimensions: null, imageCropData: null, originalBlob: undefined },
       cover: { contentId: null, assetDimensions: null, imageCropData: null, originalBlob: undefined },
@@ -233,11 +249,13 @@ export const useChannelForm = (props: FormType) => {
               if (res.data.memberships.some((member) => member.channels.some((channel) => channel.id === channelId))) {
                 onCompleted?.(channelId)
                 return
-              } else if (refetchTries < 3) {
+              }
+              if (refetchTries < 3) {
                 setTimeout(() => {
                   refetchTries++
                   tryFetchMember()
                 }, 2000)
+                return
               }
 
               onCompleted?.(channelId)

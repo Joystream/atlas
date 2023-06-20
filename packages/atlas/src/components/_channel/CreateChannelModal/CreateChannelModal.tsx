@@ -64,7 +64,6 @@ export const CreateChannelModal = () => {
               Publish your videos and sell them as NFTs with your own channel.
             </Description>
           }
-          // hasNavigatedBack={hasNavigatedBack}
           formNode={
             <FormContainer>
               <Controller
