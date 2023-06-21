@@ -5,6 +5,10 @@ import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { media, sizes, zIndex } from '@/styles'
 
+export const MemberSettingsPageWrapper = styled.div`
+  padding-bottom: ${sizes(13)};
+`
+
 export const NoGlobalPaddingWrapper = styled.div`
   margin: 0 calc(-1 * var(--size-global-horizontal-padding));
 `

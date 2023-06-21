@@ -16,13 +16,13 @@ import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { ImageInputFile } from '@/components/_inputs/MultiFileSelect'
 import { TextArea } from '@/components/_inputs/TextArea'
+import { DialogButtonProps } from '@/components/_overlays/Dialog'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
 import { EntitySettingTemplate } from '@/components/_templates/EntitySettingTemplate'
 import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { MemberInputMetadata } from '@/joystream-lib/types'
-import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useFee, useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
@@ -37,28 +37,22 @@ export type EditMemberFormInputs = {
   avatar: ImageInputFile | null
   about: string | null
 }
+type MembershipPublicProfileProps = {
+  onDirty: (isDirty: boolean) => void
+  onOpenUnsavedChangesDialog: (primaryButtonProps: DialogButtonProps) => void
+  onCloseUnsavedChangesDialog: () => void
+}
 
-export const MembershipPublicProfile: FC = () => {
+export const MembershipPublicProfile: FC<MembershipPublicProfileProps> = ({
+  onDirty,
+  onOpenUnsavedChangesDialog,
+  onCloseUnsavedChangesDialog,
+}) => {
   const handleInputRef = useRef<HTMLInputElement | null>(null)
   const [isImageValid, setIsImageValid] = useState(true)
   const [isHandleValidating, setIsHandleValidating] = useState(false)
   const { memberId, activeMembership, isLoggedIn, refetchUserMemberships } = useUser()
 
-  const [openDialog, closeDialog] = useConfirmationModal({
-    title: 'Discard changes?',
-    description:
-      'You have unsaved changes which are going to be lost if you change the tab. Are you sure you want to continue?',
-    type: 'warning',
-    primaryButton: {
-      text: 'Discard changes',
-      to: absoluteRoutes.viewer.member(activeMembership?.handle),
-      onClick: () => closeDialog(),
-    },
-    secondaryButton: {
-      text: 'Cancel',
-      onClick: () => closeDialog(),
-    },
-  })
   const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
@@ -99,6 +93,10 @@ export const MembershipPublicProfile: FC = () => {
     shouldFocusError: true,
     reValidateMode: 'onSubmit',
   })
+
+  useEffect(() => {
+    onDirty(isDirty)
+  }, [isDirty, onDirty])
 
   const resetForm = useCallback(async () => {
     let blob
@@ -316,6 +314,7 @@ export const MembershipPublicProfile: FC = () => {
             isDirty
               ? undefined
               : {
+                  hideOnClick: false,
                   text: 'All changes saved. Nothing to publish.',
                   icon: <SvgActionCheck />,
                 }
@@ -323,7 +322,14 @@ export const MembershipPublicProfile: FC = () => {
           secondaryButton={{
             text: 'Cancel',
             to: isDirty ? undefined : absoluteRoutes.viewer.member(activeMembership?.handle),
-            onClick: () => (isDirty ? openDialog() : undefined),
+            onClick: () =>
+              isDirty
+                ? onOpenUnsavedChangesDialog({
+                    text: 'Discard changes',
+                    to: absoluteRoutes.viewer.member(activeMembership?.handle),
+                    onClick: () => onCloseUnsavedChangesDialog(),
+                  })
+                : undefined,
           }}
         />
       </form>

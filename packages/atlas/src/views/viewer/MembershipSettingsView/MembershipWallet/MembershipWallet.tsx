@@ -174,6 +174,7 @@ export const MembershipWallet = () => {
       <StyledActionBar
         primaryButtonTooltip={{
           text: 'All changes saved. Nothing to publish.',
+          hideOnClick: false,
           icon: <SvgActionCheck />,
         }}
         primaryButton={{
