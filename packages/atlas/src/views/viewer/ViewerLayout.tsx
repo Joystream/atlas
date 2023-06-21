@@ -82,12 +82,11 @@ export const ViewerLayout: FC = () => {
                 <Route
                   path={relativeRoutes.viewer.memberSettings()}
                   element={
-                    // <PrivateRoute
-                    //   isAuth={isLoggedIn}
-                    //   element={<MembershipSettingsView />}
-                    //   redirectTo={ENTRY_POINT_ROUTE}
-                    // />
-                    <MembershipSettingsView />
+                    <PrivateRoute
+                      isAuth={isLoggedIn}
+                      element={<MembershipSettingsView />}
+                      redirectTo={ENTRY_POINT_ROUTE}
+                    />
                   }
                 />
                 <Route
