@@ -46,7 +46,6 @@ export type GetFullChannelQuery = {
                 __typename?: 'StorageDataObject'
                 id: string
                 resolvedUrls: Array<string>
-                resolvedUrl?: string | null
                 createdAt: Date
                 size: string
                 isAccepted: boolean
@@ -70,7 +69,6 @@ export type GetFullChannelQuery = {
       __typename?: 'StorageDataObject'
       id: string
       resolvedUrls: Array<string>
-      resolvedUrl?: string | null
       createdAt: Date
       size: string
       isAccepted: boolean
@@ -89,7 +87,6 @@ export type GetFullChannelQuery = {
       __typename?: 'StorageDataObject'
       id: string
       resolvedUrls: Array<string>
-      resolvedUrl?: string | null
       createdAt: Date
       size: string
       isAccepted: boolean
@@ -131,7 +128,6 @@ export type GetExtendedBasicChannelsQuery = {
         __typename?: 'StorageDataObject'
         id: string
         resolvedUrls: Array<string>
-        resolvedUrl?: string | null
         createdAt: Date
         size: string
         isAccepted: boolean
@@ -189,7 +185,6 @@ export type GetExtendedFullChannelsQuery = {
                   __typename?: 'StorageDataObject'
                   id: string
                   resolvedUrls: Array<string>
-                  resolvedUrl?: string | null
                   createdAt: Date
                   size: string
                   isAccepted: boolean
@@ -213,7 +208,6 @@ export type GetExtendedFullChannelsQuery = {
         __typename?: 'StorageDataObject'
         id: string
         resolvedUrls: Array<string>
-        resolvedUrl?: string | null
         createdAt: Date
         size: string
         isAccepted: boolean
@@ -232,7 +226,6 @@ export type GetExtendedFullChannelsQuery = {
         __typename?: 'StorageDataObject'
         id: string
         resolvedUrls: Array<string>
-        resolvedUrl?: string | null
         createdAt: Date
         size: string
         isAccepted: boolean
@@ -279,7 +272,6 @@ export type GetBasicChannelsConnectionQuery = {
           __typename?: 'StorageDataObject'
           id: string
           resolvedUrls: Array<string>
-          resolvedUrl?: string | null
           createdAt: Date
           size: string
           isAccepted: boolean
@@ -340,7 +332,6 @@ export type GetTop10ChannelsQuery = {
         __typename?: 'StorageDataObject'
         id: string
         resolvedUrls: Array<string>
-        resolvedUrl?: string | null
         createdAt: Date
         size: string
         isAccepted: boolean
@@ -380,7 +371,6 @@ export type GetDiscoverChannelsQuery = {
         __typename?: 'StorageDataObject'
         id: string
         resolvedUrls: Array<string>
-        resolvedUrl?: string | null
         createdAt: Date
         size: string
         isAccepted: boolean
@@ -423,7 +413,6 @@ export type GetChannelNftCollectorsQuery = {
                 __typename?: 'StorageDataObject'
                 id: string
                 resolvedUrls: Array<string>
-                resolvedUrl?: string | null
                 createdAt: Date
                 size: string
                 isAccepted: boolean
@@ -493,7 +482,6 @@ export type GetPayloadDataByCommitmentQuery = {
             __typename?: 'StorageDataObject'
             id: string
             resolvedUrls: Array<string>
-            resolvedUrl?: string | null
             createdAt: Date
             size: string
             isAccepted: boolean
@@ -647,7 +635,6 @@ export type GetTopSellingChannelsFromThreePeriodsQuery = {
         __typename?: 'StorageDataObject'
         id: string
         resolvedUrls: Array<string>
-        resolvedUrl?: string | null
         createdAt: Date
         size: string
         isAccepted: boolean
@@ -681,7 +668,6 @@ export type GetTopSellingChannelsFromThreePeriodsQuery = {
         __typename?: 'StorageDataObject'
         id: string
         resolvedUrls: Array<string>
-        resolvedUrl?: string | null
         createdAt: Date
         size: string
         isAccepted: boolean
@@ -715,7 +701,6 @@ export type GetTopSellingChannelsFromThreePeriodsQuery = {
         __typename?: 'StorageDataObject'
         id: string
         resolvedUrls: Array<string>
-        resolvedUrl?: string | null
         createdAt: Date
         size: string
         isAccepted: boolean

@@ -91,7 +91,6 @@ fragment FullMembershipFields on Membership {
 fragment StorageDataObjectFields on StorageDataObject {
   id
   resolvedUrls
-  resolvedUrl @client
   createdAt
   size
   isAccepted

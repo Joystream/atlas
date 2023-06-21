@@ -3850,9 +3850,11 @@ export type MutationSetVideoViewPerIpTimeLimitArgs = {
 
 export type MutationSetVideoWeightsArgs = {
   commentsWeight: Scalars['Float']
+  joysteamTimestampSubWeight: Scalars['Float']
   newnessWeight: Scalars['Float']
   reactionsWeight: Scalars['Float']
   viewsWeight: Scalars['Float']
+  ytTimestampSubWeight: Scalars['Float']
 }
 
 export type MutationSignAppActionCommitmentArgs = {
