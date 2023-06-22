@@ -59,7 +59,7 @@ features:
       - title: Sign Up to YouTube Partner Program
         showInDashboard: false # Optional. If false the reward will be shown only on YouTube partner program landing page. Default true
         shortDescription: Connect your YouTube channels via a simple step-by-step flow and get your first reward.
-        baseAmount: 5000 # Base amount that will be multiplied by tier multiplier
+        baseAmount: 20 # Base amount that will be multiplied by tier multiplier
       - title: Sync videos from your YouTube channel
         shortDescription: Opt in to auto-sync feature upon sign up and all YouTube content will get uploaded to $VITE_APP_NAME automatically. Get paid for every new video synced to your $VITE_APP_NAME channel.
         stepsDescription: Publishing your existing and new content with $VITE_APP_NAME is the fastest way to earn more JOY tokens.
@@ -68,7 +68,7 @@ features:
           - Wait till your videos get synced to your $VITE_APP_NAME channel.
           - Publish new videos to your YouTube channel.
           - Get rewarded for every new video synced to $VITE_APP_NAME.
-        baseAmount: 300
+        baseAmount: 3
       - title: Refer another YouTube creator
         shortDescription: Get JOY for every new creator who signs up to YPP program using your referral link. Referrals multiplier depends on the popularity tier of the channel signed up using referral link.
         stepsDescription: Earn when another YouTube creator signs up to the program by using your your referral link.
@@ -78,8 +78,8 @@ features:
           - Get rewarded for every new successful sign up, that uses your referral link. Referral reward depends on their popularity tier.
           - If signed up without the link they can simply add your channel name to the referral field in the registration flow.
         baseAmount:
-          min: 1000
-          max: 5000
+          min: 10
+          max: 50
         actionButtonText: Get referral link
         actionButtonAction: copyReferral
     widgets: # Widgets on Ypp landing page

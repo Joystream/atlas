@@ -87,7 +87,7 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
       )}
       <RewardsWrapper>
         {REWARDS?.map((reward) => {
-          const joyAmount =
+          const rewardAmount =
             typeof reward.joyAmount === 'number'
               ? { type: 'number' as const, amount: reward.joyAmount * multiplier }
               : { type: 'range' as const, min: reward.joyAmount.min, max: reward.joyAmount.max }
@@ -116,7 +116,8 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
                     }
                   : undefined
               }
-              joyAmount={joyAmount}
+              dollarAmount={rewardAmount}
+              joyAmount={null}
             />
           )
         })}
