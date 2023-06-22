@@ -15,3 +15,7 @@ export const StyledAvatar = styled(Avatar)`
   flex-shrink: 0;
   visibility: visible;
 `
+
+export const StyledForm = styled.form`
+  padding-bottom: 52px;
+`

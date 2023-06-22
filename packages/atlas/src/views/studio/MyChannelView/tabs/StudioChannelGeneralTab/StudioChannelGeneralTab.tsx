@@ -3,10 +3,11 @@ import { RefObject } from 'react'
 import { Controller, FieldError } from 'react-hook-form'
 
 import { useFullChannel } from '@/api/hooks/channel'
-import { SvgActionCheck } from '@/assets/icons'
+import { SvgActionCheck, SvgActionShow } from '@/assets/icons'
 import { ActionBar } from '@/components/ActionBar'
 import { Portal } from '@/components/Portal'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
+import { Button } from '@/components/_buttons/Button'
 import { ChannelCover } from '@/components/_channel/ChannelCover'
 import { FormField } from '@/components/_inputs/FormField'
 import { TextInput } from '@/components/_inputs/Input/Input.styles'
@@ -15,6 +16,7 @@ import { TextArea } from '@/components/_inputs/TextArea'
 import { ImageCropModal } from '@/components/_overlays/ImageCropModal'
 import { EntitySettingTemplate } from '@/components/_templates/EntitySettingTemplate'
 import { atlasConfig } from '@/config'
+import { absoluteRoutes } from '@/config/routes'
 import { useChannelForm } from '@/hooks/useChannelForm'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useConfirmationModal } from '@/providers/confirmationModal'
@@ -24,7 +26,7 @@ import { useUser } from '@/providers/user/user.hooks'
 import { requiredValidation } from '@/utils/formValidationOptions'
 import { SentryLogger } from '@/utils/logs'
 
-import { InputsWrapper, StyledAvatar } from './GeneralTab.styles'
+import { InputsWrapper, StyledAvatar, StyledForm } from './StudioChannelGeneralTab.styles'
 
 const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
   { name: 'Public', value: true },
@@ -35,6 +37,7 @@ export const StudioChannelGeneralTab = ({ actionBarPortal }: { actionBarPortal: 
   const { channelId } = useUser()
   const { displaySnackbar } = useSnackbar()
   const smMatch = useMediaMatch('sm')
+  const xsMatch = useMediaMatch('xs')
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
 
   const {
@@ -79,7 +82,7 @@ export const StudioChannelGeneralTab = ({ actionBarPortal }: { actionBarPortal: 
         closeDialog()
         reset()
         displaySnackbar({
-          title: 'Change were discarded',
+          title: 'All changes were discarded',
           iconType: 'info',
         })
       },
@@ -96,7 +99,12 @@ export const StudioChannelGeneralTab = ({ actionBarPortal }: { actionBarPortal: 
 
   return (
     <>
-      <form>
+      <StyledForm>
+        {!xsMatch && channelId && (
+          <Button fullWidth variant="secondary" to={absoluteRoutes.viewer.channel(channelId)} icon={<SvgActionShow />}>
+            View channel
+          </Button>
+        )}
         <EntitySettingTemplate
           title="Channel branding"
           description="Show your followers what your channel is about with customized avatar, cover & description."
@@ -234,7 +242,7 @@ export const StudioChannelGeneralTab = ({ actionBarPortal }: { actionBarPortal: 
             />
           </InputsWrapper>
         </EntitySettingTemplate>
-      </form>
+      </StyledForm>
       <Portal containerRef={actionBarPortal}>
         <ActionBar
           fee={isDirty ? fee : new BN(0)}

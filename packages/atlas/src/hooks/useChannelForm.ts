@@ -45,9 +45,9 @@ const DEFAULT_LANGUAGE = atlasConfig.derived.popularLanguagesSelectValues[0].val
 const channelSchema = z.object({
   title: z
     .string()
-    .min(1, 'Title is required')
-    .min(3, 'Title should be at least 3 characters long')
-    .max(40, 'Title can be only 40 characters long'),
+    .min(1, 'Title is required.')
+    .min(3, 'Title should be at least 3 characters long.')
+    .max(40, 'Title can be only 40 characters long.'),
   isPublic: z.boolean(),
   description: z.string().optional(),
   language: z.any(),
