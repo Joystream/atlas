@@ -87,10 +87,16 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
       )}
       <RewardsWrapper>
         {REWARDS?.map((reward) => {
-          const rewardAmount =
-            typeof reward.joyAmount === 'number'
+          const rewardAmount = reward.joyAmount
+            ? typeof reward.joyAmount === 'number'
               ? { type: 'number' as const, amount: reward.joyAmount * multiplier }
               : { type: 'range' as const, min: reward.joyAmount.min, max: reward.joyAmount.max }
+            : null
+          const rewardAmountUsd = reward.usdAmount
+            ? typeof reward.usdAmount === 'number'
+              ? { type: 'number' as const, amount: reward.usdAmount * multiplier }
+              : { type: 'range' as const, min: reward.usdAmount.min, max: reward.usdAmount.max }
+            : null
           return (
             <BenefitCard
               key={reward.title}
@@ -116,8 +122,8 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
                     }
                   : undefined
               }
-              dollarAmount={rewardAmount}
-              joyAmount={null}
+              joyAmount={rewardAmount}
+              dollarAmount={rewardAmountUsd}
             />
           )
         })}

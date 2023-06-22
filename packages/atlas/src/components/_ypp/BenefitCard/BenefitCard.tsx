@@ -52,7 +52,7 @@ export type BenefitCardProps = {
     to?: string
   }
   joyAmount: JoyAmountNumber | JoyAmountRange | null
-  dollarAmount?: DollarAmountNumber | DollarAmountRange
+  dollarAmount?: DollarAmountNumber | DollarAmountRange | null
   className?: string
 }
 

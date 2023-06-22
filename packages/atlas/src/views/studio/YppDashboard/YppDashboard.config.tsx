@@ -86,6 +86,7 @@ export const REWARDS =
       description: reward.stepsDescription,
       steps: reward.steps,
       joyAmount: reward.baseAmount,
+      usdAmount: reward.baseUsdAmount,
       ...(reward.actionButtonText
         ? {
             actionButton: {
