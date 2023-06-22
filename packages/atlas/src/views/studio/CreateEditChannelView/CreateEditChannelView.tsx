@@ -431,7 +431,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
                     ? null
                     : value.croppedUrl
                     ? [value.croppedUrl]
-                    : value.croppedUrl
+                    : value.originalUrl
                     ? [value.originalUrl as string]
                     : undefined
                 }
@@ -473,7 +473,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
                       ? null
                       : value.croppedUrl
                       ? [value.croppedUrl]
-                      : value.croppedUrl
+                      : value.originalUrl
                       ? [value.originalUrl as string]
                       : undefined
                   }
