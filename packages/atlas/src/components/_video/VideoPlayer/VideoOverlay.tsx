@@ -16,7 +16,7 @@ type VideoOverlayProps = {
   playerState: PlayerState
   onPlayAgain: () => void
   channelId?: string
-  currentThumbnailUrl?: string | null
+  currentThumbnailUrl?: string[] | null
   videoId?: string
   isFullScreen?: boolean
   isPlayNextDisabled?: boolean

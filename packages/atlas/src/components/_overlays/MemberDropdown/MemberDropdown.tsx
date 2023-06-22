@@ -34,7 +34,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     const [disableScrollDuringAnimation, setDisableScrollDuringAnimation] = useState(false)
 
     const [showSendDialog, setShowSendDialog] = useState(false)
-    const { url: memberAvatarUrl } = getMemberAvatar(activeMembership)
+    const { urls: memberAvatarUrls } = getMemberAvatar(activeMembership)
     const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
 
     const memoizedChannelStateBloatBond = useMemo(() => {
@@ -144,7 +144,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     return (
       <>
         <WithdrawFundsDialog
-          avatarUrl={memberAvatarUrl}
+          avatarUrls={memberAvatarUrls}
           activeMembership={activeMembership}
           show={showWithdrawDialog}
           onExitClick={toggleWithdrawDialog}

@@ -52,7 +52,7 @@ export const YppReferralBanner: FC<YppReferralBannerProps> = ({ className }) => 
   })
 
   const channel = extendedChannel?.channel
-  const channelAvatarUrl = channel?.avatarPhoto?.resolvedUrl
+  const channelAvatarUrl = channel?.avatarPhoto?.resolvedUrls
   const shouldShowReferrerBanner = referrerId && channel && !isLoadingChannel
 
   // persist referrer id in store

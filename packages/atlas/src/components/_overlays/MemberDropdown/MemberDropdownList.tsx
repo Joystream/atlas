@@ -68,7 +68,7 @@ export const MemberDropdownList: FC<MemberDropdownListProps> = ({
               <ListItem
                 key={channel.id}
                 onClick={() => onChannelChange?.(channel.id)}
-                nodeStart={<Avatar assetUrl={channel.avatarPhoto?.resolvedUrl} size={32} />}
+                nodeStart={<Avatar assetUrl={channel.avatarPhoto?.resolvedUrls} size={32} />}
                 label={channel?.title ?? ''}
                 caption={channel ? `${channel?.followsNum} followers` : undefined}
                 selected={channel.id === channelId}
@@ -97,11 +97,11 @@ type MemberListItemProps = {
   onClick: () => void
 }
 const MemberListItem: FC<MemberListItemProps> = ({ member, selected, onClick }) => {
-  const { url, isLoadingAsset } = getMemberAvatar(member)
+  const { urls, isLoadingAsset } = getMemberAvatar(member)
   return (
     <ListItem
       onClick={onClick}
-      nodeStart={<Avatar assetUrl={url} loading={isLoadingAsset} />}
+      nodeStart={<Avatar assetUrl={urls} loading={isLoadingAsset} />}
       label={member.handle ?? ''}
       selected={selected}
       asButton

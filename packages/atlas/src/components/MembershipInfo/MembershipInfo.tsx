@@ -14,7 +14,7 @@ import { CopyAddressButton } from '../_buttons/CopyAddressButton/CopyAddressButt
 import { SkeletonLoader } from '../_loaders/SkeletonLoader'
 
 export type MembershipInfoProps = {
-  avatarUrl?: string | null
+  avatarUrls?: string[] | null
   avatarLoading?: boolean
   hasAvatarUploadFailed?: boolean
   onAvatarEditClick?: (event: MouseEvent<HTMLElement>) => void
@@ -29,7 +29,7 @@ export type MembershipInfoProps = {
 
 export const MembershipInfo: FC<MembershipInfoProps> = ({
   address,
-  avatarUrl,
+  avatarUrls,
   avatarLoading,
   hasAvatarUploadFailed,
   onAvatarEditClick,
@@ -56,7 +56,7 @@ export const MembershipInfo: FC<MembershipInfoProps> = ({
               editable={editable}
               onImageValidation={onImageValidation}
               onClick={onAvatarEditClick}
-              assetUrl={avatarUrl}
+              assetUrl={avatarUrls}
               loading={avatarLoading}
               hasAvatarUploadFailed={hasAvatarUploadFailed}
             />

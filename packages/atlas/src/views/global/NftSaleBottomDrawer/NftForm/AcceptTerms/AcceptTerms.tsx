@@ -247,8 +247,8 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({
 }
 
 export const MemberWithResolvedAvatar: FC<{ member: BasicMembershipFieldsFragment }> = ({ member }) => {
-  const { isLoadingAsset, url } = getMemberAvatar(member)
-  return <StyledOutputPill avatarUri={url} isLoadingAvatar={isLoadingAsset} handle={member.handle} withAvatar />
+  const { isLoadingAsset, urls } = getMemberAvatar(member)
+  return <StyledOutputPill avatarUri={urls} isLoadingAvatar={isLoadingAsset} handle={member.handle} withAvatar />
 }
 
 export const TitleText: FC<PropsWithChildren> = ({ children }) => (

@@ -85,7 +85,7 @@ const RegularTemplate: StoryFn<ImageCropModalProps> = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'start', gap: '24px' }}>
       <Avatar
-        assetUrl={avatarImage?.url}
+        assetUrl={avatarImage?.url ? [avatarImage.url] : undefined}
         editable
         onClick={() => avatarDialogRef.current?.open(avatarImage?.originalBlob, avatarImage?.cropData, true)}
         size={88}

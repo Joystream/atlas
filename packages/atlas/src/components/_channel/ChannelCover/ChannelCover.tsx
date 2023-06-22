@@ -19,7 +19,7 @@ import {
 } from './ChannelCover.styles'
 
 export type ChannelCoverProps = {
-  assetUrl?: string | null
+  assetUrl?: string[] | null
   hasCoverUploadFailed?: boolean
   editable?: boolean
   disabled?: boolean

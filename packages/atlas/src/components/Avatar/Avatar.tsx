@@ -1,9 +1,8 @@
-import { FC, MouseEvent, PropsWithChildren, useCallback, useEffect } from 'react'
+import { FC, MouseEvent, PropsWithChildren, useCallback } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { SvgActionNewChannel } from '@/assets/icons'
 import { cVar, transitions } from '@/styles'
-import { validateImage } from '@/utils/image'
 
 import {
   AvatarSize,
@@ -26,7 +25,7 @@ export type AvatarProps = PropsWithChildren<{
   onClick?: (event: MouseEvent<HTMLElement>) => void
   onImageValidation?: (validImage: boolean) => void
   onError?: () => void
-  assetUrl?: string | null
+  assetUrl?: string[] | null
   hasAvatarUploadFailed?: boolean
   loading?: boolean
   className?: string
@@ -49,30 +48,10 @@ export const Avatar: FC<AvatarProps> = ({
   clickable,
   onError,
   onClick,
-  onImageValidation,
+  // onImageValidation,
   disableHoverDimm,
 }) => {
   const isEditable = !loading && editable && size !== 32 && size !== 24
-
-  const checkIfImageIsValid = useCallback(async () => {
-    if (!assetUrl) {
-      onImageValidation?.(true)
-      return
-    }
-    try {
-      await validateImage(assetUrl)
-      onImageValidation?.(true)
-    } catch (error) {
-      onImageValidation?.(false)
-    }
-  }, [assetUrl, onImageValidation])
-
-  useEffect(() => {
-    if (!assetUrl) {
-      return
-    }
-    checkIfImageIsValid()
-  }, [assetUrl, checkIfImageIsValid])
 
   const getEditableIconSize = useCallback(() => {
     const smallIconSizes = [24, 32, 40]

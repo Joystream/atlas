@@ -2,6 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
+import { AssetImage } from '@/components/AssetImage'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, square } from '@/styles'
 
@@ -81,7 +82,7 @@ export const ContentContainer = styled.div`
   ${square('100%')};
 `
 
-export const ThumbnailImage = styled.img`
+export const ThumbnailImage = styled(AssetImage)`
   position: absolute;
   top: 0;
   left: 0;
@@ -208,7 +209,7 @@ export const VideoThumbnailContainer = styled(Link, { shouldForwardProp: isPropV
           transform: translate(0, 12px);
         }
 
-        ${ContentOverlay}, ${HoverOverlay}, ${PlaylistOverlay}, ${SlotsOverlay}, {
+        ${ContentOverlay}, ${HoverOverlay}, ${PlaylistOverlay}, ${SlotsOverlay} {
           transform: translate(0, -4px);
         }
         ${PlaylistOverlay} {

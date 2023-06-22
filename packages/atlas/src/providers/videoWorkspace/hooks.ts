@@ -84,11 +84,11 @@ export const useVideoWorkspaceData = () => {
     : {
         video: {
           id: video?.media?.id ?? null,
-          url: video?.media?.resolvedUrl,
+          url: video?.media?.resolvedUrls[0],
         },
         thumbnail: {
           cropId: video?.thumbnailPhoto?.id ?? null,
-          url: video?.thumbnailPhoto?.resolvedUrl,
+          url: video?.thumbnailPhoto?.resolvedUrls[0],
           originalId: null,
         },
       }

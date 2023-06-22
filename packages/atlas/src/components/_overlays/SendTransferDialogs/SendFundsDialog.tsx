@@ -247,10 +247,10 @@ type ResolvedAvatarProps = {
   member: BasicMembershipFieldsFragment
 }
 const ResolvedAvatar: FC<ResolvedAvatarProps> = ({ member }) => {
-  const { url, isLoadingAsset } = getMemberAvatar(member)
+  const { urls, isLoadingAsset } = getMemberAvatar(member)
   return (
     <Tooltip text={member?.handle} placement="top">
-      <Avatar assetUrl={url} loading={isLoadingAsset} size={24} />
+      <Avatar assetUrl={urls} loading={isLoadingAsset} size={24} />
     </Tooltip>
   )
 }

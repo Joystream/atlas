@@ -70,7 +70,7 @@ export const ChannelLink: FC<ChannelLinkProps> = ({
             withHandle={!hideHandle}
             loading={!displayedChannel}
             size={avatarSize}
-            assetUrl={displayedChannel?.channel.avatarPhoto?.resolvedUrl}
+            assetUrl={displayedChannel?.channel.avatarPhoto?.resolvedUrls}
           />
         </StyledLink>
       )}

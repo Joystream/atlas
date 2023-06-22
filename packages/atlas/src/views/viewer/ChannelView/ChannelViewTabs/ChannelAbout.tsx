@@ -25,7 +25,7 @@ type ChannelAboutProps = {
 }
 
 export const ChannelAbout: FC<ChannelAboutProps> = ({ channel, activeVideosCount }) => {
-  const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(channel?.ownerMember)
+  const { urls: memberAvatarUrls, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(channel?.ownerMember)
   return (
     <StyledLayoutGrid>
       <GridItem colSpan={{ xxs: 12, sm: 8 }} rowStart={{ xxs: 2, sm: 1 }}>
@@ -46,7 +46,7 @@ export const ChannelAbout: FC<ChannelAboutProps> = ({ channel, activeVideosCount
         </Text>
 
         <DetailsMember>
-          <StyledAvatar size={40} assetUrl={memberAvatarUrl} loading={memberAvatarLoading} />
+          <StyledAvatar size={40} assetUrl={memberAvatarUrls} loading={memberAvatarLoading} />
           <MemberContainer>
             <Text as="span" variant="t100" color="colorText">
               Owned by member

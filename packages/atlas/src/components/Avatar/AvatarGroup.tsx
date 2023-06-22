@@ -22,7 +22,7 @@ type SharedAvatarGroupAvatarProps = PropsWithChildren<{
 
 export type AvatarGroupUrlAvatar = {
   __typename?: 'AvatarGroupUrlAvatar'
-  url?: string | null
+  urls?: string[] | null
 } & SharedAvatarGroupAvatarProps
 
 type AvatarGroupMemberAvatar = BasicMembershipFieldsFragment & SharedAvatarGroupAvatarProps
@@ -102,23 +102,23 @@ type SingleAvatarProps = {
   size: AvatarProps['size']
 }
 const SingleAvatar: FC<SingleAvatarProps> = ({ avatar, loading: loadingProp, size }) => {
-  const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(
+  const { urls: memberAvatarUrls, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(
     avatar.__typename === 'Membership' ? avatar : null
   )
 
   let loading: boolean
-  let url: string | null | undefined
+  let urls: string[] | null | undefined
   if (avatar.__typename === 'Membership') {
-    url = memberAvatarUrl
+    urls = memberAvatarUrls
     loading = memberAvatarLoading || avatar.loading || loadingProp || false
   } else {
-    url = (avatar as AvatarGroupUrlAvatar).url
+    urls = (avatar as AvatarGroupUrlAvatar).urls
     loading = avatar.loading || loadingProp || false
   }
   return (
     <StyledAvatar
       loading={loading}
-      assetUrl={url}
+      assetUrl={urls}
       size={size}
       disableHoverDimm
       onClick={(e) => {

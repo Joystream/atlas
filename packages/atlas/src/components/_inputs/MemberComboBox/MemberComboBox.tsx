@@ -137,8 +137,8 @@ type AvatarWithResolvedAssetProps = {
 }
 
 const AvatarWithResolvedAsset: FC<AvatarWithResolvedAssetProps> = ({ member }) => {
-  const { url, isLoadingAsset } = getMemberAvatar(member)
-  return <Avatar size={32} assetUrl={url} loading={isLoadingAsset} />
+  const { urls, isLoadingAsset } = getMemberAvatar(member)
+  return <Avatar size={32} assetUrl={urls} loading={isLoadingAsset} />
 }
 
 type StyledOutputPillWithResolvedAssetProps = {
@@ -154,12 +154,12 @@ const StyledOutputPillWithResolvedAsset: FC<StyledOutputPillWithResolvedAssetPro
   onKeyPress,
   focused,
 }) => {
-  const { url, isLoadingAsset } = getMemberAvatar(member)
+  const { urls, isLoadingAsset } = getMemberAvatar(member)
   return (
     <StyledOutputPill
       handle={member.handle}
       onDeleteClick={onDeleteClick}
-      avatarUri={url}
+      avatarUri={urls}
       isLoadingAvatar={isLoadingAsset}
       withAvatar
       onKeyPress={onKeyPress}

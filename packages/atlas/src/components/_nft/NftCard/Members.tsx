@@ -15,7 +15,7 @@ import {
 } from './NftCard.styles'
 
 export type Member = {
-  assetUrl?: string | null
+  assetUrls?: string[] | null
   name?: string | null
 }
 
@@ -30,7 +30,7 @@ type MembersProps =
 export const Members: FC<MembersProps> = ({ caption, members, loading }) => {
   const avatars =
     members && Array.isArray(members)
-      ? members.map((member) => ({ assetUrl: member.assetUrl, ...(member.name ? { tooltipText: member.name } : {}) }))
+      ? members.map((member) => ({ assetUrl: member.assetUrls, ...(member.name ? { tooltipText: member.name } : {}) }))
       : null
   const isArray = Array.isArray(members)
   return (
@@ -53,7 +53,7 @@ export const Members: FC<MembersProps> = ({ caption, members, loading }) => {
       )}
       {!isArray && (
         <AvatarWrapper>
-          <StyledAvatar size={24} assetUrl={members.assetUrl} loading={loading} />
+          <StyledAvatar size={24} assetUrl={members.assetUrls} loading={loading} />
           {loading ? (
             <SkeletonLoader width={64} height={24} />
           ) : (

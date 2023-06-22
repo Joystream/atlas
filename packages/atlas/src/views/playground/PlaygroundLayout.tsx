@@ -53,7 +53,7 @@ const playgroundRoutes = [
 const PlaygroundLayout = () => {
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
   const { activeMembership, isLoggedIn, signIn } = useUser()
-  const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(activeMembership)
+  const { urls: memberAvatarUrls, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(activeMembership)
   const { openSignInDialog } = useDisplaySignInDialog()
   return (
     <UserProvider>
@@ -78,7 +78,7 @@ const PlaygroundLayout = () => {
           {isLoggedIn ? (
             <Avatar
               size={40}
-              assetUrl={memberAvatarUrl}
+              assetUrl={memberAvatarUrls}
               loading={memberAvatarLoading}
               onClick={() => setIsMemberDropdownActive(true)}
             />

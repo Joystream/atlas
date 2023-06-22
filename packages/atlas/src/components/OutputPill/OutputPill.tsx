@@ -5,7 +5,7 @@ import { Text } from '@/components/Text'
 import { OutputPillWrapper, RemoveButton, StyledAvatar, StyledSVGCloseIcon } from './OutputPill.styles'
 
 export type OutputPillProps = {
-  avatarUri?: string | null
+  avatarUri?: string[] | null
   handle?: string | null
   onDeleteClick?: () => void
   className?: string

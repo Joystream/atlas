@@ -43,7 +43,7 @@ export const SubtitlesBox: FC<SubtitleBoxProps> = ({
     axios.get(url, { responseType: 'blob' })
   )
 
-  const url = asset?.resolvedUrl
+  const url = asset?.resolvedUrls
 
   const handleDownload = async (url = '') => {
     const response = await subtitlesFetch(url)
@@ -61,7 +61,7 @@ export const SubtitlesBox: FC<SubtitleBoxProps> = ({
       ? [
           {
             label: 'Download file',
-            onClick: () => url && handleDownload(url),
+            onClick: () => url && handleDownload(url[0]),
             externalLink: file
               ? {
                   href: URL.createObjectURL(file),

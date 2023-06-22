@@ -71,7 +71,7 @@ import { CustomVideojsEvents, PlayerState, VOLUME_STEP, hotkeysHandler, isFullSc
 import { VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
 
 export type VideoPlayerProps = {
-  channelAvatarUrl?: string | null
+  channelAvatarUrl?: string[] | null
   isChannelAvatarLoading?: boolean
   isShareDialogOpen?: boolean
   onCloseShareDialog?: () => void
@@ -542,7 +542,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
       return
     }
     availableTextTracks.forEach((track) => {
-      player.addRemoteTextTrack({ ...track, mode: 'hidden' }, false)
+      player.addRemoteTextTrack({ ...track, src: track.src[0], mode: 'hidden' }, false)
     })
   }, [availableTextTracks, player])
 

@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 
 import { SvgActionPlus } from '@/assets/icons'
+import { AssetImage } from '@/components/AssetImage'
 import { cVar, sizes, zIndex } from '@/styles'
 
 export const ComboBoxWrapper = styled.div`
@@ -19,7 +20,7 @@ export const ListWrapper = styled.ul<{ isOpen: boolean }>`
   margin: 0;
 `
 
-export const StyledThumbnail = styled.img`
+export const StyledThumbnail = styled(AssetImage)`
   max-height: 32px;
 `
 

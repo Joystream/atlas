@@ -125,9 +125,9 @@ export const VideoHero: FC<VideoHeroProps> = ({
             muted={soundMuted}
             autoPlay
             onTimeUpdate={onTimeUpdate}
-            poster={videoHeroData.heroPosterUrl ?? undefined}
+            poster={[videoHeroData.heroPosterUrl ?? '']}
             onEnded={handleEnded}
-            src={videoHeroData?.heroVideoCutUrl}
+            src={[videoHeroData?.heroVideoCutUrl]}
           />
         )}
         <GradientOverlay withSolidOverlay />

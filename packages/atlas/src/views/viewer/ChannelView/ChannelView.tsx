@@ -113,8 +113,8 @@ export const ChannelView: FC = () => {
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(id, channel?.title)
   const [currentTab, setCurrentTab] = useState<typeof TABS[number]>(TABS[0])
 
-  const avatarPhotoUrl = channel?.avatarPhoto?.resolvedUrl
-  const coverPhotoUrl = channel?.coverPhoto?.resolvedUrl
+  const avatarPhotoUrl = channel?.avatarPhoto?.resolvedUrls
+  const coverPhotoUrl = channel?.coverPhoto?.resolvedUrls
 
   const [sortNftsBy, setSortNftsBy] = useState<OwnedNftOrderByInput>(OwnedNftOrderByInput.CreatedAtDesc)
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
@@ -145,7 +145,7 @@ export const ChannelView: FC = () => {
     if (!channel || !avatarPhotoUrl) return {}
     return generateChannelMetaTags(
       channel,
-      avatarPhotoUrl,
+      avatarPhotoUrl[0],
       atlasConfig.general.appName,
       window.location.origin,
       atlasConfig.general.appTwitterId

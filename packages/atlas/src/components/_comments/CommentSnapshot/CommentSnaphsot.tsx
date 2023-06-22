@@ -21,7 +21,7 @@ import { CommentBody } from '../CommentBody'
 
 export type CommentSnapshotProps = {
   isMemberAvatarLoading?: boolean
-  memberAvatarUrl?: string
+  memberAvatarUrls?: string[] | null
   memberUrl?: string
   memberHandle?: string
   loading?: boolean
@@ -31,7 +31,7 @@ export type CommentSnapshotProps = {
 }
 
 export const CommentSnapshot: FC<CommentSnapshotProps> = ({
-  memberAvatarUrl,
+  memberAvatarUrls,
   isMemberAvatarLoading,
   memberHandle,
   loading,
@@ -44,7 +44,7 @@ export const CommentSnapshot: FC<CommentSnapshotProps> = ({
     <ContentWrapper>
       <AvatarWrapper>
         <Link to={memberUrl}>
-          <Avatar assetUrl={memberAvatarUrl} size={40} loading={isMemberAvatarLoading} clickable />
+          <Avatar assetUrl={memberAvatarUrls} size={40} loading={isMemberAvatarLoading} clickable />
         </Link>
         {!last && <Line />}
       </AvatarWrapper>

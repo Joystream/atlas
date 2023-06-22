@@ -17,7 +17,9 @@ type BackgroundVideoPlayerProps = {
   videoPlaytime?: number
   videoId?: string
   withFade?: boolean
-} & VideoHTMLAttributes<HTMLVideoElement>
+  src: string[]
+  poster: string[]
+} & Omit<VideoHTMLAttributes<HTMLVideoElement>, 'src' | 'poster'>
 
 export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
   autoPlay,

@@ -43,7 +43,7 @@ export type Auction = {
   topBid: BasicBidFieldsFragment | undefined
   topBidAmount: BN | undefined
   topBidderHandle: string | undefined
-  topBidderAvatarUri: string | null | undefined
+  topBidderAvatarUris: string[] | null | undefined
   isUserTopBidder: boolean | undefined
   userBidAmount: BN | undefined
   userBidUnlockDate: Date | undefined
@@ -62,7 +62,7 @@ export type Auction = {
 
 export type NftWidgetProps = {
   ownerHandle: string | null | undefined
-  ownerAvatar: string | null | undefined
+  ownerAvatar: string[] | null | undefined
   creatorId?: string
   isOwner: boolean | undefined
   needsSettling: boolean | undefined
@@ -382,7 +382,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
                 content={
                   <>
                     <TopBidderContainer>
-                      <Avatar assetUrl={nftStatus.topBidderAvatarUri} size={24} />
+                      <Avatar assetUrl={nftStatus.topBidderAvatarUris} size={24} />
                       <TopBidderTokenContainer data-size={size}>
                         <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
                       </TopBidderTokenContainer>

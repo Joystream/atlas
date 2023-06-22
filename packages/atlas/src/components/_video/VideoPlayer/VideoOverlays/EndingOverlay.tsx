@@ -25,7 +25,7 @@ import {
 
 type EndingOverlayProps = {
   channelId?: string
-  currentThumbnailUrl?: string | null
+  currentThumbnailUrl?: string[] | null
   isFullScreen?: boolean
   onPlayAgain?: () => void
   randomNextVideo?: BasicVideoFieldsFragment | null
@@ -49,7 +49,7 @@ export const EndingOverlay: FC<EndingOverlayProps> = ({
   const [isCountDownStarted, setIsCountDownStarted] = useState(false)
   const mdMatch = useMediaMatch('md')
 
-  const randomNextVideoThumbnailUrl = randomNextVideo?.thumbnailPhoto?.resolvedUrl
+  const randomNextVideoThumbnailUrl = randomNextVideo?.thumbnailPhoto?.resolvedUrls
 
   useEffect(() => {
     if (!randomNextVideo || !isEnded) {
@@ -105,9 +105,9 @@ export const EndingOverlay: FC<EndingOverlayProps> = ({
 
   const thumbnailUrl = useMemo(() => {
     if (randomNextVideo) {
-      return randomNextVideoThumbnailUrl || ''
+      return randomNextVideoThumbnailUrl
     } else {
-      return currentThumbnailUrl || ''
+      return currentThumbnailUrl
     }
   }, [currentThumbnailUrl, randomNextVideo, randomNextVideoThumbnailUrl])
 

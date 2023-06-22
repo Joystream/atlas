@@ -14,7 +14,7 @@ import { Input, InputProps } from '../Input'
 
 type ModifiedListItemProps = ListItemProps & {
   label: string
-  thumbnailUrl?: string
+  thumbnailUrl?: string[]
   isSeparator?: boolean
 }
 

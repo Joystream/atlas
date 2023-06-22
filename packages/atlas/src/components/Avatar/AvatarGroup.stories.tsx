@@ -28,9 +28,9 @@ export const Default = Template.bind({})
 
 Default.args = {
   avatars: [
-    { url: 'https://i.pravatar.cc/300', tooltipText: 'Jane' },
-    { url: 'https://i.pravatar.cc/300', tooltipText: 'John' },
-    { url: 'https://i.pravatar.cc/300', tooltipText: 'William' },
-    { url: 'https://i.pravatar.cc/300', tooltipText: 'One line description' },
+    { urls: ['https://i.pravatar.cc/300'], tooltipText: 'Jane' },
+    { urls: ['https://i.pravatar.cc/300'], tooltipText: 'John' },
+    { urls: ['https://i.pravatar.cc/300'], tooltipText: 'William' },
+    { urls: ['https://i.pravatar.cc/300'], tooltipText: 'One line description' },
   ],
 }

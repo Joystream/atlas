@@ -19,9 +19,9 @@ type NftTileViewerProps = {
 export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId, isInCarousel }) => {
   const { nftStatus, nft, loading } = useNft(nftId || '')
   const navigate = useNavigate()
-  const thumbnailUrl = nft?.video.thumbnailPhoto?.resolvedUrl
+  const thumbnailUrls = nft?.video.thumbnailPhoto?.resolvedUrls
   const nftActions = useNftActions()
-  const creatorAvatarUrl = nft?.video.channel.avatarPhoto?.resolvedUrl
+  const creatorAvatarUrls = nft?.video.channel.avatarPhoto?.resolvedUrls
   const nftState = useNftState(nft)
   const {
     auctionPlannedEndDate,
@@ -36,7 +36,7 @@ export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId, isInCarousel }) =
   const ownerMember = nft?.owner.__typename === 'NftOwnerMember' && nft.owner.member
   const ownerChannel = nft?.owner.__typename === 'NftOwnerChannel' && nft.owner.channel
 
-  const { url: ownerMemberAvatarUrl } = getMemberAvatar(ownerMember || null)
+  const { urls: ownerMemberAvatarUrls } = getMemberAvatar(ownerMember || null)
 
   const isAuction = nftStatus?.status === 'auction'
 
@@ -50,14 +50,14 @@ export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId, isInCarousel }) =
   const owner = ownerChannel
     ? {
         name: ownerChannel.title || undefined,
-        assetUrl: creatorAvatarUrl || undefined,
+        assetUrl: creatorAvatarUrls || undefined,
         loading,
         onClick: () => navigate(absoluteRoutes.viewer.channel(ownerChannel.id)),
       }
     : ownerMember
     ? {
         name: ownerMember.handle,
-        assetUrl: ownerMemberAvatarUrl,
+        assetUrl: ownerMemberAvatarUrls,
         loading,
         onClick: () => navigate(absoluteRoutes.viewer.member(ownerMember.handle)),
       }
@@ -83,7 +83,7 @@ export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId, isInCarousel }) =
     loading: loading || !nftId,
     thumbnail: {
       videoHref: absoluteRoutes.viewer.video(nft?.video.id),
-      thumbnailUrl: thumbnailUrl,
+      thumbnailUrls: thumbnailUrls,
       loading: loading,
       thumbnailAlt: `${nft?.video?.title} video thumbnail`,
       type: 'video',
@@ -92,7 +92,7 @@ export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId, isInCarousel }) =
     creator: {
       name: nft?.video.channel.title || undefined,
       loading: loading,
-      assetUrl: creatorAvatarUrl,
+      assetUrls: creatorAvatarUrls,
       onClick: () => navigate(absoluteRoutes.viewer.channel(nft?.video.channel.id)),
     },
     contextMenuItems,

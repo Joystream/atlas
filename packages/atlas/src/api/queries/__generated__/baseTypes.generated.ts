@@ -6575,7 +6575,6 @@ export type StorageDataObject = {
   ipfsHash: Scalars['String']
   /** Whether the data object was uploaded and accepted by the storage provider */
   isAccepted: Scalars['Boolean']
-  resolvedUrl?: Maybe<Scalars['String']>
   /** Resolved asset urls */
   resolvedUrls: Array<Scalars['String']>
   /** Data object size in bytes */

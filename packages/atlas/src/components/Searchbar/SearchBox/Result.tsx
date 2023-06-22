@@ -34,8 +34,8 @@ export const Result: FC<ResultProps> = ({
   loading,
 }) => {
   const title = video ? video.title : channel?.title
-  const channelAvatar = channel?.avatarPhoto?.resolvedUrl
-  const videoThumbnail = video?.thumbnailPhoto?.resolvedUrl
+  const channelAvatar = channel?.avatarPhoto?.resolvedUrls
+  const videoThumbnail = video?.thumbnailPhoto?.resolvedUrls
   const to = useMemo(() => {
     if (video) {
       return absoluteRoutes.viewer.video(video.id)
@@ -63,7 +63,7 @@ export const Result: FC<ResultProps> = ({
         ) : channel && !thumbnailUrl ? (
           <StyledSvgAvatarSilhouette width={32} height={32} />
         ) : (
-          <ResultThumbnail src={thumbnailUrl || ''} rounded={!!channel} />
+          <ResultThumbnail src={thumbnailUrl?.[0]} rounded={!!channel} />
         )}
         <div>
           <Title as="span" color={!selected ? 'colorText' : undefined} variant="t200-strong">

@@ -224,7 +224,7 @@ export const EditMembershipView: FC = () => {
             <>
               <MembershipInfo
                 address={accountId}
-                avatarUrl={avatarInputFile?.url}
+                avatarUrls={avatarInputFile?.url ? [avatarInputFile.url] : undefined}
                 onImageValidation={setIsImageValid}
                 hasAvatarUploadFailed={!isImageValid}
                 onAvatarEditClick={() =>

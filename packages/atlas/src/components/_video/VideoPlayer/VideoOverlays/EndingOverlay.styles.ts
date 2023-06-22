@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 
+import { AssetImage } from '@/components/AssetImage'
 import { CircularProgress } from '@/components/CircularProgress'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
@@ -163,7 +164,7 @@ export const RestartButton = styled(Button)`
   }
 `
 
-export const VideoThumbnail = styled.img`
+export const VideoThumbnail = styled(AssetImage)`
   width: 320px;
   display: none;
 

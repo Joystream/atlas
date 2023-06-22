@@ -45,19 +45,19 @@ export const Default = Template.bind({})
 export const WithLessThan5Collectors = Template.bind({})
 WithLessThan5Collectors.args = {
   collectors: [
-    { url: 'https://thispersondoesnotexist.com/image', tooltipText: 'William', nftsAmount: 6 },
+    { urls: ['https://thispersondoesnotexist.com/image'], tooltipText: 'William', nftsAmount: 6 },
     {
-      url: 'https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg',
+      urls: ['https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg'],
       tooltipText: 'Someone',
       nftsAmount: 1,
     },
-    { url: 'https://thispersondoesnotexist.com/image', tooltipText: 'Someone else', nftsAmount: 7 },
+    { urls: ['https://thispersondoesnotexist.com/image'], tooltipText: 'Someone else', nftsAmount: 7 },
   ],
 }
 
 const TemplateWithChannelCover: StoryFn<CollectorsBoxProps> = (args) => (
   <div style={{ position: 'relative' }}>
-    <ChannelCover assetUrl="https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg" />
+    <ChannelCover assetUrl={['https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg']} />
     <div style={{ position: 'absolute', bottom: -32, right: 0 }}>
       <CollectorsBox {...args} />
     </div>

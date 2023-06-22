@@ -9,7 +9,7 @@ export default {
     editable: { table: { required: false } },
   },
   args: {
-    assetUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg',
+    assetUrl: ['https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg'],
   },
 } as Meta<ChannelCoverProps>
 

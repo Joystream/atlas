@@ -35,9 +35,9 @@ export const VideoTile: FC<VideoTileProps> = memo(
     slots,
     videoHref,
     linkState,
-    thumbnailUrl,
+    thumbnailUrls,
     loadingDetails,
-    channelAvatarUrl,
+    channelAvatarUrls,
     createdAt,
     views,
     loadingThumbnail,
@@ -67,7 +67,7 @@ export const VideoTile: FC<VideoTileProps> = memo(
           ref={thumbnailRef}
           videoHref={videoHref}
           linkState={linkState}
-          thumbnailUrl={thumbnailUrl}
+          thumbnailUrls={thumbnailUrls}
           loading={loadingThumbnail}
           contentSlot={contentSlot}
           slots={slots}
@@ -83,7 +83,7 @@ export const VideoTile: FC<VideoTileProps> = memo(
           channelHref={channelHref}
           onChannelAvatarClick={onChannelAvatarClick}
           variant={detailsVariant}
-          channelAvatarUrl={channelAvatarUrl}
+          channelAvatarUrls={channelAvatarUrls}
           videoTitle={videoTitle}
           videoSubTitle={videoSubTitle}
           views={views}

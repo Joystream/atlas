@@ -54,7 +54,7 @@ export const generateCommonMetaTags = (
 
 export const generateVideoMetaTags = (
   video: BasicVideoFieldsFragment,
-  thumbnailUrl: string,
+  thumbnailUrl: string[],
   appName: string,
   baseAppUrl: string,
   twitterId?: string
@@ -67,7 +67,7 @@ export const generateVideoMetaTags = (
     videoUrl,
     videoTitle,
     video.description || videoTitle,
-    thumbnailUrl,
+    thumbnailUrl[0],
     twitterId
   )
 

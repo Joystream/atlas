@@ -77,7 +77,7 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = memo(({ channelId }
         <StyledAvatar
           size={mdMatch ? 136 : 88}
           loading={isLoading}
-          assetUrl={extendedChannel?.channel.avatarPhoto?.resolvedUrl}
+          assetUrl={extendedChannel?.channel.avatarPhoto?.resolvedUrls}
         />
         <InfoWrapper>
           {isLoading ? (

@@ -60,7 +60,7 @@ const TemplateWithPreffixAndSuffix: StoryFn<InputProps> = (args) => {
       <Input {...args} nodeStart={<Pill label="label" />} nodeEnd="$" />
       <Input
         {...args}
-        nodeStart={<Avatar size={24} assetUrl="https://placedog.net/360/203" />}
+        nodeStart={<Avatar size={24} assetUrl={['https://placedog.net/360/203']} />}
         nodeEnd={<Pill label="500$" />}
       />
       <Input

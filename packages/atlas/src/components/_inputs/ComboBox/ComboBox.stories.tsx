@@ -13,77 +13,77 @@ const MEMBERS = [
   {
     id: 1,
     label: 'Klaudiusz',
-    thumbnailUrl: 'https://placedog.net/57/32?random=1',
+    thumbnailUrl: ['https://placedog.net/57/32?random=1'],
   },
   {
     id: 2,
     label: 'Diego',
-    thumbnailUrl: 'https://placedog.net/57/32?random=2',
+    thumbnailUrl: ['https://placedog.net/57/32?random=2'],
   },
   {
     id: 3,
     label: 'Rafal',
-    thumbnailUrl: 'https://placedog.net/57/32?random=3',
+    thumbnailUrl: ['https://placedog.net/57/32?random=3'],
   },
   {
     id: 3,
     label: 'Loic',
-    thumbnailUrl: 'https://placedog.net/57/32?random=4',
+    thumbnailUrl: ['https://placedog.net/57/32?random=4'],
   },
   {
     id: 4,
     label: 'Bartosz',
-    thumbnailUrl: 'https://placedog.net/57/32?random=5',
+    thumbnailUrl: ['https://placedog.net/57/32?random=5'],
   },
   {
     id: 5,
     label: 'Klaudiusz the Second',
-    thumbnailUrl: 'https://placedog.net/57/32?random=6',
+    thumbnailUrl: ['https://placedog.net/57/32?random=6'],
   },
   {
     id: 6,
     label: 'Diego the Second',
-    thumbnailUrl: 'https://placedog.net/57/32?random=7',
+    thumbnailUrl: ['https://placedog.net/57/32?random=7'],
   },
   {
     id: 7,
     label: 'Rafal the Second',
-    thumbnailUrl: 'https://placedog.net/57/32?random=8',
+    thumbnailUrl: ['https://placedog.net/57/32?random=8'],
   },
   {
     id: 8,
     label: 'Loic the Second',
-    thumbnailUrl: 'https://placedog.net/57/32?random=9',
+    thumbnailUrl: ['https://placedog.net/57/32?random=9'],
   },
   {
     id: 9,
     label: 'Bartosz the Second',
-    thumbnailUrl: 'https://placedog.net/57/32?random=10',
+    thumbnailUrl: ['https://placedog.net/57/32?random=10'],
   },
   {
     id: 10,
     label: 'Klaudiusz the Third',
-    thumbnailUrl: 'https://placedog.net/57/32?random=11',
+    thumbnailUrl: ['https://placedog.net/57/32?random=11'],
   },
   {
     id: 11,
     label: 'Diego the Third',
-    thumbnailUrl: 'https://placedog.net/57/32?random=12',
+    thumbnailUrl: ['https://placedog.net/57/32?random=12'],
   },
   {
     id: 12,
     label: 'Rafal the Third',
-    thumbnailUrl: 'https://placedog.net/57/32?random=13',
+    thumbnailUrl: ['https://placedog.net/57/32?random=13'],
   },
   {
     id: 13,
     label: 'Loic the Third',
-    thumbnailUrl: 'https://placedog.net/57/32?random=14',
+    thumbnailUrl: ['https://placedog.net/57/32?random=14'],
   },
   {
     id: 14,
     label: 'Bartosz the Third',
-    thumbnailUrl: 'https://placedog.net/57/32?random=15',
+    thumbnailUrl: ['https://placedog.net/57/32?random=15'],
   },
 ]
 
@@ -134,7 +134,7 @@ const Template: StoryFn<ComboBoxProps> = (args) => {
 
 export const Default = Template.bind({})
 
-type Member = { label: string; thumbnailUrl: string; id: string }
+type Member = { label: string; thumbnailUrl: string[]; id: string }
 const TemplateWithMembers: StoryFn<ComboBoxProps> = (args) => {
   const [selectedMembers, setSelectedMembers] = useState<Member[]>([])
   const [focusedElement, setFocusedElement] = useState<number | null>(null)
@@ -167,7 +167,7 @@ const TemplateWithMembers: StoryFn<ComboBoxProps> = (args) => {
         items={dropdownItems.map((member) => ({
           id: member.id,
           label: member.label,
-          thumbnailUrl: '',
+          thumbnailUrl: [],
         }))}
         resetOnSelect
       />
