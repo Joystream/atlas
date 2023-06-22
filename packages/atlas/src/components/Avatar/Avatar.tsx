@@ -107,7 +107,7 @@ export const Avatar: FC<AvatarProps> = ({
             >
               {loading ? (
                 <StyledSkeletonLoader rounded />
-              ) : assetUrl ? (
+              ) : assetUrl?.length ? (
                 <StyledImage src={assetUrl} onError={onError} />
               ) : (
                 <SilhouetteAvatar />
