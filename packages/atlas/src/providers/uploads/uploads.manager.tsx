@@ -6,6 +6,7 @@ import shallow from 'zustand/shallow'
 import { useDataObjectsAvailabilityLazy } from '@/api/hooks/dataObject'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
+import useAnalytics from '@/hooks/useSegmentAnalytics'
 import { fetchMissingAssets } from '@/providers/uploads/uploads.utils'
 import { useUser } from '@/providers/user/user.hooks'
 import { AssetUploadStatus } from '@/types/storage'
@@ -26,6 +27,7 @@ export const UploadsManager: FC = () => {
   const { channelId } = useUser()
   const [cachedChannelId, setCachedChannelId] = useState<string | null>(null)
   const videoAssetsRef = useRef<VideoAssets[]>([])
+  const { videoUploaded } = useAnalytics()
 
   const { displaySnackbar } = useSnackbar()
   const { assetsFiles, channelUploads, uploadStatuses, isSyncing, processingAssets, newChannelsIds } = useUploadsStore(
@@ -72,6 +74,8 @@ export const UploadsManager: FC = () => {
             onActionClick: () => openInNewTab(absoluteRoutes.viewer.video(video.parentObject.id), true),
           })
         }
+
+        videoUploaded(video.parentObject?.title ?? 'no data', channelId ?? 'no data')
       })
       videoAssetsRef.current = videoAssets
     }

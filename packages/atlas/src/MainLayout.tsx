@@ -6,6 +6,7 @@ import { StudioLoading } from '@/components/_loaders/StudioLoading'
 import { CookiePopover } from '@/components/_overlays/CookiePopover'
 import { atlasConfig } from '@/config'
 import { BASE_PATHS, absoluteRoutes } from '@/config/routes'
+import useAnalytics from '@/hooks/useSegmentAnalytics'
 import { transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
 import { isBrowserOutdated } from '@/utils/browser'
@@ -54,11 +55,13 @@ export const MainLayout: FC = () => {
     },
     onExitClick: () => closeDialog(),
   })
+  const { pageViewed } = useAnalytics()
 
   useEffect(() => {
     if (!atlasConfig.analytics.sentry?.dsn) {
       return
     }
+
     const stopReplay = async () => await SentryLogger.replay?.stop()
 
     if (location.pathname === absoluteRoutes.viewer.ypp()) {
@@ -70,6 +73,8 @@ export const MainLayout: FC = () => {
         stopReplay()
       }
     }
+
+    pageViewed(location.pathname)
   }, [location.pathname])
 
   const { clearOverlays } = useOverlayManager()

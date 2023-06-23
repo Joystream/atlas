@@ -28,6 +28,7 @@ import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
+import useAnalytics from '@/hooks/useSegmentAnalytics'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
 import { VideoReaction } from '@/joystream-lib/types'
 import { useFee } from '@/providers/joystream/joystream.hooks'
@@ -93,6 +94,7 @@ export const VideoView: FC = () => {
   const nftWidgetProps = useNftWidget(video)
   const { likeOrDislikeVideo } = useReactionTransactions()
   const { withdrawBid } = useNftTransactions()
+  const { videoViewed, likeAdded, dislikeAdded } = useAnalytics()
 
   const mdMatch = useMediaMatch('md')
   const { addVideoView } = useAddVideoView()
@@ -208,6 +210,7 @@ export const VideoView: FC = () => {
         setVideoReactionProcessing(true)
         const fee = reactionFee || (await getReactionFee([memberId || '', video?.id, reaction]))
         const reacted = await likeOrDislikeVideo(video.id, reaction, video.title, fee)
+        reaction === 'like' ? likeAdded(video.id, memberId ?? 'no data') : dislikeAdded(video.id, memberId ?? 'no data')
         setVideoReactionProcessing(false)
         return reacted
       }
@@ -252,6 +255,14 @@ export const VideoView: FC = () => {
     }).catch((error) => {
       SentryLogger.error('Failed to increase video views', 'VideoView', error)
     })
+
+    videoViewed(
+      video?.id ?? 'no data',
+      video?.channel.id ?? 'no data',
+      video?.channel.title ?? 'no data',
+      video?.description ?? 'no data',
+      !!nftWidgetProps
+    )
   }, [addVideoView, channelId, videoId])
 
   if (error) {
