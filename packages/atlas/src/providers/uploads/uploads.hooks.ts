@@ -179,7 +179,7 @@ export const useStartFileUpload = () => {
         const axiosError = e as AxiosError
         const networkFailure =
           axiosError.isAxiosError &&
-          (!axiosError.response?.status || (axiosError.response.status < 400 && axiosError.response.status >= 500))
+          (!axiosError.response?.status || (axiosError.response.status >= 400 && axiosError.response.status <= 500))
         if (networkFailure) {
           markStorageOperatorFailed(uploadOperator.id)
         }

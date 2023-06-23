@@ -34,7 +34,9 @@ const getVideoKeyArgs = (
   const idIn = args?.where?.id_in || []
   const isPublic = args?.where?.isPublic_eq ?? ''
   const createdAtGte = args?.where?.createdAt_gte ? JSON.stringify(args.where.createdAt_gte) : ''
+  const createdAtGt = args?.where?.createdAt_gt ? JSON.stringify(args.where.createdAt_gt) : ''
   const createdAtLte = args?.where?.createdAt_lte ? JSON.stringify(args.where.createdAt_lte) : ''
+  const createdAtLt = args?.where?.createdAt_lt ? JSON.stringify(args.where.createdAt_lt) : ''
   const durationGte = args?.where?.duration_gte || ''
   const durationLte = args?.where?.duration_gte || ''
   const titleContains = args?.where?.title_contains || ''
@@ -48,7 +50,7 @@ const getVideoKeyArgs = (
     return `${createdAtGte}:${channel}`
   }
 
-  return `${onlyCount}:${channel}:${category}:${nft}:${language}:${createdAtGte}:${createdAtLte}:${isPublic}:${idEq}:${idIn}:${sorting}:${durationGte}:${durationLte}:${titleContains}:${titleContainsInsensitive}:${offset}`
+  return `${onlyCount}:${channel}:${category}:${nft}:${language}:${createdAtGte}:${createdAtLte}:${isPublic}:${idEq}:${idIn}:${sorting}:${durationGte}:${durationLte}:${titleContains}:${titleContainsInsensitive}:${offset}:${createdAtGt}:${createdAtLt}`
 }
 
 const getNftKeyArgs = (

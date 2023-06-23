@@ -93,7 +93,7 @@ export const Tabs: FC<TabsProps> = memo(
                 data-badge={tab.badgeNumber}
               >
                 {tab.name}
-                {tab.pillText && <StyledPill size="small" label={tab.pillText} />}
+                {typeof tab.pillText !== 'undefined' && <StyledPill size="small" label={tab.pillText} />}
               </Text>
             </Tab>
           ))}
