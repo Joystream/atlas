@@ -2,7 +2,8 @@ import styled from '@emotion/styled'
 
 import { GridItem } from '@/components/LayoutGrid'
 import { Button } from '@/components/_buttons/Button'
-import { sizes } from '@/styles'
+import { cVar, sizes } from '@/styles'
+import { Anchor } from '@/views/global/YppLandingView/YppAuthorizationModal/YppAuthorizationModal.styles'
 
 export const BenefitsCardButton = styled(Button)`
   border-radius: 999px;
@@ -26,6 +27,10 @@ export const BenefitsCardsButtonsGroup = styled.div`
 export const BenefitsCardsContainerGridItem = styled(GridItem)`
   display: grid;
   gap: ${sizes(4)};
+`
+
+export const ColorAnchor = styled(Anchor)`
+  color: ${cVar('colorTextPrimary')};
 `
 
 export const RewardsSubtitleWrapper = styled.div`

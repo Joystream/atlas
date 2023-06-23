@@ -8,7 +8,6 @@ import { TooltipText } from '@/components/Tooltip/Tooltip.styles'
 import { BenefitCard } from '@/components/_ypp/BenefitCard'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { Anchor } from '@/views/global/YppLandingView/YppAuthorizationModal/YppAuthorizationModal.styles'
 
 import {
   BackgroundContainer,
@@ -20,6 +19,7 @@ import {
   BenefitsCardButton,
   BenefitsCardsButtonsGroup,
   BenefitsCardsContainerGridItem,
+  ColorAnchor,
   RewardsSubtitleWrapper,
 } from './YppRewardSection.styles'
 
@@ -176,9 +176,9 @@ export const YppRewardSection: FC = () => {
                 {atlasConfig.joystream.tokenTicker} token is a native crypto asset of Joystream blockchain. It is used
                 for platform governance, purchasing NFTs, trading creator tokens, and covering blockchain processing
                 fees. They are listed on{' '}
-                <Anchor href="https://www.mexc.com/exchange/JOYSTREAM_USDT" target="__blank">
+                <ColorAnchor href="https://www.mexc.com/exchange/JOYSTREAM_USDT" target="__blank">
                   MEXC
-                </Anchor>{' '}
+                </ColorAnchor>{' '}
                 exchange under "JOYSTREAM" ticker.
               </TooltipText>
             }
