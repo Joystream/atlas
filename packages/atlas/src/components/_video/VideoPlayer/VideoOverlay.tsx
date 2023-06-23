@@ -3,7 +3,9 @@ import { FC, useEffect, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useBasicVideos } from '@/api/hooks/video'
+import { VideoOrderByInput, VideoWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { BasicVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { publicVideoFilter } from '@/config/contentFilter'
 import { cVar, transitions } from '@/styles'
 import { getRandomIntInclusive } from '@/utils/number'
 
@@ -20,7 +22,9 @@ type VideoOverlayProps = {
   isPlayNextDisabled?: boolean
   playRandomVideoOnEnded?: boolean
   isMinimized?: boolean
+  currentVideoCreatedAt?: Date
 }
+
 export const VideoOverlay: FC<VideoOverlayProps> = ({
   playerState,
   onPlayAgain,
@@ -31,28 +35,37 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
   isPlayNextDisabled,
   isMinimized,
   playRandomVideoOnEnded = true,
+  currentVideoCreatedAt,
 }) => {
   const [randomNextVideo, setRandomNextVideo] = useState<BasicVideoFieldsFragment | null>(null)
-  const { videos } = useBasicVideos(
-    {
-      where: {
-        channel: {
-          id_eq: channelId,
-        },
+  const commonFiltersFactory = (where?: VideoWhereInput) => ({
+    limit: 1,
+    orderBy: VideoOrderByInput.ChannelCreatedAtAsc,
+    where: {
+      ...publicVideoFilter,
+      channel: {
+        id_eq: channelId,
       },
+      ...where,
     },
-    { context: { delay: 2000 } }
+  })
+  const { videos: newerVideos, loading: loadingNewestVideos } = useBasicVideos(
+    commonFiltersFactory({ createdAt_gt: currentVideoCreatedAt })
   )
+  const { videos: olderVideos } = useBasicVideos(commonFiltersFactory({ createdAt_lt: currentVideoCreatedAt }), {
+    skip: loadingNewestVideos || !!newerVideos?.length,
+  })
 
   useEffect(() => {
-    if (!videos?.length || videos.length <= 1) {
+    const videos = newerVideos?.length ? newerVideos : olderVideos
+    if (!videos?.length || videos.length === 0) {
       return
     }
     const filteredVideos = videos.filter((video) => video.id !== videoId)
     const randomNumber = getRandomIntInclusive(0, filteredVideos.length - 1)
 
     setRandomNextVideo(filteredVideos[randomNumber])
-  }, [videoId, videos])
+  }, [channelId, currentVideoCreatedAt, newerVideos, olderVideos, videoId])
 
   return (
     <SwitchTransition>
