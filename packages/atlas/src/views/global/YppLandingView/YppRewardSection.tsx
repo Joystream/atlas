@@ -30,7 +30,6 @@ export const YppRewardSection: FC = () => {
   const [rewardMultiplier, setRewardMultiplier] = useState<number>(tiers ? tiers[tiers.length - 1].multiplier : 1)
   const ref = useRef<HTMLDivElement>(null)
 
-
   if (!rewards?.length) {
     return null
   }
