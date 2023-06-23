@@ -100,11 +100,6 @@ const numberCompactFormatter = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 2,
 })
 
-const dollarFormatter = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
-})
-
 const dollarSmallNumberFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
@@ -116,5 +111,4 @@ const formatNumberShort = (num: number): string => {
   return numberCompactFormatter.format(num).replaceAll(',', ' ')
 }
 
-const formatDollars = (num: number) =>
-  (num >= 1 ? dollarFormatter.format(num) : dollarSmallNumberFormatter.format(num)).replaceAll(',', ' ')
+const formatDollars = (num: number) => dollarSmallNumberFormatter.format(num).replaceAll(',', ' ')

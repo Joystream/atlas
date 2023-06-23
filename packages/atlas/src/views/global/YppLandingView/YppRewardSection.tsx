@@ -1,11 +1,14 @@
-import { FC, useState } from 'react'
+import { FC, useRef, useState } from 'react'
 
+import { Information } from '@/components/Information'
 import { LayoutGrid } from '@/components/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
+import { TooltipText } from '@/components/Tooltip/Tooltip.styles'
 import { BenefitCard } from '@/components/_ypp/BenefitCard'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { Anchor } from '@/views/global/YppLandingView/YppAuthorizationModal/YppAuthorizationModal.styles'
 
 import {
   BackgroundContainer,
@@ -17,6 +20,7 @@ import {
   BenefitsCardButton,
   BenefitsCardsButtonsGroup,
   BenefitsCardsContainerGridItem,
+  RewardsSubtitleWrapper,
 } from './YppRewardSection.styles'
 
 export const YppRewardSection: FC = () => {
@@ -24,6 +28,8 @@ export const YppRewardSection: FC = () => {
   const tiers = atlasConfig.features.ypp.tiersDefinition?.tiers
   const rewards = atlasConfig.features.ypp.rewards
   const [rewardMultiplier, setRewardMultiplier] = useState<number>(tiers ? tiers[tiers.length - 1].multiplier : 1)
+
+  const ref = useRef<HTMLDivElement>(null)
 
   if (!rewards?.length) {
     return null
@@ -160,6 +166,28 @@ export const YppRewardSection: FC = () => {
             })}
           </BenefitsCardsContainerGridItem>
         </LayoutGrid>
+        <RewardsSubtitleWrapper>
+          <Text variant="t200" as="p" color="colorText" margin={{ right: 1 }}>
+            Payments are made in {atlasConfig.joystream.tokenTicker} tokens
+          </Text>
+          <Information
+            interactive
+            customContent={
+              <TooltipText as="span" variant="t100">
+                {atlasConfig.joystream.tokenTicker} token is a native crypto asset of Joystream blockchain. It is used
+                for platform governance, purchasing NFTs, trading creator tokens, and covering blockchain processing
+                fees. They are listed on{' '}
+                <Anchor href="https://www.mexc.com/exchange/JOYSTREAM_USDT" target="__blank">
+                  MEXC
+                </Anchor>{' '}
+                exchange under "JOYSTREAM" ticker
+              </TooltipText>
+            }
+            multiline
+            reference={ref.current}
+            delay={1000}
+          />
+        </RewardsSubtitleWrapper>
       </StyledLimitedWidthContainer>
     </BackgroundContainer>
   )

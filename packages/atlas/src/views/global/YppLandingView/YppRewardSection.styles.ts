@@ -27,3 +27,11 @@ export const BenefitsCardsContainerGridItem = styled(GridItem)`
   display: grid;
   gap: ${sizes(4)};
 `
+
+export const RewardsSubtitleWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: ${sizes(8)};
+`
