@@ -40,7 +40,7 @@ const getDescription = (activity: ActivitiesRecord) => {
       return (
         <>
           <StyledLink
-            to={absoluteRoutes.viewer.member(fromHandle, { tab: 'NFTs owned' })}
+            to={absoluteRoutes.viewer.member(fromHandle, { tab: 'NFTs' })}
             onClick={(e) => e.stopPropagation()}
           >
             {fromHandle}
@@ -53,7 +53,7 @@ const getDescription = (activity: ActivitiesRecord) => {
       return (
         <>
           <StyledLink
-            to={absoluteRoutes.viewer.member(fromHandle, { tab: 'NFTs owned' })}
+            to={absoluteRoutes.viewer.member(fromHandle, { tab: 'NFTs' })}
             onClick={(e) => e.stopPropagation()}
           >
             {fromHandle}
@@ -74,7 +74,7 @@ const getDescription = (activity: ActivitiesRecord) => {
           purchased NFT for <NumberFormat as="span" color="inherit" format="short" value={activity.price} withToken />{' '}
           from{' '}
           <StyledLink
-            to={absoluteRoutes.viewer.member(fromHandle, { tab: 'NFTs owned' })}
+            to={absoluteRoutes.viewer.member(fromHandle, { tab: 'NFTs' })}
             onClick={(e) => e.stopPropagation()}
           >
             {fromHandle}
@@ -85,7 +85,7 @@ const getDescription = (activity: ActivitiesRecord) => {
       return (
         <>
           <StyledLink
-            to={absoluteRoutes.viewer.member(fromHandle, { tab: 'NFTs owned' })}
+            to={absoluteRoutes.viewer.member(fromHandle, { tab: 'NFTs' })}
             onClick={(e) => e.stopPropagation()}
           >
             {fromHandle}
@@ -102,7 +102,7 @@ const getDescription = (activity: ActivitiesRecord) => {
       return (
         <>
           <StyledLink
-            to={absoluteRoutes.viewer.member(fromHandle, { tab: 'NFTs owned' })}
+            to={absoluteRoutes.viewer.member(fromHandle, { tab: 'NFTs' })}
             onClick={(e) => e.stopPropagation()}
           >
             {fromHandle}
@@ -114,7 +114,7 @@ const getDescription = (activity: ActivitiesRecord) => {
       return (
         <>
           <StyledLink
-            to={absoluteRoutes.viewer.member(fromHandle, { tab: 'NFTs owned' })}
+            to={absoluteRoutes.viewer.member(fromHandle, { tab: 'NFTs' })}
             onClick={(e) => e.stopPropagation()}
           >
             {fromHandle}
@@ -126,7 +126,7 @@ const getDescription = (activity: ActivitiesRecord) => {
       return (
         <>
           <StyledLink
-            to={absoluteRoutes.viewer.member(fromHandle, { tab: 'NFTs owned' })}
+            to={absoluteRoutes.viewer.member(fromHandle, { tab: 'NFTs' })}
             onClick={(e) => e.stopPropagation()}
           >
             {fromHandle}
@@ -138,7 +138,7 @@ const getDescription = (activity: ActivitiesRecord) => {
       return (
         <>
           <StyledLink
-            to={absoluteRoutes.viewer.member(fromHandle, { tab: 'NFTs owned' })}
+            to={absoluteRoutes.viewer.member(fromHandle, { tab: 'NFTs' })}
             onClick={(e) => e.stopPropagation()}
           >
             {fromHandle}
@@ -171,7 +171,7 @@ export const MemberActivity: FC<MemberActivityProps> = ({
   return (
     <section>
       {!loading && items.length === 0 ? (
-        <EmptyFallback title="No activity" subtitle="Go out there and explore!" variant="small" />
+        <EmptyFallback title="No activity" subtitle="This member hasn’t done anything yet." variant="large" />
       ) : (
         <LayoutGrid>
           <GridItem colSpan={{ base: 12, sm: 8 }} rowStart={{ base: 2, sm: 1 }}>

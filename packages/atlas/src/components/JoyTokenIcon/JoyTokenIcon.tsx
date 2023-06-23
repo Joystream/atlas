@@ -18,8 +18,10 @@ import {
   SvgJoyTokenSilver48,
 } from '@/assets/icons'
 import { Tooltip } from '@/components/Tooltip'
+import { TooltipText } from '@/components/Tooltip/Tooltip.styles'
 import { atlasConfig } from '@/config'
 import { cVar } from '@/styles'
+import { Anchor } from '@/views/global/YppLandingView/YppAuthorizationModal/YppAuthorizationModal.styles'
 
 type JoyTokenIconVariant = 'primary' | 'silver' | 'regular' | 'gray'
 type JoyTokenIconSize = 16 | 24 | 32 | 48
@@ -70,8 +72,19 @@ export const JoyTokenIcon: FC<JoyTokenIconProps> = ({
   return (
     <>
       <Tooltip
+        interactive
         hidden={withoutInformationTooltip}
-        text={`${atlasConfig.joystream.tokenTicker} token is a native crypto asset of Joystream blockchain. It is used for platform governance, purchasing NFTs, trading creator tokens, and covering blockchain processing fees.`}
+        customContent={
+          <TooltipText as="span" variant="t100">
+            {atlasConfig.joystream.tokenTicker} token is a native crypto asset of Joystream blockchain. It is used for
+            platform governance, purchasing NFTs, trading creator tokens, and covering blockchain processing fees. They
+            are listed on{' '}
+            <Anchor href="https://www.mexc.com/exchange/JOYSTREAM_USDT" target="__blank">
+              MEXC
+            </Anchor>{' '}
+            exchange under JOYSTREAM ticker
+          </TooltipText>
+        }
         multiline
         reference={ref.current}
         delay={1000}

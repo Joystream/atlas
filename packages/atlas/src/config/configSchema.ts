@@ -62,13 +62,24 @@ export const configSchema = z.object({
             shortDescription: z.string(),
             stepsDescription: z.string().optional(),
             steps: z.array(z.string()).optional(),
-            baseAmount: z.union([
-              z.number(),
-              z.object({
-                min: z.number(),
-                max: z.number(),
-              }),
-            ]),
+            baseAmount: z
+              .union([
+                z.number(),
+                z.object({
+                  min: z.number(),
+                  max: z.number(),
+                }),
+              ])
+              .nullable(),
+            baseUsdAmount: z
+              .union([
+                z.number(),
+                z.object({
+                  min: z.number(),
+                  max: z.number(),
+                }),
+              ])
+              .nullable(),
             actionButtonText: z.string().optional(),
             actionButtonAction: z
               .string()
@@ -147,6 +158,11 @@ export const configSchema = z.object({
       })
       .nullable(),
     GA: z
+      .object({
+        id: z.string().nullable(),
+      })
+      .nullable(),
+    optimize: z
       .object({
         id: z.string().nullable(),
       })
