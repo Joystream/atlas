@@ -234,35 +234,14 @@ export const useChannelForm = (props: FormType) => {
         (result) => {
           reset(getValues())
           channelId = result.channelId
+          refetchUserMemberships()
         },
         setValue,
         () => {
           if (atlasConfig.features.ypp.googleConsoleClientId && atlasConfig.features.ypp.youtubeSyncApiUrl) {
             setTimeout(() => setShowConnectToYtDialog(true), 2000)
           }
-
-          // not sure why, but even tho Orion should be in sync initial refetches return empty state
-          // that's why I've introduced this logic to make sure state is in sync before taking actions
-          let refetchTries = 0
-          const tryFetchMember = async () => {
-            refetchUserMemberships().then((res) => {
-              if (res.data.memberships.some((member) => member.channels.some((channel) => channel.id === channelId))) {
-                onCompleted?.(channelId)
-                return
-              }
-              if (refetchTries < 3) {
-                setTimeout(() => {
-                  refetchTries++
-                  tryFetchMember()
-                }, 2000)
-                return
-              }
-
-              onCompleted?.(channelId)
-            })
-          }
-
-          tryFetchMember()
+          onCompleted?.(channelId)
         }
       )
     })()
