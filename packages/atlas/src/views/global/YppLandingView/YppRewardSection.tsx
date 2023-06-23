@@ -20,6 +20,7 @@ import {
   BenefitsCardsButtonsGroup,
   BenefitsCardsContainerGridItem,
   ColorAnchor,
+  RewardsSubtitleGridItem,
   RewardsSubtitleWrapper,
 } from './YppRewardSection.styles'
 
@@ -164,29 +165,31 @@ export const YppRewardSection: FC = () => {
               )
             })}
           </BenefitsCardsContainerGridItem>
+          <RewardsSubtitleGridItem colStart={{ base: 6 }} colSpan={{ base: 7, lg: 6 }}>
+            <RewardsSubtitleWrapper>
+              <Text variant="t200" as="p" color="colorText" margin={{ right: 1 }}>
+                Payments are made in {atlasConfig.joystream.tokenTicker} tokens
+              </Text>
+              <Information
+                interactive
+                customContent={
+                  <TooltipText as="span" variant="t100">
+                    {atlasConfig.joystream.tokenTicker} token is a native crypto asset of Joystream blockchain. It is
+                    used for platform governance, purchasing NFTs, trading creator tokens, and covering blockchain
+                    processing fees. They are listed on{' '}
+                    <ColorAnchor href="https://www.mexc.com/exchange/JOYSTREAM_USDT" target="__blank">
+                      MEXC
+                    </ColorAnchor>{' '}
+                    exchange under "JOYSTREAM" ticker.
+                  </TooltipText>
+                }
+                multiline
+                reference={ref.current}
+                delay={1000}
+              />
+            </RewardsSubtitleWrapper>
+          </RewardsSubtitleGridItem>
         </LayoutGrid>
-        <RewardsSubtitleWrapper>
-          <Text variant="t200" as="p" color="colorText" margin={{ right: 1 }}>
-            Payments are made in {atlasConfig.joystream.tokenTicker} tokens
-          </Text>
-          <Information
-            interactive
-            customContent={
-              <TooltipText as="span" variant="t100">
-                {atlasConfig.joystream.tokenTicker} token is a native crypto asset of Joystream blockchain. It is used
-                for platform governance, purchasing NFTs, trading creator tokens, and covering blockchain processing
-                fees. They are listed on{' '}
-                <ColorAnchor href="https://www.mexc.com/exchange/JOYSTREAM_USDT" target="__blank">
-                  MEXC
-                </ColorAnchor>{' '}
-                exchange under "JOYSTREAM" ticker.
-              </TooltipText>
-            }
-            multiline
-            reference={ref.current}
-            delay={1000}
-          />
-        </RewardsSubtitleWrapper>
       </StyledLimitedWidthContainer>
     </BackgroundContainer>
   )

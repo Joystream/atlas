@@ -33,10 +33,15 @@ export const ColorAnchor = styled(Anchor)`
   color: ${cVar('colorTextPrimary')};
 `
 
+export const RewardsSubtitleGridItem = styled(GridItem)`
+  display: grid;
+  gap: ${sizes(4)};
+  margin-top: ${sizes(8)};
+`
+
 export const RewardsSubtitleWrapper = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  margin-top: ${sizes(8)};
 `
