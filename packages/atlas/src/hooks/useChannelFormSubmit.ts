@@ -7,7 +7,13 @@ import { AppActionActionType } from '@/api/queries/__generated__/baseTypes.gener
 import { GetExtendedFullChannelsQueryHookResult } from '@/api/queries/__generated__/channels.generated'
 import { FullChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { atlasConfig } from '@/config'
-import { ChannelAssets, ChannelExtrinsicResult, ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib/types'
+import {
+  ChannelAssets,
+  ChannelAssetsIds,
+  ChannelExtrinsicResult,
+  ChannelInputAssets,
+  ChannelInputMetadata,
+} from '@/joystream-lib/types'
 import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
 import { useOperatorsContext } from '@/providers/assets/assets.provider'
 import { useBloatFeesAndPerMbFees, useBucketsConfigForNewChannel, useJoystream } from '@/providers/joystream'
@@ -46,11 +52,25 @@ type CreateEditChannelData = {
   channel?: FullChannelFieldsFragment
   refetchChannel?: GetExtendedFullChannelsQueryHookResult['refetch']
   fee?: BN
+  collaboratorId?: string
+}
+
+type CreateEditChannelSubmitParams = {
+  data: CreateEditChannelData
+  onUploadAssets?: (field: 'avatar.contentId' | 'cover.contentId', data: string) => void
+  onCompleted?: () => void
+  onTxSync?: (result: { block: number } & { channelId: string; assetsIds: ChannelAssetsIds }) => void | Promise<void>
+  minimized?:
+    | {
+        errorMessage: string
+      }
+    | undefined
 }
 
 export const useCreateEditChannelSubmit = () => {
   const { joystream, proxyCallback } = useJoystream()
   const { channelId, memberId, setActiveChannel, refetchUserMemberships } = useUser()
+
   const addNewChannelIdToUploadsStore = useUploadsStore((state) => state.actions.addNewChannelId)
   const getBucketsConfigForNewChannel = useBucketsConfigForNewChannel()
   const { channelStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
@@ -66,12 +86,7 @@ export const useCreateEditChannelSubmit = () => {
   )
 
   return useCallback(
-    async (
-      data: CreateEditChannelData,
-      onTxSync?: () => void,
-      onUploadAssets?: (field: 'avatar.contentId' | 'cover.contentId', data: string) => void,
-      onCompleted?: () => void
-    ) => {
+    async ({ data, onCompleted, onUploadAssets, minimized, onTxSync }: CreateEditChannelSubmitParams) => {
       if (!joystream) {
         ConsoleLogger.error('No Joystream instance! Has webworker been initialized?')
         return
@@ -200,6 +215,7 @@ export const useCreateEditChannelSubmit = () => {
         }
       }
       const completed = await handleTransaction({
+        minimized,
         fee: data.fee,
         preProcess: processAssets,
         txFactory: async (updateStatus) =>
@@ -214,6 +230,7 @@ export const useCreateEditChannelSubmit = () => {
                 dataObjectStateBloatBondValue.toString(),
                 channelStateBloatBondValue.toString(),
                 atlasConfig.general.appId ? proxyCallback(rawMetadataProcessor) : undefined,
+                data.collaboratorId,
                 proxyCallback(updateStatus)
               )
             : (
@@ -226,11 +243,11 @@ export const useCreateEditChannelSubmit = () => {
                 removedAssetsIds,
                 dataObjectStateBloatBondValue.toString(),
                 channelBucketsCount.toString(),
-                undefined,
+                data.collaboratorId,
                 proxyCallback(updateStatus)
               ),
-        onTxSync: (result) => {
-          onTxSync?.()
+        onTxSync: async (result) => {
+          onTxSync?.(result)
           return refetchDataAndUploadAssets(result)
         },
       })

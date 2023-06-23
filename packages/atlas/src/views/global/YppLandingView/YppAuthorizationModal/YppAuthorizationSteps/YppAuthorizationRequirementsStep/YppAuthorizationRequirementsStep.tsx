@@ -8,6 +8,7 @@ import { atlasConfig } from '@/config'
 import { pluralizeNoun } from '@/utils/misc'
 
 import { CategoriesText, ListItem, Paragraph, StyledList, TickWrapper } from './YppAuthorizationRequirementsStep.styles'
+import { useGetYppChannelRequirements } from './useGetYppChannelRequirements'
 
 import {
   ChannelRequirements,
@@ -18,7 +19,6 @@ import {
 export type Requirements = Record<keyof ChannelRequirements, number | undefined>
 
 type YppAuthorizationRequirementsStepProps = {
-  requirements: Requirements
   requirmentsErrorCodes: YppRequirementsErrorCode[]
 }
 
@@ -33,9 +33,9 @@ const convertHoursRequirementTime = (hours: number) => {
 }
 
 export const YppAuthorizationRequirementsStep: FC<YppAuthorizationRequirementsStepProps> = ({
-  requirements,
   requirmentsErrorCodes,
 }) => {
+  const requirements = useGetYppChannelRequirements()
   const checkRequirmentError = (errorCode: YppAuthorizationErrorCode) =>
     !requirmentsErrorCodes.some((error) => error === errorCode)
 

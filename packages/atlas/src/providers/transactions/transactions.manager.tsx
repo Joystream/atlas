@@ -67,7 +67,7 @@ export const TransactionsManager: FC = () => {
     lastProcessedQnBlockRef.current = lastProcessedBlock
 
     const blockActions = useTransactionManagerStore.getState().blockActions
-    const syncedActions = blockActions.filter((action) => lastProcessedBlock >= action.targetBlock)
+    const syncedActions = blockActions.filter((action) => lastProcessedBlock > action.targetBlock)
 
     if (!syncedActions.length) {
       return

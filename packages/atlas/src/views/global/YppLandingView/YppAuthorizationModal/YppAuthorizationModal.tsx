@@ -3,11 +3,11 @@ import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useMutation } from 'react-query'
 import { useNavigate } from 'react-router-dom'
+import shallow from 'zustand/shallow'
 
-import { useBasicChannel } from '@/api/hooks/channel'
+import { useBasicChannel, useFullChannel } from '@/api/hooks/channel'
 import { FullMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgAlertsError32 } from '@/assets/icons'
-import appScreenshot from '@/assets/images/ypp-authorization/app-screenshot.webp'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { GoogleButton } from '@/components/_buttons/GoogleButton'
@@ -15,37 +15,32 @@ import { Loader } from '@/components/_loaders/Loader'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
+import { useCreateEditChannelSubmit } from '@/hooks/useChannelFormSubmit'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
-import { useBloatFeesAndPerMbFees, useJoystream } from '@/providers/joystream'
-import { useOverlayManager } from '@/providers/overlayManager'
 import { useSnackbar } from '@/providers/snackbars'
-import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { useYppStore } from '@/providers/ypp/ypp.store'
+import { createId } from '@/utils/createId'
+import { imageUrlToBlob } from '@/utils/image'
 import { SentryLogger } from '@/utils/logs'
-import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/YppLandingView.hooks'
 
-import { useGetYppChannelRequirements, useYppGoogleAuth } from './YppAuthorizationModal.hooks'
 import {
   Anchor,
   Content,
-  DescriptionText,
   HeaderIconsWrapper,
-  Img,
   RequirementsButtonSkeleton,
   StyledSvgAppLogoShort,
 } from './YppAuthorizationModal.styles'
-import { YppAuthorizationStepsType } from './YppAuthorizationModal.types'
 import {
   DetailsFormData,
   YppAuthorizationDetailsFormStep,
   YppAuthorizationRequirementsStep,
   YppAuthorizationSelectChannelStep,
-  YppAuthorizationSyncStep,
-  YppAuthorizationTermsAndConditionsStep,
   YppSyncStepData,
 } from './YppAuthorizationSteps'
+import { useYppGoogleAuth } from './useYppGoogleAuth'
+
+import { useGetYppSyncedChannels } from '../useGetYppSyncedChannels'
 
 type FinalFormData = {
   authorizationCode?: string
@@ -58,37 +53,83 @@ type FinalFormData = {
 }
 
 export type YppAuthorizationModalProps = {
-  currentStep: YppAuthorizationStepsType
-  onChangeStep: (step: YppAuthorizationStepsType) => void
   unSyncedChannels?: FullMembershipFieldsFragment['channels']
 }
 
-const APP_NAME = atlasConfig.general.appName
+/*  
+1. Not signed users
+- requirements
+- google auth 
+  - get the all required data from google and save in store
+- create user
+  - (under the hood) create a member and a channel
+- ypp settings(refferal, categories)
+- speak to ypp backend
 
-export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
-  currentStep,
-  onChangeStep,
-  unSyncedChannels,
-}) => {
-  const { setActiveChannel, memberId, activeMembership } = useUser()
+2. Signed users without channel
+- requirements
+- google auth
+- (under the hood) create a channel
+- ypp settings(refferal, categories)
+- speak to ypp backend
+
+
+3. Signed users with one channel
+- requirements
+- google auth
+- ypp settings(refferal, categories)
+- speak to ypp backend
+
+
+4. Signed users with many channels 
+- select channel 
+- requirements
+- google auth
+- ypp settings(refferal, categories) 
+- update channel extrinsics
+- speak to ypp backend
+
+*/
+
+const APP_NAME = atlasConfig.general.appName
+const COLLABORATOR_ID = atlasConfig.features.ypp.youtubeCollaboratorMemberId
+const DEFAULT_LANGUAGE = atlasConfig.derived.popularLanguagesSelectValues[0].value
+
+export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSyncedChannels }) => {
+  const { memberId, refetchUserMemberships, setActiveChannel, channelId } = useUser()
   const navigate = useNavigate()
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const { decrementOverlaysOpenCount } = useOverlayManager()
   const {
     unsyncedChannels: yppUnsyncedChannels,
     currentChannel: yppCurrentChannel,
     isLoading,
   } = useGetYppSyncedChannels()
+
+  const setYppModalOpenName = useYppStore((state) => state.actions.setYppModalOpenName)
+  const yppModalOpenName = useYppStore((state) => state.yppModalOpenName)
+
   const contentRef = useRef<HTMLDivElement | null>(null)
   const channelsLoaded = !!unSyncedChannels
   const [finalFormData, setFinalFormData] = useState<FinalFormData | null>(null)
   const selectedChannelId = useYppStore((store) => store.selectedChannelId)
-  const referrerId = useYppStore((store) => store.referrerId)
+  const { referrerId, ytResponseData } = useYppStore((store) => store, shallow)
   const setSelectedChannelId = useYppStore((store) => store.actions.setSelectedChannelId)
   const setReferrerId = useYppStore((store) => store.actions.setReferrerId)
   const setShouldContinueYppFlow = useYppStore((store) => store.actions.setShouldContinueYppFlow)
   const { mutateAsync: yppChannelMutation } = useMutation('ypp-channels-post', (finalFormData: FinalFormData | null) =>
     axios.post(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels`, finalFormData)
+  )
+
+  const { refetch: refetchChannel } = useFullChannel(
+    channelId || '',
+    {
+      skip: !channelId,
+      onError: (error) =>
+        SentryLogger.error('Failed to fetch channel', 'UploadStatus', error, {
+          channel: { id: channelId },
+        }),
+    },
+    { where: { channel: { isPublic_eq: undefined, isCensored_eq: undefined } } }
   )
 
   const smMatch = useMediaMatch('sm')
@@ -97,15 +138,9 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     defaultValues: {
       referrerChannelId: '',
       referrerChannelTitle: '',
-      email: '',
       shouldBeIngested: true,
     },
   })
-  const { dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
-  const channelBucketsCount = useChannelsStorageBucketsCount(selectedChannelId)
-
-  const { joystream, proxyCallback } = useJoystream()
-  const youtubeCollaboratorMemberId = atlasConfig.features.ypp.youtubeCollaboratorMemberId
 
   const { extendedChannel } = useBasicChannel(referrerId || '', {
     skip: !referrerId,
@@ -113,45 +148,33 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
 
   const channel = extendedChannel?.channel
 
-  const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()
 
-  const {
-    handleAuthorizeClick,
-    ytRequirementsErrors,
-    ytResponseData,
-    setYtRequirementsErrors,
-    alreadyRegisteredChannel,
-  } = useYppGoogleAuth({
-    closeModal: useCallback(() => onChangeStep(null), [onChangeStep]),
-    channelsLoaded,
-    onChangeStep: onChangeStep,
-  })
-  const requirements = useGetYppChannelRequirements()
+  const { handleAuthorizeClick, ytRequirementsErrors, setYtRequirementsErrors, alreadyRegisteredChannel } =
+    useYppGoogleAuth({
+      channelsLoaded,
+    })
 
   useEffect(() => {
     contentRef.current?.scrollTo({ top: 0 })
-  }, [currentStep])
+  }, [yppModalOpenName])
 
   const handleClose = useCallback(() => {
     setYtRequirementsErrors([])
     setReferrerId(null)
-    onChangeStep(null)
+    setYppModalOpenName(null)
     setSelectedChannelId(null)
     setShouldContinueYppFlow(false)
-  }, [onChangeStep, setReferrerId, setSelectedChannelId, setShouldContinueYppFlow, setYtRequirementsErrors])
+  }, [setYppModalOpenName, setReferrerId, setSelectedChannelId, setShouldContinueYppFlow, setYtRequirementsErrors])
 
   const handleGoBack = useCallback(() => {
-    if (currentStep === 'ypp-sync') {
-      onChangeStep('details')
+    if (yppModalOpenName === 'ypp-sync-options') {
+      setYppModalOpenName(null)
     }
-    if (currentStep === 'terms-and-conditions') {
-      onChangeStep('ypp-sync')
+    if (yppModalOpenName === 'ypp-sync-options' || yppModalOpenName === 'ypp-channel-already-registered') {
+      setYppModalOpenName('ypp-select-channel')
     }
-    if (currentStep === 'details' || currentStep === 'channel-already-registered') {
-      onChangeStep('select-channel')
-    }
-  }, [currentStep, onChangeStep])
+  }, [yppModalOpenName, setYppModalOpenName])
 
   const handleSelectChannel = useCallback(
     (selectedChannelId: string) => {
@@ -161,49 +184,94 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     [setSelectedChannelId, setYtRequirementsErrors]
   )
 
-  const handleSubmitDetailsForm = detailsFormMethods.handleSubmit((data) => {
+  const createChannel = useCreateEditChannelSubmit()
+
+  const handleCreateOrUpdateChannel = detailsFormMethods.handleSubmit(async (data) => {
     setFinalFormData(() => ({
       ...(selectedChannelId ? { joystreamChannelId: parseInt(selectedChannelId) } : {}),
       authorizationCode: ytResponseData?.authorizationCode,
       userId: ytResponseData?.userId,
-      email: data.email,
       shouldBeIngested: data.shouldBeIngested,
       videoCategoryId: data.videoCategoryId,
       ...(data.referrerChannelId ? { referrerChannelId: parseInt(data.referrerChannelId) } : {}),
     }))
-    onChangeStep(currentStep === 'details' ? 'ypp-sync' : 'terms-and-conditions')
-  })
+    setIsSubmitting(true)
 
-  const handleAcceptTermsAndSubmit = useCallback(async () => {
-    if (!joystream || !selectedChannelId || !memberId) {
-      return
-    }
+    setYppModalOpenName('ypp-speaking-to-backend')
+
     try {
-      if (!youtubeCollaboratorMemberId) {
+      const avatarBlob = ytResponseData?.avatarUrl ? await imageUrlToBlob(ytResponseData?.avatarUrl) : null
+
+      const coverBlob = ytResponseData?.bannerUrl ? await imageUrlToBlob(ytResponseData?.bannerUrl, 1920, 480) : null
+
+      const avatarContentId = `local-avatar-${createId()}`
+      const coverContentId = `local-cover-${createId()}`
+
+      if (!memberId) {
+        throw Error(' memberId id was not provided')
+      }
+      if (!COLLABORATOR_ID) {
         throw Error('Collaborator member id was not provided')
       }
-      setIsSubmitting(true)
-      await yppChannelMutation(finalFormData)
-      const completed = await handleTransaction({
-        txFactory: async (updateStatus) => {
-          return (await joystream.extrinsics).updateChannel(
-            selectedChannelId,
-            memberId,
-            { ownerAccount: memberId },
-            {},
-            [],
-            dataObjectStateBloatBondValue.toString(),
-            channelBucketsCount.toString(),
-            youtubeCollaboratorMemberId,
-            proxyCallback(updateStatus)
-          )
+      await createChannel({
+        minimized: {
+          errorMessage: 'Failed to create or update channel',
+        },
+        data: {
+          collaboratorId: COLLABORATOR_ID,
+          metadata: {
+            ownerAccount: memberId,
+            description: ytResponseData?.channelDescription,
+            isPublic: true,
+            language: DEFAULT_LANGUAGE,
+            title: ytResponseData?.channelTitle || ytResponseData?.channelHandle,
+          },
+          refetchChannel,
+          newChannel: !selectedChannelId,
+          assets: {
+            avatarPhoto: {
+              assetDimensions: { height: 192, width: 192 },
+              contentId: avatarContentId,
+              imageCropData: null,
+              croppedBlob: avatarBlob,
+              originalBlob: avatarBlob,
+            },
+            coverPhoto: {
+              assetDimensions: { width: 1920, height: 480 },
+              contentId: coverContentId,
+              imageCropData: null,
+              croppedBlob: coverBlob,
+              originalBlob: coverBlob,
+            },
+          },
+        },
+        onTxSync: async ({ channelId }) => {
+          setActiveChannel(channelId)
+        },
+        onCompleted: async () => {
+          await refetchUserMemberships()
+
+          await yppChannelMutation({
+            ...(selectedChannelId ? { joystreamChannelId: parseInt(selectedChannelId) } : {}),
+            ...(data.referrerChannelId ? { referrerChannelId: parseInt(data.referrerChannelId) } : {}),
+            authorizationCode: ytResponseData?.authorizationCode,
+            userId: ytResponseData?.userId,
+            shouldBeIngested: data.shouldBeIngested,
+            videoCategoryId: data.videoCategoryId,
+          })
+
+          setYppModalOpenName(null)
+          navigate(absoluteRoutes.studio.ypp())
+          displaySnackbar({
+            title: 'YouTube Synch Enabled',
+            description:
+              'We started importing your YouTube videos. Allow up to 30 minutes for the YouTube videos to start showing in your channel.',
+            actionText: 'Go to My videos',
+            onActionClick: () => navigate(absoluteRoutes.studio.videos()),
+            iconType: 'info',
+          })
         },
       })
-      if (completed) {
-        setTimeout(() => {
-          onChangeStep('summary')
-        }, 2000)
-      }
     } catch (error) {
       displaySnackbar({
         title: 'Authorization failed',
@@ -218,20 +286,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     } finally {
       setIsSubmitting(false)
     }
-  }, [
-    joystream,
-    selectedChannelId,
-    memberId,
-    yppChannelMutation,
-    finalFormData,
-    handleTransaction,
-    dataObjectStateBloatBondValue,
-    channelBucketsCount,
-    youtubeCollaboratorMemberId,
-    proxyCallback,
-    onChangeStep,
-    displaySnackbar,
-  ])
+  })
 
   useEffect(() => {
     if (channel?.title && referrerId) {
@@ -240,12 +295,6 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     }
   }, [channel, detailsFormMethods, referrerId])
 
-  useEffect(() => {
-    if (ytResponseData?.email && ytResponseData.email.includes('@gmail.com')) {
-      detailsFormMethods.setValue('email', ytResponseData.email)
-    }
-  }, [detailsFormMethods, ytResponseData?.email])
-
   const selectedChannel = useMemo(() => {
     if (!unSyncedChannels || !selectedChannelId) {
       return null
@@ -253,14 +302,9 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     return unSyncedChannels.find((channel) => channel.id === selectedChannelId)
   }, [unSyncedChannels, selectedChannelId])
 
-  const handleGoToDashboard = useCallback(() => {
-    decrementOverlaysOpenCount()
-    if (selectedChannel?.id) setActiveChannel(selectedChannel.id)
-  }, [decrementOverlaysOpenCount, selectedChannel?.id, setActiveChannel])
-
   const authorizationStep = useMemo(() => {
-    switch (currentStep) {
-      case 'requirements': {
+    switch (yppModalOpenName) {
+      case 'ypp-requirements': {
         const getPrimaryButton = () => {
           if (isLoading) {
             return <RequirementsButtonSkeleton />
@@ -270,13 +314,6 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
             navigate(absoluteRoutes.studio.ypp())
           }
 
-          if (!activeMembership?.channels.length) {
-            return {
-              text: 'Create a new channel',
-              onClick: () => navigate(absoluteRoutes.studio.newChannel()),
-            }
-          }
-
           if (yppUnsyncedChannels?.length) {
             setSelectedChannelId(yppUnsyncedChannels[0].id)
           }
@@ -284,15 +321,15 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
           if (yppUnsyncedChannels && yppUnsyncedChannels.length > 1) {
             return {
               text: 'Select channel',
-              onClick: () => onChangeStep('select-channel'),
+              onClick: () => setYppModalOpenName('ypp-select-channel'),
             }
           }
 
           return (
             <GoogleButton
               onClick={() => {
-                setSelectedChannelId(yppUnsyncedChannels?.[0].id ?? '')
-                handleAuthorizeClick(yppUnsyncedChannels?.[0].id)
+                setSelectedChannelId(yppUnsyncedChannels?.[0]?.id ?? '')
+                handleAuthorizeClick(yppUnsyncedChannels?.[0]?.id)
               }}
             />
           )
@@ -302,16 +339,11 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
           title: 'Requirements',
           description: `Before you can apply to the program, make sure your YouTube channel meets the below conditions.`,
           primaryButton: getPrimaryButton(),
-          component: (
-            <YppAuthorizationRequirementsStep
-              requirements={requirements}
-              requirmentsErrorCodes={ytRequirementsErrors}
-            />
-          ),
+          component: <YppAuthorizationRequirementsStep requirmentsErrorCodes={ytRequirementsErrors} />,
         }
       }
 
-      case 'select-channel':
+      case 'ypp-select-channel':
         return {
           title: 'Select channel',
           description: `Select the ${APP_NAME} channel you want your YouTube channel to be connected with.`,
@@ -324,7 +356,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
             />
           ),
         }
-      case 'fetching-data':
+      case 'ypp-fetching-data':
         return {
           headerIcon: <Loader variant="medium" />,
           title: 'Waiting for YouTube...',
@@ -334,55 +366,29 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
             disabled: true,
           },
         }
-      case 'details':
+
+      case 'ypp-sync-options':
         return {
-          title: 'Details',
-          description: 'Provide additional information to set up your program membership.',
+          title: 'YouTube Auto Sync',
+          description: 'Gleev automatically syncs all your YouTube videos.',
           primaryButton: {
-            onClick: () => handleSubmitDetailsForm(),
+            onClick: () => handleCreateOrUpdateChannel(),
             text: 'Continue',
           },
           component: <YppAuthorizationDetailsFormStep />,
         }
-      case 'ypp-sync':
+      case 'ypp-speaking-to-backend':
         return {
-          title: 'YouTube Sync',
-          description: `With YouTube Sync enabled, ${APP_NAME} will import videos from your YouTube channel over to Joystream. This can be changed later.`,
+          headerIcon: <Loader variant="medium" />,
+          title: 'Speaking with backend...',
+          description:
+            'Please wait while the server is processing the request. It may take up to 15 seconds on slow a slow network.',
           primaryButton: {
-            onClick: () => handleSubmitDetailsForm(),
-            text: 'Continue',
+            text: 'Waiting...',
+            disabled: true,
           },
-          component: <YppAuthorizationSyncStep />,
         }
-      case 'terms-and-conditions':
-        return {
-          title: null,
-          description: ``,
-          primaryButton: {
-            text: isSubmitting ? 'Please wait...' : 'Accept terms & sign',
-            disabled: isSubmitting,
-            onClick: handleAcceptTermsAndSubmit,
-          },
-          additionalSubtitleNode: null,
-          component: <YppAuthorizationTermsAndConditionsStep />,
-        }
-      case 'summary':
-        return {
-          title: 'Congratulations!',
-          description: (
-            <DescriptionText variant="t200" as="span" color="inherit">
-              Your channel is now successfully enrolled to {APP_NAME} YouTube Partnership Program! Go to Dashboard for
-              more information.
-            </DescriptionText>
-          ),
-          primaryButton: {
-            text: 'Go to dashboard',
-            to: absoluteRoutes.studio.yppDashboard(),
-            onClick: handleGoToDashboard,
-          },
-          component: <Img src={appScreenshot} />,
-        }
-      case 'channel-already-registered':
+      case 'ypp-channel-already-registered':
         return {
           headerIcon: <SvgAlertsError32 />,
           title: 'Authorization failed',
@@ -402,57 +408,47 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
         }
     }
   }, [
-    currentStep,
+    yppModalOpenName,
     selectedChannel,
     unSyncedChannels,
     selectedChannelId,
     handleSelectChannel,
-    isSubmitting,
-    handleAcceptTermsAndSubmit,
-    handleGoToDashboard,
     alreadyRegisteredChannel?.channelTitle,
     alreadyRegisteredChannel?.ownerMemberHandle,
-    requirements,
     ytRequirementsErrors,
     isLoading,
     yppCurrentChannel,
-    activeMembership?.channels.length,
     yppUnsyncedChannels,
     navigate,
     setSelectedChannelId,
-    onChangeStep,
+    setYppModalOpenName,
     handleAuthorizeClick,
-    handleSubmitDetailsForm,
+    handleCreateOrUpdateChannel,
   ])
 
+  const isLoadingModal = yppModalOpenName === 'ypp-fetching-data' || yppModalOpenName === 'ypp-speaking-to-backend'
+
   const secondaryButton = useMemo(() => {
-    if (currentStep === 'requirements' || currentStep === 'select-channel') return
-    if (currentStep === 'summary') {
-      return {
-        text: 'Close',
-        onClick: handleClose,
-      }
-    }
+    if (yppModalOpenName === 'ypp-requirements' || yppModalOpenName === 'ypp-select-channel' || isLoadingModal) return
 
     return {
       text: 'Back',
       disabled: isSubmitting,
       onClick: handleGoBack,
     }
-  }, [currentStep, handleGoBack, isSubmitting, handleClose])
+  }, [yppModalOpenName, isLoadingModal, isSubmitting, handleGoBack])
 
   return (
     <FormProvider {...detailsFormMethods}>
       <DialogModal
         contentRef={contentRef}
-        show={currentStep != null}
-        dividers
+        show={yppModalOpenName != null}
+        dividers={!isLoadingModal}
         additionalActionsNodeMobilePosition="bottom"
         primaryButton={authorizationStep?.primaryButton}
         secondaryButton={secondaryButton}
         additionalActionsNode={
-          currentStep !== 'summary' &&
-          currentStep !== 'fetching-data' && (
+          !isLoadingModal && (
             <Button variant="tertiary" disabled={isSubmitting} onClick={handleClose}>
               Cancel
             </Button>
@@ -465,7 +461,6 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
         <Text variant={smMatch ? 'h500' : 'h400'} as="h2" margin={{ top: 6, bottom: 2 }}>
           {authorizationStep?.title}
         </Text>
-        {authorizationStep?.additionalSubtitleNode}
         <Text variant="t200" as="p" color="colorText">
           {authorizationStep?.description}
         </Text>

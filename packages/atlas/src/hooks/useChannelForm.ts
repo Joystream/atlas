@@ -9,6 +9,7 @@ import {
 import { SelectItem } from '@/components/_inputs/Select'
 import { ImageCropModalImperativeHandle, ImageCropModalProps } from '@/components/_overlays/ImageCropModal'
 import { atlasConfig } from '@/config'
+import { CreateEditChannelFormInputs, useCreateEditChannelSubmit } from '@/hooks/useChannelFormSubmit'
 import { ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib/types'
 import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
@@ -18,10 +19,6 @@ import { useUser } from '@/providers/user/user.hooks'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { createId } from '@/utils/createId'
 import { SentryLogger } from '@/utils/logs'
-import {
-  CreateEditChannelFormInputs,
-  useCreateEditChannelSubmit,
-} from '@/views/studio/CreateEditChannelView/CreateEditChannelView.hooks'
 
 export const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
   { name: 'Public', value: true },
@@ -245,8 +242,8 @@ export const useChannelForm = (props: FormType) => {
       ownerAccount: accountId ?? '',
     }
 
-    await handleChannelSubmit(
-      {
+    await handleChannelSubmit({
+      data: {
         metadata,
         channel,
         newChannel,
@@ -257,13 +254,13 @@ export const useChannelForm = (props: FormType) => {
         refetchChannel: isEditType(props) ? props.refetchChannel : undefined,
         fee: newChannel ? createChannelFee : updateChannelFee,
       },
-      () => reset(getValues()),
-      setValue,
-      () =>
+      onTxSync: () => reset(getValues()),
+      onUploadAssets: setValue,
+      onCompleted: () =>
         atlasConfig.features.ypp.googleConsoleClientId &&
         atlasConfig.features.ypp.youtubeSyncApiUrl &&
-        setTimeout(() => setShowConnectToYtDialog(true), 2000)
-    )
+        setTimeout(() => setShowConnectToYtDialog(true), 2000),
+    })
   })
 
   const handleCoverChange: ImageCropModalProps['onConfirm'] = (

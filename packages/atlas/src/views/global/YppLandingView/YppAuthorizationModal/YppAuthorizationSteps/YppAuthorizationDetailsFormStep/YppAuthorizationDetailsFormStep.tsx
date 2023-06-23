@@ -12,25 +12,30 @@ import {
 } from '@/api/queries/__generated__/fragments.generated'
 import { Avatar } from '@/components/Avatar'
 import { FormField } from '@/components/_inputs/FormField'
-import { Input } from '@/components/_inputs/Input'
 import { InputAutocomplete } from '@/components/_inputs/InputAutocomplete'
+import { Select, SelectItem } from '@/components/_inputs/Select'
 import { atlasConfig } from '@/config'
-import { EMAIL_PATTERN } from '@/config/regex'
+import { displayCategories } from '@/config/categories'
 import { useUser } from '@/providers/user/user.hooks'
 
 import { FormFieldsWrapper } from './YppAuthorizationDetailsFormStep.styles'
 
 export type DetailsFormData = {
-  email: string | undefined
   referrerChannelTitle: string | undefined
   referrerChannelId: string | undefined
+  videoCategoryId?: string
 }
+
+const categoriesSelectItems: SelectItem[] =
+  displayCategories?.map((c) => ({
+    name: c.name || 'Unknown category',
+    value: c.defaultVideoCategory,
+  })) || []
 
 export const YppAuthorizationDetailsFormStep: FC = () => {
   const [foundChannel, setFoundChannel] = useState<FullChannelFieldsFragment | null>()
   const { memberId } = useUser()
   const {
-    register,
     control,
     formState: { errors },
     setValue,
@@ -39,31 +44,25 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
   return (
     <FormFieldsWrapper>
       <FormField
-        label="Contact email"
-        description="We need your email address to send you payment information. No spam or marketing materials."
-        error={errors.email?.message}
+        label="Category for videos"
+        description="Choose one of the categories to be assigned to the imported videos by default. You can change it for each video later."
+        error={errors.videoCategoryId?.message}
       >
-        <Input
-          placeholder="Email address"
-          type="email"
-          error={!!errors.email}
-          {...register('email', {
-            validate: {
-              required: (value) => {
-                if (!value || !value.length) {
-                  return 'Enter contact email.'
-                }
-              },
-              valid: (value) => {
-                if (value && !EMAIL_PATTERN.test(value)) {
-                  return 'Enter valid email address.'
-                }
-                return true
-              },
+        <Controller
+          control={control}
+          name="videoCategoryId"
+          rules={{
+            required: {
+              value: true,
+              message: 'Select a video category.',
             },
-          })}
+          }}
+          render={({ field: { value, onChange, ref } }) => (
+            <Select items={categoriesSelectItems} onChange={onChange} value={value} ref={ref} />
+          )}
         />
       </FormField>
+
       <Controller
         name="referrerChannelTitle"
         control={control}
