@@ -86,7 +86,8 @@ export const useFollowChannel = (opts?: MutationHookOptions<FollowChannelMutatio
   const { followChannel: trackChannelFollow } = useAnalytics()
   return {
     followChannel: (id: string) => {
-      followChannel({
+      trackChannelFollow(id)
+      return followChannel({
         ...opts,
         variables: {
           channelId: id,
@@ -103,7 +104,6 @@ export const useFollowChannel = (opts?: MutationHookOptions<FollowChannelMutatio
           })
         },
       })
-      trackChannelFollow(id)
     },
     ...rest,
   }
