@@ -243,6 +243,9 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     proxyCallback,
     onChangeStep,
     displaySnackbar,
+    yppCurrentChannel?.subscribersCount,
+    yppCurrentChannel?.title,
+    yppOptIn,
   ])
 
   useEffect(() => {

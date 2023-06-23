@@ -79,7 +79,7 @@ export const UploadsManager: FC = () => {
       })
       videoAssetsRef.current = videoAssets
     }
-  }, [assetsFiles, displaySnackbar, navigate, videoAssets])
+  }, [assetsFiles, displaySnackbar, navigate, videoAssets, channelId, videoUploaded])
 
   const initialRender = useRef(true)
   useEffect(() => {

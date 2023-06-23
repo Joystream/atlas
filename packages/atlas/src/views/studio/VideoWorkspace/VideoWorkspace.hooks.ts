@@ -279,6 +279,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
       isNftMintDismissed,
       removeAssetFromUploads,
       setShowFistMintDialog,
+      nftMinted,
     ]
   )
 }

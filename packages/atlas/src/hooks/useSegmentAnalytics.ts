@@ -7,7 +7,6 @@ const useAnalytics = () => {
 
   const pageViewed = useCallback(
     (name: string, category = 'App') => {
-      console.log('lol')
       analytics.page(category, name)
     },
     [analytics]

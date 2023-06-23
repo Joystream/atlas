@@ -88,7 +88,17 @@ export const NftSaleBottomDrawer: FC = () => {
         closeNftAction()
       }
     },
-    [memberId, client, closeNftAction, currentNftId, displaySnackbar, handleTransaction, joystream, proxyCallback]
+    [
+      memberId,
+      client,
+      closeNftAction,
+      currentNftId,
+      displaySnackbar,
+      handleTransaction,
+      joystream,
+      proxyCallback,
+      nftSale,
+    ]
   )
 
   const handleCancel = useCallback(() => {

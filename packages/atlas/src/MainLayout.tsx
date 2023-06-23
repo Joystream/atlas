@@ -75,7 +75,7 @@ export const MainLayout: FC = () => {
     }
 
     pageViewed(location.pathname)
-  }, [location.pathname])
+  }, [location.pathname, pageViewed])
 
   const { clearOverlays } = useOverlayManager()
 

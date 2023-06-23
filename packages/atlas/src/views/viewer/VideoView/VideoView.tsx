@@ -151,6 +151,7 @@ export const VideoView: FC = () => {
   const channelId = video?.channel?.id
   const channelName = video?.channel?.title
   const videoId = video?.id
+  const videoDescription = video?.description
   const numberOfLikes = video?.reactions.filter(({ reaction }) => reaction === 'LIKE').length
   const numberOfDislikes = video?.reactions.filter(({ reaction }) => reaction === 'UNLIKE').length
   const videoNotAvailable = !loading && !video
@@ -216,7 +217,19 @@ export const VideoView: FC = () => {
       }
       return false
     },
-    [getReactionFee, isLoggedIn, likeOrDislikeVideo, memberId, openSignInDialog, reactionFee, signIn, video]
+    [
+      getReactionFee,
+      isLoggedIn,
+      likeOrDislikeVideo,
+      memberId,
+      openSignInDialog,
+      reactionFee,
+      signIn,
+      likeAdded,
+      dislikeAdded,
+      video?.id,
+      video?.title,
+    ]
   )
 
   // use Media Session API to provide rich metadata to the browser
@@ -257,13 +270,13 @@ export const VideoView: FC = () => {
     })
 
     videoViewed(
-      video?.id ?? 'no data',
-      video?.channel.id ?? 'no data',
-      video?.channel.title ?? 'no data',
-      video?.description ?? 'no data',
+      videoId ?? 'no data',
+      channelId ?? 'no data',
+      channelName ?? 'no data',
+      videoDescription ?? 'no data',
       !!nftWidgetProps
     )
-  }, [addVideoView, channelId, videoId])
+  }, [addVideoView, channelId, videoId, channelName, videoDescription, nftWidgetProps, videoViewed])
 
   if (error) {
     return <ViewErrorFallback />
