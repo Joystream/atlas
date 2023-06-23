@@ -179,7 +179,7 @@ export const YppRewardSection: FC = () => {
                 <Anchor href="https://www.mexc.com/exchange/JOYSTREAM_USDT" target="__blank">
                   MEXC
                 </Anchor>{' '}
-                exchange under "JOYSTREAM" ticker
+                exchange under "JOYSTREAM" ticker.
               </TooltipText>
             }
             multiline

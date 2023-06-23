@@ -103,7 +103,7 @@ const numberCompactFormatter = new Intl.NumberFormat('en-US', {
 const dollarSmallNumberFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
-  minimumSignificantDigits: 2,
+  minimumSignificantDigits: 1,
   maximumSignificantDigits: 3,
 })
 
