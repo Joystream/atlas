@@ -1,14 +1,12 @@
 import { FC, ReactNode, useCallback, useState } from 'react'
 
-import { SvgActionCheck, SvgActionCopy, SvgActionDownload, SvgActionEdit } from '@/assets/icons'
+import { SvgActionCopy, SvgActionDownload, SvgActionEdit } from '@/assets/icons'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
 import { EntitySettingTemplate } from '@/components/_templates/EntitySettingTemplate'
-import { absoluteRoutes } from '@/config/routes'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useAuth } from '@/providers/auth/auth.hooks'
-import { useUser } from '@/providers/user/user.hooks'
 
 import {
   ChangePasswordButton,
@@ -21,7 +19,6 @@ import {
 
 import { ChangePasswordDialog } from '../ChangePasswordDialog'
 import { ExportSeedDialog } from '../ExportSeedDialog'
-import { StyledActionBar } from '../MembershipSettingsView.styles'
 
 const CONNECTING_WALLET_STEPS: WalletStepListItemComponentProps[] = [
   {
@@ -59,7 +56,6 @@ const CONNECTING_WALLET_STEPS: WalletStepListItemComponentProps[] = [
 ]
 
 export const MembershipWallet = () => {
-  const { activeMembership } = useUser()
   const [isCopyClicked, setIsCopyClicked] = useState(false)
   const { copyToClipboard } = useClipboard()
   const { currentUser, isWalletUser } = useAuth()
@@ -171,20 +167,6 @@ export const MembershipWallet = () => {
           </FormField>
         </EntitySettingTemplate>
       )}
-      <StyledActionBar
-        primaryButtonTooltip={{
-          text: 'All changes saved. Nothing to publish.',
-          hideOnClick: false,
-          icon: <SvgActionCheck />,
-        }}
-        primaryButton={{
-          text: 'Publish changes',
-        }}
-        secondaryButton={{
-          text: 'Cancel',
-          to: absoluteRoutes.viewer.member(activeMembership?.handle),
-        }}
-      />
     </>
   )
 }

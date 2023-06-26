@@ -10,7 +10,6 @@ import {
   GetMembershipsQuery,
   GetMembershipsQueryVariables,
 } from '@/api/queries/__generated__/memberships.generated'
-import { SvgActionCheck } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
@@ -20,7 +19,6 @@ import { DialogButtonProps } from '@/components/_overlays/Dialog'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
 import { EntitySettingTemplate } from '@/components/_templates/EntitySettingTemplate'
 import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
-import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { MemberInputMetadata } from '@/joystream-lib/types'
 import { useFee, useJoystream } from '@/providers/joystream'
@@ -91,6 +89,7 @@ export const MembershipPublicProfile: FC<MembershipPublicProfileProps> = ({
     formState: { errors, isDirty, dirtyFields, isSubmitting },
   } = useForm<EditMemberFormInputs>({
     shouldFocusError: true,
+    shouldUnregister: true,
     reValidateMode: 'onSubmit',
   })
 
@@ -306,28 +305,21 @@ export const MembershipPublicProfile: FC<MembershipPublicProfileProps> = ({
           fee={fee}
           feeLoading={feeLoading}
           primaryButton={{
-            disabled: isSubmitting,
+            disabled: isSubmitting || !isDirty,
             text: isSubmitting ? 'Please wait...' : 'Publish changes',
             type: 'submit',
           }}
-          primaryButtonTooltip={
-            isDirty
-              ? undefined
-              : {
-                  hideOnClick: false,
-                  text: 'All changes saved. Nothing to publish.',
-                  icon: <SvgActionCheck />,
-                }
-          }
           secondaryButton={{
             text: 'Cancel',
-            to: isDirty ? undefined : absoluteRoutes.viewer.member(activeMembership?.handle),
+            disabled: !isDirty,
             onClick: () =>
               isDirty
                 ? onOpenUnsavedChangesDialog({
                     text: 'Discard changes',
-                    to: absoluteRoutes.viewer.member(activeMembership?.handle),
-                    onClick: () => onCloseUnsavedChangesDialog(),
+                    onClick: () => {
+                      reset()
+                      onCloseUnsavedChangesDialog()
+                    },
                   })
                 : undefined,
           }}

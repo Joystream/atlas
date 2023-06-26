@@ -3,8 +3,9 @@ import { useSearchParams } from 'react-router-dom'
 
 import { PageTabs } from '@/components/PageTabs'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
-import { MemberSettingsTabs, QUERY_PARAMS } from '@/config/routes'
+import { MemberSettingsTabs, QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useConfirmationModal } from '@/providers/confirmationModal'
+import { useUser } from '@/providers/user/user.hooks'
 
 import { MembershipPublicProfile } from './MembershipPublicProfile'
 import {
@@ -20,6 +21,7 @@ export const MembershipSettingsView: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [currentTab, setCurrentTab] = useState<number>(0)
   const [isFormDirty, setIsFormDirty] = useState(false)
+  const { activeMembership } = useUser()
   const currentTabName = searchParams.get(QUERY_PARAMS.TAB) as MemberSettingsTabs | null
 
   // At mount set the tab from the search params
@@ -72,7 +74,24 @@ export const MembershipSettingsView: FC = () => {
   return (
     <MemberSettingsPageWrapper>
       <NoGlobalPaddingWrapper>
-        <PageTabs tabs={TABS.map((tab) => ({ name: tab }))} onSelectTab={handleChangeTab} selected={currentTab} />
+        <PageTabs
+          tabs={TABS.map((tab) => ({ name: tab }))}
+          onSelectTab={handleChangeTab}
+          selected={currentTab}
+          backAction={{
+            to: !isFormDirty ? absoluteRoutes.viewer.member(activeMembership?.handle) : undefined,
+            onClick: isFormDirty
+              ? () =>
+                  handleOpenUnsavedChangesDialog({
+                    text: 'Discard changes',
+                    to: absoluteRoutes.viewer.member(activeMembership?.handle),
+                    onClick: () => {
+                      closeUnsavedChangesDialog()
+                    },
+                  })
+              : undefined,
+          }}
+        />
       </NoGlobalPaddingWrapper>
       <StyledLimitedWidthContainer>
         {currentTab === 0 && (

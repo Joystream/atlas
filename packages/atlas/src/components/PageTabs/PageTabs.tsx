@@ -1,14 +1,26 @@
 import { FC } from 'react'
 
-import { PageTabsWrapper } from './PageTabs.styles'
+import { SvgActionChevronL } from '@/assets/icons'
+
+import { BackActionWrapper, PageTabsWrapper } from './PageTabs.styles'
 
 import { Tabs, TabsProps } from '../Tabs'
+import { Button, ButtonProps } from '../_buttons/Button'
 
-type PageTabsProps = Omit<TabsProps, 'underline'>
+type BackAction = Pick<ButtonProps, 'to' | 'onClick'>
 
-export const PageTabs: FC<PageTabsProps> = ({ className, ...tabsProps }) => {
+type PageTabsProps = Omit<TabsProps, 'underline'> & {
+  backAction?: BackAction
+}
+
+export const PageTabs: FC<PageTabsProps> = ({ className, backAction, ...tabsProps }) => {
   return (
     <PageTabsWrapper className={className}>
+      {backAction && (
+        <BackActionWrapper>
+          <Button variant="tertiary" size="medium" icon={<SvgActionChevronL />} {...backAction} />
+        </BackActionWrapper>
+      )}
       <Tabs {...tabsProps} />
       {/* todo add support for filters */}
     </PageTabsWrapper>
