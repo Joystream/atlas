@@ -7,7 +7,6 @@ import { SvgActionCheck, SvgActionShow } from '@/assets/icons'
 import { ActionBar } from '@/components/ActionBar'
 import { Portal } from '@/components/Portal'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
-import { Button } from '@/components/_buttons/Button'
 import { ChannelCover } from '@/components/_channel/ChannelCover'
 import { FormField } from '@/components/_inputs/FormField'
 import { TextInput } from '@/components/_inputs/Input/Input.styles'
@@ -26,7 +25,7 @@ import { useUser } from '@/providers/user/user.hooks'
 import { requiredValidation } from '@/utils/formValidationOptions'
 import { SentryLogger } from '@/utils/logs'
 
-import { InputsWrapper, StyledAvatar, StyledForm } from './StudioChannelGeneralTab.styles'
+import { InputsWrapper, StyledAvatar, StyledButton, StyledForm } from './StudioChannelGeneralTab.styles'
 
 const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
   { name: 'Public', value: true },
@@ -101,9 +100,14 @@ export const StudioChannelGeneralTab = ({ actionBarPortal }: { actionBarPortal: 
     <>
       <StyledForm>
         {!xsMatch && channelId && (
-          <Button fullWidth variant="secondary" to={absoluteRoutes.viewer.channel(channelId)} icon={<SvgActionShow />}>
+          <StyledButton
+            fullWidth
+            variant="secondary"
+            to={absoluteRoutes.viewer.channel(channelId)}
+            icon={<SvgActionShow />}
+          >
             View channel
-          </Button>
+          </StyledButton>
         )}
         <EntitySettingTemplate
           title="Channel branding"

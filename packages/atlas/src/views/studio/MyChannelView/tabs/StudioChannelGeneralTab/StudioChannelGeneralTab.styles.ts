@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Avatar } from '@/components/Avatar'
+import { Button } from '@/components/_buttons/Button'
 import { sizes } from '@/styles'
 
 export const InputsWrapper = styled.div`
@@ -18,4 +19,8 @@ export const StyledAvatar = styled(Avatar)`
 
 export const StyledForm = styled.form`
   padding-bottom: 52px;
+`
+
+export const StyledButton = styled(Button)`
+  margin-bottom: ${sizes(10)};
 `
