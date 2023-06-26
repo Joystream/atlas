@@ -16,3 +16,6 @@ export const BackActionWrapper = styled.div`
   position: relative;
   border-right: 1px solid ${cVar('colorCoreNeutral600')};
 `
+export const TailingContentWrapper = styled.div`
+  margin: ${sizes(2)} ${sizes(4)} ${sizes(2)} auto;
+`
