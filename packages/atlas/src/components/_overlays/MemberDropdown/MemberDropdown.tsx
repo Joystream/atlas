@@ -11,7 +11,7 @@ import { useAuth } from '@/providers/auth/auth.hooks'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useSubscribeAccountBalance } from '@/providers/joystream'
 import { useUser } from '@/providers/user/user.hooks'
-import { cVar, transitions } from '@/styles'
+import { transitions } from '@/styles'
 
 import { Container, InnerContainer, SlideAnimationContainer } from './MemberDropdown.styles'
 import { MemberDropdownList } from './MemberDropdownList'
@@ -136,7 +136,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
         <CSSTransition
           classNames={transitions.names.dropdown}
           in={isActive}
-          timeout={parseInt(cVar('animationTimingMedium', true))}
+          timeout={0}
           onEntering={() => setDisableScrollDuringAnimation(true)}
           onEntered={() => setDisableScrollDuringAnimation(false)}
           mountOnEnter

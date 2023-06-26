@@ -142,7 +142,7 @@ export const transitionStyles = css`
   .${transitions.names.dropdown}-enter-done, .${transitions.names.dropdown}-appear-active {
     opacity: 1;
     transform: translateY(0);
-    transition: ${transitions.timings.routing} ${transitions.routingEasing};
+    transition: ${cVar('animationTimingMedium')} ${transitions.routingEasing};
   }
 
   .${transitions.names.dropdown}-exit {
@@ -151,7 +151,7 @@ export const transitionStyles = css`
 
   .${transitions.names.dropdown}-exit-active {
     opacity: 0;
-    transition: ${transitions.timings.routing} ${transitions.routingEasing};
+    transition: ${cVar('animationTimingMedium')} ${transitions.routingEasing};
   }
 
   .${transitions.names.enterFromRight}-enter, .${transitions.names.enterFromRight}-appear {
@@ -192,7 +192,7 @@ export const transitionStyles = css`
     opacity: 1;
   }
 
-  .${transitions.names.enterFromRight}-exit-active {
+  .${transitions.names.enterFromLeft}-exit-active {
     opacity: 0;
     transform: translateX(-280px);
     transition: ${cVar('animationTimingMedium')} ${transitions.switch};
