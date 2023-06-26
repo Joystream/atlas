@@ -49,7 +49,6 @@ export const relativeRoutes = {
   },
   studio: {
     index: () => '',
-    newChannel: () => 'channel/new',
     myChannel: (query?: { [QUERY_PARAMS.TAB]?: MyChannelTabs }) => withQueryParameters('channel', query),
     videos: () => 'videos',
     crtWelcome: () => 'crt-welcome',

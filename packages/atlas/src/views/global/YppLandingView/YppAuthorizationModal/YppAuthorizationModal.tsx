@@ -19,6 +19,8 @@ import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
+import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
+import { useAuthStore } from '@/providers/auth/auth.store'
 import { useBloatFeesAndPerMbFees, useJoystream } from '@/providers/joystream'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { useSnackbar } from '@/providers/snackbars'
@@ -95,6 +97,9 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   const { mutateAsync: yppChannelMutation } = useMutation('ypp-channels-post', (finalFormData: FinalFormData | null) =>
     axios.post(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels`, finalFormData)
   )
+  const {
+    actions: { setAuthModalOpenName },
+  } = useAuthStore()
 
   const smMatch = useMediaMatch('sm')
 
@@ -353,7 +358,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
           if (!activeMembership?.channels.length) {
             return {
               text: 'Create a new channel',
-              onClick: () => navigate(absoluteRoutes.studio.newChannel()),
+              onClick: () => setAuthModalOpenName(getCorrectLoginModal()),
             }
           }
 
@@ -493,6 +498,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     activeMembership?.channels.length,
     yppUnsyncedChannels,
     navigate,
+    setAuthModalOpenName,
     setSelectedChannelId,
     onChangeStep,
     handleAuthorizeClick,

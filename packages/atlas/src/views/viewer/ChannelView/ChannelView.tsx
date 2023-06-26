@@ -88,6 +88,7 @@ export const ChannelView: FC = () => {
     loading,
     error: channelError,
   } = useFullChannel(id ?? '', {
+    skip: !id,
     onError: (error) => SentryLogger.error('Failed to fetch channel', 'ChannelView', error, { channel: { id } }),
   })
   const {

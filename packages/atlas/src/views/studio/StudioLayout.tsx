@@ -30,7 +30,6 @@ import { CrtWelcomeView } from '@/views/studio/CrtWelcomeView/CrtWelcomeView'
 import { MyChannelView } from '@/views/studio/MyChannelView'
 import { MyPaymentsView } from '@/views/studio/MyPaymentsView'
 
-import { CreateEditChannelView } from './CreateEditChannelView'
 import { MyUploadsView } from './MyUploadsView'
 import { MyVideosView } from './MyVideosView'
 import { StudioWelcomeView } from './StudioWelcomeView'
@@ -64,7 +63,7 @@ const StudioLayout = () => {
   const displayedLocation = useVideoWorkspaceRouting()
   const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
-  const { channelId, memberships, isLoggedIn, membershipsLoading } = useUser()
+  const { channelId, memberships, membershipsLoading, activeMembership } = useUser()
   const { isAuthenticating } = useAuth()
 
   const [openUnsupportedBrowserDialog, closeUnsupportedBrowserDialog] = useConfirmationModal()
@@ -73,7 +72,7 @@ const StudioLayout = () => {
   const { trackPageView } = useSegmentAnalytics()
   const hasMembership = !!memberships?.length
 
-  const channelSet = !!channelId && hasMembership
+  const channelSet = !!(channelId && activeMembership?.channels.find((channel) => channel.id === channelId))
   const { currentChannel, isLoading } = useGetYppSyncedChannels()
   const isLoadingYPPData = isLoading || membershipsLoading || isAuthenticating
   const isYppSigned = !!currentChannel
@@ -147,16 +146,6 @@ const StudioLayout = () => {
                 path={relativeRoutes.studio.signIn()}
                 element={
                   <PrivateRoute element={<StudioWelcomeView />} isAuth={!channelSet} redirectTo={ENTRY_POINT_ROUTE} />
-                }
-              />
-              <Route
-                path={relativeRoutes.studio.newChannel()}
-                element={
-                  <PrivateRoute
-                    element={<CreateEditChannelView newChannel />}
-                    isAuth={isLoggedIn}
-                    redirectTo={ENTRY_POINT_ROUTE}
-                  />
                 }
               />
               <Route

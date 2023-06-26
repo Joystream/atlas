@@ -1,7 +1,6 @@
 import bezier from 'bezier-easing'
 import BN from 'bn.js'
 import { FC, useRef } from 'react'
-import { useNavigate } from 'react-router'
 import { animated, useTransition } from 'react-spring'
 import useResizeObserver from 'use-resize-observer'
 
@@ -26,6 +25,7 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
+import { useAuthStore } from '@/providers/auth/auth.store'
 import { cVar } from '@/styles'
 import { isMobile } from '@/utils/browser'
 
@@ -59,6 +59,8 @@ type MemberDropdownNavProps = {
   containerRefElement: Element | null
   onCloseDropdown?: () => void
   onSwitchDropdownType: (type: DropdownType) => void
+  onAddNewChannel?: () => void
+
   onSwitchToList: (type: DropdownType) => void
   onSignOut: () => void
   onShowFundsDialog: () => void
@@ -85,11 +87,14 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
   activeMembership,
   membershipLoading,
   accountBalance,
+  onAddNewChannel,
   lockedAccountBalance,
   channelBalance,
   isInDebt,
 }) => {
-  const navigate = useNavigate()
+  const {
+    actions: { setAuthModalOpenName },
+  } = useAuthStore()
   const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
   const { urls: memberAvatarUrls, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(activeMembership)
   const channelAvatarUrls = selectedChannel?.avatarPhoto?.resolvedUrls
@@ -155,7 +160,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
             )}
             <AvatarButton
               onClick={() =>
-                hasAtLeastOneChannel ? onSwitchDropdownType('channel') : navigate(absoluteRoutes.studio.newChannel())
+                hasAtLeastOneChannel ? onSwitchDropdownType('channel') : setAuthModalOpenName('createChannel')
               }
               ref={channelAvatarWrapperRef}
               aria-label="Show channel details"
@@ -309,8 +314,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                     label: hasAtleastTwoChannels ? 'Switch channel' : 'Add new channel',
                     nodeStart: <IconWrapper icon={<SvgActionSwitchMember />} />,
                     nodeEnd: hasAtleastTwoChannels && <SvgActionChevronR />,
-                    onClick: () => (hasAtleastTwoChannels ? onSwitchToList(type) : onCloseDropdown?.()),
-                    to: hasAtleastTwoChannels ? undefined : absoluteRoutes.studio.newChannel(),
+                    onClick: () => (hasAtleastTwoChannels ? onSwitchToList(type) : onAddNewChannel?.()),
                   },
                 ]}
               />

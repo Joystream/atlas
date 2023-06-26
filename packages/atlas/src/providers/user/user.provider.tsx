@@ -66,8 +66,8 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       : activeMembership?.channels[0]) || null
 
   useEffect(() => {
-    setChannelId(activeMembership?.channels[0]?.id ?? null)
-  }, [activeMembership?.channels])
+    if (!channelId) setChannelId(activeMembership?.channels[0]?.id ?? null)
+  }, [activeMembership?.channels, channelId])
 
   const contextValue: UserContextValue = useMemo(
     () => ({
