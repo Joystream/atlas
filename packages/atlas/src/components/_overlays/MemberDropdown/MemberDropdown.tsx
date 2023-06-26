@@ -155,7 +155,13 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                     measureContainerRef(ref)
                   }}
                 >
-                  {!isList ? (
+                  <CSSTransition
+                    timeout={0}
+                    in={!isList}
+                    classNames={transitions.names.enterFromLeft}
+                    unmountOnExit
+                    mountOnEnter
+                  >
                     <MemberDropdownNav
                       containerRefElement={containerRef.current}
                       channelId={channelId}
@@ -175,7 +181,14 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                       type={dropdownType}
                       isInDebt={totalBalance && totalInvitationLock && totalBalance?.sub(totalInvitationLock).isNeg()}
                     />
-                  ) : (
+                  </CSSTransition>
+                  <CSSTransition
+                    timeout={0}
+                    in={isList}
+                    classNames={transitions.names.enterFromRight}
+                    unmountOnExit
+                    mountOnEnter
+                  >
                     <MemberDropdownList
                       channelId={channelId}
                       activeMembership={activeMembership}
@@ -184,7 +197,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                       onSwitchToNav={(type) => handleSwitch(type, false)}
                       type={dropdownType}
                     />
-                  )}
+                  </CSSTransition>
                 </div>
               </SlideAnimationContainer>
             </InnerContainer>

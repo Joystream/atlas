@@ -35,7 +35,7 @@ export const MemberDropdownList: FC<MemberDropdownListProps> = ({
   }, [activeMembership])
 
   return (
-    <>
+    <div>
       <SwitchMemberItemListContainer>
         <ListItem
           onClick={() => onSwitchToNav(type)}
@@ -62,6 +62,6 @@ export const MemberDropdownList: FC<MemberDropdownListProps> = ({
           />
         )}
       </SectionContainer>
-    </>
+    </div>
   )
 }
