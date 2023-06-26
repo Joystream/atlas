@@ -28,6 +28,7 @@ import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
 import { VideoReaction } from '@/joystream-lib/types'
 import { useFee } from '@/providers/joystream/joystream.hooks'
@@ -93,6 +94,7 @@ export const VideoView: FC = () => {
   const nftWidgetProps = useNftWidget(video)
   const { likeOrDislikeVideo } = useReactionTransactions()
   const { withdrawBid } = useNftTransactions()
+  const { trackVideoView, trackLikeAdded, trackDislikeAdded } = useSegmentAnalytics()
 
   const mdMatch = useMediaMatch('md')
   const { addVideoView } = useAddVideoView()
@@ -149,6 +151,7 @@ export const VideoView: FC = () => {
   const channelId = video?.channel?.id
   const channelName = video?.channel?.title
   const videoId = video?.id
+  const videoDescription = video?.description
   const numberOfLikes = video?.reactions.filter(({ reaction }) => reaction === 'LIKE').length
   const numberOfDislikes = video?.reactions.filter(({ reaction }) => reaction === 'UNLIKE').length
   const videoNotAvailable = !loading && !video
@@ -208,12 +211,27 @@ export const VideoView: FC = () => {
         setVideoReactionProcessing(true)
         const fee = reactionFee || (await getReactionFee([memberId || '', video?.id, reaction]))
         const reacted = await likeOrDislikeVideo(video.id, reaction, video.title, fee)
+        reaction === 'like'
+          ? trackLikeAdded(video.id, memberId ?? 'no data')
+          : trackDislikeAdded(video.id, memberId ?? 'no data')
         setVideoReactionProcessing(false)
         return reacted
       }
       return false
     },
-    [getReactionFee, isLoggedIn, likeOrDislikeVideo, memberId, openSignInDialog, reactionFee, signIn, video]
+    [
+      getReactionFee,
+      isLoggedIn,
+      likeOrDislikeVideo,
+      memberId,
+      openSignInDialog,
+      reactionFee,
+      signIn,
+      trackLikeAdded,
+      trackDislikeAdded,
+      video?.id,
+      video?.title,
+    ]
   )
 
   // use Media Session API to provide rich metadata to the browser
@@ -252,7 +270,15 @@ export const VideoView: FC = () => {
     }).catch((error) => {
       SentryLogger.error('Failed to increase video views', 'VideoView', error)
     })
-  }, [addVideoView, channelId, videoId])
+
+    trackVideoView(
+      videoId ?? 'no data',
+      channelId ?? 'no data',
+      channelName ?? 'no data',
+      videoDescription ?? 'no data',
+      !!nftWidgetProps
+    )
+  }, [addVideoView, channelId, videoId, channelName, videoDescription, nftWidgetProps, trackVideoView])
 
   if (error) {
     return <ViewErrorFallback />

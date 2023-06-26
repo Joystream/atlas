@@ -26,6 +26,7 @@ import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib/types'
 import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
@@ -76,6 +77,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
   const handleChannelSubmit = useCreateEditChannelSubmit()
   const smMatch = useMediaMatch('sm')
+  const { trackChannelCreation } = useSegmentAnalytics()
 
   const [showConnectToYtDialog, setShowConnectToYtDialog] = useState(false)
   const setShouldContinueYppFlow = useYppStore((store) => store.actions.setShouldContinueYppFlow)
@@ -310,6 +312,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
         atlasConfig.features.ypp.youtubeSyncApiUrl &&
         setTimeout(() => setShowConnectToYtDialog(true), 2000)
     )
+    trackChannelCreation(channel?.id ?? 'no data', channel?.title ?? 'no data', channel?.language ?? 'no data')
   })
 
   const handleCoverChange: ImageCropModalProps['onConfirm'] = (
