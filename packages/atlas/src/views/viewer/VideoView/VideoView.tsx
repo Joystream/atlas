@@ -28,7 +28,7 @@ import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
-import useAnalytics from '@/hooks/useSegmentAnalytics'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
 import { VideoReaction } from '@/joystream-lib/types'
 import { useFee } from '@/providers/joystream/joystream.hooks'
@@ -94,7 +94,7 @@ export const VideoView: FC = () => {
   const nftWidgetProps = useNftWidget(video)
   const { likeOrDislikeVideo } = useReactionTransactions()
   const { withdrawBid } = useNftTransactions()
-  const { videoViewed, likeAdded, dislikeAdded } = useAnalytics()
+  const { trackVideoView, trackLikeAdded, trackDislikeAdded } = useSegmentAnalytics()
 
   const mdMatch = useMediaMatch('md')
   const { addVideoView } = useAddVideoView()
@@ -211,7 +211,9 @@ export const VideoView: FC = () => {
         setVideoReactionProcessing(true)
         const fee = reactionFee || (await getReactionFee([memberId || '', video?.id, reaction]))
         const reacted = await likeOrDislikeVideo(video.id, reaction, video.title, fee)
-        reaction === 'like' ? likeAdded(video.id, memberId ?? 'no data') : dislikeAdded(video.id, memberId ?? 'no data')
+        reaction === 'like'
+          ? trackLikeAdded(video.id, memberId ?? 'no data')
+          : trackDislikeAdded(video.id, memberId ?? 'no data')
         setVideoReactionProcessing(false)
         return reacted
       }
@@ -225,8 +227,8 @@ export const VideoView: FC = () => {
       openSignInDialog,
       reactionFee,
       signIn,
-      likeAdded,
-      dislikeAdded,
+      trackLikeAdded,
+      trackDislikeAdded,
       video?.id,
       video?.title,
     ]
@@ -269,14 +271,14 @@ export const VideoView: FC = () => {
       SentryLogger.error('Failed to increase video views', 'VideoView', error)
     })
 
-    videoViewed(
+    trackVideoView(
       videoId ?? 'no data',
       channelId ?? 'no data',
       channelName ?? 'no data',
       videoDescription ?? 'no data',
       !!nftWidgetProps
     )
-  }, [addVideoView, channelId, videoId, channelName, videoDescription, nftWidgetProps, videoViewed])
+  }, [addVideoView, channelId, videoId, channelName, videoDescription, nftWidgetProps, trackVideoView])
 
   if (error) {
     return <ViewErrorFallback />

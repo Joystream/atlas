@@ -17,7 +17,7 @@ import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import useAnalytics from '@/hooks/useSegmentAnalytics'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
 import { useBloatFeesAndPerMbFees, useJoystream } from '@/providers/joystream/joystream.hooks'
 import { useOverlayManager } from '@/providers/overlayManager'
@@ -120,7 +120,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
 
   const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()
-  const { yppOptIn } = useAnalytics()
+  const { trackYppOptIn } = useSegmentAnalytics()
 
   const {
     handleAuthorizeClick,
@@ -207,7 +207,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
       if (completed) {
         setTimeout(() => {
           const { email, videoCategoryId } = finalFormData || {}
-          yppOptIn(
+          trackYppOptIn(
             yppCurrentChannel?.title || '',
             email ?? '',
             videoCategoryId ?? '',
@@ -245,7 +245,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     displaySnackbar,
     yppCurrentChannel?.subscribersCount,
     yppCurrentChannel?.title,
-    yppOptIn,
+    trackYppOptIn,
   ])
 
   useEffect(() => {

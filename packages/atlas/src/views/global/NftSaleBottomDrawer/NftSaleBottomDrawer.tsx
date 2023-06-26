@@ -5,7 +5,7 @@ import { GetNftDocument, GetNftQuery, GetNftQueryVariables } from '@/api/queries
 import { ActionBarProps } from '@/components/ActionBar'
 import { BottomDrawer } from '@/components/_overlays/BottomDrawer'
 import { absoluteRoutes } from '@/config/routes'
-import useAnalytics from '@/hooks/useSegmentAnalytics'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useJoystream } from '@/providers/joystream/joystream.hooks'
 import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
@@ -46,7 +46,7 @@ export const NftSaleBottomDrawer: FC = () => {
   const handleTransaction = useTransaction()
   const client = useApolloClient()
   const { displaySnackbar } = useSnackbar()
-  const { nftSale } = useAnalytics()
+  const { trackNftSale } = useSegmentAnalytics()
 
   const isOpen = currentAction === 'putOnSale'
 
@@ -76,7 +76,7 @@ export const NftSaleBottomDrawer: FC = () => {
         onTxSync: refetchData,
       })
       if (completed) {
-        nftSale(data.type, data.type === 'buyNow' ? data.buyNowPrice : data.startingPrice)
+        trackNftSale(data.type, data.type === 'buyNow' ? data.buyNowPrice : data.startingPrice)
         displaySnackbar({
           customId: currentNftId,
           title: 'NFT put on sale successfully',
@@ -97,7 +97,7 @@ export const NftSaleBottomDrawer: FC = () => {
       handleTransaction,
       joystream,
       proxyCallback,
-      nftSale,
+      trackNftSale,
     ]
   )
 

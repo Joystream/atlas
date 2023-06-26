@@ -9,7 +9,7 @@ import {
   GetFullVideosConnectionQueryVariables,
 } from '@/api/queries/__generated__/videos.generated'
 import { atlasConfig } from '@/config'
-import useAnalytics from '@/hooks/useSegmentAnalytics'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { VideoExtrinsicResult, VideoInputAssets } from '@/joystream-lib/types'
 import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
 import { useDraftStore } from '@/providers/drafts'
@@ -43,7 +43,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
   const { tabData } = useVideoWorkspaceData()
   const channelBucketsCount = useChannelsStorageBucketsCount(channelId)
   const { videoStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
-  const { nftMinted } = useAnalytics()
+  const { trackNftMint } = useSegmentAnalytics()
 
   const rawMetadataProcessor = useAppActionMetadataProcessor(channelId, AppActionActionType.CreateVideo)
 
@@ -244,7 +244,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
       })
 
       if (completed) {
-        !!data.nftMetadata && nftMinted(data.metadata.title ?? 'no data', channelId)
+        !!data.nftMetadata && trackNftMint(data.metadata.title ?? 'no data', channelId)
 
         assetsToBeRemoved?.forEach((asset) => {
           removeAssetFromUploads(asset)
@@ -279,7 +279,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
       isNftMintDismissed,
       removeAssetFromUploads,
       setShowFistMintDialog,
-      nftMinted,
+      trackNftMint,
     ]
   )
 }

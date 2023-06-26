@@ -18,7 +18,7 @@ import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
-import useAnalytics from '@/hooks/useSegmentAnalytics'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useFee } from '@/providers/joystream/joystream.hooks'
 import { useUser } from '@/providers/user/user.hooks'
@@ -56,7 +56,7 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
   const { memberId, signIn, activeMembership, isLoggedIn } = useUser()
   const { openSignInDialog } = useDisplaySignInDialog({ interaction: true })
   const { isLoadingAsset: isMemberAvatarLoading, url: memberAvatarUrl } = getMemberAvatar(activeMembership)
-  const { commentAdded } = useAnalytics()
+  const { trackCommentAdded } = useSegmentAnalytics()
 
   const { fullFee: fee, loading: feeLoading } = useFee(
     'createVideoCommentTx',
@@ -150,7 +150,7 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
     })
     setCommentInputIsProcessing(false)
 
-    commentAdded(commentInputText, video?.id ?? 'no data')
+    trackCommentAdded(commentInputText, video?.id ?? 'no data')
 
     if (newCommentId) {
       setCommentInputText('')

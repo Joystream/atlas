@@ -1,12 +1,12 @@
 import loadable from '@loadable/component'
 import { FC, useEffect, useRef, useState } from 'react'
-import { Route, Routes, useLocation, useNavigationType } from 'react-router-dom'
+import { Route, Routes, useLocation, useNavigationType, useSearchParams } from 'react-router-dom'
 
 import { StudioLoading } from '@/components/_loaders/StudioLoading'
 import { CookiePopover } from '@/components/_overlays/CookiePopover'
 import { atlasConfig } from '@/config'
 import { BASE_PATHS, absoluteRoutes } from '@/config/routes'
-import useAnalytics from '@/hooks/useSegmentAnalytics'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
 import { isBrowserOutdated } from '@/utils/browser'
@@ -41,6 +41,7 @@ const LoadablePlaygroundLayout = loadable(() => import('./views/playground/Playg
 export const MainLayout: FC = () => {
   const scrollPosition = useRef<number>(0)
   const location = useLocation()
+  const [searchParams] = useSearchParams()
   const navigationType = useNavigationType()
   const [cachedLocation, setCachedLocation] = useState(location)
   const locationState = location.state as RoutingState
@@ -55,7 +56,7 @@ export const MainLayout: FC = () => {
     },
     onExitClick: () => closeDialog(),
   })
-  const { pageViewed } = useAnalytics()
+  const { trackPageView } = useSegmentAnalytics()
 
   useEffect(() => {
     if (!atlasConfig.analytics.sentry?.dsn) {
@@ -74,8 +75,12 @@ export const MainLayout: FC = () => {
       }
     }
 
-    pageViewed(location.pathname)
-  }, [location.pathname, pageViewed])
+    trackPageView(
+      location.pathname,
+      '',
+      (location.pathname === absoluteRoutes.viewer.ypp() && searchParams.get('referrer')) || undefined
+    )
+  }, [location.pathname, trackPageView])
 
   const { clearOverlays } = useOverlayManager()
 
