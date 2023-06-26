@@ -12,7 +12,6 @@ import {
   SvgActionMember,
   SvgActionNewTab,
   SvgActionPlay,
-  SvgActionShow,
   SvgActionSwitchMember,
 } from '@/assets/icons'
 import { IconWrapper } from '@/components/IconWrapper'
@@ -25,6 +24,7 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
+import { useAuthStore } from '@/providers/auth/auth.store'
 import { isMobile } from '@/utils/browser'
 
 import { BalanceTooltip } from './BalanceTooltip'
@@ -54,6 +54,7 @@ type MemberDropdownNavProps = {
   publisher?: boolean
   containerRefElement: Element | null
   onCloseDropdown?: () => void
+  onAddNewChannel?: () => void
   onSwitchToList: (type: DropdownType) => void
   onSignOut: () => void
   onShowFundsDialog: () => void
@@ -77,10 +78,14 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
   channelId,
   activeMembership,
   accountBalance,
+  onAddNewChannel,
   lockedAccountBalance,
   channelBalance,
   isInDebt,
 }) => {
+  const {
+    actions: { setAuthModalOpenName },
+  } = useAuthStore()
   const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
   const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(activeMembership)
   const channelAvatarUrl = selectedChannel?.avatarPhoto?.resolvedUrl
@@ -211,8 +216,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                     <IconWrapper icon={hasAtLeastOneChannel ? <SvgActionChannel /> : <SvgActionAddChannel />} />
                   ),
                   nodeEnd: hasAtLeastOneChannel && <SvgActionChevronR />,
-                  onClick: () => (hasAtLeastOneChannel ? onSwitchToList(type) : onCloseDropdown?.()),
-                  to: hasAtLeastOneChannel ? undefined : absoluteRoutes.studio.newChannel(),
+                  onClick: () => (hasAtLeastOneChannel ? onSwitchToList(type) : onAddNewChannel?.()),
                 },
               ]}
             />
@@ -225,7 +229,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                   asButton: true,
                   label: 'View channel',
                   onClick: onCloseDropdown,
-                  nodeStart: <IconWrapper icon={<SvgActionShow />} />,
+                  nodeStart: <IconWrapper icon={<SvgActionChannel />} />,
                   to: hasAtLeastOneChannel
                     ? absoluteRoutes.viewer.channel(channelId ?? undefined)
                     : absoluteRoutes.studio.signIn(),
@@ -235,8 +239,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                   label: hasAtleastTwoChannels ? 'Switch channel' : 'Add new channel',
                   nodeStart: <IconWrapper icon={<SvgActionSwitchMember />} />,
                   nodeEnd: hasAtleastTwoChannels && <SvgActionChevronR />,
-                  onClick: () => (hasAtleastTwoChannels ? onSwitchToList(type) : onCloseDropdown?.()),
-                  to: hasAtleastTwoChannels ? undefined : absoluteRoutes.studio.newChannel(),
+                  onClick: () => (hasAtleastTwoChannels ? onSwitchToList(type) : onAddNewChannel?.()),
                 },
               ]}
             />

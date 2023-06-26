@@ -73,7 +73,13 @@ const createApolloClient = () => {
     link: operationSplitLink,
     resolvers: {
       StorageDataObject: {
-        resolvedUrl: async (parent: StorageDataObject) => {
+        resolvedUrl: async (parent: StorageDataObject, _, ctx) => {
+          const possibleCacheValue = ctx.cache.extract()?.[`StorageDataObject:${parent.id}`]
+
+          if (!parent.isAccepted && possibleCacheValue?.resolvedUrl?.startsWith('blob')) {
+            return possibleCacheValue.resolvedUrl
+          }
+
           if (!parent.isAccepted) {
             return null
           }

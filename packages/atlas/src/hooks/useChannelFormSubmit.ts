@@ -7,7 +7,13 @@ import { AppActionActionType } from '@/api/queries/__generated__/baseTypes.gener
 import { GetExtendedFullChannelsQueryHookResult } from '@/api/queries/__generated__/channels.generated'
 import { FullChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { atlasConfig } from '@/config'
-import { ChannelAssets, ChannelExtrinsicResult, ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib/types'
+import {
+  ChannelAssets,
+  ChannelAssetsIds,
+  ChannelExtrinsicResult,
+  ChannelInputAssets,
+  ChannelInputMetadata,
+} from '@/joystream-lib/types'
 import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
 import { useOperatorsContext } from '@/providers/assets/assets.provider'
 import { useBloatFeesAndPerMbFees, useBucketsConfigForNewChannel, useJoystream } from '@/providers/joystream'
@@ -50,7 +56,7 @@ type CreateEditChannelData = {
 
 export const useCreateEditChannelSubmit = () => {
   const { joystream, proxyCallback } = useJoystream()
-  const { channelId, memberId, setActiveChannel, refetchUserMemberships } = useUser()
+  const { channelId, memberId, refetchUserMemberships } = useUser()
   const addNewChannelIdToUploadsStore = useUploadsStore((state) => state.actions.addNewChannelId)
   const getBucketsConfigForNewChannel = useBucketsConfigForNewChannel()
   const { channelStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
@@ -68,7 +74,7 @@ export const useCreateEditChannelSubmit = () => {
   return useCallback(
     async (
       data: CreateEditChannelData,
-      onTxSync?: () => void,
+      onTxSync?: (result: { block: number } & { channelId: string; assetsIds: ChannelAssetsIds }) => void,
       onUploadAssets?: (field: 'avatar.contentId' | 'cover.contentId', data: string) => void,
       onCompleted?: () => void
     ) => {
@@ -182,21 +188,19 @@ export const useCreateEditChannelSubmit = () => {
           await data?.refetchChannel?.()
         }
 
+        if (data.newChannel) {
+          // when creating a channel, refetch operators before uploading so that storage bag assignments gets populated for a new channel
+          await fetchStorageOperators()
+          uploadAssets(result)
+        } else {
+          uploadAssets(result)
+        }
+
         if (assetsIds.avatarPhoto && data.assets.avatarPhoto?.croppedUrl) {
           modifyAssetUrlInCache(client, assetsIds.avatarPhoto, data.assets.avatarPhoto.croppedUrl)
         }
         if (assetsIds.coverPhoto && data.assets.coverPhoto?.croppedUrl) {
           modifyAssetUrlInCache(client, assetsIds.coverPhoto, data.assets.coverPhoto.croppedUrl)
-        }
-
-        if (data.newChannel) {
-          // when creating a channel, refetch operators before uploading so that storage bag assignments gets populated for a new channel
-          setActiveChannel(channelId)
-          fetchStorageOperators().then(() => {
-            uploadAssets(result)
-          })
-        } else {
-          uploadAssets(result)
         }
       }
       const completed = await handleTransaction({
@@ -230,12 +234,12 @@ export const useCreateEditChannelSubmit = () => {
                 proxyCallback(updateStatus)
               ),
         onTxSync: (result) => {
-          onTxSync?.()
+          onTxSync?.(result)
           return refetchDataAndUploadAssets(result)
         },
       })
 
-      if (completed && data.newChannel) {
+      if (completed) {
         onCompleted?.()
       }
     },
@@ -254,7 +258,6 @@ export const useCreateEditChannelSubmit = () => {
       proxyCallback,
       rawMetadataProcessor,
       refetchUserMemberships,
-      setActiveChannel,
       startFileUpload,
     ]
   )
