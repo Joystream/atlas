@@ -35,7 +35,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
       actions: { setAuthModalOpenName },
     } = useAuthStore()
     const [showWithdrawDialog, setShowWithdrawDialog] = useState(false)
-    const [disableScrollDuringAnimation, setDisableScrollDuringAnimation] = useState(false)
+    const [disableScrollDuringAnimation, setDisableScrollDuringAnimation] = useState(true)
 
     const [showSendDialog, setShowSendDialog] = useState(false)
     const { url: memberAvatarUrl } = getMemberAvatar(activeMembership)
@@ -113,6 +113,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     }, [closeDropdown, isActive])
 
     const resetToDefaultState = useCallback(() => {
+      setDisableScrollDuringAnimation(true)
       if (isActive) {
         return
       }
@@ -152,7 +153,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                     in={!isList}
                     classNames={transitions.names.enterFromLeft}
                     onEntering={() => setDisableScrollDuringAnimation(true)}
-                    onEntered={() => setDisableScrollDuringAnimation(false)}
+                    onExiting={() => setDisableScrollDuringAnimation(true)}
                     unmountOnExit
                     mountOnEnter
                   >
