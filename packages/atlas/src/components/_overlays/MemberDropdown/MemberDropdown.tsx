@@ -7,6 +7,7 @@ import useResizeObserver from 'use-resize-observer'
 
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useAuth } from '@/providers/auth/auth.hooks'
+import { useAuthStore } from '@/providers/auth/auth.store'
 import { useSubscribeAccountBalance } from '@/providers/joystream'
 import { useUser } from '@/providers/user/user.hooks'
 import { cVar } from '@/styles'
@@ -28,13 +29,15 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
   ({ publisher, isActive, closeDropdown, onChannelChange }, ref) => {
     const { channelId, activeMembership, memberships, setActiveChannel, membershipsLoading } = useUser()
     const { handleLogout } = useAuth()
+    const {
+      actions: { setAuthModalOpenName },
+    } = useAuthStore()
     const [showWithdrawDialog, setShowWithdrawDialog] = useState(false)
     const [disableScrollDuringAnimation, setDisableScrollDuringAnimation] = useState(false)
 
     const [showSendDialog, setShowSendDialog] = useState(false)
     const { url: memberAvatarUrl } = getMemberAvatar(activeMembership)
     const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
-
     const memoizedChannelStateBloatBond = useMemo(() => {
       return new BN(selectedChannel?.channelStateBloatBond || 0)
     }, [selectedChannel?.channelStateBloatBond])
@@ -68,10 +71,9 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     })
 
     const handleAddNewChannel = useCallback(() => {
-      setDropdownType('channel')
-      setIsList(false)
+      setAuthModalOpenName('createChannel')
       closeDropdown?.()
-    }, [closeDropdown])
+    }, [closeDropdown, setAuthModalOpenName])
 
     const handleChannelChange = useCallback(
       (channelId: string) => {
@@ -143,8 +145,12 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
           >
             {transition((style, isList) => (
               <SlideAnimationContainer style={style} disableVerticalScroll={disableScrollDuringAnimation}>
-                {!isList ? (
-                  <div ref={measureContainerRef}>
+                <div
+                  ref={(ref) => {
+                    measureContainerRef(ref)
+                  }}
+                >
+                  {!isList ? (
                     <MemberDropdownNav
                       containerRefElement={containerRef.current}
                       channelId={channelId}
@@ -153,6 +159,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                         dropdownType === 'channel' ? setShowWithdrawDialog(true) : setShowSendDialog(true)
                       }
                       accountBalance={accountBalance}
+                      onAddNewChannel={handleAddNewChannel}
                       channelBalance={channelBalance}
                       lockedAccountBalance={lockedAccountBalance}
                       activeMembership={activeMembership}
@@ -165,9 +172,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                       type={dropdownType}
                       isInDebt={totalBalance && totalInvitationLock && totalBalance?.sub(totalInvitationLock).isNeg()}
                     />
-                  </div>
-                ) : (
-                  <div ref={measureContainerRef}>
+                  ) : (
                     <MemberDropdownList
                       channelId={channelId}
                       activeMembership={activeMembership}
@@ -176,8 +181,8 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                       onSwitchToNav={(type) => handleSwitch(type, false)}
                       type={dropdownType}
                     />
-                  </div>
-                )}
+                  )}
+                </div>
               </SlideAnimationContainer>
             ))}
           </InnerContainer>

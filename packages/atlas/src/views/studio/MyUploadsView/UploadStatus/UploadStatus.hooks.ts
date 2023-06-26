@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 
 import { useFullChannel } from '@/api/hooks/channel'
+import { useCreateEditChannelSubmit } from '@/hooks/useChannelFormSubmit'
 import { JoystreamLibExtrinsics } from '@/joystream-lib/extrinsics'
 import { TxMethodName } from '@/joystream-lib/types'
 import { useConfirmationModal } from '@/providers/confirmationModal'
@@ -12,7 +13,6 @@ import { computeFileHash } from '@/utils/hashing'
 import { SentryLogger } from '@/utils/logs'
 import { shortenString } from '@/utils/misc'
 import { getVideoMetadata } from '@/utils/video'
-import { useCreateEditChannelSubmit } from '@/views/studio/CreateEditChannelView/CreateEditChannelView.hooks'
 import { useHandleVideoWorkspaceSubmit } from '@/views/studio/VideoWorkspace/VideoWorkspace.hooks'
 
 export const FILE_NAME_LENGTH_LIMIT = 24
