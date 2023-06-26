@@ -133,15 +133,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
         />
         <SendFundsDialog show={showSendDialog} onExitClick={toggleSendDialog} accountBalance={accountBalance} />
 
-        <CSSTransition
-          classNames={transitions.names.dropdown}
-          in={isActive}
-          timeout={0}
-          onEntering={() => setDisableScrollDuringAnimation(true)}
-          onEntered={() => setDisableScrollDuringAnimation(false)}
-          mountOnEnter
-          unmountOnExit
-        >
+        <CSSTransition classNames={transitions.names.dropdown} in={isActive} timeout={0} mountOnEnter unmountOnExit>
           <Container ref={mergeRefs([ref, containerRef])}>
             <InnerContainer
               onTransitionEnd={resetToDefaultState}
@@ -159,6 +151,8 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                     timeout={0}
                     in={!isList}
                     classNames={transitions.names.enterFromLeft}
+                    onEntering={() => setDisableScrollDuringAnimation(true)}
+                    onEntered={() => setDisableScrollDuringAnimation(false)}
                     unmountOnExit
                     mountOnEnter
                   >
