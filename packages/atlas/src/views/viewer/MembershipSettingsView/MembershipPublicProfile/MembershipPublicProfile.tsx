@@ -319,6 +319,10 @@ export const MembershipPublicProfile: FC<MembershipPublicProfileProps> = ({
                     onClick: () => {
                       reset()
                       onCloseUnsavedChangesDialog()
+                      displaySnackbar({
+                        title: 'All changes were discarded',
+                        iconType: 'info',
+                      })
                     },
                   })
                 : undefined,
