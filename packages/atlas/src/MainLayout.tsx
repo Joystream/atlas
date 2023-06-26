@@ -80,7 +80,7 @@ export const MainLayout: FC = () => {
       '',
       (location.pathname === absoluteRoutes.viewer.ypp() && searchParams.get('referrer')) || undefined
     )
-  }, [location.pathname, trackPageView])
+  }, [location.pathname, trackPageView, searchParams])
 
   const { clearOverlays } = useOverlayManager()
 
