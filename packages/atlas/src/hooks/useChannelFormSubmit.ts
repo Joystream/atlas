@@ -69,7 +69,7 @@ type CreateEditChannelSubmitParams = {
 
 export const useCreateEditChannelSubmit = () => {
   const { joystream, proxyCallback } = useJoystream()
-  const { channelId, memberId, setActiveChannel, refetchUserMemberships } = useUser()
+  const { channelId, memberId, refetchUserMemberships } = useUser()
 
   const addNewChannelIdToUploadsStore = useUploadsStore((state) => state.actions.addNewChannelId)
   const getBucketsConfigForNewChannel = useBucketsConfigForNewChannel()
@@ -197,21 +197,19 @@ export const useCreateEditChannelSubmit = () => {
           await data?.refetchChannel?.()
         }
 
+        if (data.newChannel) {
+          // when creating a channel, refetch operators before uploading so that storage bag assignments gets populated for a new channel
+          await fetchStorageOperators()
+          uploadAssets(result)
+        } else {
+          uploadAssets(result)
+        }
+
         if (assetsIds.avatarPhoto && data.assets.avatarPhoto?.croppedUrl) {
           modifyAssetUrlInCache(client, assetsIds.avatarPhoto, data.assets.avatarPhoto.croppedUrl)
         }
         if (assetsIds.coverPhoto && data.assets.coverPhoto?.croppedUrl) {
           modifyAssetUrlInCache(client, assetsIds.coverPhoto, data.assets.coverPhoto.croppedUrl)
-        }
-
-        if (data.newChannel) {
-          // when creating a channel, refetch operators before uploading so that storage bag assignments gets populated for a new channel
-          setActiveChannel(channelId)
-          fetchStorageOperators().then(() => {
-            uploadAssets(result)
-          })
-        } else {
-          uploadAssets(result)
         }
       }
       const completed = await handleTransaction({
@@ -252,7 +250,7 @@ export const useCreateEditChannelSubmit = () => {
         },
       })
 
-      if (completed && data.newChannel) {
+      if (completed) {
         onCompleted?.()
       }
     },
@@ -271,7 +269,6 @@ export const useCreateEditChannelSubmit = () => {
       proxyCallback,
       rawMetadataProcessor,
       refetchUserMemberships,
-      setActiveChannel,
       startFileUpload,
     ]
   )

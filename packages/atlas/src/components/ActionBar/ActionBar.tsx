@@ -1,10 +1,10 @@
 import BN from 'bn.js'
-import { MouseEvent, forwardRef } from 'react'
+import { MouseEvent, forwardRef, useRef } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Fee } from '@/components/Fee'
 import { Text } from '@/components/Text'
-import { TooltipProps } from '@/components/Tooltip'
+import { Tooltip, TooltipProps } from '@/components/Tooltip'
 import { ButtonProps } from '@/components/_buttons/Button'
 import { useHasEnoughBalance } from '@/hooks/useHasEnoughBalance'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -34,6 +34,7 @@ export type ActionBarProps = {
   feeLoading?: boolean
   infoBadge?: ActionDialogInfoBadge
   primaryButton: ActionDialogButtonProps
+  primaryButtonTooltip?: Omit<TooltipProps, 'reference'>
   secondaryButton?: ActionDialogButtonProps
   isActive?: boolean
   skipFeeCheck?: boolean
@@ -49,6 +50,7 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
       isActive = true,
       className,
       primaryButton,
+      primaryButtonTooltip,
       secondaryButton,
       infoBadge,
       skipFeeCheck,
@@ -63,6 +65,7 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
       primaryButton.onClick,
       skipFeeCheck
     )
+    const buttonRef = useRef<HTMLButtonElement>(null)
 
     return (
       <ActionBarContainer ref={ref} className={className} isActive={isActive}>
@@ -92,6 +95,7 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
         </CSSTransition>
         <ActionButtonPrimary
           {...primaryButton}
+          ref={buttonRef}
           disabled={primaryButton.disabled || loadingState}
           onClick={isNoneCrypto ? primaryButton.onClick : signTransactionHandler}
           secondaryButtonExists={!!secondaryButton}
@@ -100,6 +104,7 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
         >
           {loadingState ? 'Please wait...' : primaryButton.text}
         </ActionButtonPrimary>
+        {primaryButtonTooltip && <Tooltip reference={buttonRef.current} {...primaryButtonTooltip} />}
       </ActionBarContainer>
     )
   }

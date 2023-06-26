@@ -1,5 +1,7 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 import shallow from 'zustand/shallow'
 
 import {
@@ -16,7 +18,6 @@ import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { useBloatFeesAndPerMbFees, useFee, useJoystream } from '@/providers/joystream'
 import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { useUser } from '@/providers/user/user.hooks'
-import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { createId } from '@/utils/createId'
 import { SentryLogger } from '@/utils/logs'
 
@@ -40,12 +41,25 @@ type FormType = EditChannelProps | NewChannelProps
 const isEditType = (props: FormType): props is EditChannelProps => props.type === 'edit'
 const DEFAULT_LANGUAGE = atlasConfig.derived.popularLanguagesSelectValues[0].value
 
+const channelSchema = z.object({
+  title: z
+    .string()
+    .min(1, 'Title is required.')
+    .min(3, 'Title should be at least 3 characters long.')
+    .max(40, 'Title can be only 40 characters long.'),
+  isPublic: z.boolean(),
+  description: z.string().optional(),
+  language: z.any(),
+  avatar: z.any(),
+  cover: z.any(),
+})
+
 export const useChannelForm = (props: FormType) => {
   const [showConnectToYtDialog, setShowConnectToYtDialog] = useState(false)
   const firstRender = useRef(true)
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropModalImperativeHandle>(null)
-  const { memberId, accountId, channelId } = useUser()
+  const { memberId, accountId, channelId, refetchUserMemberships } = useUser()
   const cachedChannelId = useRef(channelId)
   const { joystream } = useJoystream()
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
@@ -56,6 +70,7 @@ export const useChannelForm = (props: FormType) => {
 
   const form = useForm<CreateEditChannelFormInputs>({
     mode: 'onSubmit',
+    resolver: zodResolver(channelSchema),
     defaultValues: {
       avatar: { contentId: null, assetDimensions: null, imageCropData: null, originalBlob: undefined },
       cover: { contentId: null, assetDimensions: null, imageCropData: null, originalBlob: undefined },
@@ -92,8 +107,6 @@ export const useChannelForm = (props: FormType) => {
         : null,
     shallow
   )
-
-  const { isWorkspaceOpen, setIsWorkspaceOpen } = useVideoWorkspace()
 
   useEffect(() => {
     if (newChannel) {
@@ -185,7 +198,6 @@ export const useChannelForm = (props: FormType) => {
     newChannelAssets
   )
 
-  // set default values for editing channel
   useEffect(() => {
     if (newChannel || !channel) {
       return
@@ -233,7 +245,6 @@ export const useChannelForm = (props: FormType) => {
       return
     }
 
-    setIsWorkspaceOpen(false)
     const metadata: ChannelInputMetadata = {
       ...(dirtyFields.title ? { title: data.title?.trim() ?? '' } : {}),
       ...(dirtyFields.description ? { description: data.description?.trim() ?? '' } : {}),
@@ -338,7 +349,6 @@ export const useChannelForm = (props: FormType) => {
     hasAvatarUploadFailed,
     hasCoverUploadFailed,
     hideActionBar,
-    isWorkspaceOpen,
     showConnectToYtDialog,
     actions: {
       handleDeleteCover,
