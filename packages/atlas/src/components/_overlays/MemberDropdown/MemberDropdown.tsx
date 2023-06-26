@@ -113,7 +113,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     }, [closeDropdown, isActive])
 
     const resetToDefaultState = useCallback(() => {
-      setDisableScrollDuringAnimation(true)
+      setDisableScrollDuringAnimation(false)
       if (isActive) {
         return
       }
