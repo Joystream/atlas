@@ -19,6 +19,7 @@ export const StyledText = styled(Text)`
   text-overflow: ellipsis;
   border: none;
   background: none;
+  max-height: 20px;
   cursor: pointer;
 `
 export const StyledSvgActionCopy = styled(SvgActionCopy)`

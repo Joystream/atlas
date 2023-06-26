@@ -1,9 +1,8 @@
-import bezier from 'bezier-easing'
 import { BN } from 'bn.js'
 import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { mergeRefs } from 'react-merge-refs'
 import { useNavigate } from 'react-router'
-import { useTransition } from 'react-spring'
+import { CSSTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
 import { absoluteRoutes } from '@/config/routes'
@@ -11,7 +10,7 @@ import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useAuth } from '@/providers/auth/auth.hooks'
 import { useSubscribeAccountBalance } from '@/providers/joystream'
 import { useUser } from '@/providers/user/user.hooks'
-import { cVar } from '@/styles'
+import { cVar, transitions } from '@/styles'
 
 import { Container, InnerContainer, SlideAnimationContainer } from './MemberDropdown.styles'
 import { MemberDropdownList } from './MemberDropdownList'
@@ -55,19 +54,6 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
       box: 'border-box',
     })
     const containerRef = useRef<HTMLDivElement>(null)
-
-    const transition = useTransition(isList, {
-      from: { opacity: 0, x: isList ? 280 : -280, position: 'absolute' as const },
-      enter: { opacity: 1, x: 0 },
-      leave: { opacity: 0, x: isList ? -280 : 280 },
-      config: {
-        duration: parseInt(cVar('animationTimingMedium', true)),
-        // 'animationEasingMedium'
-        easing: bezier(0.03, 0.5, 0.25, 1),
-      },
-      onStart: () => setDisableScrollDuringAnimation(true),
-      onRest: () => setDisableScrollDuringAnimation(false),
-    })
 
     const handleAddNewChannel = useCallback(() => {
       setDropdownType('channel')
@@ -143,15 +129,24 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
           channelId={channelId}
         />
         <SendFundsDialog show={showSendDialog} onExitClick={toggleSendDialog} accountBalance={accountBalance} />
-        <Container ref={mergeRefs([ref, containerRef])}>
-          <InnerContainer
-            onTransitionEnd={resetToDefaultState}
-            isActive={isActive}
-            containerHeight={measureContainerHeight}
-            disableVerticalScroll={disableScrollDuringAnimation}
-          >
-            {transition((style, isList) => (
-              <SlideAnimationContainer style={style} disableVerticalScroll={disableScrollDuringAnimation}>
+
+        <CSSTransition
+          classNames={transitions.names.dropdown}
+          in={isActive}
+          timeout={parseInt(cVar('animationTimingMedium', true))}
+          onEntering={() => setDisableScrollDuringAnimation(true)}
+          onEntered={() => setDisableScrollDuringAnimation(false)}
+          mountOnEnter
+          unmountOnExit
+        >
+          <Container ref={mergeRefs([ref, containerRef])}>
+            <InnerContainer
+              onTransitionEnd={resetToDefaultState}
+              isActive={isActive}
+              containerHeight={measureContainerHeight}
+              disableVerticalScroll={disableScrollDuringAnimation}
+            >
+              <SlideAnimationContainer disableVerticalScroll={disableScrollDuringAnimation}>
                 {!isList ? (
                   <div ref={measureContainerRef}>
                     <MemberDropdownNav
@@ -186,9 +181,9 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                   </div>
                 )}
               </SlideAnimationContainer>
-            ))}
-          </InnerContainer>
-        </Container>
+            </InnerContainer>
+          </Container>
+        </CSSTransition>
       </>
     )
   }

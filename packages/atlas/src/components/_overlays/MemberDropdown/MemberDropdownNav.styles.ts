@@ -1,4 +1,3 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { animated } from 'react-spring'
 
@@ -7,10 +6,6 @@ import { Text } from '@/components/Text'
 import { cVar, sizes } from '@/styles'
 
 import { SectionContainer } from './MemberDropdown.styles'
-
-const paddingStyles = css`
-  padding: ${sizes(6)} ${sizes(4)};
-`
 
 export const MemberInfoAndBgWrapper = styled.div`
   position: relative;
@@ -61,8 +56,7 @@ export const Filter = styled.div`
 export const MemberInfoContainer = styled.div`
   position: relative;
   border-bottom: 1px solid ${cVar('colorBorderMutedAlpha')};
-
-  ${paddingStyles}
+  padding: ${sizes(4)};
 `
 
 export const AvatarContainer = styled.div`
@@ -70,7 +64,6 @@ export const AvatarContainer = styled.div`
   justify-content: start;
   grid-template-columns: auto auto;
   gap: ${sizes(2)};
-  margin-bottom: ${sizes(2)};
 `
 
 export const StyledAvatar = styled(Avatar)`
@@ -117,9 +110,7 @@ export const AddressContainer = styled.div`
   overflow: hidden;
   width: 100%;
   grid-column: 1/3;
-
-  span {
-  }
+  margin-top: ${sizes(2)};
 
   path {
     fill: ${cVar('colorText')};

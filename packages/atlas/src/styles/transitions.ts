@@ -21,6 +21,7 @@ export const transitions = {
     slide: 'slide',
     slideDown: 'slide-down',
     modal: 'modal',
+    dropdown: 'dropdown',
   },
 }
 
@@ -29,7 +30,7 @@ export const transitionStyles = css`
     opacity: 0;
 
     & .${transitions.names.slide} {
-      transform: translateY(${sizes(8)});
+      transform: translateY(${sizes(7)});
     }
   }
 
@@ -128,5 +129,25 @@ export const transitionStyles = css`
       transform: translate(-50%, -50%) scale(0.8) !important;
       opacity: 0 !important;
     }
+  }
+
+  .${transitions.names.dropdown}-enter, .${transitions.names.dropdown}-appear {
+    opacity: 0;
+    transform: translateY(${sizes(-8)});
+  }
+
+  .${transitions.names.dropdown}-enter-done, .${transitions.names.dropdown}-appear-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: ${transitions.timings.routing} ${transitions.routingEasing};
+  }
+
+  .${transitions.names.dropdown}-exit {
+    opacity: 1;
+  }
+
+  .${transitions.names.dropdown}-exit-active {
+    opacity: 0;
+    transition: ${transitions.timings.routing} ${transitions.routingEasing};
   }
 `
