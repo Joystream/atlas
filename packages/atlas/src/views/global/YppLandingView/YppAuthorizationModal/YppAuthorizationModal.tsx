@@ -12,11 +12,13 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { GoogleButton } from '@/components/_buttons/GoogleButton'
 import { Loader } from '@/components/_loaders/Loader'
+import { DialogButtonProps } from '@/components/_overlays/Dialog'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useCreateEditChannelSubmit } from '@/hooks/useChannelFormSubmit'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useAuthStore } from '@/providers/auth/auth.store'
 import { useSnackbar } from '@/providers/snackbars'
 import { useUser } from '@/providers/user/user.hooks'
 import { useYppStore } from '@/providers/ypp/ypp.store'
@@ -56,47 +58,12 @@ export type YppAuthorizationModalProps = {
   unSyncedChannels?: FullMembershipFieldsFragment['channels']
 }
 
-/*  
-1. Not signed users
-- requirements
-- google auth 
-  - get the all required data from google and save in store
-- create user
-  - (under the hood) create a member and a channel
-- ypp settings(refferal, categories)
-- speak to ypp backend
-
-2. Signed users without channel
-- requirements
-- google auth
-- (under the hood) create a channel
-- ypp settings(refferal, categories)
-- speak to ypp backend
-
-
-3. Signed users with one channel
-- requirements
-- google auth
-- ypp settings(refferal, categories)
-- speak to ypp backend
-
-
-4. Signed users with many channels 
-- select channel 
-- requirements
-- google auth
-- ypp settings(refferal, categories) 
-- update channel extrinsics
-- speak to ypp backend
-
-*/
-
 const APP_NAME = atlasConfig.general.appName
 const COLLABORATOR_ID = atlasConfig.features.ypp.youtubeCollaboratorMemberId
 const DEFAULT_LANGUAGE = atlasConfig.derived.popularLanguagesSelectValues[0].value
 
 export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSyncedChannels }) => {
-  const { memberId, refetchUserMemberships, setActiveChannel, channelId } = useUser()
+  const { memberId, refetchUserMemberships, setActiveChannel, channelId, isLoggedIn } = useUser()
   const navigate = useNavigate()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const {
@@ -116,8 +83,17 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
   const setSelectedChannelId = useYppStore((store) => store.actions.setSelectedChannelId)
   const setReferrerId = useYppStore((store) => store.actions.setReferrerId)
   const setShouldContinueYppFlow = useYppStore((store) => store.actions.setShouldContinueYppFlow)
-  const { mutateAsync: yppChannelMutation } = useMutation('ypp-channels-post', (finalFormData: FinalFormData | null) =>
-    axios.post(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels`, finalFormData)
+  const { mutateAsync: yppSignChannelMutation } = useMutation(
+    'ypp-channels-post',
+    (finalFormData: FinalFormData | null) =>
+      axios.post(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels`, finalFormData)
+  )
+
+  const { setAuthModalOpenName } = useAuthStore(
+    (state) => ({
+      setAuthModalOpenName: state.actions.setAuthModalOpenName,
+    }),
+    shallow
   )
 
   const { refetch: refetchChannel } = useFullChannel(
@@ -184,7 +160,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     [setSelectedChannelId, setYtRequirementsErrors]
   )
 
-  const createChannel = useCreateEditChannelSubmit()
+  const createOrUpdateChannel = useCreateEditChannelSubmit()
 
   const handleCreateOrUpdateChannel = detailsFormMethods.handleSubmit(async (data) => {
     setFinalFormData(() => ({
@@ -208,42 +184,47 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
       const coverContentId = `local-cover-${createId()}`
 
       if (!memberId) {
-        throw Error(' memberId id was not provided')
+        throw Error('memberId id was not provided')
       }
       if (!COLLABORATOR_ID) {
         throw Error('Collaborator member id was not provided')
       }
-      await createChannel({
+
+      await createOrUpdateChannel({
         minimized: {
           errorMessage: 'Failed to create or update channel',
         },
         data: {
           collaboratorId: COLLABORATOR_ID,
-          metadata: {
-            ownerAccount: memberId,
-            description: ytResponseData?.channelDescription,
-            isPublic: true,
-            language: DEFAULT_LANGUAGE,
-            title: ytResponseData?.channelTitle || ytResponseData?.channelHandle,
-          },
+          metadata: selectedChannelId
+            ? { ownerAccount: memberId }
+            : {
+                ownerAccount: memberId,
+                description: ytResponseData?.channelDescription,
+                isPublic: true,
+                language: DEFAULT_LANGUAGE,
+                title: ytResponseData?.channelTitle || ytResponseData?.channelHandle,
+              },
           refetchChannel,
           newChannel: !selectedChannelId,
-          assets: {
-            avatarPhoto: {
-              assetDimensions: { height: 192, width: 192 },
-              contentId: avatarContentId,
-              imageCropData: null,
-              croppedBlob: avatarBlob,
-              originalBlob: avatarBlob,
-            },
-            coverPhoto: {
-              assetDimensions: { width: 1920, height: 480 },
-              contentId: coverContentId,
-              imageCropData: null,
-              croppedBlob: coverBlob,
-              originalBlob: coverBlob,
-            },
-          },
+          assets: selectedChannelId
+            ? {}
+            : {
+                avatarPhoto: {
+                  assetDimensions: { height: 192, width: 192 },
+                  contentId: avatarContentId,
+                  imageCropData: null,
+                  croppedBlob: avatarBlob,
+                  originalBlob: avatarBlob,
+                },
+                coverPhoto: {
+                  assetDimensions: { width: 1920, height: 480 },
+                  contentId: coverContentId,
+                  imageCropData: null,
+                  croppedBlob: coverBlob,
+                  originalBlob: coverBlob,
+                },
+              },
         },
         onTxSync: async ({ channelId }) => {
           setActiveChannel(channelId)
@@ -251,16 +232,16 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
         onCompleted: async () => {
           await refetchUserMemberships()
 
-          await yppChannelMutation({
+          await yppSignChannelMutation({
             ...(selectedChannelId ? { joystreamChannelId: parseInt(selectedChannelId) } : {}),
             ...(data.referrerChannelId ? { referrerChannelId: parseInt(data.referrerChannelId) } : {}),
             authorizationCode: ytResponseData?.authorizationCode,
             userId: ytResponseData?.userId,
+            email: ytResponseData?.email,
             shouldBeIngested: data.shouldBeIngested,
             videoCategoryId: data.videoCategoryId,
           })
 
-          setYppModalOpenName(null)
           navigate(absoluteRoutes.studio.ypp())
           displaySnackbar({
             title: 'YouTube Synch Enabled',
@@ -284,6 +265,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
         },
       })
     } finally {
+      setYppModalOpenName(null)
       setIsSubmitting(false)
     }
   })
@@ -428,15 +410,45 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
 
   const isLoadingModal = yppModalOpenName === 'ypp-fetching-data' || yppModalOpenName === 'ypp-speaking-to-backend'
 
-  const secondaryButton = useMemo(() => {
-    if (yppModalOpenName === 'ypp-requirements' || yppModalOpenName === 'ypp-select-channel' || isLoadingModal) return
+  const secondaryButton: DialogButtonProps | undefined = useMemo(() => {
+    if (isLoadingModal) return
+
+    if (yppModalOpenName === 'ypp-requirements' && isLoggedIn) return
+
+    if (yppModalOpenName === 'ypp-requirements' && !isLoggedIn) {
+      return {
+        text: 'Sign in',
+        onClick: () => {
+          setYppModalOpenName(null)
+          setAuthModalOpenName('logIn')
+        },
+      }
+    }
+
+    if (yppModalOpenName === 'ypp-select-channel') {
+      return {
+        text: 'Create new channel',
+        onClick: () => {
+          setAuthModalOpenName('createChannel')
+          setYppModalOpenName(null)
+        },
+      }
+    }
 
     return {
       text: 'Back',
       disabled: isSubmitting,
       onClick: handleGoBack,
     }
-  }, [yppModalOpenName, isLoadingModal, isSubmitting, handleGoBack])
+  }, [
+    isLoadingModal,
+    yppModalOpenName,
+    isLoggedIn,
+    isSubmitting,
+    handleGoBack,
+    setYppModalOpenName,
+    setAuthModalOpenName,
+  ])
 
   return (
     <FormProvider {...detailsFormMethods}>

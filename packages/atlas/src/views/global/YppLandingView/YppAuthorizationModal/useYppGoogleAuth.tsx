@@ -284,7 +284,12 @@ export const useYppGoogleAuth = ({ channelsLoaded }: { channelsLoaded: boolean }
     const code = searchParams.get('code')
     const state = searchParams.get('state')
 
-    if (code && !error && !isAuthenticating && channelsLoaded) {
+    if (isAuthenticating) {
+      // wait for authentication before proceed
+      return
+    }
+
+    if (code && !error) {
       handleGoogleAuthSuccess(code, state)
     }
   }, [channelsLoaded, handleGoogleAuthError, handleGoogleAuthSuccess, isAuthenticating, searchParams])

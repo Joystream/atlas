@@ -71,14 +71,13 @@ export const useCreateMember = () => {
   const { handleLogin } = useAuth()
   const setAnonymousUserId = useAuthStore((store) => store.actions.setAnonymousUserId)
   const { joystream } = useJoystream()
-  // todo do we need this?
-  // const addBlockAction = useTransactionManagerStore((state) => state.actions.addBlockAction)
   const { displaySnackbar } = useSnackbar()
 
   const { mutateAsync: avatarMutation } = useMutation('avatar-post', (croppedBlob: Blob) =>
     uploadAvatarImage(croppedBlob)
   )
   const { mutateAsync: faucetMutation } = useMutation('faucet-post', (body: FaucetParams) =>
+    // todo change faucet url if request is done via ypp
     axios.post<NewMemberResponse>(FAUCET_URL, body)
   )
 
@@ -101,12 +100,6 @@ export const useCreateMember = () => {
       }
       try {
         const response = await faucetMutation(body)
-
-        // todo do we need this
-        // addBlockAction({
-        //   targetBlock: response.data.block,
-        //   callback: () => null,
-        // })
 
         return String(response.data.memberId)
       } catch (error) {
