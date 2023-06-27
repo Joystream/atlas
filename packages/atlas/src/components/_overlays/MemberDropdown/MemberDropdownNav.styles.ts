@@ -72,25 +72,6 @@ export const StyledAvatar = styled(Avatar)`
   transition: opacity ${cVar('animationTransitionMedium')};
 `
 
-export const AvatarButton = styled.button`
-  position: relative;
-  cursor: pointer;
-  border: none;
-  padding: 0;
-  background: none;
-  align-self: start;
-
-  :hover {
-    ${StyledAvatar} {
-      opacity: 1;
-    }
-  }
-
-  :active {
-    opacity: 0.75;
-  }
-`
-
 type FixedSizeContainerProps = {
   height?: number | string
   width?: number | string

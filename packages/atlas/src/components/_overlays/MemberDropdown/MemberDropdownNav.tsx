@@ -18,20 +18,17 @@ import { IconWrapper } from '@/components/IconWrapper'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { ListItem, ListItemProps } from '@/components/ListItem'
 import { NumberFormat } from '@/components/NumberFormat'
-import { Tooltip } from '@/components/Tooltip'
 import { CopyAddressButton } from '@/components/_buttons/CopyAddressButton/CopyAddressButton'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
-import { isMobile } from '@/utils/browser'
 
 import { BalanceTooltip } from './BalanceTooltip'
 import { SectionContainer } from './MemberDropdown.styles'
 import {
   AddressContainer,
   AnimatedSectionContainer,
-  AvatarButton,
   AvatarContainer,
   BalanceContainer,
   BlurredBG,
@@ -85,7 +82,6 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
   const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
   const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(activeMembership)
   const channelAvatarUrl = selectedChannel?.avatarPhoto?.resolvedUrl
-  const avatarWrapperRef = useRef<HTMLButtonElement>(null)
   const { ref: sectionContainerRef, height: sectionContainerHeight } = useResizeObserver<HTMLDivElement>({
     box: 'border-box',
   })
@@ -106,17 +102,12 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
       <MemberInfoAndBgWrapper>
         <MemberInfoContainer>
           <AvatarContainer>
-            {!isMobile() && (
-              <Tooltip reference={avatarWrapperRef.current} text="Member" offsetY={16} placement="bottom" />
-            )}
-            <AvatarButton ref={avatarWrapperRef} aria-label="Show member details">
-              <StyledAvatar
-                clickable={false}
-                size={40}
-                assetUrl={dropdownEntity.avatarUrl}
-                loading={dropdownEntity.avatarLoading}
-              />
-            </AvatarButton>
+            <StyledAvatar
+              clickable={false}
+              size={40}
+              assetUrl={dropdownEntity.avatarUrl}
+              loading={dropdownEntity.avatarLoading}
+            />
             <div>
               <MemberHandleText as="span" variant="h400">
                 {dropdownEntity.title}
@@ -182,7 +173,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
               </BalanceContainer>
             </div>
             <AddressContainer>
-              <CopyAddressButton address={activeMembership?.controllerAccount ?? ''} size="big" trucate />
+              <CopyAddressButton address={activeMembership?.controllerAccount ?? ''} size="big" truncate />
             </AddressContainer>
           </AvatarContainer>
         </MemberInfoContainer>

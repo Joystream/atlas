@@ -10,10 +10,10 @@ export type CopyAddressButtonProps = {
   address: string
   className?: string
   size?: 'small' | 'big'
-  trucate?: boolean
+  truncate?: boolean
 }
 
-export const CopyAddressButton: FC<CopyAddressButtonProps> = ({ address, className, size = 'big', trucate }) => {
+export const CopyAddressButton: FC<CopyAddressButtonProps> = ({ address, className, size = 'big', truncate }) => {
   const { copyToClipboard } = useClipboard()
   const [copyButtonClicked, setCopyButtonClicked] = useState(false)
 
@@ -31,7 +31,7 @@ export const CopyAddressButton: FC<CopyAddressButtonProps> = ({ address, classNa
   return (
     <Container onClick={handleCopyAddress}>
       <StyledText as="button" variant={size === 'big' ? 't300' : 't100'} color="colorText" className={className}>
-        {trucate ? address : shortenString(address, 6, 4)}
+        {truncate ? address : shortenString(address, 6, 4)}
       </StyledText>
       <Tooltip text="Copy account address" placement="top">
         {copyButtonClicked ? <StyledSvgActionCheck /> : <StyledSvgActionCopy />}
