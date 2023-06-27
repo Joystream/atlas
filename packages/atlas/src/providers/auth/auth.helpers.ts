@@ -234,14 +234,13 @@ export const changePassword = async ({
   gatewayAccountId,
 }: ChangePasswordArgs) => {
   try {
-    const timestamp = Date.now()
     const keypair = keyring.addFromMnemonic(mnemonic)
     const newArtifacts = await prepareEncryptionArtifacts(email, newPassword, mnemonic)
 
     const changePasswordPayload = {
       joystreamAccountId,
       gatewayName: atlasConfig.general.appName,
-      timestamp,
+      timestamp: Date.now() - 30_000,
       action: 'changeAccount',
       gatewayAccountId,
       newArtifacts,
