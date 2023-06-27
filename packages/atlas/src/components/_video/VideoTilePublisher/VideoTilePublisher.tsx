@@ -48,7 +48,11 @@ export const DELAYED_FADE_CLASSNAME = 'delayed-fade'
 export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
   ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick, onMintNftClick, isSyncing }) => {
     const [videoTitleMap, setVideoTitleMap] = useState('')
-    const { video, loading } = useFullVideo(id ?? '', {
+    const {
+      video,
+      loading,
+      refetch: refetchVideo,
+    } = useFullVideo(id ?? '', {
       skip: !id,
       onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTilePublisher', error, { video: { id } }),
     })
@@ -303,6 +307,12 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
       }
       return videoHref
     }, [hasVideoUploadFailed, isSyncingWithYoutube, isUploading, videoHref])
+
+    useEffect(() => {
+      if (uploadVideoStatus?.lastStatus === 'completed' || uploadThumbnailStatus?.lastStatus === 'completed') {
+        refetchVideo()
+      }
+    })
 
     return (
       <VideoTile
