@@ -59,7 +59,7 @@ export const useChannelForm = (props: FormType) => {
   const firstRender = useRef(true)
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropModalImperativeHandle>(null)
-  const { memberId, accountId, channelId } = useUser()
+  const { memberId, accountId, channelId, refetchUserMemberships } = useUser()
   const cachedChannelId = useRef(channelId)
   const { joystream } = useJoystream()
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
@@ -235,44 +235,51 @@ export const useChannelForm = (props: FormType) => {
     }
   }, [channel, newChannel, reset])
 
-  const handleSubmit = createSubmitHandler(async (data) => {
-    if (!joystream || !memberId || !accountId) {
-      return
-    }
+  const handleSubmit = (onCompleted?: (channelId: string) => void) =>
+    createSubmitHandler(async (data) => {
+      if (!joystream || !memberId || !accountId) {
+        return
+      }
 
-    if (!channelBucketsCount && !newChannel) {
-      SentryLogger.error('Channel buckets count is not set', 'CreateEditChannelView')
-      return
-    }
+      if (!channelBucketsCount && !newChannel) {
+        SentryLogger.error('Channel buckets count is not set', 'CreateEditChannelView')
+        return
+      }
 
-    const metadata: ChannelInputMetadata = {
-      ...(dirtyFields.title ? { title: data.title?.trim() ?? '' } : {}),
-      ...(dirtyFields.description ? { description: data.description?.trim() ?? '' } : {}),
-      ...(dirtyFields.language || newChannel ? { language: data.language } : {}),
-      ...(dirtyFields.isPublic || newChannel ? { isPublic: data.isPublic } : {}),
-      ownerAccount: accountId ?? '',
-    }
-
-    await handleChannelSubmit({
-      data: {
-        metadata,
-        channel,
-        newChannel,
-        assets: {
-          avatarPhoto: data.avatar,
-          coverPhoto: data.cover,
+      const metadata: ChannelInputMetadata = {
+        ...(dirtyFields.title ? { title: data.title?.trim() ?? '' } : {}),
+        ...(dirtyFields.description ? { description: data.description?.trim() ?? '' } : {}),
+        ...(dirtyFields.language || newChannel ? { language: data.language } : {}),
+        ...(dirtyFields.isPublic || newChannel ? { isPublic: data.isPublic } : {}),
+        ownerAccount: accountId ?? '',
+      }
+      let channelId = ''
+      await handleChannelSubmit({
+        data: {
+          metadata,
+          channel,
+          newChannel,
+          assets: {
+            avatarPhoto: data.avatar,
+            coverPhoto: data.cover,
+          },
+          refetchChannel: isEditType(props) ? props.refetchChannel : undefined,
+          fee: newChannel ? createChannelFee : updateChannelFee,
         },
-        refetchChannel: isEditType(props) ? props.refetchChannel : undefined,
-        fee: newChannel ? createChannelFee : updateChannelFee,
-      },
-      onTxSync: () => reset(getValues()),
-      onUploadAssets: setValue,
-      onCompleted: () =>
-        atlasConfig.features.ypp.googleConsoleClientId &&
-        atlasConfig.features.ypp.youtubeSyncApiUrl &&
-        setTimeout(() => setShowConnectToYtDialog(true), 2000),
-    })
-  })
+        onTxSync: (result) => {
+          reset(getValues())
+          channelId = result.channelId
+          refetchUserMemberships()
+        },
+        onUploadAssets: setValue,
+        onCompleted: () => {
+          atlasConfig.features.ypp.googleConsoleClientId &&
+            atlasConfig.features.ypp.youtubeSyncApiUrl &&
+            setTimeout(() => setShowConnectToYtDialog(true), 2000)
+          onCompleted?.(channelId)
+        },
+      })
+    })()
 
   const handleCoverChange: ImageCropModalProps['onConfirm'] = (
     croppedBlob,
