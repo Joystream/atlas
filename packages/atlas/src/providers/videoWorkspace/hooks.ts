@@ -8,6 +8,7 @@ import { useFullVideo } from '@/api/hooks/video'
 import { displayCategories } from '@/config/categories'
 import { cancelledVideoFilter } from '@/config/contentFilter'
 import { absoluteRoutes } from '@/config/routes'
+import { useGetAssetUrl } from '@/hooks/useGetAssetUrl'
 import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import { RoutingState } from '@/types/routing'
 import { SubtitlesInput } from '@/types/subtitles'
@@ -44,6 +45,8 @@ export const useVideoWorkspaceData = () => {
       },
     }
   )
+  const videoUrl = useGetAssetUrl(video?.media?.resolvedUrls, 'video')
+  const thumbnailUrl = useGetAssetUrl(video?.thumbnailPhoto?.resolvedUrls, 'image')
 
   const hasAnyAvailableSubtitles = video?.subtitles?.some((s) => !!s.asset?.isAccepted)
 
@@ -84,11 +87,11 @@ export const useVideoWorkspaceData = () => {
     : {
         video: {
           id: video?.media?.id ?? null,
-          url: video?.media?.resolvedUrls[0],
+          url: videoUrl.url,
         },
         thumbnail: {
           cropId: video?.thumbnailPhoto?.id ?? null,
-          url: video?.thumbnailPhoto?.resolvedUrls[0],
+          url: thumbnailUrl.url,
           originalId: null,
         },
       }
