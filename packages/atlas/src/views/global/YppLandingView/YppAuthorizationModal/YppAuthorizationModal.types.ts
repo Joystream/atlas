@@ -37,6 +37,8 @@ export type ChannelRequirements = {
   MINIMUM_CHANNEL_AGE_HOURS: number
 }
 
+export type Requirements = Record<keyof ChannelRequirements, number | undefined>
+
 type ChannelRequirementsFailedError = {
   code: YppRequirementsErrorCode
   message: string

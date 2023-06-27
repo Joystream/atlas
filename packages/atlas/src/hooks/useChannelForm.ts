@@ -59,7 +59,7 @@ export const useChannelForm = (props: FormType) => {
   const firstRender = useRef(true)
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropModalImperativeHandle>(null)
-  const { memberId, accountId, channelId, refetchUserMemberships } = useUser()
+  const { memberId, accountId, channelId } = useUser()
   const cachedChannelId = useRef(channelId)
   const { joystream } = useJoystream()
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)

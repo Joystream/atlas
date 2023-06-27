@@ -5,8 +5,7 @@ import { useQuery } from 'react-query'
 import { atlasConfig } from '@/config'
 import { SentryLogger } from '@/utils/logs'
 
-import { Requirements } from '..'
-import { ChannelRequirements } from '../../YppAuthorizationModal.types'
+import { ChannelRequirements, Requirements } from '../../YppAuthorizationModal.types'
 
 export const useGetYppChannelRequirements = () => {
   const { data } = useQuery('ypp-requirements-fetch', () =>

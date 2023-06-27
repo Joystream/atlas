@@ -10,13 +10,7 @@ import { pluralizeNoun } from '@/utils/misc'
 import { CategoriesText, ListItem, Paragraph, StyledList, TickWrapper } from './YppAuthorizationRequirementsStep.styles'
 import { useGetYppChannelRequirements } from './useGetYppChannelRequirements'
 
-import {
-  ChannelRequirements,
-  YppAuthorizationErrorCode,
-  YppRequirementsErrorCode,
-} from '../../YppAuthorizationModal.types'
-
-export type Requirements = Record<keyof ChannelRequirements, number | undefined>
+import { YppAuthorizationErrorCode, YppRequirementsErrorCode } from '../../YppAuthorizationModal.types'
 
 type YppAuthorizationRequirementsStepProps = {
   requirmentsErrorCodes: YppRequirementsErrorCode[]
