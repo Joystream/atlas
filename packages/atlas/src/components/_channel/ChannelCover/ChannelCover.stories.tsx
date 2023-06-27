@@ -9,7 +9,7 @@ export default {
     editable: { table: { required: false } },
   },
   args: {
-    assetUrl: ['https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg'],
+    assetUrls: ['https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg'],
   },
 } as Meta<ChannelCoverProps>
 
@@ -30,5 +30,5 @@ export const Default = Template.bind({})
 
 export const WithNoImage = Template.bind({})
 WithNoImage.args = {
-  assetUrl: undefined,
+  assetUrls: undefined,
 }

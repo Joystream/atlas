@@ -105,7 +105,7 @@ export const VideoThumbnail = forwardRef<HTMLAnchorElement, VideoThumbnailProps>
                 <ThumbnailSkeletonLoader />
               ) : (
                 <ThumbnailBackground>
-                  {thumbnailUrls && <ThumbnailImage src={thumbnailUrls || ''} alt={thumbnailAlt || ''} />}
+                  {thumbnailUrls && <ThumbnailImage resolvedUrls={thumbnailUrls || ''} alt={thumbnailAlt || ''} />}
                 </ThumbnailBackground>
               )}
             </CSSTransition>

@@ -112,13 +112,13 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
       {playing && <VideoProgress video={videoRef.current} isPlaying={isPlaying} tick={10} limit={videoPlaytime} />}
       <StyledLink withFade={withFade} to={videoId ? absoluteRoutes.viewer.video(videoId) : ''}>
         <StyledVideo
-          src={src}
+          resolvedVideoUrls={src}
           autoPlay={autoPlay}
           playsInline={playsInline}
           ref={videoRef}
           onEnded={handleEnded}
           onPlay={handlePlay}
-          poster={poster}
+          resolvedPosterUrls={poster}
           {...props}
           muted={handleActions ? isMuted : props.muted}
         />
@@ -130,7 +130,7 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
             classNames={transitions.names.fade}
             timeout={300}
           >
-            <VideoPoster src={poster} alt="" />
+            <VideoPoster resolvedUrls={poster} alt="" />
           </CSSTransition>
         )}
       </StyledLink>

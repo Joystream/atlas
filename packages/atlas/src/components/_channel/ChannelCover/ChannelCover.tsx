@@ -19,7 +19,7 @@ import {
 } from './ChannelCover.styles'
 
 export type ChannelCoverProps = {
-  assetUrl?: string[] | null
+  assetUrls?: string[] | null
   hasCoverUploadFailed?: boolean
   editable?: boolean
   disabled?: boolean
@@ -27,7 +27,7 @@ export type ChannelCoverProps = {
 }
 
 export const ChannelCover: FC<ChannelCoverProps> = ({
-  assetUrl,
+  assetUrls,
   hasCoverUploadFailed,
   editable,
   disabled,
@@ -41,7 +41,7 @@ export const ChannelCover: FC<ChannelCoverProps> = ({
             <EditCoverDesktopOverlay onClick={onCoverEditClick}>
               <SvgActionImage />
               <Text as="span" variant="t200-strong" margin={{ top: 1 }} color="colorCoreNeutral100">{`${
-                assetUrl ? 'Edit ' : 'Add '
+                assetUrls ? 'Edit ' : 'Add '
               } cover image`}</Text>
             </EditCoverDesktopOverlay>
             <EditCoverMobileButton icon={<SvgActionImageFile />} onClick={onCoverEditClick} variant="tertiary" />
@@ -50,12 +50,12 @@ export const ChannelCover: FC<ChannelCoverProps> = ({
         <Media>
           <TransitionGroup>
             <CSSTransition
-              key={assetUrl ? 'cover' : 'pattern'}
+              key={assetUrls ? 'cover' : 'pattern'}
               timeout={parseInt(transitions.timings.loading)}
               classNames={transitions.names.fade}
             >
-              {assetUrl ? (
-                <CoverImage src={assetUrl} />
+              {assetUrls ? (
+                <CoverImage resolvedUrls={assetUrls} />
               ) : hasCoverUploadFailed ? (
                 <FailedUploadContainer>
                   <StyledSvgIllustrativeFileFailed />

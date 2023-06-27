@@ -5,7 +5,7 @@ import { Text } from '@/components/Text'
 import { OutputPillWrapper, RemoveButton, StyledAvatar, StyledSVGCloseIcon } from './OutputPill.styles'
 
 export type OutputPillProps = {
-  avatarUri?: string[] | null
+  avatarUrls?: string[] | null
   handle?: string | null
   onDeleteClick?: () => void
   className?: string
@@ -16,7 +16,7 @@ export type OutputPillProps = {
   onKeyPress?: (event: KeyboardEvent<HTMLButtonElement>) => void
 }
 export const OutputPill: FC<OutputPillProps> = ({
-  avatarUri,
+  avatarUrls,
   handle,
   onDeleteClick,
   className,
@@ -35,7 +35,7 @@ export const OutputPill: FC<OutputPillProps> = ({
 
   return (
     <OutputPillWrapper className={className} withoutButton={!onDeleteClick || readonly}>
-      {withAvatar && <StyledAvatar size={24} assetUrl={avatarUri} loading={isLoadingAvatar} />}
+      {withAvatar && <StyledAvatar size={24} assetUrls={avatarUrls} loading={isLoadingAvatar} />}
       <Text variant="t200" as="p">
         {handle}
       </Text>

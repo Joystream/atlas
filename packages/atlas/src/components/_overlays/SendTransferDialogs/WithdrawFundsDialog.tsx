@@ -186,7 +186,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
             Destination account
           </Text>
           <VerticallyCenteredDiv>
-            <StyledAvatar assetUrl={avatarUrls} />
+            <StyledAvatar assetUrls={avatarUrls} />
             <Text as="span" variant="t100" margin={{ left: 2, right: 1 }}>
               {activeMembership?.handle}
             </Text>

@@ -23,9 +23,6 @@ const delayLink = new ApolloLink((operation, forward) => {
   })
 })
 
-// const MAX_ALLOWED_RETRIES = 10
-// const bannedDistributorUrls: Record<string, number> = {}
-
 const createApolloClient = () => {
   const subscriptionLink = new GraphQLWsLink(
     createClient({

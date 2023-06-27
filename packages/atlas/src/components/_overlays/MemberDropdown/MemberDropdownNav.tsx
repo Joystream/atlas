@@ -148,7 +148,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                 clickable={false}
                 isDisabled={type === 'channel'}
                 size={40}
-                assetUrl={memberAvatarUrls}
+                assetUrls={memberAvatarUrls}
                 loading={memberAvatarLoading}
               />
               <StyledIconWrapper size="small" icon={<SvgActionMember />} />
@@ -172,7 +172,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                 clickable={false}
                 isDisabled={type === 'member'}
                 size={40}
-                assetUrl={channelAvatarUrls}
+                assetUrls={channelAvatarUrls}
                 loading={membershipLoading}
               >
                 {!hasAtLeastOneChannel ? (

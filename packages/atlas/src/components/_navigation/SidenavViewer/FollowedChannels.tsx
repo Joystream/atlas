@@ -44,7 +44,7 @@ export const ChannelNavItem: FC<NavItemProps & ChannelNavItemProps> = ({
 
   return (
     <NavItem to={to} expanded={expanded} itemName={itemName} onClick={onClick} isSecondary={isSecondary}>
-      <Avatar loading={!extendedChannel} size={32} assetUrl={extendedChannel?.channel.avatarPhoto?.resolvedUrls} />
+      <Avatar loading={!extendedChannel} size={32} assetUrls={extendedChannel?.channel.avatarPhoto?.resolvedUrls} />
       {extendedChannel ? (
         <ChannelTitle as="p" variant="h300" color="colorText">
           {extendedChannel.channel.title}

@@ -50,14 +50,14 @@ export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId, isInCarousel }) =
   const owner = ownerChannel
     ? {
         name: ownerChannel.title || undefined,
-        assetUrl: creatorAvatarUrls || undefined,
+        assetUrls: creatorAvatarUrls || undefined,
         loading,
         onClick: () => navigate(absoluteRoutes.viewer.channel(ownerChannel.id)),
       }
     : ownerMember
     ? {
         name: ownerMember.handle,
-        assetUrl: ownerMemberAvatarUrls,
+        assetUrls: ownerMemberAvatarUrls,
         loading,
         onClick: () => navigate(absoluteRoutes.viewer.member(ownerMember.handle)),
       }

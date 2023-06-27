@@ -4,11 +4,11 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { useGetAssetUrl } from '@/hooks/useGetAssetUrl'
 
 export type AssetImage = {
-  src: string[] | undefined | null
+  resolvedUrls: string[] | undefined | null
 } & Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'>
 
-export const AssetImage = ({ src, ...imgProps }: AssetImage) => {
-  const { url, isLoading } = useGetAssetUrl(src, 'image')
+export const AssetImage = ({ resolvedUrls, ...imgProps }: AssetImage) => {
+  const { url, isLoading } = useGetAssetUrl(resolvedUrls, 'image')
   if (isLoading) {
     return <SkeletonLoader className={imgProps.className} />
   }

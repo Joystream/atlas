@@ -378,7 +378,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                           Top bid
                         </Text>
                         <FlexWrapper>
-                          <Avatar size={24} assetUrl={topBidderAvatarUrls} loading={topBidderAvatarLoading} />
+                          <Avatar size={24} assetUrls={topBidderAvatarUrls} loading={topBidderAvatarLoading} />
                           <TokenWrapper>
                             <StyledJoyTokenIcon variant="gray" size={24} />
                           </TokenWrapper>
@@ -399,7 +399,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                             Your Bid
                           </Text>
                           <FlexWrapper>
-                            <Avatar size={24} assetUrl={userBidAvatarUrls} loading={userBidAvatarLoading} />
+                            <Avatar size={24} assetUrls={userBidAvatarUrls} loading={userBidAvatarLoading} />
                             <TokenWrapper>
                               <StyledJoyTokenIcon variant="gray" size={24} />
                             </TokenWrapper>
@@ -531,7 +531,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                   Owner
                 </Text>
                 <PaymentSplitValues>
-                  <Avatar size={24} assetUrl={ownerMemberAvatarUrls} />
+                  <Avatar size={24} assetUrls={ownerMemberAvatarUrls} />
                   <Text as="span" variant="h400" color="colorText" margin={{ left: 2 }}>
                     {ownerRoyalty}%
                   </Text>
@@ -542,7 +542,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                   Creator
                 </Text>
                 <PaymentSplitValues>
-                  <Avatar size={24} assetUrl={creatorAvatarUrls} />
+                  <Avatar size={24} assetUrls={creatorAvatarUrls} />
                   <Text as="span" variant="h400" color="colorText" margin={{ left: 2 }}>
                     {creatorRoyalty}%
                   </Text>

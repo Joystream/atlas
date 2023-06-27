@@ -78,7 +78,7 @@ const PlaygroundLayout = () => {
           {isLoggedIn ? (
             <Avatar
               size={40}
-              assetUrl={memberAvatarUrls}
+              assetUrls={memberAvatarUrls}
               loading={memberAvatarLoading}
               onClick={() => setIsMemberDropdownActive(true)}
             />

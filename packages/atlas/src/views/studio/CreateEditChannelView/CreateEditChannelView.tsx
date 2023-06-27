@@ -426,7 +426,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
           render={({ field: { value } }) => (
             <>
               <ChannelCover
-                assetUrl={
+                assetUrls={
                   loading
                     ? null
                     : value.croppedUrl
@@ -468,7 +468,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
             render={({ field: { value } }) => (
               <>
                 <StyledAvatar
-                  assetUrl={
+                  assetUrls={
                     loading
                       ? null
                       : value.croppedUrl

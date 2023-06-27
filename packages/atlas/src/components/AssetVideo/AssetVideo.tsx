@@ -3,14 +3,14 @@ import { VideoHTMLAttributes, forwardRef } from 'react'
 import { useGetAssetUrl } from '@/hooks/useGetAssetUrl'
 
 export type AssetVideoProps = {
-  src: string[]
-  poster: string[]
+  resolvedVideoUrls: string[]
+  resolvedPosterUrls: string[]
 } & Omit<VideoHTMLAttributes<HTMLVideoElement>, 'src' | 'poster'>
 
 export const AssetVideo = forwardRef<HTMLVideoElement, AssetVideoProps>(
-  ({ src, poster, ...props }: AssetVideoProps, ref) => {
-    const { url: videoSrc } = useGetAssetUrl(src, 'video')
-    const { url: posterSrc } = useGetAssetUrl(poster, 'image')
+  ({ resolvedVideoUrls, resolvedPosterUrls, ...props }: AssetVideoProps, ref) => {
+    const { url: videoSrc } = useGetAssetUrl(resolvedVideoUrls, 'video')
+    const { url: posterSrc } = useGetAssetUrl(resolvedPosterUrls, 'image')
 
     return <video {...props} ref={ref} src={videoSrc} poster={posterSrc} />
   }

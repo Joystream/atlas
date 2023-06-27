@@ -49,7 +49,7 @@ export const PlaygroundInputAutocomplete = () => {
             setChannel(item.channel.title ?? '')
           }
         }}
-        nodeEnd={foundChannel && <Avatar assetUrl={foundChannel.avatarPhoto?.resolvedUrls} size={24} />}
+        nodeEnd={foundChannel && <Avatar assetUrls={foundChannel.avatarPhoto?.resolvedUrls} size={24} />}
         clearSelection={() => setFoundChannel(null)}
       />
       <div style={{ marginTop: 20 }}>

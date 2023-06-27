@@ -112,8 +112,8 @@ export const VideoView: FC = () => {
   const { ref: playerRef, inView: isPlayerInView } = useInView()
   const pausePlayNext = anyOverlaysOpen || !isPlayerInView || isCommenting
 
-  const mediaUrl = video?.media?.resolvedUrls
-  const thumbnailUrl = video?.thumbnailPhoto?.resolvedUrls
+  const mediaUrls = video?.media?.resolvedUrls
+  const thumbnailUrls = video?.thumbnailPhoto?.resolvedUrls
   useEffect(() => {
     const getSubtitles = async () => {
       if (!video?.subtitles) return []
@@ -141,15 +141,15 @@ export const VideoView: FC = () => {
   }, [video?.subtitles])
 
   const videoMetaTags = useMemo(() => {
-    if (!video || !thumbnailUrl) return {}
+    if (!video || !thumbnailUrls) return {}
     return generateVideoMetaTags(
       video,
-      thumbnailUrl,
+      thumbnailUrls,
       atlasConfig.general.appName,
       window.location.origin,
       atlasConfig.general.appTwitterId
     )
-  }, [video, thumbnailUrl])
+  }, [video, thumbnailUrls])
   const headTags = useHeadTags(video?.title, videoMetaTags)
 
   const [isShareDialogOpen, setShareDialogOpen] = useState(false)
@@ -234,7 +234,7 @@ export const VideoView: FC = () => {
       return
     }
 
-    const artwork: MediaImage[] = thumbnailUrl ? [{ src: thumbnailUrl[0], type: 'image/webp', sizes: '640x360' }] : []
+    const artwork: MediaImage[] = thumbnailUrls ? [{ src: thumbnailUrls[0], type: 'image/webp', sizes: '640x360' }] : []
 
     navigator.mediaSession.metadata = new MediaMetadata({
       title: video.title || '',
@@ -246,7 +246,7 @@ export const VideoView: FC = () => {
     return () => {
       navigator.mediaSession.metadata = null
     }
-  }, [thumbnailUrl, video])
+  }, [thumbnailUrls, video])
 
   const handleShare = () => {
     setShareDialogOpen(true)
@@ -402,7 +402,7 @@ export const VideoView: FC = () => {
                   isVideoPending={!video?.media?.isAccepted}
                   videoId={video?.id}
                   autoplay
-                  src={mediaUrl}
+                  src={mediaUrls}
                   onEnd={handleVideoEnd}
                   onTimeUpdated={handleTimeUpdate}
                   startTime={startTimestamp}

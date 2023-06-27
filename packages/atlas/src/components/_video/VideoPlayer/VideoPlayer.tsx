@@ -71,7 +71,7 @@ import { CustomVideojsEvents, PlayerState, VOLUME_STEP, hotkeysHandler, isFullSc
 import { VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
 
 export type VideoPlayerProps = {
-  channelAvatarUrl?: string[] | null
+  channelAvatarUrls?: string[] | null
   isChannelAvatarLoading?: boolean
   isShareDialogOpen?: boolean
   onCloseShareDialog?: () => void
@@ -106,7 +106,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
   {
     isVideoPending,
     className,
-    channelAvatarUrl,
+    channelAvatarUrls,
     isChannelAvatarLoading,
     onCloseShareDialog,
     onAddVideoView,
@@ -894,7 +894,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
             handlePlayPause(true)
           }}
           channelId={video?.channel.id}
-          currentThumbnailUrl={videoJsConfig.posterUrl}
+          currentThumbnailUrls={videoJsConfig.posterUrl}
           playRandomVideoOnEnded={!isEmbedded}
           isMinimized={isMinimized}
         />
@@ -906,7 +906,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                 <Avatar
                   clickable
                   size={isFullScreen && !isMobile() ? 88 : 32}
-                  assetUrl={channelAvatarUrl}
+                  assetUrls={channelAvatarUrls}
                   loading={isChannelAvatarLoading}
                 />
               </a>

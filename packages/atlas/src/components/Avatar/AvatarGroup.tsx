@@ -118,7 +118,7 @@ const SingleAvatar: FC<SingleAvatarProps> = ({ avatar, loading: loadingProp, siz
   return (
     <StyledAvatar
       loading={loading}
-      assetUrl={urls}
+      assetUrls={urls}
       size={size}
       disableHoverDimm
       onClick={(e) => {

@@ -250,7 +250,7 @@ const ResolvedAvatar: FC<ResolvedAvatarProps> = ({ member }) => {
   const { urls, isLoadingAsset } = getMemberAvatar(member)
   return (
     <Tooltip text={member?.handle} placement="top">
-      <Avatar assetUrl={urls} loading={isLoadingAsset} size={24} />
+      <Avatar assetUrls={urls} loading={isLoadingAsset} size={24} />
     </Tooltip>
   )
 }

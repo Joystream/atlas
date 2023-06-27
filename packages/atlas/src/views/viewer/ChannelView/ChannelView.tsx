@@ -235,7 +235,7 @@ export const ChannelView: FC = () => {
   return (
     <ViewWrapper>
       {headTags}
-      <ChannelCover assetUrl={coverPhotoUrl} />
+      <ChannelCover assetUrls={coverPhotoUrl} />
       <LimitedWidthContainer>
         {smMatch ? (
           <CollectorsBoxContainer>

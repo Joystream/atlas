@@ -111,7 +111,7 @@ export const NotificationTile: FC<NotificationProps> = ({
           variant="compact"
           nodeStart={
             member ? (
-              <Avatar size={32} assetUrl={avatarUrls} loading={isLoadingAvatar || loading} />
+              <Avatar size={32} assetUrls={avatarUrls} loading={isLoadingAvatar || loading} />
             ) : (
               <NoActorNotificationAvatar size="small" />
             )
@@ -155,7 +155,7 @@ export const NotificationTile: FC<NotificationProps> = ({
       )}
       <AvatarWrapper>
         {member ? (
-          <Avatar size={40} assetUrl={avatarUrls} loading={isLoadingAvatar || loading} />
+          <Avatar size={40} assetUrls={avatarUrls} loading={isLoadingAvatar || loading} />
         ) : (
           <NoActorNotificationAvatar size="regular" />
         )}

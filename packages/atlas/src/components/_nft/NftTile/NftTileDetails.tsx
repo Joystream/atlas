@@ -163,7 +163,7 @@ export const NftTileDetails: FC<NftTileDetailsProps> = memo(
     const avatars = useMemo(
       () => [
         {
-          url: creator?.assetUrls,
+          urls: creator?.assetUrls,
           tooltipText: `Creator: ${creator?.name}`,
           onClick: creator?.onClick,
           loading: creator?.loading,
@@ -171,7 +171,7 @@ export const NftTileDetails: FC<NftTileDetailsProps> = memo(
         ...(owner
           ? [
               {
-                url: owner?.assetUrls,
+                urls: owner?.assetUrls,
                 tooltipText: `Owner: ${owner?.name}`,
                 onClick: owner?.onClick,
                 loading: owner.loading,

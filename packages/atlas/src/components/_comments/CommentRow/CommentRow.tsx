@@ -61,10 +61,10 @@ export const CommentRow: FC<CommentRowProps> = ({
         <div>
           {memberUrl ? (
             <Link to={memberUrl}>
-              <Avatar assetUrl={memberAvatarUrls} size={avatarSize} loading={isMemberAvatarLoading} clickable />
+              <Avatar assetUrls={memberAvatarUrls} size={avatarSize} loading={isMemberAvatarLoading} clickable />
             </Link>
           ) : (
-            <Avatar assetUrl={memberAvatarUrls} size={avatarSize} loading={isMemberAvatarLoading} />
+            <Avatar assetUrls={memberAvatarUrls} size={avatarSize} loading={isMemberAvatarLoading} />
           )}
         </div>
         <div className={className}>{children}</div>

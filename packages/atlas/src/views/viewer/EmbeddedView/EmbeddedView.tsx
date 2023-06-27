@@ -96,7 +96,7 @@ export const EmbeddedView: FC = () => {
           <VideoPlayer
             onAddVideoView={handleAddVideoView}
             isVideoPending={!video?.media?.isAccepted}
-            channelAvatarUrl={channelAvatarUrls}
+            channelAvatarUrls={channelAvatarUrls}
             isChannelAvatarLoading={loading}
             videoId={video.id}
             src={mediaUrls}

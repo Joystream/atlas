@@ -23,9 +23,8 @@ import { Text } from '../Text'
 
 export type AvatarProps = PropsWithChildren<{
   onClick?: (event: MouseEvent<HTMLElement>) => void
-  onImageValidation?: (validImage: boolean) => void
   onError?: () => void
-  assetUrl?: string[] | null
+  assetUrls?: string[] | null
   hasAvatarUploadFailed?: boolean
   loading?: boolean
   className?: string
@@ -37,7 +36,7 @@ export type AvatarProps = PropsWithChildren<{
 }>
 
 export const Avatar: FC<AvatarProps> = ({
-  assetUrl,
+  assetUrls,
   hasAvatarUploadFailed,
   loading = false,
   size = 32,
@@ -48,7 +47,6 @@ export const Avatar: FC<AvatarProps> = ({
   clickable,
   onError,
   onClick,
-  // onImageValidation,
   disableHoverDimm,
 }) => {
   const isEditable = !loading && editable && size !== 32 && size !== 24
@@ -75,9 +73,9 @@ export const Avatar: FC<AvatarProps> = ({
     >
       {(clickable || !!onClick) && (
         <IconAndOverlayWrapper>
-          <Overlay isEdit={isEditable && !!assetUrl} />
+          <Overlay isEdit={isEditable && !!assetUrls} />
           {isEditable &&
-            (assetUrl ? (
+            (assetUrls ? (
               <StyledSvgActionEdit width={getEditableIconSize()} height={getEditableIconSize()} />
             ) : (
               <StyledSvgActionAddImage width={getEditableIconSize()} height={getEditableIconSize()} />
@@ -107,8 +105,8 @@ export const Avatar: FC<AvatarProps> = ({
             >
               {loading ? (
                 <StyledSkeletonLoader rounded />
-              ) : assetUrl?.length ? (
-                <StyledImage src={assetUrl} onError={onError} />
+              ) : assetUrls?.length ? (
+                <StyledImage resolvedUrls={assetUrls} onError={onError} />
               ) : (
                 <SilhouetteAvatar />
               )}

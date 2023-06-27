@@ -126,7 +126,7 @@ export const TopbarViewer: FC = () => {
                       {!mdMatch && !searchOpen && (
                         <StyledAvatar
                           size={40}
-                          assetUrl={memberAvatarUrls}
+                          assetUrls={memberAvatarUrls}
                           loading={memberAvatarLoading}
                           onClick={handleDrawerToggle}
                         />
@@ -134,7 +134,7 @@ export const TopbarViewer: FC = () => {
                       {mdMatch && (
                         <StyledAvatar
                           size={40}
-                          assetUrl={memberAvatarUrls}
+                          assetUrls={memberAvatarUrls}
                           onClick={handleDrawerToggle}
                           loading={memberAvatarLoading}
                         />

@@ -75,7 +75,7 @@ export const HistoryItem: FC<HistoryItemProps> = ({ size, member, date, joyAmoun
     <HistoryItemContainer data-size={size}>
       <Avatar
         onClick={() => navigate(absoluteRoutes.viewer.member(member?.handle))}
-        assetUrl={urls}
+        assetUrls={urls}
         loading={isLoadingAsset}
         size={size === 'medium' ? 40 : 32}
       />

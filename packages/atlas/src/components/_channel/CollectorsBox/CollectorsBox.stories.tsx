@@ -57,7 +57,7 @@ WithLessThan5Collectors.args = {
 
 const TemplateWithChannelCover: StoryFn<CollectorsBoxProps> = (args) => (
   <div style={{ position: 'relative' }}>
-    <ChannelCover assetUrl={['https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg']} />
+    <ChannelCover assetUrls={['https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg']} />
     <div style={{ position: 'absolute', bottom: -32, right: 0 }}>
       <CollectorsBox {...args} />
     </div>
