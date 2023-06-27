@@ -261,3 +261,13 @@ export const changePassword = async ({
     SentryLogger.error('Something went wrong during changing password', 'changePassword', error)
   }
 }
+
+export const getMnemonicFromeEmailAndPassword = async (email: string, password: string) => {
+  const id = await getArtifactId(email, password)
+  const data = await getArtifacts(id, email, password)
+  if (!data?.decryptedEntropy) {
+    throw Error("Couldn't fetch artifacts")
+  }
+  const mnemonic = entropyToMnemonic(data?.decryptedEntropy)
+  return mnemonic
+}

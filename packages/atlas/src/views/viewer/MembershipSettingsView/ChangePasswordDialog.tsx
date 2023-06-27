@@ -9,7 +9,7 @@ import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { useHidePasswordInInput } from '@/hooks/useHidePasswordInInput'
-import { changePassword, entropyToMnemonic, getArtifactId, getArtifacts } from '@/providers/auth/auth.helpers'
+import { changePassword, getMnemonicFromeEmailAndPassword } from '@/providers/auth/auth.helpers'
 import { useAuth } from '@/providers/auth/auth.hooks'
 import { LogInErrors } from '@/providers/auth/auth.types'
 import { useSnackbar } from '@/providers/snackbars'
@@ -25,16 +25,6 @@ type ChangePasswordDialogProps = {
 type PasswordStepForm = {
   password: string
   confirmPassword: string
-}
-
-export const getMnemonicFromeEmailAndPassword = async (email: string, password: string) => {
-  const id = await getArtifactId(email, password)
-  const data = await getArtifacts(id, email, password)
-  if (!data?.decryptedEntropy) {
-    throw Error("Couldn't fetch artifacts")
-  }
-  const mnemonic = entropyToMnemonic(data?.decryptedEntropy)
-  return mnemonic
 }
 
 export const ChangePasswordDialog: FC<ChangePasswordDialogProps> = ({ onClose, show }) => {
@@ -73,7 +63,7 @@ export const ChangePasswordDialog: FC<ChangePasswordDialogProps> = ({ onClose, s
     })()
   }, [currentUser, displaySnackbar, verifyPasswordForm])
 
-  const changePasswordform = useForm<PasswordStepForm>({
+  const changePasswordForm = useForm<PasswordStepForm>({
     shouldFocusError: true,
     resolver: zodResolver(passwordAndRepeatPasswordSchema),
   })
@@ -84,14 +74,14 @@ export const ChangePasswordDialog: FC<ChangePasswordDialogProps> = ({ onClose, s
 
   const handleClose = useCallback(() => {
     verifyPasswordForm.reset({ oldPassword: '' })
-    changePasswordform.reset({ password: '', confirmPassword: '' })
+    changePasswordForm.reset({ password: '', confirmPassword: '' })
     resethideOldPassword()
     resethidePassword()
     resethideConfirmPassword()
     setMnemonic(null)
     onClose()
   }, [
-    changePasswordform,
+    changePasswordForm,
     onClose,
     resethideConfirmPassword,
     resethideOldPassword,
@@ -100,7 +90,7 @@ export const ChangePasswordDialog: FC<ChangePasswordDialogProps> = ({ onClose, s
   ])
 
   const handleChangePassword = useCallback(() => {
-    changePasswordform.handleSubmit(async (data) => {
+    changePasswordForm.handleSubmit(async (data) => {
       if (!currentUser || !mnemonic) {
         throw Error('Current user is not set or mnemonic is null')
       }
@@ -128,7 +118,7 @@ export const ChangePasswordDialog: FC<ChangePasswordDialogProps> = ({ onClose, s
         setIsSubmiting(false)
       }
     })()
-  }, [changePasswordform, currentUser, displaySnackbar, handleClose, mnemonic])
+  }, [changePasswordForm, currentUser, displaySnackbar, handleClose, mnemonic])
 
   return (
     <>
@@ -173,23 +163,23 @@ export const ChangePasswordDialog: FC<ChangePasswordDialogProps> = ({ onClose, s
           </FormField>
         ) : (
           <Wrapper>
-            <FormField label="New password" error={changePasswordform.formState.errors.password?.message}>
+            <FormField label="New password" error={changePasswordForm.formState.errors.password?.message}>
               <Input
                 placeholder="New password"
-                {...changePasswordform.register('password')}
+                {...changePasswordForm.register('password')}
                 {...hidePasswordProps}
                 autoComplete="new-password"
               />
             </FormField>
-            <FormField label="Repeat Password" error={changePasswordform.formState.errors.confirmPassword?.message}>
+            <FormField label="Repeat Password" error={changePasswordForm.formState.errors.confirmPassword?.message}>
               <Input
                 placeholder="Repeat password"
-                {...changePasswordform.register('confirmPassword')}
+                {...changePasswordForm.register('confirmPassword')}
                 {...hideConfirmPasswordProps}
                 autoComplete="new-password"
               />
             </FormField>
-            <FormProvider {...changePasswordform}>
+            <FormProvider {...changePasswordForm}>
               <PasswordCriterias />
             </FormProvider>
           </Wrapper>
