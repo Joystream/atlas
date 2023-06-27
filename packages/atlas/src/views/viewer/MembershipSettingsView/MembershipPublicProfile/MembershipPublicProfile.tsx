@@ -1,5 +1,6 @@
 import { useApolloClient } from '@apollo/client'
 import debouncePromise from 'awesome-debounce-promise'
+import { BN } from 'bn.js'
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useMutation } from 'react-query'
@@ -148,7 +149,7 @@ export const MembershipPublicProfile: FC<MembershipPublicProfileProps> = ({
   const metadata = createMemberInputMetadata(watch())
   const { fullFee: fee, loading: feeLoading } = useFee(
     'updateMemberTx',
-    memberId && isDirty ? [memberId, watch('handle'), metadata] : undefined
+    memberId ? [memberId, watch('handle'), metadata] : undefined
   )
   const handleEditMember = handleSubmit(async (data) => {
     if (!joystream || !activeMembership || !isDirty) {
@@ -302,7 +303,7 @@ export const MembershipPublicProfile: FC<MembershipPublicProfileProps> = ({
         </Wrapper>
         <StyledActionBar
           ref={actionBarRef}
-          fee={fee}
+          fee={isDirty ? fee : new BN(0)}
           feeLoading={feeLoading}
           primaryButton={{
             disabled: isSubmitting || !isDirty,
