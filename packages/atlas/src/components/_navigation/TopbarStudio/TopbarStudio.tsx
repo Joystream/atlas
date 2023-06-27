@@ -3,21 +3,19 @@ import { CSSTransition } from 'react-transition-group'
 
 import { SvgActionAddVideo } from '@/assets/icons'
 import { AppLogo } from '@/components/AppLogo'
-import { AvatarGroupUrlAvatar } from '@/components/Avatar/AvatarGroup'
 import { Button } from '@/components/_buttons/Button'
 import { NotificationsButton } from '@/components/_navigation/NotificationsButton'
 import { NotificationsWidget } from '@/components/_notifications/NotificationsWidget'
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useUser } from '@/providers/user/user.hooks'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { transitions } from '@/styles'
 
-import { StudioTopbarContainer, StyledAvatarGroup, StyledTopbarBase } from './TopbarStudio.styles'
+import { StudioTopbarContainer, StyledAvatar, StyledTopbarBase } from './TopbarStudio.styles'
 
 type StudioTopbarProps = {
   hideChannelInfo?: boolean
@@ -92,7 +90,7 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
                 </Button>
               </CSSTransition>
               <NotificationsWidget trigger={<NotificationsButton />} />
-              <StyledAvatarGroup size="large" shouldHighlightEveryAvatar reverse avatars={avatars} clickable={false} />
+              <StyledAvatar size={40} assetUrl={channelAvatarUrl} onClick={handleDrawerToggle} />
             </StudioTopbarContainer>
           ) : (
             <Button size="medium" onClick={() => setAuthModalOpenName(getCorrectLoginModal())}>

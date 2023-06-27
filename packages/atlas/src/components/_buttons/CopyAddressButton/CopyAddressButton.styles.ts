@@ -5,28 +5,27 @@ import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
 import { cVar, sizes } from '@/styles'
 
-export const StyledTooltip = styled(Tooltip)`
-  :hover {
-    button {
-      color: ${cVar('colorCoreNeutral50')};
-    }
-
-    path {
-      fill: ${cVar('colorCoreNeutral50')};
-    }
-  }
+export const Container = styled.div`
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  width: fit-content;
 `
 
 export const StyledText = styled(Text)`
+  min-width: 0;
+  width: auto;
+  padding: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   border: none;
   background: none;
-  display: flex;
-  align-items: center;
+  max-height: 20px;
   cursor: pointer;
   transition: ${cVar('animationTransitionFast')};
 `
 export const StyledSvgActionCopy = styled(SvgActionCopy)`
-  margin-left: ${sizes(2)};
+  margin-left: ${sizes(1)};
 
   path {
     fill: ${cVar('colorCoreNeutral300')};

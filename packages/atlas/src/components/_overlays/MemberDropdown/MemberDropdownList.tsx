@@ -35,12 +35,12 @@ export const MemberDropdownList: FC<MemberDropdownListProps> = ({
   }, [activeMembership])
 
   return (
-    <>
+    <div>
       <SwitchMemberItemListContainer>
         <ListItem
           onClick={() => onSwitchToNav(type)}
           nodeStart={<SvgActionChevronL />}
-          label={type === 'channel' ? 'Switch channel' : 'Switch member'}
+          label={type === 'channel' ? 'Switch channels' : 'My channels'}
         />
       </SwitchMemberItemListContainer>
       <SectionContainer>
@@ -51,7 +51,7 @@ export const MemberDropdownList: FC<MemberDropdownListProps> = ({
             nodeStart={<Avatar assetUrl={channel.avatarPhoto?.resolvedUrl} size={32} />}
             label={channel?.title ?? ''}
             caption={channel ? `${channel?.followsNum} followers` : undefined}
-            selected={channel.id === channelId}
+            selected={type === 'channel' ? channel.id === channelId : false}
           />
         ))}
         {type === 'channel' && (
@@ -62,6 +62,6 @@ export const MemberDropdownList: FC<MemberDropdownListProps> = ({
           />
         )}
       </SectionContainer>
-    </>
+    </div>
   )
 }

@@ -3,15 +3,16 @@ import { FC, useState } from 'react'
 import { useClipboard } from '@/hooks/useClipboard'
 import { shortenString } from '@/utils/misc'
 
-import { StyledSvgActionCheck, StyledSvgActionCopy, StyledText, StyledTooltip } from './CopyAddressButton.styles'
+import { Container, StyledSvgActionCheck, StyledSvgActionCopy, StyledText } from './CopyAddressButton.styles'
 
 export type CopyAddressButtonProps = {
   address: string
   className?: string
   size?: 'small' | 'big'
+  truncate?: boolean
 }
 
-export const CopyAddressButton: FC<CopyAddressButtonProps> = ({ address, className, size = 'big' }) => {
+export const CopyAddressButton: FC<CopyAddressButtonProps> = ({ address, className, size = 'big', truncate }) => {
   const { copyToClipboard } = useClipboard()
   const [copyButtonClicked, setCopyButtonClicked] = useState(false)
 
@@ -27,21 +28,13 @@ export const CopyAddressButton: FC<CopyAddressButtonProps> = ({ address, classNa
   }
 
   return (
-    <StyledTooltip
-      hideOnClick={false}
-      text={copyButtonClicked ? 'Copied!' : 'Copy account address'}
-      placement="top-start"
-    >
-      <StyledText
-        as="button"
-        variant={size === 'big' ? 't300' : 't100'}
-        color="colorText"
-        className={className}
-        onClick={handleCopyAddress}
-      >
-        {shortenString(address, 6, 4)}
-        {copyButtonClicked ? <StyledSvgActionCheck /> : <StyledSvgActionCopy />}
+    <Container onClick={handleCopyAddress}>
+      <StyledText as="button" variant={size === 'big' ? 't300' : 't100'} color="colorText" className={className}>
+        {truncate ? address : shortenString(address, 6, 4)}
       </StyledText>
-    </StyledTooltip>
+      <Tooltip text="Copy account address" placement="top">
+        {copyButtonClicked ? <StyledSvgActionCheck /> : <StyledSvgActionCopy />}
+      </Tooltip>
+    </Container>
   )
 }
