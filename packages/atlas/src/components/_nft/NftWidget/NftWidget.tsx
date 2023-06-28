@@ -1,20 +1,18 @@
 import BN from 'bn.js'
 import { differenceInSeconds } from 'date-fns'
-import { FC, memo, useState } from 'react'
+import { FC, memo, useMemo, useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
 import { BasicBidFieldsFragment, FullBidFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
-import { SvgActionAuction, SvgAlertsInformative24 } from '@/assets/icons'
+import { SvgAlertsInformative24 } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
 import { Banner } from '@/components/Banner'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { GridItem } from '@/components/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
-import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { absoluteRoutes } from '@/config/routes'
-import { useDeepMemo } from '@/hooks/useDeepMemo'
 import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { EnglishTimerState } from '@/hooks/useNftState'
 import { NftSaleType } from '@/joystream-lib/types'
@@ -35,6 +33,8 @@ import {
   OwnerHandle,
   OwnerLabel,
   Size,
+  StatusContainer,
+  StatusMark,
   StyledSvgActionChevronT,
   TopBidderContainer,
   TopBidderTokenContainer,
@@ -131,7 +131,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
   const size: Size = width > SMALL_VARIANT_MAXIMUM_SIZE ? 'medium' : 'small'
   const { convertHapiToUSD, isLoadingPrice } = useTokenPrice()
 
-  const content = useDeepMemo(() => {
+  const content = useMemo(() => {
     if (!nftStatus) {
       return
     }
@@ -626,7 +626,6 @@ export const NftWidget: FC<NftWidgetProps> = ({
           </Text>
         </OwnerHandle>
         <CollapsibleButtonWrapper>
-          {nftStatus.status !== 'idle' && <Pill label="On Auction" icon={<SvgActionAuction />} />}
           <Button
             icon={<StyledSvgActionChevronT isCollapsed={isCollapsed} />}
             variant="tertiary"
@@ -635,6 +634,14 @@ export const NftWidget: FC<NftWidgetProps> = ({
           />
         </CollapsibleButtonWrapper>
       </NftOwnerContainer>
+      {nftStatus.status !== 'idle' && isCollapsed && (
+        <StatusContainer>
+          <StatusMark />
+          <Text variant="t100" as="p">
+            Purchasable
+          </Text>
+        </StatusContainer>
+      )}
       <CollapsibleWrapper collapsed={isCollapsed}>
         <CollapsibleElement>
           <Content data-size={size}>{content}</Content>

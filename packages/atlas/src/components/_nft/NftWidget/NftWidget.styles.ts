@@ -29,7 +29,7 @@ export const Content = styled.div<SizeProps>`
   gap: ${sizes(6)};
   grid-template-columns: 1fr 1fr;
   justify-content: space-between;
-  box-shadow: ${cVar('effectDividersTop')}, ${cVar('effectDividersBottom')};
+  box-shadow: ${cVar('effectDividersBottom')};
   padding: ${sizes(6)};
 
   &[data-size=${sizeObj.small}] {
@@ -41,6 +41,7 @@ export const Content = styled.div<SizeProps>`
 
 export const NftOwnerContainer = styled.div<SizeProps>`
   display: grid;
+  box-shadow: ${cVar('effectDividersBottom')};
   gap: ${sizes(1)} ${sizes(6)};
   grid-template:
     'avatar owner-label collapsible-button' auto
@@ -52,6 +53,22 @@ export const NftOwnerContainer = styled.div<SizeProps>`
     padding: ${sizes(4)};
     gap: ${sizes(1)} ${sizes(4)};
   }
+`
+
+export const StatusContainer = styled.div`
+  background-color: ${cVar('colorBackground')};
+  padding: ${sizes(1)} ${sizes(6)};
+  display: flex;
+  gap: ${sizes(2)};
+  align-items: center;
+`
+
+export const StatusMark = styled.div`
+  width: 11px;
+  height: 11px;
+  background-color: ${cVar('colorTextSuccess')};
+  border-radius: 12px;
+  border: 1px solid ${cVar('colorBackgroundElevatedAlpha')};
 `
 
 export const StyledSvgActionChevronT = styled(SvgActionChevronT)<{ isCollapsed: boolean }>`
