@@ -100,13 +100,15 @@ export const TopSellingChannelsTable = () => {
           ),
           salesVolume: (
             <JoyAmountWrapper>
-              <JoyTokenIcon variant="gray" />
               <NumberFormat
+                icon={<JoyTokenIcon variant="gray" />}
                 variant="t200-strong"
                 as="p"
                 value={new BN(data.amount)}
                 margin={{ left: 1 }}
                 format="short"
+                withDenomination
+                denominationAlign="right"
               />
             </JoyAmountWrapper>
           ),

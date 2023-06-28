@@ -1,7 +1,8 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { media, sizes } from '@/styles'
+import { SvgJoyTokenMonochrome24 } from '@/assets/icons'
+import { cVar, media, sizes } from '@/styles'
 
 export const TilesWrapper = styled.div`
   display: grid;
@@ -29,4 +30,10 @@ export const TableWrapper = styled.div<{ isEmpty?: boolean }>`
           }
         `
       : ''}
+`
+
+export const StyledSvgJoyTokenMonochrome24 = styled(SvgJoyTokenMonochrome24)`
+  path {
+    fill: ${cVar('colorText')};
+  }
 `

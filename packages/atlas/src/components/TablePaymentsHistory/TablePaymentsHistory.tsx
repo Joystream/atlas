@@ -18,7 +18,6 @@ import { formatDateTime } from '@/utils/time'
 
 import {
   DialogText,
-  JoyAmountWrapper,
   JoystreamSvgWrapper,
   SenderItem,
   StyledJoyTokenIcon,
@@ -174,16 +173,15 @@ const Type = ({ type }: { type: PaymentType }) => {
 const TokenAmount = ({ tokenAmount }: { tokenAmount: BN }) => {
   const isNegative = tokenAmount.isNeg()
   return (
-    <JoyAmountWrapper>
-      <StyledJoyTokenIcon variant="gray" error={isNegative} />
-      <StyledNumberFormat
-        variant="t200-strong"
-        as="p"
-        value={tokenAmount}
-        margin={{ left: 1 }}
-        format="short"
-        color={isNegative ? 'colorTextError' : 'colorTextStrong'}
-      />
-    </JoyAmountWrapper>
+    <StyledNumberFormat
+      icon={<StyledJoyTokenIcon variant="gray" error={isNegative} />}
+      variant="t200-strong"
+      as="p"
+      value={tokenAmount}
+      format="short"
+      color={isNegative ? 'colorTextError' : 'colorTextStrong'}
+      withDenomination
+      denominationAlign="right"
+    />
   )
 }

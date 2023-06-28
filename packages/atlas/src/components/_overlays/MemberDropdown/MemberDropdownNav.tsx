@@ -193,10 +193,14 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                       {selectedChannel?.title}
                     </MemberHandleText>
                     {channelBalance !== undefined ? (
-                      <UserBalance>
-                        <JoyTokenIcon size={16} variant="regular" />
-                        <NumberFormat as="span" variant="t200-strong" value={channelBalance} format="short" />
-                      </UserBalance>
+                      <NumberFormat
+                        icon={<JoyTokenIcon size={16} variant="regular" />}
+                        as="span"
+                        variant="t200-strong"
+                        value={channelBalance}
+                        format="short"
+                        withDenomination
+                      />
                     ) : (
                       <SkeletonLoader width={30} height={20} />
                     )}
@@ -213,14 +217,22 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                     >
                       {accountBalance !== undefined ? (
                         <UserBalance>
-                          <JoyTokenIcon isNegative={isInDebt} size={16} variant="regular" withoutInformationTooltip />
                           <NumberFormat
+                            icon={
+                              <JoyTokenIcon
+                                isNegative={isInDebt}
+                                size={16}
+                                variant="regular"
+                                withoutInformationTooltip
+                              />
+                            }
                             withTooltip={false}
                             as="span"
                             variant="t200-strong"
                             value={accountBalance}
                             format="short"
                             isNegative={isInDebt}
+                            withDenomination
                           />
                         </UserBalance>
                       ) : (
