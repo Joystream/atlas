@@ -20,6 +20,7 @@ import { SvgActionClose, SvgControlsCaptionsOutline, SvgControlsCaptionsSolid } 
 import { Avatar } from '@/components/Avatar'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { isMobile } from '@/utils/browser'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
@@ -131,6 +132,12 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
   const [isSharingOverlayOpen, setIsSharingOverlayOpen] = useState(false)
   const { height: playerHeight = 0 } = useResizeObserver({ box: 'border-box', ref: playerRef })
   const customControlsRef = useRef<HTMLDivElement>(null)
+  const {
+    trackVideoPlaybackResumed,
+    trackVideoPlaybackPaused,
+    trackVideoPlaybackStarted,
+    trackVideoPlaybackCompleted,
+  } = useSegmentAnalytics()
 
   const customControlsOffset =
     ((customControlsRef.current?.getBoundingClientRect().top || 0) -
@@ -184,6 +191,16 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
       try {
         setNeedsManualPlay(false)
         const playPromise = await player.play()
+        if (playPromise) {
+          trackVideoPlaybackResumed(
+            videoId ?? 'no data',
+            video?.channel.id ?? 'no data',
+            video?.title ?? 'no data',
+            video?.duration ?? -1,
+            isFullScreen,
+            video?.mediaMetadata?.pixelHeight?.toString() ?? '1'
+          )
+        }
         if (playPromise && callback) callback()
       } catch (error) {
         if (error.name === 'AbortError') {
@@ -202,17 +219,45 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
         }
       }
     },
-    [videoId, videoJsConfig.src]
+    [
+      isFullScreen,
+      trackVideoPlaybackResumed,
+      video?.channel.id,
+      video?.duration,
+      video?.mediaMetadata?.pixelHeight,
+      video?.title,
+      videoId,
+      videoJsConfig.src,
+    ]
   )
 
-  const pauseVideo = useCallback((player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => {
-    if (!player) {
-      return
-    }
-    withIndicator && player.trigger(CustomVideojsEvents.PauseControl)
-    callback?.()
-    player.pause()
-  }, [])
+  const pauseVideo = useCallback(
+    (player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => {
+      if (!player) {
+        return
+      }
+      withIndicator && player.trigger(CustomVideojsEvents.PauseControl)
+      callback?.()
+      player.pause()
+      trackVideoPlaybackPaused(
+        videoId ?? 'no data',
+        video?.channel.id ?? 'no data',
+        video?.title ?? 'no data',
+        video?.duration ?? -1,
+        isFullScreen,
+        video?.mediaMetadata?.pixelHeight?.toString() ?? '1'
+      )
+    },
+    [
+      isFullScreen,
+      trackVideoPlaybackPaused,
+      video?.channel.id,
+      video?.duration,
+      video?.mediaMetadata?.pixelHeight,
+      video?.title,
+      videoId,
+    ]
+  )
 
   useEffect(() => {
     if (!isVideoPending) {
@@ -331,12 +376,30 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     }
     const handler = () => {
       setPlayerState('ended')
+      trackVideoPlaybackCompleted(
+        videoId ?? 'no data',
+        video?.channel.id ?? 'no data',
+        video?.title ?? 'no data',
+        video?.duration ?? -1,
+        isFullScreen,
+        video?.mediaMetadata?.pixelHeight?.toString() ?? '1'
+      )
     }
     player.on('ended', handler)
     return () => {
       player.off('ended', handler)
     }
-  }, [nextVideo, player])
+  }, [
+    isFullScreen,
+    nextVideo,
+    player,
+    trackVideoPlaybackCompleted,
+    video?.channel.id,
+    video?.duration,
+    video?.mediaMetadata?.pixelHeight,
+    video?.title,
+    videoId,
+  ])
 
   // handle loadstart
   useEffect(() => {
@@ -363,13 +426,33 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
         .then(() => {
           onAddVideoView?.()
           setIsPlaying(true)
+          trackVideoPlaybackStarted(
+            videoId ?? 'no data',
+            video?.channel.id ?? 'no data',
+            video?.title ?? 'no data',
+            video?.duration ?? -1,
+            isFullScreen,
+            video?.mediaMetadata?.pixelHeight?.toString() ?? '1'
+          )
         })
         .catch((e) => {
           setNeedsManualPlay(true)
           ConsoleLogger.warn('Video autoplay failed', e)
         })
     }
-  }, [player, isLoaded, autoplay, onAddVideoView])
+  }, [
+    player,
+    isLoaded,
+    autoplay,
+    onAddVideoView,
+    trackVideoPlaybackStarted,
+    videoId,
+    video?.channel.id,
+    video?.title,
+    video?.duration,
+    video?.mediaMetadata?.pixelHeight,
+    isFullScreen,
+  ])
 
   // handle playing and pausing from outside the component
   useEffect(() => {
@@ -378,10 +461,38 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     }
     if (playing) {
       playVideo(player)
+      trackVideoPlaybackResumed(
+        videoId ?? 'no data',
+        video?.channel.id ?? 'no data',
+        video?.title ?? 'no data',
+        video?.duration ?? -1,
+        isFullScreen,
+        video?.mediaMetadata?.pixelHeight?.toString() ?? '1'
+      )
     } else {
       player.pause()
+      trackVideoPlaybackPaused(
+        videoId ?? 'no data',
+        video?.channel.id ?? 'no data',
+        video?.title ?? 'no data',
+        video?.duration ?? -1,
+        isFullScreen,
+        video?.mediaMetadata?.pixelHeight?.toString() ?? '1'
+      )
     }
-  }, [playVideo, player, playing])
+  }, [
+    isFullScreen,
+    playVideo,
+    player,
+    playing,
+    trackVideoPlaybackPaused,
+    trackVideoPlaybackResumed,
+    video?.channel.id,
+    video?.duration,
+    video?.mediaMetadata?.pixelHeight,
+    video?.title,
+    videoId,
+  ])
 
   // handle playing and pausing
   useEffect(() => {

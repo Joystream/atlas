@@ -94,7 +94,7 @@ export const VideoView: FC = () => {
   const nftWidgetProps = useNftWidget(video)
   const { likeOrDislikeVideo } = useReactionTransactions()
   const { withdrawBid } = useNftTransactions()
-  const { trackVideoView, trackLikeAdded, trackDislikeAdded } = useSegmentAnalytics()
+  const { trackLikeAdded, trackDislikeAdded } = useSegmentAnalytics()
 
   const mdMatch = useMediaMatch('md')
   const { addVideoView } = useAddVideoView()
@@ -151,7 +151,6 @@ export const VideoView: FC = () => {
   const channelId = video?.channel?.id
   const channelName = video?.channel?.title
   const videoId = video?.id
-  const videoDescription = video?.description
   const numberOfLikes = video?.reactions.filter(({ reaction }) => reaction === 'LIKE').length
   const numberOfDislikes = video?.reactions.filter(({ reaction }) => reaction === 'UNLIKE').length
   const videoNotAvailable = !loading && !video
@@ -259,8 +258,6 @@ export const VideoView: FC = () => {
     setShareDialogOpen(true)
   }
 
-  const isNft = !!nftWidgetProps
-
   const handleAddVideoView = useCallback(() => {
     if (!videoId || !channelId) {
       return
@@ -272,15 +269,7 @@ export const VideoView: FC = () => {
     }).catch((error) => {
       SentryLogger.error('Failed to increase video views', 'VideoView', error)
     })
-
-    trackVideoView(
-      videoId ?? 'no data',
-      channelId ?? 'no data',
-      channelName ?? 'no data',
-      videoDescription ?? 'no data',
-      isNft
-    )
-  }, [videoId, channelId, addVideoView, trackVideoView, channelName, videoDescription, isNft])
+  }, [videoId, channelId, addVideoView])
 
   if (error) {
     return <ViewErrorFallback />

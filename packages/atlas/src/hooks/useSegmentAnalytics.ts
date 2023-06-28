@@ -5,6 +5,13 @@ import useSegmentAnalyticsContext from '@/providers/segmentAnalytics/useSegmentA
 export const useSegmentAnalytics = () => {
   const { analytics } = useSegmentAnalyticsContext()
 
+  const identifyUser = useCallback(
+    (email: string) => {
+      analytics.identify({ email })
+    },
+    [analytics]
+  )
+
   const trackPageView = useCallback(
     (name: string, category = 'App', referrer = 'no data') => {
       analytics.page(category, name, {
@@ -47,14 +54,57 @@ export const useSegmentAnalytics = () => {
     [analytics]
   )
 
-  const trackVideoView = useCallback(
-    (videoId: string, channelId: string, channelTitle: string, description: string, isNft: boolean) => {
-      analytics.track('video viewed', {
+  const trackVideoPlaybackStarted = useCallback(
+    (videoId: string, channelId: string, title: string, totalLength: number, fullScreen: boolean, quality: string) => {
+      analytics.track('video playback started', {
         videoId,
         channelId,
-        channelTitle,
-        description,
-        isNft,
+        title,
+        totalLength,
+        fullScreen,
+        quality,
+      })
+    },
+    [analytics]
+  )
+
+  const trackVideoPlaybackPaused = useCallback(
+    (videoId: string, channelId: string, title: string, totalLength: number, fullScreen: boolean, quality: string) => {
+      analytics.track('video playback paused', {
+        videoId,
+        channelId,
+        title,
+        totalLength,
+        fullScreen,
+        quality,
+      })
+    },
+    [analytics]
+  )
+
+  const trackVideoPlaybackResumed = useCallback(
+    (videoId: string, channelId: string, title: string, totalLength: number, fullScreen: boolean, quality: string) => {
+      analytics.track('video playback resumed', {
+        videoId,
+        channelId,
+        title,
+        totalLength,
+        fullScreen,
+        quality,
+      })
+    },
+    [analytics]
+  )
+
+  const trackVideoPlaybackCompleted = useCallback(
+    (videoId: string, channelId: string, title: string, totalLength: number, fullScreen: boolean, quality: string) => {
+      analytics.track('video playback completed', {
+        videoId,
+        channelId,
+        title,
+        totalLength,
+        fullScreen,
+        quality,
       })
     },
     [analytics]
@@ -129,12 +179,20 @@ export const useSegmentAnalytics = () => {
     [analytics]
   )
 
+  const trackYppSignInButtonClick = useCallback(() => {
+    analytics.track('YPP Landing Sign In w Google Clicked')
+  }, [analytics])
+
   return {
+    identifyUser,
     trackPageView,
     trackYppOptIn,
     trackAccountCreation,
     trackChannelCreation,
-    trackVideoView,
+    trackVideoPlaybackStarted,
+    trackVideoPlaybackPaused,
+    trackVideoPlaybackResumed,
+    trackVideoPlaybackCompleted,
     trackVideoUpload,
     trackNftMint,
     trackNftSale,
@@ -142,5 +200,6 @@ export const useSegmentAnalytics = () => {
     trackLikeAdded,
     trackDislikeAdded,
     trackChannelFollow,
+    trackYppSignInButtonClick,
   }
 }

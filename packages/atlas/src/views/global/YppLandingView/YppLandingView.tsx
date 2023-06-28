@@ -10,6 +10,7 @@ import { YppReferralBanner } from '@/components/_ypp/YppReferralBanner'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useSnackbar } from '@/providers/snackbars'
 import { useUser } from '@/providers/user/user.hooks'
 import { useYppStore } from '@/providers/ypp/ypp.store'
@@ -34,6 +35,7 @@ export const YppLandingView: FC = () => {
   const { setSelectedChannelId, setShouldContinueYppFlow } = useYppStore((store) => store.actions)
   const { displaySnackbar } = useSnackbar()
   const navigate = useNavigate()
+  const { trackYppSignInButtonClick } = useSegmentAnalytics()
   const selectedChannelTitle = activeMembership?.channels.find((channel) => channel.id === channelId)?.title
   const { data } = useQuery('ypp-quota-fetch', () =>
     axios
@@ -68,6 +70,7 @@ export const YppLandingView: FC = () => {
     }
 
     if (!isLoggedIn) {
+      trackYppSignInButtonClick()
       await signIn()
       setWasSignInTriggered(true)
       return
@@ -82,7 +85,16 @@ export const YppLandingView: FC = () => {
       setCurrentStep('requirements')
       return
     }
-  }, [currentStep, displaySnackbar, isLoggedIn, isTodaysQuotaReached, isYppSigned, navigate, signIn])
+  }, [
+    currentStep,
+    displaySnackbar,
+    isLoggedIn,
+    isTodaysQuotaReached,
+    isYppSigned,
+    navigate,
+    signIn,
+    trackYppSignInButtonClick,
+  ])
 
   useEffect(() => {
     // rerun handleYppSignUpClick after sign in flow

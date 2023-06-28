@@ -7,6 +7,7 @@ import { useTransition } from 'react-spring'
 import useResizeObserver from 'use-resize-observer'
 
 import { absoluteRoutes } from '@/config/routes'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
 import { useUser } from '@/providers/user/user.hooks'
@@ -30,6 +31,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     const navigate = useNavigate()
     const { channelId, activeMembership, memberships, signOut, setActiveUser, setSignInModalOpen, membershipsLoading } =
       useUser()
+    const { identifyUser } = useSegmentAnalytics()
     const [showWithdrawDialog, setShowWithdrawDialog] = useState(false)
     const [disableScrollDuringAnimation, setDisableScrollDuringAnimation] = useState(false)
 
@@ -77,13 +79,14 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     const handleMemberChange = useCallback(
       (memberId: string, accountId: string, channelId: string | null) => {
         setActiveUser({ accountId, memberId, channelId })
+        identifyUser(memberId)
         setIsList(false)
 
         if (publisher) {
           navigate(absoluteRoutes.studio.index())
         }
       },
-      [navigate, publisher, setActiveUser]
+      [identifyUser, navigate, publisher, setActiveUser]
     )
 
     const handleAddNewChannel = useCallback(() => {
