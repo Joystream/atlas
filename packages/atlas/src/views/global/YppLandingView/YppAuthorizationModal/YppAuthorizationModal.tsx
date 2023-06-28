@@ -429,8 +429,8 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
       return {
         text: 'Create new channel',
         onClick: () => {
-          setAuthModalOpenName('createChannel')
           setYppModalOpenName(null)
+          handleAuthorizeClick()
         },
       }
     }
@@ -448,6 +448,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     handleGoBack,
     setYppModalOpenName,
     setAuthModalOpenName,
+    handleAuthorizeClick,
   ])
 
   return (
