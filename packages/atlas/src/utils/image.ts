@@ -77,14 +77,17 @@ export const imageUrlToBlob = async (imageUrl: string, width = 192, height = 192
         resizedCanvas.toBlob((blob: Blob | null) => {
           if (blob) {
             resolve(blob)
+            img.remove()
           } else {
             reject(new Error('Failed to create Blob'))
+            img.remove()
           }
         })
       }
 
       img.onerror = () => {
         reject(new Error('Failed to load image'))
+        img.remove()
       }
     })
   } catch (error) {

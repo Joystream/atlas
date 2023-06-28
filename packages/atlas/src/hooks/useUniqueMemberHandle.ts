@@ -7,11 +7,7 @@ import {
   GetMembershipsQueryVariables,
 } from '@/api/queries/__generated__/memberships.generated'
 import { createId } from '@/utils/createId'
-
-function removeSpecialCharacters(input: string): string {
-  const regex = /[^\w\s]|_/g
-  return input.replace(regex, '').toLowerCase()
-}
+import { removeSpecialCharacters } from '@/utils/text'
 
 export const useUniqueMemberHandle = () => {
   const client = useApolloClient()
@@ -43,9 +39,7 @@ export const useUniqueMemberHandle = () => {
 
       const isAvailable = await checkIfMemberIsAvailable(sanitizedHandle)
       if (!isAvailable) {
-        const lastDigitIndex = sanitizedHandle.length - 1
-        const modified =
-          attempt === 1 ? `${sanitizedHandle}${attempt}` : `${sanitizedHandle.slice(0, lastDigitIndex)}${attempt}`
+        const modified = attempt === 1 ? `${sanitizedHandle}${attempt}` : `${sanitizedHandle.slice(-1)}${attempt}`
 
         return generateUniqueMemberHandleBasedOnInput(modified, attempt + 1)
       }

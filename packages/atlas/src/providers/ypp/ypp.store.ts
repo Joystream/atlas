@@ -1,6 +1,6 @@
 import { createStore } from '@/utils/store'
 
-import { YppModal, YtResponseData } from './ypp.types'
+import { YppModalStep, YtResponseData } from './ypp.types'
 
 type YppStoreState = {
   referrerId: string | null
@@ -9,7 +9,7 @@ type YppStoreState = {
    * 'state' param passed to Google auth URL
    */
   ytStateParam: string | null
-  yppModalOpenName: YppModal
+  yppModalOpenName: YppModalStep
   shouldContinueYppFlow: boolean
   ytResponseData: YtResponseData
 }
@@ -21,7 +21,7 @@ type YppStoreActions = {
    * sets 'state' param passed to Google auth URL
    */
   setYtStateParam: (authState: string | null) => void
-  setYppModalOpenName: (modal: YppModal) => void
+  setYppModalOpenName: (modal: YppModalStep) => void
   setShouldContinueYppFlow: (shouldContinueYppFlow: boolean) => void
   setYtResponseData: (ytResponseData: YtResponseData) => void
 }

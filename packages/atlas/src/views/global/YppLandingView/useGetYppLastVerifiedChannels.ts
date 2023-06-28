@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { useCallback } from 'react'
 import { useQuery } from 'react-query'
 
 import { useBasicChannels } from '@/api/hooks/channel'
@@ -11,19 +10,18 @@ import { YppSyncedChannel } from './YppLandingView.types'
 const YPP_SYNC_URL = atlasConfig.features.ypp.youtubeSyncApiUrl
 
 type RecentChannelsResponse = YppSyncedChannel[]
+const getRecentChannels = async (): Promise<string[] | void> => {
+  try {
+    const response = await axios.get<RecentChannelsResponse>(`${YPP_SYNC_URL}/channels`)
+    return response.data
+      .filter((channel) => channel.yppStatus === 'Verified')
+      .map((channel) => channel.joystreamChannelId.toString())
+  } catch (error) {
+    SentryLogger.error('Failed to fetch recent channels', 'useYppGetLastVerifiedChannels', error)
+  }
+}
 
 export const useGetYppLastVerifiedChannels = () => {
-  const getRecentChannels = useCallback(async (): Promise<string[] | void> => {
-    try {
-      const response = await axios.get<RecentChannelsResponse>(`${YPP_SYNC_URL}/channels`)
-      return response.data
-        .filter((channel) => channel.yppStatus === 'Verified')
-        .map((channel) => channel.joystreamChannelId.toString())
-    } catch (error) {
-      SentryLogger.error('Failed to fetch recent channels', 'useYppGetLastVerifiedChannels', error)
-    }
-  }, [])
-
   const { data: recentChannelIds, isLoading: isVerifiedChannelsLoading } = useQuery('ypp-channels-fetch', () =>
     getRecentChannels()
   )

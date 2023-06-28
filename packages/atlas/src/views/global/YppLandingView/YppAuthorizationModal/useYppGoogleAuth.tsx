@@ -4,6 +4,7 @@ import { isArray } from 'lodash-es'
 import { useCallback, useEffect, useState } from 'react'
 import { useMutation } from 'react-query'
 import { useSearchParams } from 'react-router-dom'
+import shallow from 'zustand/shallow'
 
 import {
   GetFullChannelDocument,
@@ -43,11 +44,15 @@ type AlreadyRegisteredChannel = {
 }
 
 export const useYppGoogleAuth = ({ channelsLoaded }: { channelsLoaded: boolean }) => {
-  const { setYtResponseData, setYppModalOpenName } = useYppStore((state) => state.actions)
+  const {
+    actions: { setYtResponseData, setYppModalOpenName },
+    ytStateParam: oldYppAuthState,
+    selectedChannelId,
+  } = useYppStore((state) => state, shallow)
+
   const setAuthModalOpenName = useAuthStore((state) => state.actions.setAuthModalOpenName)
   const { isLoggedIn, isAuthenticating } = useAuth()
 
-  const { ytStateParam: oldYppAuthState, selectedChannelId } = useYppStore((state) => state)
   const { setYtStateParam: setYppAuthState, setSelectedChannelId } = useYppStore((state) => state.actions)
   const [ytRequirementsErrors, setYtRequirementsErrors] = useState<YppRequirementsErrorCode[]>([])
 

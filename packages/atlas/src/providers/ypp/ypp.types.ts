@@ -1,6 +1,6 @@
 import { ChannelVerificationSuccessResponse } from '@/views/global/YppLandingView/YppAuthorizationModal/YppAuthorizationModal.types'
 
-export type YppModal =
+export type YppModalStep =
   | 'ypp-select-channel'
   | 'ypp-requirements'
   | 'ypp-fetching-data'
