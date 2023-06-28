@@ -1,3 +1,4 @@
+import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
@@ -71,7 +72,9 @@ export const StatusMark = styled.div`
   border: 1px solid ${cVar('colorBackgroundElevatedAlpha')};
 `
 
-export const StyledSvgActionChevronT = styled(SvgActionChevronT)<{ isCollapsed: boolean }>`
+export const StyledSvgActionChevronT = styled(SvgActionChevronT, {
+  shouldForwardProp: isPropValid,
+})<{ isCollapsed: boolean }>`
   transform: rotate(${({ isCollapsed }) => (isCollapsed ? '-180deg' : '0deg')});
   transition: transform ${cVar('animationTransitionMedium')};
 `

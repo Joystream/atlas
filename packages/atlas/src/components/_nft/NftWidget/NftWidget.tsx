@@ -1,5 +1,6 @@
 import BN from 'bn.js'
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router'
 import useResizeObserver from 'use-resize-observer'
 
 import { BasicBidFieldsFragment, FullBidFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
@@ -112,7 +113,21 @@ export const NftWidget: FC<NftWidgetProps> = ({
   const { ref, width = SMALL_VARIANT_MAXIMUM_SIZE + 1 } = useResizeObserver({
     box: 'border-box',
   })
-  const [isCollapsed, setIsCollapsed] = useState(false)
+
+  const location = useLocation()
+  const [isCollapsed, setIsCollapsed] = useState(true)
+
+  const navigate = useNavigate()
+
+  const shouldCollapse = location.state?.shouldCollapse === undefined ? true : location.state?.shouldCollapse
+
+  useEffect(() => {
+    setIsCollapsed(shouldCollapse)
+    if (shouldCollapse) {
+      // clear link state
+      navigate(location.pathname, {})
+    }
+  }, [location.pathname, navigate, shouldCollapse])
 
   const size: Size = width > SMALL_VARIANT_MAXIMUM_SIZE ? 'medium' : 'small'
 
