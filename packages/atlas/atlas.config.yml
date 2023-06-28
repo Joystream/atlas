@@ -24,7 +24,7 @@ storage:
 
 joystream:
   tokenTicker: 'JOY' # Ticker for the token used in the app
-  tokenPriceFeedUrl: null # URL for the token price feed - used to display token price in the app
+  tokenPriceFeedUrl: 'https://status.joystream.org/price' # URL for the token price feed - used to display token price in the app
   alternativeNodes:
     - name: 'Jsgenesis (Europe/UK)'
       url: 'wss://testnet-rpc-3-uk.joystream.org'
