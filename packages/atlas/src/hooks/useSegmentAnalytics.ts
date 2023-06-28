@@ -50,6 +50,7 @@ export const useSegmentAnalytics = () => {
   const trackVideoView = useCallback(
     (videoId: string, channelId: string, channelTitle: string, description: string, isNft: boolean) => {
       analytics.track('video viewed', {
+        videoId,
         channelId,
         channelTitle,
         description,

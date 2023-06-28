@@ -259,6 +259,8 @@ export const VideoView: FC = () => {
     setShareDialogOpen(true)
   }
 
+  const isNft = !!nftWidgetProps
+
   const handleAddVideoView = useCallback(() => {
     if (!videoId || !channelId) {
       return
@@ -276,9 +278,9 @@ export const VideoView: FC = () => {
       channelId ?? 'no data',
       channelName ?? 'no data',
       videoDescription ?? 'no data',
-      !!nftWidgetProps
+      isNft
     )
-  }, [addVideoView, channelId, videoId, channelName, videoDescription, nftWidgetProps, trackVideoView])
+  }, [videoId, channelId, addVideoView, trackVideoView, channelName, videoDescription, isNft])
 
   if (error) {
     return <ViewErrorFallback />
