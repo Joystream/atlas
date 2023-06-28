@@ -402,7 +402,7 @@ export const VideoView: FC = () => {
                   isVideoPending={!video?.media?.isAccepted}
                   videoId={video?.id}
                   autoplay
-                  src={mediaUrls}
+                  videoUrls={mediaUrls}
                   onEnd={handleVideoEnd}
                   onTimeUpdated={handleTimeUpdate}
                   startTime={startTimestamp}

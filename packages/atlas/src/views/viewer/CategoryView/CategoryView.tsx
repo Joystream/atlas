@@ -57,22 +57,22 @@ const useVideoHeroVideos = (featuredVideos: BasicVideoFeaturedInCategoryFragment
       thumbnailPhotoUrl: '',
     }))
 
-  const thumbnailPhotoUrl1 = videoHeroVideos?.[0]?.video?.thumbnailPhoto?.resolvedUrls
+  const thumbnailPhotoUrls1 = videoHeroVideos?.[0]?.video?.thumbnailPhoto?.resolvedUrls
 
-  const thumbnailPhotoUrl2 = videoHeroVideos?.[1]?.video?.thumbnailPhoto?.resolvedUrls
+  const thumbnailPhotoUrls2 = videoHeroVideos?.[1]?.video?.thumbnailPhoto?.resolvedUrls
 
-  const thumbnailPhotoUrl3 = videoHeroVideos?.[2]?.video?.thumbnailPhoto?.resolvedUrls
+  const thumbnailPhotoUrls3 = videoHeroVideos?.[2]?.video?.thumbnailPhoto?.resolvedUrls
 
   if (!videoHeroVideos) return [null, null, null]
 
   if (videoHeroVideos[0]) {
-    videoHeroVideos[0].thumbnailPhotoUrl = thumbnailPhotoUrl1?.[0] ?? ''
+    videoHeroVideos[0].thumbnailPhotoUrl = thumbnailPhotoUrls1?.[0] ?? ''
   }
   if (videoHeroVideos[1]) {
-    videoHeroVideos[1].thumbnailPhotoUrl = thumbnailPhotoUrl2?.[0] ?? ''
+    videoHeroVideos[1].thumbnailPhotoUrl = thumbnailPhotoUrls2?.[0] ?? ''
   }
   if (videoHeroVideos[2]) {
-    videoHeroVideos[2].thumbnailPhotoUrl = thumbnailPhotoUrl3?.[0] ?? ''
+    videoHeroVideos[2].thumbnailPhotoUrl = thumbnailPhotoUrls3?.[0] ?? ''
   }
 
   return videoHeroVideos

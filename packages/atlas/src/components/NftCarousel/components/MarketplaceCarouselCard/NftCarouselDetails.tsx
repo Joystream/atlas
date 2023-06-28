@@ -60,13 +60,13 @@ export const NftCarouselDetails = ({
       nft?.owner.__typename === 'NftOwnerChannel'
         ? {
             name,
-            assetUrl: creatorAvatarUrls,
+            assetUrls: creatorAvatarUrls,
             onClick: () => navigate(absoluteRoutes.viewer.channel(nft.video.channel.id)),
           }
         : nft?.owner.__typename === 'NftOwnerMember'
         ? {
             name,
-            assetUrl: creatorAvatarUrls,
+            assetUrls: creatorAvatarUrls,
             onClick: () => name && navigate(absoluteRoutes.viewer.member(name)),
           }
         : undefined,
@@ -110,7 +110,7 @@ export const NftCarouselDetails = ({
       ...(owner
         ? [
             {
-              urls: owner?.assetUrl,
+              urls: owner?.assetUrls,
               tooltipText: `Owner: ${owner?.name}`,
               onClick: owner?.onClick,
             },

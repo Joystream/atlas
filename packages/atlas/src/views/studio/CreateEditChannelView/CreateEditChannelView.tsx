@@ -427,12 +427,10 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
             <>
               <ChannelCover
                 assetUrls={
-                  loading
-                    ? null
-                    : value.croppedUrl
+                  !loading && value.croppedUrl
                     ? [value.croppedUrl]
                     : value.originalUrl
-                    ? [value.originalUrl as string]
+                    ? [value.originalUrl]
                     : undefined
                 }
                 hasCoverUploadFailed={hasCoverUploadFailed}
@@ -469,12 +467,10 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
               <>
                 <StyledAvatar
                   assetUrls={
-                    loading
-                      ? null
-                      : value.croppedUrl
+                    !loading && value.croppedUrl
                       ? [value.croppedUrl]
                       : value.originalUrl
-                      ? [value.originalUrl as string]
+                      ? [value.originalUrl]
                       : undefined
                   }
                   hasAvatarUploadFailed={hasAvatarUploadFailed}

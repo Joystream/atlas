@@ -312,7 +312,7 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
       if (uploadVideoStatus?.lastStatus === 'completed' || uploadThumbnailStatus?.lastStatus === 'completed') {
         refetchVideo()
       }
-    })
+    }, [refetchVideo, uploadThumbnailStatus?.lastStatus, uploadVideoStatus?.lastStatus])
 
     return (
       <VideoTile

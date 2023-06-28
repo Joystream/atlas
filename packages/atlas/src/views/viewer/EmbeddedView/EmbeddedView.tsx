@@ -99,8 +99,8 @@ export const EmbeddedView: FC = () => {
             channelAvatarUrls={channelAvatarUrls}
             isChannelAvatarLoading={loading}
             videoId={video.id}
-            src={mediaUrls}
-            posterUrl={thumbnailUrls}
+            videoUrls={mediaUrls}
+            posterUrls={thumbnailUrls}
             fill
             startTime={startTimestamp}
             onEnd={handleVideoEnded}
