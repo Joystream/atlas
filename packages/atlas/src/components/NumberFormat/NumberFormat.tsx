@@ -1,11 +1,14 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import BN from 'bn.js'
-import { forwardRef, useRef } from 'react'
+import { ReactNode, forwardRef, useRef } from 'react'
 import { mergeRefs } from 'react-merge-refs'
 
 import { Text, TextProps, TextVariant } from '@/components/Text'
 import { atlasConfig } from '@/config'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
+import { useTokenPrice } from '@/providers/joystream/joystream.hooks'
+import { sizes } from '@/styles'
 import { formatNumber } from '@/utils/number'
 
 import { Tooltip } from '../Tooltip'
@@ -19,6 +22,9 @@ export type NumberFormatProps = {
   variant?: TextVariant
   displayedValue?: string | number
   isNegative?: boolean
+  icon?: ReactNode
+  withDenomination?: boolean | 'horizontal' | 'vertical'
+  denominationAlign?: 'left' | 'right'
 } & Omit<TextProps, 'children' | 'variant'>
 
 export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
@@ -32,25 +38,35 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
       displayedValue,
       isNegative,
       color,
+      withDenomination,
+      denominationAlign = 'left',
+      icon,
       ...textProps
     },
     ref
   ) => {
+    const { convertTokensToUSD } = useTokenPrice()
     const internalValue = BN.isBN(value) ? hapiBnToTokenNumber(value) : value
+    const fiatValue = convertTokensToUSD(internalValue)
     const textRef = useRef<HTMLHeadingElement>(null)
     const bnValue = new BN(value)
     let formattedValue
+    let formattedDenominatedValue
     let tooltipText
     switch (isNegative || bnValue.isNeg() ? 'full' : format) {
       case 'short':
         formattedValue = internalValue ? (internalValue > 0.01 ? formatNumberShort(internalValue) : `< 0.01`) : 0
+        formattedDenominatedValue = fiatValue ? (fiatValue > 0.01 ? formatNumberShort(fiatValue) : `< 0.01`) : 0
         tooltipText = formatNumber(internalValue)
         break
       case 'full':
         formattedValue = tooltipText = formatNumber(internalValue)
+        formattedDenominatedValue = fiatValue ? formatNumber(fiatValue) : 0
         break
       case 'dollar':
         formattedValue = formatDollars(internalValue)
+        formattedDenominatedValue = fiatValue ? formatDollars(fiatValue) : 0
+
         tooltipText = new Intl.NumberFormat('en-US', { maximumSignificantDigits, ...currencyFormatOptions })
           .format(internalValue)
           .replaceAll(',', ' ')
@@ -75,7 +91,36 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
 
     return (
       <>
-        {content}
+        {withDenomination ? (
+          <Container orientation={withDenomination}>
+            {icon ? (
+              <IconContainer>
+                {icon}
+                {content}
+              </IconContainer>
+            ) : (
+              content
+            )}
+            <Denomination
+              align={denominationAlign}
+              className="denomination"
+              as="span"
+              color={bnValue.isNeg() || isNegative ? 'colorTextError' : 'colorText'}
+              variant="t100"
+              ref={mergeRefs([ref, textRef])}
+            >
+              ${formattedDenominatedValue}
+            </Denomination>
+          </Container>
+        ) : icon ? (
+          <IconContainer>
+            {icon}
+            {content}
+          </IconContainer>
+        ) : (
+          content
+        )}
+
         <Tooltip reference={textRef} placement="top" delay={[500, null]} text={hasTooltip ? tooltipText : undefined} />
       </>
     )
@@ -85,6 +130,34 @@ NumberFormat.displayName = 'Number'
 
 const StyledText = styled(Text)`
   display: inline-block;
+`
+
+const Denomination = styled(Text)<{ align: 'right' | 'left' }>`
+  display: inline-block;
+  text-align: ${(props) => props.align};
+`
+
+const Container = styled.div<{ orientation: NumberFormatProps['withDenomination'] }>`
+  display: flex;
+  flex-direction: column;
+  gap: ${sizes(1)};
+  width: fit-content;
+  ${(props) =>
+    props.orientation === 'horizontal' &&
+    css`
+      width: 100%;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    `}
+`
+
+const IconContainer = styled.div`
+  display: inline-grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  align-items: center;
+  gap: ${sizes(1)};
 `
 
 const maximumSignificantDigits = 21
