@@ -307,14 +307,13 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
             }
           }
 
-          return (
-            <GoogleButton
-              onClick={() => {
-                setSelectedChannelId(yppUnsyncedChannels?.[0]?.id ?? '')
-                handleAuthorizeClick(yppUnsyncedChannels?.[0]?.id)
-              }}
-            />
-          )
+          return {
+            text: 'Continue',
+            onClick: () => {
+              setSelectedChannelId(yppUnsyncedChannels?.[0]?.id ?? '')
+              handleAuthorizeClick(yppUnsyncedChannels?.[0]?.id)
+            },
+          }
         }
 
         return {
@@ -329,7 +328,11 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
         return {
           title: 'Select channel',
           description: `Select the ${APP_NAME} channel you want your YouTube channel to be connected with.`,
-          primaryButton: <GoogleButton disabled={!selectedChannel} onClick={() => handleAuthorizeClick()} />,
+          primaryButton: {
+            text: 'Continue',
+            disabled: !selectedChannel,
+            onClick: () => handleAuthorizeClick(),
+          },
           component: (
             <YppAuthorizationSelectChannelStep
               channels={unSyncedChannels}
