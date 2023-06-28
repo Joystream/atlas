@@ -1,13 +1,12 @@
 import BN from 'bn.js'
 import { FC, useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router'
+import { useLocation } from 'react-router'
 import useResizeObserver from 'use-resize-observer'
 
-import { BasicBidFieldsFragment, FullBidFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { FullBidFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { absoluteRoutes } from '@/config/routes'
-import { EnglishTimerState } from '@/hooks/useNftState'
 import { NftSaleType } from '@/joystream-lib/types'
 
 import { NftHistory, NftHistoryEntry } from './NftHistory'
@@ -26,32 +25,8 @@ import {
   StatusMark,
   StyledSvgActionChevronT,
 } from './NftWidget.styles'
+import { NftWidgetStatus } from './NftWidget.types'
 import { NftWidgetContent } from './NftWidgetContent'
-
-export type Auction = {
-  status: 'auction'
-  type: 'open' | 'english'
-  startingPrice: BN
-  buyNowPrice: BN | undefined
-  topBid: BasicBidFieldsFragment | undefined
-  topBidAmount: BN | undefined
-  topBidderHandle: string | undefined
-  topBidderAvatarUri: string | null | undefined
-  isUserTopBidder: boolean | undefined
-  userBidAmount: BN | undefined
-  userBidUnlockDate: Date | undefined
-  canWithdrawBid: boolean | undefined
-  canChangeBid: boolean | undefined
-  hasTimersLoaded: boolean | undefined
-  englishTimerState: EnglishTimerState | undefined
-  auctionPlannedEndDate: Date | undefined
-  startsAtDate: Date | undefined
-  plannedEndAtBlock: number | null | undefined
-  startsAtBlock: number | null | undefined
-  auctionBeginsInDays: number
-  auctionBeginsInSeconds: number
-  isUserWhitelisted: boolean | undefined
-}
 
 export type NftWidgetProps = {
   ownerHandle: string | null | undefined
@@ -59,18 +34,7 @@ export type NftWidgetProps = {
   creatorId?: string
   saleType: NftSaleType | null
   isOwnedByChannel?: boolean
-  nftStatus?:
-    | {
-        status: 'idle'
-        lastSalePrice: BN | undefined
-        lastSaleDate: Date | undefined
-      }
-    | {
-        status: 'buy-now'
-        buyNowPrice: BN
-      }
-    | Auction
-    | undefined
+  nftStatus: NftWidgetStatus | undefined
   nftHistory: NftHistoryEntry[]
   isOwner: boolean | undefined
   needsSettling: boolean | undefined
@@ -117,17 +81,11 @@ export const NftWidget: FC<NftWidgetProps> = ({
   const location = useLocation()
   const [isCollapsed, setIsCollapsed] = useState(true)
 
-  const navigate = useNavigate()
-
   const shouldCollapse = location.state?.shouldCollapse === undefined ? true : location.state?.shouldCollapse
 
   useEffect(() => {
     setIsCollapsed(shouldCollapse)
-    if (shouldCollapse) {
-      // clear link state
-      navigate(location.pathname, {})
-    }
-  }, [location.pathname, navigate, shouldCollapse])
+  }, [shouldCollapse])
 
   const size: Size = width > SMALL_VARIANT_MAXIMUM_SIZE ? 'medium' : 'small'
 

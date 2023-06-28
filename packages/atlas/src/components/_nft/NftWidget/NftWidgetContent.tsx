@@ -17,26 +17,14 @@ import { useTokenPrice } from '@/providers/joystream/joystream.hooks'
 import { formatDateTime, formatDurationShort, formatTime } from '@/utils/time'
 
 import { NftInfoItem, NftTimerItem } from './NftInfoItem'
-import { Auction } from './NftWidget'
 import { OwnerHandle } from './NftWidget.styles'
+import { NftWidgetStatus } from './NftWidget.types'
 import { ButtonGrid, TopBidderContainer, TopBidderTokenContainer } from './NftWidgetContent.styles'
 
 type Size = 'small' | 'medium'
 
 type NftWidgetContentProps = {
-  nftStatus?:
-    | {
-        status: 'idle'
-        lastSalePrice: BN | undefined
-        lastSaleDate: Date | undefined
-      }
-    | {
-        status: 'buy-now'
-        buyNowPrice: BN
-      }
-    | Auction
-    | undefined
-
+  nftStatus: NftWidgetStatus | undefined
   ownerHandle: string | null | undefined
   isOwner: boolean | undefined
   needsSettling: boolean | undefined
