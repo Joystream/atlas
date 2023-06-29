@@ -575,6 +575,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                   withToken
                   variant="t100"
                   color={hasInsufficientFunds ? 'colorTextError' : 'colorText'}
+                  withDenomination="before"
                 />
               ) : (
                 <SkeletonLoader width={82} height={16} />
@@ -591,6 +592,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                   withToken
                   variant="t100"
                   color="colorText"
+                  withDenomination="before"
                 />
               )}
             </Row>
@@ -605,11 +607,18 @@ export const NftPurchaseBottomDrawer: FC = () => {
                   makeBidFeeLoading ? (
                     <SkeletonLoader width={80} height={16} />
                   ) : (
-                    <NumberFormat as="span" value={transactionFee} withToken variant="t100" color="colorText" />
+                    <NumberFormat
+                      as="span"
+                      value={transactionFee}
+                      withToken
+                      variant="t100"
+                      color="colorText"
+                      withDenomination="before"
+                    />
                   )}
                 </Row>
                 <Row>
-                  <Text as="span" variant="h500" color="colorText">
+                  <Text as="span" variant="h300" color="colorText">
                     You will pay
                   </Text>
                   {(canBuyNow ? !buyNowFee.toNumber() : !makeBidFee.toNumber()) ||
@@ -626,7 +635,8 @@ export const NftPurchaseBottomDrawer: FC = () => {
                       withToken
                       format="short"
                       withTooltip
-                      variant="h500"
+                      variant="h300"
+                      withDenomination="before"
                     />
                   )}
                 </Row>

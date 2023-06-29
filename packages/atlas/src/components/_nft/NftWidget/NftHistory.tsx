@@ -11,7 +11,6 @@ import { Text } from '@/components/Text'
 import { absoluteRoutes } from '@/config/routes'
 import { useToggle } from '@/hooks/useToggle'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
-import { useTokenPrice } from '@/providers/joystream/joystream.hooks'
 import { formatDateTime } from '@/utils/time'
 
 import {
@@ -20,11 +19,9 @@ import {
   HistoryItemContainer,
   HistoryPanel,
   HistoryPanelContainer,
-  JoyPlusIcon,
   NftHistoryHeader,
   StyledChevronButton,
   TextContainer,
-  ValueContainer,
 } from './NftHistory.styles'
 import { OwnerHandle, Size } from './NftWidget.styles'
 
@@ -67,9 +64,6 @@ type HistoryItemProps = {
 export const HistoryItem: FC<HistoryItemProps> = ({ size, member, date, joyAmount, text }) => {
   const navigate = useNavigate()
   const { url, isLoadingAsset } = getMemberAvatar(member)
-  const { convertHapiToUSD } = useTokenPrice()
-
-  const dollarValue = joyAmount ? convertHapiToUSD(joyAmount) : null
 
   return (
     <HistoryItemContainer data-size={size}>
@@ -96,22 +90,15 @@ export const HistoryItem: FC<HistoryItemProps> = ({ size, member, date, joyAmoun
         </Text>
       </TextContainer>
       {!!joyAmount && (
-        <ValueContainer>
-          <JoyPlusIcon>
-            <JoyTokenIcon size={16} variant="silver" />
-            <NumberFormat as="span" format="short" value={joyAmount} variant={size === 'medium' ? 'h300' : 'h200'} />
-          </JoyPlusIcon>
-          {dollarValue !== null && (
-            <NumberFormat
-              as="span"
-              format="dollar"
-              variant="t100"
-              color="colorText"
-              value={dollarValue || 0}
-              align="end"
-            />
-          )}
-        </ValueContainer>
+        <NumberFormat
+          as="span"
+          icon={<JoyTokenIcon size={16} variant="silver" />}
+          format="short"
+          value={joyAmount}
+          variant={size === 'medium' ? 'h300' : 'h200'}
+          withDenomination
+          denominationAlign="right"
+        />
       )}
     </HistoryItemContainer>
   )

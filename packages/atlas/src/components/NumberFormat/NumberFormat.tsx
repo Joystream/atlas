@@ -23,9 +23,11 @@ export type NumberFormatProps = {
   displayedValue?: string | number
   isNegative?: boolean
   icon?: ReactNode
-  withDenomination?: boolean | 'horizontal' | 'vertical'
+  withDenomination?: boolean | 'horizontal' | 'vertical' | 'before' | 'after'
   denominationAlign?: 'left' | 'right'
 } & Omit<TextProps, 'children' | 'variant'>
+
+const TEXT_DENOMINATION_ALIGMENTS: NumberFormatProps['withDenomination'][] = ['before', 'after']
 
 export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
   (
@@ -55,8 +57,8 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
     let tooltipText
     switch (isNegative || bnValue.isNeg() ? 'full' : format) {
       case 'short':
-        formattedValue = internalValue ? (internalValue > 0.01 ? formatNumberShort(internalValue) : `< 0.01`) : 0
-        formattedDenominatedValue = fiatValue ? (fiatValue > 0.01 ? formatNumberShort(fiatValue) : `< 0.01`) : 0
+        formattedValue = internalValue ? (internalValue > 0.01 ? formatNumberShort(internalValue) : `<0.01`) : 0
+        formattedDenominatedValue = fiatValue ? (fiatValue > 0.01 ? formatNumberShort(fiatValue) : `<$0.01`) : 0
         tooltipText = formatNumber(internalValue)
         break
       case 'full':
@@ -84,8 +86,31 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
         variant={variant}
         ref={mergeRefs([ref, textRef])}
       >
+        {withDenomination === 'before' && (
+          <Text
+            className="denomination"
+            as="span"
+            color={bnValue.isNeg() || isNegative ? 'colorTextError' : 'colorText'}
+            variant={variant}
+          >
+            ({formattedDenominatedValue !== '<$0.01' ? '$' : ''}
+            {formattedDenominatedValue}){' '}
+          </Text>
+        )}
         {displayedValue || formattedValue}
         {withToken && ` ${atlasConfig.joystream.tokenTicker}`}
+        {withDenomination === 'after' && (
+          <Text
+            className="denomination"
+            as="span"
+            color={bnValue.isNeg() || isNegative ? 'colorTextError' : 'colorText'}
+            variant={variant}
+          >
+            {' '}
+            ({formattedDenominatedValue !== '<$0.01' ? '$' : ''}
+            {formattedDenominatedValue}){' '}
+          </Text>
+        )}
       </StyledText>
     )
 
@@ -101,16 +126,19 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
             ) : (
               content
             )}
-            <Denomination
-              align={denominationAlign}
-              className="denomination"
-              as="span"
-              color={bnValue.isNeg() || isNegative ? 'colorTextError' : 'colorText'}
-              variant="t100"
-              ref={mergeRefs([ref, textRef])}
-            >
-              ${formattedDenominatedValue}
-            </Denomination>
+            {!TEXT_DENOMINATION_ALIGMENTS.includes(withDenomination) && (
+              <Denomination
+                align={denominationAlign}
+                className="denomination"
+                as="span"
+                color={bnValue.isNeg() || isNegative ? 'colorTextError' : 'colorText'}
+                variant="t100"
+                ref={mergeRefs([ref, textRef])}
+              >
+                {formattedDenominatedValue !== '<$0.01' ? '$' : ''}
+                {formattedDenominatedValue}
+              </Denomination>
+            )}
           </Container>
         ) : icon ? (
           <IconContainer>
