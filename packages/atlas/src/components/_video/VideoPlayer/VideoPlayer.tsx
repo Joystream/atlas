@@ -20,7 +20,7 @@ import { SvgActionClose, SvgControlsCaptionsOutline, SvgControlsCaptionsSolid } 
 import { Avatar } from '@/components/Avatar'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
+import { useSegmentAnalytics, videoPlaybackParams } from '@/hooks/useSegmentAnalytics'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { isMobile } from '@/utils/browser'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
@@ -182,6 +182,18 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     )
   }, [availableTextTracks, captionsLanguage, storedLanguageExists])
 
+  const videoPlaybackData = useMemo(
+    (): videoPlaybackParams => ({
+      videoId: videoId ?? 'no data',
+      channelId: video?.channel.id ?? 'no data',
+      title: video?.title ?? 'no data',
+      totalLength: video?.duration ?? -1,
+      fullScreen: isFullScreen,
+      quality: video?.mediaMetadata?.pixelHeight?.toString() ?? '1',
+    }),
+    [videoId, video?.channel.id, video?.title, video?.duration, isFullScreen, video?.mediaMetadata?.pixelHeight]
+  )
+
   const playVideo = useCallback(
     async (player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => {
       if (!player) {
@@ -192,14 +204,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
         setNeedsManualPlay(false)
         const playPromise = await player.play()
         if (playPromise) {
-          trackVideoPlaybackResumed(
-            videoId ?? 'no data',
-            video?.channel.id ?? 'no data',
-            video?.title ?? 'no data',
-            video?.duration ?? -1,
-            isFullScreen,
-            video?.mediaMetadata?.pixelHeight?.toString() ?? '1'
-          )
+          trackVideoPlaybackResumed(videoPlaybackData)
         }
         if (playPromise && callback) callback()
       } catch (error) {
@@ -219,16 +224,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
         }
       }
     },
-    [
-      isFullScreen,
-      trackVideoPlaybackResumed,
-      video?.channel.id,
-      video?.duration,
-      video?.mediaMetadata?.pixelHeight,
-      video?.title,
-      videoId,
-      videoJsConfig.src,
-    ]
+    [trackVideoPlaybackResumed, videoId, videoJsConfig.src, videoPlaybackData]
   )
 
   const pauseVideo = useCallback(
@@ -239,24 +235,9 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
       withIndicator && player.trigger(CustomVideojsEvents.PauseControl)
       callback?.()
       player.pause()
-      trackVideoPlaybackPaused(
-        videoId ?? 'no data',
-        video?.channel.id ?? 'no data',
-        video?.title ?? 'no data',
-        video?.duration ?? -1,
-        isFullScreen,
-        video?.mediaMetadata?.pixelHeight?.toString() ?? '1'
-      )
+      trackVideoPlaybackPaused(videoPlaybackData)
     },
-    [
-      isFullScreen,
-      trackVideoPlaybackPaused,
-      video?.channel.id,
-      video?.duration,
-      video?.mediaMetadata?.pixelHeight,
-      video?.title,
-      videoId,
-    ]
+    [trackVideoPlaybackPaused, videoPlaybackData]
   )
 
   useEffect(() => {
@@ -376,30 +357,13 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     }
     const handler = () => {
       setPlayerState('ended')
-      trackVideoPlaybackCompleted(
-        videoId ?? 'no data',
-        video?.channel.id ?? 'no data',
-        video?.title ?? 'no data',
-        video?.duration ?? -1,
-        isFullScreen,
-        video?.mediaMetadata?.pixelHeight?.toString() ?? '1'
-      )
+      trackVideoPlaybackCompleted(videoPlaybackData)
     }
     player.on('ended', handler)
     return () => {
       player.off('ended', handler)
     }
-  }, [
-    isFullScreen,
-    nextVideo,
-    player,
-    trackVideoPlaybackCompleted,
-    video?.channel.id,
-    video?.duration,
-    video?.mediaMetadata?.pixelHeight,
-    video?.title,
-    videoId,
-  ])
+  }, [nextVideo, player, trackVideoPlaybackCompleted, videoPlaybackData])
 
   // handle loadstart
   useEffect(() => {
@@ -426,33 +390,14 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
         .then(() => {
           onAddVideoView?.()
           setIsPlaying(true)
-          trackVideoPlaybackStarted(
-            videoId ?? 'no data',
-            video?.channel.id ?? 'no data',
-            video?.title ?? 'no data',
-            video?.duration ?? -1,
-            isFullScreen,
-            video?.mediaMetadata?.pixelHeight?.toString() ?? '1'
-          )
+          trackVideoPlaybackStarted(videoPlaybackData)
         })
         .catch((e) => {
           setNeedsManualPlay(true)
           ConsoleLogger.warn('Video autoplay failed', e)
         })
     }
-  }, [
-    player,
-    isLoaded,
-    autoplay,
-    onAddVideoView,
-    trackVideoPlaybackStarted,
-    videoId,
-    video?.channel.id,
-    video?.title,
-    video?.duration,
-    video?.mediaMetadata?.pixelHeight,
-    isFullScreen,
-  ])
+  }, [player, isLoaded, autoplay, onAddVideoView, trackVideoPlaybackStarted, videoPlaybackData])
 
   // handle playing and pausing from outside the component
   useEffect(() => {
@@ -461,38 +406,12 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     }
     if (playing) {
       playVideo(player)
-      trackVideoPlaybackResumed(
-        videoId ?? 'no data',
-        video?.channel.id ?? 'no data',
-        video?.title ?? 'no data',
-        video?.duration ?? -1,
-        isFullScreen,
-        video?.mediaMetadata?.pixelHeight?.toString() ?? '1'
-      )
+      trackVideoPlaybackResumed(videoPlaybackData)
     } else {
       player.pause()
-      trackVideoPlaybackPaused(
-        videoId ?? 'no data',
-        video?.channel.id ?? 'no data',
-        video?.title ?? 'no data',
-        video?.duration ?? -1,
-        isFullScreen,
-        video?.mediaMetadata?.pixelHeight?.toString() ?? '1'
-      )
+      trackVideoPlaybackPaused(videoPlaybackData)
     }
-  }, [
-    isFullScreen,
-    playVideo,
-    player,
-    playing,
-    trackVideoPlaybackPaused,
-    trackVideoPlaybackResumed,
-    video?.channel.id,
-    video?.duration,
-    video?.mediaMetadata?.pixelHeight,
-    video?.title,
-    videoId,
-  ])
+  }, [playVideo, player, playing, trackVideoPlaybackPaused, trackVideoPlaybackResumed, videoPlaybackData])
 
   // handle playing and pausing
   useEffect(() => {

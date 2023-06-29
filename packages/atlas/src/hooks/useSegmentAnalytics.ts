@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 
 import useSegmentAnalyticsContext from '@/providers/segmentAnalytics/useSegmentAnalyticsContext'
 
-interface videoPlaybackParams {
+export type videoPlaybackParams = {
   videoId: string
   channelId: string
   title: string
