@@ -24,6 +24,7 @@ export type NumberFormatProps = {
   isNegative?: boolean
   icon?: ReactNode
   withDenomination?: boolean | 'horizontal' | 'vertical'
+  denominationAlign?: 'left' | 'right'
 } & Omit<TextProps, 'children' | 'variant'>
 
 export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
@@ -38,6 +39,7 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
       isNegative,
       color,
       withDenomination,
+      denominationAlign = 'left',
       icon,
       ...textProps
     },
@@ -100,6 +102,7 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
               content
             )}
             <Denomination
+              align={denominationAlign}
               className="denomination"
               as="span"
               color={bnValue.isNeg() || isNegative ? 'colorTextError' : 'colorText'}
@@ -129,9 +132,9 @@ const StyledText = styled(Text)`
   display: inline-block;
 `
 
-const Denomination = styled(Text)`
+const Denomination = styled(Text)<{ align: 'right' | 'left' }>`
   display: inline-block;
-  text-align: right;
+  text-align: ${(props) => props.align};
 `
 
 const Container = styled.div<{ orientation: NumberFormatProps['withDenomination'] }>`

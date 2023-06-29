@@ -181,6 +181,7 @@ const TokenAmount = ({ tokenAmount }: { tokenAmount: BN }) => {
       format="short"
       color={isNegative ? 'colorTextError' : 'colorTextStrong'}
       withDenomination
+      denominationAlign="right"
     />
   )
 }

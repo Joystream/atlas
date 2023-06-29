@@ -108,6 +108,7 @@ export const TopSellingChannelsTable = () => {
                 margin={{ left: 1 }}
                 format="short"
                 withDenomination
+                denominationAlign="right"
               />
             </JoyAmountWrapper>
           ),
