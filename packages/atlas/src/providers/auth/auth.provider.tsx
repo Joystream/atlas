@@ -104,27 +104,27 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         mode: mode.CBC,
       })
 
-      const { status } = await axios.post(
-        `${ORION_AUTH_URL}/session-artifacts`,
-        {
-          cipherKey,
-          cipherIv,
-        },
-        { withCredentials: true }
-      )
+      try {
+        await axios.post(
+          `${ORION_AUTH_URL}/session-artifacts`,
+          {
+            cipherKey,
+            cipherIv,
+          },
+          { withCredentials: true }
+        )
 
-      if (status !== 200) {
-        return false
+        setEncodedSeed(encrypted.ciphertext.toString(enc.Hex))
+        return true
+      } catch (error) {
+        throw new Error(LogInErrors.ArtifactsAlreadySaved)
       }
-
-      setEncodedSeed(encrypted.ciphertext.toString(enc.Hex))
-      return true
     },
     [setEncodedSeed]
   )
 
   const handleLogin: AuthContextValue['handleLogin'] = useCallback(
-    async (params) => {
+    async (params, retryCount = 0) => {
       setIsAuthenticating(true)
       await cryptoWaitReady()
       const time = Date.now() - 30_000
@@ -180,7 +180,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
         setAnonymousUserId(null)
         if (localEntropy) {
-          saveEncodedSeed(localEntropy)
+          await saveEncodedSeed(localEntropy)
           setApiActiveAccount('seed', entropyToMnemonic(localEntropy))
         } else {
           setApiActiveAccount('address', payload.joystreamAccountId)
@@ -191,17 +191,23 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
         return response.data.accountId
       } catch (error) {
-        const orionMessage = error.response.data.message
-        if (orionMessage.includes('Invalid credentials')) {
-          throw new Error(LogInErrors.NoAccountFound)
-        }
+        // if user receive "Session artifacts already saved", remove artifacts by signing user out and run login again
+        if (retryCount === 0 && error.message === LogInErrors.ArtifactsAlreadySaved) {
+          await logoutRequest()
+          return handleLogin(params, retryCount + 1)
+        } else {
+          const orionMessage = error.response.data.message
+          if (orionMessage.includes('Invalid credentials')) {
+            throw new Error(LogInErrors.NoAccountFound)
+          }
 
-        if (orionMessage.includes('Payload signature is invalid.')) {
-          throw new Error(LogInErrors.InvalidPayload)
-        }
+          if (orionMessage.includes('Payload signature is invalid.')) {
+            throw new Error(LogInErrors.InvalidPayload)
+          }
 
-        SentryLogger.error('Unsupported error when posting login action', 'auth.provider', error)
-        throw new Error(LogInErrors.UnknownError)
+          SentryLogger.error('Unsupported error when posting login action', 'auth.provider', error)
+          throw new Error(LogInErrors.UnknownError)
+        }
       } finally {
         setIsAuthenticating(false)
       }
