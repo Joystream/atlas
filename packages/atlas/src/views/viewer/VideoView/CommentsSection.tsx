@@ -55,7 +55,7 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
   const { id: videoId } = useParams()
   const { memberId, signIn, activeMembership, isLoggedIn } = useUser()
   const { openSignInDialog } = useDisplaySignInDialog({ interaction: true })
-  const { isLoadingAsset: isMemberAvatarLoading, url: memberAvatarUrl } = getMemberAvatar(activeMembership)
+  const { isLoadingAsset: isMemberAvatarLoading, urls: memberAvatarUrls } = getMemberAvatar(activeMembership)
   const { trackCommentAdded } = useSegmentAnalytics()
 
   const { fullFee: fee, loading: feeLoading } = useFee(
@@ -226,7 +226,7 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
         />
       </CommentsSectionHeader>
       <CommentInput
-        memberAvatarUrl={memberAvatarUrl}
+        memberAvatarUrls={memberAvatarUrls}
         isMemberAvatarLoading={isLoggedIn ? isMemberAvatarLoading : false}
         processing={commentInputIsProcessing}
         readOnly={!memberId}

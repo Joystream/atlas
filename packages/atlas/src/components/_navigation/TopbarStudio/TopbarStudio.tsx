@@ -31,9 +31,9 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
 
   const currentChannel = activeMembership?.channels.find((channel) => channel.id === channelId)
 
-  const channelAvatarUrl = currentChannel?.avatarPhoto?.resolvedUrl
+  const channelAvatarUrls = currentChannel?.avatarPhoto?.resolvedUrls
 
-  const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(activeMembership)
+  const { urls: memberAvatarUrls, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(activeMembership)
 
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
 
@@ -53,13 +53,13 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
   const avatars: AvatarGroupUrlAvatar[] = channelId
     ? [
         {
-          url: memberAvatarUrl,
+          urls: memberAvatarUrls,
           loading: memberAvatarLoading,
           onClick: handleDrawerToggle,
         },
-        { url: channelAvatarUrl, loading: isAuthLoading, onClick: handleDrawerToggle },
+        { urls: channelAvatarUrls, loading: isAuthLoading, onClick: handleDrawerToggle },
       ]
-    : [{ url: memberAvatarUrl, loading: memberAvatarLoading, onClick: handleDrawerToggle }]
+    : [{ urls: memberAvatarUrls, loading: memberAvatarLoading, onClick: handleDrawerToggle }]
 
   return (
     <>

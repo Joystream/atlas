@@ -16,7 +16,7 @@ type VideoOverlayProps = {
   playerState: PlayerState
   onPlayAgain: () => void
   channelId?: string
-  currentThumbnailUrl?: string | null
+  currentThumbnailUrls?: string[] | null
   videoId?: string
   isFullScreen?: boolean
   isPlayNextDisabled?: boolean
@@ -29,7 +29,7 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
   playerState,
   onPlayAgain,
   channelId,
-  currentThumbnailUrl,
+  currentThumbnailUrls,
   videoId,
   isFullScreen,
   isPlayNextDisabled,
@@ -87,7 +87,7 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
               isPlayNextDisabled={isPlayNextDisabled}
               onPlayAgain={onPlayAgain}
               channelId={channelId}
-              currentThumbnailUrl={currentThumbnailUrl}
+              currentThumbnailUrls={currentThumbnailUrls}
               randomNextVideo={playRandomVideoOnEnded ? randomNextVideo : undefined}
             />
           )}

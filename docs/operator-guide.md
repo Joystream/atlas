@@ -167,13 +167,6 @@ joystream-cli content:createVideoCategory "My category" "My category description
 
 Once you run the above command, you can use the query above with a `orderBy: createdAt_DESC` argument to get the ID of the newly created category. You can then add it to the `content.categories` config entry.
 
-#### YouTube Partner Program
-
-All the YPP (YouTube Partner Program) parameters could be found in `atlas.config.yml` file located in `packages/atlas` directory.
-`features.ypp` section contains all the necessary params for setting up [youtube-synch](https://github.com/Joystream/youtube-synch/) and customizing user's rewards.
-
-Once youtube-synch is setup, you'll need to provide its API URL in `youtubeSyncApiUrl` variable.
-
 In order to enable YPP content in atlas, `googleConsoleClientId` variable needs to be provided. You can read more about it [here](https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid).
 
 #### Terms of Service, Copyright Policy and Privacy Policy

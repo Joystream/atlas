@@ -6,7 +6,7 @@ export default {
   title: 'Other/OutputPill',
   component: OutputPill,
   args: {
-    avatarUri: 'https://placedog.net/100/100',
+    avatarUrls: ['https://placedog.net/100/100'],
     handle: 'Member',
     withAvatar: true,
     readonly: false,

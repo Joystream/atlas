@@ -93,8 +93,8 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
 }) => {
   const navigate = useNavigate()
   const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
-  const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(activeMembership)
-  const channelAvatarUrl = selectedChannel?.avatarPhoto?.resolvedUrl
+  const { urls: memberAvatarUrls, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(activeMembership)
+  const channelAvatarUrls = selectedChannel?.avatarPhoto?.resolvedUrls
   const setSignInModalOpen = useUserStore((state) => state.actions.setSignInModalOpen)
   const memberAvatarWrapperRef = useRef<HTMLButtonElement>(null)
   const channelAvatarWrapperRef = useRef<HTMLButtonElement>(null)
@@ -148,7 +148,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                 clickable={false}
                 isDisabled={type === 'channel'}
                 size={40}
-                assetUrl={memberAvatarUrl}
+                assetUrls={memberAvatarUrls}
                 loading={memberAvatarLoading}
               />
               <StyledIconWrapper size="small" icon={<SvgActionMember />} />
@@ -172,7 +172,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                 clickable={false}
                 isDisabled={type === 'member'}
                 size={40}
-                assetUrl={channelAvatarUrl}
+                assetUrls={channelAvatarUrls}
                 loading={membershipLoading}
               >
                 {!hasAtLeastOneChannel ? (
@@ -264,7 +264,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
             </TextLink>
           </BalanceContainer>
         </MemberInfoContainer>
-        <BlurredBG memberUrl={memberAvatarUrl} channelUrl={channelAvatarUrl} isChannel={type === 'channel'}>
+        <BlurredBG memberUrl={memberAvatarUrls?.[0]} channelUrl={channelAvatarUrls?.[0]} isChannel={type === 'channel'}>
           <Filter />
         </BlurredBG>
       </MemberInfoAndBgWrapper>

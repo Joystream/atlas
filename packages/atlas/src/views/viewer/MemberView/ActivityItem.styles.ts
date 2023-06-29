@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 
+import { AssetImage } from '@/components/AssetImage'
 import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, media, sizes } from '@/styles'
@@ -62,7 +63,7 @@ export const Title = styled(Text)`
   overflow: hidden;
   text-overflow: ellipsis;
 `
-export const Thumbnail = styled.img`
+export const Thumbnail = styled(AssetImage)`
   height: 40px;
 
   ${media.sm} {

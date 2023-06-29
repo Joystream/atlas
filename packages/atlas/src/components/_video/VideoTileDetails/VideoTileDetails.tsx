@@ -35,7 +35,7 @@ export type VideoTileDetailsProps = {
   views?: number | null
   createdAt?: Date | null
   channelTitle?: string | null
-  channelAvatarUrl?: string | null
+  channelAvatarUrls?: string[] | null
   channelHref?: string
   onChannelAvatarClick?: () => void
   loadingAvatar?: boolean
@@ -59,7 +59,7 @@ export const VideoTileDetails: FC<VideoTileDetailsProps> = ({
   channelHref,
   onChannelAvatarClick,
   size = 'medium',
-  channelAvatarUrl,
+  channelAvatarUrls,
   loadingAvatar,
   loading,
   kebabMenuItems = [],
@@ -72,7 +72,7 @@ export const VideoTileDetails: FC<VideoTileDetailsProps> = ({
       {variant === 'withChannelNameAndAvatar' && (
         <StyledAvatar
           size={32}
-          assetUrl={channelAvatarUrl}
+          assetUrls={channelAvatarUrls}
           loading={loadingAvatar}
           onClick={onChannelAvatarClick}
           smallGap={size === 'small'}

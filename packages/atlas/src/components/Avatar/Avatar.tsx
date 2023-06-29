@@ -1,9 +1,8 @@
-import { FC, MouseEvent, PropsWithChildren, useCallback, useEffect } from 'react'
+import { FC, MouseEvent, PropsWithChildren, useCallback } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { SvgActionNewChannel } from '@/assets/icons'
 import { cVar, transitions } from '@/styles'
-import { validateImage } from '@/utils/image'
 
 import {
   AvatarSize,
@@ -24,9 +23,8 @@ import { Text } from '../Text'
 
 export type AvatarProps = PropsWithChildren<{
   onClick?: (event: MouseEvent<HTMLElement>) => void
-  onImageValidation?: (validImage: boolean) => void
   onError?: () => void
-  assetUrl?: string | null
+  assetUrls?: string[] | null
   hasAvatarUploadFailed?: boolean
   loading?: boolean
   className?: string
@@ -38,7 +36,7 @@ export type AvatarProps = PropsWithChildren<{
 }>
 
 export const Avatar: FC<AvatarProps> = ({
-  assetUrl,
+  assetUrls,
   hasAvatarUploadFailed,
   loading = false,
   size = 32,
@@ -49,30 +47,9 @@ export const Avatar: FC<AvatarProps> = ({
   clickable,
   onError,
   onClick,
-  onImageValidation,
   disableHoverDimm,
 }) => {
   const isEditable = !loading && editable && size !== 32 && size !== 24
-
-  const checkIfImageIsValid = useCallback(async () => {
-    if (!assetUrl) {
-      onImageValidation?.(true)
-      return
-    }
-    try {
-      await validateImage(assetUrl)
-      onImageValidation?.(true)
-    } catch (error) {
-      onImageValidation?.(false)
-    }
-  }, [assetUrl, onImageValidation])
-
-  useEffect(() => {
-    if (!assetUrl) {
-      return
-    }
-    checkIfImageIsValid()
-  }, [assetUrl, checkIfImageIsValid])
 
   const getEditableIconSize = useCallback(() => {
     const smallIconSizes = [24, 32, 40]
@@ -96,9 +73,9 @@ export const Avatar: FC<AvatarProps> = ({
     >
       {(clickable || !!onClick) && (
         <IconAndOverlayWrapper>
-          <Overlay isEdit={isEditable && !!assetUrl} />
+          <Overlay isEdit={isEditable && !!assetUrls} />
           {isEditable &&
-            (assetUrl ? (
+            (assetUrls ? (
               <StyledSvgActionEdit width={getEditableIconSize()} height={getEditableIconSize()} />
             ) : (
               <StyledSvgActionAddImage width={getEditableIconSize()} height={getEditableIconSize()} />
@@ -128,8 +105,8 @@ export const Avatar: FC<AvatarProps> = ({
             >
               {loading ? (
                 <StyledSkeletonLoader rounded />
-              ) : assetUrl ? (
-                <StyledImage src={assetUrl} onError={onError} />
+              ) : assetUrls?.length ? (
+                <StyledImage resolvedUrls={assetUrls} onError={onError} />
               ) : (
                 <SilhouetteAvatar />
               )}

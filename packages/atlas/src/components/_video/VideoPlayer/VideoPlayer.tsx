@@ -72,7 +72,7 @@ import { CustomVideojsEvents, PlayerState, VOLUME_STEP, hotkeysHandler, isFullSc
 import { VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
 
 export type VideoPlayerProps = {
-  channelAvatarUrl?: string | null
+  channelAvatarUrls?: string[] | null
   isChannelAvatarLoading?: boolean
   isShareDialogOpen?: boolean
   onCloseShareDialog?: () => void
@@ -81,6 +81,7 @@ export type VideoPlayerProps = {
   nextVideo?: FullVideoFieldsFragment | null
   className?: string
   videoStyle?: CSSProperties
+  onError?: () => void
   autoplay?: boolean
   playing?: boolean
   videoId?: string
@@ -107,7 +108,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
   {
     isVideoPending,
     className,
-    channelAvatarUrl,
+    channelAvatarUrls,
     isChannelAvatarLoading,
     onCloseShareDialog,
     onAddVideoView,
@@ -122,6 +123,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     availableTextTracks,
     isMinimized,
     onMinimizedExit,
+    onError,
     ...videoJsConfig
   },
   externalRef
@@ -219,12 +221,12 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
           ConsoleLogger.warn('Video playback failed', error)
         } else {
           SentryLogger.error('Video playback failed', 'VideoPlayer', error, {
-            video: { id: videoId, url: videoJsConfig.src },
+            video: { id: videoId, urls: videoJsConfig.videoUrls },
           })
         }
       }
     },
-    [trackVideoPlaybackResumed, videoId, videoJsConfig.src, videoPlaybackData]
+    [trackVideoPlaybackResumed, videoId, videoPlaybackData, videoJsConfig.videoUrls]
   )
 
   const pauseVideo = useCallback(
@@ -306,13 +308,14 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
       return
     }
     const handler = () => {
+      onError?.()
       setPlayerState('error')
     }
     player.on('error', handler)
     return () => {
       player.off('error', handler)
     }
-  })
+  }, [onError, player])
 
   // handle setting playback rate
   useEffect(() => {
@@ -327,10 +330,11 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
   // When src is null that means something went wrong during asset resolution
   // No need to log anything here, error logging is handled in resolvers
   useEffect(() => {
-    if (videoJsConfig.src === null) {
+    if (!videoJsConfig.videoUrls) {
       setPlayerState('error')
+      onError?.()
     }
-  }, [videoJsConfig.src])
+  }, [onError, videoJsConfig.videoUrls])
 
   // handle video loading
   useEffect(() => {
@@ -924,7 +928,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
             handlePlayPause(true)
           }}
           channelId={video?.channel.id}
-          currentThumbnailUrl={videoJsConfig.posterUrl}
+          currentThumbnailUrls={videoJsConfig.posterUrls}
           playRandomVideoOnEnded={!isEmbedded}
           isMinimized={isMinimized}
         />
@@ -936,7 +940,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                 <Avatar
                   clickable
                   size={isFullScreen && !isMobile() ? 88 : 32}
-                  assetUrl={channelAvatarUrl}
+                  assetUrls={channelAvatarUrls}
                   loading={isChannelAvatarLoading}
                 />
               </a>

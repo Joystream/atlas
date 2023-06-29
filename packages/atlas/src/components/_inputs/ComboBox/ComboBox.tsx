@@ -14,7 +14,7 @@ import { Input, InputProps } from '../Input'
 
 type ModifiedListItemProps = ListItemProps & {
   label: string
-  thumbnailUrl?: string
+  thumbnailUrls?: string[]
   isSeparator?: boolean
 }
 
@@ -134,7 +134,9 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
                     })}
                     size="large"
                     highlight={highlightedIndex === index}
-                    nodeStart={item.nodeStart || (item.thumbnailUrl && <StyledThumbnail src={item.thumbnailUrl} />)}
+                    nodeStart={
+                      item.nodeStart || (item.thumbnailUrls && <StyledThumbnail resolvedUrls={item.thumbnailUrls} />)
+                    }
                     isSeparator={item.isSeparator}
                   />
                 ))}

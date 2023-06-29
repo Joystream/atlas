@@ -43,7 +43,7 @@ export type Auction = {
   topBid: BasicBidFieldsFragment | undefined
   topBidAmount: BN | undefined
   topBidderHandle: string | undefined
-  topBidderAvatarUri: string | null | undefined
+  topBidderAvatarUris: string[] | null | undefined
   isUserTopBidder: boolean | undefined
   userBidAmount: BN | undefined
   userBidUnlockDate: Date | undefined
@@ -62,7 +62,7 @@ export type Auction = {
 
 export type NftWidgetProps = {
   ownerHandle: string | null | undefined
-  ownerAvatar: string | null | undefined
+  ownerAvatarUrls: string[] | null | undefined
   creatorId?: string
   isOwner: boolean | undefined
   needsSettling: boolean | undefined
@@ -103,7 +103,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
   nftStatus,
   nftHistory,
   needsSettling,
-  ownerAvatar,
+  ownerAvatarUrls,
   onNftPutOnSale,
   onNftAcceptBid,
   onWithdrawBid,
@@ -382,7 +382,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
                 content={
                   <>
                     <TopBidderContainer>
-                      <Avatar assetUrl={nftStatus.topBidderAvatarUri} size={24} />
+                      <Avatar assetUrls={nftStatus.topBidderAvatarUris} size={24} />
                       <TopBidderTokenContainer data-size={size}>
                         <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
                       </TopBidderTokenContainer>
@@ -602,7 +602,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
   return (
     <Container ref={ref}>
       <NftOwnerContainer data-size={size}>
-        <OwnerAvatar assetUrl={ownerAvatar} size={40} />
+        <OwnerAvatar assetUrls={ownerAvatarUrls} size={40} />
         <OwnerLabel as="span" variant="t100" color="colorText">
           This NFT is owned by
         </OwnerLabel>

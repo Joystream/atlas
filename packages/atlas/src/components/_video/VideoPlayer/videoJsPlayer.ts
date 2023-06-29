@@ -2,15 +2,17 @@ import { RefObject, useEffect, useRef, useState } from 'react'
 import { VideoJsPlayer, VideoJsPlayerOptions } from 'video.js'
 import videojs from 'video.js/dist/alt/video.core.novtt'
 
+import { useGetAssetUrl } from '@/hooks/useGetAssetUrl'
+
 export type VideoJsConfig = {
-  src?: string | null
+  videoUrls?: string[] | null
   width?: number
   height?: number
   fluid?: boolean
   fill?: boolean
   muted?: boolean
   loop?: boolean
-  posterUrl?: string | null
+  posterUrls?: string[] | null
   startTime?: number
   onDataLoaded?: () => void
   onPlay?: () => void
@@ -24,11 +26,11 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
   fill,
   fluid,
   height,
-  src,
+  videoUrls,
   width,
   muted = false,
   loop = false,
-  posterUrl,
+  posterUrls,
   startTime = 0,
   onDataLoaded,
   onPlay,
@@ -38,7 +40,8 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
 }) => {
   const playerRef = useRef<HTMLVideoElement | null>(null)
   const [player, setPlayer] = useState<VideoJsPlayer | null>(null)
-
+  const { url: src } = useGetAssetUrl(videoUrls, 'video')
+  const { url: posterUrl } = useGetAssetUrl(posterUrls, 'image')
   useEffect(() => {
     if (!playerRef.current) {
       return
