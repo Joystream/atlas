@@ -51,8 +51,8 @@ export type BenefitCardProps = {
     onClick?: () => void
     to?: string
   }
-  joyAmount: JoyAmountNumber | JoyAmountRange
-  dollarAmount?: DollarAmountNumber | DollarAmountRange
+  joyAmount: JoyAmountNumber | JoyAmountRange | null
+  dollarAmount?: DollarAmountNumber | DollarAmountRange | null
   className?: string
 }
 
@@ -71,83 +71,101 @@ export const BenefitCard: FC<BenefitCardProps> = ({
 
   const RewardAmount = () => {
     const isJoyTokenIconVisible =
-      (!smMatch && !isFullVariant && dollarAmount) || (!isFullVariant && dollarAmount) || isFullVariant
+      !(dollarAmount && !joyAmount) &&
+      ((!smMatch && !isFullVariant && dollarAmount) || (!isFullVariant && dollarAmount) || isFullVariant)
     return (
       <RewardWrapper isCompact={!isFullVariant}>
-        {!!dollarAmount && dollarAmount.type === 'number' && (
-          <NumberFormat
-            as="p"
-            format="dollar"
-            variant={!smMatch ? 'h500' : 'h600'}
-            value={dollarAmount.amount}
-            margin={{ right: dollarAmount && !isFullVariant && !smMatch ? 2 : 0 }}
-          />
-        )}
-        {!!dollarAmount && dollarAmount.type === 'range' && (
-          <>
-            <NumberFormat
-              as="p"
-              format="dollar"
-              variant={!smMatch ? 'h500' : 'h600'}
-              value={dollarAmount.min}
-              margin={{ right: dollarAmount && !isFullVariant && !smMatch ? 2 : 0 }}
-            />
-            <Text as="span" variant={smMatch ? 'h600' : 'h500'} color="colorText" margin={{ right: 1 }}>
-              -
-            </Text>
-            <NumberFormat
-              as="p"
-              format="dollar"
-              variant={!smMatch ? 'h500' : 'h600'}
-              value={dollarAmount.max}
-              margin={{ right: dollarAmount && !isFullVariant && !smMatch ? 2 : 0 }}
-            />
-          </>
-        )}
         <TokenRewardWrapper>
-          {isJoyTokenIconVisible ? (
-            <StyledJoyTokenIcon variant="silver" size={smMatch && !dollarAmount ? 24 : 16} />
-          ) : (
+          {!!dollarAmount && !isFullVariant && (
             <Text as="span" variant={smMatch ? 'h600' : 'h500'} color="colorText" margin={{ right: 1 }}>
               +
             </Text>
           )}
-          {joyAmount.type === 'number' && (
+          {!!dollarAmount && dollarAmount.type === 'number' && (
             <NumberFormat
-              as="span"
-              format="short"
-              color={!dollarAmount ? 'colorTextStrong' : 'colorText'}
-              variant={!dollarAmount ? (!smMatch ? 'h500' : 'h600') : !smMatch ? 'h300' : 'h400'}
-              value={joyAmount.amount}
+              as="p"
+              format="dollar"
+              variant={!smMatch ? 'h500' : 'h600'}
+              value={dollarAmount.amount}
+              margin={{ right: dollarAmount && !isFullVariant && !smMatch ? 2 : 0 }}
             />
           )}
-          {joyAmount.type === 'range' && (
+          {!!dollarAmount && dollarAmount.type === 'range' && (
             <>
               <NumberFormat
-                as="span"
-                format="short"
-                color={!dollarAmount ? 'colorTextStrong' : 'colorText'}
-                variant={!dollarAmount ? (!smMatch ? 'h500' : 'h600') : !smMatch ? 'h300' : 'h400'}
-                value={joyAmount.min}
+                as="p"
+                format="dollar"
+                variant={!smMatch ? 'h500' : 'h600'}
+                value={dollarAmount.min}
+                margin={{ right: dollarAmount && !isFullVariant && !smMatch ? 2 : 0 }}
               />
               <Text as="span" variant={smMatch ? 'h600' : 'h500'} color="colorText" margin={{ right: 1 }}>
                 -
               </Text>
               <NumberFormat
-                as="span"
-                format="short"
-                color={!dollarAmount ? 'colorTextStrong' : 'colorText'}
-                variant={!dollarAmount ? (!smMatch ? 'h500' : 'h600') : !smMatch ? 'h300' : 'h400'}
-                value={joyAmount.max}
+                as="p"
+                format="dollar"
+                variant={!smMatch ? 'h500' : 'h600'}
+                value={dollarAmount.max}
+                margin={{ right: dollarAmount && !isFullVariant && !smMatch ? 2 : 0 }}
               />
             </>
           )}
-          {!dollarAmount && !isFullVariant && (
+          {!!dollarAmount && !joyAmount && (
             <Text as="span" variant={smMatch ? 'h400' : 'h300'} color="colorText" margin={{ left: 1 }}>
-              {atlasConfig.joystream.tokenTicker}
+              USD
             </Text>
           )}
         </TokenRewardWrapper>
+        {joyAmount && (
+          <>
+            <TokenRewardWrapper>
+              {isJoyTokenIconVisible ? (
+                <StyledJoyTokenIcon variant="silver" size={smMatch && !dollarAmount ? 24 : 16} />
+              ) : (
+                <Text as="span" variant={smMatch ? 'h600' : 'h500'} color="colorText" margin={{ right: 1 }}>
+                  +
+                </Text>
+              )}
+              {joyAmount.type === 'number' && (
+                <NumberFormat
+                  as="span"
+                  format="short"
+                  color={!dollarAmount ? 'colorTextStrong' : 'colorText'}
+                  variant={!dollarAmount ? (!smMatch ? 'h500' : 'h600') : !smMatch ? 'h300' : 'h400'}
+                  value={joyAmount.amount}
+                />
+              )}
+              {joyAmount.type === 'range' && (
+                <>
+                  <NumberFormat
+                    as="span"
+                    format="short"
+                    color={!dollarAmount ? 'colorTextStrong' : 'colorText'}
+                    variant={!dollarAmount ? (!smMatch ? 'h500' : 'h600') : !smMatch ? 'h300' : 'h400'}
+                    value={joyAmount.min}
+                  />
+                  <Text as="span" variant={smMatch ? 'h600' : 'h500'} color="colorText" margin={{ right: 1 }}>
+                    -
+                  </Text>
+                  <NumberFormat
+                    as="span"
+                    format="short"
+                    color={!dollarAmount ? 'colorTextStrong' : 'colorText'}
+                    variant={!dollarAmount ? (!smMatch ? 'h500' : 'h600') : !smMatch ? 'h300' : 'h400'}
+                    value={joyAmount.max}
+                  />
+                </>
+              )}
+              {(!dollarAmount && !isFullVariant) ||
+                (dollarAmount && !joyAmount && (
+                  <Text as="span" variant={smMatch ? 'h400' : 'h300'} color="colorText" margin={{ left: 1 }}>
+                    {dollarAmount ? 'USD' : atlasConfig.joystream.tokenTicker}
+                  </Text>
+                ))}
+            </TokenRewardWrapper>
+          </>
+        )}
       </RewardWrapper>
     )
   }

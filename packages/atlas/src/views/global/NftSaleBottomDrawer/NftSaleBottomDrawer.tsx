@@ -5,6 +5,7 @@ import { GetNftDocument, GetNftQuery, GetNftQueryVariables } from '@/api/queries
 import { ActionBarProps } from '@/components/ActionBar'
 import { BottomDrawer } from '@/components/_overlays/BottomDrawer'
 import { absoluteRoutes } from '@/config/routes'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useJoystream } from '@/providers/joystream/joystream.hooks'
 import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
@@ -20,6 +21,7 @@ const SUCCESS_SNACKBAR_TIMEOUT = 6000
 
 export const NftSaleBottomDrawer: FC = () => {
   const { currentAction, currentNftId, closeNftAction } = useNftActions()
+
   const [formStatus, setFormStatus] = useState<NftFormStatus | null>(null)
   const [openPuttingOnSaleDialog, closeCancelPuttingOnSaleDialog] = useConfirmationModal({
     type: 'warning',
@@ -44,6 +46,7 @@ export const NftSaleBottomDrawer: FC = () => {
   const handleTransaction = useTransaction()
   const client = useApolloClient()
   const { displaySnackbar } = useSnackbar()
+  const { trackNftSale } = useSegmentAnalytics()
 
   const isOpen = currentAction === 'putOnSale'
 
@@ -73,6 +76,7 @@ export const NftSaleBottomDrawer: FC = () => {
         onTxSync: refetchData,
       })
       if (completed) {
+        trackNftSale(data.type, data.type === 'buyNow' ? data.buyNowPrice : data.startingPrice)
         displaySnackbar({
           customId: currentNftId,
           title: 'NFT put on sale successfully',
@@ -84,7 +88,17 @@ export const NftSaleBottomDrawer: FC = () => {
         closeNftAction()
       }
     },
-    [memberId, client, closeNftAction, currentNftId, displaySnackbar, handleTransaction, joystream, proxyCallback]
+    [
+      memberId,
+      client,
+      closeNftAction,
+      currentNftId,
+      displaySnackbar,
+      handleTransaction,
+      joystream,
+      proxyCallback,
+      trackNftSale,
+    ]
   )
 
   const handleCancel = useCallback(() => {

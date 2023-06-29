@@ -114,6 +114,7 @@ export const SignInModal: FC = () => {
         captchaToken: data.captchaToken,
       }
       const response = await faucetMutation(body)
+
       return response.data
     },
     [avatarMutation, faucetMutation]

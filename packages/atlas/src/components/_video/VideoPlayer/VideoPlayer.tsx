@@ -80,6 +80,7 @@ export type VideoPlayerProps = {
   nextVideo?: FullVideoFieldsFragment | null
   className?: string
   videoStyle?: CSSProperties
+  onError?: () => void
   autoplay?: boolean
   playing?: boolean
   videoId?: string
@@ -121,6 +122,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     availableTextTracks,
     isMinimized,
     onMinimizedExit,
+    onError,
     ...videoJsConfig
   },
   externalRef
@@ -280,13 +282,14 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
       return
     }
     const handler = () => {
+      onError?.()
       setPlayerState('error')
     }
     player.on('error', handler)
     return () => {
       player.off('error', handler)
     }
-  })
+  }, [onError, player])
 
   // handle setting playback rate
   useEffect(() => {
@@ -303,8 +306,9 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
   useEffect(() => {
     if (!videoJsConfig.videoUrls) {
       setPlayerState('error')
+      onError?.()
     }
-  }, [videoJsConfig.videoUrls])
+  }, [onError, videoJsConfig.videoUrls])
 
   // handle video loading
   useEffect(() => {

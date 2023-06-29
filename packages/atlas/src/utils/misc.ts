@@ -33,26 +33,50 @@ export const shortenString = (text: string, firstLettersAmount: number, lastLett
   return `${firstLetters}...${lastLetters}`
 }
 
-export const retryPromise = <T>(
+// this helper will not care for errors other than timeout error, it's used
+// for scenarions when wallet is not available on first call
+export const retryWalletPromise = <T>(
   promiseFactory: () => Promise<T | null>,
   interval: number,
   timeout: number
 ): Promise<T | null> => {
+  if (interval > timeout || timeout % interval !== 0) {
+    throw new Error('Adjust timeout and interval')
+  }
   return new Promise((resolve, reject) => {
-    const cleanup = () => {
-      clearTimeout(timeoutCleanup)
-      clearInterval(intervalCleanup)
-    }
-    const intervalCleanup = setInterval(async () => {
-      const result = await promiseFactory()
-      if (result) {
-        cleanup()
-        return resolve(result)
+    const intervalPromise = new Promise<T | null>((res) => {
+      const numberOfTries = timeout / interval
+
+      const init = async () => {
+        for (let i = 0; i < numberOfTries; i++) {
+          try {
+            const result = await Promise.race([
+              promiseFactory(),
+              new Promise<T>((_, innerReject) =>
+                setTimeout(() => {
+                  innerReject(new TimeoutError('Timeout in interval'))
+                }, interval)
+              ),
+            ])
+            res(result)
+            break
+          } catch {
+            // Failed, but continue to try
+          }
+        }
       }
-    }, interval)
-    const timeoutCleanup = setTimeout(() => {
-      cleanup()
-      return reject(new TimeoutError('Timed out in retrying the promise'))
-    }, timeout)
+
+      init()
+    })
+
+    const mainTimeoutPromise = new Promise<T | null>((_, innerReject) => {
+      setTimeout(() => {
+        innerReject(new TimeoutError('Timed out in retrying the promise'))
+      }, timeout)
+    })
+
+    Promise.race([intervalPromise, mainTimeoutPromise])
+      .then((result) => resolve(result))
+      .catch((error) => reject(error))
   })
 }
