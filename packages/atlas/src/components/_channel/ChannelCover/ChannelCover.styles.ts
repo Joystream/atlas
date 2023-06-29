@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 
 import { SvgIllustrativeFileFailed } from '@/assets/icons'
 import { SvgBgPattern } from '@/assets/illustrations'
+import { AssetImage } from '@/components/AssetImage'
 import { Button } from '@/components/_buttons/Button'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
@@ -21,7 +22,7 @@ export const Media = styled.div`
   overflow: hidden;
 `
 
-export const CoverImage = styled.img`
+export const CoverImage = styled(AssetImage)`
   width: 100%;
   position: absolute;
   top: 0;

@@ -147,7 +147,10 @@ Publisher.args = {
   slots: {
     topLeft: {
       element: (
-        <OwnerPill avatar={{ assetUrl: 'https://thispersondoesnotexist.com/image' }} handle="thishandledoesntexists" />
+        <OwnerPill
+          avatar={{ assetUrls: ['https://thispersondoesnotexist.com/image'] }}
+          handle="thishandledoesntexists"
+        />
       ),
       clickable: true,
       halfWidth: true,

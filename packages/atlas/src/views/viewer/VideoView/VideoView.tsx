@@ -24,6 +24,7 @@ import { AvailableTrack } from '@/components/_video/VideoPlayer/SettingsButtonWi
 import { atlasConfig } from '@/config'
 import { displayCategories } from '@/config/categories'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
+import { getSingleAssetUrl } from '@/hooks/useGetAssetUrl'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
@@ -66,6 +67,7 @@ export const VideoView: FC = () => {
   const { memberId, signIn, isLoggedIn } = useUser()
   const [showReportDialog, setShowReportDialog] = useState(false)
   const [reactionFee, setReactionFee] = useState<BN | undefined>()
+  const [availableTracks, setAvailableTracks] = useState<AvailableTrack[]>([])
   const { openSignInDialog } = useDisplaySignInDialog({ interaction: true })
   const { openNftPutOnSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement, cancelNftSale } =
     useNftActions()
@@ -112,35 +114,44 @@ export const VideoView: FC = () => {
   const { ref: playerRef, inView: isPlayerInView } = useInView()
   const pausePlayNext = anyOverlaysOpen || !isPlayerInView || isCommenting
 
-  const mediaUrl = video?.media?.resolvedUrl
-  const thumbnailUrl = video?.thumbnailPhoto?.resolvedUrl
-  const availableTracks = useMemo(() => {
-    if (!video?.subtitles) return []
+  const mediaUrls = video?.media?.resolvedUrls
+  const thumbnailUrls = video?.thumbnailPhoto?.resolvedUrls
+  useEffect(() => {
+    const getSubtitles = async () => {
+      if (!video?.subtitles) return []
 
-    return video.subtitles
-      .filter((subtitle) => !!subtitle.asset && subtitle.asset?.resolvedUrl)
-      .map((subtitle) => {
-        const resolvedLanguageName = atlasConfig.derived.languagesLookup[subtitle.language || '']
-        const url = subtitle.asset?.resolvedUrl
-        return {
-          label: subtitle.type === 'subtitles' ? resolvedLanguageName : `${resolvedLanguageName} (CC)`,
-          language: subtitle.type === 'subtitles' ? subtitle.language : `${subtitle.language}-cc`,
-          src: url,
-        }
-      })
-      .filter((subtitles): subtitles is AvailableTrack => !!subtitles.language && !!subtitles.label && !!subtitles.src)
+      const videoSubs = (
+        await Promise.all(
+          video.subtitles
+            .filter((subtitle) => !!subtitle.asset && subtitle.asset?.resolvedUrls.length)
+            .map(async (subtitle) => {
+              const resolvedLanguageName = atlasConfig.derived.languagesLookup[subtitle.language || '']
+              const url = await getSingleAssetUrl(subtitle.asset?.resolvedUrls, 'subtitle')
+              return {
+                label: subtitle.type === 'subtitles' ? resolvedLanguageName : `${resolvedLanguageName} (CC)`,
+                language: subtitle.type === 'subtitles' ? subtitle.language : `${subtitle.language}-cc`,
+                src: url,
+              }
+            })
+        )
+      ).filter((subtitles): subtitles is AvailableTrack => !!subtitles.language && !!subtitles.label && !!subtitles.src)
+
+      setAvailableTracks(videoSubs)
+    }
+
+    getSubtitles()
   }, [video?.subtitles])
 
   const videoMetaTags = useMemo(() => {
-    if (!video || !thumbnailUrl) return {}
+    if (!video || !thumbnailUrls) return {}
     return generateVideoMetaTags(
       video,
-      thumbnailUrl,
+      thumbnailUrls,
       atlasConfig.general.appName,
       window.location.origin,
       atlasConfig.general.appTwitterId
     )
-  }, [video, thumbnailUrl])
+  }, [video, thumbnailUrls])
   const headTags = useHeadTags(video?.title, videoMetaTags)
 
   const [isShareDialogOpen, setShareDialogOpen] = useState(false)
@@ -241,7 +252,7 @@ export const VideoView: FC = () => {
       return
     }
 
-    const artwork: MediaImage[] = thumbnailUrl ? [{ src: thumbnailUrl, type: 'image/webp', sizes: '640x360' }] : []
+    const artwork: MediaImage[] = thumbnailUrls ? [{ src: thumbnailUrls[0], type: 'image/webp', sizes: '640x360' }] : []
 
     navigator.mediaSession.metadata = new MediaMetadata({
       title: video.title || '',
@@ -253,7 +264,7 @@ export const VideoView: FC = () => {
     return () => {
       navigator.mediaSession.metadata = null
     }
-  }, [thumbnailUrl, video])
+  }, [thumbnailUrls, video])
 
   const handleShare = () => {
     setShareDialogOpen(true)
@@ -419,7 +430,7 @@ export const VideoView: FC = () => {
                   isVideoPending={!video?.media?.isAccepted}
                   videoId={video?.id}
                   autoplay
-                  src={mediaUrl}
+                  videoUrls={mediaUrls}
                   onEnd={handleVideoEnd}
                   onTimeUpdated={handleTimeUpdate}
                   startTime={startTimestamp}

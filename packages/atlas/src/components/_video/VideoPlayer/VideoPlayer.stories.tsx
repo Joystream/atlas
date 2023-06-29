@@ -30,7 +30,7 @@ const Template: StoryFn<VideoPlayerProps> = (args) => (
 )
 export const Regular = Template.bind({})
 Regular.args = {
-  src: 'https://eu-central-1.linodeobjects.com/atlas-assets/videos/1.mp4',
+  videoUrls: ['https://eu-central-1.linodeobjects.com/atlas-assets/videos/1.mp4'],
   fill: true,
 }
 

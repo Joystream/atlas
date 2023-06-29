@@ -19,7 +19,7 @@ import { CustomNodeWrapper, TilesWrapper } from './PaymentsOverview.styles'
 
 export const PaymentsOverView = () => {
   const { channelId, activeMembership } = useUser()
-  const { url: memberAvatarUrl } = getMemberAvatar(activeMembership)
+  const { urls: memberAvatarUrls } = getMemberAvatar(activeMembership)
   const { totalBalance } = useSubscribeAccountBalance()
   const [showWithdrawDialog, setShowWithdrawDialog] = useState(false)
   const [showClaimDialog, setShowClaimDialog] = useState<boolean>(false)
@@ -43,7 +43,7 @@ export const PaymentsOverView = () => {
   return (
     <>
       <WithdrawFundsDialog
-        avatarUrl={memberAvatarUrl}
+        avatarUrls={memberAvatarUrls}
         activeMembership={activeMembership}
         show={showWithdrawDialog}
         onExitClick={() => setShowWithdrawDialog(false)}

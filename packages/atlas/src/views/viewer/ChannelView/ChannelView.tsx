@@ -21,6 +21,7 @@ import { ReportModal } from '@/components/_overlays/ReportModal'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { NFT_SORT_OPTIONS, VIDEO_SORT_OPTIONS } from '@/config/sorting'
+import { useGetAssetUrl } from '@/hooks/useGetAssetUrl'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -113,8 +114,7 @@ export const ChannelView: FC = () => {
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(id, channel?.title)
   const [currentTab, setCurrentTab] = useState<typeof TABS[number]>(TABS[0])
 
-  const avatarPhotoUrl = channel?.avatarPhoto?.resolvedUrl
-  const coverPhotoUrl = channel?.coverPhoto?.resolvedUrl
+  const { url: avatarPhotoUrl } = useGetAssetUrl(channel?.avatarPhoto?.resolvedUrls, 'image')
 
   const [sortNftsBy, setSortNftsBy] = useState<OwnedNftOrderByInput>(OwnedNftOrderByInput.CreatedAtDesc)
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
@@ -235,7 +235,7 @@ export const ChannelView: FC = () => {
   return (
     <ViewWrapper>
       {headTags}
-      <ChannelCover assetUrl={coverPhotoUrl} />
+      <ChannelCover assetUrls={channel?.coverPhoto?.resolvedUrls} />
       <LimitedWidthContainer>
         {smMatch ? (
           <CollectorsBoxContainer>

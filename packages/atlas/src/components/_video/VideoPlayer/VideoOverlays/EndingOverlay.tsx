@@ -25,7 +25,7 @@ import {
 
 type EndingOverlayProps = {
   channelId?: string
-  currentThumbnailUrl?: string | null
+  currentThumbnailUrls?: string[] | null
   isFullScreen?: boolean
   onPlayAgain?: () => void
   randomNextVideo?: BasicVideoFieldsFragment | null
@@ -39,7 +39,7 @@ export const EndingOverlay: FC<EndingOverlayProps> = ({
   onPlayAgain,
   isFullScreen,
   channelId,
-  currentThumbnailUrl,
+  currentThumbnailUrls,
   randomNextVideo,
   isEnded,
   isPlayNextDisabled,
@@ -49,7 +49,7 @@ export const EndingOverlay: FC<EndingOverlayProps> = ({
   const [isCountDownStarted, setIsCountDownStarted] = useState(false)
   const mdMatch = useMediaMatch('md')
 
-  const randomNextVideoThumbnailUrl = randomNextVideo?.thumbnailPhoto?.resolvedUrl
+  const randomNextVideoThumbnailUrls = randomNextVideo?.thumbnailPhoto?.resolvedUrls
 
   useEffect(() => {
     if (!randomNextVideo || !isEnded) {
@@ -103,13 +103,13 @@ export const EndingOverlay: FC<EndingOverlayProps> = ({
     }
   }
 
-  const thumbnailUrl = useMemo(() => {
+  const thumbnailUrls = useMemo(() => {
     if (randomNextVideo) {
-      return randomNextVideoThumbnailUrl || ''
+      return randomNextVideoThumbnailUrls
     } else {
-      return currentThumbnailUrl || ''
+      return currentThumbnailUrls
     }
-  }, [currentThumbnailUrl, randomNextVideo, randomNextVideoThumbnailUrl])
+  }, [currentThumbnailUrls, randomNextVideo, randomNextVideoThumbnailUrls])
 
   const stopPropagationx = (e: MouseEvent) => {
     e.stopPropagation()
@@ -124,7 +124,7 @@ export const EndingOverlay: FC<EndingOverlayProps> = ({
               navigate(absoluteRoutes.viewer.video(randomNextVideo.id))
             }}
           >
-            <VideoThumbnail src={thumbnailUrl} />
+            <VideoThumbnail resolvedUrls={thumbnailUrls} />
             <VideoInfo>
               <Text as="span" variant={mdMatch ? 't300' : 't200'} color="colorText">
                 Up next

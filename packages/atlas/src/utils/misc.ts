@@ -1,10 +1,19 @@
 import { formatNumber } from '@/utils/number'
 
-export class TimeoutError extends Error {}
+export class TimeoutError<T> extends Error {
+  payload: T
 
-export const withTimeout = async <T>(promise: Promise<T>, timeout: number) => {
-  const timeoutPromise = new Promise<T>((resolve, reject) => setTimeout(() => reject(new TimeoutError()), timeout))
-  return await Promise.race([timeoutPromise, promise])
+  constructor(payload: T) {
+    super()
+    this.payload = payload
+  }
+}
+
+export const withTimeout = async <T, P>(promise: Promise<T> | Promise<T>[], timeout: number, rejectionPayload?: P) => {
+  const timeoutPromise = new Promise<T>((resolve, reject) =>
+    setTimeout(() => reject(new TimeoutError(rejectionPayload)), timeout)
+  )
+  return await Promise.race([timeoutPromise, ...[promise].flat()])
 }
 
 export const pluralizeNoun = (count: number, noun: string, formatCount?: boolean, suffix = 's') =>

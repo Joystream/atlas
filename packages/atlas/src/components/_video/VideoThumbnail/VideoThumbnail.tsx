@@ -43,7 +43,7 @@ export type VideoThumbnailProps = {
   loading?: boolean
   videoHref?: To
   linkState?: LinkProps['state']
-  thumbnailUrl?: string | null
+  thumbnailUrls?: string[] | null
   thumbnailAlt?: string | null
   clickable?: boolean
   videosInPlaylist?: number
@@ -60,7 +60,7 @@ export const VideoThumbnail = forwardRef<HTMLAnchorElement, VideoThumbnailProps>
       videoHref,
       linkState,
       slots,
-      thumbnailUrl,
+      thumbnailUrls,
       thumbnailAlt,
       onClick,
       clickable = true,
@@ -105,7 +105,7 @@ export const VideoThumbnail = forwardRef<HTMLAnchorElement, VideoThumbnailProps>
                 <ThumbnailSkeletonLoader />
               ) : (
                 <ThumbnailBackground>
-                  {thumbnailUrl && <ThumbnailImage src={thumbnailUrl || ''} alt={thumbnailAlt || ''} />}
+                  {thumbnailUrls && <ThumbnailImage resolvedUrls={thumbnailUrls || ''} alt={thumbnailAlt || ''} />}
                 </ThumbnailBackground>
               )}
             </CSSTransition>

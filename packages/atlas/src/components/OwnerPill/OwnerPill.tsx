@@ -7,7 +7,7 @@ import { Avatar } from '../Avatar'
 export type OwnerPillProps = {
   handle?: string
   avatar?: {
-    assetUrl?: string | null
+    assetUrls?: string[] | null
     loading?: boolean
   }
   title?: string

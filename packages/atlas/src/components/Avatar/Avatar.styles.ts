@@ -4,6 +4,7 @@ import styled from '@emotion/styled'
 
 import { SvgActionAddImage, SvgActionEdit, SvgIllustrativeFileFailed } from '@/assets/icons'
 import { SvgAvatarSilhouette } from '@/assets/illustrations'
+import { AssetImage } from '@/components/AssetImage'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, square, zIndex } from '@/styles'
 
@@ -154,7 +155,7 @@ export const StyledSkeletonLoader = styled(SkeletonLoader)`
   left: 0;
 `
 
-export const StyledImage = styled.img`
+export const StyledImage = styled(AssetImage)`
   position: absolute;
   left: 0;
   width: 100%;

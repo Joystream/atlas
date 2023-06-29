@@ -32,7 +32,7 @@ type WithdrawFundsDialogProps = {
   show: boolean
   totalBalance?: BN
   channelBalance?: BN
-  avatarUrl?: string | null
+  avatarUrls?: string[] | null
   channelId?: string | null
 }
 
@@ -42,7 +42,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
   onExitClick,
   activeMembership,
   show,
-  avatarUrl,
+  avatarUrls,
   totalBalance = new BN(0),
   channelBalance = new BN(0),
   channelId,
@@ -186,7 +186,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
             Destination account
           </Text>
           <VerticallyCenteredDiv>
-            <StyledAvatar assetUrl={avatarUrl} />
+            <StyledAvatar assetUrls={avatarUrls} />
             <Text as="span" variant="t100" margin={{ left: 2, right: 1 }}>
               {activeMembership?.handle}
             </Text>
