@@ -2,6 +2,15 @@ import { useCallback } from 'react'
 
 import useSegmentAnalyticsContext from '@/providers/segmentAnalytics/useSegmentAnalyticsContext'
 
+interface videoPlaybackParams {
+  videoId: string
+  channelId: string
+  title: string
+  totalLength: number
+  fullScreen: boolean
+  quality: string
+}
+
 export const useSegmentAnalytics = () => {
   const { analytics } = useSegmentAnalyticsContext()
 
@@ -55,56 +64,36 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackVideoPlaybackStarted = useCallback(
-    (videoId: string, channelId: string, title: string, totalLength: number, fullScreen: boolean, quality: string) => {
+    (params: videoPlaybackParams) => {
       analytics.track('video playback started', {
-        videoId,
-        channelId,
-        title,
-        totalLength,
-        fullScreen,
-        quality,
+        ...params,
       })
     },
     [analytics]
   )
 
   const trackVideoPlaybackPaused = useCallback(
-    (videoId: string, channelId: string, title: string, totalLength: number, fullScreen: boolean, quality: string) => {
+    (params: videoPlaybackParams) => {
       analytics.track('video playback paused', {
-        videoId,
-        channelId,
-        title,
-        totalLength,
-        fullScreen,
-        quality,
+        ...params,
       })
     },
     [analytics]
   )
 
   const trackVideoPlaybackResumed = useCallback(
-    (videoId: string, channelId: string, title: string, totalLength: number, fullScreen: boolean, quality: string) => {
+    (params: videoPlaybackParams) => {
       analytics.track('video playback resumed', {
-        videoId,
-        channelId,
-        title,
-        totalLength,
-        fullScreen,
-        quality,
+        ...params,
       })
     },
     [analytics]
   )
 
   const trackVideoPlaybackCompleted = useCallback(
-    (videoId: string, channelId: string, title: string, totalLength: number, fullScreen: boolean, quality: string) => {
+    (params: videoPlaybackParams) => {
       analytics.track('video playback completed', {
-        videoId,
-        channelId,
-        title,
-        totalLength,
-        fullScreen,
-        quality,
+        ...params,
       })
     },
     [analytics]

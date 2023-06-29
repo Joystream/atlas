@@ -60,7 +60,7 @@ export const MainLayout: FC = () => {
 
   useEffect(() => {
     // had to include this timeout to make sure the page title is updated
-    setTimeout(
+    const trackRequestTimeout = setTimeout(
       () =>
         trackPageView(
           document.title,
@@ -84,6 +84,9 @@ export const MainLayout: FC = () => {
       if (SentryLogger.replay?.getReplayId()) {
         stopReplay()
       }
+    }
+    return () => {
+      clearTimeout(trackRequestTimeout)
     }
   }, [location.pathname, trackPageView, searchParams])
 

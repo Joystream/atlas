@@ -81,7 +81,9 @@ const StudioLayout = () => {
 
   useEffect(() => {
     // had to include this timeout to make sure the page title is updated
-    setTimeout(() => trackPageView(document.title, 'studio', undefined), 1000)
+    const trackRequestTimeout = setTimeout(() => trackPageView(document.title, 'studio', undefined), 1000)
+
+    return () => clearTimeout(trackRequestTimeout)
   }, [location.pathname, trackPageView])
 
   const yppRedirect = useCallback(() => {
