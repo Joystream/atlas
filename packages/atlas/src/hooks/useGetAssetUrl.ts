@@ -36,6 +36,9 @@ export const useGetAssetUrl = (urls: string[] | undefined | null, type: 'image' 
   const [url, setUrl] = useState<string | undefined>(undefined)
   const [isLoading, setIsLoading] = useState(true)
   useEffect(() => {
+    if (url) {
+      return
+    }
     const init = async () => {
       setIsLoading(true)
       const resolvedUrl = await getSingleAssetUrl(urls, type)
@@ -46,7 +49,7 @@ export const useGetAssetUrl = (urls: string[] | undefined | null, type: 'image' 
     }
 
     init()
-  }, [type, urls])
+  }, [type, url, urls])
 
   return { url, isLoading }
 }
