@@ -30,9 +30,8 @@ export const YppLandingView: FC = () => {
   const headTags = useHeadTags('YouTube Partner Program')
   const yppModalOpenName = useYppStore((state) => state.yppModalOpenName)
   const setYppModalOpen = useYppStore((state) => state.actions.setYppModalOpenName)
-  // const [currentStep, setYppModalOpen] = useState<YppAuthorizationStepsType>(null)
   const { activeMembership, channelId } = useUser()
-  const { setSelectedChannelId, setShouldContinueYppFlow } = useYppStore((store) => store.actions)
+  const { setSelectedChannelId, setShouldContinueYppFlowAfterCreatingChannel } = useYppStore((store) => store.actions)
   const { displaySnackbar } = useSnackbar()
   const navigate = useNavigate()
   const selectedChannelTitle = activeMembership?.channels.find((channel) => channel.id === channelId)?.title
@@ -44,7 +43,9 @@ export const YppLandingView: FC = () => {
   )
   const [wasSignInTriggered, setWasSignInTriggered] = useState(false)
   const isTodaysQuotaReached = data ? data.signupQuotaUsed > SINGUP_DAILY_QUOTA : false
-  const shouldContinueYppFlow = useYppStore((store) => store.shouldContinueYppFlow)
+  const shouldContinueYppFlowAfterCreatingChannel = useYppStore(
+    (store) => store.shouldContinueYppFlowAfterCreatingChannel
+  )
 
   const { unsyncedChannels, isLoading, currentChannel } = useGetYppSyncedChannels()
   const isYppSigned = !!currentChannel
@@ -88,18 +89,18 @@ export const YppLandingView: FC = () => {
   }, [handleYppSignUpClick, wasSignInTriggered])
 
   useEffect(() => {
-    if (shouldContinueYppFlow) {
+    if (shouldContinueYppFlowAfterCreatingChannel) {
       setSelectedChannelId(channelId)
-      setShouldContinueYppFlow(false)
+      setShouldContinueYppFlowAfterCreatingChannel(false)
       setYppModalOpen('ypp-requirements')
     }
   }, [
     channelId,
     handleYppSignUpClick,
     setSelectedChannelId,
-    setShouldContinueYppFlow,
+    setShouldContinueYppFlowAfterCreatingChannel,
     setYppModalOpen,
-    shouldContinueYppFlow,
+    shouldContinueYppFlowAfterCreatingChannel,
   ])
 
   const getYppAtlasStatus = () => {

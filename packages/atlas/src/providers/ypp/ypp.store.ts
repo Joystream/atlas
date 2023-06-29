@@ -10,7 +10,8 @@ type YppStoreState = {
    */
   ytStateParam: string | null
   yppModalOpenName: YppModalStep
-  shouldContinueYppFlow: boolean
+  shouldContinueYppFlowAfterLogin: boolean
+  shouldContinueYppFlowAfterCreatingChannel: boolean
   ytResponseData: YtResponseData
 }
 
@@ -22,7 +23,8 @@ type YppStoreActions = {
    */
   setYtStateParam: (authState: string | null) => void
   setYppModalOpenName: (modal: YppModalStep) => void
-  setShouldContinueYppFlow: (shouldContinueYppFlow: boolean) => void
+  setShouldContinueYppFlowAfterLogin: (shouldContinueYppFlow: boolean) => void
+  setShouldContinueYppFlowAfterCreatingChannel: (shouldContinueYppFlow: boolean) => void
   setYtResponseData: (ytResponseData: YtResponseData) => void
 }
 
@@ -33,7 +35,8 @@ export const useYppStore = createStore<YppStoreState, YppStoreActions>(
       selectedChannelId: null,
       ytStateParam: null,
       yppModalOpenName: null,
-      shouldContinueYppFlow: false,
+      shouldContinueYppFlowAfterLogin: false,
+      shouldContinueYppFlowAfterCreatingChannel: false,
       ytResponseData: null,
     },
     actionsFactory: (set) => ({
@@ -57,9 +60,14 @@ export const useYppStore = createStore<YppStoreState, YppStoreActions>(
           state.yppModalOpenName = modal
         })
       },
-      setShouldContinueYppFlow: (shouldContinueYppFlow) => {
+      setShouldContinueYppFlowAfterLogin: (shouldContinueYppFlow) => {
         set((state) => {
-          state.shouldContinueYppFlow = shouldContinueYppFlow
+          state.shouldContinueYppFlowAfterLogin = shouldContinueYppFlow
+        })
+      },
+      setShouldContinueYppFlowAfterCreatingChannel: (shouldContinueYppFlow) => {
+        set((state) => {
+          state.shouldContinueYppFlowAfterCreatingChannel = shouldContinueYppFlow
         })
       },
       setYtResponseData: (ytResponseData) => {

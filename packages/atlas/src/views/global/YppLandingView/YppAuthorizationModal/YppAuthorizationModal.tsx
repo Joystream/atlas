@@ -82,7 +82,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
   const { referrerId, ytResponseData } = useYppStore((store) => store, shallow)
   const setSelectedChannelId = useYppStore((store) => store.actions.setSelectedChannelId)
   const setReferrerId = useYppStore((store) => store.actions.setReferrerId)
-  const setShouldContinueYppFlow = useYppStore((store) => store.actions.setShouldContinueYppFlow)
+  const setShouldContinueYppFlowAfterLogin = useYppStore((store) => store.actions.setShouldContinueYppFlowAfterLogin)
   const { mutateAsync: yppSignChannelMutation } = useMutation(
     'ypp-channels-post',
     (finalFormData: FinalFormData | null) =>
@@ -140,8 +140,14 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     setReferrerId(null)
     setYppModalOpenName(null)
     setSelectedChannelId(null)
-    setShouldContinueYppFlow(false)
-  }, [setYppModalOpenName, setReferrerId, setSelectedChannelId, setShouldContinueYppFlow, setYtRequirementsErrors])
+    setShouldContinueYppFlowAfterLogin(false)
+  }, [
+    setYppModalOpenName,
+    setReferrerId,
+    setSelectedChannelId,
+    setShouldContinueYppFlowAfterLogin,
+    setYtRequirementsErrors,
+  ])
 
   const handleGoBack = useCallback(() => {
     if (yppModalOpenName === 'ypp-sync-options') {
@@ -423,6 +429,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
       return {
         text: 'Sign in',
         onClick: () => {
+          setShouldContinueYppFlowAfterLogin(true)
           setYppModalOpenName(null)
           setAuthModalOpenName('logIn')
         },
@@ -450,6 +457,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     isLoggedIn,
     isSubmitting,
     handleGoBack,
+    setShouldContinueYppFlowAfterLogin,
     setYppModalOpenName,
     setAuthModalOpenName,
     handleAuthorizeClick,
