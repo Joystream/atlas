@@ -59,6 +59,17 @@ export const MainLayout: FC = () => {
   const { trackPageView } = useSegmentAnalytics()
 
   useEffect(() => {
+    // had to include this timeout to make sure the page title is updated
+    const trackRequestTimeout = setTimeout(
+      () =>
+        trackPageView(
+          document.title,
+          'viewer',
+          (location.pathname === absoluteRoutes.viewer.ypp() && searchParams.get('referrer')) || undefined
+        ),
+      1000
+    )
+
     if (!atlasConfig.analytics.sentry?.dsn) {
       return
     }
@@ -74,12 +85,9 @@ export const MainLayout: FC = () => {
         stopReplay()
       }
     }
-
-    trackPageView(
-      location.pathname,
-      '',
-      (location.pathname === absoluteRoutes.viewer.ypp() && searchParams.get('referrer')) || undefined
-    )
+    return () => {
+      clearTimeout(trackRequestTimeout)
+    }
   }, [location.pathname, trackPageView, searchParams])
 
   const { clearOverlays } = useOverlayManager()
