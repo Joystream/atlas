@@ -17,7 +17,7 @@ server {
     server_tokens off;
 
     location / {
-        if ($http_user_agent ~* "baiduspider|twitterbot|facebookexternalhit|rogerbot|linkedinbot|embedly|quora link preview|showyoubot|outbrain|pinterest|slackbot|vkShare|W3C_Validator") {
+        if ($http_user_agent ~* "googlebot|YandexBot|baiduspider|twitterbot|facebookexternalhit|discordbot|rogerbot|linkedinbot|embedly|quora link preview|showyoubot|outbrain|pinterest|slackbot|vkShare|W3C_Validator|Rocket.Chat|Minds|Taringa|redditbot") {
             proxy_pass http://${META_SERVER_HOSTNAME};
             break;
         }

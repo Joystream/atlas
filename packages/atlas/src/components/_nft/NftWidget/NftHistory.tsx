@@ -55,7 +55,7 @@ type HistoryItemProps = {
 } & NftHistoryEntry
 export const HistoryItem: FC<HistoryItemProps> = ({ size, member, date, joyAmount, text }) => {
   const navigate = useNavigate()
-  const { url, isLoadingAsset } = getMemberAvatar(member)
+  const { urls, isLoadingAsset } = getMemberAvatar(member)
   const { convertHapiToUSD } = useTokenPrice()
 
   const dollarValue = joyAmount ? convertHapiToUSD(joyAmount) : null
@@ -64,7 +64,7 @@ export const HistoryItem: FC<HistoryItemProps> = ({ size, member, date, joyAmoun
     <HistoryItemContainer data-size={size}>
       <Avatar
         onClick={() => navigate(absoluteRoutes.viewer.member(member?.handle))}
-        assetUrl={url}
+        assetUrls={urls}
         loading={isLoadingAsset}
         size={size === 'medium' ? 40 : 32}
       />

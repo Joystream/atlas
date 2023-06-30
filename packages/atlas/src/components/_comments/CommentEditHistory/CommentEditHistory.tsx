@@ -18,7 +18,7 @@ type CommentEditHistoryProps = {
 
 export const CommentEditHistory: FC<CommentEditHistoryProps> = ({ originalComment }) => {
   const { commentEdits, loading } = useCommentEdits(originalComment?.id)
-  const { url: memberAvatarUrl, isLoadingAsset } = getMemberAvatar(originalComment?.author)
+  const { urls: memberAvatarUrls, isLoadingAsset } = getMemberAvatar(originalComment?.author)
 
   const placeholderItems = createPlaceholderData(3)
 
@@ -47,7 +47,7 @@ export const CommentEditHistory: FC<CommentEditHistoryProps> = ({ originalCommen
                   memberUrl={absoluteRoutes.viewer.member(originalComment?.author?.handle)}
                   text={commentEdit.data.text}
                   loading={loading}
-                  memberAvatarUrl={memberAvatarUrl || ''}
+                  memberAvatarUrls={memberAvatarUrls}
                   isMemberAvatarLoading={isLoadingAsset}
                 />
               )

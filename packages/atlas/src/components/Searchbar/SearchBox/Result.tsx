@@ -3,6 +3,7 @@ import { FC, useCallback, useMemo } from 'react'
 import { BasicChannelFieldsFragment, BasicVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { Text } from '@/components/Text'
 import { absoluteRoutes } from '@/config/routes'
+import { useGetAssetUrl } from '@/hooks/useGetAssetUrl'
 
 import { ResultTitle } from './ResultTitle'
 import { ResultWrapper } from './ResultWrapper'
@@ -34,8 +35,11 @@ export const Result: FC<ResultProps> = ({
   loading,
 }) => {
   const title = video ? video.title : channel?.title
-  const channelAvatar = channel?.avatarPhoto?.resolvedUrl
-  const videoThumbnail = video?.thumbnailPhoto?.resolvedUrl
+  const { url: channelAvatar, isLoading: isLoadingAvatar } = useGetAssetUrl(channel?.avatarPhoto?.resolvedUrls, 'image')
+  const { url: videoThumbnail, isLoading: isLoadingThumbnail } = useGetAssetUrl(
+    video?.thumbnailPhoto?.resolvedUrls,
+    'image'
+  )
   const to = useMemo(() => {
     if (video) {
       return absoluteRoutes.viewer.video(video.id)
@@ -58,12 +62,12 @@ export const Result: FC<ResultProps> = ({
   return (
     <ResultWrapper to={to} selected={selected} handleSelectedItem={onSelected} selectedItem={selectedItem}>
       <ResultContent>
-        {loading ? (
+        {loading && (video ? isLoadingThumbnail : isLoadingAvatar) ? (
           <StyledSkeletonLoader width={video ? '64px' : '32px'} height={video ? '40px' : '32px'} rounded={!!channel} />
         ) : channel && !thumbnailUrl ? (
           <StyledSvgAvatarSilhouette width={32} height={32} />
         ) : (
-          <ResultThumbnail src={thumbnailUrl || ''} rounded={!!channel} />
+          <ResultThumbnail src={thumbnailUrl} rounded={!!channel} />
         )}
         <div>
           <Title as="span" color={!selected ? 'colorText' : undefined} variant="t200-strong">

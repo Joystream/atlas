@@ -31,9 +31,9 @@ export const NftSettlementBottomDrawer: FC = () => {
   const { nft, loading, refetch } = useNft(currentNftId || '')
 
   const { displaySnackbar } = useSnackbar()
-  const thumbnailUrl = nft?.video.thumbnailPhoto?.resolvedUrl
-  const avatarUrl = nft?.video.channel.avatarPhoto?.resolvedUrl
-  const { url: memberAvatarUrl } = getMemberAvatar(
+  const thumbnailUrls = nft?.video.thumbnailPhoto?.resolvedUrls
+  const avatarUrls = nft?.video.channel.avatarPhoto?.resolvedUrls
+  const { urls: memberAvatarUrls } = getMemberAvatar(
     nft?.owner.__typename === 'NftOwnerMember' && nft.owner.member ? nft.owner.member : null
   )
 
@@ -76,13 +76,13 @@ export const NftSettlementBottomDrawer: FC = () => {
               title={nft?.video.title}
               thumbnail={{
                 loading: loading,
-                thumbnailUrl: thumbnailUrl,
+                thumbnailUrls: thumbnailUrls,
                 type: 'video',
               }}
-              creator={{ name: nft?.video.channel.title, assetUrl: avatarUrl }}
+              creator={{ name: nft?.video.channel.title, assetUrls: avatarUrls }}
               owner={{
                 name: (nft?.owner.__typename === 'NftOwnerMember' && nft.owner.member?.handle) || '',
-                assetUrl: memberAvatarUrl,
+                assetUrls: memberAvatarUrls,
               }}
               fullWidth
               loading={loading}

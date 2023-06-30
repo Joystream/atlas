@@ -27,7 +27,7 @@ import { useFee, useJoystream } from '@/providers/joystream/joystream.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
-import { uploadAvatarImage } from '@/utils/image'
+import { uploadAvatarImage, validateImage } from '@/utils/image'
 import { ConsoleLogger } from '@/utils/logs'
 
 import { StyledActionBar, TextFieldsWrapper, Wrapper } from './EditMembershipView.styles'
@@ -224,8 +224,7 @@ export const EditMembershipView: FC = () => {
             <>
               <MembershipInfo
                 address={accountId}
-                avatarUrl={avatarInputFile?.url}
-                onImageValidation={setIsImageValid}
+                avatarUrls={avatarInputFile?.url ? [avatarInputFile.url] : undefined}
                 hasAvatarUploadFailed={!isImageValid}
                 onAvatarEditClick={() =>
                   avatarDialogRef.current?.open(
@@ -241,6 +240,9 @@ export const EditMembershipView: FC = () => {
               <ImageCropModal
                 imageType="avatar"
                 onConfirm={(blob, url, _, imageCropData, originalBlob) => {
+                  validateImage(url)
+                    .then(() => setIsImageValid(true))
+                    .catch(() => setIsImageValid(false))
                   onChange({
                     blob,
                     url,

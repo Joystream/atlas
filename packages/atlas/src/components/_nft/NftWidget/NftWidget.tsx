@@ -30,7 +30,7 @@ import { NftWidgetContent } from './NftWidgetContent'
 
 export type NftWidgetProps = {
   ownerHandle: string | null | undefined
-  ownerAvatar: string | null | undefined
+  ownerAvatarUrls: string[] | null | undefined
   creatorId?: string
   saleType: NftSaleType | null
   isOwnedByChannel?: boolean
@@ -59,7 +59,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
   nftStatus,
   nftHistory,
   isOwnedByChannel,
-  ownerAvatar,
+  ownerAvatarUrls,
   isOwner,
   needsSettling,
   onNftPutOnSale,
@@ -94,7 +94,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
   return (
     <Container ref={ref}>
       <NftOwnerContainer data-size={size}>
-        <OwnerAvatar assetUrl={ownerAvatar} size={40} />
+        <OwnerAvatar assetUrls={ownerAvatarUrls} size={40} />
         <OwnerLabel as="span" variant="t100" color="colorText">
           This NFT is owned by
         </OwnerLabel>

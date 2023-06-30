@@ -253,14 +253,14 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
           assetDimensions: null,
           imageCropData: null,
           originalBlob: undefined,
-          originalUrl: channel.avatarPhoto?.resolvedUrl,
+          originalUrl: channel.avatarPhoto?.resolvedUrls[0],
         },
         cover: {
           contentId: coverPhoto?.id,
           assetDimensions: null,
           imageCropData: null,
           originalBlob: undefined,
-          originalUrl: channel.coverPhoto?.resolvedUrl,
+          originalUrl: channel.coverPhoto?.resolvedUrls[0],
         },
         title: title || '',
         description: description || '',
@@ -429,7 +429,13 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
           render={({ field: { value } }) => (
             <>
               <ChannelCover
-                assetUrl={loading ? null : value.croppedUrl || value.originalUrl}
+                assetUrls={
+                  !loading && value.croppedUrl
+                    ? [value.croppedUrl]
+                    : value.originalUrl
+                    ? [value.originalUrl]
+                    : undefined
+                }
                 hasCoverUploadFailed={hasCoverUploadFailed}
                 onCoverEditClick={() => {
                   coverDialogRef.current?.open(
@@ -463,7 +469,13 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
             render={({ field: { value } }) => (
               <>
                 <StyledAvatar
-                  assetUrl={loading ? null : value.croppedUrl || value.originalUrl}
+                  assetUrls={
+                    !loading && value.croppedUrl
+                      ? [value.croppedUrl]
+                      : value.originalUrl
+                      ? [value.originalUrl]
+                      : undefined
+                  }
                   hasAvatarUploadFailed={hasAvatarUploadFailed}
                   size={smMatch ? 136 : 88}
                   onClick={() => {

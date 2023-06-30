@@ -6,7 +6,7 @@ export default {
   title: 'other/Avatar',
   component: Avatar,
   args: {
-    assetUrl: 'https://picsum.photos/200/300',
+    assetUrls: ['https://picsum.photos/200/300'],
   },
 } as Meta<AvatarProps>
 

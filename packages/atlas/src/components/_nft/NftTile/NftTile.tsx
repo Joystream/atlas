@@ -80,7 +80,7 @@ export const NftTile: FC<NftTileProps> = ({
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         loading={loading}
-        thumbnailUrl={thumbnail?.thumbnailUrl}
+        thumbnailUrls={thumbnail?.thumbnailUrls}
         clickable={false}
         slots={{
           topLeft: views

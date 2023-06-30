@@ -12,7 +12,7 @@ general:
   joystreamDiscordUrl: 'https://discord.gg/DE9UN3YpRP' # URL for Joystream Discord - used for support when errors occur
   appContentFocus: 'web3 & crypto' # Content focus of given app. Provide a string, for example `web & crypto` or `sport`
 storage:
-  assetResponseTimeout: 20000 # Timeout for asset response in ms - after this timeout, different distributor will be tried
+  assetResponseTimeout: 2_000 # Timeout for asset response in ms - after this timeout, different distributor will be tried
   assetUploadStatusPollingInterval: 2000 # Interval for polling asset upload status in ms - polling begins once asset is uploaded and is finished once QN reports the asset as accepted
   uploadProcessingTimeout: 60000 # Timeout for processing uploaded asset in ms - after this timeout, upload will be considered failed
   minimumDistributorRefetchTime: 1000 # Minimum time before refetching distributors list in ms - refetching is done if certain bag is not found on any distributor

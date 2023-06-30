@@ -5,7 +5,7 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { JoystreamContext, JoystreamContextValue } from '@/providers/joystream/joystream.provider'
 import { isMobile } from '@/utils/browser'
 import { AssetLogger, SentryLogger } from '@/utils/logs'
-import { retryPromise } from '@/utils/misc'
+import { retryWalletPromise } from '@/utils/misc'
 
 import { useSignerWallet } from './user.helpers'
 import { useUserStore } from './user.store'
@@ -81,7 +81,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       try {
         const initializedAccounts = await (!invokedAutomatically
           ? initSignerWallet(walletName)
-          : retryPromise(() => initSignerWallet(walletName), 500, 2000))
+          : retryWalletPromise(() => initSignerWallet(walletName), 1_500, 3_000))
         if (initializedAccounts == null) {
           SentryLogger.error('Selected wallet not found or not installed', 'UserProvider')
           setSignInModalOpen(true)

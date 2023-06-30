@@ -36,7 +36,6 @@ export type GetVideoHeroQuery = {
           __typename?: 'StorageDataObject'
           id: string
           resolvedUrls: Array<string>
-          resolvedUrl?: string | null
           createdAt: Date
           size: string
           isAccepted: boolean
@@ -56,7 +55,6 @@ export type GetVideoHeroQuery = {
         __typename?: 'StorageDataObject'
         id: string
         resolvedUrls: Array<string>
-        resolvedUrl?: string | null
         createdAt: Date
         size: string
         isAccepted: boolean
@@ -104,7 +102,6 @@ export type GetVideoHeroQuery = {
                             __typename?: 'StorageDataObject'
                             id: string
                             resolvedUrls: Array<string>
-                            resolvedUrl?: string | null
                             createdAt: Date
                             size: string
                             isAccepted: boolean
@@ -128,7 +125,6 @@ export type GetVideoHeroQuery = {
                   __typename?: 'StorageDataObject'
                   id: string
                   resolvedUrls: Array<string>
-                  resolvedUrl?: string | null
                   createdAt: Date
                   size: string
                   isAccepted: boolean
@@ -161,7 +157,6 @@ export type GetVideoHeroQuery = {
                           __typename?: 'StorageDataObject'
                           id: string
                           resolvedUrls: Array<string>
-                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -223,7 +218,6 @@ export type GetVideoHeroQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -265,7 +259,6 @@ export type GetVideoHeroQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -302,7 +295,6 @@ export type GetVideoHeroQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -367,7 +359,6 @@ export type GetAllCategoriesFeaturedVideosQuery = {
             __typename?: 'StorageDataObject'
             id: string
             resolvedUrls: Array<string>
-            resolvedUrl?: string | null
             createdAt: Date
             size: string
             isAccepted: boolean
@@ -387,7 +378,6 @@ export type GetAllCategoriesFeaturedVideosQuery = {
           __typename?: 'StorageDataObject'
           id: string
           resolvedUrls: Array<string>
-          resolvedUrl?: string | null
           createdAt: Date
           size: string
           isAccepted: boolean
@@ -468,7 +458,6 @@ export type GetCategoryFeaturedVideosQuery = {
             __typename?: 'StorageDataObject'
             id: string
             resolvedUrls: Array<string>
-            resolvedUrl?: string | null
             createdAt: Date
             size: string
             isAccepted: boolean
@@ -488,7 +477,6 @@ export type GetCategoryFeaturedVideosQuery = {
           __typename?: 'StorageDataObject'
           id: string
           resolvedUrls: Array<string>
-          resolvedUrl?: string | null
           createdAt: Date
           size: string
           isAccepted: boolean
