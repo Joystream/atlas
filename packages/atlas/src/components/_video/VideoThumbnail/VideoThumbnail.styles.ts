@@ -3,7 +3,6 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { AssetImage } from '@/components/AssetImage'
-import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, square } from '@/styles'
 
 const sharedOverlayStyles = css`
@@ -247,12 +246,4 @@ export const VideoThumbnailContainer = styled(Link, { shouldForwardProp: isPropV
       `}
   }
   /* stylelint-enable no-duplicate-selectors */
-`
-
-export const ThumbnailSkeletonLoader = styled(SkeletonLoader)`
-  ${square('100%')}
-
-  position: absolute;
-  top: 0;
-  left: 0;
 `

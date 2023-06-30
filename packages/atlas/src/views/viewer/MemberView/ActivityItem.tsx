@@ -12,7 +12,6 @@ import {
   PillAndDateContainer,
   PillSkeletonLoader,
   Thumbnail,
-  ThumbnailSkeletonLoader,
   Title,
   TitleAndDescriptionContainer,
   TitleSkeletonLoader,
@@ -55,7 +54,7 @@ export const ActivityItem: FC<ActivityItemProps> = ({
   const isImageLoading = loading || thumbnailLoading
   return (
     <ActivityItemContainer loading={loading} onClick={onItemClick}>
-      {isImageLoading ? <ThumbnailSkeletonLoader /> : <Thumbnail resolvedUrls={thumbnailUris} />}
+      <Thumbnail resolvedUrls={thumbnailUris} isLoading={isImageLoading} />
       <TitleAndDescriptionContainer>
         {loading ? (
           <TitleSkeletonLoader />

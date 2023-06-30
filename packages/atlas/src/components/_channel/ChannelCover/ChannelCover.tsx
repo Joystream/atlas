@@ -1,9 +1,7 @@
 import { FC, MouseEvent } from 'react'
-import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
 import { SvgActionImage, SvgActionImageFile } from '@/assets/icons'
 import { Text } from '@/components/Text'
-import { transitions } from '@/styles'
 
 import {
   CoverImage,
@@ -48,15 +46,10 @@ export const ChannelCover: FC<ChannelCoverProps> = ({
           </EditableControls>
         )}
         <Media>
-          <TransitionGroup>
-            <CSSTransition
-              key={assetUrls ? 'cover' : 'pattern'}
-              timeout={parseInt(transitions.timings.loading)}
-              classNames={transitions.names.fade}
-            >
-              {assetUrls ? (
-                <CoverImage resolvedUrls={assetUrls} />
-              ) : hasCoverUploadFailed ? (
+          <CoverImage
+            resolvedUrls={assetUrls}
+            imagePlaceholder={
+              hasCoverUploadFailed ? (
                 <FailedUploadContainer>
                   <StyledSvgIllustrativeFileFailed />
                   <Text as="span" variant="t100" color="colorText">
@@ -65,9 +58,9 @@ export const ChannelCover: FC<ChannelCoverProps> = ({
                 </FailedUploadContainer>
               ) : (
                 <StyledBackgroundPattern />
-              )}
-            </CSSTransition>
-          </TransitionGroup>
+              )
+            }
+          />
         </Media>
       </MediaWrapper>
     </CoverWrapper>

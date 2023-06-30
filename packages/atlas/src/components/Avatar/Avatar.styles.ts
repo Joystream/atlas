@@ -59,27 +59,6 @@ export const Overlay = styled.div<{ isEdit?: boolean }>`
     `};
 `
 
-// const coverAvatarCss = css`
-//   ${square('64px')};
-
-//   ${media.md} {
-//     ${square('88px')};
-//   }
-// `
-
-// const channelAvatarCss = css`
-//   ${square('88px')};
-//   ${media.md} {
-//     ${square('136px')};
-//   }
-// `
-// const channelCardAvatarCss = css`
-//   ${square('88px')};
-//   ${media.md} {
-//     ${square('104px')};
-//   }
-// `
-
 export const sharedAvatarHoverStyles = (props: { disableHoverDimm?: boolean }) => css`
   ::after {
     border: 1px solid ${cVar('colorBackgroundAlpha')};
