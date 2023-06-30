@@ -11,7 +11,7 @@ import { atlasConfig } from '@/config'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useUser } from '@/providers/user/user.hooks'
 import { configYppIconMapper } from '@/views/global/YppLandingView/YppFooter'
-import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/YppLandingView.hooks'
+import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
 
 import { RewardsWrapper, StyledBanner, StyledSvgAlertsInformative24, WidgetsWrapper } from './YppDashboardTabs.styles'
 

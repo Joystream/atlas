@@ -2,33 +2,13 @@ import axios from 'axios'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useQuery } from 'react-query'
 
-import { useBasicChannels } from '@/api/hooks/channel'
 import { atlasConfig } from '@/config'
 import { useUser } from '@/providers/user/user.hooks'
 import { SentryLogger } from '@/utils/logs'
 
+import { YppSyncedChannel } from './YppLandingView.types'
+
 const YPP_SYNC_URL = atlasConfig.features.ypp.youtubeSyncApiUrl
-
-type YppStatus = 'Unverified' | 'Verified' | 'Suspended' | 'OptedOut'
-
-export type YppSyncedChannel = {
-  title: string
-  description: string
-  aggregatedStats: number
-  shouldBeIngested: boolean
-  yppStatus: YppStatus
-  joystreamChannelId: number
-  videoCategoryId: string
-  thumbnails: {
-    default: string
-    medium: string
-    high: string
-    maxRes: string
-    standard: string
-  }
-  subscribersCount: number
-  createdAt: string
-}
 
 export const useGetYppSyncedChannels = () => {
   const { activeMembership, membershipsLoading, channelId } = useUser()
@@ -84,39 +64,5 @@ export const useGetYppSyncedChannels = () => {
     currentChannel: yppSyncedData?.currentChannel,
     refetchYppSyncedChannels: refetch,
     isLoading: isLoading || membershipsLoading,
-  }
-}
-type RecentChannelsResponse = YppSyncedChannel[]
-
-export const useGetYppLastVerifiedChannels = () => {
-  const getRecentChannels = useCallback(async (): Promise<string[] | void> => {
-    try {
-      const response = await axios.get<RecentChannelsResponse>(`${YPP_SYNC_URL}/channels`)
-      return response.data
-        .filter((channel) => channel.yppStatus === 'Verified')
-        .map((channel) => channel.joystreamChannelId.toString())
-    } catch (error) {
-      SentryLogger.error('Failed to fetch recent channels', 'useYppGetLastVerifiedChannels', error)
-    }
-  }, [])
-
-  const { data: recentChannelIds, isLoading: isVerifiedChannelsLoading } = useQuery('ypp-channels-fetch', () =>
-    getRecentChannels()
-  )
-
-  const { extendedChannels: channels, loading } = useBasicChannels(
-    {
-      where: {
-        channel: {
-          id_in: recentChannelIds ?? [],
-        },
-      },
-    },
-    { skip: !recentChannelIds?.length }
-  )
-
-  return {
-    loading: loading || isVerifiedChannelsLoading,
-    channels,
   }
 }

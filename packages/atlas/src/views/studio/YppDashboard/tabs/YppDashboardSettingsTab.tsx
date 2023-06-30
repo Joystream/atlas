@@ -19,7 +19,7 @@ import { TX_SIGN_CANCELLED_SNACKBAR_TIMEOUT } from '@/providers/transactions/tra
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
-import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/YppLandingView.hooks'
+import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
 
 import {
   Divider,

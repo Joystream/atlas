@@ -36,7 +36,7 @@ import { VideoWorkspace } from './VideoWorkspace'
 import { YppDashboard } from './YppDashboard'
 
 import { YppLandingView } from '../global/YppLandingView'
-import { useGetYppSyncedChannels } from '../global/YppLandingView/YppLandingView.hooks'
+import { useGetYppSyncedChannels } from '../global/YppLandingView/useGetYppSyncedChannels'
 import { NotFoundView } from '../viewer/NotFoundView'
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()

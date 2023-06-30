@@ -2,17 +2,6 @@ import { FullMembershipFieldsFragment } from '@/api/queries/__generated__/fragme
 
 export type MemberChannel = FullMembershipFieldsFragment['channels'][0]
 
-export type YppAuthorizationStepsType =
-  | 'select-channel'
-  | 'requirements'
-  | 'fetching-data'
-  | 'details'
-  | 'ypp-sync'
-  | 'terms-and-conditions'
-  | 'summary'
-  | 'channel-already-registered'
-  | null
-
 export enum YppAuthorizationErrorCode {
   CHANNEL_ALREADY_REGISTERED = 'CHANNEL_ALREADY_REGISTERED',
   CHANNEL_NOT_FOUND = 'CHANNEL_NOT_FOUND',
@@ -34,6 +23,11 @@ export type YppRequirementsErrorCode = PickEnum<
 export type ChannelVerificationSuccessResponse = {
   email: string
   userId: string
+  channelHandle: string
+  channelTitle: string
+  channelDescription?: string
+  avatarUrl?: string
+  bannerUrl?: string
 }
 
 export type ChannelRequirements = {
@@ -42,6 +36,8 @@ export type ChannelRequirements = {
   MINIMUM_VIDEO_AGE_HOURS: number
   MINIMUM_CHANNEL_AGE_HOURS: number
 }
+
+export type Requirements = Record<keyof ChannelRequirements, number | undefined>
 
 type ChannelRequirementsFailedError = {
   code: YppRequirementsErrorCode
@@ -67,9 +63,3 @@ export type ChannelVerificationErrorResponse =
     }
   | YppError
   | ChannelAlreadyRegisteredError
-
-export type YoutubeResponseData = {
-  email: string
-  userId: string
-  authorizationCode: string
-}

@@ -52,11 +52,25 @@ type CreateEditChannelData = {
   channel?: FullChannelFieldsFragment
   refetchChannel?: GetExtendedFullChannelsQueryHookResult['refetch']
   fee?: BN
+  collaboratorId?: string
+}
+
+type CreateEditChannelSubmitParams = {
+  data: CreateEditChannelData
+  onUploadAssets?: (field: 'avatar.contentId' | 'cover.contentId', data: string) => void
+  onCompleted?: () => void
+  onTxSync?: (result: { block: number } & { channelId: string; assetsIds: ChannelAssetsIds }) => void | Promise<void>
+  minimized?:
+    | {
+        errorMessage: string
+      }
+    | undefined
 }
 
 export const useCreateEditChannelSubmit = () => {
   const { joystream, proxyCallback } = useJoystream()
   const { channelId, memberId, refetchUserMemberships } = useUser()
+
   const addNewChannelIdToUploadsStore = useUploadsStore((state) => state.actions.addNewChannelId)
   const getBucketsConfigForNewChannel = useBucketsConfigForNewChannel()
   const { channelStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
@@ -72,12 +86,7 @@ export const useCreateEditChannelSubmit = () => {
   )
 
   return useCallback(
-    async (
-      data: CreateEditChannelData,
-      onTxSync?: (result: { block: number } & { channelId: string; assetsIds: ChannelAssetsIds }) => void,
-      onUploadAssets?: (field: 'avatar.contentId' | 'cover.contentId', data: string) => void,
-      onCompleted?: () => void
-    ) => {
+    async ({ data, onCompleted, onUploadAssets, minimized, onTxSync }: CreateEditChannelSubmitParams) => {
       if (!joystream) {
         ConsoleLogger.error('No Joystream instance! Has webworker been initialized?')
         return
@@ -204,6 +213,7 @@ export const useCreateEditChannelSubmit = () => {
         }
       }
       const completed = await handleTransaction({
+        minimized,
         fee: data.fee,
         preProcess: processAssets,
         txFactory: async (updateStatus) =>
@@ -218,6 +228,7 @@ export const useCreateEditChannelSubmit = () => {
                 dataObjectStateBloatBondValue.toString(),
                 channelStateBloatBondValue.toString(),
                 atlasConfig.general.appId ? proxyCallback(rawMetadataProcessor) : undefined,
+                data.collaboratorId,
                 proxyCallback(updateStatus)
               )
             : (
@@ -230,10 +241,10 @@ export const useCreateEditChannelSubmit = () => {
                 removedAssetsIds,
                 dataObjectStateBloatBondValue.toString(),
                 channelBucketsCount.toString(),
-                undefined,
+                data.collaboratorId,
                 proxyCallback(updateStatus)
               ),
-        onTxSync: (result) => {
+        onTxSync: async (result) => {
           onTxSync?.(result)
           return refetchDataAndUploadAssets(result)
         },

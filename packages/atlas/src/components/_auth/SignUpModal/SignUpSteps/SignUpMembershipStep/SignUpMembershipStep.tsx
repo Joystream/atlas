@@ -1,14 +1,8 @@
-import { useApolloClient } from '@apollo/client'
 import HCaptcha from '@hcaptcha/react-hcaptcha'
 import debouncePromise from 'awesome-debounce-promise'
 import { FC, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
-import {
-  GetMembershipsDocument,
-  GetMembershipsQuery,
-  GetMembershipsQueryVariables,
-} from '@/api/queries/__generated__/memberships.generated'
 import { Text } from '@/components/Text'
 import { AuthenticationModalStepTemplate } from '@/components/_auth/AuthenticationModalStepTemplate'
 import { FormField } from '@/components/_inputs/FormField'
@@ -17,6 +11,7 @@ import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_ov
 import { atlasConfig } from '@/config'
 import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
 import { MemberFormData } from '@/hooks/useCreateMember'
+import { useUniqueMemberHandle } from '@/hooks/useUniqueMemberHandle'
 
 import { Anchor, StyledAvatar, StyledForm } from './SignUpMembershipStep.styles'
 
@@ -57,21 +52,7 @@ export const SignUpMembershipStep: FC<SignInModalMembershipStepProps> = ({
   // used to scroll the form to the bottom upon first handle field focus - this is done to let the user see Captcha form field
   const hasDoneInitialScroll = useRef(false)
 
-  const client = useApolloClient()
-
-  const validateUserHandle = useCallback(
-    async (value: string) => {
-      const {
-        data: { memberships },
-      } = await client.query<GetMembershipsQuery, GetMembershipsQueryVariables>({
-        query: GetMembershipsDocument,
-        variables: { where: { handle_eq: value } },
-      })
-
-      return !memberships[0]
-    },
-    [client]
-  )
+  const { checkIfMemberIsAvailable } = useUniqueMemberHandle()
 
   const requestFormSubmit = useCallback(() => {
     setIsHandleValidating(false)
@@ -106,14 +87,14 @@ export const SignUpMembershipStep: FC<SignInModalMembershipStepProps> = ({
         validate: {
           valid: (value) => (!value ? true : MEMBERSHIP_NAME_PATTERN.test(value) || 'Enter a valid member handle.'),
           unique: async (value) => {
-            const valid = await validateUserHandle(value)
+            const valid = await checkIfMemberIsAvailable(value)
             return valid || 'This member handle is already in use.'
           },
         },
         required: { value: true, message: 'Member handle is required.' },
         minLength: { value: 5, message: 'Member handle must be at least 5 characters long.' },
       }),
-    [register, trigger, validateUserHandle]
+    [checkIfMemberIsAvailable, register, trigger]
   )
 
   useEffect(() => {
