@@ -27,7 +27,7 @@ export type NumberFormatProps = {
   denominationAlign?: 'left' | 'right'
 } & Omit<TextProps, 'children' | 'variant'>
 
-const TEXT_DENOMINATION_ALIGMENTS: NumberFormatProps['withDenomination'][] = ['before', 'after']
+const TEXT_DENOMINATION_ALIGNMENTS: NumberFormatProps['withDenomination'][] = ['before', 'after']
 
 export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
   (
@@ -40,17 +40,19 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
       displayedValue,
       isNegative,
       color,
-      withDenomination,
+      withDenomination: _withDenomination,
       denominationAlign = 'left',
       icon,
       ...textProps
     },
     ref
   ) => {
+    const withDenomination = atlasConfig.joystream.tokenPriceFeedUrl ? _withDenomination : undefined
     const { convertTokensToUSD } = useTokenPrice()
     const internalValue = BN.isBN(value) ? hapiBnToTokenNumber(value) : value
     const fiatValue = convertTokensToUSD(internalValue)
     const textRef = useRef<HTMLHeadingElement>(null)
+    const denominationRef = useRef<HTMLHeadingElement>(null)
     const bnValue = new BN(value)
     let formattedValue
     let formattedDenominatedValue
@@ -79,39 +81,44 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
     const hasTooltip =
       withTooltip &&
       ((format === 'short' && (internalValue > 999 || hasDecimals)) || (format === 'dollar' && hasDecimals))
+    const shouldShowDenominationTooltip = fiatValue && fiatValue <= 0.01
     const content = (
-      <StyledText
-        {...textProps}
-        color={bnValue.isNeg() || isNegative ? 'colorTextError' : color}
-        variant={variant}
-        ref={mergeRefs([ref, textRef])}
-      >
+      <ContentContainer>
         {withDenomination === 'before' && (
           <Text
             className="denomination"
             as="span"
-            color={bnValue.isNeg() || isNegative ? 'colorTextError' : 'colorText'}
+            color={bnValue.isNeg() || isNegative ? 'colorTextError' : 'colorTextMuted'}
             variant={variant}
+            ref={denominationRef}
           >
             ({formattedDenominatedValue !== '<$0.01' ? '$' : ''}
             {formattedDenominatedValue}){' '}
           </Text>
         )}
-        {displayedValue || formattedValue}
-        {withToken && ` ${atlasConfig.joystream.tokenTicker}`}
+        <StyledText
+          {...textProps}
+          color={bnValue.isNeg() || isNegative ? 'colorTextError' : color}
+          variant={variant}
+          ref={mergeRefs([ref, textRef])}
+        >
+          {displayedValue || formattedValue}
+          {withToken && ` ${atlasConfig.joystream.tokenTicker}`}
+        </StyledText>
         {withDenomination === 'after' && (
           <Text
             className="denomination"
             as="span"
-            color={bnValue.isNeg() || isNegative ? 'colorTextError' : 'colorText'}
+            color={bnValue.isNeg() || isNegative ? 'colorTextError' : 'colorTextMuted'}
             variant={variant}
+            ref={denominationRef}
           >
             {' '}
             ({formattedDenominatedValue !== '<$0.01' ? '$' : ''}
             {formattedDenominatedValue}){' '}
           </Text>
         )}
-      </StyledText>
+      </ContentContainer>
     )
 
     return (
@@ -126,14 +133,14 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
             ) : (
               content
             )}
-            {!TEXT_DENOMINATION_ALIGMENTS.includes(withDenomination) && (
+            {!TEXT_DENOMINATION_ALIGNMENTS.includes(withDenomination) && (
               <Denomination
                 align={denominationAlign}
                 className="denomination"
                 as="span"
-                color={bnValue.isNeg() || isNegative ? 'colorTextError' : 'colorText'}
+                color={bnValue.isNeg() || isNegative ? 'colorTextError' : 'colorTextMuted'}
                 variant="t100"
-                ref={mergeRefs([ref, textRef])}
+                ref={denominationRef}
               >
                 {formattedDenominatedValue !== '<$0.01' ? '$' : ''}
                 {formattedDenominatedValue}
@@ -150,11 +157,21 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
         )}
 
         <Tooltip reference={textRef} placement="top" delay={[500, null]} text={hasTooltip ? tooltipText : undefined} />
+        <Tooltip
+          reference={denominationRef}
+          placement="top"
+          delay={[500, null]}
+          text={shouldShowDenominationTooltip ? `$${fiatValue?.toPrecision(2)}` : undefined}
+        />
       </>
     )
   }
 )
 NumberFormat.displayName = 'Number'
+
+export const ContentContainer = styled.div`
+  display: inline-block;
+`
 
 const StyledText = styled(Text)`
   display: inline-block;

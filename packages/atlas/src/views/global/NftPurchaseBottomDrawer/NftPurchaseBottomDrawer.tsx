@@ -618,7 +618,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                   )}
                 </Row>
                 <Row>
-                  <Text as="span" variant="h300" color="colorText">
+                  <Text as="span" variant="h300">
                     You will pay
                   </Text>
                   {(canBuyNow ? !buyNowFee.toNumber() : !makeBidFee.toNumber()) ||
