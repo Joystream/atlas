@@ -605,7 +605,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                   {(canBuyNow ? !buyNowFee.toNumber() : !makeBidFee.toNumber()) ||
                   buyNowFeeLoading ||
                   makeBidFeeLoading ? (
-                    <SkeletonLoader width={80} height={16} />
+                    <SkeletonLoader width={80} height={18} />
                   ) : (
                     <NumberFormat
                       as="span"
@@ -624,7 +624,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                   {(canBuyNow ? !buyNowFee.toNumber() : !makeBidFee.toNumber()) ||
                   buyNowFeeLoading ||
                   makeBidFeeLoading ? (
-                    <SkeletonLoader width={112} height={32} />
+                    <SkeletonLoader width={112} height={24} />
                   ) : (
                     <NumberFormat
                       as="span"
