@@ -64,17 +64,6 @@ export const Title = styled(Text)`
   text-overflow: ellipsis;
 `
 export const Thumbnail = styled(AssetImage)`
-  height: 40px;
-
-  ${media.sm} {
-    height: 64px;
-  }
-
-  ${media.lg} {
-    height: 80px;
-  }
-`
-export const ThumbnailSkeletonLoader = styled(SkeletonLoader)`
   width: 71px;
   height: 40px;
 
