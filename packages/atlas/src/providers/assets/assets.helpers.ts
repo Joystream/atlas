@@ -51,7 +51,10 @@ export const testAssetDownload = (url: string, type: 'image' | 'video' | 'subtit
 
     if (type === 'image') {
       img = new Image()
-      img.addEventListener('load', resolve)
+      img.addEventListener('load', (e) => {
+        e.preventDefault()
+        resolve()
+      })
       img.addEventListener('error', reject)
       img.src = url
     } else if (type === 'video') {
@@ -104,4 +107,11 @@ export const logDistributorPerformance = async (assetUrl: string, eventEntry: Di
   }
 
   AssetLogger.logDistributorResponseTime(eventEntry, metric)
+}
+
+export const getFastestImageUrl = async (urls: string[]) => {
+  const promises = urls.map((url) => {
+    return testAssetDownload(url, 'image')
+  })
+  return Promise.race(promises)
 }
