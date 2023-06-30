@@ -1,19 +1,30 @@
 import { FC, ReactNode } from 'react'
 
-import { PageTabsWrapper, TailingContentWrapper } from './PageTabs.styles'
+import { SvgActionChevronL } from '@/assets/icons'
+
+import { BackActionWrapper, PageTabsWrapper, TailingContentWrapper } from './PageTabs.styles'
 
 import { Tabs, TabsProps } from '../Tabs'
+import { Button, ButtonProps } from '../_buttons/Button'
 
-type PageTabsProps = {
+type BackAction = Pick<ButtonProps, 'to' | 'onClick'>
+
+type PageTabsProps = Omit<TabsProps, 'underline'> & {
+  backAction?: BackAction
   trailingContent?: ReactNode
-} & Omit<TabsProps, 'underline'>
+}
 
-export const PageTabs: FC<PageTabsProps> = ({ className, trailingContent, ...tabsProps }) => {
+export const PageTabs: FC<PageTabsProps> = ({ className, backAction, trailingContent, ...tabsProps }) => {
   return (
     <PageTabsWrapper className={className}>
+      {backAction && (
+        <BackActionWrapper>
+          <Button variant="tertiary" size="medium" icon={<SvgActionChevronL />} {...backAction} />
+        </BackActionWrapper>
+      )}
       <Tabs {...tabsProps} />
-      {/* todo add support for filters */}
       {trailingContent && <TailingContentWrapper>{trailingContent}</TailingContentWrapper>}
+      {/* todo add support for filters */}
     </PageTabsWrapper>
   )
 }

@@ -27,7 +27,7 @@ type TooltipTextProps = {
 
 export const TooltipText = styled(Text)<TooltipTextProps>`
   display: inline-block;
-  max-width: 200px;
+  max-width: 224px;
 
   ${({ withIcon, headerText }) => withIcon && headerText && `margin-left: ${sizes(7)}`};
 `
@@ -48,7 +48,7 @@ const customContentCss = css`
 `
 
 export const TooltipContainer = styled.div<TooltipContainerProps>`
-  display: inline-flex;
+  display: block;
   flex-direction: ${({ hasHeader, hasCustomContent }) => (hasHeader || hasCustomContent ? 'column' : 'row')};
   padding: ${({ hasHeader, multiline }) => sizes(hasHeader || multiline ? 3 : 2)};
   background-color: ${cVar('colorBackgroundElevated')};
