@@ -2,9 +2,11 @@ import styled from '@emotion/styled'
 
 import { cVar, sizes } from '@/styles'
 
-export const StyledSignUpForm = styled.form`
+export const StyledSignUpForm = styled.form<{ additionalPaddingBottom?: boolean }>`
   display: grid;
   gap: ${sizes(6)};
+  padding-bottom: ${({ additionalPaddingBottom }) =>
+    additionalPaddingBottom ? 'var(--local-size-dialog-padding)' : 0};
 `
 
 export const CheckboxWrapper = styled.div<{ isAccepted: boolean }>`

@@ -15,7 +15,6 @@ type SizeProps = {
 
 type ContentProps = {
   noContentPadding?: boolean
-  hasFooter: boolean
 }
 
 const getDialogPaddingVariableStyles = ({ size }: SizeProps) =>
@@ -99,7 +98,6 @@ export const Footer = styled.div<FooterProps>`
   justify-content: space-between;
   flex-direction: ${({ additionalActionsNodeMobilePosition = 'top' }) =>
     additionalActionsNodeMobilePosition === 'bottom' ? 'column-reverse' : 'column'};
-  padding-top: var(--local-size-dialog-padding);
 
   ${({ dividers }) => dividers && footerDividersStyles};
 

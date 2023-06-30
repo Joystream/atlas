@@ -16,7 +16,7 @@ export const inputBorderColors = {
   focus: cVar('colorBorderPrimary'),
 }
 
-export const getSharedInputStyles = (ignoreBoxShadow?: boolean) => ({
+export const getSharedInputStyles = (ignoreBoxShadow?: boolean, disabledAttributeOnly?: boolean) => ({
   default: css`
     /* inherit from Text component font size and color */
     font-size: inherit;
@@ -66,11 +66,13 @@ export const getSharedInputStyles = (ignoreBoxShadow?: boolean) => ({
       background-color: ${ignoreBoxShadow ? 'transparent' : inputBorderColors.error};
     }
   `,
-  disabled: css`
-    opacity: 0.5;
-    background-color: ${cVar('colorBackgroundMutedAlpha')};
-    cursor: not-allowed;
-  `,
+  disabled: disabledAttributeOnly
+    ? null
+    : css`
+        opacity: 0.5;
+        background-color: ${cVar('colorBackgroundMutedAlpha')};
+        cursor: not-allowed;
+      `,
   focus: css`
     & + span {
       background-color: ${ignoreBoxShadow ? 'transparent' : inputBorderColors.focus};
@@ -105,11 +107,19 @@ export const getInputPadding = ({ inputSize, leftNodeWidth, rightNodeWidth }: Ge
   `
 }
 
-export const getBaseInputStyles = ({ error, ignoreBoxShadow }: { error?: boolean; ignoreBoxShadow?: boolean }) => css`
+export const getBaseInputStyles = ({
+  error,
+  ignoreBoxShadow,
+  disabledAttributeOnly,
+}: {
+  error?: boolean
+  ignoreBoxShadow?: boolean
+  disabledAttributeOnly?: boolean
+}) => css`
   ${getSharedInputStyles(ignoreBoxShadow).default};
 
   :disabled {
-    ${getSharedInputStyles(ignoreBoxShadow).disabled};
+    ${getSharedInputStyles(ignoreBoxShadow, disabledAttributeOnly).disabled};
   }
 
   :hover:not(:disabled) {

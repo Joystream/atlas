@@ -7,8 +7,15 @@ export const PageTabsWrapper = styled.div`
   padding: 0 ${sizes(4)};
   box-shadow: ${cVar('effectDividersBottom')};
   display: flex;
-  justify-content: space-between;
+`
+
+export const BackActionWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  padding: ${sizes(2)} ${sizes(4)} ${sizes(2)} 0;
+  position: relative;
+  border-right: 1px solid ${cVar('colorCoreNeutral600')};
 `
 export const TailingContentWrapper = styled.div`
-  margin: ${sizes(2)} ${sizes(4)};
+  margin: ${sizes(2)} ${sizes(4)} ${sizes(2)} auto;
 `

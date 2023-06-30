@@ -34,13 +34,13 @@ export const BannerDescription = styled.div<{ withTitle?: boolean }>`
   white-space: pre-line;
 `
 
-export const BannerWrapper = styled.div<{ size: 'small' | 'medium' }>`
+export const BannerWrapper = styled.div<{ size: 'small' | 'medium'; borderColor?: string }>`
   flex: 1;
   position: relative;
   padding: ${(props) => (props.size === 'small' ? sizes(4) : sizes(6))};
   width: 100%;
   background-color: ${cVar('colorBackgroundMutedAlpha')};
-  border-left: 2px solid ${cVar('colorBorderPrimary')};
+  border-left: 2px solid ${({ borderColor }) => borderColor ?? cVar('colorBorderPrimary')};
 `
 
 export const ActionButton = styled(Button)`
