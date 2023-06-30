@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { cVar, sizes } from '@/styles'
+import { cVar, sizes, zIndex } from '@/styles'
 
 export const sizeObj = { small: 'small', medium: 'medium' } as const
 export type Size = keyof typeof sizeObj
@@ -29,7 +29,7 @@ export const TopBidderTokenContainer = styled.div<SizeProps>`
   align-items: center;
   position: relative;
   left: -4px;
-  z-index: 10;
+  z-index: ${zIndex.overlay};
 
   &::before {
     display: inline-block;
