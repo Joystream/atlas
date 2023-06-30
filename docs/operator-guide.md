@@ -169,6 +169,49 @@ Once you run the above command, you can use the query above with a `orderBy: cre
 
 In order to enable YPP content in atlas, `googleConsoleClientId` variable needs to be provided. You can read more about it [here](https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid).
 
+#### Environment variables
+
+Atlas uses environment variables, so you can customize it for your specific needs. `.env` file is located in `/packages/atlas/src` directory.
+Below is the list of all the variables used by Atlas with a short description:
+
+`VITE_ENV` - used for making a production build
+
+`VITE_ENV_SELECTION_ENABLED` - enables environment selection dropdown in the admin panel. Recommended to be set to `false` in production.
+
+`VITE_DEFAULT_DATA_ENV` - if `VITE_ENV` is set to `true`, atlas will use `VITE_PRODUCTION_` URLs. Changing this variable can overwrite this.
+
+`VITE_FORCE_MAINTENANCE` - Setting this to `true` will enable the maintenance mode. Orion has its own KillSwitch mechanism which will also enable maintenance mode for Atlas, but this variable can be used when Orion is down or temporarily unavailable.
+
+`VITE_APP_ID` - id of the app for wrapping metadata. You can receive an Id by [creating an app](https://github.com/Joystream/joystream/tree/master/cli#joystream-cli-appscreateapp) in joystream-cli.
+
+`VITE_APP_NAME` - name of the app for wrapping metadata.
+
+`VITE_AVATAR_SERVICE_URL` - URL for avatar service - used to upload member's avatar.
+
+`VITE_GOOGLE_CONSOLE_CLIENT_ID` - ID of your Google console client. Used to enable the [youtube-sync](https://github.com/Joystream/youtube-synch) service for YPP.
+
+`VITE_YOUTUBE_SYNC_API_URL` - URL of your youtube-sync instance.
+
+`VITE_YOUTUBE_COLLABORATOR_MEMBER_ID` -
+
+`VITE_GA_ID` - Google Analytics ID. Used to enable Google Analytics.
+
+`VITE_SEGMENT_ID` - Segment ID. Used to enable Segment analytics tool.
+
+`VITE_SENTRY_DSN` - Sentry DSN. Used to enable Sentry error tracking.
+
+`VITE_OPTIMIZE_ID` - Optimize ID. Used to enable Google Optimize.
+
+`VITE_USERSNAP_ID` - Usersnap ID. Used to enable Usersnap.
+
+`VITE_{environment}_ORION_URL` - Orion URL. See [Orion](#orion) section for more info.
+
+`VITE_{environment}_QUERY_NODE_SUBSCRIPTION_URL` - Orion's Query Node URL. See [Query Node](#query-node) section for more info.
+
+`VITE_{environment}_NODE_URL` - RPC Node URL. See [RPC Node](#rpc-node) section for more info.
+
+`VITE_{environment}_FAUCET_URL` - Faucet URL. See [Member Faucet](#member-faucet) section for more info.
+
 #### Terms of Service, Copyright Policy and Privacy Policy
 
 You can provide your own Terms of Service, Copyright Policy and Privacy Policy by updating the `legal.termsOfService`, `legal.copyrightPolicy` and `legal.privacyPolicy` config entries. All of these support basic Markdown syntax like headings and lists.
@@ -193,9 +236,7 @@ Orion is the main backend service for Atlas - providing indexed blockchain data 
 
 ### Query Node
 
-Query Node (QN) is a service that processes blockchain events and stores them in a database. Orion proxies requests from Atlas to QN, so it will need a QN URL provided for it to work. You can find more info about QN in [its repo](https://github.com/Joystream/joystream/tree/master/query-node). As a gateway operator you probably want to run your own QN, but it also should be fine to rely on a publicly available instance, like `https://query.joystream.org/graphql`.
-
-Atlas uses Websocket connection to QN to receive real-time updates about QN state and to properly update the UI. Endpoint for this connection must be passed as the `VITE_PRODUCTION_QUERY_NODE_SUBSCRIPTION_URL` environment variable.
+Query Node (QN) is a service that processes blockchain events and stores them in a database. Orion v2 has it's own Query Node included by default, so you don't need to run it separately. However, if you are running Orion v1, you will need to run QN separately. You can find more information about QN in [its repo](https://github.com/Joystream/joystream/tree/master/query-node).
 
 ### RPC Node
 
