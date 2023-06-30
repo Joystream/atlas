@@ -1,6 +1,4 @@
-import { JOYSTREAM_ADDRESS_PREFIX } from '@joystream/types'
 import { ScryptOpts, scrypt } from '@noble/hashes/scrypt'
-import { Keyring } from '@polkadot/keyring'
 import { KeyringPair } from '@polkadot/keyring/types'
 import { hexToU8a, u8aToHex } from '@polkadot/util'
 import { mnemonicToEntropy as _mnemonicToEntropy, cryptoWaitReady } from '@polkadot/util-crypto'
@@ -9,13 +7,17 @@ import { entropyToMnemonic as _entropyToMnemonic } from 'bip39'
 import { Buffer } from 'buffer'
 import { AES, enc, lib, mode } from 'crypto-js'
 
+import { atlasConfig } from '@/config'
 import { ORION_AUTH_URL } from '@/config/env'
+import { keyring } from '@/joystream-lib/lib'
 import { getWalletsList } from '@/providers/wallet/wallet.helpers'
 import { SentryLogger } from '@/utils/logs'
 
-import { AuthModals, OrionAccountError, RegisterParams, RegisterPayload } from './auth.types'
+import { AuthModals, LogInErrors, OrionAccountError, RegisterParams, RegisterPayload } from './auth.types'
 
-export const keyring = new Keyring({ type: 'sr25519', ss58Format: JOYSTREAM_ADDRESS_PREFIX })
+export const getArtifactId = async (email: string, password: string) => {
+  return (await scryptHash(`${email}:${password}`, '0x0818ee04c541716831bdd0f598fa4bbb')).toString('hex')
+}
 
 export const handleAnonymousAuth = async (userId?: string | null) => {
   try {
@@ -57,7 +59,10 @@ export const getArtifacts = async (id: string, email: string, password: string) 
       decryptedEntropy,
     }
   } catch (error) {
-    SentryLogger.error('Error when fetching artifacts', 'useLogIn', error)
+    if (isAxiosError(error) && error.response?.status === 404) {
+      throw new Error(LogInErrors.ArtifactsNotFound)
+    }
+    throw new Error(LogInErrors.UnknownError)
   }
 }
 
@@ -138,7 +143,7 @@ export const prepareEncryptionArtifacts = async (email: string, password: string
     const entropy = _mnemonicToEntropy(mnemonic)
     const seed = u8aToHex(entropy)
 
-    const id = (await scryptHash(`${email}:${password}`, '0x0818ee04c541716831bdd0f598fa4bbb')).toString('hex')
+    const id = await getArtifactId(email, password)
     const cipherIv = lib.WordArray.random(16).toString(enc.Hex)
     const cipherKey = await scryptHash(`${email}:${password}`, Buffer.from(hexToU8a(cipherIv)))
     const keyWA = enc.Hex.parse(cipherKey.toString('hex'))
@@ -212,4 +217,56 @@ export const registerAccount = async (params: RegisterParams) => {
       status: error.response?.status,
     })
   }
+}
+
+type ChangePasswordArgs = {
+  joystreamAccountId: string
+  gatewayAccountId: string
+  email: string
+  mnemonic: string
+  newPassword: string
+}
+export const changePassword = async ({
+  email,
+  newPassword,
+  mnemonic,
+  joystreamAccountId,
+  gatewayAccountId,
+}: ChangePasswordArgs) => {
+  try {
+    const keypair = keyring.addFromMnemonic(mnemonic)
+    const newArtifacts = await prepareEncryptionArtifacts(email, newPassword, mnemonic)
+
+    const changePasswordPayload = {
+      joystreamAccountId,
+      gatewayName: atlasConfig.general.appName,
+      timestamp: Date.now() - 30_000,
+      action: 'changeAccount',
+      gatewayAccountId,
+      newArtifacts,
+    }
+
+    const signatureOverPayload = u8aToHex(keypair.sign(JSON.stringify(changePasswordPayload)))
+
+    return axios.post(
+      `${ORION_AUTH_URL}/change-account`,
+      {
+        signature: signatureOverPayload,
+        payload: changePasswordPayload,
+      },
+      { withCredentials: true }
+    )
+  } catch (error) {
+    SentryLogger.error('Something went wrong during changing password', 'changePassword', error)
+  }
+}
+
+export const getMnemonicFromeEmailAndPassword = async (email: string, password: string) => {
+  const id = await getArtifactId(email, password)
+  const data = await getArtifacts(id, email, password)
+  if (!data?.decryptedEntropy) {
+    throw Error("Couldn't fetch artifacts")
+  }
+  const mnemonic = entropyToMnemonic(data?.decryptedEntropy)
+  return mnemonic
 }

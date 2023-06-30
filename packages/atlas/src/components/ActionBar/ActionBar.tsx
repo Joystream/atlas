@@ -5,16 +5,16 @@ import { CSSTransition } from 'react-transition-group'
 import { Fee } from '@/components/Fee'
 import { Text } from '@/components/Text'
 import { Tooltip, TooltipProps } from '@/components/Tooltip'
-import { ButtonProps } from '@/components/_buttons/Button'
+import { Button, ButtonProps } from '@/components/_buttons/Button'
 import { useHasEnoughBalance } from '@/hooks/useHasEnoughBalance'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { transitions } from '@/styles'
 
 import {
   ActionBarContainer,
-  ActionButtonPrimary,
   DraftsBadgeContainer,
   FeeContainer,
+  PrimaryButtonContainer,
   SecondaryButton,
   StyledInformation,
 } from './ActionBar.styles'
@@ -93,18 +93,22 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
             {secondaryButton?.text}
           </SecondaryButton>
         </CSSTransition>
-        <ActionButtonPrimary
-          {...primaryButton}
-          ref={buttonRef}
-          disabled={primaryButton.disabled || loadingState}
-          onClick={isNoneCrypto ? primaryButton.onClick : signTransactionHandler}
-          secondaryButtonExists={!!secondaryButton}
-          size={smMatch ? 'large' : 'medium'}
-          type="submit"
-        >
-          {loadingState ? 'Please wait...' : primaryButton.text}
-        </ActionButtonPrimary>
-        {primaryButtonTooltip && <Tooltip reference={buttonRef.current} {...primaryButtonTooltip} />}
+        <PrimaryButtonContainer secondaryButtonExists={!!secondaryButton}>
+          {/* tooltip is positioned weirdly on this button, that's we are setting offsetY to 22 */}
+          <Tooltip offsetY={22} {...primaryButtonTooltip}>
+            <Button
+              fullWidth
+              {...primaryButton}
+              ref={buttonRef}
+              disabled={primaryButton.disabled || loadingState}
+              onClick={isNoneCrypto ? primaryButton.onClick : signTransactionHandler}
+              size={smMatch ? 'large' : 'medium'}
+              type="submit"
+            >
+              {loadingState ? 'Please wait...' : primaryButton.text}
+            </Button>
+          </Tooltip>
+        </PrimaryButtonContainer>
       </ActionBarContainer>
     )
   }

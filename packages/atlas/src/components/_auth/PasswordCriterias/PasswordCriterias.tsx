@@ -71,7 +71,11 @@ export const PasswordCriteria: FC<PasswordCriteriaProps> = ({ text, validationSt
   )
 }
 
-export const PasswordCriterias = ({ path = 'password' }: { path?: string }) => {
+type PasswordCriteriasProps = {
+  path?: string
+}
+
+export const PasswordCriterias: FC<PasswordCriteriasProps> = ({ path = 'password' }) => {
   const context = useFormContext()
   const [passwordRequirementsErrors, setPasswordRequirementsErrors] = useState<PasswordRequirementsErrors>(
     PASSWORD_REQUIREMENTS_ERRORS_INITIAL_STATE
@@ -91,7 +95,7 @@ export const PasswordCriterias = ({ path = 'password' }: { path?: string }) => {
       }
 
       setPasswordRequirementsErrors(() => ({
-        length: getValidationState(password.length <= 9),
+        length: getValidationState(password.length <= 9 || password.length >= 64),
         number: getValidationState(/^[^0-9]*$/.test(password)),
         upperCase: getValidationState(/^[^A-Z]*$/.test(password)),
         specialCharacter: getValidationState(/^[^!@#$%^&*()_+]*$/.test(password)),

@@ -82,13 +82,11 @@ export const ViewerLayout: FC = () => {
                 <Route
                   path={relativeRoutes.viewer.memberSettings()}
                   element={
-                    // todo uncomment and use private route once authentication is handled
-                    // <PrivateRoute
-                    //   isAuth={isLoggedIn}
-                    //   element={<MembershipSettingsView />}
-                    //   redirectTo={ENTRY_POINT_ROUTE}
-                    // />
-                    <MembershipSettingsView />
+                    <PrivateRoute
+                      isAuth={isLoggedIn}
+                      element={<MembershipSettingsView />}
+                      redirectTo={ENTRY_POINT_ROUTE}
+                    />
                   }
                 />
                 <Route

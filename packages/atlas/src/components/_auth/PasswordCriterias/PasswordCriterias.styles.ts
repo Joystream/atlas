@@ -14,7 +14,6 @@ export const PasswordRequirementsList = styled.ul`
   list-style-type: none;
   display: grid;
   gap: ${sizes(2)};
-  margin-bottom: ${sizes(6)};
 `
 
 export const PasswordRequirementItem = styled(Text)`

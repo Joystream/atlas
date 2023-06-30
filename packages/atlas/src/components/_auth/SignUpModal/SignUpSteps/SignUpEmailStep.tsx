@@ -39,6 +39,7 @@ type EmailStepForm = z.infer<typeof zodSchema>
 type SignUpEmailStepProps = {
   onEmailSubmit: (email: string, confirmedTerms: boolean) => void
   isEmailAlreadyTakenError?: boolean
+  isOverflowing: boolean
 } & SignUpStepsCommonProps &
   Pick<AccountFormData, 'email' | 'confirmedTerms'>
 
@@ -46,6 +47,7 @@ export const SignUpEmailStep: FC<SignUpEmailStepProps> = ({
   setPrimaryButtonProps,
   hasNavigatedBack,
   isEmailAlreadyTakenError,
+  isOverflowing,
   onEmailSubmit,
   confirmedTerms,
   email,
@@ -94,7 +96,7 @@ export const SignUpEmailStep: FC<SignUpEmailStepProps> = ({
       hasNavigatedBack={hasNavigatedBack}
       subtitle="If you misspell your email address, please note that there is no option for us to recover your account."
     >
-      <StyledSignUpForm>
+      <StyledSignUpForm additionalPaddingBottom={!isOverflowing}>
         <FormField label="Email" error={errors.email?.message}>
           <Input {...register('email')} placeholder="Email" error={!!errors.email} />
         </FormField>

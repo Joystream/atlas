@@ -87,7 +87,6 @@ export const Dialog: FC<DialogProps> = ({
         </Header>
       )}
       <Content
-        hasFooter={hasFooter}
         data-scroll-lock-scrollable
         noContentPadding={noContentPadding}
         className={contentClassName}

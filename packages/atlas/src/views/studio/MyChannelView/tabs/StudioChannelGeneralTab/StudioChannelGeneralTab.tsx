@@ -3,7 +3,7 @@ import { RefObject } from 'react'
 import { Controller, FieldError } from 'react-hook-form'
 
 import { useFullChannel } from '@/api/hooks/channel'
-import { SvgActionCheck, SvgActionShow } from '@/assets/icons'
+import { SvgActionShow } from '@/assets/icons'
 import { ActionBar } from '@/components/ActionBar'
 import { Portal } from '@/components/Portal'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
@@ -253,6 +253,7 @@ export const StudioChannelGeneralTab = ({ actionBarPortal }: { actionBarPortal: 
           feeLoading={feeLoading}
           primaryButton={{
             text: 'Publish changes',
+            disabled: !isDirty,
             onClick: () =>
               isDirty
                 ? handleSubmit(() => {
@@ -263,22 +264,11 @@ export const StudioChannelGeneralTab = ({ actionBarPortal }: { actionBarPortal: 
                   })
                 : undefined,
           }}
-          primaryButtonTooltip={
-            isDirty
-              ? undefined
-              : {
-                  text: 'All changes saved. Nothing to publish.',
-                  icon: <SvgActionCheck />,
-                }
-          }
-          secondaryButton={
-            isDirty && nodeConnectionStatus === 'connected'
-              ? {
-                  text: 'Cancel',
-                  onClick: () => openDialog(),
-                }
-              : undefined
-          }
+          secondaryButton={{
+            text: 'Cancel',
+            onClick: () => openDialog(),
+            disabled: !isDirty || nodeConnectionStatus !== 'connected',
+          }}
           skipFeeCheck
         />
       </Portal>

@@ -15,6 +15,7 @@ import {
 type TextInputProps = {
   error?: boolean
   inputSize: InputSize
+  disabledAttributeOnly?: boolean
 } & NodeWidthProps
 
 export const TextInput = styled.input<TextInputProps>`
@@ -83,7 +84,7 @@ export const NodeContainer = styled.div<NodeContainerProps>`
   ${nodePlacementStyles};
 `
 
-export const InputContainer = styled.div<{ size: InputSize }>`
+export const InputContainer = styled.div<{ size: InputSize; ignoreBoxShadow?: boolean }>`
   position: relative;
   height: max-content;
   font: ${({ size }) => (size === 'large' ? cVar('typographyDesktopT300') : cVar('typographyDesktopT200'))};
@@ -92,7 +93,7 @@ export const InputContainer = styled.div<{ size: InputSize }>`
 
   :focus-within {
     ${TextInput} {
-      ${getSharedInputStyles().focus};
+      ${({ ignoreBoxShadow }) => getSharedInputStyles(ignoreBoxShadow).focus};
     }
     ${NodeContainer} {
       > svg > path {

@@ -1,9 +1,9 @@
 import { useApolloClient } from '@apollo/client'
 import debouncePromise from 'awesome-debounce-promise'
+import { BN } from 'bn.js'
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useMutation } from 'react-query'
-import { useNavigate } from 'react-router'
 import useResizeObserver from 'use-resize-observer'
 
 import {
@@ -16,13 +16,12 @@ import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { ImageInputFile } from '@/components/_inputs/MultiFileSelect'
 import { TextArea } from '@/components/_inputs/TextArea'
+import { DialogButtonProps } from '@/components/_overlays/Dialog'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
 import { EntitySettingTemplate } from '@/components/_templates/EntitySettingTemplate'
 import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
-import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { MemberInputMetadata } from '@/joystream-lib/types'
-import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useFee, useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
@@ -37,29 +36,22 @@ export type EditMemberFormInputs = {
   avatar: ImageInputFile | null
   about: string | null
 }
+type MembershipPublicProfileProps = {
+  onDirty: (isDirty: boolean) => void
+  onOpenUnsavedChangesDialog: (primaryButtonProps: DialogButtonProps) => void
+  onCloseUnsavedChangesDialog: () => void
+}
 
-export const MembershipPublicProfile: FC = () => {
-  const navigate = useNavigate()
+export const MembershipPublicProfile: FC<MembershipPublicProfileProps> = ({
+  onDirty,
+  onOpenUnsavedChangesDialog,
+  onCloseUnsavedChangesDialog,
+}) => {
   const handleInputRef = useRef<HTMLInputElement | null>(null)
   const [isImageValid, setIsImageValid] = useState(true)
   const [isHandleValidating, setIsHandleValidating] = useState(false)
   const { memberId, activeMembership, isLoggedIn, refetchUserMemberships } = useUser()
 
-  const [openDialog, closeDialog] = useConfirmationModal({
-    title: 'Discard changes?',
-    description:
-      'You have unsaved changes which are going to be lost if you change the tab. Are you sure you want to continue?',
-    type: 'warning',
-    primaryButton: {
-      text: 'Discard changes',
-      to: absoluteRoutes.viewer.member(activeMembership?.handle),
-      onClick: () => closeDialog(),
-    },
-    secondaryButton: {
-      text: 'Cancel',
-      onClick: () => closeDialog(),
-    },
-  })
   const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
@@ -98,8 +90,13 @@ export const MembershipPublicProfile: FC = () => {
     formState: { errors, isDirty, dirtyFields, isSubmitting },
   } = useForm<EditMemberFormInputs>({
     shouldFocusError: true,
+    shouldUnregister: true,
     reValidateMode: 'onSubmit',
   })
+
+  useEffect(() => {
+    onDirty(isDirty)
+  }, [isDirty, onDirty])
 
   const resetForm = useCallback(async () => {
     let blob
@@ -172,7 +169,10 @@ export const MembershipPublicProfile: FC = () => {
       }
     }
 
-    const success = await handleTransaction({
+    await handleTransaction({
+      onTxSync: async () => {
+        await refetchUserMemberships()
+      },
       txFactory: async (updateStatus) => {
         const memberInputMetadata: MemberInputMetadata = {
           ...(dirtyFields.handle ? { name: data.handle } : {}),
@@ -190,13 +190,6 @@ export const MembershipPublicProfile: FC = () => {
         title: 'Profile updated successfully',
       },
     })
-    const {
-      data: { memberships },
-    } = await refetchUserMemberships()
-    const updatedMembership = memberships.find((m) => m.id === activeMembership.id)
-    if (success) {
-      navigate(absoluteRoutes.viewer.member(updatedMembership?.handle))
-    }
   })
 
   const { ref, ...handleRest } = useMemo(
@@ -231,6 +224,8 @@ export const MembershipPublicProfile: FC = () => {
 
   return (
     <EntitySettingTemplate
+      isFirst
+      isLast
       title="Profile info"
       description="This membership information is stored on Joystream blockchain and can be displayed in all apps connected to the chain."
     >
@@ -308,17 +303,30 @@ export const MembershipPublicProfile: FC = () => {
         </Wrapper>
         <StyledActionBar
           ref={actionBarRef}
-          fee={fee}
+          fee={isDirty ? fee : new BN(0)}
           feeLoading={feeLoading}
           primaryButton={{
-            disabled: isSubmitting,
+            disabled: isSubmitting || !isDirty,
             text: isSubmitting ? 'Please wait...' : 'Publish changes',
             type: 'submit',
           }}
           secondaryButton={{
             text: 'Cancel',
-            to: isDirty ? undefined : absoluteRoutes.viewer.member(activeMembership?.handle),
-            onClick: () => (isDirty ? openDialog() : undefined),
+            disabled: !isDirty,
+            onClick: () =>
+              isDirty
+                ? onOpenUnsavedChangesDialog({
+                    text: 'Discard changes',
+                    onClick: () => {
+                      reset()
+                      onCloseUnsavedChangesDialog()
+                      displaySnackbar({
+                        title: 'All changes were discarded',
+                        iconType: 'info',
+                      })
+                    },
+                  })
+                : undefined,
           }}
         />
       </form>
