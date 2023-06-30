@@ -30,8 +30,8 @@ import {
   SelectDifferentChannelButton,
   StyledInfiniteCarousel,
 } from './YppHero.styles'
-import { useGetYppLastVerifiedChannels } from './YppLandingView.hooks'
 import { BackgroundContainer, StyledLimitedWidthContainer } from './YppLandingView.styles'
+import { useGetYppLastVerifiedChannels } from './useGetYppLastVerifiedChannels'
 
 export type YppAtlasStatus = 'have-channel' | 'no-channel' | 'ypp-signed' | 'connect-wallet' | null
 

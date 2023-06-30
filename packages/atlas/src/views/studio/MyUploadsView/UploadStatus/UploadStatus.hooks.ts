@@ -130,11 +130,10 @@ export const useUploadStatusModals = () => {
 }
 
 export const useUploadStatus = (asset: AssetUpload) => {
-  const { channelId, accountId } = useUser()
-
   const handleVideoWorkspaceSubmit = useHandleVideoWorkspaceSubmit()
   const handleEditChannelSubmit = useCreateEditChannelSubmit()
 
+  const { channelId, accountId } = useUser()
   const { channel, refetch: refetchChannel } = useFullChannel(
     channelId || '',
     {
@@ -167,36 +166,38 @@ export const useUploadStatus = (asset: AssetUpload) => {
         const assetDimensions = dimensions !== undefined ? dimensions : null
         const imageCropData = cropData !== undefined ? cropData : null
         await handleEditChannelSubmit({
-          metadata: { ownerAccount: accountId ?? '' },
-          channel,
-          newChannel: false,
-          assets:
-            asset.type === 'avatar'
-              ? {
-                  avatarPhoto: {
-                    ...newAsset,
-                    contentId: `local-avatar-${createId()}`,
-                    originalBlob,
-                    croppedUrl,
-                    croppedBlob,
-                    imageCropData,
-                    assetDimensions,
+          data: {
+            metadata: { ownerAccount: accountId ?? '' },
+            channel,
+            newChannel: false,
+            assets:
+              asset.type === 'avatar'
+                ? {
+                    avatarPhoto: {
+                      ...newAsset,
+                      contentId: `local-avatar-${createId()}`,
+                      originalBlob,
+                      croppedUrl,
+                      croppedBlob,
+                      imageCropData,
+                      assetDimensions,
+                    },
+                    coverPhoto: emptyAsset,
+                  }
+                : {
+                    coverPhoto: {
+                      ...newAsset,
+                      contentId: `local-cover-${createId()}`,
+                      originalBlob,
+                      croppedUrl,
+                      croppedBlob,
+                      imageCropData,
+                      assetDimensions,
+                    },
+                    avatarPhoto: emptyAsset,
                   },
-                  coverPhoto: emptyAsset,
-                }
-              : {
-                  coverPhoto: {
-                    ...newAsset,
-                    contentId: `local-cover-${createId()}`,
-                    originalBlob,
-                    croppedUrl,
-                    croppedBlob,
-                    imageCropData,
-                    assetDimensions,
-                  },
-                  avatarPhoto: emptyAsset,
-                },
-          refetchChannel,
+            refetchChannel,
+          },
         })
       } else {
         const newCropAssetId = `local-thumbnail-crop-${createId()}`

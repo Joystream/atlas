@@ -78,7 +78,7 @@ export const SignUpEmailStep: FC<SignUpEmailStepProps> = ({
 
   useEffect(() => {
     setPrimaryButtonProps({
-      text: isEmailAlreadyTakenError ? 'Sign up' : 'Continue',
+      text: 'Sign up',
       onClick: handleGoToNextStep,
     })
   }, [handleGoToNextStep, isEmailAlreadyTakenError, setPrimaryButtonProps])

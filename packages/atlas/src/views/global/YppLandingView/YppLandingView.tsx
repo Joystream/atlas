@@ -10,8 +10,6 @@ import { YppReferralBanner } from '@/components/_ypp/YppReferralBanner'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
-import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
-import { useAuthStore } from '@/providers/auth/auth.store'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useSnackbar } from '@/providers/snackbars'
 import { useUser } from '@/providers/user/user.hooks'
@@ -19,25 +17,22 @@ import { useYppStore } from '@/providers/ypp/ypp.store'
 import { SentryLogger } from '@/utils/logs'
 
 import { YppAuthorizationModal } from './YppAuthorizationModal'
-import { YppAuthorizationStepsType } from './YppAuthorizationModal/YppAuthorizationModal.types'
 import { YppCardsSections } from './YppCardsSections'
 import { YppFooter } from './YppFooter'
 import { YppHero } from './YppHero'
-import { useGetYppSyncedChannels } from './YppLandingView.hooks'
 import { Wrapper } from './YppLandingView.styles'
 import { YppRewardSection } from './YppRewardSection'
 import { YppThreeStepsSection } from './YppThreeStepsSection'
+import { useGetYppSyncedChannels } from './useGetYppSyncedChannels'
 
 const SINGUP_DAILY_QUOTA = 500 // 2% of the total daily quota
 
 export const YppLandingView: FC = () => {
   const headTags = useHeadTags('YouTube Partner Program')
-  const [currentStep, setCurrentStep] = useState<YppAuthorizationStepsType>(null)
-  const { isLoggedIn, activeMembership, channelId } = useUser()
-  const {
-    actions: { setAuthModalOpenName },
-  } = useAuthStore()
-  const { setSelectedChannelId, setShouldContinueYppFlow } = useYppStore((store) => store.actions)
+  const yppModalOpenName = useYppStore((state) => state.yppModalOpenName)
+  const setYppModalOpen = useYppStore((state) => state.actions.setYppModalOpenName)
+  const { activeMembership, channelId } = useUser()
+  const { setSelectedChannelId, setShouldContinueYppFlowAfterCreatingChannel } = useYppStore((store) => store.actions)
   const { displaySnackbar } = useSnackbar()
   const navigate = useNavigate()
   const { trackYppSignInButtonClick } = useSegmentAnalytics()
@@ -50,7 +45,9 @@ export const YppLandingView: FC = () => {
   )
   const [wasSignInTriggered, setWasSignInTriggered] = useState(false)
   const isTodaysQuotaReached = data ? data.signupQuotaUsed > SINGUP_DAILY_QUOTA : false
-  const shouldContinueYppFlow = useYppStore((store) => store.shouldContinueYppFlow)
+  const shouldContinueYppFlowAfterCreatingChannel = useYppStore(
+    (store) => store.shouldContinueYppFlowAfterCreatingChannel
+  )
 
   const { unsyncedChannels, isLoading, currentChannel } = useGetYppSyncedChannels()
   const isYppSigned = !!currentChannel
@@ -74,19 +71,13 @@ export const YppLandingView: FC = () => {
       return
     }
 
-    if (!isLoggedIn) {
-      setAuthModalOpenName(getCorrectLoginModal())
-      setWasSignInTriggered(true)
-      return
-    }
-
     if (isYppSigned) {
       navigate(absoluteRoutes.studio.ypp())
       return
     }
 
-    if (!currentStep) {
-      setCurrentStep('requirements')
+    if (!yppModalOpenName) {
+      setYppModalOpen('ypp-requirements')
       return
     }
   }, [
@@ -109,21 +100,24 @@ export const YppLandingView: FC = () => {
   }, [handleYppSignUpClick, wasSignInTriggered])
 
   useEffect(() => {
-    if (shouldContinueYppFlow) {
+    if (shouldContinueYppFlowAfterCreatingChannel) {
       setSelectedChannelId(channelId)
-      setShouldContinueYppFlow(false)
-      setCurrentStep('requirements')
+      setShouldContinueYppFlowAfterCreatingChannel(false)
+      setYppModalOpen('ypp-requirements')
     }
-  }, [channelId, handleYppSignUpClick, setSelectedChannelId, setShouldContinueYppFlow, shouldContinueYppFlow])
+  }, [
+    channelId,
+    handleYppSignUpClick,
+    setSelectedChannelId,
+    setShouldContinueYppFlowAfterCreatingChannel,
+    setYppModalOpen,
+    shouldContinueYppFlowAfterCreatingChannel,
+  ])
 
   const getYppAtlasStatus = () => {
     if (isLoading) {
       return null
     }
-    // todo: replace
-    // if (walletStatus !== 'connected') {
-    //   return 'connect-wallet'
-    // }
 
     if (!activeMembership?.channels.length) {
       return 'no-channel'
@@ -137,15 +131,11 @@ export const YppLandingView: FC = () => {
   return (
     <Wrapper>
       {headTags}
-      <YppAuthorizationModal
-        unSyncedChannels={unsyncedChannels}
-        currentStep={currentStep}
-        onChangeStep={setCurrentStep}
-      />
+      <YppAuthorizationModal unSyncedChannels={unsyncedChannels} />
       <ParallaxProvider>
         <YppReferralBanner />
         <YppHero
-          onSelectChannel={() => setCurrentStep('select-channel')}
+          onSelectChannel={() => setYppModalOpen('ypp-select-channel')}
           onSignUpClick={handleYppSignUpClick}
           yppAtlasStatus={getYppAtlasStatus()}
           hasAnotherUnsyncedChannel={hasAnotherUnsyncedChannel}

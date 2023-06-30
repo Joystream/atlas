@@ -7,7 +7,7 @@ import { Text } from '@/components/Text'
 import { atlasConfig } from '@/config'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/YppLandingView.hooks'
+import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
 
 import { TIERS } from './YppDashboard.config'
 import { Divider, Header, TabsWrapper, TierCount, TierDescription, TierWrapper } from './YppDashboard.styles'

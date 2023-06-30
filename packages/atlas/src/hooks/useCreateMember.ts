@@ -15,7 +15,6 @@ import { useAuthStore } from '@/providers/auth/auth.store'
 import { OrionAccountError } from '@/providers/auth/auth.types'
 import { useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
-import { useTransactionManagerStore } from '@/providers/transactions/transactions.store'
 import { UploadAvatarServiceError, uploadAvatarImage } from '@/utils/image'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
@@ -61,28 +60,31 @@ export enum RegisterError {
 type SignUpParams<T> = {
   data: T
   onStart?: () => void
-  onSuccess?: (amountOfTokens?: number) => void
+  onSuccess?: (params: { amountOfTokens: number }) => void
   onError?: (step?: RegisterError) => void
 }
+
+// replace avatar's ImageInputFile type with simpler CreateMemberAvatarParam, because we only need blob file to upload new avatar
+type CreateMemberAvatarParam = { avatar?: { blob?: null | Blob } }
+type CreateNewMemberParams = SignUpParams<Omit<MemberFormData, 'confirmedCopy' | 'avatar'> & CreateMemberAvatarParam>
 
 export const useCreateMember = () => {
   const { handleLogin } = useAuth()
   const setAnonymousUserId = useAuthStore((store) => store.actions.setAnonymousUserId)
   const { joystream } = useJoystream()
-  const addBlockAction = useTransactionManagerStore((state) => state.actions.addBlockAction)
   const { displaySnackbar } = useSnackbar()
 
   const { mutateAsync: avatarMutation } = useMutation('avatar-post', (croppedBlob: Blob) =>
     uploadAvatarImage(croppedBlob)
   )
   const { mutateAsync: faucetMutation } = useMutation('faucet-post', (body: FaucetParams) =>
+    // todo change faucet url if request is done via ypp
     axios.post<NewMemberResponse>(FAUCET_URL, body)
   )
 
   const createNewMember = useCallback(
-    async (params: SignUpParams<MemberFormData>) => {
-      const { data, onError, onStart, onSuccess } = params
-      onStart?.()
+    async (params: CreateNewMemberParams) => {
+      const { data, onError } = params
       let fileUrl
       const keypair = keyring.addFromMnemonic(data.mnemonic)
       const address = keypair.address
@@ -99,12 +101,6 @@ export const useCreateMember = () => {
       }
       try {
         const response = await faucetMutation(body)
-        addBlockAction({
-          targetBlock: response.data.block,
-          callback: () => {
-            onSuccess?.()
-          },
-        })
 
         return String(response.data.memberId)
       } catch (error) {
@@ -164,7 +160,7 @@ export const useCreateMember = () => {
         return
       }
     },
-    [addBlockAction, avatarMutation, displaySnackbar, faucetMutation]
+    [avatarMutation, displaySnackbar, faucetMutation]
   )
 
   const createNewOrionAccount = useCallback(
@@ -186,7 +182,7 @@ export const useCreateMember = () => {
         }
         const { lockedBalance } = await joystream.getAccountBalance(address)
         const amountOfTokens = hapiBnToTokenNumber(new BN(lockedBalance))
-        onSuccess?.(amountOfTokens)
+        onSuccess?.({ amountOfTokens })
         handleLogin({ type: 'internal', ...data })
       } catch (error) {
         if (error instanceof OrionAccountError) {

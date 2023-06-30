@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useOverflowDetector } from 'react-detectable-overflow'
 import shallow from 'zustand/shallow'
 
@@ -8,8 +8,12 @@ import { DialogButtonProps } from '@/components/_overlays/Dialog'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { AccountFormData, MemberFormData, RegisterError, useCreateMember } from '@/hooks/useCreateMember'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useUniqueMemberHandle } from '@/hooks/useUniqueMemberHandle'
 import { useAuthStore } from '@/providers/auth/auth.store'
+import { useYppStore } from '@/providers/ypp/ypp.store'
 import { media } from '@/styles'
+import { createId } from '@/utils/createId'
+import { imageUrlToBlob } from '@/utils/image'
 
 import { SignUpSteps } from './SignUpModal.types'
 import {
@@ -42,6 +46,12 @@ export const SignUpModal = () => {
   const [amountOfTokens, setAmountofTokens] = useState<number>()
   const [memberId, setMemberId] = useState<string | null>(null)
 
+  const ytResponseData = useYppStore((state) => state.ytResponseData)
+  const setYppModalOpenName = useYppStore((state) => state.actions.setYppModalOpenName)
+  const setYtResponseData = useYppStore((state) => state.actions.setYtResponseData)
+
+  const { generateUniqueMemberHandleBasedOnInput } = useUniqueMemberHandle()
+
   const { authModalOpenName, setAuthModalOpenName } = useAuthStore(
     (state) => ({
       authModalOpenName: state.authModalOpenName,
@@ -59,6 +69,15 @@ export const SignUpModal = () => {
     setCurrentStep((previousIdx) => (previousIdx ?? -1) + 1)
     setHasNavigatedBack(false)
   }, [])
+
+  const isYppFlow = ytResponseData !== null
+
+  // skip the membership step when signing to ypp(ypp flow will provide handle and avatar for membership automatically)
+  useEffect(() => {
+    if (isYppFlow) {
+      setCurrentStep(SignUpSteps.SignUpSeed)
+    }
+  }, [isYppFlow])
 
   const goToPreviousStep = useCallback(() => {
     setCurrentStep((previousIdx) => (previousIdx ?? 1) - 1)
@@ -78,7 +97,8 @@ export const SignUpModal = () => {
   const handleEmailStepSubmit = useCallback(
     (email: string, confirmedTerms: boolean) => {
       setSignupFormData((userForm) => ({ ...userForm, email, confirmedTerms }))
-      if (emailAlreadyTakenError && memberId) {
+
+      if (memberId) {
         createNewOrionAccount({
           data: { ...signUpFormData, email, confirmedTerms, memberId },
           onError: (error) => {
@@ -90,64 +110,95 @@ export const SignUpModal = () => {
             goToStep(SignUpSteps.CreateMember)
           },
           onStart: () => goToStep(SignUpSteps.Creating),
-          onSuccess: (amountOfTokens) => {
-            setAmountofTokens(amountOfTokens)
-            goToNextStep()
+          onSuccess: ({ amountOfTokens }) => {
+            // if this is ypp flow, overwrite ytResponseData.email
+            if (ytResponseData) {
+              setYtResponseData({ ...ytResponseData, email })
+              setAuthModalOpenName(undefined)
+              setYppModalOpenName('ypp-sync-options')
+            } else {
+              setAmountofTokens(amountOfTokens)
+              goToNextStep()
+            }
           },
         })
         return
       }
       goToNextStep()
     },
-    [createNewOrionAccount, emailAlreadyTakenError, goToNextStep, goToStep, memberId, signUpFormData]
+    [
+      createNewOrionAccount,
+      goToNextStep,
+      goToStep,
+      memberId,
+      setAuthModalOpenName,
+      setYppModalOpenName,
+      setYtResponseData,
+      signUpFormData,
+      ytResponseData,
+    ]
   )
 
   const handlePasswordStepSubmit = useCallback(
-    (password: string) => {
+    async (password: string) => {
       goToNextStep()
       setSignupFormData((userForm) => ({ ...userForm, password }))
-      if (!emailAlreadyTakenError && memberId) {
-        createNewOrionAccount({
-          data: { ...signUpFormData, password, memberId },
-          onError: (error) => {
-            if (error === RegisterError.EmailAlreadyExists) {
-              setEmailAlreadyTakenError(true)
-              goToStep(SignUpSteps.SignUpEmail)
-              return
-            }
-            goToStep(SignUpSteps.CreateMember)
-          },
-          onStart: () => goToStep(SignUpSteps.Creating),
-          onSuccess: (amountOfTokens) => {
-            setAmountofTokens(amountOfTokens)
-            goToNextStep()
-          },
-        })
-        return
-      }
     },
-    [createNewOrionAccount, emailAlreadyTakenError, goToNextStep, goToStep, memberId, signUpFormData]
+    [goToNextStep]
   )
 
-  const handleSeedStepSubmit = useCallback(
-    (mnemonic: string, confirmedCopy: boolean) => {
-      setSignupFormData((userForm) => ({ ...userForm, mnemonic, confirmedCopy }))
-      if (!memberId) {
-        createNewMember({
-          data: { ...signUpFormData, mnemonic },
-          onError: () => {
-            goToStep(SignUpSteps.CreateMember)
-          },
-        }).then((memberId) => {
-          if (memberId) {
-            setMemberId(memberId)
-          }
-        })
+  const handleCreateMemberOnSeedStepSubmit = useCallback(
+    async (mnemonic: string, confirmedCopy: boolean) => {
+      let handle = signUpFormData.handle
+      let blob = signUpFormData.avatar?.blob
+
+      if (ytResponseData) {
+        // replace handle and avatar if they are provided via ypp flow
+        blob = ytResponseData.avatarUrl ? await imageUrlToBlob(ytResponseData.avatarUrl) : null
+        handle = ytResponseData.channelHandle
+          ? await generateUniqueMemberHandleBasedOnInput(ytResponseData.channelHandle)
+          : `user${createId()}`
+      }
+
+      const memberData = {
+        mnemonic,
+        handle,
+        confirmedCopy,
+        avatar: blob ? { blob } : undefined,
+      }
+
+      setSignupFormData((userForm) => ({
+        ...userForm,
+        ...memberData,
+      }))
+
+      // don't create another member if user already created a member and click back on the password step
+      if (memberId) {
+        goToNextStep()
+        return
       }
 
       goToNextStep()
+      const newMemberId = await createNewMember({
+        data: { ...signUpFormData, ...memberData },
+        onError: () => {
+          goToStep(SignUpSteps.CreateMember)
+        },
+      })
+
+      if (newMemberId) {
+        setMemberId(newMemberId)
+      }
     },
-    [createNewMember, goToNextStep, goToStep, memberId, signUpFormData]
+    [
+      createNewMember,
+      generateUniqueMemberHandleBasedOnInput,
+      goToNextStep,
+      goToStep,
+      memberId,
+      signUpFormData,
+      ytResponseData,
+    ]
   )
 
   const handleMemberStepSubmit = useCallback(
@@ -166,10 +217,16 @@ export const SignUpModal = () => {
     }),
     [goToNextStep, hasNavigatedBack]
   )
-  const backButtonVisible =
-    currentStep === SignUpSteps.SignUpEmail ||
-    currentStep === SignUpSteps.SignUpPassword ||
-    currentStep === SignUpSteps.SignUpSeed
+  const backButtonVisible = useMemo(() => {
+    if (currentStep === SignUpSteps.SignUpSeed && ytResponseData) {
+      return false
+    }
+    return (
+      currentStep === SignUpSteps.SignUpEmail ||
+      currentStep === SignUpSteps.SignUpPassword ||
+      currentStep === SignUpSteps.SignUpSeed
+    )
+  }, [currentStep, ytResponseData])
 
   const cancelButtonVisible = currentStep !== SignUpSteps.Success && currentStep !== SignUpSteps.Creating
   const isSuccess = currentStep === SignUpSteps.Success
@@ -221,19 +278,9 @@ export const SignUpModal = () => {
       {currentStep === SignUpSteps.SignUpSeed && (
         <SignUpSeedStep
           {...commonProps}
-          onSeedSubmit={handleSeedStepSubmit}
+          onSeedSubmit={handleCreateMemberOnSeedStepSubmit}
           mnemonic={signUpFormData.mnemonic}
           confirmedCopy={signUpFormData.confirmedCopy}
-        />
-      )}
-      {currentStep === SignUpSteps.SignUpEmail && (
-        <SignUpEmailStep
-          {...commonProps}
-          isOverflowing={overflow || !smMatch}
-          isEmailAlreadyTakenError={emailAlreadyTakenError}
-          onEmailSubmit={handleEmailStepSubmit}
-          email={signUpFormData.email}
-          confirmedTerms={signUpFormData.confirmedTerms}
         />
       )}
       {currentStep === SignUpSteps.SignUpPassword && (
@@ -245,6 +292,16 @@ export const SignUpModal = () => {
         />
       )}
 
+      {currentStep === SignUpSteps.SignUpEmail && (
+        <SignUpEmailStep
+          {...commonProps}
+          isOverflowing={overflow || !smMatch}
+          isEmailAlreadyTakenError={emailAlreadyTakenError}
+          onEmailSubmit={handleEmailStepSubmit}
+          email={signUpFormData.email}
+          confirmedTerms={signUpFormData.confirmedTerms}
+        />
+      )}
       {currentStep === SignUpSteps.Creating && <SignUpCreatingMemberStep {...commonProps} />}
       {currentStep === SignUpSteps.Success && (
         <SignUpSuccessStep avatarUrl={signUpFormData.avatar?.url || ''} amountOfTokens={amountOfTokens} />

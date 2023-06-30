@@ -3,7 +3,7 @@ import { ApolloQueryResult } from '@apollo/client'
 import { GetCurrentAccountQuery } from '@/api/queries/__generated__/accounts.generated'
 
 export type AuthContextValue = {
-  handleLogin: (params: LoginParams) => Promise<string>
+  handleLogin: (params: LoginParams, retryCount?: number) => Promise<string>
   isWalletUser: boolean
   isAuthenticating: boolean
   loggedAddress: string | null
@@ -16,6 +16,7 @@ export type AuthContextValue = {
 
 // Login handler types
 export enum LogInErrors {
+  ArtifactsAlreadySaved = 'ArtifactsAlreadySaved',
   ArtifactsNotFound = 'ArtifactsNotFound',
   NoAccountFound = 'NoAccountFound',
   InvalidPayload = 'InvalidPayload',

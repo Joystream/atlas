@@ -11,6 +11,7 @@ import {
 import { SelectItem } from '@/components/_inputs/Select'
 import { ImageCropModalImperativeHandle, ImageCropModalProps } from '@/components/_overlays/ImageCropModal'
 import { atlasConfig } from '@/config'
+import { CreateEditChannelFormInputs, useCreateEditChannelSubmit } from '@/hooks/useChannelFormSubmit'
 import { ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib/types'
 import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
@@ -19,8 +20,6 @@ import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { useUser } from '@/providers/user/user.hooks'
 import { createId } from '@/utils/createId'
 import { SentryLogger } from '@/utils/logs'
-
-import { CreateEditChannelFormInputs, useCreateEditChannelSubmit } from './useChannelFormSubmit'
 
 export const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
   { name: 'Public', value: true },
@@ -199,53 +198,6 @@ export const useChannelForm = (props: FormType) => {
     newChannelAssets
   )
 
-  // set default values for editing channel
-  const handleSubmit = (onCompleted?: (channelId: string) => void) =>
-    createSubmitHandler(async (data) => {
-      if (!joystream || !memberId || !accountId) {
-        return
-      }
-
-      if (!channelBucketsCount && !newChannel) {
-        SentryLogger.error('Channel buckets count is not set', 'CreateEditChannelView')
-        return
-      }
-
-      const metadata: ChannelInputMetadata = {
-        ...(dirtyFields.title ? { title: data.title?.trim() ?? '' } : {}),
-        ...(dirtyFields.description ? { description: data.description?.trim() ?? '' } : {}),
-        ...(dirtyFields.language || newChannel ? { language: data.language } : {}),
-        ...(dirtyFields.isPublic || newChannel ? { isPublic: data.isPublic } : {}),
-        ownerAccount: accountId ?? '',
-      }
-      let channelId = ''
-      await handleChannelSubmit(
-        {
-          metadata,
-          channel,
-          newChannel,
-          assets: {
-            avatarPhoto: data.avatar,
-            coverPhoto: data.cover,
-          },
-          refetchChannel: isEditType(props) ? props.refetchChannel : undefined,
-          fee: newChannel ? createChannelFee : updateChannelFee,
-        },
-        (result) => {
-          reset(getValues())
-          channelId = result.channelId
-          refetchUserMemberships()
-        },
-        setValue,
-        () => {
-          if (atlasConfig.features.ypp.googleConsoleClientId && atlasConfig.features.ypp.youtubeSyncApiUrl) {
-            setTimeout(() => setShowConnectToYtDialog(true), 2000)
-          }
-          onCompleted?.(channelId)
-        }
-      )
-    })()
-
   useEffect(() => {
     if (newChannel || !channel) {
       return
@@ -282,6 +234,52 @@ export const useChannelForm = (props: FormType) => {
       cachedChannelId.current = channel.id
     }
   }, [channel, newChannel, reset])
+
+  const handleSubmit = (onCompleted?: (channelId: string) => void) =>
+    createSubmitHandler(async (data) => {
+      if (!joystream || !memberId || !accountId) {
+        return
+      }
+
+      if (!channelBucketsCount && !newChannel) {
+        SentryLogger.error('Channel buckets count is not set', 'CreateEditChannelView')
+        return
+      }
+
+      const metadata: ChannelInputMetadata = {
+        ...(dirtyFields.title ? { title: data.title?.trim() ?? '' } : {}),
+        ...(dirtyFields.description ? { description: data.description?.trim() ?? '' } : {}),
+        ...(dirtyFields.language || newChannel ? { language: data.language } : {}),
+        ...(dirtyFields.isPublic || newChannel ? { isPublic: data.isPublic } : {}),
+        ownerAccount: accountId ?? '',
+      }
+      let channelId = ''
+      await handleChannelSubmit({
+        data: {
+          metadata,
+          channel,
+          newChannel,
+          assets: {
+            avatarPhoto: data.avatar,
+            coverPhoto: data.cover,
+          },
+          refetchChannel: isEditType(props) ? props.refetchChannel : undefined,
+          fee: newChannel ? createChannelFee : updateChannelFee,
+        },
+        onTxSync: (result) => {
+          reset(getValues())
+          channelId = result.channelId
+          refetchUserMemberships()
+        },
+        onUploadAssets: setValue,
+        onCompleted: () => {
+          atlasConfig.features.ypp.googleConsoleClientId &&
+            atlasConfig.features.ypp.youtubeSyncApiUrl &&
+            setTimeout(() => setShowConnectToYtDialog(true), 2000)
+          onCompleted?.(channelId)
+        },
+      })
+    })()
 
   const handleCoverChange: ImageCropModalProps['onConfirm'] = (
     croppedBlob,
