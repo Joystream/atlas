@@ -11,7 +11,7 @@ export type Auction = {
   topBid: BasicBidFieldsFragment | undefined
   topBidAmount: BN | undefined
   topBidderHandle: string | undefined
-  topBidderAvatarUri: string | null | undefined
+  topBidderAvatarUris: string[] | null | undefined
   isUserTopBidder: boolean | undefined
   userBidAmount: BN | undefined
   userBidUnlockDate: Date | undefined

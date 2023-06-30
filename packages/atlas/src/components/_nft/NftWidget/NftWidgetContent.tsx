@@ -267,7 +267,7 @@ export const NftWidgetContent: FC<NftWidgetContentProps> = memo(
                 content={
                   <>
                     <TopBidderContainer>
-                      <Avatar assetUrl={nftStatus.topBidderAvatarUri} size={24} />
+                      <Avatar assetUrls={nftStatus.topBidderAvatarUris} size={24} />
                       <TopBidderTokenContainer data-size={size}>
                         <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
                       </TopBidderTokenContainer>
