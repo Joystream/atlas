@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { BUILD_ENV } from '@/config/env'
 import { AssetLogger, ConsoleLogger, DataObjectResponseMetric, DistributorEventEntry } from '@/utils/logs'
@@ -111,7 +113,11 @@ export const logDistributorPerformance = async (assetUrl: string, eventEntry: Di
 
 export const getFastestImageUrl = async (urls: string[]) => {
   const promises = urls.map((url) => {
-    return testAssetDownload(url, 'image')
+    return axios.head(url, {
+      headers: {
+        'Cache-Control': 'no-cache',
+      },
+    })
   })
   return Promise.race(promises)
 }

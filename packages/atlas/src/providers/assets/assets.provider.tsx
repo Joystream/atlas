@@ -169,17 +169,11 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
         const startTime = performance.now()
         await promiseRace
         const msDuration = performance.now() - startTime
-        console.log(
-          'ben time',
-          msDuration,
-          msDuration > atlasConfig.storage.assetResponseTimeout,
-          msDuration < atlasConfig.storage.assetResponseTimeout / 2
-        )
         if (
           msDuration > atlasConfig.storage.assetResponseTimeout ||
           msDuration < atlasConfig.storage.assetResponseTimeout / 2
         ) {
-          setUserBenchmarkTime(msDuration + 500)
+          setUserBenchmarkTime(msDuration * 1.5)
         }
       }
     }

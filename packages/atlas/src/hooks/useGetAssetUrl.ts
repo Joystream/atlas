@@ -10,7 +10,7 @@ export const getSingleAssetUrl = async (
   urls: string[] | undefined | null,
   type: 'image' | 'video' | 'subtitle',
   timeout?: number
-) => {
+): Promise<string | undefined> => {
   if (!urls || urls[0] === '') {
     return
   }
@@ -41,6 +41,24 @@ export const getSingleAssetUrl = async (
       }
     }
   }
+
+  // if waterfall logic timeout was too small, fallback to waiting with no timeout
+  return new Promise((res) => {
+    const promises: Promise<string>[] = []
+    for (const distributionAssetUrl of urls) {
+      const assetTestPromise = testAssetDownload(distributionAssetUrl, type)
+      promises.push(assetTestPromise)
+    }
+
+    Promise.race(promises)
+      .then(res)
+      .catch((error) => {
+        ConsoleLogger.warn(`Error during fallback asset promise race`, {
+          urls,
+          error,
+        })
+      })
+  })
 }
 
 export const useGetAssetUrl = (urls: string[] | undefined | null, type: 'image' | 'video' | 'subtitle') => {
