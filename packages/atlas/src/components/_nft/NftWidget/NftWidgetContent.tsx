@@ -84,16 +84,15 @@ export const NftWidgetContent: FC<NftWidgetContentProps> = memo(
                 size={size}
                 label="Last price"
                 content={
-                  <>
-                    <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
-                    <NumberFormat
-                      as="span"
-                      value={nftStatus.lastSalePrice}
-                      format="short"
-                      variant={contentTextVariant}
-                      color="colorText"
-                    />
-                  </>
+                  <NumberFormat
+                    as="span"
+                    value={nftStatus.lastSalePrice}
+                    format="short"
+                    variant={contentTextVariant}
+                    icon={<JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />}
+                    color="colorText"
+                    withDenomination
+                  />
                 }
                 secondaryText={nftStatus.lastSaleDate && formatDateTime(nftStatus.lastSaleDate)}
               />
@@ -256,7 +255,6 @@ export const NftWidgetContent: FC<NftWidgetContentProps> = memo(
         )
 
         const topBidAmountInUsd = nftStatus.topBidAmount && convertHapiToUSD(nftStatus.topBidAmount)
-        const startingPriceInUsd = convertHapiToUSD(nftStatus.startingPrice)
 
         return (
           <>
@@ -301,21 +299,14 @@ export const NftWidgetContent: FC<NftWidgetContentProps> = memo(
                 size={size}
                 label="Starting Price"
                 content={
-                  <>
-                    <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
-                    <NumberFormat
-                      as="span"
-                      format="short"
-                      value={nftStatus.startingPrice}
-                      variant={contentTextVariant}
-                    />
-                  </>
-                }
-                disableSecondary={startingPriceInUsd === null}
-                secondaryText={
-                  startingPriceInUsd && (
-                    <NumberFormat as="span" color="colorText" format="dollar" value={startingPriceInUsd ?? 0} />
-                  )
+                  <NumberFormat
+                    as="span"
+                    format="short"
+                    value={nftStatus.startingPrice}
+                    variant={contentTextVariant}
+                    icon={<JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />}
+                    withDenomination
+                  />
                 }
               />
             )}
@@ -474,23 +465,20 @@ const BidPlacingInfoText = () => (
 )
 
 export const BuyNow = memo(({ buyNowPrice, size }: { buyNowPrice?: BN; size: Size }) => {
-  const { convertHapiToUSD } = useTokenPrice()
-  const buyNowPriceInUsd = buyNowPrice && convertHapiToUSD(buyNowPrice)
-
   const contentTextVariant = size === 'small' ? 'h400' : 'h600'
   return buyNowPrice?.gtn(0) ? (
     <NftInfoItem
       size={size}
       label="Buy now"
-      disableSecondary={buyNowPriceInUsd === null}
       content={
-        <>
-          <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
-          <NumberFormat as="span" value={buyNowPrice} format="short" variant={contentTextVariant} />
-        </>
-      }
-      secondaryText={
-        buyNowPriceInUsd && <NumberFormat as="span" color="colorText" format="dollar" value={buyNowPriceInUsd} />
+        <NumberFormat
+          icon={<JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />}
+          withDenomination
+          as="span"
+          value={buyNowPrice}
+          format="short"
+          variant={contentTextVariant}
+        />
       }
     />
   ) : null

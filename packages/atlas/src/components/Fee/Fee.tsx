@@ -49,6 +49,7 @@ export const Fee: FC<FeeProps> = ({
             variant={variant}
             color={loading ? 'colorTextMuted' : color}
             withTooltip
+            withDenomination="after"
             format="short"
             margin={{ right: 1 }}
           />

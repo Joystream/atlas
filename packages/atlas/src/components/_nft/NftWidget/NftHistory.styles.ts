@@ -57,21 +57,6 @@ export const CopyContainer = styled.div`
   display: flex;
 `
 
-export const ValueContainer = styled.div`
-  display: grid;
-  gap: ${sizes(1)};
-  grid-auto-rows: max-content;
-`
-
-export const JoyPlusIcon = styled.div`
-  display: grid;
-  gap: ${sizes(1)};
-  align-items: center;
-  grid-auto-flow: column;
-  grid-auto-columns: max-content;
-  justify-content: end;
-`
-
 export const HistoryPanelContainer = styled.div`
   position: relative;
 `

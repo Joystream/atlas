@@ -24,7 +24,7 @@ export const Content = styled.div`
   align-self: flex-end;
   gap: ${sizes(4)};
 
-  ${media.lg} {
+  ${media.md} {
     gap: ${sizes(6)};
     grid-template-columns: 1fr auto;
     align-items: center;

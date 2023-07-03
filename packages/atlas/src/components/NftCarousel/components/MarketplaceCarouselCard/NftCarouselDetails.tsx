@@ -191,6 +191,7 @@ export const NftCarouselDetails = ({
                     caption="BUY NOW"
                     content={nftDetails.buyNow}
                     icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
+                    withDenomination
                   />
                 )}
                 {nftDetails.topBid && (
@@ -200,6 +201,7 @@ export const NftCarouselDetails = ({
                     caption="TOP BID"
                     content={nftDetails.topBid}
                     icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
+                    withDenomination
                   />
                 )}
                 {nftDetails.minBid && (
@@ -209,6 +211,7 @@ export const NftCarouselDetails = ({
                     caption="MIN BID"
                     content={nftDetails.minBid}
                     icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
+                    withDenomination
                   />
                 )}
                 {nftStatus?.status === 'idle' && (
