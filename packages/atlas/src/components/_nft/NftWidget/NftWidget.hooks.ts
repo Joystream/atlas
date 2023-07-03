@@ -83,9 +83,11 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
   const ownerMember = nftOwner?.__typename === 'NftOwnerMember' ? nftOwner.member : null
   const ownerChannel = nftOwner?.__typename === 'NftOwnerChannel' ? nftOwner.channel : null
 
-  const { url: ownerAvatarUri } = getMemberAvatar(ownerMember)
-  const creatorAvatarUri = ownerChannel?.avatarPhoto?.resolvedUrl
-  const { url: topBidderAvatarUri } = getMemberAvatar(nftStatus?.status === 'auction' ? nftStatus.topBidder : undefined)
+  const { urls: _ownerAvatarUrls } = getMemberAvatar(ownerMember)
+  const creatorAvatarUrls = ownerChannel?.avatarPhoto?.resolvedUrls
+  const { urls: topBidderAvatarUris } = getMemberAvatar(
+    nftStatus?.status === 'auction' ? nftStatus.topBidder : undefined
+  )
 
   const { entries: nftHistory } = useNftHistoryEntries(video?.id ?? '', {
     skip: !nft,
@@ -95,7 +97,7 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
   })
   const isOwnedByChannel = nftOwner?.__typename === 'NftOwnerChannel'
   const ownerHandle = ownerMember?.handle || ownerChannel?.title
-  const ownerAvatar = isOwnedByChannel ? creatorAvatarUri : ownerAvatarUri
+  const ownerAvatarUrls = isOwnedByChannel ? creatorAvatarUrls : _ownerAvatarUrls
 
   const creatorId = ownerMember?.id || ownerChannel?.id
 
@@ -103,7 +105,7 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
     case 'auction': {
       return {
         ownerHandle,
-        ownerAvatar,
+        ownerAvatarUrls,
         creatorId,
         isOwner,
         needsSettling,
@@ -115,7 +117,7 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
           canChangeBid,
           englishTimerState,
           auctionPlannedEndDate,
-          topBidderAvatarUri,
+          topBidderAvatarUris,
           isUserTopBidder,
           userBidUnlockDate,
           startsAtBlock,
@@ -137,7 +139,7 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
     case 'buy-now':
       return {
         ownerHandle,
-        ownerAvatar,
+        ownerAvatarUrls,
         creatorId,
         isOwner,
         needsSettling,
@@ -154,7 +156,7 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
     case 'idle':
       return {
         ownerHandle,
-        ownerAvatar,
+        ownerAvatarUrls,
         creatorId,
         isOwner,
         needsSettling,

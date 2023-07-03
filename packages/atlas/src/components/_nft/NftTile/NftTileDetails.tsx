@@ -24,7 +24,7 @@ import {
 } from './NftTileDetails.styles'
 
 export type Member = {
-  assetUrl?: string | null
+  assetUrls?: string[] | null
   name?: string
   onClick?: () => void
   loading?: boolean
@@ -118,6 +118,7 @@ export const NftTileDetails: FC<NftTileDetailsProps> = memo(
               content="Not for sale"
               icon={<SvgActionNotForSale />}
               secondary
+              withDenomination
             />
           )
         case 'buy-now':
@@ -127,6 +128,7 @@ export const NftTileDetails: FC<NftTileDetailsProps> = memo(
               caption="Buy now"
               content={buyNowPrice ?? 0}
               icon={<JoyTokenIcon size={16} variant="regular" />}
+              withDenomination
             />
           )
         case 'auction':
@@ -138,6 +140,7 @@ export const NftTileDetails: FC<NftTileDetailsProps> = memo(
                   caption="Top bid"
                   content={topBid}
                   icon={<JoyTokenIcon size={16} variant="regular" />}
+                  withDenomination
                 />
               ) : (
                 <DetailsContent
@@ -145,6 +148,7 @@ export const NftTileDetails: FC<NftTileDetailsProps> = memo(
                   caption="Min bid"
                   content={startingPrice ?? 0}
                   icon={<JoyTokenIcon size={16} variant="regular" />}
+                  withDenomination
                 />
               )}
               {!!buyNowPrice && (
@@ -153,6 +157,7 @@ export const NftTileDetails: FC<NftTileDetailsProps> = memo(
                   caption="Buy now"
                   content={buyNowPrice}
                   icon={<JoyTokenIcon size={16} variant="regular" />}
+                  withDenomination
                 />
               )}
             </>
@@ -163,7 +168,7 @@ export const NftTileDetails: FC<NftTileDetailsProps> = memo(
     const avatars = useMemo(
       () => [
         {
-          url: creator?.assetUrl,
+          urls: creator?.assetUrls,
           tooltipText: `Creator: ${creator?.name}`,
           onClick: creator?.onClick,
           loading: creator?.loading,
@@ -171,7 +176,7 @@ export const NftTileDetails: FC<NftTileDetailsProps> = memo(
         ...(owner
           ? [
               {
-                url: owner?.assetUrl,
+                urls: owner?.assetUrls,
                 tooltipText: `Owner: ${owner?.name}`,
                 onClick: owner?.onClick,
                 loading: owner.loading,
@@ -179,7 +184,7 @@ export const NftTileDetails: FC<NftTileDetailsProps> = memo(
             ]
           : []),
       ],
-      [creator?.assetUrl, creator?.loading, creator?.name, creator?.onClick, owner]
+      [creator?.assetUrls, creator?.loading, creator?.name, creator?.onClick, owner]
     )
 
     return (
@@ -254,9 +259,10 @@ type DetailsContentProps = {
   content: number | string | ReactElement | ReactElement[]
   secondary?: boolean
   tileSize: TileSize | undefined
+  withDenomination?: boolean
 }
 export const DetailsContent: FC<DetailsContentProps> = memo(
-  ({ tileSize, caption, icon, content, secondary, avoidIconStyling }) => {
+  ({ tileSize, caption, icon, content, secondary, avoidIconStyling, withDenomination }) => {
     const getSize = () => {
       switch (tileSize) {
         case 'small':
@@ -277,7 +283,7 @@ export const DetailsContent: FC<DetailsContentProps> = memo(
           {caption}
         </Text>
         <DetailsContentWrapper avoidIconStyling={avoidIconStyling} secondary={secondary}>
-          {icon}{' '}
+          {typeof content === 'string' && icon}{' '}
           {typeof content === 'string' ? (
             <Text as="span" variant={getSize().content} color={secondary ? 'colorText' : undefined}>
               {content}
@@ -285,10 +291,12 @@ export const DetailsContent: FC<DetailsContentProps> = memo(
           ) : typeof content === 'number' ? (
             <NumberFormat
               as="span"
+              icon={icon}
               value={content}
               format="short"
               variant={getSize().content}
               color={secondary ? 'colorText' : undefined}
+              withDenomination={withDenomination}
             />
           ) : (
             content

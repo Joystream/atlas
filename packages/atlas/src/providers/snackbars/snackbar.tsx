@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { FC, ReactNode, useEffect } from 'react'
+import { FC, ReactNode, useEffect, useLayoutEffect, useState } from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
 import {
@@ -13,7 +13,6 @@ import {
 import { Snackbar } from '@/components/Snackbar'
 import { Spinner } from '@/components/_loaders/Spinner'
 import { useBottomNavStore } from '@/providers/bottomNav'
-import { usePersonalDataStore } from '@/providers/personalData'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 import { SnackbarIconType, useSnackbarStore } from './store'
@@ -40,10 +39,8 @@ export const useSnackbar = () => useSnackbarStore((state) => state.actions)
 export const Snackbars: FC = () => {
   const { closeSnackbar, cancelSnackbarTimeout, restartSnackbarTimeout } = useSnackbar()
   const snackbars = useSnackbarStore((state) => state.snackbars)
-  const { isCookiesPopoverVisible } = usePersonalDataStore((state) => ({
-    isCookiesPopoverVisible: state.actions.getIsCookiesPopoverVisible(),
-  }))
   const bottomNavOpen = useBottomNavStore((state) => state.open)
+  const [hasActionBar, setHasActionBar] = useState(false)
   const nonStickedSnackbars = snackbars.filter((snackbar) => !snackbar.sticked)
 
   useEffect(() => {
@@ -54,8 +51,15 @@ export const Snackbars: FC = () => {
     }
   }, [nonStickedSnackbars, closeSnackbar])
 
+  useLayoutEffect(() => {
+    if (snackbars.length) {
+      const _hasActionBar = !!document.getElementsByClassName('action-bar').length
+      setHasActionBar(_hasActionBar)
+    }
+  }, [snackbars.length])
+
   return (
-    <SnackbarsContainer cookiesBannerOpen={isCookiesPopoverVisible} bottomNavOpen={bottomNavOpen}>
+    <SnackbarsContainer bottomNavType={hasActionBar ? 'action' : bottomNavOpen ? 'nav' : undefined}>
       <TransitionGroup>
         {snackbars.map(({ id, iconType, onActionClick, onExit, ...snackbarProps }) => (
           <CSSTransition key={id} timeout={parseInt(cVar('animationTimingMedium', true)) * 2} classNames="snackbar">
@@ -84,19 +88,23 @@ export const Snackbars: FC = () => {
   )
 }
 
-export const SnackbarsContainer = styled.div<{ cookiesBannerOpen: boolean; bottomNavOpen: boolean }>`
+export const SnackbarsContainer = styled.div<{ bottomNavType?: 'action' | 'nav' }>`
   position: fixed;
   left: var(--size-sidenav-width-collapsed);
-  bottom: ${({ cookiesBannerOpen, bottomNavOpen }) => sizes(cookiesBannerOpen ? (bottomNavOpen ? 89 : 73) : 18)};
+  bottom: ${({ bottomNavType }) => sizes(bottomNavType ? (bottomNavType === 'nav' ? 20 : 32) : 4)};
   margin-left: ${sizes(4)};
   display: grid;
   z-index: ${zIndex.snackbars};
   width: calc(100% - ${sizes(8)});
   transition: bottom ${cVar('animationTransitionMedium')}
-    ${({ bottomNavOpen }) => (bottomNavOpen ? transitions.timings.routing : '0ms')};
+    ${({ bottomNavType }) => (bottomNavType ? transitions.timings.routing : '0ms')};
 
   ${media.xs} {
     width: 100%;
     max-width: 360px;
+  }
+
+  ${media.sm} {
+    bottom: ${({ bottomNavType }) => sizes(bottomNavType ? 20 : 4)};
   }
 `

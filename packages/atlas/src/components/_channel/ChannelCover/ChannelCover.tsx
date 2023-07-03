@@ -1,9 +1,7 @@
 import { FC, MouseEvent } from 'react'
-import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
 import { SvgActionImage, SvgActionImageFile } from '@/assets/icons'
 import { Text } from '@/components/Text'
-import { transitions } from '@/styles'
 
 import {
   CoverImage,
@@ -19,7 +17,7 @@ import {
 } from './ChannelCover.styles'
 
 export type ChannelCoverProps = {
-  assetUrl?: string | null
+  assetUrls?: string[] | null
   hasCoverUploadFailed?: boolean
   editable?: boolean
   disabled?: boolean
@@ -27,7 +25,7 @@ export type ChannelCoverProps = {
 }
 
 export const ChannelCover: FC<ChannelCoverProps> = ({
-  assetUrl,
+  assetUrls,
   hasCoverUploadFailed,
   editable,
   disabled,
@@ -41,22 +39,17 @@ export const ChannelCover: FC<ChannelCoverProps> = ({
             <EditCoverDesktopOverlay onClick={onCoverEditClick}>
               <SvgActionImage />
               <Text as="span" variant="t200-strong" margin={{ top: 1 }} color="colorCoreNeutral100">{`${
-                assetUrl ? 'Edit ' : 'Add '
+                assetUrls ? 'Edit ' : 'Add '
               } cover image`}</Text>
             </EditCoverDesktopOverlay>
             <EditCoverMobileButton icon={<SvgActionImageFile />} onClick={onCoverEditClick} variant="tertiary" />
           </EditableControls>
         )}
         <Media>
-          <TransitionGroup>
-            <CSSTransition
-              key={assetUrl ? 'cover' : 'pattern'}
-              timeout={parseInt(transitions.timings.loading)}
-              classNames={transitions.names.fade}
-            >
-              {assetUrl ? (
-                <CoverImage src={assetUrl} />
-              ) : hasCoverUploadFailed ? (
+          <CoverImage
+            resolvedUrls={assetUrls}
+            imagePlaceholder={
+              hasCoverUploadFailed ? (
                 <FailedUploadContainer>
                   <StyledSvgIllustrativeFileFailed />
                   <Text as="span" variant="t100" color="colorText">
@@ -65,9 +58,9 @@ export const ChannelCover: FC<ChannelCoverProps> = ({
                 </FailedUploadContainer>
               ) : (
                 <StyledBackgroundPattern />
-              )}
-            </CSSTransition>
-          </TransitionGroup>
+              )
+            }
+          />
         </Media>
       </MediaWrapper>
     </CoverWrapper>

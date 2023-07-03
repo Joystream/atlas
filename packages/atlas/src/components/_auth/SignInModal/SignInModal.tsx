@@ -8,6 +8,7 @@ import { Button } from '@/components/_buttons/Button'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
 import { atlasConfig } from '@/config'
 import { FAUCET_URL } from '@/config/env'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { MemberId } from '@/joystream-lib/types'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useJoystream } from '@/providers/joystream/joystream.hooks'
@@ -56,6 +57,7 @@ export const SignInModal: FC = () => {
   )
 
   const { displaySnackbar } = useSnackbar()
+  const { identifyUser } = useSegmentAnalytics()
   const { walletStatus, refetchUserMemberships, setActiveUser, isLoggedIn } = useUser()
   const { signInModalOpen, setSignInModalOpen } = useUserStore(
     (state) => ({ signInModalOpen: state.signInModalOpen, setSignInModalOpen: state.actions.setSignInModalOpen }),
@@ -114,6 +116,7 @@ export const SignInModal: FC = () => {
         captchaToken: data.captchaToken,
       }
       const response = await faucetMutation(body)
+
       return response.data
     },
     [avatarMutation, faucetMutation]
@@ -131,6 +134,7 @@ export const SignInModal: FC = () => {
           const lastCreatedMembership = data.memberships[data.memberships.length - 1]
           if (lastCreatedMembership) {
             setActiveUser({ accountId: selectedAddress, memberId: lastCreatedMembership.id, channelId: null })
+            identifyUser(lastCreatedMembership.id)
             displaySnackbar({
               title: 'Your membership has been created',
               description: 'Browse, watch, create, collect videos across the platform and have fun!',
@@ -218,11 +222,11 @@ export const SignInModal: FC = () => {
       displaySnackbar,
       goToNextStep,
       goToPreviousStep,
+      identifyUser,
       joystream,
       refetchUserMemberships,
       selectedAddress,
       setActiveUser,
-      setPreviouslyFailedData,
       setSignInModalOpen,
     ]
   )

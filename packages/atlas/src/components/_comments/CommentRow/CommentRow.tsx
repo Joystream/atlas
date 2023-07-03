@@ -11,7 +11,7 @@ export type CommentRowProps = PropsWithChildren<{
   processing?: boolean
   highlighted?: boolean
   isMemberAvatarLoading?: boolean
-  memberAvatarUrl?: string | null
+  memberAvatarUrls?: string[] | null
   memberUrl?: string
   className?: string
   isInput?: boolean
@@ -24,7 +24,7 @@ export const CommentRow: FC<CommentRowProps> = ({
   processing,
   highlighted,
   children,
-  memberAvatarUrl,
+  memberAvatarUrls,
   isMemberAvatarLoading,
   memberUrl = '',
   className,
@@ -61,10 +61,10 @@ export const CommentRow: FC<CommentRowProps> = ({
         <div>
           {memberUrl ? (
             <Link to={memberUrl}>
-              <Avatar assetUrl={memberAvatarUrl} size={avatarSize} loading={isMemberAvatarLoading} clickable />
+              <Avatar assetUrls={memberAvatarUrls} size={avatarSize} loading={isMemberAvatarLoading} clickable />
             </Link>
           ) : (
-            <Avatar assetUrl={memberAvatarUrl} size={avatarSize} loading={isMemberAvatarLoading} />
+            <Avatar assetUrls={memberAvatarUrls} size={avatarSize} loading={isMemberAvatarLoading} />
           )}
         </div>
         <div className={className}>{children}</div>

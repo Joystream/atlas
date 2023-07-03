@@ -2,24 +2,23 @@ import { BN } from 'bn.js'
 import { useMemo, useState } from 'react'
 
 import { useFullChannel } from '@/api/hooks/channel'
-import { SvgAlertsInformative24, SvgJoyTokenMonochrome24 } from '@/assets/icons'
+import { SvgAlertsInformative24 } from '@/assets/icons'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
 import { ClaimChannelPaymentsDialog } from '@/components/_overlays/ClaimChannelPaymentsDialog'
 import { WithdrawFundsDialog } from '@/components/_overlays/SendTransferDialogs'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
 import { useUser } from '@/providers/user/user.hooks'
-import { formatNumber } from '@/utils/number'
 
 import { useChannelPayout } from './PaymentsOverview.hooks'
-import { CustomNodeWrapper, TilesWrapper } from './PaymentsOverview.styles'
+import { CustomNodeWrapper, StyledSvgJoyTokenMonochrome24, TilesWrapper } from './PaymentsOverview.styles'
 
 export const PaymentsOverView = () => {
   const { channelId, activeMembership } = useUser()
-  const { url: memberAvatarUrl } = getMemberAvatar(activeMembership)
+  const { urls: memberAvatarUrls } = getMemberAvatar(activeMembership)
   const { totalBalance } = useSubscribeAccountBalance()
   const [showWithdrawDialog, setShowWithdrawDialog] = useState(false)
   const [showClaimDialog, setShowClaimDialog] = useState<boolean>(false)
@@ -35,15 +34,12 @@ export const PaymentsOverView = () => {
       channelStateBloatBond: memoizedChannelStateBloatBond,
     }) || new BN(0)
 
-  const formattedChannelBalance = formatNumber(hapiBnToTokenNumber(channelBalance || new BN(0)))
-  const formattedReward = formatNumber(availableAward || 0)
-
   const mdMatch = useMediaMatch('md')
 
   return (
     <>
       <WithdrawFundsDialog
-        avatarUrl={memberAvatarUrl}
+        avatarUrls={memberAvatarUrls}
         activeMembership={activeMembership}
         show={showWithdrawDialog}
         onExitClick={() => setShowWithdrawDialog(false)}
@@ -56,7 +52,6 @@ export const PaymentsOverView = () => {
         <WidgetTile
           title="Claimable Rewards"
           loading={isAwardLoading || loading}
-          text={availableAward ? formattedReward : undefined}
           button={
             availableAward
               ? {
@@ -67,7 +62,14 @@ export const PaymentsOverView = () => {
               : undefined
           }
           customNode={
-            availableAward ? undefined : (
+            availableAward ? (
+              <NumberFormat
+                value={availableAward}
+                as="span"
+                icon={<StyledSvgJoyTokenMonochrome24 />}
+                withDenomination
+              />
+            ) : (
               <CustomNodeWrapper>
                 <SvgAlertsInformative24 />
                 <Text variant="t100" as="p" color="colorText">
@@ -80,8 +82,14 @@ export const PaymentsOverView = () => {
         />
         <WidgetTile
           title="Channel balance"
-          icon={<SvgJoyTokenMonochrome24 />}
-          text={formattedChannelBalance}
+          customNode={
+            <NumberFormat
+              value={channelBalance || new BN(0)}
+              as="span"
+              icon={<StyledSvgJoyTokenMonochrome24 />}
+              withDenomination
+            />
+          }
           loading={loading || channelBalance === undefined}
           button={{
             text: 'Withdraw',

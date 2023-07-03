@@ -3850,9 +3850,11 @@ export type MutationSetVideoViewPerIpTimeLimitArgs = {
 
 export type MutationSetVideoWeightsArgs = {
   commentsWeight: Scalars['Float']
+  joysteamTimestampSubWeight: Scalars['Float']
   newnessWeight: Scalars['Float']
   reactionsWeight: Scalars['Float']
   viewsWeight: Scalars['Float']
+  ytTimestampSubWeight: Scalars['Float']
 }
 
 export type MutationSignAppActionCommitmentArgs = {
@@ -6573,7 +6575,6 @@ export type StorageDataObject = {
   ipfsHash: Scalars['String']
   /** Whether the data object was uploaded and accepted by the storage provider */
   isAccepted: Scalars['Boolean']
-  resolvedUrl?: Maybe<Scalars['String']>
   /** Resolved asset urls */
   resolvedUrls: Array<Scalars['String']>
   /** Data object size in bytes */

@@ -1,7 +1,8 @@
 import styled from '@emotion/styled'
 
+import { SvgJoyTokenMonochrome24 } from '@/assets/icons'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
-import { cVar, media, sizes, zIndex } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 export const CustomNodeWrapper = styled.div`
   display: grid;
@@ -10,30 +11,6 @@ export const CustomNodeWrapper = styled.div`
   gap: ${sizes(2)};
 `
 
-export const AvatarAndTokenWrapper = styled.div`
-  display: flex;
-  align-items: center;
-`
-
-export const TokenWrapper = styled.div`
-  position: relative;
-  left: -4px;
-  z-index: ${zIndex.overlay};
-  margin-right: ${sizes(2)};
-
-  /* token background */
-
-  &::before {
-    content: '';
-    position: absolute;
-    width: 28px;
-    height: 28px;
-    background-color: ${cVar('colorBackgroundMuted')};
-    border-radius: 100%;
-    left: -2px;
-    top: -2px;
-  }
-`
 export const StyledJoyTokenIcon = styled(JoyTokenIcon)`
   position: relative;
 `
@@ -52,5 +29,11 @@ export const TilesWrapper = styled.div`
   ${media.md} {
     gap: ${sizes(6)};
     margin-bottom: ${sizes(6)};
+  }
+`
+
+export const StyledSvgJoyTokenMonochrome24 = styled(SvgJoyTokenMonochrome24)`
+  path {
+    fill: ${cVar('colorText')};
   }
 `

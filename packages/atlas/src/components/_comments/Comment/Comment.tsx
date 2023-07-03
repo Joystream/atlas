@@ -65,7 +65,7 @@ export const Comment: FC<CommentProps> = memo(
         skip: !commentId,
       }
     )
-    const { isLoadingAsset: isMemberAvatarLoading, url: memberAvatarUrl } = getMemberAvatar(activeMembership)
+    const { isLoadingAsset: isMemberAvatarLoading, urls: memberAvatarUrls } = getMemberAvatar(activeMembership)
 
     const commentIdQueryParam = useRouterQuery(QUERY_PARAMS.COMMENT_ID)
     const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
@@ -280,7 +280,7 @@ export const Comment: FC<CommentProps> = memo(
           processing={editCommentInputIsProcessing}
           readOnly={!memberId}
           memberHandle={activeMembership?.handle}
-          memberAvatarUrl={memberAvatarUrl}
+          memberAvatarUrls={memberAvatarUrls}
           isMemberAvatarLoading={isMemberAvatarLoading}
           value={editCommentInputText}
           hasInitialValueChanged={comment?.text !== editCommentInputText}
@@ -334,7 +334,7 @@ export const Comment: FC<CommentProps> = memo(
               ref={replyCommentInputRef}
               fee={replyCommentFee}
               feeLoading={replyCommentFeeLoading}
-              memberAvatarUrl={memberAvatarUrl}
+              memberAvatarUrls={memberAvatarUrls}
               isMemberAvatarLoading={isMemberAvatarLoading}
               processing={replyCommentInputIsProcessing}
               readOnly={!memberId}

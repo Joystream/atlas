@@ -54,7 +54,8 @@ export const useChannelPayout = (txCallback?: () => void) => {
       })
 
       const payloadUrl =
-        events[0]?.data.__typename === 'ChannelPayoutsUpdatedEventData' && events[0].data.payloadDataObject?.resolvedUrl
+        events[0]?.data.__typename === 'ChannelPayoutsUpdatedEventData' &&
+        events[0].data.payloadDataObject?.resolvedUrls
 
       return payloadUrl
     },
@@ -74,7 +75,7 @@ export const useChannelPayout = (txCallback?: () => void) => {
         if (!payloadUrl) {
           return
         }
-        const { reward } = await getClaimableReward(channelId, cumulativeRewardClaimed, payloadUrl)
+        const { reward } = await getClaimableReward(channelId, cumulativeRewardClaimed, payloadUrl[0])
 
         if (reward.gt(maxCashoutAllowed) || reward.lt(minCashoutAllowed)) {
           setClaimError(
@@ -119,7 +120,7 @@ export const useChannelPayout = (txCallback?: () => void) => {
         channelId,
         memberId,
         channel.cumulativeRewardClaimed ?? null,
-        rewardData.payloadUrl,
+        rewardData.payloadUrl[0],
         rewardData.commitment,
       ])
     }

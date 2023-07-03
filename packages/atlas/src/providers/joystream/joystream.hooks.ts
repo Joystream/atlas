@@ -45,6 +45,14 @@ export const useTokenPrice = () => {
     },
     [tokenPrice]
   )
+
+  const convertTokensToUSD = useCallback(
+    (tokens: number) => {
+      if (!tokenPrice) return null
+      return tokens * tokenPrice
+    },
+    [tokenPrice]
+  )
   const convertUSDToHapi = useCallback(
     (dollars: number) => {
       if (!tokenPrice) return new BN(0)
@@ -56,6 +64,7 @@ export const useTokenPrice = () => {
 
   return {
     convertHapiToUSD,
+    convertTokensToUSD,
     convertUSDToHapi,
     isLoadingPrice,
   }

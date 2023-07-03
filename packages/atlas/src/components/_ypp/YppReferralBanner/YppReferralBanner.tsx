@@ -52,7 +52,7 @@ export const YppReferralBanner: FC<YppReferralBannerProps> = ({ className }) => 
   })
 
   const channel = extendedChannel?.channel
-  const channelAvatarUrl = channel?.avatarPhoto?.resolvedUrl
+  const channelAvatarUrls = channel?.avatarPhoto?.resolvedUrls
   const shouldShowReferrerBanner = referrerId && channel && !isLoadingChannel
 
   // persist referrer id in store
@@ -71,7 +71,7 @@ export const YppReferralBanner: FC<YppReferralBannerProps> = ({ className }) => 
       <ReferralBannerContainer className={className}>
         <ChannelInfoContainer>
           <ChannelAvatarLink to={absoluteRoutes.viewer.channel(channel?.id)}>
-            <Avatar clickable loading={isLoading} assetUrl={channelAvatarUrl} size={32} />
+            <Avatar clickable loading={isLoading} assetUrls={channelAvatarUrls} size={32} />
           </ChannelAvatarLink>
           <SwitchTransition>
             <CSSTransition

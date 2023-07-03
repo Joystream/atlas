@@ -24,6 +24,7 @@ type StorageEvent = {
 export type DistributorEventEntry = {
   dataObjectId: string
   dataObjectType: DataObjectType['__typename']
+  resolvedUrl: string
 } & DistributorEventDetails
 
 export type DataObjectResponseMetric = {
