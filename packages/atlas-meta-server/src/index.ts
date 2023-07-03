@@ -32,7 +32,7 @@ app.get('/video/:id', async (req, res) => {
 
     const thumbnailUrl = video.thumbnailPhoto ? generateAssetUrl(video.thumbnailPhoto) : ''
 
-    const videoMetaTags = generateVideoMetaTags(video, thumbnailUrl, appData.name, APP_URL, appData.twitterId)
+    const videoMetaTags = generateVideoMetaTags(video, [thumbnailUrl], appData.name, APP_URL, appData.twitterId)
     const videoSchemaTagsHtml = generateVideoSchemaTagsHtml(video, thumbnailUrl, appData.name, APP_URL)
 
     applyMetaTagsToHtml(html, videoMetaTags)
