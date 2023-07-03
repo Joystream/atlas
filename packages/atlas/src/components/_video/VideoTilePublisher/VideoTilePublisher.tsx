@@ -48,7 +48,11 @@ export const DELAYED_FADE_CLASSNAME = 'delayed-fade'
 export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
   ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick, onMintNftClick, isSyncing }) => {
     const [videoTitleMap, setVideoTitleMap] = useState('')
-    const { video, loading } = useFullVideo(id ?? '', {
+    const {
+      video,
+      loading,
+      refetch: refetchVideo,
+    } = useFullVideo(id ?? '', {
       skip: !id,
       onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTilePublisher', error, { video: { id } }),
     })
@@ -59,7 +63,7 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
       }
     }, [video?.title, videoTitleMap])
 
-    const { isLoadingThumbnail, thumbnailPhotoUrl, videoHref } = useVideoTileSharedLogic(video)
+    const { isLoadingThumbnail, thumbnailPhotoUrls, videoHref } = useVideoTileSharedLogic(video)
     const navigate = useNavigate()
 
     const hasNft = !!video?.nft
@@ -151,7 +155,7 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
                     e?.preventDefault()
                     navigate(absoluteRoutes.viewer.member(ownerMember.handle))
                   }}
-                  avatar={{ assetUrl: ownerAvatar.url, loading: ownerAvatar.isLoadingAsset }}
+                  avatar={{ assetUrls: ownerAvatar.urls, loading: ownerAvatar.isLoadingAsset }}
                   handle={ownerMember.handle}
                   title={ownerMember.handle}
                 />
@@ -206,7 +210,7 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
       onEditClick,
       ownerMember,
       ownerAvatar.isLoadingAsset,
-      ownerAvatar.url,
+      ownerAvatar.urls,
       video?.duration,
       video?.nft,
     ])
@@ -304,6 +308,12 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
       return videoHref
     }, [hasVideoUploadFailed, isSyncingWithYoutube, isUploading, videoHref])
 
+    useEffect(() => {
+      if (uploadVideoStatus?.lastStatus === 'completed' || uploadThumbnailStatus?.lastStatus === 'completed') {
+        refetchVideo()
+      }
+    }, [refetchVideo, uploadThumbnailStatus?.lastStatus, uploadVideoStatus?.lastStatus])
+
     return (
       <VideoTile
         clickable={(!isUploading || hasAssetUploadFailed) && !isSyncingWithYoutube}
@@ -316,7 +326,7 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
         detailsVariant="withoutChannel"
         loadingDetails={loading || !video}
         loadingThumbnail={isLoadingThumbnail && !hasThumbnailUploadFailed}
-        thumbnailUrl={isSyncingWithYoutube ? null : thumbnailPhotoUrl}
+        thumbnailUrls={isSyncingWithYoutube ? null : thumbnailPhotoUrls}
         createdAt={video?.createdAt}
         videoTitle={video?.title}
         views={video?.viewsNum}

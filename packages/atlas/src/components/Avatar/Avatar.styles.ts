@@ -4,6 +4,7 @@ import styled from '@emotion/styled'
 
 import { SvgActionAddImage, SvgActionEdit, SvgIllustrativeFileFailed } from '@/assets/icons'
 import { SvgAvatarSilhouette } from '@/assets/illustrations'
+import { AssetImage } from '@/components/AssetImage'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, square, zIndex } from '@/styles'
 
@@ -57,27 +58,6 @@ export const Overlay = styled.div<{ isEdit?: boolean }>`
       opacity: 0.5;
     `};
 `
-
-// const coverAvatarCss = css`
-//   ${square('64px')};
-
-//   ${media.md} {
-//     ${square('88px')};
-//   }
-// `
-
-// const channelAvatarCss = css`
-//   ${square('88px')};
-//   ${media.md} {
-//     ${square('136px')};
-//   }
-// `
-// const channelCardAvatarCss = css`
-//   ${square('88px')};
-//   ${media.md} {
-//     ${square('104px')};
-//   }
-// `
 
 export const sharedAvatarHoverStyles = (props: { disableHoverDimm?: boolean }) => css`
   ::after {
@@ -154,7 +134,7 @@ export const StyledSkeletonLoader = styled(SkeletonLoader)`
   left: 0;
 `
 
-export const StyledImage = styled.img`
+export const StyledImage = styled(AssetImage)`
   position: absolute;
   left: 0;
   width: 100%;

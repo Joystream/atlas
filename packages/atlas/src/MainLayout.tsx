@@ -1,11 +1,12 @@
 import loadable from '@loadable/component'
 import { FC, useEffect, useRef, useState } from 'react'
-import { Route, Routes, useLocation, useNavigationType } from 'react-router-dom'
+import { Route, Routes, useLocation, useNavigationType, useSearchParams } from 'react-router-dom'
 
 import { StudioLoading } from '@/components/_loaders/StudioLoading'
 import { CookiePopover } from '@/components/_overlays/CookiePopover'
 import { atlasConfig } from '@/config'
 import { BASE_PATHS, absoluteRoutes } from '@/config/routes'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
 import { isBrowserOutdated } from '@/utils/browser'
@@ -40,6 +41,7 @@ const LoadablePlaygroundLayout = loadable(() => import('./views/playground/Playg
 export const MainLayout: FC = () => {
   const scrollPosition = useRef<number>(0)
   const location = useLocation()
+  const [searchParams] = useSearchParams()
   const navigationType = useNavigationType()
   const [cachedLocation, setCachedLocation] = useState(location)
   const locationState = location.state as RoutingState
@@ -54,11 +56,24 @@ export const MainLayout: FC = () => {
     },
     onExitClick: () => closeDialog(),
   })
+  const { trackPageView } = useSegmentAnalytics()
 
   useEffect(() => {
+    // had to include this timeout to make sure the page title is updated
+    const trackRequestTimeout = setTimeout(
+      () =>
+        trackPageView(
+          document.title,
+          'viewer',
+          (location.pathname === absoluteRoutes.viewer.ypp() && searchParams.get('referrer')) || undefined
+        ),
+      1000
+    )
+
     if (!atlasConfig.analytics.sentry?.dsn) {
       return
     }
+
     const stopReplay = async () => await SentryLogger.replay?.stop()
 
     if (location.pathname === absoluteRoutes.viewer.ypp()) {
@@ -70,7 +85,10 @@ export const MainLayout: FC = () => {
         stopReplay()
       }
     }
-  }, [location.pathname])
+    return () => {
+      clearTimeout(trackRequestTimeout)
+    }
+  }, [location.pathname, trackPageView, searchParams])
 
   const { clearOverlays } = useOverlayManager()
 

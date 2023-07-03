@@ -12,7 +12,7 @@ general:
   joystreamDiscordUrl: 'https://discord.gg/DE9UN3YpRP' # URL for Joystream Discord - used for support when errors occur
   appContentFocus: 'web3 & crypto' # Content focus of given app. Provide a string, for example `web & crypto` or `sport`
 storage:
-  assetResponseTimeout: 20000 # Timeout for asset response in ms - after this timeout, different distributor will be tried
+  assetResponseTimeout: 2_000 # Timeout for asset response in ms - after this timeout, different distributor will be tried
   assetUploadStatusPollingInterval: 2000 # Interval for polling asset upload status in ms - polling begins once asset is uploaded and is finished once QN reports the asset as accepted
   uploadProcessingTimeout: 60000 # Timeout for processing uploaded asset in ms - after this timeout, upload will be considered failed
   minimumDistributorRefetchTime: 1000 # Minimum time before refetching distributors list in ms - refetching is done if certain bag is not found on any distributor
@@ -24,7 +24,7 @@ storage:
 
 joystream:
   tokenTicker: 'JOY' # Ticker for the token used in the app
-  tokenPriceFeedUrl: null # URL for the token price feed - used to display token price in the app
+  tokenPriceFeedUrl: 'https://status.joystream.org/price' # URL for the token price feed - used to display token price in the app
   alternativeNodes:
     - name: 'Jsgenesis (Europe/UK)'
       url: 'wss://testnet-rpc-3-uk.joystream.org'
@@ -131,7 +131,7 @@ features:
 
         ## Other ways Joystream Channels can get rewards
 
-        Joystream DAO operating model encapsulates rewards for Joystream channels paid out outside of the Youtube Partnership Program. Gleev Operator, JS Genesis AS has no responsibility or control over such mechanisms and they are listed below.
+        Joystream DAO operating model encapsulates rewards for Joystream channels paid out outside of the YouTube Partnership Program. Gleev Operator, JS Genesis AS has no responsibility or control over such mechanisms and they are listed below.
 
         1. Payout Proposal to Channels by DAO Council.
         2. Direct Payment from DAO Working Group Budget by WG Lead.
@@ -586,7 +586,7 @@ legal:
 
     Joystream Standard License is the default setting for all uploads. It allows creators to retain all ownership over their content, which published on Joystream network storage nodes, while giving any App built and operated by JS Genesis, Joystream DAO or external operators that work with Joystream Blockchain to broadcast this content.
 
-    For content automatically synced from Youtube via Youtube Partnership Programme, YouTube Standard License is substituted by Joystream Standard License. 
+    For content automatically synced from YouTube via YouTube Partnership Program, YouTube Standard License is substituted by Joystream Standard License. 
 
     2. CCO
 

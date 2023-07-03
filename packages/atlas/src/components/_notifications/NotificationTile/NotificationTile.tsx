@@ -81,7 +81,7 @@ export const NotificationTile: FC<NotificationProps> = ({
   className,
 }) => {
   const { date, video, member, read } = notification
-  const { url: avatarUrl, isLoadingAsset: isLoadingAvatar } = getMemberAvatar(member)
+  const { urls: avatarUrls, isLoadingAsset: isLoadingAvatar } = getMemberAvatar(member)
 
   const formattedDate = useMemo(() => {
     const differenceDays = differenceInDays(new Date(), date)
@@ -111,7 +111,7 @@ export const NotificationTile: FC<NotificationProps> = ({
           variant="compact"
           nodeStart={
             member ? (
-              <Avatar size={32} assetUrl={avatarUrl} loading={isLoadingAvatar || loading} />
+              <Avatar size={32} assetUrls={avatarUrls} loading={isLoadingAvatar || loading} />
             ) : (
               <NoActorNotificationAvatar size="small" />
             )
@@ -155,7 +155,7 @@ export const NotificationTile: FC<NotificationProps> = ({
       )}
       <AvatarWrapper>
         {member ? (
-          <Avatar size={40} assetUrl={avatarUrl} loading={isLoadingAvatar || loading} />
+          <Avatar size={40} assetUrls={avatarUrls} loading={isLoadingAvatar || loading} />
         ) : (
           <NoActorNotificationAvatar size="regular" />
         )}

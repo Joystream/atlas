@@ -43,6 +43,9 @@ export const Th = styled(Text)`
 export const Td = styled(Text)`
   ${cellStyles};
 
+  align-items: start;
+  flex-direction: column;
+  justify-content: center;
   box-shadow: ${cVar('effectDividersBottom')};
 `
 

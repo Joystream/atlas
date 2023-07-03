@@ -63,7 +63,7 @@ export const MemberView: FC = () => {
     }
   )
   const member = memberships?.find((member) => member.handle === handle)
-  const { url: avatarUrl, isLoadingAsset: avatarLoading } = getMemberAvatar(member)
+  const { urls: avatarUrls, isLoadingAsset: avatarLoading } = getMemberAvatar(member)
 
   const {
     ownedNftWhereInput,
@@ -242,7 +242,7 @@ export const MemberView: FC = () => {
       {headTags}
       <LimitedWidthContainer>
         <StyledMembershipInfo
-          avatarUrl={avatarUrl}
+          avatarUrls={avatarUrls}
           avatarLoading={avatarLoading}
           handle={member?.handle}
           address={member?.controllerAccount}

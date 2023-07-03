@@ -2,16 +2,18 @@ import { BasicVideoFieldsFragment, FullVideoFieldsFragment } from '@/api/queries
 import { absoluteRoutes } from '@/config/routes'
 
 export const useVideoTileSharedLogic = (video?: BasicVideoFieldsFragment | FullVideoFieldsFragment | null) => {
-  const thumbnailPhotoUrl = video?.thumbnailPhoto?.resolvedUrl
-  const avatarPhotoUrl = video?.channel?.avatarPhoto?.resolvedUrl
+  const thumbnailPhotoUrls = video?.thumbnailPhoto?.resolvedUrls.length ? video.thumbnailPhoto.resolvedUrls : undefined
+  const avatarPhotoUrls = video?.channel?.avatarPhoto?.resolvedUrls.length
+    ? video.channel.avatarPhoto.resolvedUrls
+    : undefined
 
   const videoHref = video ? absoluteRoutes.viewer.video(video.id) : undefined
 
   return {
     isLoadingThumbnail: !video,
     isLoadingAvatar: !video,
-    thumbnailPhotoUrl,
-    avatarPhotoUrl,
+    thumbnailPhotoUrls,
+    avatarPhotoUrls,
     videoHref,
   }
 }

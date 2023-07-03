@@ -262,7 +262,7 @@ const CarouselTemplate: StoryFn<SectionProps<unknown>> = () => {
               <VideoTile
                 loadingDetails={true}
                 loadingAvatar={true}
-                thumbnailUrl={`http://placekitten.com/g/${320 + idx}/180`}
+                thumbnailUrls={[`http://placekitten.com/g/${320 + idx}/180`]}
               />
             </RankingNumberTile>
           )),
@@ -286,7 +286,7 @@ const CarouselTemplate: StoryFn<SectionProps<unknown>> = () => {
               <VideoTile
                 loadingDetails={true}
                 loadingAvatar={true}
-                thumbnailUrl={`https://place.dog/${320 + idx}/180`}
+                thumbnailUrls={[`https://place.dog/${320 + idx}/180`]}
               />
             </RankingNumberTile>
           )),
@@ -308,7 +308,7 @@ const CarouselTemplate: StoryFn<SectionProps<unknown>> = () => {
           children: placeholderItems.map((_, idx) => (
             <NftTile
               key={idx}
-              thumbnail={{ type: 'video', thumbnailUrl: `https://place.dog/${320 + idx}/180` }}
+              thumbnail={{ type: 'video', thumbnailUrls: [`https://place.dog/${320 + idx}/180`] }}
               title={`Nft number ${idx}`}
             />
           )),
@@ -332,7 +332,7 @@ const CarouselTemplate: StoryFn<SectionProps<unknown>> = () => {
               key={idx}
               loadingDetails={true}
               loadingAvatar={true}
-              thumbnailUrl={`https://place.dog/${320 + idx}/180`}
+              thumbnailUrls={[`https://place.dog/${320 + idx}/180`]}
             />
           )),
         }}

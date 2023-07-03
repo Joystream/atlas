@@ -80,6 +80,12 @@ export const InnerContainer = styled.div<{ hasFocus: boolean; hasQuery: boolean 
   }
 `
 
+export const StyledButton = styled(Button)`
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: unset !important;
+`
+
 export const StyledSvgOutlineSearch = styled(SvgControlsSearchAlt, { shouldForwardProp: isPropValid })<{
   highlighted?: boolean
 }>`
@@ -104,6 +110,9 @@ export const SearchHelper = styled(Text)`
 export const SearchButton = styled(Button)`
   padding: 0;
   margin: 0 auto;
+  width: 100%;
+  height: 100%;
+  border-radius: unset;
 
   ${media.md} {
     display: none;

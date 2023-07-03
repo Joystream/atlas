@@ -1,10 +1,9 @@
 import { format } from 'date-fns'
-import { FC, ReactNode, useEffect, useState } from 'react'
+import { FC, ReactNode } from 'react'
 
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { imageUrlValidation } from '@/utils/asset'
 
 import {
   ActivityItemContainer,
@@ -13,7 +12,6 @@ import {
   PillAndDateContainer,
   PillSkeletonLoader,
   Thumbnail,
-  ThumbnailSkeletonLoader,
   Title,
   TitleAndDescriptionContainer,
   TitleSkeletonLoader,
@@ -25,7 +23,7 @@ export type ActivityItemProps = {
   date?: Date
   title?: string
   description?: ReactNode
-  thumbnailUri: string
+  thumbnailUris?: string[]
   thumbnailLoading?: boolean
   loading?: boolean
   onItemClick?: () => void
@@ -35,22 +33,13 @@ export const ActivityItem: FC<ActivityItemProps> = ({
   type,
   title,
   description,
-  thumbnailUri,
+  thumbnailUris,
   thumbnailLoading,
   loading,
   onItemClick,
 }) => {
-  const [thumbnailLoaded, setThumbnailLoaded] = useState(false)
   const smMatch = useMediaMatch('sm')
   const lgMatch = useMediaMatch('lg')
-
-  useEffect(() => {
-    const validateImg = async () => {
-      const res = await imageUrlValidation(thumbnailUri)
-      setThumbnailLoaded(res)
-    }
-    validateImg()
-  }, [thumbnailUri])
 
   const getTitleTextVariant = () => {
     if (lgMatch) {
@@ -62,10 +51,10 @@ export const ActivityItem: FC<ActivityItemProps> = ({
     }
   }
 
-  const isImageLoading = loading || thumbnailLoading || !thumbnailLoaded
+  const isImageLoading = loading || thumbnailLoading
   return (
     <ActivityItemContainer loading={loading} onClick={onItemClick}>
-      {isImageLoading ? <ThumbnailSkeletonLoader /> : <Thumbnail src={thumbnailUri} />}
+      <Thumbnail resolvedUrls={thumbnailUris} isLoading={isImageLoading} />
       <TitleAndDescriptionContainer>
         {loading ? (
           <TitleSkeletonLoader />

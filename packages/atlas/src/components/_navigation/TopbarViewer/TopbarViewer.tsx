@@ -33,7 +33,7 @@ export const TopbarViewer: FC = () => {
   const { isLoggedIn, activeMembership, signIn, isAuthLoading } = useUser()
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
 
-  const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(activeMembership)
+  const { urls: memberAvatarUrls, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(activeMembership)
 
   const { pathname, search } = useLocation()
   const mdMatch = useMediaMatch('md')
@@ -126,7 +126,7 @@ export const TopbarViewer: FC = () => {
                       {!mdMatch && !searchOpen && (
                         <StyledAvatar
                           size={40}
-                          assetUrl={memberAvatarUrl}
+                          assetUrls={memberAvatarUrls}
                           loading={memberAvatarLoading}
                           onClick={handleDrawerToggle}
                         />
@@ -134,7 +134,7 @@ export const TopbarViewer: FC = () => {
                       {mdMatch && (
                         <StyledAvatar
                           size={40}
-                          assetUrl={memberAvatarUrl}
+                          assetUrls={memberAvatarUrls}
                           onClick={handleDrawerToggle}
                           loading={memberAvatarLoading}
                         />

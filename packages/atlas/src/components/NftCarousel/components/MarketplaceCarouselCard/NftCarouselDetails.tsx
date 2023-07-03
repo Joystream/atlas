@@ -6,7 +6,7 @@ import { CSSTransition } from 'react-transition-group'
 import { getNftStatus } from '@/api/hooks/nfts'
 import { GetFeaturedNftsVideosQuery } from '@/api/queries/__generated__/nfts.generated'
 import { SvgActionNotForSale } from '@/assets/icons'
-import { AvatarGroup } from '@/components/Avatar/AvatarGroup'
+import { AvatarGroup, AvatarGroupAvatar } from '@/components/Avatar/AvatarGroup'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import {
   Container,
@@ -43,34 +43,34 @@ export const NftCarouselDetails = ({
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
   const nftStatus = getNftStatus(nft, nft?.video)
 
-  const creatorAvatarUrl =
+  const creatorAvatarUrls =
     nft.owner.__typename === 'NftOwnerChannel'
-      ? nft.owner.channel.avatarPhoto?.resolvedUrl
-      : getMemberAvatar(nft.owner.member).url
-  const thumbnailUrl = nft.video.thumbnailPhoto?.resolvedUrl
-  const mediaUrl = nft.video.media?.resolvedUrl
+      ? nft.owner.channel.avatarPhoto?.resolvedUrls
+      : getMemberAvatar(nft.owner.member).urls
+  const thumbnailUrls = nft.video.thumbnailPhoto?.resolvedUrls
+  const mediaUrls = nft.video.media?.resolvedUrls
   const plannedEndDateBlockTimestamp =
     nftStatus?.status === 'auction' &&
     nftStatus.auctionPlannedEndBlock &&
     convertBlockToMsTimestamp(nftStatus.auctionPlannedEndBlock)
-  const isLoading = !thumbnailUrl || !mediaUrl
+  const isLoading = !thumbnailUrls || !mediaUrls
   const name = nft.owner.__typename === 'NftOwnerChannel' ? nft.video.channel.title : nft.owner.member.handle
   const owner = useMemo(
     () =>
       nft?.owner.__typename === 'NftOwnerChannel'
         ? {
             name,
-            assetUrl: creatorAvatarUrl,
+            assetUrls: creatorAvatarUrls,
             onClick: () => navigate(absoluteRoutes.viewer.channel(nft.video.channel.id)),
           }
         : nft?.owner.__typename === 'NftOwnerMember'
         ? {
             name,
-            assetUrl: creatorAvatarUrl,
+            assetUrls: creatorAvatarUrls,
             onClick: () => name && navigate(absoluteRoutes.viewer.member(name)),
           }
         : undefined,
-    [creatorAvatarUrl, name, navigate, nft]
+    [creatorAvatarUrls, name, navigate, nft]
   )
 
   const nftDetails = useMemo(
@@ -83,7 +83,7 @@ export const NftCarouselDetails = ({
           : undefined,
       creator: {
         name: nft?.video.channel.title || undefined,
-        assetUrl: creatorAvatarUrl,
+        assetUrl: creatorAvatarUrls,
         onClick: () => navigate(absoluteRoutes.viewer.channel(nft?.video.channel.id)),
       },
       title: nft.video.title,
@@ -97,20 +97,20 @@ export const NftCarouselDetails = ({
           ? hapiBnToTokenNumber(nftStatus.startingPrice)
           : undefined,
     }),
-    [creatorAvatarUrl, navigate, nft, nftStatus]
+    [creatorAvatarUrls, navigate, nft, nftStatus]
   )
 
   const avatars = useMemo(
-    () => [
+    (): AvatarGroupAvatar[] => [
       {
-        url: nftDetails.creator?.assetUrl,
+        urls: nftDetails.creator?.assetUrl,
         tooltipText: `Creator: ${nftDetails.creator?.name}`,
         onClick: nftDetails.creator?.onClick,
       },
       ...(owner
         ? [
             {
-              url: owner?.assetUrl,
+              urls: owner?.assetUrls,
               tooltipText: `Owner: ${owner?.name}`,
               onClick: owner?.onClick,
             },
@@ -168,8 +168,8 @@ export const NftCarouselDetails = ({
           onPause={() => setIsPaused(true)}
           onPlay={() => setIsPaused(false)}
           preload="auto"
-          src={mediaUrl ?? undefined}
-          poster={thumbnailUrl ?? undefined}
+          src={mediaUrls ?? undefined}
+          poster={thumbnailUrls ?? undefined}
           handleActions={active}
           videoPlaytime={30}
           onEnded={slideNext}
@@ -191,6 +191,7 @@ export const NftCarouselDetails = ({
                     caption="BUY NOW"
                     content={nftDetails.buyNow}
                     icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
+                    withDenomination
                   />
                 )}
                 {nftDetails.topBid && (
@@ -200,6 +201,7 @@ export const NftCarouselDetails = ({
                     caption="TOP BID"
                     content={nftDetails.topBid}
                     icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
+                    withDenomination
                   />
                 )}
                 {nftDetails.minBid && (
@@ -209,6 +211,7 @@ export const NftCarouselDetails = ({
                     caption="MIN BID"
                     content={nftDetails.minBid}
                     icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
+                    withDenomination
                   />
                 )}
                 {nftStatus?.status === 'idle' && (

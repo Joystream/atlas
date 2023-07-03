@@ -100,13 +100,15 @@ export const TopSellingChannelsTable = () => {
           ),
           salesVolume: (
             <JoyAmountWrapper>
-              <JoyTokenIcon variant="gray" />
               <NumberFormat
+                icon={<JoyTokenIcon variant="gray" />}
                 variant="t200-strong"
                 as="p"
                 value={new BN(data.amount)}
                 margin={{ left: 1 }}
                 format="short"
+                withDenomination
+                denominationAlign="right"
               />
             </JoyAmountWrapper>
           ),
@@ -199,7 +201,7 @@ const Channel = ({ channel }: { channel: BasicChannelFieldsFragment }) => {
   return (
     <StyledLink to={absoluteRoutes.viewer.channel(channel.id)} title={channel.title || ''}>
       <StyledListItem
-        nodeStart={<Avatar assetUrl={channel.avatarPhoto?.resolvedUrl ?? undefined} />}
+        nodeStart={<Avatar assetUrls={channel.avatarPhoto?.resolvedUrls ?? undefined} />}
         label={channel.title}
         isInteractive={false}
         nodeEnd={
