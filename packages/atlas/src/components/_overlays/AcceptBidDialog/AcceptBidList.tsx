@@ -7,12 +7,11 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { RadioInput } from '@/components/_inputs/RadioInput'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { formatDateTime } from '@/utils/time'
 
 import { Bid, SelectedBid } from './AcceptBidDialog.types'
-import { BidRowWrapper, Price, TokenPrice } from './AcceptBidList.styles'
+import { BidRowWrapper, Price } from './AcceptBidList.styles'
 
 type BidRowProps = {
   selectedBid?: SelectedBid
@@ -43,10 +42,10 @@ export const AcceptBidList: FC<AcceptBidListProps> = ({ items, onSelect, selecte
   )
 }
 
-export const BidRow: FC<BidRowProps> = ({ bidder, createdAt, amount, amountUSD, selectedBid, onSelect }) => {
+export const BidRow: FC<BidRowProps> = ({ bidder, createdAt, amount, selectedBid, onSelect }) => {
   const xsMatch = useMediaMatch('xs')
   const selected = selectedBid?.bidderId === bidder.id
-  const { url, isLoadingAsset } = getMemberAvatar(bidder)
+  const { urls, isLoadingAsset } = getMemberAvatar(bidder)
   return (
     <BidRowWrapper selected={selected} onClick={() => onSelect?.(bidder.id, amount)}>
       <RadioInput
@@ -54,7 +53,7 @@ export const BidRow: FC<BidRowProps> = ({ bidder, createdAt, amount, amountUSD, 
         value={bidder.id}
         onChange={() => onSelect?.(bidder.id, amount)}
       />
-      {xsMatch && <Avatar assetUrl={url} loading={isLoadingAsset} size={40} />}
+      {xsMatch && <Avatar assetUrls={urls} loading={isLoadingAsset} size={40} />}
       <div>
         <Text as="p" variant="h300" color={!selected ? 'colorText' : undefined} margin={{ bottom: 1 }}>
           {bidder?.handle}
@@ -64,15 +63,16 @@ export const BidRow: FC<BidRowProps> = ({ bidder, createdAt, amount, amountUSD, 
         </Text>
       </div>
       <Price>
-        <TokenPrice>
-          <JoyTokenIcon variant={selected ? 'regular' : 'gray'} />
-          <Text as="p" variant="h300" margin={{ left: 1 }} color={!selected ? 'colorText' : undefined}>
-            {hapiBnToTokenNumber(amount)}
-          </Text>
-        </TokenPrice>
-        {amountUSD !== null && (
-          <NumberFormat value={amountUSD} format="dollar" as="p" variant="t100" color="colorText" />
-        )}
+        <NumberFormat
+          value={amount}
+          icon={<JoyTokenIcon variant={selected ? 'regular' : 'gray'} />}
+          format="short"
+          as="p"
+          variant="h300"
+          color={!selected ? 'colorText' : undefined}
+          withDenomination
+          denominationAlign="right"
+        />
       </Price>
     </BidRowWrapper>
   )

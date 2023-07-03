@@ -18,7 +18,6 @@ import { formatDateTime } from '@/utils/time'
 
 import {
   DialogText,
-  JoyAmountWrapper,
   JoystreamSvgWrapper,
   SenderItem,
   StyledJoyTokenIcon,
@@ -116,7 +115,7 @@ const Sender = ({ sender }: { sender: PaymentHistory['sender'] }) => {
     }
   )
   const member = memberships?.find((member) => member.controllerAccount === sender)
-  const { url: avatarUrl, isLoadingAsset: avatarLoading } = getMemberAvatar(member)
+  const { urls: avatarUrls, isLoadingAsset: avatarLoading } = getMemberAvatar(member)
 
   if (sender === 'council') {
     return (
@@ -135,7 +134,7 @@ const Sender = ({ sender }: { sender: PaymentHistory['sender'] }) => {
     return (
       <StyledLink to={absoluteRoutes.viewer.member(member.handle)}>
         <SenderItem
-          nodeStart={<Avatar assetUrl={avatarUrl} size={32} loading={avatarLoading} />}
+          nodeStart={<Avatar assetUrls={avatarUrls} size={32} loading={avatarLoading} />}
           label={member?.handle}
           isInteractive={false}
         />
@@ -174,16 +173,14 @@ const Type = ({ type }: { type: PaymentType }) => {
 const TokenAmount = ({ tokenAmount }: { tokenAmount: BN }) => {
   const isNegative = tokenAmount.isNeg()
   return (
-    <JoyAmountWrapper>
-      <StyledJoyTokenIcon variant="gray" error={isNegative} />
-      <StyledNumberFormat
-        variant="t200-strong"
-        as="p"
-        value={tokenAmount}
-        margin={{ left: 1 }}
-        format="short"
-        color={isNegative ? 'colorTextError' : 'colorTextStrong'}
-      />
-    </JoyAmountWrapper>
+    <StyledNumberFormat
+      icon={<StyledJoyTokenIcon variant="gray" error={isNegative} />}
+      variant="t200-strong"
+      as="p"
+      value={tokenAmount}
+      format="short"
+      color={isNegative ? 'colorTextError' : 'colorTextStrong'}
+      withDenomination
+    />
   )
 }

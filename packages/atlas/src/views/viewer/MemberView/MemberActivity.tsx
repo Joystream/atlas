@@ -185,11 +185,11 @@ export const MemberActivity: FC<MemberActivityProps> = ({
                 },
                 children: items.map((activity, i) =>
                   activity.id === undefined ? (
-                    <ActivityItem key={i} loading={loading} thumbnailUri="" />
+                    <ActivityItem key={i} loading={loading} />
                   ) : (
                     <ActivityItem
                       key={i}
-                      thumbnailUri={activity.video?.thumbnailPhoto?.resolvedUrl || ''}
+                      thumbnailUris={activity.video?.thumbnailPhoto?.resolvedUrls}
                       onItemClick={() => navigate(absoluteRoutes.viewer.video(activity.video?.id))}
                       date={activity?.date}
                       type={activity?.type}

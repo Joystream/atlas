@@ -14,6 +14,7 @@ import { SidenavStudio } from '@/components/_navigation/SidenavStudio'
 import { TopbarStudio } from '@/components/_navigation/TopbarStudio'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { ConnectionStatusManager, useConnectionStatusStore } from '@/providers/connectionStatus'
 import { UploadsManager } from '@/providers/uploads/uploads.manager'
@@ -49,6 +50,7 @@ const StudioLayout = () => {
 
   const [openUnsupportedBrowserDialog, closeUnsupportedBrowserDialog] = useConfirmationModal()
   const [enterLocation] = useState(location.pathname)
+  const { trackPageView } = useSegmentAnalytics()
   const isMembershipLoaded = !membershipsLoading && !isAuthLoading && !isWalletLoading
   const hasMembership = !!memberships?.length
 
@@ -76,6 +78,13 @@ const StudioLayout = () => {
       })
     }
   }, [closeUnsupportedBrowserDialog, openUnsupportedBrowserDialog])
+
+  useEffect(() => {
+    // had to include this timeout to make sure the page title is updated
+    const trackRequestTimeout = setTimeout(() => trackPageView(document.title, 'studio', undefined), 1000)
+
+    return () => clearTimeout(trackRequestTimeout)
+  }, [location.pathname, trackPageView])
 
   const yppRedirect = useCallback(() => {
     if (!channelSet) {

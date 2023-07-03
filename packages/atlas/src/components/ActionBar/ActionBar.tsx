@@ -65,7 +65,7 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
     )
 
     return (
-      <ActionBarContainer ref={ref} className={className} isActive={isActive}>
+      <ActionBarContainer ref={ref} className={`${className} action-bar`} isActive={isActive}>
         {fee && !isNoneCrypto && (
           <FeeContainer>
             <Fee variant={smMatch ? 'h400' : 'h200'} withToken amount={fee || new BN(0)} loading={feeLoading} />

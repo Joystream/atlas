@@ -22,9 +22,9 @@ export const EmbeddedView: FC = () => {
   })
   const { addVideoView } = useAddVideoView()
 
-  const mediaUrl = video?.media?.resolvedUrl
-  const thumbnailUrl = video?.thumbnailPhoto?.resolvedUrl
-  const channelAvatarUrl = video?.channel.avatarPhoto?.resolvedUrl
+  const mediaUrls = video?.media?.resolvedUrls
+  const thumbnailUrls = video?.thumbnailPhoto?.resolvedUrls
+  const channelAvatarUrls = video?.channel.avatarPhoto?.resolvedUrls
 
   const startTimestamp = useVideoStartTimestamp(video?.duration)
 
@@ -96,11 +96,11 @@ export const EmbeddedView: FC = () => {
           <VideoPlayer
             onAddVideoView={handleAddVideoView}
             isVideoPending={!video?.media?.isAccepted}
-            channelAvatarUrl={channelAvatarUrl}
+            channelAvatarUrls={channelAvatarUrls}
             isChannelAvatarLoading={loading}
             videoId={video.id}
-            src={mediaUrl}
-            posterUrl={thumbnailUrl}
+            videoUrls={mediaUrls}
+            posterUrls={thumbnailUrls}
             fill
             startTime={startTimestamp}
             onEnd={handleVideoEnded}

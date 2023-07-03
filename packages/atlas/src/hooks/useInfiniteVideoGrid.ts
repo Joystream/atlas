@@ -53,6 +53,7 @@ export const useInfiniteVideoGrid = <Query extends VideoInfiniteQueries>({
   const itemsToLoad = Math.min(itemsLeft, columns * 4)
 
   const nextLoadPlaceholders = !dataConnection?.pageInfo.hasNextPage || false ? [] : createPlaceholderData(itemsToLoad)
+
   return {
     tiles: [...firstLoadPlaceholders, ...displayedItems, ...(loading ? nextLoadPlaceholders : [])],
     fetchMore,

@@ -81,7 +81,7 @@
     "blake3": "patch:blake3@npm:2.1.7#.yarn/patches/blake3-npm-2.1.7-7bf40c44b4"
   },
   "engines": {
-    "node": "^16"
+    "node": "^18"
   },
   "packageManager": "yarn@3.2.1"
 }

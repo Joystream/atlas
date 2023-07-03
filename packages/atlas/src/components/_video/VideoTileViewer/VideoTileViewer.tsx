@@ -33,7 +33,7 @@ export const VideoTileViewer: FC<VideoTileViewerProps> = ({ id, onClick, details
   })
   const nftStatus = getNftStatus(video?.nft, video)
   const nftState = useNftState(video?.nft)
-  const { avatarPhotoUrl, isLoadingAvatar, isLoadingThumbnail, thumbnailPhotoUrl, videoHref } =
+  const { avatarPhotoUrls, isLoadingAvatar, isLoadingThumbnail, thumbnailPhotoUrls, videoHref } =
     useVideoTileSharedLogic(video)
 
   const handleWithdrawBid = () => {
@@ -75,7 +75,7 @@ export const VideoTileViewer: FC<VideoTileViewerProps> = ({ id, onClick, details
       onChannelAvatarClick={() => navigate(channelHref)}
       loadingDetails={loading || !video}
       loadingThumbnail={isLoadingThumbnail}
-      thumbnailUrl={thumbnailPhotoUrl}
+      thumbnailUrls={thumbnailPhotoUrls}
       views={video?.viewsNum}
       createdAt={video?.createdAt}
       slots={{
@@ -95,7 +95,7 @@ export const VideoTileViewer: FC<VideoTileViewerProps> = ({ id, onClick, details
           type: 'hover',
         },
       }}
-      channelAvatarUrl={avatarPhotoUrl}
+      channelAvatarUrls={avatarPhotoUrls}
       loadingAvatar={isLoadingAvatar}
       channelTitle={video?.channel?.title}
       videoTitle={video?.title}

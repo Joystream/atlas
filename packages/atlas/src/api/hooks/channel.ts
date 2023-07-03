@@ -23,6 +23,7 @@ import {
   useGetTop10ChannelsQuery,
   useUnfollowChannelMutation,
 } from '@/api/queries/__generated__/channels.generated'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 
 export const useBasicChannel = (
   id: string,
@@ -82,9 +83,11 @@ export const useBasicChannels = (
 
 export const useFollowChannel = (opts?: MutationHookOptions<FollowChannelMutation>) => {
   const [followChannel, rest] = useFollowChannelMutation()
+  const { trackChannelFollow } = useSegmentAnalytics()
   return {
-    followChannel: (id: string) =>
-      followChannel({
+    followChannel: (id: string) => {
+      trackChannelFollow(id)
+      return followChannel({
         ...opts,
         variables: {
           channelId: id,
@@ -100,7 +103,8 @@ export const useFollowChannel = (opts?: MutationHookOptions<FollowChannelMutatio
             },
           })
         },
-      }),
+      })
+    },
     ...rest,
   }
 }

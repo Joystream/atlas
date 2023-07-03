@@ -62,6 +62,7 @@ const tileSizeVariants = ({ tileSize }: ContentProps) => css`
 const isContentPropValid = (prop: string) => prop !== 'loading' && prop !== 'tileSize' && prop !== 'shouldHover'
 export const Content = styled(Link, { shouldForwardProp: isContentPropValid })<ContentProps>`
   display: block;
+  height: 100%;
   text-decoration: none;
   background-color: ${cVar('colorBackgroundMuted')};
   transition: background-color ${cVar('animationTransitionFast')};

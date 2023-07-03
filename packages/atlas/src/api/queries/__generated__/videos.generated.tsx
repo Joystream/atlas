@@ -47,7 +47,6 @@ export type GetFullVideoQuery = {
       __typename?: 'StorageDataObject'
       id: string
       resolvedUrls: Array<string>
-      resolvedUrl?: string | null
       createdAt: Date
       size: string
       isAccepted: boolean
@@ -66,7 +65,6 @@ export type GetFullVideoQuery = {
       __typename?: 'StorageDataObject'
       id: string
       resolvedUrls: Array<string>
-      resolvedUrl?: string | null
       createdAt: Date
       size: string
       isAccepted: boolean
@@ -109,7 +107,6 @@ export type GetFullVideoQuery = {
                   __typename?: 'StorageDataObject'
                   id: string
                   resolvedUrls: Array<string>
-                  resolvedUrl?: string | null
                   createdAt: Date
                   size: string
                   isAccepted: boolean
@@ -133,7 +130,6 @@ export type GetFullVideoQuery = {
         __typename?: 'StorageDataObject'
         id: string
         resolvedUrls: Array<string>
-        resolvedUrl?: string | null
         createdAt: Date
         size: string
         isAccepted: boolean
@@ -152,7 +148,6 @@ export type GetFullVideoQuery = {
         __typename?: 'StorageDataObject'
         id: string
         resolvedUrls: Array<string>
-        resolvedUrl?: string | null
         createdAt: Date
         size: string
         isAccepted: boolean
@@ -208,7 +203,6 @@ export type GetFullVideoQuery = {
                           __typename?: 'StorageDataObject'
                           id: string
                           resolvedUrls: Array<string>
-                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -232,7 +226,6 @@ export type GetFullVideoQuery = {
                 __typename?: 'StorageDataObject'
                 id: string
                 resolvedUrls: Array<string>
-                resolvedUrl?: string | null
                 createdAt: Date
                 size: string
                 isAccepted: boolean
@@ -265,7 +258,6 @@ export type GetFullVideoQuery = {
                         __typename?: 'StorageDataObject'
                         id: string
                         resolvedUrls: Array<string>
-                        resolvedUrl?: string | null
                         createdAt: Date
                         size: string
                         isAccepted: boolean
@@ -327,7 +319,6 @@ export type GetFullVideoQuery = {
                             __typename?: 'StorageDataObject'
                             id: string
                             resolvedUrls: Array<string>
-                            resolvedUrl?: string | null
                             createdAt: Date
                             size: string
                             isAccepted: boolean
@@ -369,7 +360,6 @@ export type GetFullVideoQuery = {
                             __typename?: 'StorageDataObject'
                             id: string
                             resolvedUrls: Array<string>
-                            resolvedUrl?: string | null
                             createdAt: Date
                             size: string
                             isAccepted: boolean
@@ -406,7 +396,6 @@ export type GetFullVideoQuery = {
                             __typename?: 'StorageDataObject'
                             id: string
                             resolvedUrls: Array<string>
-                            resolvedUrl?: string | null
                             createdAt: Date
                             size: string
                             isAccepted: boolean
@@ -444,7 +433,6 @@ export type GetFullVideoQuery = {
         __typename?: 'StorageDataObject'
         id: string
         resolvedUrls: Array<string>
-        resolvedUrl?: string | null
         createdAt: Date
         size: string
         isAccepted: boolean
@@ -500,7 +488,6 @@ export type GetBasicVideosConnectionQuery = {
             __typename?: 'StorageDataObject'
             id: string
             resolvedUrls: Array<string>
-            resolvedUrl?: string | null
             createdAt: Date
             size: string
             isAccepted: boolean
@@ -520,7 +507,6 @@ export type GetBasicVideosConnectionQuery = {
           __typename?: 'StorageDataObject'
           id: string
           resolvedUrls: Array<string>
-          resolvedUrl?: string | null
           createdAt: Date
           size: string
           isAccepted: boolean
@@ -568,7 +554,6 @@ export type GetBasicVideosConnectionQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -592,7 +577,6 @@ export type GetBasicVideosConnectionQuery = {
                     __typename?: 'StorageDataObject'
                     id: string
                     resolvedUrls: Array<string>
-                    resolvedUrl?: string | null
                     createdAt: Date
                     size: string
                     isAccepted: boolean
@@ -625,7 +609,6 @@ export type GetBasicVideosConnectionQuery = {
                             __typename?: 'StorageDataObject'
                             id: string
                             resolvedUrls: Array<string>
-                            resolvedUrl?: string | null
                             createdAt: Date
                             size: string
                             isAccepted: boolean
@@ -687,7 +670,6 @@ export type GetBasicVideosConnectionQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -729,7 +711,6 @@ export type GetBasicVideosConnectionQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -766,7 +747,6 @@ export type GetBasicVideosConnectionQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -851,7 +831,6 @@ export type GetFullVideosConnectionQuery = {
           __typename?: 'StorageDataObject'
           id: string
           resolvedUrls: Array<string>
-          resolvedUrl?: string | null
           createdAt: Date
           size: string
           isAccepted: boolean
@@ -870,7 +849,6 @@ export type GetFullVideosConnectionQuery = {
           __typename?: 'StorageDataObject'
           id: string
           resolvedUrls: Array<string>
-          resolvedUrl?: string | null
           createdAt: Date
           size: string
           isAccepted: boolean
@@ -913,7 +891,6 @@ export type GetFullVideosConnectionQuery = {
                       __typename?: 'StorageDataObject'
                       id: string
                       resolvedUrls: Array<string>
-                      resolvedUrl?: string | null
                       createdAt: Date
                       size: string
                       isAccepted: boolean
@@ -937,7 +914,6 @@ export type GetFullVideosConnectionQuery = {
             __typename?: 'StorageDataObject'
             id: string
             resolvedUrls: Array<string>
-            resolvedUrl?: string | null
             createdAt: Date
             size: string
             isAccepted: boolean
@@ -956,7 +932,6 @@ export type GetFullVideosConnectionQuery = {
             __typename?: 'StorageDataObject'
             id: string
             resolvedUrls: Array<string>
-            resolvedUrl?: string | null
             createdAt: Date
             size: string
             isAccepted: boolean
@@ -1012,7 +987,6 @@ export type GetFullVideosConnectionQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -1036,7 +1010,6 @@ export type GetFullVideosConnectionQuery = {
                     __typename?: 'StorageDataObject'
                     id: string
                     resolvedUrls: Array<string>
-                    resolvedUrl?: string | null
                     createdAt: Date
                     size: string
                     isAccepted: boolean
@@ -1069,7 +1042,6 @@ export type GetFullVideosConnectionQuery = {
                             __typename?: 'StorageDataObject'
                             id: string
                             resolvedUrls: Array<string>
-                            resolvedUrl?: string | null
                             createdAt: Date
                             size: string
                             isAccepted: boolean
@@ -1131,7 +1103,6 @@ export type GetFullVideosConnectionQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -1173,7 +1144,6 @@ export type GetFullVideosConnectionQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -1210,7 +1180,6 @@ export type GetFullVideosConnectionQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -1248,7 +1217,6 @@ export type GetFullVideosConnectionQuery = {
             __typename?: 'StorageDataObject'
             id: string
             resolvedUrls: Array<string>
-            resolvedUrl?: string | null
             createdAt: Date
             size: string
             isAccepted: boolean
@@ -1301,7 +1269,6 @@ export type GetBasicVideosQuery = {
         __typename?: 'StorageDataObject'
         id: string
         resolvedUrls: Array<string>
-        resolvedUrl?: string | null
         createdAt: Date
         size: string
         isAccepted: boolean
@@ -1321,7 +1288,6 @@ export type GetBasicVideosQuery = {
       __typename?: 'StorageDataObject'
       id: string
       resolvedUrls: Array<string>
-      resolvedUrl?: string | null
       createdAt: Date
       size: string
       isAccepted: boolean
@@ -1369,7 +1335,6 @@ export type GetBasicVideosQuery = {
                           __typename?: 'StorageDataObject'
                           id: string
                           resolvedUrls: Array<string>
-                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -1393,7 +1358,6 @@ export type GetBasicVideosQuery = {
                 __typename?: 'StorageDataObject'
                 id: string
                 resolvedUrls: Array<string>
-                resolvedUrl?: string | null
                 createdAt: Date
                 size: string
                 isAccepted: boolean
@@ -1426,7 +1390,6 @@ export type GetBasicVideosQuery = {
                         __typename?: 'StorageDataObject'
                         id: string
                         resolvedUrls: Array<string>
-                        resolvedUrl?: string | null
                         createdAt: Date
                         size: string
                         isAccepted: boolean
@@ -1488,7 +1451,6 @@ export type GetBasicVideosQuery = {
                             __typename?: 'StorageDataObject'
                             id: string
                             resolvedUrls: Array<string>
-                            resolvedUrl?: string | null
                             createdAt: Date
                             size: string
                             isAccepted: boolean
@@ -1530,7 +1492,6 @@ export type GetBasicVideosQuery = {
                             __typename?: 'StorageDataObject'
                             id: string
                             resolvedUrls: Array<string>
-                            resolvedUrl?: string | null
                             createdAt: Date
                             size: string
                             isAccepted: boolean
@@ -1567,7 +1528,6 @@ export type GetBasicVideosQuery = {
                             __typename?: 'StorageDataObject'
                             id: string
                             resolvedUrls: Array<string>
-                            resolvedUrl?: string | null
                             createdAt: Date
                             size: string
                             isAccepted: boolean
@@ -1643,7 +1603,6 @@ export type GetFullVideosQuery = {
       __typename?: 'StorageDataObject'
       id: string
       resolvedUrls: Array<string>
-      resolvedUrl?: string | null
       createdAt: Date
       size: string
       isAccepted: boolean
@@ -1662,7 +1621,6 @@ export type GetFullVideosQuery = {
       __typename?: 'StorageDataObject'
       id: string
       resolvedUrls: Array<string>
-      resolvedUrl?: string | null
       createdAt: Date
       size: string
       isAccepted: boolean
@@ -1705,7 +1663,6 @@ export type GetFullVideosQuery = {
                   __typename?: 'StorageDataObject'
                   id: string
                   resolvedUrls: Array<string>
-                  resolvedUrl?: string | null
                   createdAt: Date
                   size: string
                   isAccepted: boolean
@@ -1729,7 +1686,6 @@ export type GetFullVideosQuery = {
         __typename?: 'StorageDataObject'
         id: string
         resolvedUrls: Array<string>
-        resolvedUrl?: string | null
         createdAt: Date
         size: string
         isAccepted: boolean
@@ -1748,7 +1704,6 @@ export type GetFullVideosQuery = {
         __typename?: 'StorageDataObject'
         id: string
         resolvedUrls: Array<string>
-        resolvedUrl?: string | null
         createdAt: Date
         size: string
         isAccepted: boolean
@@ -1804,7 +1759,6 @@ export type GetFullVideosQuery = {
                           __typename?: 'StorageDataObject'
                           id: string
                           resolvedUrls: Array<string>
-                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -1828,7 +1782,6 @@ export type GetFullVideosQuery = {
                 __typename?: 'StorageDataObject'
                 id: string
                 resolvedUrls: Array<string>
-                resolvedUrl?: string | null
                 createdAt: Date
                 size: string
                 isAccepted: boolean
@@ -1861,7 +1814,6 @@ export type GetFullVideosQuery = {
                         __typename?: 'StorageDataObject'
                         id: string
                         resolvedUrls: Array<string>
-                        resolvedUrl?: string | null
                         createdAt: Date
                         size: string
                         isAccepted: boolean
@@ -1923,7 +1875,6 @@ export type GetFullVideosQuery = {
                             __typename?: 'StorageDataObject'
                             id: string
                             resolvedUrls: Array<string>
-                            resolvedUrl?: string | null
                             createdAt: Date
                             size: string
                             isAccepted: boolean
@@ -1965,7 +1916,6 @@ export type GetFullVideosQuery = {
                             __typename?: 'StorageDataObject'
                             id: string
                             resolvedUrls: Array<string>
-                            resolvedUrl?: string | null
                             createdAt: Date
                             size: string
                             isAccepted: boolean
@@ -2002,7 +1952,6 @@ export type GetFullVideosQuery = {
                             __typename?: 'StorageDataObject'
                             id: string
                             resolvedUrls: Array<string>
-                            resolvedUrl?: string | null
                             createdAt: Date
                             size: string
                             isAccepted: boolean
@@ -2040,7 +1989,6 @@ export type GetFullVideosQuery = {
         __typename?: 'StorageDataObject'
         id: string
         resolvedUrls: Array<string>
-        resolvedUrl?: string | null
         createdAt: Date
         size: string
         isAccepted: boolean
@@ -2098,7 +2046,6 @@ export type GetMostViewedVideosConnectionQuery = {
             __typename?: 'StorageDataObject'
             id: string
             resolvedUrls: Array<string>
-            resolvedUrl?: string | null
             createdAt: Date
             size: string
             isAccepted: boolean
@@ -2118,7 +2065,6 @@ export type GetMostViewedVideosConnectionQuery = {
           __typename?: 'StorageDataObject'
           id: string
           resolvedUrls: Array<string>
-          resolvedUrl?: string | null
           createdAt: Date
           size: string
           isAccepted: boolean
@@ -2166,7 +2112,6 @@ export type GetMostViewedVideosConnectionQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -2190,7 +2135,6 @@ export type GetMostViewedVideosConnectionQuery = {
                     __typename?: 'StorageDataObject'
                     id: string
                     resolvedUrls: Array<string>
-                    resolvedUrl?: string | null
                     createdAt: Date
                     size: string
                     isAccepted: boolean
@@ -2223,7 +2167,6 @@ export type GetMostViewedVideosConnectionQuery = {
                             __typename?: 'StorageDataObject'
                             id: string
                             resolvedUrls: Array<string>
-                            resolvedUrl?: string | null
                             createdAt: Date
                             size: string
                             isAccepted: boolean
@@ -2285,7 +2228,6 @@ export type GetMostViewedVideosConnectionQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -2327,7 +2269,6 @@ export type GetMostViewedVideosConnectionQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -2364,7 +2305,6 @@ export type GetMostViewedVideosConnectionQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean

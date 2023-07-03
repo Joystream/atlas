@@ -3,6 +3,8 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
+import { AssetImage } from '@/components/AssetImage'
+import { AssetVideo } from '@/components/AssetVideo/AssetVideo'
 import { cVar, media, sizes, zIndex } from '@/styles'
 
 type VideoWrapperProps = {
@@ -13,7 +15,7 @@ export const VideoWrapper = styled.div<VideoWrapperProps>`
   overflow: hidden;
 `
 
-export const VideoPoster = styled.img`
+export const VideoPoster = styled(AssetImage)`
   position: absolute;
   object-fit: cover;
   max-height: 100%;
@@ -29,7 +31,7 @@ export const VideoPoster = styled.img`
   }
 `
 
-export const StyledVideo = styled.video`
+export const StyledVideo = styled(AssetVideo)`
   position: absolute;
   object-fit: cover;
   max-height: 100%;
