@@ -45,7 +45,7 @@ export const AcceptBidList: FC<AcceptBidListProps> = ({ items, onSelect, selecte
 export const BidRow: FC<BidRowProps> = ({ bidder, createdAt, amount, selectedBid, onSelect }) => {
   const xsMatch = useMediaMatch('xs')
   const selected = selectedBid?.bidderId === bidder.id
-  const { url, isLoadingAsset } = getMemberAvatar(bidder)
+  const { urls, isLoadingAsset } = getMemberAvatar(bidder)
   return (
     <BidRowWrapper selected={selected} onClick={() => onSelect?.(bidder.id, amount)}>
       <RadioInput
@@ -53,7 +53,7 @@ export const BidRow: FC<BidRowProps> = ({ bidder, createdAt, amount, selectedBid
         value={bidder.id}
         onChange={() => onSelect?.(bidder.id, amount)}
       />
-      {xsMatch && <Avatar assetUrl={url} loading={isLoadingAsset} size={40} />}
+      {xsMatch && <Avatar assetUrls={urls} loading={isLoadingAsset} size={40} />}
       <div>
         <Text as="p" variant="h300" color={!selected ? 'colorText' : undefined} margin={{ bottom: 1 }}>
           {bidder?.handle}

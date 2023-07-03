@@ -2,8 +2,24 @@ import { useCallback } from 'react'
 
 import useSegmentAnalyticsContext from '@/providers/segmentAnalytics/useSegmentAnalyticsContext'
 
+export type videoPlaybackParams = {
+  videoId: string
+  channelId: string
+  title: string
+  totalLength: number
+  fullScreen: boolean
+  quality: string
+}
+
 export const useSegmentAnalytics = () => {
   const { analytics } = useSegmentAnalyticsContext()
+
+  const identifyUser = useCallback(
+    (email: string) => {
+      analytics.identify({ email })
+    },
+    [analytics]
+  )
 
   const trackPageView = useCallback(
     (name: string, category = 'App', referrer = 'no data') => {
@@ -47,14 +63,37 @@ export const useSegmentAnalytics = () => {
     [analytics]
   )
 
-  const trackVideoView = useCallback(
-    (videoId: string, channelId: string, channelTitle: string, description: string, isNft: boolean) => {
-      analytics.track('video viewed', {
-        videoId,
-        channelId,
-        channelTitle,
-        description,
-        isNft,
+  const trackVideoPlaybackStarted = useCallback(
+    (params: videoPlaybackParams) => {
+      analytics.track('video playback started', {
+        ...params,
+      })
+    },
+    [analytics]
+  )
+
+  const trackVideoPlaybackPaused = useCallback(
+    (params: videoPlaybackParams) => {
+      analytics.track('video playback paused', {
+        ...params,
+      })
+    },
+    [analytics]
+  )
+
+  const trackVideoPlaybackResumed = useCallback(
+    (params: videoPlaybackParams) => {
+      analytics.track('video playback resumed', {
+        ...params,
+      })
+    },
+    [analytics]
+  )
+
+  const trackVideoPlaybackCompleted = useCallback(
+    (params: videoPlaybackParams) => {
+      analytics.track('video playback completed', {
+        ...params,
       })
     },
     [analytics]
@@ -129,12 +168,20 @@ export const useSegmentAnalytics = () => {
     [analytics]
   )
 
+  const trackYppSignInButtonClick = useCallback(() => {
+    analytics.track('YPP Landing Sign In w Google Clicked')
+  }, [analytics])
+
   return {
+    identifyUser,
     trackPageView,
     trackYppOptIn,
     trackAccountCreation,
     trackChannelCreation,
-    trackVideoView,
+    trackVideoPlaybackStarted,
+    trackVideoPlaybackPaused,
+    trackVideoPlaybackResumed,
+    trackVideoPlaybackCompleted,
     trackVideoUpload,
     trackNftMint,
     trackNftSale,
@@ -142,5 +189,6 @@ export const useSegmentAnalytics = () => {
     trackLikeAdded,
     trackDislikeAdded,
     trackChannelFollow,
+    trackYppSignInButtonClick,
   }
 }

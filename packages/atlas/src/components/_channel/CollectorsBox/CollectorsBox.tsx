@@ -67,7 +67,7 @@ export const CollectorsBox: FC<CollectorsBoxProps> = ({ collectors, maxShowedCol
         {mappedCollectors.map((collector, idx) => (
           <StyledLink key={idx} to={collector.memberUrl || ''}>
             <ListItem
-              nodeStart={<Avatar size={40} assetUrl={collector.url} />}
+              nodeStart={<Avatar size={40} assetUrls={collector.urls} />}
               nodeEnd={
                 <Text as="span" variant="t100" color="colorText">
                   Owns {collector.nftsAmount}

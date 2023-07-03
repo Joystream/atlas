@@ -24,7 +24,7 @@ import {
 } from './NftTileDetails.styles'
 
 export type Member = {
-  assetUrl?: string | null
+  assetUrls?: string[] | null
   name?: string
   onClick?: () => void
   loading?: boolean
@@ -168,7 +168,7 @@ export const NftTileDetails: FC<NftTileDetailsProps> = memo(
     const avatars = useMemo(
       () => [
         {
-          url: creator?.assetUrl,
+          urls: creator?.assetUrls,
           tooltipText: `Creator: ${creator?.name}`,
           onClick: creator?.onClick,
           loading: creator?.loading,
@@ -176,7 +176,7 @@ export const NftTileDetails: FC<NftTileDetailsProps> = memo(
         ...(owner
           ? [
               {
-                url: owner?.assetUrl,
+                urls: owner?.assetUrls,
                 tooltipText: `Owner: ${owner?.name}`,
                 onClick: owner?.onClick,
                 loading: owner.loading,
@@ -184,7 +184,7 @@ export const NftTileDetails: FC<NftTileDetailsProps> = memo(
             ]
           : []),
       ],
-      [creator?.assetUrl, creator?.loading, creator?.name, creator?.onClick, owner]
+      [creator?.assetUrls, creator?.loading, creator?.name, creator?.onClick, owner]
     )
 
     return (

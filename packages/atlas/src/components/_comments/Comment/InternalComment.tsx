@@ -115,11 +115,11 @@ export const InternalComment: FC<InternalCommentProps> = ({
 
   const popoverRef = useRef<PopoverImperativeHandle>(null)
   const isTouchDevice = useTouchDevice()
-  const { url: memberAvatarUrl, isLoadingAsset: isMemberAvatarLoading } = getMemberAvatar(author)
+  const { urls: memberAvatarUrls, isLoadingAsset: isMemberAvatarLoading } = getMemberAvatar(author)
   const filteredDuplicatedAvatars = repliesCount
     ? replyAvatars
       ? [...new Map(replyAvatars?.map((item) => [item.handle, item])).values()]
-      : createPlaceholderData(repliesCount, { url: undefined })
+      : createPlaceholderData(repliesCount, { urls: undefined })
     : []
 
   const tooltipDate = createdAt ? `${formatDate(createdAt || new Date())} at ${format(createdAt, 'HH:mm')}` : undefined
@@ -185,7 +185,7 @@ export const InternalComment: FC<InternalCommentProps> = ({
       highlighted={highlighted}
       isMemberAvatarLoading={loading || isMemberAvatarLoading}
       memberUrl={memberUrl}
-      memberAvatarUrl={memberAvatarUrl}
+      memberAvatarUrls={memberAvatarUrls}
       onMouseEnter={() => setCommentHover(true)}
       onMouseLeave={() => setCommentHover(false)}
     >

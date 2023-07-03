@@ -62,9 +62,9 @@ export const NftPurchaseBottomDrawer: FC = () => {
   const { currentAction, closeNftAction, currentNftId, isBuyNowClicked } = useNftActions()
   const { nft, nftStatus, loading, refetch } = useNft(currentNftId || '')
   const { userBid, canChangeBid, userBidUnlockDate } = useNftState(nft)
-  const thumbnailUrl = nft?.video.thumbnailPhoto?.resolvedUrl
-  const creatorAvatarUrl = nft?.video.channel.avatarPhoto?.resolvedUrl
-  const { url: ownerMemberAvatarUrl } = getMemberAvatar(
+  const thumbnailUrls = nft?.video.thumbnailPhoto?.resolvedUrls
+  const creatorAvatarUrls = nft?.video.channel.avatarPhoto?.resolvedUrls
+  const { urls: ownerMemberAvatarUrls } = getMemberAvatar(
     nft?.owner.__typename === 'NftOwnerMember' ? nft.owner.member : null
   )
   const mdMatch = useMediaMatch('md')
@@ -282,8 +282,8 @@ export const NftPurchaseBottomDrawer: FC = () => {
     }
   }, [isOpen, setValue])
 
-  const { isLoadingAsset: userBidAvatarLoading, url: userBidAvatarUrl } = getMemberAvatar(userBid?.bidder)
-  const { isLoadingAsset: topBidderAvatarLoading, url: topBidderAvatarUrl } = getMemberAvatar(topBidder)
+  const { isLoadingAsset: userBidAvatarLoading, urls: userBidAvatarUrls } = getMemberAvatar(userBid?.bidder)
+  const { isLoadingAsset: topBidderAvatarLoading, urls: topBidderAvatarUrls } = getMemberAvatar(topBidder)
   const timeToUnlockSeconds = userBidUnlockDate ? differenceInSeconds(userBidUnlockDate, new Date()) : 0
 
   return (
@@ -317,13 +317,13 @@ export const NftPurchaseBottomDrawer: FC = () => {
             title={nft?.video.title}
             thumbnail={{
               loading: loading || !nft,
-              thumbnailUrl: thumbnailUrl,
+              thumbnailUrls: thumbnailUrls,
               type: 'video',
             }}
-            creator={{ name: nft?.video.channel.title, assetUrl: creatorAvatarUrl }}
+            creator={{ name: nft?.video.channel.title, assetUrls: creatorAvatarUrls }}
             owner={{
               name: (nft?.owner.__typename === 'NftOwnerMember' && nft.owner.member?.handle) || '',
-              assetUrl: ownerMemberAvatarUrl,
+              assetUrls: ownerMemberAvatarUrls,
             }}
             loading={loading}
             fullWidth={!mdMatch}
@@ -378,7 +378,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                           Top bid
                         </Text>
                         <FlexWrapper>
-                          <Avatar size={24} assetUrl={topBidderAvatarUrl} loading={topBidderAvatarLoading} />
+                          <Avatar size={24} assetUrls={topBidderAvatarUrls} loading={topBidderAvatarLoading} />
                           <TokenWrapper>
                             <StyledJoyTokenIcon variant="gray" size={24} />
                           </TokenWrapper>
@@ -399,7 +399,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                             Your Bid
                           </Text>
                           <FlexWrapper>
-                            <Avatar size={24} assetUrl={userBidAvatarUrl} loading={userBidAvatarLoading} />
+                            <Avatar size={24} assetUrls={userBidAvatarUrls} loading={userBidAvatarLoading} />
                             <TokenWrapper>
                               <StyledJoyTokenIcon variant="gray" size={24} />
                             </TokenWrapper>
@@ -531,7 +531,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                   Owner
                 </Text>
                 <PaymentSplitValues>
-                  <Avatar size={24} assetUrl={ownerMemberAvatarUrl} />
+                  <Avatar size={24} assetUrls={ownerMemberAvatarUrls} />
                   <Text as="span" variant="h400" color="colorText" margin={{ left: 2 }}>
                     {ownerRoyalty}%
                   </Text>
@@ -542,7 +542,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                   Creator
                 </Text>
                 <PaymentSplitValues>
-                  <Avatar size={24} assetUrl={creatorAvatarUrl} />
+                  <Avatar size={24} assetUrls={creatorAvatarUrls} />
                   <Text as="span" variant="h400" color="colorText" margin={{ left: 2 }}>
                     {creatorRoyalty}%
                   </Text>

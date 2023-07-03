@@ -215,7 +215,7 @@ const WithTitleTemplate: StoryFn<SectionHeaderProps<unknown>> = () => {
           nodeStart: {
             type: 'avatar',
             avatarProps: {
-              assetUrl: 'https://placekitten.com/g/200/300',
+              assetUrls: ['https://placekitten.com/g/200/300'],
             },
           },
         }}

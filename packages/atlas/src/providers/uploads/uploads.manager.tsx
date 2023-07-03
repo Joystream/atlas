@@ -73,9 +73,8 @@ export const UploadsManager: FC = () => {
             actionText: 'See on Joystream',
             onActionClick: () => openInNewTab(absoluteRoutes.viewer.video(video.parentObject.id), true),
           })
+          trackVideoUpload(video.parentObject?.title ?? 'no data', channelId ?? 'no data')
         }
-
-        trackVideoUpload(video.parentObject?.title ?? 'no data', channelId ?? 'no data')
       })
       videoAssetsRef.current = videoAssets
     }

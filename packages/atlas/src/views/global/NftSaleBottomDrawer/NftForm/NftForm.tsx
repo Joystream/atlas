@@ -105,9 +105,9 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
 
   const { video, loading: loadingVideo } = useBasicVideo(videoId, { fetchPolicy: 'cache-only' })
 
-  const channelAvatarUrl = video?.channel.avatarPhoto?.resolvedUrl
-  const thumbnailPhotoUrl = video?.thumbnailPhoto?.resolvedUrl
-  const { url: memberAvatarUri } = getMemberAvatar(activeMembership)
+  const channelAvatarUrls = video?.channel.avatarPhoto?.resolvedUrls
+  const thumbnailPhotoUrls = video?.thumbnailPhoto?.resolvedUrls
+  const { urls: memberAvatarUris } = getMemberAvatar(activeMembership)
 
   const [openModal, closeModal] = useConfirmationModal()
 
@@ -302,10 +302,10 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
 
   const nftTileProps: NftTileProps = {
     status: getNftStatus(),
-    thumbnail: { thumbnailUrl: thumbnailPhotoUrl, type: 'video' },
+    thumbnail: { thumbnailUrls: thumbnailPhotoUrls, type: 'video' },
     title: video?.title,
-    owner: { assetUrl: memberAvatarUri, name: activeMembership?.handle },
-    creator: { assetUrl: channelAvatarUrl, name: video?.channel.title ?? '' },
+    owner: { assetUrls: memberAvatarUris, name: activeMembership?.handle },
+    creator: { assetUrls: channelAvatarUrls, name: video?.channel.title ?? '' },
     loading: loadingVideo,
     duration: video?.duration,
     views: video?.viewsNum,

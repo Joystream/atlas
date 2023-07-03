@@ -1,7 +1,7 @@
 import { To } from 'history'
 import { MouseEvent, ReactNode, forwardRef, useState } from 'react'
 import { LinkProps } from 'react-router-dom'
-import { CSSTransition, SwitchTransition } from 'react-transition-group'
+import { CSSTransition } from 'react-transition-group'
 
 import { SvgControlsPlaylist } from '@/assets/icons'
 import { Text } from '@/components/Text'
@@ -17,7 +17,6 @@ import {
   SlotsOverlay,
   ThumbnailBackground,
   ThumbnailImage,
-  ThumbnailSkeletonLoader,
   VideoThumbnailContainer,
 } from './VideoThumbnail.styles'
 
@@ -43,7 +42,7 @@ export type VideoThumbnailProps = {
   loading?: boolean
   videoHref?: To
   linkState?: LinkProps['state']
-  thumbnailUrl?: string | null
+  thumbnailUrls?: string[] | null
   thumbnailAlt?: string | null
   clickable?: boolean
   videosInPlaylist?: number
@@ -60,7 +59,7 @@ export const VideoThumbnail = forwardRef<HTMLAnchorElement, VideoThumbnailProps>
       videoHref,
       linkState,
       slots,
-      thumbnailUrl,
+      thumbnailUrls,
       thumbnailAlt,
       onClick,
       clickable = true,
@@ -95,21 +94,12 @@ export const VideoThumbnail = forwardRef<HTMLAnchorElement, VideoThumbnailProps>
         isPlaylist={type === 'playlist'}
       >
         <ContentOverlay>
-          <SwitchTransition>
-            <CSSTransition
-              key={String(loading)}
-              timeout={parseInt(cVar('animationTimingFast', true))}
-              classNames={transitions.names.fade}
-            >
-              {loading ? (
-                <ThumbnailSkeletonLoader />
-              ) : (
-                <ThumbnailBackground>
-                  {thumbnailUrl && <ThumbnailImage src={thumbnailUrl || ''} alt={thumbnailAlt || ''} />}
-                </ThumbnailBackground>
-              )}
-            </CSSTransition>
-          </SwitchTransition>
+          <ThumbnailImage
+            isLoading={loading}
+            resolvedUrls={thumbnailUrls}
+            alt={thumbnailAlt || ''}
+            imagePlaceholder={<ThumbnailBackground />}
+          />
           {contentSlot && (
             <CSSTransition
               in={!!contentSlot}

@@ -39,7 +39,6 @@ export type GetBidsQuery = {
                 __typename?: 'StorageDataObject'
                 id: string
                 resolvedUrls: Array<string>
-                resolvedUrl?: string | null
                 createdAt: Date
                 size: string
                 isAccepted: boolean

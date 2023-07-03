@@ -201,7 +201,7 @@ const Channel = ({ channel }: { channel: BasicChannelFieldsFragment }) => {
   return (
     <StyledLink to={absoluteRoutes.viewer.channel(channel.id)} title={channel.title || ''}>
       <StyledListItem
-        nodeStart={<Avatar assetUrl={channel.avatarPhoto?.resolvedUrl ?? undefined} />}
+        nodeStart={<Avatar assetUrls={channel.avatarPhoto?.resolvedUrls ?? undefined} />}
         label={channel.title}
         isInteractive={false}
         nodeEnd={
