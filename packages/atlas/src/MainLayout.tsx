@@ -120,7 +120,7 @@ export const MainLayout: FC = () => {
         stopReplay()
       }
     }
-  }, [location.pathname, trackPageView, searchParams])
+  }, [location.pathname, trackPageView, searchParams, id])
 
   const { clearOverlays } = useOverlayManager()
 
