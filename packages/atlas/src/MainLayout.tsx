@@ -1,10 +1,11 @@
 import loadable from '@loadable/component'
 import { FC, useEffect, useRef, useState } from 'react'
-import { Route, Routes, useLocation, useNavigationType, useSearchParams } from 'react-router-dom'
+import { Route, Routes, useLocation, useNavigationType, useParams, useSearchParams } from 'react-router-dom'
 
 import { StudioLoading } from '@/components/_loaders/StudioLoading'
 import { CookiePopover } from '@/components/_overlays/CookiePopover'
 import { atlasConfig } from '@/config'
+import { displayCategoriesLookup } from '@/config/categories'
 import { BASE_PATHS, absoluteRoutes } from '@/config/routes'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { transitions } from '@/styles'
@@ -34,6 +35,21 @@ const LoadableStudioLayout = loadable(() => import('./views/studio/StudioLayout'
   ),
 })
 
+const locationToPageName = {
+  '/discover': 'Discover',
+  '/category': 'Category',
+  '/search': 'Search',
+  '/channels': 'Channels',
+  '/channel': 'Channel',
+  '/video': 'Video',
+  '/membership/edit': 'editMembership',
+  '/membership': 'Member',
+  '/notifications': 'Notifications',
+  '/marketplace': 'Marketplace',
+  '/ypp': 'YPP',
+  '/ypp-dashboard': 'YPP Dashboard',
+}
+
 const LoadablePlaygroundLayout = loadable(() => import('./views/playground/PlaygroundLayout'), {
   fallback: <h1>Loading Playground...</h1>,
 })
@@ -42,6 +58,7 @@ export const MainLayout: FC = () => {
   const scrollPosition = useRef<number>(0)
   const location = useLocation()
   const [searchParams] = useSearchParams()
+  const { id } = useParams()
   const navigationType = useNavigationType()
   const [cachedLocation, setCachedLocation] = useState(location)
   const locationState = location.state as RoutingState
@@ -59,16 +76,34 @@ export const MainLayout: FC = () => {
   const { trackPageView } = useSegmentAnalytics()
 
   useEffect(() => {
-    // had to include this timeout to make sure the page title is updated
-    const trackRequestTimeout = setTimeout(
-      () =>
-        trackPageView(
-          document.title,
-          'viewer',
-          (location.pathname === absoluteRoutes.viewer.ypp() && searchParams.get('referrer')) || undefined
-        ),
-      1000
-    )
+    if (!location.pathname.includes('studio')) {
+      const pageName =
+        location.pathname === '/'
+          ? 'Home'
+          : Object.keys(locationToPageName).find((key) => location.pathname.includes(key))
+      const categoryName = pageName === 'Category' && id ? displayCategoriesLookup[id] : undefined
+      const query = searchParams.get('query')
+      const referrer = searchParams.get('referrer') || searchParams.get('utm_source')
+
+      const buildPageName = () => {
+        if (pageName === 'Category') {
+          return `pageName ${categoryName}`
+        } else if (pageName === 'Search') {
+          return `Search result page '${query}'`
+        } else return pageName || 'unknown'
+      }
+
+      // had to include this timeout to make sure the page title is updated
+      const trackRequestTimeout = setTimeout(
+        () =>
+          trackPageView(buildPageName(), (location.pathname === absoluteRoutes.viewer.ypp() && referrer) || undefined),
+        1000
+      )
+
+      return () => {
+        clearTimeout(trackRequestTimeout)
+      }
+    }
 
     if (!atlasConfig.analytics.sentry?.dsn) {
       return
@@ -85,10 +120,7 @@ export const MainLayout: FC = () => {
         stopReplay()
       }
     }
-    return () => {
-      clearTimeout(trackRequestTimeout)
-    }
-  }, [location.pathname, trackPageView, searchParams])
+  }, [location.pathname, trackPageView, searchParams, id])
 
   const { clearOverlays } = useOverlayManager()
 

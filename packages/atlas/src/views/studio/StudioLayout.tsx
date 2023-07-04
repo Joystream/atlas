@@ -41,6 +41,22 @@ import { NotFoundView } from '../viewer/NotFoundView'
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
 
+const locationToPageName = {
+  '/channel/new': 'New channel',
+  '/channel': 'Channel',
+  '/videos': 'Videos',
+  '/crt-welcome': 'CRT Welcome',
+  '/crt-preview-edit': 'CRT Preview Edit',
+  '/crt-preview': 'CRT Preview',
+  'video-workspace': 'Video workspace',
+  '/uploads': 'Uploads',
+  '/signin': 'Sign in',
+  '/notifications': 'Notifications',
+  '/payments': 'Payments',
+  '/ypp': 'YPP',
+  '/ypp-dashboard': 'YPP Dashboard',
+}
+
 const StudioLayout = () => {
   const location = useLocation()
   const displayedLocation = useVideoWorkspaceRouting()
@@ -80,8 +96,10 @@ const StudioLayout = () => {
   }, [closeUnsupportedBrowserDialog, openUnsupportedBrowserDialog])
 
   useEffect(() => {
+    const pageName = Object.keys(locationToPageName).find((key) => location.pathname.includes(key))
+
     // had to include this timeout to make sure the page title is updated
-    const trackRequestTimeout = setTimeout(() => trackPageView(document.title, 'studio', undefined), 1000)
+    const trackRequestTimeout = setTimeout(() => trackPageView(`Studio - ${pageName}`, undefined), 1000)
 
     return () => clearTimeout(trackRequestTimeout)
   }, [location.pathname, trackPageView])
