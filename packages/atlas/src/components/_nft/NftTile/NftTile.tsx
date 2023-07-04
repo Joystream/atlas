@@ -76,6 +76,7 @@ export const NftTile: FC<NftTileProps> = ({
       <VideoThumbnail
         type="video"
         videoHref={thumbnail?.videoHref}
+        linkState={{ shouldCollapse: false }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         loading={loading}

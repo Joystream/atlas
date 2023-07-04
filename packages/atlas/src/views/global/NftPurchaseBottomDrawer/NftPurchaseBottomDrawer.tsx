@@ -575,6 +575,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                   withToken
                   variant="t100"
                   color={hasInsufficientFunds ? 'colorTextError' : 'colorText'}
+                  withDenomination="before"
                 />
               ) : (
                 <SkeletonLoader width={82} height={16} />
@@ -591,6 +592,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                   withToken
                   variant="t100"
                   color="colorText"
+                  withDenomination="before"
                 />
               )}
             </Row>
@@ -603,19 +605,26 @@ export const NftPurchaseBottomDrawer: FC = () => {
                   {(canBuyNow ? !buyNowFee.toNumber() : !makeBidFee.toNumber()) ||
                   buyNowFeeLoading ||
                   makeBidFeeLoading ? (
-                    <SkeletonLoader width={80} height={16} />
+                    <SkeletonLoader width={80} height={18} />
                   ) : (
-                    <NumberFormat as="span" value={transactionFee} withToken variant="t100" color="colorText" />
+                    <NumberFormat
+                      as="span"
+                      value={transactionFee}
+                      withToken
+                      variant="t100"
+                      color="colorText"
+                      withDenomination="before"
+                    />
                   )}
                 </Row>
                 <Row>
-                  <Text as="span" variant="h500" color="colorText">
+                  <Text as="span" variant="h300">
                     You will pay
                   </Text>
                   {(canBuyNow ? !buyNowFee.toNumber() : !makeBidFee.toNumber()) ||
                   buyNowFeeLoading ||
                   makeBidFeeLoading ? (
-                    <SkeletonLoader width={112} height={32} />
+                    <SkeletonLoader width={112} height={24} />
                   ) : (
                     <NumberFormat
                       as="span"
@@ -626,7 +635,8 @@ export const NftPurchaseBottomDrawer: FC = () => {
                       withToken
                       format="short"
                       withTooltip
-                      variant="h500"
+                      variant="h300"
+                      withDenomination="before"
                     />
                   )}
                 </Row>

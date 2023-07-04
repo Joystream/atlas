@@ -1,8 +1,6 @@
 import { FC, MouseEvent, PropsWithChildren, useCallback } from 'react'
-import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { SvgActionNewChannel } from '@/assets/icons'
-import { cVar, transitions } from '@/styles'
 
 import {
   AvatarSize,
@@ -97,21 +95,12 @@ export const Avatar: FC<AvatarProps> = ({
             )}
           </NewChannelAvatar>
         ) : (
-          <SwitchTransition>
-            <CSSTransition
-              key={loading ? 'placeholder' : 'content'}
-              timeout={parseInt(cVar('animationTimingFast', true))}
-              classNames={transitions.names.fade}
-            >
-              {loading ? (
-                <StyledSkeletonLoader rounded />
-              ) : assetUrls?.length ? (
-                <StyledImage resolvedUrls={assetUrls} onError={onError} />
-              ) : (
-                <SilhouetteAvatar />
-              )}
-            </CSSTransition>
-          </SwitchTransition>
+          <StyledImage
+            resolvedUrls={assetUrls}
+            onError={onError}
+            isLoading={loading}
+            imagePlaceholder={<SilhouetteAvatar />}
+          />
         ))}
       {children && (loading ? <StyledSkeletonLoader rounded /> : <ChildrenWrapper>{children}</ChildrenWrapper>)}
     </Container>

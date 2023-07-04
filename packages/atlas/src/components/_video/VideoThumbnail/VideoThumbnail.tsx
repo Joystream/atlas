@@ -1,7 +1,7 @@
 import { To } from 'history'
 import { MouseEvent, ReactNode, forwardRef, useState } from 'react'
 import { LinkProps } from 'react-router-dom'
-import { CSSTransition, SwitchTransition } from 'react-transition-group'
+import { CSSTransition } from 'react-transition-group'
 
 import { SvgControlsPlaylist } from '@/assets/icons'
 import { Text } from '@/components/Text'
@@ -17,7 +17,6 @@ import {
   SlotsOverlay,
   ThumbnailBackground,
   ThumbnailImage,
-  ThumbnailSkeletonLoader,
   VideoThumbnailContainer,
 } from './VideoThumbnail.styles'
 
@@ -95,21 +94,12 @@ export const VideoThumbnail = forwardRef<HTMLAnchorElement, VideoThumbnailProps>
         isPlaylist={type === 'playlist'}
       >
         <ContentOverlay>
-          <SwitchTransition>
-            <CSSTransition
-              key={String(loading)}
-              timeout={parseInt(cVar('animationTimingFast', true))}
-              classNames={transitions.names.fade}
-            >
-              {loading ? (
-                <ThumbnailSkeletonLoader />
-              ) : (
-                <ThumbnailBackground>
-                  {thumbnailUrls && <ThumbnailImage resolvedUrls={thumbnailUrls || ''} alt={thumbnailAlt || ''} />}
-                </ThumbnailBackground>
-              )}
-            </CSSTransition>
-          </SwitchTransition>
+          <ThumbnailImage
+            isLoading={loading}
+            resolvedUrls={thumbnailUrls}
+            alt={thumbnailAlt || ''}
+            imagePlaceholder={<ThumbnailBackground />}
+          />
           {contentSlot && (
             <CSSTransition
               in={!!contentSlot}

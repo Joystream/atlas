@@ -151,27 +151,27 @@ export const configSchema = z.object({
         id: z.string().nullable(),
         rootHostname: z.string().nullable(),
       })
-      .nullable(),
+      .optional(),
     usersnap: z
       .object({
         id: z.string().nullable(),
       })
-      .nullable(),
+      .optional(),
     GA: z
       .object({
         id: z.string().nullable(),
       })
-      .nullable(),
+      .optional(),
     optimize: z
       .object({
         id: z.string().nullable(),
       })
-      .nullable(),
+      .optional(),
     segment: z
       .object({
         id: z.string().nullable(),
       })
-      .nullable(),
+      .optional(),
   }),
   legal: z.object({
     termsOfService: z.string(),

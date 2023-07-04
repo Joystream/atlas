@@ -1,17 +1,36 @@
-import { ImgHTMLAttributes } from 'react'
+import { FC, ImgHTMLAttributes, ReactNode } from 'react'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { useGetAssetUrl } from '@/hooks/useGetAssetUrl'
+import { cVar, transitions } from '@/styles'
 
-export type AssetImage = {
+export type AssetImageProps = {
+  isLoading?: boolean
   resolvedUrls: string[] | undefined | null
+  imagePlaceholder?: ReactNode
 } & Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'>
 
-export const AssetImage = ({ resolvedUrls, ...imgProps }: AssetImage) => {
-  const { url, isLoading } = useGetAssetUrl(resolvedUrls, 'image')
-  if (isLoading) {
-    return <SkeletonLoader className={imgProps.className} />
-  }
+export const AssetImage: FC<AssetImageProps> = ({ resolvedUrls, isLoading, imagePlaceholder, ...imgProps }) => {
+  const { url, isLoading: isResolving } = useGetAssetUrl(resolvedUrls, 'image')
 
-  return <img {...imgProps} src={url} />
+  const loading = isLoading || isResolving
+
+  return (
+    <SwitchTransition>
+      <CSSTransition
+        key={String(loading)}
+        timeout={parseInt(cVar('animationTimingFast', true))}
+        classNames={transitions.names.fade}
+      >
+        {loading ? (
+          <SkeletonLoader className={imgProps.className} />
+        ) : imagePlaceholder && !url ? (
+          <>{imagePlaceholder}</>
+        ) : (
+          <img {...imgProps} src={url} />
+        )}
+      </CSSTransition>
+    </SwitchTransition>
+  )
 }

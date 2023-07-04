@@ -3,54 +3,40 @@ import { FC } from 'react'
 import { useNavigate } from 'react-router'
 
 import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
-import { SvgActionChevronB } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { absoluteRoutes } from '@/config/routes'
-import { useToggle } from '@/hooks/useToggle'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
-import { useTokenPrice } from '@/providers/joystream/joystream.hooks'
 import { formatDateTime } from '@/utils/time'
 
 import {
   CopyContainer,
-  FadingBlock,
   HistoryItemContainer,
   HistoryPanel,
   HistoryPanelContainer,
-  JoyPlusIcon,
   NftHistoryHeader,
-  StyledChevronButton,
   TextContainer,
-  ValueContainer,
 } from './NftHistory.styles'
 import { OwnerHandle, Size } from './NftWidget.styles'
 
 type NftHistoryProps = { size: Size; width: number; historyItems: NftHistoryEntry[] }
-export const NftHistory: FC<NftHistoryProps> = ({ size, width, historyItems }) => {
-  const [isOpen, toggleIsOpen] = useToggle()
-
+export const NftHistory: FC<NftHistoryProps> = ({ size, historyItems }) => {
   return (
     <>
-      <NftHistoryHeader data-open={isOpen} data-size={size} onClick={toggleIsOpen}>
+      <NftHistoryHeader data-size={size}>
         <Text as="h3" variant={size === 'small' ? 'h300' : 'h400'}>
           History
         </Text>
-        <StyledChevronButton data-open={isOpen} variant="tertiary" icon={<SvgActionChevronB />} />
       </NftHistoryHeader>
-      {isOpen && (
-        <HistoryPanelContainer>
-          <FadingBlock data-size={size} width={width} />
-          <HistoryPanel data-size={size} data-open={isOpen}>
-            {historyItems.map((props, index) => (
-              <HistoryItem key={index} {...props} size={size} />
-            ))}
-          </HistoryPanel>
-          <FadingBlock data-size={size} width={width} data-bottom />
-        </HistoryPanelContainer>
-      )}
+      <HistoryPanelContainer>
+        <HistoryPanel data-size={size}>
+          {historyItems.map((props, index) => (
+            <HistoryItem key={index} {...props} size={size} />
+          ))}
+        </HistoryPanel>
+      </HistoryPanelContainer>
     </>
   )
 }
@@ -67,9 +53,6 @@ type HistoryItemProps = {
 export const HistoryItem: FC<HistoryItemProps> = ({ size, member, date, joyAmount, text }) => {
   const navigate = useNavigate()
   const { urls, isLoadingAsset } = getMemberAvatar(member)
-  const { convertHapiToUSD } = useTokenPrice()
-
-  const dollarValue = joyAmount ? convertHapiToUSD(joyAmount) : null
 
   return (
     <HistoryItemContainer data-size={size}>
@@ -96,22 +79,15 @@ export const HistoryItem: FC<HistoryItemProps> = ({ size, member, date, joyAmoun
         </Text>
       </TextContainer>
       {!!joyAmount && (
-        <ValueContainer>
-          <JoyPlusIcon>
-            <JoyTokenIcon size={16} variant="silver" />
-            <NumberFormat as="span" format="short" value={joyAmount} variant={size === 'medium' ? 'h300' : 'h200'} />
-          </JoyPlusIcon>
-          {dollarValue !== null && (
-            <NumberFormat
-              as="span"
-              format="dollar"
-              variant="t100"
-              color="colorText"
-              value={dollarValue || 0}
-              align="end"
-            />
-          )}
-        </ValueContainer>
+        <NumberFormat
+          as="span"
+          icon={<JoyTokenIcon size={16} variant="silver" />}
+          format="short"
+          value={joyAmount}
+          variant={size === 'medium' ? 'h300' : 'h200'}
+          withDenomination
+          denominationAlign="right"
+        />
       )}
     </HistoryItemContainer>
   )

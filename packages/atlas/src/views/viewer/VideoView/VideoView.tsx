@@ -251,7 +251,9 @@ export const VideoView: FC = () => {
       return
     }
 
-    const artwork: MediaImage[] = thumbnailUrls ? [{ src: thumbnailUrls[0], type: 'image/webp', sizes: '640x360' }] : []
+    const artwork: MediaImage[] = thumbnailUrls?.[0]
+      ? [{ src: thumbnailUrls[0], type: 'image/webp', sizes: '640x360' }]
+      : []
 
     navigator.mediaSession.metadata = new MediaMetadata({
       title: video.title || '',
