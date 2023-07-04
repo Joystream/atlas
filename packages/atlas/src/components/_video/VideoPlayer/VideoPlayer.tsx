@@ -189,6 +189,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
       videoId: videoId ?? 'no data',
       channelId: video?.channel.id ?? 'no data',
       title: video?.title ?? 'no data',
+      category: video?.category?.name ?? 'no data',
       totalLength: video?.duration ?? -1,
       fullScreen: isFullScreen,
       quality: video?.mediaMetadata?.pixelHeight?.toString() ?? '1',

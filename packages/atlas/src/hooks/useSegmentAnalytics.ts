@@ -6,6 +6,7 @@ export type videoPlaybackParams = {
   videoId: string
   channelId: string
   title: string
+  category: string
   totalLength: number
   fullScreen: boolean
   quality: string
@@ -22,9 +23,9 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackPageView = useCallback(
-    (name: string, category = 'App', referrer = 'no data') => {
-      analytics.page(category, name, {
-        referrer,
+    (name: string, referrer?: string) => {
+      analytics.page(undefined, name, {
+        ...(referrer ? { referrer } : {}),
       })
     },
     [analytics]
