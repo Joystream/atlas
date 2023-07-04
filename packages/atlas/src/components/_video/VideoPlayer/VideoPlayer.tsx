@@ -194,7 +194,15 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
       fullScreen: isFullScreen,
       quality: video?.mediaMetadata?.pixelHeight?.toString() ?? '1',
     }),
-    [videoId, video?.channel.id, video?.title, video?.duration, isFullScreen, video?.mediaMetadata?.pixelHeight]
+    [
+      videoId,
+      video?.channel.id,
+      video?.title,
+      video?.category?.name,
+      video?.duration,
+      video?.mediaMetadata?.pixelHeight,
+      isFullScreen,
+    ]
   )
 
   const playVideo = useCallback(

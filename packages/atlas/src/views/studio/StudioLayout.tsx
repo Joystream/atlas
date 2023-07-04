@@ -96,7 +96,6 @@ const StudioLayout = () => {
   }, [closeUnsupportedBrowserDialog, openUnsupportedBrowserDialog])
 
   useEffect(() => {
-    console.log('studio event', location.pathname)
     const pageName = Object.keys(locationToPageName).find((key) => location.pathname.includes(key))
 
     // had to include this timeout to make sure the page title is updated
