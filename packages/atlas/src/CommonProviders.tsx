@@ -38,18 +38,18 @@ export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
           <WalletProvider>
             <AuthProvider>
               <UserProvider>
-              <SegmentAnalyticsProvider>
-                <OverlayManagerProvider>
-                  <ConfirmationModalProvider>
-                    <BrowserRouter>
-                      <AdminModal />
-                      <MaintenanceWrapper>
-                        <OperatorsContextProvider>{children}</OperatorsContextProvider>
-                      </MaintenanceWrapper>
-                    </BrowserRouter>
-                  </ConfirmationModalProvider>
-                </OverlayManagerProvider>
-              </SegmentAnalyticsProvider>
+                <SegmentAnalyticsProvider>
+                  <OverlayManagerProvider>
+                    <ConfirmationModalProvider>
+                      <BrowserRouter>
+                        <AdminModal />
+                        <MaintenanceWrapper>
+                          <OperatorsContextProvider>{children}</OperatorsContextProvider>
+                        </MaintenanceWrapper>
+                      </BrowserRouter>
+                    </ConfirmationModalProvider>
+                  </OverlayManagerProvider>
+                </SegmentAnalyticsProvider>
               </UserProvider>
             </AuthProvider>
           </WalletProvider>

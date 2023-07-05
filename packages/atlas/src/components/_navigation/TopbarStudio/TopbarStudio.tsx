@@ -9,6 +9,7 @@ import { NotificationsWidget } from '@/components/_notifications/NotificationsWi
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useUser } from '@/providers/user/user.hooks'
@@ -31,11 +32,7 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
   } = useAuthStore()
   const { isWorkspaceOpen, setIsWorkspaceOpen, uploadVideoButtonProps } = useVideoWorkspace()
 
-  const currentChannel = activeMembership?.channels.find((channel) => channel.id === channelId)
-
-  const channelAvatarUrls = currentChannel?.avatarPhoto?.resolvedUrls
-
-  const { urls: memberAvatarUrls, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(activeMembership)
+  const { urls: memberAvatarUrls } = getMemberAvatar(activeMembership)
 
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
 
@@ -51,17 +48,6 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
     }
     setIsWorkspaceOpen(false)
   }
-
-  const avatars: AvatarGroupUrlAvatar[] = channelId
-    ? [
-        {
-          urls: memberAvatarUrls,
-          loading: memberAvatarLoading,
-          onClick: handleDrawerToggle,
-        },
-        { urls: channelAvatarUrls, loading: isAuthLoading, onClick: handleDrawerToggle },
-      ]
-    : [{ urls: memberAvatarUrls, loading: memberAvatarLoading, onClick: handleDrawerToggle }]
 
   return (
     <>
@@ -90,7 +76,7 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
                 </Button>
               </CSSTransition>
               <NotificationsWidget trigger={<NotificationsButton />} />
-              <StyledAvatar size={40} assetUrl={channelAvatarUrl} onClick={handleDrawerToggle} />
+              <StyledAvatar size={40} assetUrls={memberAvatarUrls} onClick={handleDrawerToggle} />
             </StudioTopbarContainer>
           ) : (
             <Button size="medium" onClick={() => setAuthModalOpenName(getCorrectLoginModal())}>

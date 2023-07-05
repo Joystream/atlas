@@ -139,7 +139,7 @@ export const MembershipPublicProfile: FC<MembershipPublicProfileProps> = ({
       const metaData = {
         ...(dirtyFields.handle ? { name: data?.handle } : {}),
         ...(dirtyFields.about ? { about: data?.about } : {}),
-        ...(dirtyFields.avatar ? { avatarUri: data?.avatar?.url } : {}),
+        ...(dirtyFields.avatar ? { avatarUris: data?.avatar?.url } : {}),
       }
       return metaData
     },
@@ -247,7 +247,7 @@ export const MembershipPublicProfile: FC<MembershipPublicProfileProps> = ({
                   )
                 }}
                 onImageValidation={setIsImageValid}
-                assetUrl={avatarInputFile?.url}
+                assetUrls={[avatarInputFile?.url || '']}
                 loading={!isLoggedIn}
                 hasAvatarUploadFailed={!isImageValid}
               />
@@ -333,4 +333,3 @@ export const MembershipPublicProfile: FC<MembershipPublicProfileProps> = ({
     </EntitySettingTemplate>
   )
 }
-

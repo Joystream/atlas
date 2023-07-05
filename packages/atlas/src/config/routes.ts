@@ -8,7 +8,7 @@ export const BASE_PATHS = {
 } as const
 
 export type MemberSettingsTabs = 'Public profile' | 'Wallet' | 'Notifications'
-export type MemberTabs = 'NFTs owned' | 'Activity' | 'About'
+export type MemberTabs = 'NFTs' | 'Activity' | 'About'
 export type MyChannelTabs = 'General' | 'Notifications'
 
 const withQueryParameters = (basePath: string, query: Record<string, string> = {}) => {
@@ -85,8 +85,6 @@ export const absoluteRoutes = Object.entries(BASE_PATHS).reduce((absoluteRoutesA
 
   return absoluteRoutesAcc
 }, {} as typeof relativeRoutes)
-
-export type MemberTabs = 'NFTs' | 'Activity' | 'About'
 
 export const QUERY_PARAMS = {
   SEARCH: 'query',

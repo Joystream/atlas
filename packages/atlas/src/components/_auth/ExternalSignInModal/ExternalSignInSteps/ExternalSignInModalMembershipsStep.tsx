@@ -121,7 +121,7 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
             caption={shortenString(member.controllerAccount, 5)}
             size={smMatch ? 'large' : 'medium'}
             selected={memberId === member.id}
-            nodeStart={<Avatar size={40} assetUrl={getMemberAvatar(member).url} />}
+            nodeStart={<Avatar size={40} assetUrls={getMemberAvatar(member).urls} />}
             onClick={() => setMemberId(member.id)}
           />
         ))}

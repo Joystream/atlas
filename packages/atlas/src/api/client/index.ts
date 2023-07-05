@@ -4,7 +4,6 @@ import { getMainDefinition } from '@apollo/client/utilities'
 import { createClient } from 'graphql-ws'
 
 import { ORION_GRAPHQL_URL, QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL } from '@/config/env'
-import { useAuthStore } from '@/providers/auth/auth.store'
 import { useUserLocationStore } from '@/providers/userLocation'
 
 import cache from './cache'
@@ -23,9 +22,6 @@ const delayLink = new ApolloLink((operation, forward) => {
     }, ctx.delay)
   })
 })
-
-const MAX_ALLOWED_RETRIES = 10
-const bannedDistributorUrls: Record<string, number> = {}
 
 const createApolloClient = () => {
   const subscriptionLink = new GraphQLWsLink(

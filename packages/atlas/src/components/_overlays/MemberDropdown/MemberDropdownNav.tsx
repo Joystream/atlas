@@ -92,7 +92,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
 
   const dropdownEntity = {
     title: type === 'member' ? activeMembership?.handle : selectedChannel?.title,
-    avatarUrl: type === 'member' ? memberAvatarUrl : channelAvatarUrl,
+    avatarUrls: type === 'member' ? memberAvatarUrls : channelAvatarUrls,
     avatarLoading: type === 'member' ? memberAvatarLoading : false,
     balance: type === 'member' ? memberAvatarLoading : channelBalance,
   }
@@ -105,7 +105,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
             <StyledAvatar
               clickable={false}
               size={40}
-              assetUrl={dropdownEntity.avatarUrl}
+              assetUrls={dropdownEntity.avatarUrls}
               loading={dropdownEntity.avatarLoading}
             />
             <div>

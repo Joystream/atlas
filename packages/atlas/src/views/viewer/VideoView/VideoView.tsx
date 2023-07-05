@@ -226,12 +226,9 @@ export const VideoView: FC = () => {
     },
     [
       getReactionFee,
-      isLoggedIn,
       likeOrDislikeVideo,
       memberId,
-      openSignInDialog,
       reactionFee,
-      signIn,
       trackLikeAdded,
       trackDislikeAdded,
       video?.id,

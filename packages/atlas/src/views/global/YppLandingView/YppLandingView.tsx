@@ -77,18 +77,18 @@ export const YppLandingView: FC = () => {
     }
 
     if (!yppModalOpenName) {
+      trackYppSignInButtonClick()
       setYppModalOpen('ypp-requirements')
       return
     }
   }, [
-    currentStep,
     displaySnackbar,
-    isLoggedIn,
     isTodaysQuotaReached,
     isYppSigned,
     navigate,
-    signIn,
     trackYppSignInButtonClick,
+    setYppModalOpen,
+    yppModalOpenName,
   ])
 
   useEffect(() => {

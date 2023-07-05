@@ -8,7 +8,7 @@ import { useWalletStore } from '@/providers/wallet/wallet.store'
 import { SignerWalletAccount, WalletContextValue } from '@/providers/wallet/wallet.types'
 import { formatJoystreamAddress } from '@/utils/address'
 import { SentryLogger } from '@/utils/logs'
-import { retryPromise } from '@/utils/misc'
+import { retryWalletPromise } from '@/utils/misc'
 
 import { getWalletsList } from './wallet.helpers'
 
@@ -89,7 +89,7 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
       try {
         const initializedAccounts = await (!invokedAutomatically
           ? initSignerWallet(walletName)
-          : retryPromise(() => initSignerWallet(walletName), 500, 2000))
+          : retryWalletPromise(() => initSignerWallet(walletName), 500, 2000))
         if (initializedAccounts === null) {
           SentryLogger.error('Selected wallet not found or not installed', 'UserProvider')
         }

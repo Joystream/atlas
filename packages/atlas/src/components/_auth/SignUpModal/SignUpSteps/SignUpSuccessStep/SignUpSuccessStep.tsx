@@ -21,7 +21,7 @@ export const SignUpSuccessStep: FC<SignUpSuccessStepProps> = ({ avatarUrl, amoun
   return (
     <>
       <IllustrationWrapper>
-        <AppKV customNode={<Avatar size={136} assetUrl={avatarUrl} />} />
+        <AppKV customNode={<Avatar size={136} assetUrls={[avatarUrl || '']} />} />
         {!smMatch && (
           <LottieContainer>
             <LottiePlayer

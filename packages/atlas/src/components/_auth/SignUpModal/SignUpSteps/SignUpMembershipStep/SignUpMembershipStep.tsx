@@ -139,7 +139,7 @@ export const SignUpMembershipStep: FC<SignInModalMembershipStepProps> = ({
                       !!imageInputFile?.blob
                     )
                   }
-                  assetUrl={imageInputFile?.url}
+                  assetUrls={[imageInputFile?.url || '']}
                   editable
                 />
                 <ImageCropModal

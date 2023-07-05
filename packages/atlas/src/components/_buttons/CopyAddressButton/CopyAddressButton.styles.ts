@@ -2,7 +2,6 @@ import styled from '@emotion/styled'
 
 import { SvgActionCheck, SvgActionCopy } from '@/assets/icons'
 import { Text } from '@/components/Text'
-import { Tooltip } from '@/components/Tooltip'
 import { cVar, sizes } from '@/styles'
 
 export const Container = styled.div`

@@ -124,7 +124,7 @@ export const StudioChannelGeneralTab = ({ actionBarPortal }: { actionBarPortal: 
               render={({ field: { value } }) => (
                 <FormField label="Channel avatar" description="Max file size is 5MB.">
                   <StyledAvatar
-                    assetUrl={loading ? null : value.croppedUrl || value.originalUrl}
+                    assetUrls={loading ? null : [value.croppedUrl || value.originalUrl || '']}
                     hasAvatarUploadFailed={hasAvatarUploadFailed}
                     size={smMatch ? 136 : 88}
                     onClick={() => {
@@ -159,7 +159,7 @@ export const StudioChannelGeneralTab = ({ actionBarPortal }: { actionBarPortal: 
               render={({ field: { value } }) => (
                 <FormField label="Channel cover" description="Max file size is 5MB. Recommended image ratio is 16:9.">
                   <ChannelCover
-                    assetUrl={loading ? null : value.croppedUrl || value.originalUrl}
+                    assetUrls={loading ? null : [value.croppedUrl || value.originalUrl || '']}
                     hasCoverUploadFailed={hasCoverUploadFailed}
                     onCoverEditClick={() => {
                       coverDialogRef.current?.open(

@@ -30,8 +30,6 @@ export const MembershipInfo: FC<MembershipInfoProps> = ({
   avatarUrls,
   avatarLoading,
   hasAvatarUploadFailed,
-  onAvatarEditClick,
-  onImageValidation,
   handle,
   loading,
   isOwner,
@@ -50,10 +48,7 @@ export const MembershipInfo: FC<MembershipInfoProps> = ({
           <MembershipInfoContainer>
             <Avatar
               size={smMatch ? 136 : 88}
-              onImageValidation={onImageValidation}
-              onClick={onAvatarEditClick}
               assetUrls={avatarUrls}
-              editable={editable}
               loading={avatarLoading}
               hasAvatarUploadFailed={hasAvatarUploadFailed}
             />

@@ -16,7 +16,7 @@ export const useSegmentAnalytics = () => {
   const { analytics } = useSegmentAnalyticsContext()
 
   const identifyUser = useCallback(
-    (email: string) => {
+    (email = 'no data') => {
       analytics.identify({ email })
     },
     [analytics]
@@ -32,7 +32,7 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackYppOptIn = useCallback(
-    (handle: string, email: string, category: string, subscribersCount: string) => {
+    (handle = 'no data', email = 'no data', category = 'no data', subscribersCount: string) => {
       analytics.track('ypp opt-in', {
         handle,
         email,

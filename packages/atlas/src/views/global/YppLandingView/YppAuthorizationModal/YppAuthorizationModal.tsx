@@ -15,6 +15,7 @@ import { Loader } from '@/components/_loaders/Loader'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
+import { displayCategoriesLookup } from '@/config/categories'
 import { absoluteRoutes } from '@/config/routes'
 import { useCreateEditChannelSubmit } from '@/hooks/useChannelFormSubmit'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -240,7 +241,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
         onCompleted: async () => {
           await refetchUserMemberships()
 
-          await yppSignChannelMutation({
+          const channelCreationResponse = await yppSignChannelMutation({
             ...(selectedChannelId ? { joystreamChannelId: parseInt(selectedChannelId) } : {}),
             ...(data.referrerChannelId ? { referrerChannelId: parseInt(data.referrerChannelId) } : {}),
             authorizationCode: ytResponseData?.authorizationCode,
@@ -249,6 +250,13 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
             shouldBeIngested: data.shouldBeIngested,
             videoCategoryId: data.videoCategoryId,
           })
+
+          trackYppOptIn(
+            ytResponseData?.channelHandle,
+            ytResponseData?.email,
+            data.videoCategoryId ? displayCategoriesLookup[data.videoCategoryId].name : undefined,
+            channelCreationResponse.data.channel.subscribersCount
+          )
 
           navigate(absoluteRoutes.studio.ypp())
           displaySnackbar({

@@ -1,5 +1,6 @@
 import { FC, useState } from 'react'
 
+import { Tooltip } from '@/components/Tooltip'
 import { useClipboard } from '@/hooks/useClipboard'
 import { shortenString } from '@/utils/misc'
 

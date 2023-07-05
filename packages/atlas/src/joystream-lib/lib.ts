@@ -1,6 +1,5 @@
 // load type augments
-import '@joystream/types'
-import { JOYSTREAM_ADDRESS_PREFIX } from '@joystream/types/.'
+import * as types from '@joystream/types'
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import { QueryableStorageMultiArg } from '@polkadot/api-base/types/storage'
 import { Signer } from '@polkadot/api/types'
@@ -19,7 +18,7 @@ import { JoystreamLibError } from './errors'
 import { JoystreamLibExtrinsics } from './extrinsics'
 import { AccountId, AtlasSigner } from './types'
 
-export const keyring = new Keyring({ type: 'sr25519', ss58Format: JOYSTREAM_ADDRESS_PREFIX })
+export const keyring = new Keyring({ type: 'sr25519', ss58Format: types.JOYSTREAM_ADDRESS_PREFIX })
 
 export class JoystreamLib {
   readonly api: ApiPromise

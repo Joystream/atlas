@@ -53,7 +53,7 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
   const mdMatch = useMediaMatch('md')
   const { id: videoId } = useParams()
   const { memberId, activeMembership, isLoggedIn } = useUser()
-  const { isLoadingAsset: isMemberAvatarLoading, url: memberAvatarUrl } = getMemberAvatar(activeMembership)
+  const { isLoadingAsset: isMemberAvatarLoading, urls: memberAvatarUrls } = getMemberAvatar(activeMembership)
   const { trackCommentAdded } = useSegmentAnalytics()
 
   const { fullFee: fee, loading: feeLoading } = useFee(
