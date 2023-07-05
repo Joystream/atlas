@@ -110,7 +110,7 @@ export const VideoTileDetails: FC<VideoTileDetailsProps> = ({
               ) : (
                 <>
                   {type === 'video' ? (
-                    <Text variant="t200" color="colorText" as="p">
+                    <Text variant="t200" color="colorText" as="span">
                       {videoSubTitle
                         ? videoSubTitle
                         : createdAt && (
