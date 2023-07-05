@@ -5,6 +5,7 @@ import { Text } from '@/components/Text'
 import { NavItem, NavItemType } from '@/components/_navigation/NavItem'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
+import { useMiscStore } from '@/providers/misc/store'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { transitions } from '@/styles'
 
@@ -23,6 +24,7 @@ import {
   StyledGhLogo,
   StyledHamburgerButton,
   StyledSvgJoystreamLogoFull,
+  StyledTextButton,
 } from './SidenavBase.styles'
 
 export type SidenavProps = {
@@ -47,6 +49,8 @@ const SidenavBase: FC<SidenavProps> = ({
   className,
 }) => {
   const scrollContainer = createRef<HTMLDivElement>()
+  const setAdminModalOpen = useMiscStore((store) => store.actions.setAdminModalOpen)
+
   const scrollAndToggle = (expended: boolean) => {
     scrollContainer?.current && scrollContainer.current.scrollTo(0, 0)
     toggleSideNav(expended)
@@ -140,6 +144,10 @@ const SidenavBase: FC<SidenavProps> = ({
                 <StyledAnchor href={atlasConfig.general.appGithubUrl} target="_blank">
                   <StyledGhLogo />
                 </StyledAnchor>
+                <Text as="span" variant="t100" color="inherit">
+                  •
+                </Text>
+                <StyledTextButton onClick={() => setAdminModalOpen(true)}>Admin Panel</StyledTextButton>
                 <StyledAnchor />
               </LinksRow>
             </LinksWrapper>
