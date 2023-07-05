@@ -4,12 +4,12 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import shallow from 'zustand/shallow'
 
-import { SvgActionHide, SvgActionShow } from '@/assets/icons'
 import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
+import { useHidePasswordInInput } from '@/hooks/useHidePasswordInInput'
 import { useAuth } from '@/providers/auth/auth.hooks'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { LogInErrors } from '@/providers/auth/auth.types'
@@ -22,9 +22,9 @@ import { AuthenticationModalStepTemplate } from '../AuthenticationModalStepTempl
 
 export const LogInModal = () => {
   const [isLoading, setIsLoading] = useState(false)
-  const [isPasswordShown, setPasswordShown] = useState(false)
   const { handleLogin, refetchCurrentUser } = useAuth()
   const { displaySnackbar } = useSnackbar()
+  const [hidePasswordProps] = useHidePasswordInInput()
 
   const setYppModalOpenName = useYppStore((state) => state.actions.setYppModalOpenName)
 
@@ -114,25 +114,25 @@ export const LogInModal = () => {
         >
           <Container>
             <FormField label="Email" error={errors.email?.message}>
-              <Input {...register('email')} placeholder="Email" />
-            </FormField>
-            <FormField label="Password" error={errors.password?.message}>
               <Input
-                {...register('password')}
-                placeholder="Password"
-                type={isPasswordShown ? 'text' : 'password'}
+                {...register('email')}
+                placeholder="Email"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     handleSubmit()
                   }
                 }}
-                actionButton={{
-                  tooltipText: isPasswordShown ? 'Hide' : 'Show',
-                  dontFocusOnClick: true,
-                  icon: isPasswordShown ? <SvgActionHide /> : <SvgActionShow />,
-                  onClick: () => {
-                    setPasswordShown((prev) => !prev)
-                  },
+              />
+            </FormField>
+            <FormField label="Password" error={errors.password?.message}>
+              <Input
+                {...register('password')}
+                placeholder="Password"
+                {...hidePasswordProps}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSubmit()
+                  }
                 }}
               />
             </FormField>

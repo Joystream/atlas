@@ -68,24 +68,24 @@ export const ChangePasswordDialog: FC<ChangePasswordDialogProps> = ({ onClose, s
     resolver: zodResolver(passwordAndRepeatPasswordSchema),
   })
 
-  const [hideOldPasswordProps, resethideOldPassword] = useHidePasswordInInput()
-  const [hidePasswordProps, resethidePassword] = useHidePasswordInInput()
-  const [hideConfirmPasswordProps, resethideConfirmPassword] = useHidePasswordInInput()
+  const [hideOldPasswordProps, resetHideOldPassword] = useHidePasswordInInput()
+  const [hidePasswordProps, resetHidePassword] = useHidePasswordInInput()
+  const [hideConfirmPasswordProps, resetHideConfirmPassword] = useHidePasswordInInput()
 
   const handleClose = useCallback(() => {
     verifyPasswordForm.reset({ oldPassword: '' })
     changePasswordForm.reset({ password: '', confirmPassword: '' })
-    resethideOldPassword()
-    resethidePassword()
-    resethideConfirmPassword()
+    resetHideOldPassword()
+    resetHidePassword()
+    resetHideConfirmPassword()
     setMnemonic(null)
     onClose()
   }, [
     changePasswordForm,
     onClose,
-    resethideConfirmPassword,
-    resethideOldPassword,
-    resethidePassword,
+    resetHideConfirmPassword,
+    resetHideOldPassword,
+    resetHidePassword,
     verifyPasswordForm,
   ])
 

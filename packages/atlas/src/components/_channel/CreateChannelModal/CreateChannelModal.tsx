@@ -130,5 +130,5 @@ const StyledAvatar = styled(Avatar)`
   top: 0;
 `
 const PaddingBox = styled.div`
-  padding: ${sizes(6)} ${sizes(6)} 0 ${sizes(6)};
+  padding: ${sizes(6)};
 `
