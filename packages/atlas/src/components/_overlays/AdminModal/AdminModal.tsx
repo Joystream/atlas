@@ -18,6 +18,7 @@ import { ENV_SELECTION_ENABLED, NODE_URL } from '@/config/env'
 import { absoluteRoutes } from '@/config/routes'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useEnvironmentStore } from '@/providers/environment'
+import { useMiscStore } from '@/providers/misc/store'
 import { useSnackbar } from '@/providers/snackbars'
 import { useUserStore } from '@/providers/user/user.store'
 import { ActiveUserState } from '@/providers/user/user.types'
@@ -68,7 +69,10 @@ const TABS: TabItem[] = [
 ]
 
 export const AdminModal: FC = () => {
-  const [overlayOpen, setOverlayOpen] = useState(false)
+  const {
+    isAdminModalOpen,
+    actions: { setAdminModalOpen },
+  } = useMiscStore()
   const [selectedTabIdx, setSelectedTabIdx] = useState(0)
 
   useEffect(() => {
@@ -81,17 +85,17 @@ export const AdminModal: FC = () => {
 
       if (!control || !shift) return
 
-      setOverlayOpen((currentValue) => !currentValue)
+      setAdminModalOpen(!isAdminModalOpen)
     }
 
     window.addEventListener('keydown', handler)
     return () => {
       window.removeEventListener('keydown', handler)
     }
-  }, [])
+  }, [isAdminModalOpen, setAdminModalOpen])
 
   const handleCloseClick = () => {
-    setOverlayOpen(false)
+    setAdminModalOpen(false)
   }
 
   const handleTabSelect = (tabIdx: number) => {
@@ -100,7 +104,7 @@ export const AdminModal: FC = () => {
 
   return (
     <DialogModal
-      show={overlayOpen}
+      show={isAdminModalOpen}
       onClickOutside={handleCloseClick}
       onExitClick={handleCloseClick}
       title={
