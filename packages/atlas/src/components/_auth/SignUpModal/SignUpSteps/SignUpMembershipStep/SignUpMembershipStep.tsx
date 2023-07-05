@@ -44,8 +44,8 @@ export const SignUpMembershipStep: FC<SignInModalMembershipStepProps> = ({
       handle,
     },
   })
-
   const handleInputRef = useRef<HTMLInputElement | null>(null)
+  const captchaInputRef = useRef<HTMLDivElement | null>(null)
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
 
   const [isHandleValidating, setIsHandleValidating] = useState(false)
@@ -101,7 +101,11 @@ export const SignUpMembershipStep: FC<SignInModalMembershipStepProps> = ({
     if (errors.handle) {
       handleInputRef.current?.scrollIntoView({ behavior: 'smooth' })
     }
-  }, [errors.handle])
+
+    if (errors.captchaToken) {
+      captchaInputRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [errors.captchaToken, errors.handle])
 
   return (
     <AuthenticationModalStepTemplate
@@ -184,7 +188,7 @@ export const SignUpMembershipStep: FC<SignInModalMembershipStepProps> = ({
               control={control}
               name="captchaToken"
               render={({ field: { onChange }, fieldState: { error } }) => (
-                <FormField error={error?.message}>
+                <FormField error={error?.message} ref={captchaInputRef}>
                   <HCaptcha
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     sitekey={atlasConfig.features.members.hcaptchaSiteKey!}
