@@ -1,17 +1,31 @@
 import { createStore } from '@/utils/store'
 
+import { YppModalStep, YtResponseData } from './ypp.types'
+
 type YppStoreState = {
   referrerId: string | null
   selectedChannelId: string | null
-  authState: string | null // 'state' param passed to Google auth URL
-  shouldContinueYppFlow: boolean
+  /**
+   * 'state' param passed to Google auth URL
+   */
+  ytStateParam: string | null
+  yppModalOpenName: YppModalStep
+  shouldContinueYppFlowAfterLogin: boolean
+  shouldContinueYppFlowAfterCreatingChannel: boolean
+  ytResponseData: YtResponseData
 }
 
 type YppStoreActions = {
   setReferrerId: (referrerId: string | null) => void
   setSelectedChannelId: (selectedChannelId: string | null) => void
-  setAuthState: (authState: string | null) => void
-  setShouldContinueYppFlow: (shouldContinueYppFlow: boolean) => void
+  /**
+   * sets 'state' param passed to Google auth URL
+   */
+  setYtStateParam: (authState: string | null) => void
+  setYppModalOpenName: (modal: YppModalStep) => void
+  setShouldContinueYppFlowAfterLogin: (shouldContinueYppFlow: boolean) => void
+  setShouldContinueYppFlowAfterCreatingChannel: (shouldContinueYppFlow: boolean) => void
+  setYtResponseData: (ytResponseData: YtResponseData) => void
 }
 
 export const useYppStore = createStore<YppStoreState, YppStoreActions>(
@@ -19,8 +33,11 @@ export const useYppStore = createStore<YppStoreState, YppStoreActions>(
     state: {
       referrerId: null,
       selectedChannelId: null,
-      authState: null,
-      shouldContinueYppFlow: false,
+      ytStateParam: null,
+      yppModalOpenName: null,
+      shouldContinueYppFlowAfterLogin: false,
+      shouldContinueYppFlowAfterCreatingChannel: false,
+      ytResponseData: null,
     },
     actionsFactory: (set) => ({
       setReferrerId: (referrerId) => {
@@ -33,14 +50,29 @@ export const useYppStore = createStore<YppStoreState, YppStoreActions>(
           state.selectedChannelId = selectedChannelId
         })
       },
-      setAuthState: (authState) => {
+      setYtStateParam: (authState) => {
         set((state) => {
-          state.authState = authState
+          state.ytStateParam = authState
         })
       },
-      setShouldContinueYppFlow: (shouldContinueYppFlow) => {
+      setYppModalOpenName: (modal) => {
         set((state) => {
-          state.shouldContinueYppFlow = shouldContinueYppFlow
+          state.yppModalOpenName = modal
+        })
+      },
+      setShouldContinueYppFlowAfterLogin: (shouldContinueYppFlow) => {
+        set((state) => {
+          state.shouldContinueYppFlowAfterLogin = shouldContinueYppFlow
+        })
+      },
+      setShouldContinueYppFlowAfterCreatingChannel: (shouldContinueYppFlow) => {
+        set((state) => {
+          state.shouldContinueYppFlowAfterCreatingChannel = shouldContinueYppFlow
+        })
+      },
+      setYtResponseData: (ytResponseData) => {
+        set((state) => {
+          state.ytResponseData = ytResponseData
         })
       },
     }),
@@ -48,7 +80,7 @@ export const useYppStore = createStore<YppStoreState, YppStoreActions>(
   {
     persist: {
       key: 'ypp',
-      whitelist: ['referrerId', 'authState'],
+      whitelist: ['referrerId', 'ytStateParam'],
       version: 0,
       migrate: (oldState) => oldState,
     },

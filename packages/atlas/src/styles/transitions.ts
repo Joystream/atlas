@@ -7,6 +7,7 @@ import { sizes } from './sizes'
 export const transitions = {
   easing: 'cubic-bezier(0.165, 0.84, 0.44, 1)',
   routingEasing: 'cubic-bezier(0.87, 0, 0.13, 1)',
+  switch: 'cubic-bezier(0.03, 0.5, 0.25, 1)',
   timings: {
     loading: '600ms',
     regular: '400ms',
@@ -21,6 +22,9 @@ export const transitions = {
     slide: 'slide',
     slideDown: 'slide-down',
     modal: 'modal',
+    dropdown: 'dropdown',
+    enterFromLeft: 'enterFromLeft',
+    enterFromRight: 'enterFromRight',
   },
 }
 
@@ -29,7 +33,7 @@ export const transitionStyles = css`
     opacity: 0;
 
     & .${transitions.names.slide} {
-      transform: translateY(${sizes(8)});
+      transform: translateY(${sizes(7)});
     }
   }
 
@@ -128,5 +132,69 @@ export const transitionStyles = css`
       transform: translate(-50%, -50%) scale(0.8) !important;
       opacity: 0 !important;
     }
+  }
+
+  .${transitions.names.dropdown}-enter, .${transitions.names.dropdown}-appear {
+    opacity: 0;
+    transform: translateY(${sizes(-8)});
+  }
+
+  .${transitions.names.dropdown}-enter-done, .${transitions.names.dropdown}-appear-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: ${cVar('animationTimingMedium')} ${transitions.routingEasing};
+  }
+
+  .${transitions.names.dropdown}-exit {
+    opacity: 1;
+  }
+
+  .${transitions.names.dropdown}-exit-active {
+    opacity: 0;
+    transition: ${cVar('animationTimingMedium')} ${transitions.routingEasing};
+  }
+
+  .${transitions.names.enterFromRight}-enter, .${transitions.names.enterFromRight}-appear {
+    opacity: 0;
+    transform: translateX(280px);
+    position: absolute;
+  }
+
+  .${transitions.names.enterFromRight}-enter-done, .${transitions.names.enterFromRight}-appear-active {
+    opacity: 1;
+    transform: translateX(0);
+    transition: ${cVar('animationTimingMedium')} ${transitions.switch};
+  }
+
+  .${transitions.names.enterFromRight}-exit {
+    opacity: 1;
+  }
+
+  .${transitions.names.enterFromRight}-exit-active {
+    opacity: 0;
+    transform: translateX(280px);
+    transition: ${cVar('animationTimingMedium')} ${transitions.switch};
+  }
+
+  .${transitions.names.enterFromLeft}-enter, .${transitions.names.enterFromLeft}-appear {
+    opacity: 0;
+    transform: translateX(-280px);
+    position: absolute;
+  }
+
+  .${transitions.names.enterFromLeft}-enter-done, .${transitions.names.enterFromLeft}-appear-active {
+    opacity: 1;
+    transform: translateX(0);
+    transition: ${cVar('animationTimingMedium')} ${transitions.switch};
+  }
+
+  .${transitions.names.enterFromLeft}-exit {
+    opacity: 1;
+  }
+
+  .${transitions.names.enterFromLeft}-exit-active {
+    opacity: 0;
+    transform: translateX(-280px);
+    transition: ${cVar('animationTimingMedium')} ${transitions.switch};
   }
 `

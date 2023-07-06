@@ -15,6 +15,7 @@ import { TopbarStudio } from '@/components/_navigation/TopbarStudio'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
+import { useAuth } from '@/providers/auth/auth.hooks'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { ConnectionStatusManager, useConnectionStatusStore } from '@/providers/connectionStatus'
 import { UploadsManager } from '@/providers/uploads/uploads.manager'
@@ -26,9 +27,9 @@ import { NotificationsView } from '@/views/notifications'
 import { CrtPreviewEditView } from '@/views/studio/CrtPreviewEditView'
 import { CrtPreviewView } from '@/views/studio/CrtPreviewView'
 import { CrtWelcomeView } from '@/views/studio/CrtWelcomeView/CrtWelcomeView'
+import { MyChannelView } from '@/views/studio/MyChannelView'
 import { MyPaymentsView } from '@/views/studio/MyPaymentsView'
 
-import { CreateEditChannelView } from './CreateEditChannelView'
 import { MyUploadsView } from './MyUploadsView'
 import { MyVideosView } from './MyVideosView'
 import { StudioWelcomeView } from './StudioWelcomeView'
@@ -36,7 +37,7 @@ import { VideoWorkspace } from './VideoWorkspace'
 import { YppDashboard } from './YppDashboard'
 
 import { YppLandingView } from '../global/YppLandingView'
-import { useGetYppSyncedChannels } from '../global/YppLandingView/YppLandingView.hooks'
+import { useGetYppSyncedChannels } from '../global/YppLandingView/useGetYppSyncedChannels'
 import { NotFoundView } from '../viewer/NotFoundView'
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
@@ -62,17 +63,18 @@ const StudioLayout = () => {
   const displayedLocation = useVideoWorkspaceRouting()
   const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
-  const { channelId, memberships, isLoggedIn, isAuthLoading, membershipsLoading, isWalletLoading } = useUser()
+  const { channelId, memberships, membershipsLoading, activeMembership } = useUser()
+  const { isAuthenticating } = useAuth()
 
   const [openUnsupportedBrowserDialog, closeUnsupportedBrowserDialog] = useConfirmationModal()
   const [enterLocation] = useState(location.pathname)
+  const isMembershipLoaded = !membershipsLoading && !isAuthenticating
   const { trackPageView } = useSegmentAnalytics()
-  const isMembershipLoaded = !membershipsLoading && !isAuthLoading && !isWalletLoading
   const hasMembership = !!memberships?.length
 
-  const channelSet = !!channelId && hasMembership
+  const channelSet = !!(channelId && activeMembership?.channels.find((channel) => channel.id === channelId))
   const { currentChannel, isLoading } = useGetYppSyncedChannels()
-  const isLoadingYPPData = isLoading || isAuthLoading || membershipsLoading
+  const isLoadingYPPData = isLoading || membershipsLoading || isAuthenticating
   const isYppSigned = !!currentChannel
 
   useEffect(() => {
@@ -121,7 +123,7 @@ const StudioLayout = () => {
         nodeConnectionStatus={nodeConnectionStatus}
         isConnectedToInternet={internetConnectionStatus === 'connected'}
       />
-      {isAuthLoading || membershipsLoading || isWalletLoading ? (
+      {membershipsLoading || isAuthenticating ? (
         <StudioLoading />
       ) : (
         <>
@@ -147,23 +149,9 @@ const StudioLayout = () => {
                 }
               />
               <Route
-                path={relativeRoutes.studio.newChannel()}
+                path={relativeRoutes.studio.myChannel()}
                 element={
-                  <PrivateRoute
-                    element={<CreateEditChannelView newChannel />}
-                    isAuth={isLoggedIn}
-                    redirectTo={ENTRY_POINT_ROUTE}
-                  />
-                }
-              />
-              <Route
-                path={relativeRoutes.studio.editChannel()}
-                element={
-                  <PrivateRoute
-                    element={<CreateEditChannelView />}
-                    isAuth={channelSet}
-                    redirectTo={ENTRY_POINT_ROUTE}
-                  />
+                  <PrivateRoute element={<MyChannelView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
                 }
               />
               <Route

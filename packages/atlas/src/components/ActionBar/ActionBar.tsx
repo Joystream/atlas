@@ -1,20 +1,20 @@
 import BN from 'bn.js'
-import { MouseEvent, forwardRef } from 'react'
+import { MouseEvent, forwardRef, useRef } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Fee } from '@/components/Fee'
 import { Text } from '@/components/Text'
-import { TooltipProps } from '@/components/Tooltip'
-import { ButtonProps } from '@/components/_buttons/Button'
+import { Tooltip, TooltipProps } from '@/components/Tooltip'
+import { Button, ButtonProps } from '@/components/_buttons/Button'
 import { useHasEnoughBalance } from '@/hooks/useHasEnoughBalance'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { transitions } from '@/styles'
 
 import {
   ActionBarContainer,
-  ActionButtonPrimary,
   DraftsBadgeContainer,
   FeeContainer,
+  PrimaryButtonContainer,
   SecondaryButton,
   StyledInformation,
 } from './ActionBar.styles'
@@ -34,6 +34,7 @@ export type ActionBarProps = {
   feeLoading?: boolean
   infoBadge?: ActionDialogInfoBadge
   primaryButton: ActionDialogButtonProps
+  primaryButtonTooltip?: Omit<TooltipProps, 'reference'>
   secondaryButton?: ActionDialogButtonProps
   isActive?: boolean
   skipFeeCheck?: boolean
@@ -49,6 +50,7 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
       isActive = true,
       className,
       primaryButton,
+      primaryButtonTooltip,
       secondaryButton,
       infoBadge,
       skipFeeCheck,
@@ -63,6 +65,7 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
       primaryButton.onClick,
       skipFeeCheck
     )
+    const buttonRef = useRef<HTMLButtonElement>(null)
 
     return (
       <ActionBarContainer ref={ref} className={`${className} action-bar`} isActive={isActive}>
@@ -90,16 +93,22 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
             {secondaryButton?.text}
           </SecondaryButton>
         </CSSTransition>
-        <ActionButtonPrimary
-          {...primaryButton}
-          disabled={primaryButton.disabled || loadingState}
-          onClick={isNoneCrypto ? primaryButton.onClick : signTransactionHandler}
-          secondaryButtonExists={!!secondaryButton}
-          size={smMatch ? 'large' : 'medium'}
-          type="submit"
-        >
-          {loadingState ? 'Please wait...' : primaryButton.text}
-        </ActionButtonPrimary>
+        <PrimaryButtonContainer secondaryButtonExists={!!secondaryButton}>
+          {/* tooltip is positioned weirdly on this button, that's we are setting offsetY to 22 */}
+          <Tooltip offsetY={22} {...primaryButtonTooltip}>
+            <Button
+              fullWidth
+              {...primaryButton}
+              ref={buttonRef}
+              disabled={primaryButton.disabled || loadingState}
+              onClick={isNoneCrypto ? primaryButton.onClick : signTransactionHandler}
+              size={smMatch ? 'large' : 'medium'}
+              type="submit"
+            >
+              {loadingState ? 'Please wait...' : primaryButton.text}
+            </Button>
+          </Tooltip>
+        </PrimaryButtonContainer>
       </ActionBarContainer>
     )
   }

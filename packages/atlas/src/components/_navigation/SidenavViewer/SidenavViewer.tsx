@@ -12,7 +12,8 @@ import { AppLogo } from '@/components/AppLogo'
 import { Button } from '@/components/_buttons/Button'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
-import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
+import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
+import { useAuthStore } from '@/providers/auth/auth.store'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user/user.hooks'
 import { ConsoleLogger } from '@/utils/logs'
@@ -57,22 +58,24 @@ export const SidenavViewer: FC = () => {
   const [expanded, setExpanded] = useState(false)
   const followedChannels = usePersonalDataStore((state) => state.followedChannels)
   const unFollow = usePersonalDataStore((state) => state.actions.unfollowChannel)
-  const { openSignInDialog } = useDisplaySignInDialog()
+  const {
+    actions: { setAuthModalOpenName },
+  } = useAuthStore()
 
   const handleChannelNotFound = (id: string) => {
     ConsoleLogger.warn(`Followed channel not found, removing id: ${id}`)
     unFollow(id)
   }
 
-  const { signIn, isLoggedIn } = useUser()
+  const { isLoggedIn } = useUser()
 
   const closeAndSignIn = () => {
     setExpanded(false)
-    signIn(undefined, openSignInDialog)
+    setAuthModalOpenName(getCorrectLoginModal())
   }
   const buttonsContent = !isLoggedIn ? (
     <Button icon={<SvgActionMember />} onClick={closeAndSignIn}>
-      Connect wallet
+      Log in
     </Button>
   ) : (
     <Button

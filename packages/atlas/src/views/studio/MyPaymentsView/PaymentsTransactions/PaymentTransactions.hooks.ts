@@ -1,5 +1,5 @@
 import { useGetChannelPaymentEventsQuery } from '@/api/queries/__generated__/channels.generated'
-import { useJoystream } from '@/providers/joystream/joystream.hooks'
+import { useJoystream } from '@/providers/joystream'
 
 import { mapEventToPaymentHistory } from './PaymentTransactions.utils'
 

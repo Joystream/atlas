@@ -19,8 +19,6 @@ import { absoluteRoutes } from '@/config/routes'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useEnvironmentStore } from '@/providers/environment'
 import { useSnackbar } from '@/providers/snackbars'
-import { useUserStore } from '@/providers/user/user.store'
-import { ActiveUserState } from '@/providers/user/user.types'
 import { useUserLocationStore } from '@/providers/userLocation'
 import { availableEnvs } from '@/utils/envVariables'
 import { SentryLogger } from '@/utils/logs'
@@ -120,7 +118,7 @@ export const AdminModal: FC = () => {
       <Tabs tabs={TABS} onSelectTab={handleTabSelect} selected={selectedTabIdx} />
       {selectedTabIdx === 0 && <EnvTab />}
       {selectedTabIdx === 1 && <StateTab />}
-      {selectedTabIdx === 2 && <UserTab />}
+      {/*{selectedTabIdx === 2 && <UserTab />}*/}
       {selectedTabIdx === 3 && <LocationTab />}
       {selectedTabIdx === 4 && <KillSwitch />}
       <VersionText variant="t200" as="p">
@@ -141,7 +139,6 @@ const EnvTab: FC = () => {
   const determinedNodeFound = AVAILABLE_NODES.find((node) => node.value === determinedNode)
   const [usingCustomNodeUrl, setUsingCustomNodeUrl] = useState(!determinedNodeFound)
   const [customNodeUrl, setCustomNodeUrl] = useState(determinedNode)
-  const resetActiveUser = useUserStore((state) => state.actions.resetActiveUser)
 
   const handleEnvironmentChange = (value?: string | null) => {
     if (!value) {
@@ -149,7 +146,6 @@ const EnvTab: FC = () => {
     }
     setDefaultDataEnv(value)
     setNodeOverride(null)
-    resetActiveUser()
 
     window.location.reload()
   }
@@ -295,74 +291,6 @@ const StateTab: FC = () => {
       </Button>
       <Button onClick={handleClearClick} variant="secondary" size="large" icon={<SvgAlertsError24 />}>
         Clear local state
-      </Button>
-    </VerticalSpacedContainer>
-  )
-}
-
-const UserTab: FC = () => {
-  const {
-    accountId,
-    memberId,
-    channelId,
-    actions: { setActiveUser, resetActiveUser },
-  } = useUserStore()
-
-  const [accountIdValue, setAccountIdValue] = useState(accountId)
-  const [memberIdValue, setMemberIdValue] = useState(memberId)
-  const [channelIdValue, setChannelIdValue] = useState(channelId)
-
-  useEffect(() => {
-    const handler = (state: ActiveUserState) => {
-      setAccountIdValue(state.accountId)
-      setMemberIdValue(state.memberId)
-      setChannelIdValue(state.channelId)
-    }
-    return useUserStore.subscribe(handler)
-  }, [])
-
-  const handleAccountIdChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setAccountIdValue(e.target.value)
-  }
-
-  const handleMemberIdChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setMemberIdValue(e.target.value)
-  }
-
-  const handleChannelIdChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setChannelIdValue(e.target.value)
-  }
-
-  const handleSaveClick = () => {
-    setActiveUser({
-      accountId: accountIdValue,
-      memberId: memberIdValue,
-      channelId: channelIdValue,
-    })
-  }
-
-  const handleRestClick = () => {
-    resetActiveUser()
-  }
-
-  return (
-    <VerticalSpacedContainer>
-      <HorizontalSpacedContainer>
-        <FormField label="Account ID">
-          <Input value={accountIdValue || ''} onChange={handleAccountIdChange} />
-        </FormField>
-        <FormField label="Member ID">
-          <Input value={memberIdValue || ''} onChange={handleMemberIdChange} />
-        </FormField>
-        <FormField label="Channel ID">
-          <Input value={channelIdValue || ''} onChange={handleChannelIdChange} />
-        </FormField>
-      </HorizontalSpacedContainer>
-      <Button onClick={handleSaveClick} size="large" variant="secondary">
-        Save changes
-      </Button>
-      <Button onClick={handleRestClick} size="large" variant="secondary">
-        Reset user
       </Button>
     </VerticalSpacedContainer>
   )

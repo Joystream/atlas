@@ -2,7 +2,6 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { Avatar, AvatarSize } from '@/components/Avatar'
-import { Button } from '@/components/_buttons/Button'
 import { sizes } from '@/styles'
 
 export const Container = styled.div`
@@ -27,7 +26,7 @@ export const TitleWrapper = styled.div<{ followButton?: boolean }>`
   align-items: center;
 `
 
-export const FollowButton = styled(Button)`
+export const FollowButtonWrapper = styled.div`
   margin-left: auto;
 `
 

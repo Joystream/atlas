@@ -6,7 +6,7 @@ import { AlertDialogModal, AlertDialogModalProps } from '@/components/_overlays/
 import { useHasEnoughBalance } from '@/hooks/useHasEnoughBalance'
 import { JoystreamLibExtrinsics } from '@/joystream-lib/extrinsics'
 import { TxMethodName } from '@/joystream-lib/types'
-import { useFee } from '@/providers/joystream/joystream.hooks'
+import { useFee } from '@/providers/joystream'
 
 type AlertDialogModalWithFeeProps = AlertDialogModalProps & {
   fee: {

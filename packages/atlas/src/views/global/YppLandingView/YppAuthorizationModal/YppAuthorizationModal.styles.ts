@@ -17,18 +17,10 @@ export const Content = styled.div`
   margin-top: ${sizes(6)};
 `
 
-export const DescriptionText = styled(Text)`
-  display: block;
-`
-
 export const Anchor = styled.a`
   text-decoration: none;
   color: inherit;
   cursor: pointer;
-`
-
-export const Img = styled.img`
-  width: 100%;
 `
 
 export const HeaderIconsWrapper = styled.div`

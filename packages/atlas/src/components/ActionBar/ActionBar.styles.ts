@@ -47,20 +47,6 @@ export const StyledInformation = styled(Information)`
   margin-left: ${sizes(1)};
 `
 
-export const ActionButtonPrimary = styled(Button)<{ secondaryButtonExists: boolean }>`
-  grid-area: primary-button;
-
-  ${({ secondaryButtonExists }) =>
-    !secondaryButtonExists &&
-    css`
-      grid-column: 1 / span 2;
-
-      ${media.sm} {
-        grid-column: -3 / span 2;
-      }
-    `}
-`
-
 export const SecondaryButton = styled(Button)`
   grid-area: secondary-button;
 `
@@ -79,4 +65,19 @@ export const FeeContainer = styled.div`
   grid-area: primary-text;
   display: flex;
   align-items: center;
+`
+
+export const PrimaryButtonContainer = styled.div<{ secondaryButtonExists: boolean }>`
+  grid-area: primary-button;
+  width: 100%;
+
+  ${({ secondaryButtonExists }) =>
+    !secondaryButtonExists &&
+    css`
+      grid-column: 1 / span 2;
+
+      ${media.sm} {
+        grid-column: -3 / span 2;
+      }
+    `}
 `
