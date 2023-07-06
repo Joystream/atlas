@@ -5,22 +5,22 @@ import { Text } from '@/components/Text'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { Dialog } from '@/components/_overlays/Dialog'
 
-import { IllustrationWrapper, StyledModal } from './MintNftFirstTimeModal.styles'
+import { IllustrationWrapper, StyledModal } from './SaleNftFirstTimeModal.styles'
 
 type MintNftFirstTimeModalProps = {
   show: boolean
-  onMint: () => void
+  onSale: () => void
   onSkip: () => void
   onShouldHideNextTime: (value: boolean) => void
   shouldHideNextTime: boolean
 }
 
-export const MintNftFirstTimeModal: FC<MintNftFirstTimeModalProps> = ({
+export const SaleNftFirstTimeModal: FC<MintNftFirstTimeModalProps> = ({
   show,
-  onMint,
-  onSkip,
-  shouldHideNextTime,
+  onSale,
   onShouldHideNextTime,
+  shouldHideNextTime,
+  onSkip,
 }) => {
   return (
     <StyledModal show={show}>
@@ -28,10 +28,10 @@ export const MintNftFirstTimeModal: FC<MintNftFirstTimeModalProps> = ({
         <SvgOtherVideoTile />
       </IllustrationWrapper>
       <Dialog
-        title="Mint your video as NFT"
+        title="Put your NFT on sale"
         primaryButton={{
-          text: 'Mint now',
-          onClick: onMint,
+          text: 'Start sale',
+          onClick: onSale,
         }}
         secondaryButton={{
           text: 'Skip for now',
@@ -43,8 +43,7 @@ export const MintNftFirstTimeModal: FC<MintNftFirstTimeModalProps> = ({
         actionDivider
       >
         <Text as="p" variant="t200" color="colorText">
-          You can mint your videos and sell them on the market for JOY. To do that select mint NFT option in context
-          menu of a video.
+          Now that you've minted your NFT you can put it on sale by choosing "Start sale" from your video options
         </Text>
       </Dialog>
     </StyledModal>
