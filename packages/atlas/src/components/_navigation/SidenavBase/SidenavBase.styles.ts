@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 
 import { SvgLogoGithubMonochrome } from '@/assets/icons'
 import { SvgJoystreamLogoFull } from '@/assets/logos'
+import { TextButton } from '@/components/_buttons/Button'
 import { HamburgerButton } from '@/components/_buttons/HamburgerButton'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
@@ -87,10 +88,11 @@ export const LinksWrapper = styled.div`
 
 export const LinksRow = styled.div`
   justify-content: center;
-  display: grid;
+  display: flex;
   color: ${cVar('colorTextMuted')};
-  grid-auto-flow: column;
   align-items: center;
+  overflow: hidden;
+  flex-wrap: wrap;
   gap: ${sizes(2)};
 `
 
@@ -116,6 +118,15 @@ export const LegalLink = styled(Link)`
 
 export const StyledAnchor = styled.a`
   ${linkStyles}
+`
+
+export const StyledTextButton = styled(TextButton)`
+  ${linkStyles};
+
+  * {
+    white-space: nowrap;
+    font: ${cVar('typographyDesktopT100')};
+  }
 `
 
 export const StyledSvgJoystreamLogoFull = styled(SvgJoystreamLogoFull)`
