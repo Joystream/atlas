@@ -39,7 +39,7 @@ export const generateCommonMetaTags = (
     }),
     ...(image && {
       'og:image': image,
-      'twitter:image:src': appUrl + image,
+      'twitter:image': appUrl + image,
       'og:image:alt': title,
       'twitter:image:alt': title,
       'og:image:type': 'image/webp',
