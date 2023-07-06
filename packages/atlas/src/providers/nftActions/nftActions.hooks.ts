@@ -27,6 +27,8 @@ export const useNftActions = () => {
     closeNftAction,
     cancelNftSale,
     changeNftPrice,
+    nftToMint,
+    setNftToMint,
   } = ctx
 
   const checkIfSigned = useCallback(() => {
@@ -98,5 +100,7 @@ export const useNftActions = () => {
     openNftChangePrice,
     cancelNftSale,
     changeNftPrice,
+    nftToMint,
+    setNftToMint,
   }
 }
