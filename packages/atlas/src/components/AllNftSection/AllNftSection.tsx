@@ -1,12 +1,14 @@
 import styled from '@emotion/styled'
 
 import { EmptyFallback } from '@/components/EmptyFallback'
+import { SectionFilter } from '@/components/FilterButton'
 import { Section } from '@/components/Section/Section'
 import { Button } from '@/components/_buttons/Button'
 import { NftTileViewer } from '@/components/_nft/NftTileViewer'
 import { useInfiniteNftsGrid } from '@/hooks/useInfiniteNftsGrid'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { SORTING_FILTERS, useNftSectionFilters } from '@/hooks/useNftSectionFilters'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { DEFAULT_NFTS_GRID } from '@/styles'
 import { InfiniteLoadingOffsets } from '@/utils/loading.contants'
 
@@ -22,6 +24,15 @@ export const AllNftSection = () => {
     actions: { onApplyFilters, setOrder, clearFilters },
   } = useNftSectionFilters()
 
+  const { trackAllNftFilterUpdated } = useSegmentAnalytics()
+
+  const onApplyFiltersCallback = (appliedFilters: SectionFilter[]) => {
+    const status = appliedFilters.find((filter) => filter.name === 'status')
+    const price = appliedFilters.find((filter) => filter.name === 'price')
+    trackAllNftFilterUpdated(status?.range?.toString(), price?.range?.toString(), order)
+    onApplyFilters(appliedFilters)
+  }
+
   const { columns, fetchMore, pageInfo, tiles, totalCount } = useInfiniteNftsGrid({
     where: ownedNftWhereInput,
     orderBy: order,
@@ -31,7 +42,7 @@ export const AllNftSection = () => {
   return (
     <Section
       headerProps={{
-        onApplyFilters,
+        onApplyFilters: onApplyFiltersCallback,
         start: {
           type: 'title',
           title: 'All NFTs',

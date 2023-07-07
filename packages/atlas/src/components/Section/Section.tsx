@@ -14,9 +14,20 @@ export type SectionProps<T> = {
   footerProps?: SectionFooterProps
   className?: string
   withoutGap?: boolean
+  slideCallbacks?: {
+    slideLeftCallback: (page?: string) => void
+    slideRightCallback: (page?: string) => void
+  }
 }
 
-export function Section<T>({ headerProps, contentProps, footerProps, className, withoutGap }: SectionProps<T>) {
+export function Section<T>({
+  headerProps,
+  contentProps,
+  footerProps,
+  className,
+  withoutGap,
+  slideCallbacks,
+}: SectionProps<T>) {
   const isCarousel = contentProps.type === 'carousel'
   const [isCarouselEnd, setIsCarouselEnd] = useState(false)
   const [isCarouselBeginning, setIsCarouselBeginning] = useState(true)
@@ -25,9 +36,11 @@ export function Section<T>({ headerProps, contentProps, footerProps, className, 
 
   const handleSlideLeft = () => {
     gliderRef.current?.slidePrev()
+    slideCallbacks?.slideLeftCallback(gliderRef?.current?.activeIndex?.toString())
   }
   const handleSlideRight = () => {
     gliderRef.current?.slideNext()
+    slideCallbacks?.slideRightCallback(gliderRef?.current?.activeIndex?.toString())
   }
 
   useEffect(() => {
