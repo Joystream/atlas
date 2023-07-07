@@ -279,6 +279,7 @@ export const ChannelView: FC = () => {
                       format="short"
                       color="colorText"
                       variant="t300"
+                      withDenomination="after"
                     />
                   </Balance>
                 </ChannelInfoContainer>
