@@ -9,16 +9,14 @@ import { IllustrationWrapper, StyledModal } from './MintNftFirstTimeModal.styles
 
 type MintNftFirstTimeModalProps = {
   show: boolean
-  onMint: () => void
-  onSkip: () => void
+  onClose: () => void
   onShouldHideNextTime: (value: boolean) => void
   shouldHideNextTime: boolean
 }
 
 export const MintNftFirstTimeModal: FC<MintNftFirstTimeModalProps> = ({
   show,
-  onMint,
-  onSkip,
+  onClose,
   shouldHideNextTime,
   onShouldHideNextTime,
 }) => {
@@ -30,12 +28,8 @@ export const MintNftFirstTimeModal: FC<MintNftFirstTimeModalProps> = ({
       <Dialog
         title="Mint your video as NFT"
         primaryButton={{
-          text: 'Mint now',
-          onClick: onMint,
-        }}
-        secondaryButton={{
-          text: 'Skip for now',
-          onClick: onSkip,
+          text: 'Ok, got it!',
+          onClick: onClose,
         }}
         additionalActionsNode={
           <Checkbox label="Don't show this again" onChange={onShouldHideNextTime} value={shouldHideNextTime} />

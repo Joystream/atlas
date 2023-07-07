@@ -6,7 +6,6 @@ import { MintNftFirstTimeModal } from '@/components/_overlays/MintNftFirstTimeMo
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useConfirmationModal } from '@/providers/confirmationModal'
-import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { VideoWorkspaceFormStatus, useVideoWorkspace, useVideoWorkspaceData } from '@/providers/videoWorkspace'
 
@@ -19,7 +18,6 @@ export const VideoWorkspace: FC = memo(() => {
   const [formStatus, setFormStatus] = useState<VideoWorkspaceFormStatus | null>(null)
   const [showMintConfirmationDialog, setShowMintConfirmationDialog] = useState(false)
   const [shouldHideMintModal, setShouldHideMintModal] = useState(false)
-  const [txVideoId, setTxVideoId] = useState<string>()
 
   const mintConfirmationDismissed = usePersonalDataStore((state) =>
     state.dismissedMessages.some((message) => message.id === MINTING_CONFIRMATION_ID)
@@ -28,7 +26,6 @@ export const VideoWorkspace: FC = memo(() => {
 
   const { isWorkspaceOpen, setIsWorkspaceOpen, editedVideoInfo } = useVideoWorkspace()
   const { tabData } = useVideoWorkspaceData()
-  const { setNftToMint } = useNftActions()
 
   const [openEditDialog, closeEditDialog] = useConfirmationModal({
     type: 'warning',
@@ -123,18 +120,9 @@ export const VideoWorkspace: FC = memo(() => {
         shouldHideNextTime={shouldHideMintModal}
         onShouldHideNextTime={setShouldHideMintModal}
         show={showMintConfirmationDialog}
-        onSkip={() => {
+        onClose={() => {
           if (shouldHideMintModal) {
             updateMintConfirmationDismiss(MINTING_CONFIRMATION_ID, true)
-          }
-          setShowMintConfirmationDialog(false)
-        }}
-        onMint={() => {
-          if (shouldHideMintModal) {
-            updateMintConfirmationDismiss(MINTING_CONFIRMATION_ID, true)
-          }
-          if (txVideoId) {
-            setNftToMint(txVideoId)
           }
           setShowMintConfirmationDialog(false)
         }}
@@ -152,7 +140,6 @@ export const VideoWorkspace: FC = memo(() => {
           setFormStatus={setFormStatus}
           onSubmit={(data) =>
             handleVideoWorkspaceSubmit(data).then((videoId) => {
-              setTxVideoId(videoId)
               if (!mintConfirmationDismissed && !isEdit && videoId) {
                 setShowMintConfirmationDialog(true)
               }
