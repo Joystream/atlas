@@ -8,6 +8,7 @@ import { DialogButtonProps } from '@/components/_overlays/Dialog'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { AccountFormData, MemberFormData, RegisterError, useCreateMember } from '@/hooks/useCreateMember'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useUniqueMemberHandle } from '@/hooks/useUniqueMemberHandle'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useYppStore } from '@/providers/ypp/ypp.store'
@@ -51,6 +52,7 @@ export const SignUpModal = () => {
   const setYtResponseData = useYppStore((state) => state.actions.setYtResponseData)
 
   const { generateUniqueMemberHandleBasedOnInput } = useUniqueMemberHandle()
+  const { trackMembershipCreation } = useSegmentAnalytics()
 
   const { authModalOpenName, setAuthModalOpenName } = useAuthStore(
     (state) => ({
@@ -230,6 +232,12 @@ export const SignUpModal = () => {
 
   const cancelButtonVisible = currentStep !== SignUpSteps.Success && currentStep !== SignUpSteps.Creating
   const isSuccess = currentStep === SignUpSteps.Success
+
+  useEffect(() => {
+    if (isSuccess) {
+      trackMembershipCreation(signUpFormData.handle, signUpFormData.email)
+    }
+  }, [isSuccess, signUpFormData.email, signUpFormData.handle, trackMembershipCreation])
 
   const smMatch = useMediaMatch('sm')
   return (

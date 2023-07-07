@@ -1,10 +1,11 @@
 import styled from '@emotion/styled'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 import { GetFeaturedNftsVideosQuery } from '@/api/queries/__generated__/nfts.generated'
 import { Carousel, CarouselProps, SwiperInstance } from '@/components/Carousel'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { breakpoints, media } from '@/styles'
 
 import { MarketplaceCarouselCard } from './components/MarketplaceCarouselCard'
@@ -33,7 +34,24 @@ const responsive: CarouselProps['breakpoints'] = {
 
 export const MarketplaceCarousel = ({ carouselProps, isLoading, ...rest }: MarketplaceCarouselProps) => {
   const [glider, setGlider] = useState<SwiperInstance | null>(null)
+  const { trackNFTCarouselNext, trackNFTCarouselPrev } = useSegmentAnalytics()
   const mdMatch = useMediaMatch('md')
+
+  const handleNextSlide = useCallback(
+    (slideIndex: string, nft?: GetFeaturedNftsVideosQuery['ownedNfts'][number]) => {
+      trackNFTCarouselNext(slideIndex, nft?.id)
+      glider?.slideNext()
+    },
+    [glider, trackNFTCarouselNext]
+  )
+
+  const handlePrevSlide = useCallback(
+    (slideIndex: string, nft?: GetFeaturedNftsVideosQuery['ownedNfts'][number]) => {
+      trackNFTCarouselPrev(slideIndex, nft?.id)
+      glider?.slideNext()
+    },
+    [glider, trackNFTCarouselPrev]
+  )
 
   const content = useMemo(() => {
     if (isLoading) {
@@ -47,16 +65,24 @@ export const MarketplaceCarousel = ({ carouselProps, isLoading, ...rest }: Marke
 
     if (rest.type === 'nft' && rest.nfts && glider) {
       return rest.nfts.map((nft, idx) => (
-        <NftCarouselItem key={idx} onClick={(dir) => (dir === '>' ? glider?.slideNext() : glider?.slidePrev())}>
+        <NftCarouselItem
+          key={idx}
+          onClick={(dir) => (dir === '>' ? handleNextSlide(idx.toString(), nft) : handlePrevSlide(idx.toString(), nft))}
+        >
           {(isActive) => (
-            <MarketplaceCarouselCard slideNext={() => glider?.slideNext()} active={isActive} type="nft" nft={nft} />
+            <MarketplaceCarouselCard
+              slideNext={() => handleNextSlide(idx.toString(), nft)}
+              active={isActive}
+              type="nft"
+              nft={nft}
+            />
           )}
         </NftCarouselItem>
       ))
     }
 
     return [null]
-  }, [rest.type, rest.nfts, glider, isLoading])
+  }, [isLoading, rest.type, rest.nfts, glider, handleNextSlide, handlePrevSlide])
 
   if (!isLoading && (!rest.nfts || rest.nfts.length < 4)) {
     return null

@@ -2,7 +2,7 @@ import axios from 'axios'
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useMutation } from 'react-query'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import shallow from 'zustand/shallow'
 
 import { useBasicChannel, useFullChannel } from '@/api/hooks/channel'
@@ -66,6 +66,8 @@ const DEFAULT_LANGUAGE = atlasConfig.derived.popularLanguagesSelectValues[0].val
 
 export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSyncedChannels }) => {
   const { memberId, refetchUserMemberships, setActiveChannel, channelId, isLoggedIn } = useUser()
+  const [searchParams] = useSearchParams()
+  const [utmSource, setUtmSource] = useState<string | null>(null)
   const navigate = useNavigate()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const {
@@ -123,6 +125,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
   const { extendedChannel } = useBasicChannel(referrerId || '', {
     skip: !referrerId,
   })
+  const { trackPageView } = useSegmentAnalytics()
 
   const channel = extendedChannel?.channel
 
@@ -135,8 +138,15 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     })
 
   useEffect(() => {
+    if (searchParams.get('UTM_source')) {
+      setUtmSource(searchParams.get('UTM_source'))
+    }
+  }, [searchParams])
+
+  useEffect(() => {
     contentRef.current?.scrollTo({ top: 0 })
-  }, [yppModalOpenName])
+    yppModalOpenName && trackPageView(yppModalOpenName)
+  }, [trackPageView, yppModalOpenName])
 
   const handleClose = useCallback(() => {
     setYtRequirementsErrors([])
@@ -255,7 +265,9 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
             ytResponseData?.channelHandle,
             ytResponseData?.email,
             data.videoCategoryId ? displayCategoriesLookup[data.videoCategoryId].name : undefined,
-            channelCreationResponse.data.channel.subscribersCount
+            channelCreationResponse.data.channel.subscribersCount,
+            data.referrerChannelId,
+            utmSource || undefined
           )
 
           navigate(absoluteRoutes.studio.ypp())

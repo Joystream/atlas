@@ -98,7 +98,7 @@ const StudioLayout = () => {
   }, [closeUnsupportedBrowserDialog, openUnsupportedBrowserDialog])
 
   useEffect(() => {
-    const pageName = Object.keys(locationToPageName).find((key) => location.pathname.includes(key))
+    const pageName = Object.entries(locationToPageName).find(([key]) => location.pathname.includes(key))?.[1]
 
     // had to include this timeout to make sure the page title is updated
     const trackRequestTimeout = setTimeout(() => trackPageView(`Studio - ${pageName}`, undefined), 1000)

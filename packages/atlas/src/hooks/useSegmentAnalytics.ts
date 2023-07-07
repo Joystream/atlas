@@ -23,29 +23,39 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackPageView = useCallback(
-    (name: string, referrer?: string) => {
+    (name: string, referrer?: string, tab?: string) => {
       analytics.page(undefined, name, {
         ...(referrer ? { referrer } : {}),
+        ...(tab ? { tab } : {}),
       })
     },
     [analytics]
   )
 
   const trackYppOptIn = useCallback(
-    (handle = 'no data', email = 'no data', category = 'no data', subscribersCount: string) => {
-      analytics.track('ypp opt-in', {
+    (
+      handle = 'no data',
+      email = 'no data',
+      category = 'no data',
+      subscribersCount: string,
+      referrerId = 'no data',
+      utmSource = 'no data'
+    ) => {
+      analytics.track('YPP Sign Up Completed', {
         handle,
         email,
         category,
         subscribersCount,
+        referrerId,
+        utmSource,
       })
     },
     [analytics]
   )
 
-  const trackAccountCreation = useCallback(
+  const trackMembershipCreation = useCallback(
     (handle: string, email: string) => {
-      analytics.track('account created', {
+      analytics.track('Membership created', {
         handle,
         email,
       })
@@ -55,7 +65,7 @@ export const useSegmentAnalytics = () => {
 
   const trackChannelCreation = useCallback(
     (channelId: string, channelTitle: string, language: string) => {
-      analytics.track('account created', {
+      analytics.track('Channel created', {
         channelId,
         channelTitle,
         language,
@@ -66,7 +76,7 @@ export const useSegmentAnalytics = () => {
 
   const trackVideoPlaybackStarted = useCallback(
     (params: videoPlaybackParams) => {
-      analytics.track('video playback started', {
+      analytics.track('Video playback started', {
         ...params,
       })
     },
@@ -75,7 +85,7 @@ export const useSegmentAnalytics = () => {
 
   const trackVideoPlaybackPaused = useCallback(
     (params: videoPlaybackParams) => {
-      analytics.track('video playback paused', {
+      analytics.track('Video playback paused', {
         ...params,
       })
     },
@@ -84,7 +94,7 @@ export const useSegmentAnalytics = () => {
 
   const trackVideoPlaybackResumed = useCallback(
     (params: videoPlaybackParams) => {
-      analytics.track('video playback resumed', {
+      analytics.track('Video playback resumed', {
         ...params,
       })
     },
@@ -93,7 +103,7 @@ export const useSegmentAnalytics = () => {
 
   const trackVideoPlaybackCompleted = useCallback(
     (params: videoPlaybackParams) => {
-      analytics.track('video playback completed', {
+      analytics.track('Video playback completed', {
         ...params,
       })
     },
@@ -102,7 +112,7 @@ export const useSegmentAnalytics = () => {
 
   const trackVideoUpload = useCallback(
     (title: string, channelId: string) => {
-      analytics.track('video uploaded', {
+      analytics.track('Video uploaded', {
         channelId,
         title,
       })
@@ -112,7 +122,7 @@ export const useSegmentAnalytics = () => {
 
   const trackNftMint = useCallback(
     (title: string, channelId: string) => {
-      analytics.track('nft minted', {
+      analytics.track('NFT minted', {
         title,
         channelId,
       })
@@ -122,7 +132,7 @@ export const useSegmentAnalytics = () => {
 
   const trackNftSale = useCallback(
     (saleType: string, price: string) => {
-      analytics.track('nft put on sale', {
+      analytics.track('NFT put on sale', {
         saleType,
         price,
       })
@@ -132,7 +142,7 @@ export const useSegmentAnalytics = () => {
 
   const trackCommentAdded = useCallback(
     (commentBody: string, videoId: string) => {
-      analytics.track('comment added', {
+      analytics.track('Comment added', {
         commentBody,
         videoId,
       })
@@ -142,7 +152,7 @@ export const useSegmentAnalytics = () => {
 
   const trackLikeAdded = useCallback(
     (videoId: string, memberId: string) => {
-      analytics.track('like added', {
+      analytics.track('Like added', {
         memberId,
         videoId,
       })
@@ -152,7 +162,7 @@ export const useSegmentAnalytics = () => {
 
   const trackDislikeAdded = useCallback(
     (videoId: string, memberId: string) => {
-      analytics.track('dislike added', {
+      analytics.track('Dislike added', {
         memberId,
         videoId,
       })
@@ -162,7 +172,7 @@ export const useSegmentAnalytics = () => {
 
   const trackChannelFollow = useCallback(
     (channelId: string) => {
-      analytics.track('channel followed', {
+      analytics.track('Channel followed', {
         channelId,
       })
     },
@@ -173,11 +183,60 @@ export const useSegmentAnalytics = () => {
     analytics.track('YPP Landing Sign In w Google Clicked')
   }, [analytics])
 
+  const trackNFTCarouselNext = useCallback(
+    (slideId: string, nftId?: string) => {
+      analytics.track('Featured NFT carousel next slide', {
+        slideId,
+        nftId,
+      })
+    },
+    [analytics]
+  )
+
+  const trackNFTCarouselPrev = useCallback(
+    (slideId: string, nftId?: string) => {
+      analytics.track('Featured NFT carousel next slide', {
+        slideId,
+        nftId,
+      })
+    },
+    [analytics]
+  )
+
+  const trackFeaturedNFTNext = useCallback(
+    (page?: string) => {
+      analytics.track('Featured NFT next page', {
+        page,
+      })
+    },
+    [analytics]
+  )
+
+  const trackFeaturedNFTPrev = useCallback(
+    (page?: string) => {
+      analytics.track('Featured NFT prev page', {
+        page,
+      })
+    },
+    [analytics]
+  )
+
+  const trackAllNftFilterUpdated = useCallback(
+    (status?: string, price?: string, sorting?: string) => {
+      analytics.track('All NFTs section filter updated', {
+        status,
+        price,
+        sorting,
+      })
+    },
+    [analytics]
+  )
+
   return {
     identifyUser,
     trackPageView,
     trackYppOptIn,
-    trackAccountCreation,
+    trackMembershipCreation,
     trackChannelCreation,
     trackVideoPlaybackStarted,
     trackVideoPlaybackPaused,
@@ -191,5 +250,10 @@ export const useSegmentAnalytics = () => {
     trackDislikeAdded,
     trackChannelFollow,
     trackYppSignInButtonClick,
+    trackNFTCarouselNext,
+    trackNFTCarouselPrev,
+    trackFeaturedNFTNext,
+    trackFeaturedNFTPrev,
+    trackAllNftFilterUpdated,
   }
 }

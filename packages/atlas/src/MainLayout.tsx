@@ -80,14 +80,16 @@ export const MainLayout: FC = () => {
       const pageName =
         location.pathname === '/'
           ? 'Home'
-          : Object.keys(locationToPageName).find((key) => location.pathname.includes(key))
+          : Object.entries(locationToPageName).find(([key]) => location.pathname.includes(key))?.[1]
+
       const categoryName = pageName === 'Category' && id ? displayCategoriesLookup[id] : undefined
       const query = searchParams.get('query')
-      const referrer = searchParams.get('referrer') || searchParams.get('utm_source')
+      const tab = searchParams.get('tab')
+      const referrer = searchParams.get('referrer') || searchParams.get('UTM_source')
 
       const buildPageName = () => {
         if (pageName === 'Category') {
-          return `pageName ${categoryName}`
+          return `Category ${categoryName}`
         } else if (pageName === 'Search') {
           return `Search result page '${query}'`
         } else return pageName || 'unknown'
@@ -96,7 +98,11 @@ export const MainLayout: FC = () => {
       // had to include this timeout to make sure the page title is updated
       const trackRequestTimeout = setTimeout(
         () =>
-          trackPageView(buildPageName(), (location.pathname === absoluteRoutes.viewer.ypp() && referrer) || undefined),
+          trackPageView(
+            buildPageName(),
+            (location.pathname === absoluteRoutes.viewer.ypp() && referrer) || undefined,
+            (location.pathname === absoluteRoutes.viewer.channel() && tab) || undefined
+          ),
         1000
       )
 
