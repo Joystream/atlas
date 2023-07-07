@@ -51,7 +51,7 @@ const CONNECTING_WALLET_STEPS: WalletStepListItemComponentProps[] = [
   },
   {
     title: 'Success',
-    description: 'From now you can log in to your account with your external wallet on other Apps but also to Gleev.',
+    description: 'From now you can sign in to your account with your external wallet on other Apps but also to Gleev.',
   },
 ]
 
@@ -153,7 +153,7 @@ export const MembershipWallet = () => {
         <EntitySettingTemplate
           isLast
           title="External wallet"
-          description="You can use external wallet to log in to your account."
+          description="You can use external wallet to sign in to your account."
         >
           <FormField
             label="Connect external wallet"
