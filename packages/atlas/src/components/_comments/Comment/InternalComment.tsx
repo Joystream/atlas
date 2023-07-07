@@ -268,7 +268,7 @@ export const InternalComment: FC<InternalCommentProps> = ({
                         {hasReactionsAndCommentIsNotDeleted && (
                           <ProtectedActionWrapper
                             title="You want to react to this comment?"
-                            description="Log in to let others know what you think"
+                            description="Sign in to let others know what you think"
                           >
                             <ReactionsAndPopover>
                               {sortedReactions?.map(({ reactionId, active, count, state }) => (
@@ -294,7 +294,7 @@ export const InternalComment: FC<InternalCommentProps> = ({
                         <RepliesWrapper>
                           <ProtectedActionWrapper
                             title="You want to reply to this comment?"
-                            description="Log in to let others know what you think"
+                            description="Sign in to let others know what you think"
                           >
                             {!!repliesCount && filteredDuplicatedAvatars.length ? (
                               <StyledAvatarGroup

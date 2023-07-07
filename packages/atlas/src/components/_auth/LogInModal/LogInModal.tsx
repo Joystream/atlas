@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import shallow from 'zustand/shallow'
 
-import { Button } from '@/components/_buttons/Button'
+import { Button, TextButton } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { DialogModal } from '@/components/_overlays/DialogModal'
@@ -86,18 +86,10 @@ export const LogInModal = () => {
       disableBackdropAnimation
       show={authModalOpenName === 'logIn'}
       primaryButton={{
-        text: isLoading ? 'Waiting...' : 'Log in',
+        text: isLoading ? 'Waiting...' : 'Sign in',
         disabled: isLoading,
         onClick: handleSubmit,
       }}
-      secondaryButton={
-        !isLoading
-          ? {
-              text: 'Sign up',
-              onClick: () => setAuthModalOpenName('signUp'),
-            }
-          : undefined
-      }
       additionalActionsNode={
         !isLoading && (
           <Button variant="tertiary" onClick={() => setAuthModalOpenName(undefined)}>
@@ -108,8 +100,13 @@ export const LogInModal = () => {
     >
       {!isLoading ? (
         <AuthenticationModalStepTemplate
-          title="Log in"
-          subtitle={`Use your ${atlasConfig.general.appName} account.`}
+          title="Sign in"
+          subtitle={
+            <>
+              Use your {atlasConfig.general.appName} account.{' '}
+              <TextButton onClick={() => setAuthModalOpenName('signUp')}>Create account</TextButton>
+            </>
+          }
           hasNavigatedBack
         >
           <Container>

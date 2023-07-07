@@ -96,7 +96,7 @@ export const ExternalSignInModal: FC = () => {
         return (
           <AuthenticationModalStepTemplate
             title="No memberships connected"
-            subtitle="It looks like you don’t have a membership connected to this wallet. Use your email and password to log in."
+            subtitle="It looks like you don’t have a membership connected to this wallet. Use your email and password to sign in."
             hasNavigatedBack={false}
           />
         )

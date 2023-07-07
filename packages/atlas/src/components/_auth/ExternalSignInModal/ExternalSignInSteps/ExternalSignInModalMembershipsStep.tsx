@@ -101,7 +101,7 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
   // send updates to SignInModal on state of primary button
   useEffect(() => {
     setPrimaryButtonProps({
-      text: 'Log in',
+      text: 'Sign in',
       disabled: !memberId,
       onClick: handleConfirm,
     })

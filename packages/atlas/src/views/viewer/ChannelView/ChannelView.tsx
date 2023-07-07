@@ -296,7 +296,7 @@ export const ChannelView: FC = () => {
           <StyledButtonContainer>
             <ProtectedActionWrapper
               title="You want to follow this channel?"
-              description={`Log in to follow ${channel?.title}`}
+              description={`Sign in to follow ${channel?.title}`}
             >
               <StyledButton
                 icon={isFollowing ? <SvgActionCheck /> : <SvgActionPlus />}
@@ -316,7 +316,7 @@ export const ChannelView: FC = () => {
                   nodeStart: <SvgActionFlag />,
                   protected: {
                     title: 'You want to report this channel?',
-                    description: 'Log in to report harmful content',
+                    description: 'Sign in to report harmful content',
                   },
                 },
               ]}
