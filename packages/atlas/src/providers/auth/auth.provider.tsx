@@ -9,6 +9,7 @@ import { GetCurrentAccountQuery, useGetCurrentAccountLazyQuery } from '@/api/que
 import { atlasConfig } from '@/config'
 import { ORION_AUTH_URL } from '@/config/env'
 import { useMountEffect } from '@/hooks/useMountEffect'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { keyring } from '@/joystream-lib/lib'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useJoystream } from '@/providers/joystream/joystream.provider'
@@ -35,6 +36,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<GetCurrentAccountQuery['accountData'] | null>(null)
   const [lazyCurrentAccountQuery, { refetch }] = useGetCurrentAccountLazyQuery()
   const { setApiActiveAccount } = useJoystream()
+  const { identifyUser } = useSegmentAnalytics()
   const client = useApolloClient()
   const {
     anonymousUserId,
@@ -185,6 +187,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
         const res = await refetch()
         setCurrentUser(res.data.accountData)
+        identifyUser(res.data.accountData.email)
 
         return response.data.accountId
       } catch (error) {
@@ -209,7 +212,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         setIsAuthenticating(false)
       }
     },
-    [refetch, saveEncodedSeed, setAnonymousUserId, setApiActiveAccount]
+    [identifyUser, refetch, saveEncodedSeed, setAnonymousUserId, setApiActiveAccount]
   )
 
   const handleLogout: AuthContextValue['handleLogout'] = useCallback(async () => {
