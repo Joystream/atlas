@@ -4,7 +4,7 @@ import { useQueryNodeStateSubscription } from '@/api/hooks/queryNode'
 import { TransactionModal } from '@/components/_overlays/TransactionModal'
 import { ExtrinsicStatus } from '@/joystream-lib/types'
 import { useSnackbar } from '@/providers/snackbars'
-import { useUserStore } from '@/providers/user/user.store'
+import { useWalletStore } from '@/providers/wallet/wallet.store'
 import { SentryLogger } from '@/utils/logs'
 
 import { METAPROTOCOL_SNACKBAR_ID } from './transactions.config'
@@ -16,7 +16,7 @@ export const TransactionsManager: FC = () => {
     actions: { removeOldBlockActions, removeTransaction },
   } = useTransactionManagerStore((state) => state)
 
-  const userWalletName = useUserStore((state) => state.wallet?.title)
+  const userWalletName = useWalletStore((state) => state.wallet?.title)
 
   const lastProcessedQnBlockRef = useRef(0)
   const { displaySnackbar, closeSnackbar } = useSnackbar()
@@ -63,7 +63,7 @@ export const TransactionsManager: FC = () => {
     lastProcessedQnBlockRef.current = lastProcessedBlock
 
     const blockActions = useTransactionManagerStore.getState().blockActions
-    const syncedActions = blockActions.filter((action) => lastProcessedBlock >= action.targetBlock)
+    const syncedActions = blockActions.filter((action) => lastProcessedBlock > action.targetBlock)
 
     if (!syncedActions.length) {
       return

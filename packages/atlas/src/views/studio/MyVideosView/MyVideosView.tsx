@@ -32,7 +32,7 @@ import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { sizes } from '@/styles'
 import { createPlaceholderData } from '@/utils/data'
 import { SentryLogger } from '@/utils/logs'
-import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/YppLandingView.hooks'
+import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
 import { YppVideoDto } from '@/views/studio/MyVideosView/MyVideosView.types'
 
 import {

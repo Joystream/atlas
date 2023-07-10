@@ -10,8 +10,9 @@ import { Button } from '@/components/_buttons/Button'
 import { TopbarBase } from '@/components/_navigation/TopbarBase'
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { absoluteRoutes } from '@/config/routes'
-import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
+import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
+import { useAuthStore } from '@/providers/auth/auth.store'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { ConnectionStatusManager } from '@/providers/connectionStatus'
 import { useUser } from '@/providers/user/user.hooks'
@@ -24,12 +25,12 @@ import {
   PlaygroundGoogleAuthentication,
   PlaygroundIframe,
   PlaygroundImageDownsizing,
-  PlaygroundIndirectSignInDialog,
   PlaygroundInputAutocomplete,
   PlaygroundNftPurchase,
   PlaygroundNftSettleAuction,
   PlaygroundNftWhitelistMembers,
   PlaygroundReactionsComments,
+  PlaygroundSignUp,
   PlaygroundTokenPrice,
 } from './Playgrounds'
 import { PlaygroundMarketplaceCarousel } from './Playgrounds/PlaygroundMarketplaceCarousel'
@@ -40,7 +41,6 @@ const playgroundRoutes = [
   { path: 'whitelisting-members', element: <PlaygroundNftWhitelistMembers />, name: 'NFT Whitelisting members' },
   { path: 'block-time', element: <PlaygroundEstimatingBlockTime />, name: 'Estimating block time' },
   { path: 'token-price', element: <PlaygroundTokenPrice />, name: 'Token price' },
-  { path: 'indirect-signin-dialog', element: <PlaygroundIndirectSignInDialog />, name: 'Indirect sign in dialog' },
   { path: 'image-downsizing', element: <PlaygroundImageDownsizing />, name: 'Image downsizing' },
   { path: 'reactions-comments', element: <PlaygroundReactionsComments />, name: 'Reactions & comments' },
   { path: 'iframe', element: <PlaygroundIframe />, name: 'Iframe' },
@@ -48,13 +48,17 @@ const playgroundRoutes = [
   { path: 'google-authentication', element: <PlaygroundGoogleAuthentication />, name: 'Google authentication' },
   { path: 'input-autocomplete', element: <PlaygroundInputAutocomplete />, name: 'Input autocomplete' },
   { path: 'marketplace-carousel', element: <PlaygroundMarketplaceCarousel />, name: 'Marketplace carousel' },
+  { path: 'sign-up', element: <PlaygroundSignUp />, name: 'Sign up' },
 ]
 
 const PlaygroundLayout = () => {
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
-  const { activeMembership, isLoggedIn, signIn } = useUser()
+  const { activeMembership, isLoggedIn } = useUser()
   const { urls: memberAvatarUrls, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(activeMembership)
-  const { openSignInDialog } = useDisplaySignInDialog()
+  const {
+    actions: { setAuthModalOpenName },
+  } = useAuthStore()
+
   return (
     <UserProvider>
       <TopbarBase
@@ -83,7 +87,7 @@ const PlaygroundLayout = () => {
               onClick={() => setIsMemberDropdownActive(true)}
             />
           ) : (
-            <Button onClick={() => signIn(undefined, openSignInDialog)}>Sign in</Button>
+            <Button onClick={() => setAuthModalOpenName(getCorrectLoginModal())}>Sign in</Button>
           )}
         </ButtonContainer>
       </TopbarBase>

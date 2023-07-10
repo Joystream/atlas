@@ -32,3 +32,8 @@ export const TickWrapper = styled.div<{ fulfilled: boolean }>`
 export const Paragraph = styled.p`
   margin: 0;
 `
+
+export const CategoriesText = styled(Text)`
+  display: block;
+  margin-top: ${sizes(1)};
+`

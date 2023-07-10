@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { AvatarGroup } from '@/components/Avatar/AvatarGroup'
+import { Avatar } from '@/components/Avatar'
 import { media, sizes } from '@/styles'
 
 import { TopbarBase } from '../TopbarBase'
@@ -21,7 +21,7 @@ export const StyledTopbarBase = styled(TopbarBase)<{ withoutHamburgerButton?: bo
   ${({ withoutHamburgerButton }) => withoutHamburgerButton && withoutHamburgerButtonStyles};
 `
 
-export const StyledAvatarGroup = styled(AvatarGroup)`
+export const StyledAvatar = styled(Avatar)`
   margin-left: ${sizes(4)};
 `
 

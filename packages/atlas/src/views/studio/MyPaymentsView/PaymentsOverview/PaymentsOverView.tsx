@@ -10,7 +10,7 @@ import { ClaimChannelPaymentsDialog } from '@/components/_overlays/ClaimChannelP
 import { WithdrawFundsDialog } from '@/components/_overlays/SendTransferDialogs'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
-import { useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
+import { useSubscribeAccountBalance } from '@/providers/joystream'
 import { useUser } from '@/providers/user/user.hooks'
 
 import { useChannelPayout } from './PaymentsOverview.hooks'

@@ -1,6 +1,5 @@
 import { useCallback, useContext } from 'react'
 
-import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useUser } from '@/providers/user/user.hooks'
 
 import { NftActionsContext } from './nftActions.provider'
@@ -14,8 +13,7 @@ export const useNftActions = () => {
   if (ctx === undefined) {
     throw new Error('useNftActions must be used within NftActionsProvider')
   }
-  const { signIn, isLoggedIn } = useUser()
-  const { openSignInDialog } = useDisplaySignInDialog({ interaction: true })
+  const { isLoggedIn } = useUser()
 
   const {
     currentAction,
@@ -32,11 +30,8 @@ export const useNftActions = () => {
   } = ctx
 
   const checkIfSigned = useCallback(() => {
-    if (!isLoggedIn) {
-      openSignInDialog({ onConfirm: signIn })
-    }
     return isLoggedIn
-  }, [isLoggedIn, openSignInDialog, signIn])
+  }, [isLoggedIn])
 
   const openNftPurchase = useCallback(
     (nftId: string, opts?: OpenNftPurchaseOpts) => {

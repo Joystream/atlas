@@ -19,6 +19,7 @@ import { SentryLogger } from '@/utils/logs'
 import { NFT_DEFAULT_BID_LOCK_DURATION, NFT_DEFAULT_EXTENSION_PERIOD, PERBILL_ONE_PERCENT } from './config'
 import { JoystreamLibError } from './errors'
 import {
+  AtlasSigner,
   ChannelAssets,
   ChannelAssetsIds,
   DataObjectMetadata,
@@ -111,7 +112,7 @@ type RawExtrinsicResult = {
 
 export const sendExtrinsicAndParseEvents = (
   tx: SubmittableExtrinsic<'promise'>,
-  accountId: string,
+  accountId: AtlasSigner,
   registry: Registry,
   endpoint: string,
   cb?: ExtrinsicStatusCallbackFn
@@ -125,7 +126,6 @@ export const sendExtrinsicAndParseEvents = (
     tx.signAndSend(accountId, { nonce: -1 }, (result) => {
       const extrinsicsHash = tx.hash.toHex()
       const { status, isError, events: rawEvents } = result
-
       if (isError) {
         unsub()
 

@@ -7,7 +7,7 @@ import { Text } from '@/components/Text'
 import { ErrorCode } from '@/joystream-lib/errors'
 import { ExtrinsicStatus } from '@/joystream-lib/types'
 import { useOverlayManager } from '@/providers/overlayManager'
-import { useUserStore } from '@/providers/user/user.store'
+import { useWallet } from '@/providers/wallet/wallet.hooks'
 import { transitions } from '@/styles'
 import { createPlaceholderData } from '@/utils/data'
 
@@ -37,7 +37,7 @@ export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, c
   const [walletLogoVisible, setWalletLogoVisible] = useState(false)
   const { decrementOverlaysOpenCount } = useOverlayManager()
   const [initialStatus, setInitialStatus] = useState<number | null>(null)
-  const wallet = useUserStore((state) => state.wallet)
+  const { wallet } = useWallet()
   const nonUploadTransaction = initialStatus === ExtrinsicStatus.Unsigned
   const error = status === ExtrinsicStatus.Error
   const stepDetails =

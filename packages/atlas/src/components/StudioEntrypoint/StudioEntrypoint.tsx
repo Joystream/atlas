@@ -26,7 +26,7 @@ export const StudioEntrypoint: FC<StudioEntrypointProps> = ({ enterLocation }) =
     if (!activeMembership?.channels.length) {
       return <Navigate to={absoluteRoutes.studio.signIn()} replace />
     }
-    return <Navigate to={enterLocation} replace />
+    return <Navigate to={enterLocation || DEFAULT_ROUTE} replace />
   }
 
   if (channelSet) {

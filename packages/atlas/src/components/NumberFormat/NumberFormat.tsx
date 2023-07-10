@@ -124,7 +124,7 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
     return (
       <>
         {withDenomination ? (
-          <Container orientation={withDenomination}>
+          <Container orientation={withDenomination === 'horizontal' ? _withDenomination : undefined}>
             {icon ? (
               <IconContainer>
                 {icon}

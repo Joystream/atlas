@@ -15,7 +15,7 @@ import { NftBuyNowInputMetadata, NftSaleInputMetadata } from '@/joystream-lib/ty
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useConfirmationModal } from '@/providers/confirmationModal'
-import { useFee } from '@/providers/joystream/joystream.hooks'
+import { useFee } from '@/providers/joystream'
 import { useUser } from '@/providers/user/user.hooks'
 import { SentryLogger } from '@/utils/logs'
 import { formatDateTime } from '@/utils/time'
