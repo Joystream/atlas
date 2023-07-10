@@ -16,6 +16,8 @@ import {
   AvatarWrapper,
   CheckboxSkeleton,
   Content,
+  IconWrapper,
+  StyledIcon,
   StyledLink,
   StyledListItem,
   Title,
@@ -81,7 +83,7 @@ export const NotificationTile: FC<NotificationProps> = ({
   className,
 }) => {
   const { date, video, member, read } = notification
-  const { urls: avatarUrls, isLoadingAsset: isLoadingAvatar } = getMemberAvatar(member)
+  const { urls: avatarUrls } = getMemberAvatar(member)
 
   const formattedDate = useMemo(() => {
     const differenceDays = differenceInDays(new Date(), date)
@@ -111,21 +113,21 @@ export const NotificationTile: FC<NotificationProps> = ({
           variant="compact"
           nodeStart={
             member ? (
-              <Avatar size={32} assetUrls={avatarUrls} loading={isLoadingAvatar || loading} />
+              <NotifactionIcon avatarUrls={avatarUrls ?? []} iconType="nft" />
             ) : (
               <NoActorNotificationAvatar size="small" />
             )
           }
-          caption={!loading ? `${formattedDate} • ${video.title}` : <SkeletonLoader width="50%" height={19} />}
+          caption={!loading ? formattedDate : <SkeletonLoader width="50%" height={19} />}
           label={
             !loading ? (
               <>
                 {member && (
-                  <Text as="span" variant="t200-strong" color="colorText">
+                  <Text as="span" variant="t100">
                     {`${member.handle} `}
                   </Text>
                 )}
-                <Text as="span" variant="t200-strong">
+                <Text as="span" variant="t100">
                   {getNotificationText(notification)}
                 </Text>
               </>
@@ -155,7 +157,7 @@ export const NotificationTile: FC<NotificationProps> = ({
       )}
       <AvatarWrapper>
         {member ? (
-          <Avatar size={40} assetUrls={avatarUrls} loading={isLoadingAvatar || loading} />
+          <NotifactionIcon avatarUrls={avatarUrls ?? []} iconType="nft" />
         ) : (
           <NoActorNotificationAvatar size="regular" />
         )}
@@ -183,5 +185,30 @@ export const NotificationTile: FC<NotificationProps> = ({
         </Content>
       )}
     </Wrapper>
+  )
+}
+
+type NotificationIconType = 'like' | 'dislike' | 'follow' | 'warning' | 'bell' | 'nft' | 'payout'
+
+type NotifactionIconProps = {
+  avatarUrls: string[]
+  iconType: NotificationIconType
+}
+
+const notificationIconMapper: Record<NotificationIconType, any> = {
+  bell: '',
+  dislike: '',
+  follow: '',
+  like: '',
+  nft: '',
+  payout: '',
+  warning: '',
+}
+export const NotifactionIcon = ({ iconType, avatarUrls }: NotifactionIconProps) => {
+  return (
+    <IconWrapper>
+      <Avatar size={40} assetUrls={avatarUrls} />
+      <StyledIcon />
+    </IconWrapper>
   )
 }
