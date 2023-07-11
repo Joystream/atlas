@@ -101,7 +101,7 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
   // send updates to SignInModal on state of primary button
   useEffect(() => {
     setPrimaryButtonProps({
-      text: 'Log in',
+      text: 'Sign in',
       disabled: !memberId,
       onClick: handleConfirm,
     })
@@ -110,7 +110,7 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
   return (
     <AuthenticationModalStepTemplate
       title="Select membership"
-      subtitle="It looks like you have multiple memberships connected to this wallet. Select membership which you want to log in."
+      subtitle="It looks like you have multiple memberships connected to this wallet. Select membership which you want to sign in."
       hasNavigatedBack={hasNavigatedBack}
     >
       <ListItemsWrapper>

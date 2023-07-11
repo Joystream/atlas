@@ -100,7 +100,7 @@ export const ChannelLink: FC<ChannelLinkProps> = ({
                   <FollowButtonWrapper>
                     <ProtectedActionWrapper
                       title="You want to follow this channel?"
-                      description={`Log in to follow ${displayedChannel.channel.title}`}
+                      description={`Sign in to follow ${displayedChannel.channel.title}`}
                     >
                       <Button variant="secondary" onClick={handleFollowButtonClick}>
                         {isFollowing ? 'Unfollow' : 'Follow'}

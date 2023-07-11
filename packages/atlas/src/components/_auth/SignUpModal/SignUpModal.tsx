@@ -228,14 +228,21 @@ export const SignUpModal = () => {
   )
   const backButtonVisible = useMemo(() => {
     if (currentStep === SignUpSteps.SignUpSeed && ytResponseData) {
-      return false
+      return undefined
     }
-    return (
+
+    if (currentStep === SignUpSteps.CreateMember) {
+      return { text: 'Back', onClick: () => setAuthModalOpenName('logIn') }
+    }
+
+    if (
       currentStep === SignUpSteps.SignUpEmail ||
       currentStep === SignUpSteps.SignUpPassword ||
       currentStep === SignUpSteps.SignUpSeed
-    )
-  }, [currentStep, ytResponseData])
+    ) {
+      return { text: 'Back', onClick: () => goToPreviousStep() }
+    }
+  }, [currentStep, goToPreviousStep, setAuthModalOpenName, ytResponseData])
 
   const cancelButtonVisible = currentStep !== SignUpSteps.Success && currentStep !== SignUpSteps.Creating
   const isSuccess = currentStep === SignUpSteps.Success
@@ -269,7 +276,7 @@ export const SignUpModal = () => {
             }
           : primaryButtonProps
       }
-      secondaryButton={backButtonVisible ? { text: 'Back', onClick: () => goToPreviousStep() } : undefined}
+      secondaryButton={backButtonVisible}
       confetti={currentStep === SignUpSteps.Success && smMatch}
       additionalActionsNode={
         cancelButtonVisible ? (

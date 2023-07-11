@@ -48,7 +48,7 @@ export const ReactionStepper: FC<ReactionStepperProps> = ({
           <ProtectedActionWrapper
             key={reaction}
             title={reaction === 'like' ? 'You like this video?' : 'You don’t like this video?'}
-            description="Log in to make your vote count"
+            description="Sign in to make your vote count"
           >
             <ReactionButton
               fee={fee}

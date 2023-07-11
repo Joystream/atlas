@@ -94,7 +94,7 @@ export const StudioWelcomeView: FC = () => {
       buttons={[
         isLoggedIn
           ? { size: 'large', onClick: () => setAuthModalOpenName('createChannel'), children: 'Create channel' }
-          : { size: 'large', onClick: () => setAuthModalOpenName(getCorrectLoginModal()), children: 'Log in' },
+          : { size: 'large', onClick: () => setAuthModalOpenName(getCorrectLoginModal()), children: 'Sign in' },
         {
           size: 'large',
           variant: 'tertiary',

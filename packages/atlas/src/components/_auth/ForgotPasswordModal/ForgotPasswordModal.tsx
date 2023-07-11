@@ -158,7 +158,7 @@ export const ForgotPasswordModal = () => {
         )
         displaySnackbar({
           title: 'Password has been changed',
-          description: 'You can now log in to your account using the new password',
+          description: 'You can now sign in to your account using the new password',
           iconType: 'success',
         })
         setAuthModalName('logIn')
