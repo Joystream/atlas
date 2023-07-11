@@ -27,7 +27,7 @@ export const Table = styled.table`
       padding: ${sizes(2)};
       text-align: center;
 
-      &:first-child {
+      &:first-of-type {
         text-align: start;
       }
     }
