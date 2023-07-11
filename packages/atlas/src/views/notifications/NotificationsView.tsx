@@ -30,8 +30,7 @@ export const NotificationsView = () => {
   const open = useBottomNavStore((state) => state.open)
   const headTags = useHeadTags('Notifications')
 
-  const { selectedNotifications, setNotificationSelected, selectAllNotifications, unselectAllNotifications } =
-    useSelectedNotifications()
+  const { selectedNotifications, selectAllNotifications, unselectAllNotifications } = useSelectedNotifications()
   const {
     notifications,
     markNotificationsAsRead,
@@ -91,30 +90,25 @@ export const NotificationsView = () => {
         <div>
           {notifications.length > 0 ? (
             <Section
-              withoutGap
               contentProps={{
                 type: 'grid',
-                children: [
-                  <div key="single">
-                    {[...notifications, ...placeholderItems].map((notification, idx) =>
-                      notification.id ? (
-                        <StyledNotificationTile
-                          key={`notification-${notification.id}-${idx}`}
-                          notification={notification}
-                          selected={!!selectedNotifications.find((notif) => notif.id === notification.id)}
-                          onCheckboxChange={(selected, e) => {
-                            setNotificationSelected(notification, selected)
-                            e.preventDefault()
-                            e.stopPropagation()
-                          }}
-                          onClick={() => markNotificationsAsRead(notification)}
-                        />
-                      ) : (
-                        <StyledNotificationLoader key={idx} />
-                      )
-                    )}
-                  </div>,
-                ],
+                gap: 2,
+                grid: {
+                  xxs: {
+                    columns: 1,
+                  },
+                },
+                children: [...notifications, ...placeholderItems].map((notification, idx) =>
+                  notification.id ? (
+                    <StyledNotificationTile
+                      key={`notification-${notification.id}-${idx}`}
+                      notification={notification}
+                      onClick={() => markNotificationsAsRead(notification)}
+                    />
+                  ) : (
+                    <StyledNotificationLoader key={idx} />
+                  )
+                ),
               }}
               footerProps={{
                 type: 'infinite',

@@ -3,7 +3,6 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { ListItem } from '@/components/ListItem'
-import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, sizes } from '@/styles'
 
 type Variant = 'default' | 'compact'
@@ -75,16 +74,8 @@ export const Title = styled.div`
   margin-bottom: ${sizes(0.5)};
 `
 
-export const AvatarWrapper = styled.div`
-  margin: 0 ${sizes(4)};
-`
-
 export const Content = styled.div`
   width: 100%;
-`
-
-export const CheckboxSkeleton = styled(SkeletonLoader)`
-  border-radius: 2px;
 `
 
 type StyledListItemProps = {
@@ -98,7 +89,7 @@ const getListItemStyles = ({ loading }: StyledListItemProps) => {
     return
   }
   return css`
-    background-color: ${cVar('colorBackgroundStrong')};
+    background-color: transparent;
     padding: ${sizes(4)};
   `
 }
@@ -120,13 +111,41 @@ export const IconWrapper = styled.div`
   padding-right: ${sizes(2)};
 `
 
-export const StyledIcon = styled.div`
+export const IconContainer = styled.div<{ color: 'red' | 'blue' | 'green' | 'gray' }>`
   position: absolute;
   width: 24px;
   border-radius: 50%;
   height: 24px;
-  background-color: red;
   bottom: 0;
   right: 0;
-  box-shadow: 0 0 0 2px ${cVar('colorCoreNeutral700')};
+  box-shadow: 0 0 0 1px ${cVar('colorCoreNeutral700')};
+  display: grid;
+  place-items: center;
+
+  ${(props) => {
+    switch (props.color) {
+      case 'blue':
+        return css`
+          background-color: ${cVar('colorBackgroundPrimaryStrong')};
+        `
+      case 'red':
+        return css`
+          background-color: ${cVar('colorBackgroundError')};
+        `
+      case 'green':
+        return css`
+          background-color: ${cVar('colorBackgroundSuccessStrong')};
+        `
+      case 'gray':
+      default:
+        return css`
+          background-color: ${cVar('colorBorderStrong')};
+        `
+    }
+  }}
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
 `

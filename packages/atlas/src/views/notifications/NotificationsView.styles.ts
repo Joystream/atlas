@@ -37,6 +37,9 @@ export const MarkAllReadWrapper = styled.div`
 `
 
 export const StyledNotificationTile = styled(NotificationTile)`
+  background-color: ${cVar('colorBackgroundMuted')};
+  box-shadow: none;
+
   :not(:last-of-type) {
     margin-bottom: ${sizes(2)};
   }
