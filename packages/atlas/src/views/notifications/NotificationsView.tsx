@@ -103,7 +103,7 @@ export const NotificationsView = () => {
                     <StyledNotificationTile
                       key={`notification-${notification.id}-${idx}`}
                       notification={notification}
-                      onClick={() => markNotificationsAsRead(notification)}
+                      onMarkAsRead={() => markNotificationsAsRead(notification)}
                     />
                   ) : (
                     <StyledNotificationLoader key={idx} />

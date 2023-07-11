@@ -100,6 +100,12 @@ export const StyledListItem = styled(ListItem)<StyledListItemProps>`
 
   position: relative;
   box-shadow: ${cVar('effectDividersTop')};
+
+  :hover {
+    .kebab-button {
+      opacity: 1;
+    }
+  }
 `
 
 export const StyledLink = styled(Link)`

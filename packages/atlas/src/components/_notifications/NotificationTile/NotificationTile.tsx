@@ -1,12 +1,14 @@
 import { differenceInCalendarYears, differenceInDays, format } from 'date-fns'
-import { FC, ReactElement, ReactNode, useMemo } from 'react'
+import { FC, ReactElement, ReactNode, useMemo, useRef } from 'react'
 
 import {
   SvgActionAddVideo,
+  SvgActionCheck,
   SvgActionCouncil,
   SvgActionDislikeOutline,
   SvgActionInformative,
   SvgActionLikeOutline,
+  SvgActionMore,
   SvgActionNft,
   SvgActionNotifications,
   SvgActionPlaceholder,
@@ -16,6 +18,9 @@ import { Avatar } from '@/components/Avatar'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { KebabMenuButtonIcon } from '@/components/_nft/NftTile/NftTileDetails.styles'
+import { ContextMenu } from '@/components/_overlays/ContextMenu'
+import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { absoluteRoutes } from '@/config/routes'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { NotificationRecord } from '@/providers/notifications/notifications.types'
@@ -67,14 +72,21 @@ export type NotificationProps = {
   notification: NotificationRecord
   loading?: boolean
   onClick?: () => void
-  variant?: 'default' | 'compact'
   className?: string
+  onMarkAsRead?: () => void
 }
 
-export const NotificationTile: FC<NotificationProps> = ({ notification, loading, onClick, className }) => {
+export const NotificationTile: FC<NotificationProps> = ({
+  notification,
+  loading,
+  onClick,
+  className,
+  onMarkAsRead,
+}) => {
   const { date, member, read } = notification
   const { urls: avatarUrls } = getMemberAvatar(member)
-
+  const ref = useRef<HTMLButtonElement>(null)
+  const contextMenuInstanceRef = useRef<PopoverImperativeHandle>(null)
   const formattedDate = useMemo(() => {
     const differenceDays = differenceInDays(new Date(), date)
     const differenceYears = differenceInCalendarYears(new Date(), date)
@@ -94,7 +106,11 @@ export const NotificationTile: FC<NotificationProps> = ({ notification, loading,
           ? { commentId: notification.commentId }
           : {}),
       })}
-      onClick={onClick}
+      onClick={() => {
+        onClick?.()
+        onMarkAsRead?.()
+      }}
+      onPointerLeave={() => contextMenuInstanceRef.current?.hide()}
     >
       <StyledListItem
         loading={loading}
@@ -124,6 +140,39 @@ export const NotificationTile: FC<NotificationProps> = ({ notification, loading,
           ) : (
             <SkeletonLoader width="40%" height={20} bottomSpace={2} />
           )
+        }
+        nodeEnd={
+          <div
+            onClick={(e) => {
+              e.stopPropagation()
+              e.preventDefault()
+            }}
+          >
+            <KebabMenuButtonIcon
+              ref={ref}
+              icon={<SvgActionMore />}
+              variant="tertiary"
+              size="small"
+              isActive={!loading}
+              className="kebab-button"
+            />
+            <ContextMenu
+              ref={contextMenuInstanceRef}
+              appendTo={ref.current ?? undefined}
+              placement="bottom-end"
+              flipEnabled={false}
+              disabled={loading}
+              items={[
+                {
+                  label: 'Mark as read',
+                  nodeStart: <SvgActionCheck />,
+                  onClick: onMarkAsRead,
+                },
+              ]}
+              trigger={null}
+              triggerTarget={ref.current}
+            />
+          </div>
         }
       />
     </StyledLink>

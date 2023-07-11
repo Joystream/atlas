@@ -77,13 +77,12 @@ export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ ...rest }) =
                     <div key="single">
                       {notifications.map((notification, idx) => (
                         <NotificationTile
-                          variant="compact"
                           key={`notification-${notification.id}-${idx}`}
                           notification={notification}
                           onClick={() => {
                             popoverRef.current?.hide()
-                            markNotificationsAsRead(notification)
                           }}
+                          onMarkAsRead={() => markNotificationsAsRead(notification)}
                         />
                       ))}
                     </div>,
