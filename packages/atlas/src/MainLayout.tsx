@@ -1,13 +1,11 @@
 import loadable from '@loadable/component'
 import { FC, useEffect, useRef, useState } from 'react'
-import { Route, Routes, useLocation, useNavigationType, useParams, useSearchParams } from 'react-router-dom'
+import { Route, Routes, useLocation, useNavigationType } from 'react-router-dom'
 
 import { StudioLoading } from '@/components/_loaders/StudioLoading'
 import { CookiePopover } from '@/components/_overlays/CookiePopover'
 import { atlasConfig } from '@/config'
-import { displayCategoriesLookup } from '@/config/categories'
 import { BASE_PATHS, absoluteRoutes } from '@/config/routes'
-import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
 import { isBrowserOutdated } from '@/utils/browser'
@@ -35,21 +33,6 @@ const LoadableStudioLayout = loadable(() => import('./views/studio/StudioLayout'
   ),
 })
 
-const locationToPageName = {
-  '/discover': 'Discover',
-  '/category': 'Category',
-  '/search': 'Search',
-  '/channels': 'Channels',
-  '/channel': 'Channel',
-  '/video': 'Video',
-  '/membership/edit': 'editMembership',
-  '/membership': 'Member',
-  '/notifications': 'Notifications',
-  '/marketplace': 'Marketplace',
-  '/ypp': 'YPP',
-  '/ypp-dashboard': 'YPP Dashboard',
-}
-
 const LoadablePlaygroundLayout = loadable(() => import('./views/playground/PlaygroundLayout'), {
   fallback: <h1>Loading Playground...</h1>,
 })
@@ -57,8 +40,7 @@ const LoadablePlaygroundLayout = loadable(() => import('./views/playground/Playg
 export const MainLayout: FC = () => {
   const scrollPosition = useRef<number>(0)
   const location = useLocation()
-  const [searchParams] = useSearchParams()
-  const { id } = useParams()
+
   const navigationType = useNavigationType()
   const [cachedLocation, setCachedLocation] = useState(location)
   const locationState = location.state as RoutingState
@@ -73,44 +55,8 @@ export const MainLayout: FC = () => {
     },
     onExitClick: () => closeDialog(),
   })
-  const { trackPageView } = useSegmentAnalytics()
 
   useEffect(() => {
-    if (!location.pathname.includes('studio')) {
-      const pageName =
-        location.pathname === '/'
-          ? 'Home'
-          : Object.entries(locationToPageName).find(([key]) => location.pathname.includes(key))?.[1]
-
-      const categoryName = pageName === 'Category' && id ? displayCategoriesLookup[id] : undefined
-      const query = searchParams.get('query')
-      const tab = searchParams.get('tab')
-      const referrer = searchParams.get('referrer') || searchParams.get('UTM_source')
-
-      const buildPageName = () => {
-        if (pageName === 'Category') {
-          return `Category ${categoryName}`
-        } else if (pageName === 'Search') {
-          return `Search result page '${query}'`
-        } else return pageName || 'unknown'
-      }
-
-      // had to include this timeout to make sure the page title is updated
-      const trackRequestTimeout = setTimeout(
-        () =>
-          trackPageView(
-            buildPageName(),
-            (location.pathname === absoluteRoutes.viewer.ypp() && referrer) || undefined,
-            (location.pathname === absoluteRoutes.viewer.channel() && tab) || undefined
-          ),
-        1000
-      )
-
-      return () => {
-        clearTimeout(trackRequestTimeout)
-      }
-    }
-
     if (!atlasConfig.analytics.sentry?.dsn) {
       return
     }
@@ -126,7 +72,7 @@ export const MainLayout: FC = () => {
         stopReplay()
       }
     }
-  }, [location.pathname, trackPageView, searchParams, id])
+  }, [location.pathname])
 
   const { clearOverlays } = useOverlayManager()
 

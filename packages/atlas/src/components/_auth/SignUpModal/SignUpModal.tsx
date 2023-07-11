@@ -39,6 +39,12 @@ const SIGNUP_FORM_DATA_INITIAL_STATE: AccountFormData & MemberFormData = {
   memberId: '',
 }
 
+const stepToPageName: Partial<Record<SignUpSteps, string>> = {
+  [SignUpSteps.SignUpSeed]: 'YPP Seed modal',
+  [SignUpSteps.SignUpPassword]: 'YPP Password modal',
+  [SignUpSteps.SignUpEmail]: 'YPP Email modal',
+}
+
 export const SignUpModal = () => {
   const [currentStep, setCurrentStep] = useState<SignUpSteps>(0)
   const [emailAlreadyTakenError, setEmailAlreadyTakenError] = useState(false)
@@ -66,6 +72,7 @@ export const SignUpModal = () => {
   const [signUpFormData, setSignupFormData] =
     useState<Omit<AccountFormData & MemberFormData, 'memberId'>>(SIGNUP_FORM_DATA_INITIAL_STATE)
   const { createNewMember, createNewOrionAccount } = useCreateMember()
+  const { trackPageView } = useSegmentAnalytics()
 
   const goToNextStep = useCallback(() => {
     setCurrentStep((previousIdx) => (previousIdx ?? -1) + 1)
@@ -76,10 +83,10 @@ export const SignUpModal = () => {
 
   // skip the membership step when signing to ypp(ypp flow will provide handle and avatar for membership automatically)
   useEffect(() => {
-    if (isYppFlow) {
+    if (isYppFlow && stepToPageName[currentStep]) {
       setCurrentStep(SignUpSteps.SignUpSeed)
     }
-  }, [isYppFlow])
+  }, [currentStep, isYppFlow])
 
   const goToPreviousStep = useCallback(() => {
     setCurrentStep((previousIdx) => (previousIdx ?? 1) - 1)
@@ -238,6 +245,12 @@ export const SignUpModal = () => {
       trackMembershipCreation(signUpFormData.handle, signUpFormData.email)
     }
   }, [isSuccess, signUpFormData.email, signUpFormData.handle, trackMembershipCreation])
+
+  useEffect(() => {
+    if (isYppFlow && Boolean(stepToPageName[currentStep])) {
+      trackPageView(stepToPageName[currentStep] ?? '')
+    }
+  }, [currentStep, isYppFlow, trackPageView])
 
   const smMatch = useMediaMatch('sm')
   return (

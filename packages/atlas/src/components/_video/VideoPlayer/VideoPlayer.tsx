@@ -166,6 +166,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
   const [isPiPEnabled, setIsPiPEnabled] = useState(false)
   const [isSettingsPopoverOpened, setIsSettingsPopoverOpened] = useState(false)
 
+  const [autoplayEventFired, setAutoplayEventFired] = useState(!(typeof autoplay === 'boolean'))
   const [playerState, setPlayerState] = useState<PlayerState>('loading')
   const [isLoaded, setIsLoaded] = useState(false)
   const [needsManualPlay, setNeedsManualPlay] = useState(!autoplay)
@@ -214,9 +215,6 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
       try {
         setNeedsManualPlay(false)
         const playPromise = await player.play()
-        if (playPromise) {
-          trackVideoPlaybackResumed(videoPlaybackData)
-        }
         if (playPromise && callback) callback()
       } catch (error) {
         if (error.name === 'AbortError') {
@@ -235,21 +233,17 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
         }
       }
     },
-    [trackVideoPlaybackResumed, videoId, videoPlaybackData, videoJsConfig.videoUrls]
+    [videoId, videoJsConfig.videoUrls]
   )
 
-  const pauseVideo = useCallback(
-    (player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => {
-      if (!player) {
-        return
-      }
-      withIndicator && player.trigger(CustomVideojsEvents.PauseControl)
-      callback?.()
-      trackVideoPlaybackPaused(videoPlaybackData)
-      player.pause()
-    },
-    [trackVideoPlaybackPaused, videoPlaybackData]
-  )
+  const pauseVideo = useCallback((player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => {
+    if (!player) {
+      return
+    }
+    withIndicator && player.trigger(CustomVideojsEvents.PauseControl)
+    callback?.()
+    player.pause()
+  }, [])
 
   useEffect(() => {
     if (!isVideoPending) {
@@ -404,6 +398,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
           onAddVideoView?.()
           trackVideoPlaybackStarted(videoPlaybackData)
           setIsPlaying(true)
+          setAutoplayEventFired(true)
         })
         .catch((e) => {
           setNeedsManualPlay(true)
@@ -419,10 +414,8 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     }
     if (playing) {
       playVideo(player)
-      trackVideoPlaybackResumed(videoPlaybackData)
     } else {
       player.pause()
-      trackVideoPlaybackPaused(videoPlaybackData)
     }
   }, [playVideo, player, playing, trackVideoPlaybackPaused, trackVideoPlaybackResumed, videoPlaybackData])
 
@@ -433,7 +426,9 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     }
     const handler = (event: Event) => {
       if (event.type === 'play') {
-        trackVideoPlaybackResumed(videoPlaybackData)
+        if (autoplayEventFired) {
+          trackVideoPlaybackResumed(videoPlaybackData)
+        }
         setIsPlaying(true)
       }
       if (event.type === 'pause') {
@@ -445,7 +440,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     return () => {
       player.off(['play', 'pause'], handler)
     }
-  }, [player, playerState, trackVideoPlaybackPaused, trackVideoPlaybackResumed, videoPlaybackData])
+  }, [autoplayEventFired, player, playerState, trackVideoPlaybackPaused, trackVideoPlaybackResumed, videoPlaybackData])
 
   useEffect(() => {
     if (!externalRef) {

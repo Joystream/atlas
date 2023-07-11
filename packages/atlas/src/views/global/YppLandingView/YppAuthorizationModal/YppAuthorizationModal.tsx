@@ -60,6 +60,15 @@ export type YppAuthorizationModalProps = {
   unSyncedChannels?: FullMembershipFieldsFragment['channels']
 }
 
+const stepToPageName = {
+  'ypp-select-channel': 'YPP Select Channel modal',
+  'ypp-requirements': 'YPP Requirements modal',
+  'ypp-fetching-data': 'YPP Fetching Data modal',
+  'ypp-sync-options': 'YPP Category And Referrer Modal',
+  'ypp-channel-already-registered': 'YPP channel already registered modal',
+  'ypp-speaking-to-backend': 'YPP processing modal',
+}
+
 const APP_NAME = atlasConfig.general.appName
 const COLLABORATOR_ID = atlasConfig.features.ypp.youtubeCollaboratorMemberId
 const DEFAULT_LANGUAGE = atlasConfig.derived.popularLanguagesSelectValues[0].value
@@ -125,12 +134,11 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
   const { extendedChannel } = useBasicChannel(referrerId || '', {
     skip: !referrerId,
   })
-  const { trackPageView } = useSegmentAnalytics()
+  const { trackPageView, trackYppOptIn } = useSegmentAnalytics()
 
   const channel = extendedChannel?.channel
 
   const { displaySnackbar } = useSnackbar()
-  const { trackYppOptIn } = useSegmentAnalytics()
 
   const { handleAuthorizeClick, ytRequirementsErrors, setYtRequirementsErrors, alreadyRegisteredChannel } =
     useYppGoogleAuth({
@@ -138,14 +146,14 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     })
 
   useEffect(() => {
-    if (searchParams.get('UTM_source')) {
-      setUtmSource(searchParams.get('UTM_source'))
+    if (searchParams.get('utm_source')) {
+      setUtmSource(searchParams.get('utm_source'))
     }
   }, [searchParams])
 
   useEffect(() => {
     contentRef.current?.scrollTo({ top: 0 })
-    yppModalOpenName && trackPageView(yppModalOpenName)
+    yppModalOpenName && trackPageView(stepToPageName[yppModalOpenName])
   }, [trackPageView, yppModalOpenName])
 
   const handleClose = useCallback(() => {
