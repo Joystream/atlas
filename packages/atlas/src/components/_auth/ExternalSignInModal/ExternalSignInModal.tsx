@@ -140,6 +140,7 @@ export const ExternalSignInModal: FC = () => {
       show={authModalOpenName === 'externalLogIn'}
       additionalActionsNodeMobilePosition="bottom"
       contentRef={dialogContentRef}
+      dividers={currentStep === ModalSteps.Membership}
       disableBackdropAnimation
     >
       <FormProvider {...form}>{renderStep()}</FormProvider>

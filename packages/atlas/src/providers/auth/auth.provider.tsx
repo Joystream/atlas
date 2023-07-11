@@ -82,9 +82,9 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
           if (res?.find((walletAcc) => walletAcc.address === data.accountData.joystreamAccount)) {
             setLoggedAddress(data.accountData.joystreamAccount)
             setCurrentUser(data.accountData)
-            setIsAuthenticating(false)
             setApiActiveAccount('address', data.accountData.joystreamAccount)
           }
+          setIsAuthenticating(false)
         }, 200)
         return
       }

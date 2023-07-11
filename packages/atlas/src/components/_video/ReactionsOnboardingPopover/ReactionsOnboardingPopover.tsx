@@ -65,9 +65,17 @@ export const ReactionsOnboardingPopover = forwardRef<PopoverImperativeHandle, Re
             Comments and reactions are stored on blockchain and come with a fee
           </Text>
           <Text as="p" variant="t200" color="colorText" margin={{ top: 2 }}>
-            <NumberFormat value={fee} withToken as="span" color="colorText" variant="t200" format="short" /> is the
-            transaction fee for each reaction you leave under a video or comment, while the fee for posting a comment
-            depends on its length. Transaction fees are covered from your membership account balance.
+            <NumberFormat
+              value={fee}
+              withToken
+              as="span"
+              color="colorText"
+              variant="t200"
+              format="short"
+              withDenomination="before"
+            />{' '}
+            is the transaction fee for each reaction you leave under a video or comment, while the fee for posting a
+            comment depends on its length. Transaction fees are covered from your membership account balance.
           </Text>
         </PopoverContentWrapper>
       </DialogPopover>

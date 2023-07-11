@@ -46,7 +46,14 @@ const getDescription = (activity: ActivitiesRecord) => {
             {fromHandle}
           </StyledLink>{' '}
           placed a bid for{' '}
-          <NumberFormat as="span" color="inherit" format="short" value={activity.bidAmount} withToken />
+          <NumberFormat
+            as="span"
+            color="inherit"
+            format="short"
+            value={activity.bidAmount}
+            withToken
+            withDenomination="before"
+          />
         </>
       )
     case 'Sale':
@@ -62,7 +69,15 @@ const getDescription = (activity: ActivitiesRecord) => {
           <StyledLink to={absoluteRoutes.viewer.member(activity.to?.handle)} onClick={(e) => e.stopPropagation()}>
             {activity.to?.handle}
           </StyledLink>{' '}
-          NFT for <NumberFormat as="span" color="inherit" format="short" value={activity.price} withToken />
+          NFT for{' '}
+          <NumberFormat
+            as="span"
+            color="inherit"
+            format="short"
+            value={activity.price}
+            withToken
+            withDenomination="before"
+          />
         </>
       )
     case 'Purchase':
@@ -93,7 +108,15 @@ const getDescription = (activity: ActivitiesRecord) => {
           listed NFT{' '}
           {activity.typeName === 'NftSellOrderMadeEventData' && activity.price && (
             <>
-              for <NumberFormat as="span" color="inherit" format="short" value={activity.price} withToken />
+              for{' '}
+              <NumberFormat
+                as="span"
+                color="inherit"
+                format="short"
+                value={activity.price}
+                withToken
+                withDenomination="before"
+              />
             </>
           )}
         </>
@@ -143,7 +166,15 @@ const getDescription = (activity: ActivitiesRecord) => {
           >
             {fromHandle}
           </StyledLink>{' '}
-          changed price to <NumberFormat as="span" color="inherit" format="short" value={activity.price} withToken />
+          changed price to{' '}
+          <NumberFormat
+            as="span"
+            color="inherit"
+            format="short"
+            value={activity.price}
+            withToken
+            withDenomination="before"
+          />
         </>
       )
   }

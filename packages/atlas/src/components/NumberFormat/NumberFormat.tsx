@@ -183,7 +183,7 @@ const Denomination = styled(Text)<{ align: 'right' | 'left' }>`
 `
 
 const Container = styled.div<{ orientation: NumberFormatProps['withDenomination'] }>`
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
   gap: ${sizes(1)};
   width: fit-content;
