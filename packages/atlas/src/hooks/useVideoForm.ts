@@ -60,17 +60,17 @@ export const useVideoForm = ({ isEdit, id, onSubmit, form }: UseVideoFormProps) 
         ...(isNew || dirtyFields.description ? { description: data.description } : {}),
         ...(isNew || dirtyFields.category ? { category: data.category } : {}),
         ...(isNew || dirtyFields.isPublic ? { isPublic: data.isPublic } : {}),
-        ...((isNew || dirtyFields.hasMarketing) && data.hasMarketing != null
+        ...((isNew || dirtyFields.hasMarketing) && data.hasMarketing !== null
           ? { hasMarketing: data.hasMarketing }
           : {}),
-        ...((isNew || dirtyFields.isExplicit) && data.isExplicit != null ? { isExplicit: data.isExplicit } : {}),
-        ...((isNew || dirtyFields.language) && data.language != null ? { language: data.language } : {}),
+        ...((isNew || dirtyFields.isExplicit) && data.isExplicit !== null ? { isExplicit: data.isExplicit } : {}),
+        ...((isNew || dirtyFields.language) && data.language !== null ? { language: data.language } : {}),
         ...(isNew || anyLicenseFieldsDirty ? { license } : {}),
-        ...((isNew || dirtyFields.enableComments) && data.enableComments != null
+        ...((isNew || dirtyFields.enableComments) && data.enableComments !== null
           ? { enableComments: data.enableComments }
           : {}),
         ...((isNew || dirtyFields.publishedBeforeJoystream) &&
-        data.publishedBeforeJoystream != null &&
+        data.publishedBeforeJoystream !== null &&
         isValidDate(data.publishedBeforeJoystream)
           ? {
               publishedBeforeJoystream: formatISO(data.publishedBeforeJoystream),
@@ -168,7 +168,7 @@ export const useVideoForm = ({ isEdit, id, onSubmit, form }: UseVideoFormProps) 
       : undefined,
     assets
   )
-  // console.log('fee', updateVideoFee, updateVideoFeeLoading, isSigned && isEdit && id)
+
   // manage assets used by the form
   const videoFormAssets = useVideoFormAssets(watch, getValues, setValue, dirtyFields, trigger, errors)
   const {
