@@ -1,10 +1,11 @@
 import { FC, Fragment, useEffect } from 'react'
 import { Controller, UseFormReturn, useForm } from 'react-hook-form'
+import useResizeObserver from 'use-resize-observer'
 
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { EntitySettingTemplate } from '@/components/_templates/EntitySettingTemplate'
 
-import { Table } from './MembershipNotifications.styles'
+import { StyledActionBar, Table, Wrapper } from './MembershipNotifications.styles'
 
 const TABLE_STRUCTURE = [
   { name: 'All', label: '', rows: [{ name: 'ALL', label: 'Subscribe to all notifications' }] },
@@ -87,6 +88,8 @@ const dataFromBackend = {
 export const MembershipNotifications = () => {
   const form = useForm<Record<'inApp' | 'email', Record<string, boolean>>>()
 
+  const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
+
   useEffect(() => {
     // Values will be set asynchronously
     Object.entries(dataFromBackend).forEach(([notifType, values]) =>
@@ -96,13 +99,32 @@ export const MembershipNotifications = () => {
     )
   }, [form])
 
+  const handleEditMember = form.handleSubmit(async (data) => {
+    // TODO
+    console.log(data)
+  })
+
+  const isSubmitting = false
   return (
     <EntitySettingTemplate
       isFirst
       title="Membership address"
       description="When your public membership was created, it was linked to a new substrate account address built on polkadot protocol. This account holds all assets like tokens and NFTs that your membership accumulates. Set up all notifications regarding channels that you follow or your assets."
     >
-      <NotificationTableComponent sections={TABLE_STRUCTURE} form={form} />
+      <form onSubmit={handleEditMember}>
+        <Wrapper actionBarHeight={actionBarBoundsHeight}>
+          <NotificationTableComponent sections={TABLE_STRUCTURE} form={form} />
+        </Wrapper>
+
+        <StyledActionBar
+          ref={actionBarRef}
+          primaryButton={{
+            disabled: isSubmitting,
+            text: isSubmitting ? 'Please wait...' : 'Publish changes',
+            type: 'submit',
+          }}
+        />
+      </form>
     </EntitySettingTemplate>
   )
 }

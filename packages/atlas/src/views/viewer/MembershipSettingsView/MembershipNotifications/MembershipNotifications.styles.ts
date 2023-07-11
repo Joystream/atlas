@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 
-import { cVar, sizes } from '@/styles'
+import { ActionBar } from '@/components/ActionBar'
+import { cVar, sizes, zIndex } from '@/styles'
 
 export const Table = styled.table`
   border-bottom: 1px solid ${cVar('colorBorderMutedAlpha')};
@@ -32,4 +33,16 @@ export const Table = styled.table`
       }
     }
   }
+`
+
+export const Wrapper = styled.div<{ actionBarHeight: number }>`
+  padding-bottom: ${({ actionBarHeight = 0 }) => actionBarHeight}px;
+`
+
+export const StyledActionBar = styled(ActionBar)`
+  position: fixed;
+  left: var(--size-sidenav-width-collapsed);
+  right: 0;
+  bottom: 0;
+  z-index: ${zIndex.sideNav - 1};
 `
