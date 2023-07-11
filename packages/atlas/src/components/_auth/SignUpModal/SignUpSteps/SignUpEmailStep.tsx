@@ -91,7 +91,7 @@ export const SignUpEmailStep: FC<SignUpEmailStepProps> = ({
         iconType: 'error',
         title: 'This email was used already',
         description:
-          'To create new membership you need to use an email that is not connected to an already existing account',
+          'To create new membership you need to use an email that is not connected to already existing account.',
       })
       setError('email', { message: 'This email is already in use.' })
     }

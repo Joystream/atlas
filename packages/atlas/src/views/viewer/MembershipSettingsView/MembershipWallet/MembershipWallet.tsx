@@ -5,6 +5,7 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
 import { EntitySettingTemplate } from '@/components/_templates/EntitySettingTemplate'
+import { atlasConfig } from '@/config'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useAuth } from '@/providers/auth/auth.hooks'
 
@@ -51,7 +52,7 @@ const CONNECTING_WALLET_STEPS: WalletStepListItemComponentProps[] = [
   },
   {
     title: 'Success',
-    description: 'From now you can sign in to your account with your external wallet on other Apps but also to Gleev.',
+    description: `From now you can sign in to your account with your external wallet on other Apps but also to ${atlasConfig.general.appName}.`,
   },
 ]
 
