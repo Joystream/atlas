@@ -1,7 +1,8 @@
 import styled from '@emotion/styled'
 
 import { Button } from '@/components/_buttons/Button'
-import { cVar, media, sizes, zIndex } from '@/styles'
+import { ContextMenu } from '@/components/_overlays/ContextMenu'
+import { cVar, media, sizes, square, zIndex } from '@/styles'
 
 export const MobileBackdrop = styled.div`
   background-color: transparent;
@@ -13,6 +14,7 @@ export const MobileBackdrop = styled.div`
 export const Wrapper = styled.div`
   width: 100vw;
   background-color: ${cVar('colorBackgroundStrong')};
+  border-radius: ${cVar('radiusLarge')};
   ${media.sm} {
     left: 0;
     width: 516px;
@@ -37,6 +39,12 @@ export const Content = styled.div`
   }
 `
 
-export const StyledButton = styled(Button)`
-  box-shadow: ${cVar('effectDividersTop')};
+export const KebabMenuButtonIcon = styled(Button)`
+  ${square(32)};
+`
+
+export const StyledContextMenu = styled(ContextMenu)`
+  ul {
+    width: max-content;
+  }
 `

@@ -75,7 +75,7 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
                   {mdMatch && 'Upload video'}
                 </Button>
               </CSSTransition>
-              <NotificationsWidget trigger={<NotificationsButton />} />
+              <NotificationsWidget type="channel" trigger={<NotificationsButton />} />
               <StyledAvatar size={40} assetUrls={memberAvatarUrls} onClick={handleDrawerToggle} />
             </StudioTopbarContainer>
           ) : (

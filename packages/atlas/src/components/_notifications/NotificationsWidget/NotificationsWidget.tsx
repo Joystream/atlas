@@ -1,27 +1,37 @@
 import { FC, useEffect, useRef, useState } from 'react'
 
-import { SvgActionNotifications } from '@/assets/icons'
+import { SvgActionCheck, SvgActionMore, SvgActionNotifications, SvgActionSettings } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Section } from '@/components/Section/Section'
 import { Text } from '@/components/Text'
-import { Button } from '@/components/_buttons/Button'
 import { Popover, PopoverImperativeHandle, PopoverProps } from '@/components/_overlays/Popover'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useNotifications } from '@/providers/notifications/notifications.hooks'
 
-import { Content, Header, MobileBackdrop, StyledButton, Wrapper } from './NotificationsWidget.styles'
+import {
+  Content,
+  Header,
+  KebabMenuButtonIcon,
+  MobileBackdrop,
+  StyledContextMenu,
+  Wrapper,
+} from './NotificationsWidget.styles'
 
 import { NotificationTile } from '../NotificationTile'
 
-type NotificationsWidgetProps = Omit<PopoverProps, 'content' | 'instanceRef'>
+type NotificationsWidgetProps = {
+  type: 'member' | 'channel'
+} & Omit<PopoverProps, 'content' | 'instanceRef'>
 
-export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ ...rest }) => {
+export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ type, ...rest }) => {
   const popoverRef = useRef<PopoverImperativeHandle>()
   const { notifications, markNotificationsAsRead, setLastSeenNotificationBlock, pageInfo, fetchMore } =
     useNotifications()
   const smMatch = useMediaMatch('sm')
   const firstNotification = notifications[0]
+  const ref = useRef<HTMLButtonElement>(null)
+  const contextMenuInstanceRef = useRef<PopoverImperativeHandle>(null)
 
   const [isOpen, setIsOpen] = useState(false)
 
@@ -55,12 +65,38 @@ export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ ...rest }) =
       >
         <Wrapper>
           <Header>
-            <Text as="h3" variant="h400">
-              Notifications
+            <Text as="h3" variant="h300">
+              {type === 'member' ? 'Member' : 'Channel'} notifications
             </Text>
-            <Button variant="secondary" size="small" onClick={() => markNotificationsAsRead(notifications)}>
-              Mark all as read
-            </Button>
+            <div>
+              <KebabMenuButtonIcon ref={ref} icon={<SvgActionMore />} variant="tertiary" size="small" />
+              <StyledContextMenu
+                ref={contextMenuInstanceRef}
+                appendTo={ref.current ?? undefined}
+                placement="bottom-end"
+                flipEnabled={false}
+                items={[
+                  {
+                    label: 'Mark all as read',
+                    nodeStart: <SvgActionCheck />,
+                    onClick: () => markNotificationsAsRead(notifications),
+                  },
+                  {
+                    label: `${type === 'member' ? 'Member' : 'Channel'} notification center`,
+                    nodeStart: <SvgActionNotifications />,
+                    onClick: popoverRef.current?.hide,
+                    to: absoluteRoutes.viewer.notifications(),
+                  },
+                  {
+                    label: `${type === 'member' ? 'Member' : 'Channel'} notification settings`,
+                    nodeStart: <SvgActionSettings />,
+                    onClick: () => markNotificationsAsRead(notifications),
+                  },
+                ]}
+                trigger={null}
+                triggerTarget={ref.current}
+              />
+            </div>
           </Header>
           <Content>
             {notifications.length > 0 ? (
@@ -112,18 +148,6 @@ export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ ...rest }) =
               <EmptyFallback variant="small" title="You don't have any notifications" />
             )}
           </Content>
-          <StyledButton
-            variant="tertiary"
-            size="large"
-            icon={<SvgActionNotifications />}
-            fullWidth
-            to={absoluteRoutes.viewer.notifications()}
-            onClick={popoverRef.current?.hide}
-          >
-            <Text as="span" variant="t100">
-              Go to notification center
-            </Text>
-          </StyledButton>
         </Wrapper>
       </Popover>
     </>
