@@ -28,8 +28,7 @@ export const CategoryView = () => {
 
   useEffect(() => {
     if (id) {
-      const trackRequestTimeout = setTimeout(() => trackPageView(`Category ${currentCategory?.name}`), 1000)
-      return () => clearTimeout(trackRequestTimeout)
+      trackPageView(`Category ${currentCategory?.name}`)
     }
   }, [currentCategory?.name, id, trackPageView])
 

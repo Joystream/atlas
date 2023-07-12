@@ -12,6 +12,13 @@ export type videoPlaybackParams = {
   quality: string
 }
 
+type PageViewParams = {
+  referrer?: string
+  tab?: string
+  utm_source?: string
+  isYppFlow?: boolean
+}
+
 export const useSegmentAnalytics = () => {
   const { analytics } = useSegmentAnalyticsContext()
 
@@ -23,11 +30,8 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackPageView = useCallback(
-    (name: string, referrer?: string, tab?: string) => {
-      analytics.page(undefined, name, {
-        ...(referrer ? { referrer } : {}),
-        ...(tab ? { tab } : {}),
-      })
+    (name: string, params?: PageViewParams) => {
+      analytics.page(undefined, name, params)
     },
     [analytics]
   )

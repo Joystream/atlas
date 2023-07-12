@@ -40,9 +40,12 @@ const SIGNUP_FORM_DATA_INITIAL_STATE: AccountFormData & MemberFormData = {
 }
 
 const stepToPageName: Partial<Record<SignUpSteps, string>> = {
-  [SignUpSteps.SignUpSeed]: 'YPP Seed modal',
-  [SignUpSteps.SignUpPassword]: 'YPP Password modal',
-  [SignUpSteps.SignUpEmail]: 'YPP Email modal',
+  [SignUpSteps.CreateMember]: 'Sign up modal - create member',
+  [SignUpSteps.SignUpSeed]: 'Signup modal - seed',
+  [SignUpSteps.SignUpPassword]: 'Signup modal - password',
+  [SignUpSteps.SignUpEmail]: 'Signup modal - email',
+  [SignUpSteps.Creating]: 'Signup modal - creating',
+  [SignUpSteps.Success]: 'Signup modal - success',
 }
 
 export const SignUpModal = () => {
@@ -58,7 +61,6 @@ export const SignUpModal = () => {
   const setYtResponseData = useYppStore((state) => state.actions.setYtResponseData)
 
   const { generateUniqueMemberHandleBasedOnInput } = useUniqueMemberHandle()
-  const { trackMembershipCreation } = useSegmentAnalytics()
 
   const { authModalOpenName, setAuthModalOpenName } = useAuthStore(
     (state) => ({
@@ -72,7 +74,7 @@ export const SignUpModal = () => {
   const [signUpFormData, setSignupFormData] =
     useState<Omit<AccountFormData & MemberFormData, 'memberId'>>(SIGNUP_FORM_DATA_INITIAL_STATE)
   const { createNewMember, createNewOrionAccount } = useCreateMember()
-  const { trackPageView } = useSegmentAnalytics()
+  const { trackPageView, trackMembershipCreation } = useSegmentAnalytics()
 
   const goToNextStep = useCallback(() => {
     setCurrentStep((previousIdx) => (previousIdx ?? -1) + 1)
@@ -83,10 +85,10 @@ export const SignUpModal = () => {
 
   // skip the membership step when signing to ypp(ypp flow will provide handle and avatar for membership automatically)
   useEffect(() => {
-    if (isYppFlow && stepToPageName[currentStep]) {
+    if (isYppFlow) {
       setCurrentStep(SignUpSteps.SignUpSeed)
     }
-  }, [currentStep, isYppFlow])
+  }, [isYppFlow])
 
   const goToPreviousStep = useCallback(() => {
     setCurrentStep((previousIdx) => (previousIdx ?? 1) - 1)
@@ -186,7 +188,6 @@ export const SignUpModal = () => {
         goToNextStep()
         return
       }
-
       goToNextStep()
       const newMemberId = await createNewMember({
         data: { ...signUpFormData, ...memberData },
@@ -254,9 +255,7 @@ export const SignUpModal = () => {
   }, [isSuccess, signUpFormData.email, signUpFormData.handle, trackMembershipCreation])
 
   useEffect(() => {
-    if (isYppFlow && Boolean(stepToPageName[currentStep])) {
-      trackPageView(stepToPageName[currentStep] ?? '')
-    }
+    trackPageView(stepToPageName[currentStep] ?? '', { isYppFlow })
   }, [currentStep, isYppFlow, trackPageView])
 
   const smMatch = useMediaMatch('sm')
