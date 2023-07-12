@@ -54,7 +54,7 @@ export const FilterButton: FC<FilterButtonProps> = (props) => {
   }, [inView, shouldFocus])
 
   if (props.type === 'checkbox' || props.type === 'radio') {
-    const { type, name, onChange, className, icon, label, options = [] } = props
+    const { type, name, onChange, className, icon, label = [] } = props
 
     const currentValue = filterValue as FilterButtonOption[]
     const counter = currentValue.filter((option) => option.applied)?.length
