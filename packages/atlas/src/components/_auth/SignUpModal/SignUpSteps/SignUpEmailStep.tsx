@@ -9,7 +9,6 @@ import { Input } from '@/components/_inputs/Input'
 import { absoluteRoutes } from '@/config/routes'
 import { AccountFormData } from '@/hooks/useCreateMember'
 import { useMountEffect } from '@/hooks/useMountEffect'
-import { useSnackbar } from '@/providers/snackbars'
 
 import { CheckboxWrapper, StyledLink, StyledSignUpForm } from './SignUpSteps.styles'
 import { SignUpStepsCommonProps } from './SignUpSteps.types'
@@ -53,7 +52,6 @@ export const SignUpEmailStep: FC<SignUpEmailStepProps> = ({
   confirmedTerms,
   email,
 }) => {
-  const { displaySnackbar } = useSnackbar()
   const {
     register,
     handleSubmit,
@@ -80,19 +78,13 @@ export const SignUpEmailStep: FC<SignUpEmailStepProps> = ({
 
   useEffect(() => {
     setPrimaryButtonProps({
-      text: 'Sign up',
+      text: 'Continue',
       onClick: handleGoToNextStep,
     })
   }, [handleGoToNextStep, isEmailAlreadyTakenError, setPrimaryButtonProps])
 
   useMountEffect(() => {
     if (isEmailAlreadyTakenError) {
-      displaySnackbar({
-        iconType: 'error',
-        title: 'This email was used already',
-        description:
-          'To create new membership you need to use an email that is not connected to already existing account.',
-      })
       setError('email', { message: 'This email is already in use.' })
     }
   })
