@@ -90,7 +90,8 @@ export const ViewerLayout: FC = () => {
 
       const query = searchParams.get('query')
       const tab = searchParams.get('tab')
-      const referrer = searchParams.get('referrer') || searchParams.get('utm_source')
+      const referrer = searchParams.get('referrerId')
+      const utmSource = searchParams.get('utm_source')
 
       const buildPageName = () => {
         if (pageName === 'Search') {
@@ -101,11 +102,12 @@ export const ViewerLayout: FC = () => {
       // had to include this timeout to make sure the page title is updated
       const trackRequestTimeout = setTimeout(
         () =>
-          trackPageView(
-            buildPageName(),
-            (location.pathname === absoluteRoutes.viewer.ypp() && referrer) || undefined,
-            (location.pathname === absoluteRoutes.viewer.channel() && tab) || undefined
-          ),
+          trackPageView(buildPageName(), {
+            ...(location.pathname === absoluteRoutes.viewer.ypp()
+              ? { referrer: referrer || undefined, utm_source: utmSource || undefined }
+              : {}),
+            ...(location.pathname === absoluteRoutes.viewer.channel() ? { tab: tab || undefined } : {}),
+          }),
         1000
       )
 
