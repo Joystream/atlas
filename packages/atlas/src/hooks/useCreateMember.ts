@@ -190,9 +190,10 @@ export const useCreateMember = () => {
           const errorMessage = error.message
           if (errorMessage === 'Account with the provided e-mail address already exists.') {
             displaySnackbar({
-              title: 'Something went wrong',
-              description: `Account with the provided e-mail address already exists. Use different e-mail.`,
               iconType: 'error',
+              title: 'This email was used already',
+              description:
+                'To create new membership you need to use an email that is not connected to already existing account.',
             })
             onError?.(RegisterError.EmailAlreadyExists)
           } else {

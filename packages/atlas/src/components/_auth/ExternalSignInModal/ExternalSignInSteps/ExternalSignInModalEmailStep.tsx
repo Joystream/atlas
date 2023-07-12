@@ -72,9 +72,10 @@ export const ExternalSignInModalEmailStep: FC<SignInModalEmailStepProps> = ({
         if (error instanceof OrionAccountError) {
           if (error.message === 'Account with the provided e-mail address already exists.') {
             displaySnackbar({
-              title: 'Something went wrong',
-              description: `Account with the provided e-mail address already exists. Use different e-mail.`,
               iconType: 'error',
+              title: 'This email was used already',
+              description:
+                'To create new membership you need to use an email that is not connected to already existing account.',
             })
             goToStep(ModalSteps.Email)
             setError('email', { type: 'custom', message: 'Email already exists' })
