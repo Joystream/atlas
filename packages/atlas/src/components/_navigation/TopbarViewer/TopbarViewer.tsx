@@ -132,7 +132,7 @@ export const TopbarViewer: FC = () => {
                 {!topbarButtonLoading ? (
                   isLoggedIn ? (
                     <SignedButtonsWrapper>
-                      <NotificationsWidget type="channel" trigger={<NotificationsButton />} />
+                      <NotificationsWidget type="member" trigger={<NotificationsButton />} />
                       {!mdMatch && !searchOpen && (
                         <StyledAvatar
                           size={40}

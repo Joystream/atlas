@@ -26,8 +26,14 @@ type NotificationsWidgetProps = {
 
 export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ type, ...rest }) => {
   const popoverRef = useRef<PopoverImperativeHandle>()
-  const { notifications, markNotificationsAsRead, setLastSeenNotificationBlock, pageInfo, fetchMore } =
-    useNotifications()
+  const {
+    notifications,
+    markNotificationsAsRead,
+    setLastSeenNotificationBlock,
+    markNotificationsAsUnread,
+    pageInfo,
+    fetchMore,
+  } = useNotifications()
   const smMatch = useMediaMatch('sm')
   const firstNotification = notifications[0]
   const ref = useRef<HTMLButtonElement>(null)
@@ -119,6 +125,7 @@ export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ type, ...res
                             popoverRef.current?.hide()
                           }}
                           onMarkAsRead={() => markNotificationsAsRead(notification)}
+                          onMarkAsUnread={() => markNotificationsAsUnread(notification)}
                         />
                       ))}
                     </div>,

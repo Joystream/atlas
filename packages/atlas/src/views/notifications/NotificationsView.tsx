@@ -1,11 +1,25 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
-import { SvgActionClose, SvgActionRead, SvgActionUnread } from '@/assets/icons'
+import {
+  SvgActionArrowRight,
+  SvgActionCheck,
+  SvgActionChevronL,
+  SvgActionClose,
+  SvgActionMore,
+  SvgActionRead,
+  SvgActionSettings,
+  SvgActionUnread,
+} from '@/assets/icons'
 import { GridItem } from '@/components/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
+import { BackActionWrapper } from '@/components/PageTabs/PageTabs.styles'
+import { Pill } from '@/components/Pill'
 import { Section } from '@/components/Section/Section'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
+import { StyledContextMenu } from '@/components/_notifications/NotificationsWidget/NotificationsWidget.styles'
+import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
+import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useBottomNavStore } from '@/providers/bottomNav'
@@ -16,19 +30,21 @@ import { useSelectedNotifications } from './Notifications.hooks'
 import {
   FloatingActionBar,
   Header,
-  MarkAllReadWrapper,
+  KebabButton,
   NotificationEmptyRectangle,
   NotificationEmptyRectangleWithText,
   StyledLayoutGrid,
   StyledNotificationLoader,
   StyledNotificationTile,
-  StyledPill,
+  TitleContainer,
 } from './NotificationsView.styles'
 
 export const NotificationsView = () => {
   const smMatch = useMediaMatch('sm')
   const open = useBottomNavStore((state) => state.open)
-  const headTags = useHeadTags('Notifications')
+  const headTags = useHeadTags('Member notifications')
+  const ref = useRef<HTMLButtonElement>(null)
+  const contextMenuInstanceRef = useRef<PopoverImperativeHandle>(null)
 
   const { selectedNotifications, selectAllNotifications, unselectAllNotifications } = useSelectedNotifications()
   const {
@@ -61,7 +77,7 @@ export const NotificationsView = () => {
       icon={<SvgActionClose />}
     />
   )
-  const markAllAsRead = () => markNotificationsAsRead(notifications)
+  // const markAllAsRead = () => markNotificationsAsRead(notifications)
   const markSelectedAsRead = () => markNotificationsAsRead(selectedNotifications)
   const markSelectedAsUnread = () => markNotificationsAsUnread(selectedNotifications)
 
@@ -72,19 +88,42 @@ export const NotificationsView = () => {
       {headTags}
       <GridItem colSpan={{ xxs: 12, md: 10, lg: 8 }} colStart={{ md: 2, lg: 3 }}>
         <Header>
-          <Text as="h1" variant={smMatch ? 'h700' : 'h600'}>
-            Notifications
-          </Text>
-          {!!unreadNumber && (
-            <>
-              <StyledPill label={`${unreadNumber} unread`} />
-              <MarkAllReadWrapper>
-                <Button variant="secondary" size="small" onClick={markAllAsRead}>
-                  Mark all as read
-                </Button>
-              </MarkAllReadWrapper>
-            </>
-          )}
+          <BackActionWrapper>
+            <Button variant="tertiary" size="medium" icon={<SvgActionChevronL />} />
+          </BackActionWrapper>
+          <TitleContainer>
+            <Text as="h4" variant="h400">
+              Member notifications
+            </Text>
+
+            {unreadNumber && <Pill label={`${unreadNumber} unread`} />}
+          </TitleContainer>
+
+          <KebabButton ref={ref} icon={<SvgActionMore />} variant="secondary" size="small" />
+          <StyledContextMenu
+            ref={contextMenuInstanceRef}
+            appendTo={ref.current ?? undefined}
+            placement="bottom-end"
+            flipEnabled={false}
+            items={[
+              {
+                label: 'Mark all as read',
+                nodeStart: <SvgActionCheck />,
+                onClick: () => markNotificationsAsRead(notifications),
+              },
+              {
+                label: `Member notification setting`,
+                nodeStart: <SvgActionSettings />,
+                to: absoluteRoutes.viewer.notifications(),
+              },
+              {
+                label: `Channel notification center`,
+                nodeStart: <SvgActionArrowRight />,
+              },
+            ]}
+            trigger={null}
+            triggerTarget={ref.current}
+          />
         </Header>
 
         <div>

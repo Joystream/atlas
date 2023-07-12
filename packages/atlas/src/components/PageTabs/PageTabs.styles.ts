@@ -12,9 +12,10 @@ export const PageTabsWrapper = styled.div`
 export const BackActionWrapper = styled.div`
   display: flex;
   align-items: center;
-  padding: ${sizes(2)} ${sizes(4)} ${sizes(2)} 0;
+  padding-right: ${sizes(4)};
   position: relative;
   border-right: 1px solid ${cVar('colorCoreNeutral600')};
+  margin-right: ${sizes(4)};
 `
 export const TailingContentWrapper = styled.div`
   margin: ${sizes(2)} ${sizes(4)} ${sizes(2)} auto;

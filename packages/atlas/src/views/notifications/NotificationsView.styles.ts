@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { LayoutGrid } from '@/components/LayoutGrid'
-import { Pill } from '@/components/Pill'
+import { Button } from '@/components/_buttons/Button'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { NotificationTile } from '@/components/_notifications/NotificationTile'
 import { cVar, media, sizes, zIndex } from '@/styles'
@@ -21,19 +21,9 @@ export const Header = styled.div`
   }
 `
 
-export const StyledPill = styled(Pill)`
-  margin-left: ${sizes(4)};
-`
-
-export const MarkAllReadWrapper = styled.div`
-  flex-basis: 100%;
-  margin-top: ${sizes(6)};
-
-  ${media.sm} {
-    flex-basis: unset;
-    margin-top: 0;
-    margin-left: auto;
-  }
+export const KebabButton = styled(Button)`
+  margin-top: 0;
+  margin-left: auto;
 `
 
 export const StyledNotificationTile = styled(NotificationTile)`
@@ -111,5 +101,18 @@ export const FloatingActionBar = styled.div<{ 'data-bottom-nav-open'?: boolean }
     button:not(:last-child) {
       margin-right: ${sizes(4)};
     }
+  }
+`
+
+export const TitleContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: ${sizes(1)};
+
+  ${media.sm} {
+    align-items: center;
+    flex-direction: row;
+    gap: ${sizes(4)};
   }
 `

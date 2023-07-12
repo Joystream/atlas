@@ -17,7 +17,7 @@ export const Wrapper = styled.div`
   border-radius: ${cVar('radiusLarge')};
   ${media.sm} {
     left: 0;
-    width: 516px;
+    width: 400px;
   }
 `
 

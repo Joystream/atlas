@@ -74,6 +74,7 @@ export type NotificationProps = {
   onClick?: () => void
   className?: string
   onMarkAsRead?: () => void
+  onMarkAsUnread?: () => void
 }
 
 export const NotificationTile: FC<NotificationProps> = ({
@@ -82,6 +83,7 @@ export const NotificationTile: FC<NotificationProps> = ({
   onClick,
   className,
   onMarkAsRead,
+  onMarkAsUnread,
 }) => {
   const { date, member, read } = notification
   const { urls: avatarUrls } = getMemberAvatar(member)
@@ -163,11 +165,17 @@ export const NotificationTile: FC<NotificationProps> = ({
               flipEnabled={false}
               disabled={loading}
               items={[
-                {
-                  label: 'Mark as read',
-                  nodeStart: <SvgActionCheck />,
-                  onClick: onMarkAsRead,
-                },
+                read
+                  ? {
+                      label: 'Mark as unread',
+                      nodeStart: <SvgActionCheck />,
+                      onClick: onMarkAsUnread,
+                    }
+                  : {
+                      label: 'Mark as read',
+                      nodeStart: <SvgActionCheck />,
+                      onClick: onMarkAsRead,
+                    },
               ]}
               trigger={null}
               triggerTarget={ref.current}
