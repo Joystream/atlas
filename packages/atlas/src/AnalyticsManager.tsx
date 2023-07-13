@@ -71,7 +71,7 @@ export const AnalyticsManager: FC = () => {
     if (!analyticsEnabled || !atlasConfig.analytics.GA?.id) {
       return
     }
-    ReactGA.pageview(location.pathname)
+    ReactGA.send({ hitType: 'pageview', page: location.pathname })
   }, [location.pathname, analyticsEnabled])
 
   return null
