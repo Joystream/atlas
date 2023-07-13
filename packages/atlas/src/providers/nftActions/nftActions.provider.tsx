@@ -14,9 +14,11 @@ type NftAction = 'putOnSale' | 'purchase' | 'settle' | 'accept-bid' | 'change-pr
 type ContextValue = {
   currentAction: NftAction | null
   currentNftId: string | null
+  nftToMint: string | null
   isBuyNowClicked?: boolean
-  setCurrentAction: Dispatch<SetStateAction<NftAction | null>>
+  setCurrentAction: (action: NftAction | null) => void
   setCurrentNftId: Dispatch<SetStateAction<string | null>>
+  setNftToMint: Dispatch<SetStateAction<string | null>>
   setIsBuyNowClicked: Dispatch<SetStateAction<boolean | undefined>>
   closeNftAction: () => void
 }
@@ -25,9 +27,10 @@ export const NftActionsContext = createContext<(ContextValue & ReturnType<typeof
   undefined
 )
 NftActionsContext.displayName = 'NftActionsContext'
-
 export const NftActionsProvider: FC<PropsWithChildren> = ({ children }) => {
   const [currentAction, setCurrentAction] = useState<NftAction | null>(null)
+  const [nftToMint, setNftToMint] = useState<string | null>(null)
+
   const transactions = useNftTransactions()
   const [isBuyNowClicked, setIsBuyNowClicked] = useState<boolean>()
   const [currentNftId, setCurrentNftId] = useState<string | null>(null)
@@ -63,9 +66,11 @@ export const NftActionsProvider: FC<PropsWithChildren> = ({ children }) => {
       setCurrentAction,
       setCurrentNftId,
       closeNftAction,
+      nftToMint,
+      setNftToMint,
       ...transactions,
     }),
-    [closeNftAction, currentAction, currentNftId, isBuyNowClicked, transactions]
+    [closeNftAction, currentAction, currentNftId, isBuyNowClicked, nftToMint, transactions]
   )
 
   const currentBuyNowPrice =
