@@ -30,6 +30,7 @@ import {
   AddressContainer,
   AnimatedSectionContainer,
   AvatarContainer,
+  Badge,
   BalanceContainer,
   BlurredBG,
   Divider,
@@ -254,6 +255,9 @@ type ListItemOptionsProps = {
   listItems: [ListItemProps, ListItemProps] | [ListItemProps]
 }
 const ListItemOptions: FC<ListItemOptionsProps> = ({ publisher, closeDropdown, listItems }) => {
+  // todo: add logic after orion is done
+  const unseedChannelNotifications = 2
+  const unseedMemberNotifications = 1
   return (
     <>
       {listItems.map((listItemsProps, idx) => (
@@ -265,6 +269,7 @@ const ListItemOptions: FC<ListItemOptionsProps> = ({ publisher, closeDropdown, l
           nodeStart={<IconWrapper icon={<SvgActionPlay />} />}
           label={atlasConfig.general.appName}
           to={absoluteRoutes.viewer.index()}
+          nodeEnd={<Badge data-badge={unseedMemberNotifications} />}
         />
       ) : (
         <>
@@ -273,6 +278,7 @@ const ListItemOptions: FC<ListItemOptionsProps> = ({ publisher, closeDropdown, l
             nodeStart={<IconWrapper icon={<SvgActionAddVideo />} />}
             label="Studio"
             to={absoluteRoutes.studio.index()}
+            nodeEnd={<Badge data-badge={unseedChannelNotifications} />}
           />
         </>
       )}

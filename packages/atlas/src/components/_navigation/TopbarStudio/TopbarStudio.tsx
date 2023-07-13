@@ -49,6 +49,9 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
     setIsWorkspaceOpen(false)
   }
 
+  // todo: add logic after orion is done
+  const unseedMemberNotifications = 1
+
   return (
     <>
       <StyledTopbarBase
@@ -76,7 +79,12 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
                 </Button>
               </CSSTransition>
               <NotificationsWidget type="channel" trigger={<NotificationsButton />} />
-              <StyledAvatar size={40} assetUrls={memberAvatarUrls} onClick={handleDrawerToggle} />
+              <StyledAvatar
+                size={40}
+                assetUrls={memberAvatarUrls}
+                onClick={handleDrawerToggle}
+                badge={unseedMemberNotifications}
+              />
             </StudioTopbarContainer>
           ) : (
             <Button size="medium" onClick={() => setAuthModalOpenName(getCorrectLoginModal())}>

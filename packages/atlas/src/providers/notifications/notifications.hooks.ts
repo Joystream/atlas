@@ -14,6 +14,7 @@ import { convertDateFormat } from '@/utils/time'
 import { useNotificationStore } from './notifications.store'
 import { NftNotificationRecord, NotificationRecord } from './notifications.types'
 
+export type UseNotifications = ReturnType<typeof useNotifications>
 export const useNotifications = (
   opts?: QueryHookOptions<GetNotificationsConnectionQuery, GetNotificationsConnectionQueryVariables>
 ) => {

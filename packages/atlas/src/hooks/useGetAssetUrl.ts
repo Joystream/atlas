@@ -11,7 +11,7 @@ export const getSingleAssetUrl = async (
   type: 'image' | 'video' | 'subtitle',
   timeout?: number
 ): Promise<string | undefined> => {
-  if (!urls || urls[0] === '') {
+  if (!urls || !urls.length) {
     return
   }
 

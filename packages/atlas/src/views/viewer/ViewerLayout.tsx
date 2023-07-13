@@ -17,7 +17,7 @@ import { useUser } from '@/providers/user/user.hooks'
 import { transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
 import { YppLandingView } from '@/views/global/YppLandingView'
-import { NotificationsView } from '@/views/notifications'
+import { MemberNotificationsView } from '@/views/notifications'
 
 import { CategoryView } from './CategoryView'
 import { ChannelView } from './ChannelView'
@@ -90,9 +90,13 @@ export const ViewerLayout: FC = () => {
                   }
                 />
                 <Route
-                  path={absoluteRoutes.viewer.notifications()}
+                  path={absoluteRoutes.viewer.memberNotifications()}
                   element={
-                    <PrivateRoute isAuth={isLoggedIn} element={<NotificationsView />} redirectTo={ENTRY_POINT_ROUTE} />
+                    <PrivateRoute
+                      isAuth={isLoggedIn}
+                      element={<MemberNotificationsView />}
+                      redirectTo={ENTRY_POINT_ROUTE}
+                    />
                   }
                 />
                 <Route path="*" element={<NotFoundView />} />

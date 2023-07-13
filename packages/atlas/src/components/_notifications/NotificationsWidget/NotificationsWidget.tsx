@@ -1,4 +1,5 @@
 import { FC, useEffect, useRef, useState } from 'react'
+import { CSSTransition } from 'react-transition-group'
 
 import { SvgActionCheck, SvgActionMore, SvgActionNotifications, SvgActionSettings } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
@@ -8,6 +9,7 @@ import { Popover, PopoverImperativeHandle, PopoverProps } from '@/components/_ov
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useNotifications } from '@/providers/notifications/notifications.hooks'
+import { transitions } from '@/styles'
 
 import {
   Content,
@@ -36,9 +38,9 @@ export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ type, ...res
   } = useNotifications()
   const smMatch = useMediaMatch('sm')
   const firstNotification = notifications[0]
-  const ref = useRef<HTMLButtonElement>(null)
+  const [ref, setRef] = useState<HTMLButtonElement | null>()
   const contextMenuInstanceRef = useRef<PopoverImperativeHandle>(null)
-
+  const isMemberType = type === 'member'
   const [isOpen, setIsOpen] = useState(false)
 
   // set last seen notification block to first notification to manage the badge for notification button
@@ -69,93 +71,102 @@ export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ type, ...res
         appendTo={document.body}
         onHide={handleHide}
       >
-        <Wrapper>
-          <Header>
-            <Text as="h3" variant="h300">
-              {type === 'member' ? 'Member' : 'Channel'} notifications
-            </Text>
-            <div>
-              <KebabMenuButtonIcon ref={ref} icon={<SvgActionMore />} variant="tertiary" size="small" />
-              <StyledContextMenu
-                ref={contextMenuInstanceRef}
-                appendTo={ref.current ?? undefined}
-                placement="bottom-end"
-                flipEnabled={false}
-                items={[
-                  {
-                    label: 'Mark all as read',
-                    nodeStart: <SvgActionCheck />,
-                    onClick: () => markNotificationsAsRead(notifications),
-                  },
-                  {
-                    label: `${type === 'member' ? 'Member' : 'Channel'} notification center`,
-                    nodeStart: <SvgActionNotifications />,
-                    onClick: popoverRef.current?.hide,
-                    to: absoluteRoutes.viewer.notifications(),
-                  },
-                  {
-                    label: `${type === 'member' ? 'Member' : 'Channel'} notification settings`,
-                    nodeStart: <SvgActionSettings />,
-                    onClick: () => markNotificationsAsRead(notifications),
-                  },
-                ]}
-                trigger={null}
-                triggerTarget={ref.current}
-              />
-            </div>
-          </Header>
-          <Content>
-            {notifications.length > 0 ? (
-              <Section
-                withoutGap
-                contentProps={{
-                  type: 'grid',
-                  grid: {
-                    sm: {
-                      columns: 1,
+        <CSSTransition classNames={transitions.names.dropdown} in={isOpen} timeout={0} mountOnEnter unmountOnExit>
+          <Wrapper>
+            <Header>
+              <Text as="h3" variant="h300">
+                {isMemberType ? 'Member' : 'Channel'} notifications
+              </Text>
+              <div>
+                <KebabMenuButtonIcon
+                  ref={(ref) => setRef(ref)}
+                  icon={<SvgActionMore />}
+                  variant="tertiary"
+                  size="small"
+                />
+                <StyledContextMenu
+                  ref={contextMenuInstanceRef}
+                  appendTo={ref ?? undefined}
+                  placement="bottom-end"
+                  flipEnabled={false}
+                  items={[
+                    {
+                      label: 'Mark all as read',
+                      nodeStart: <SvgActionCheck />,
+                      onClick: () => markNotificationsAsRead(notifications),
                     },
-                  },
-                  children: [
-                    <div key="single">
-                      {notifications.map((notification, idx) => (
-                        <NotificationTile
-                          key={`notification-${notification.id}-${idx}`}
-                          notification={notification}
-                          onClick={() => {
-                            popoverRef.current?.hide()
-                          }}
-                          onMarkAsRead={() => markNotificationsAsRead(notification)}
-                          onMarkAsUnread={() => markNotificationsAsUnread(notification)}
-                        />
-                      ))}
-                    </div>,
-                  ],
-                }}
-                footerProps={{
-                  type: 'infinite',
-                  reachedEnd: !pageInfo?.hasNextPage ?? true,
-                  fetchMore: async () => {
-                    await fetchMore({
-                      variables: {
-                        after: pageInfo?.endCursor,
-                        first: 10,
+                    {
+                      label: `${isMemberType ? 'Member' : 'Channel'} notification center`,
+                      nodeStart: <SvgActionNotifications />,
+                      onClick: popoverRef.current?.hide,
+                      to: isMemberType
+                        ? absoluteRoutes.viewer.memberNotifications()
+                        : absoluteRoutes.studio.channelNotifications(),
+                    },
+                    {
+                      label: `${isMemberType ? 'Member' : 'Channel'} notification settings`,
+                      nodeStart: <SvgActionSettings />,
+                      onClick: () => markNotificationsAsRead(notifications),
+                    },
+                  ]}
+                  trigger={null}
+                  triggerTarget={ref}
+                />
+              </div>
+            </Header>
+            <Content>
+              {notifications.length > 0 ? (
+                <Section
+                  withoutGap
+                  contentProps={{
+                    type: 'grid',
+                    grid: {
+                      sm: {
+                        columns: 1,
                       },
-                      updateQuery: (prev, { fetchMoreResult }) => {
-                        fetchMoreResult.notificationsConnection.edges = [
-                          ...(prev.notificationsConnection?.edges ?? []),
-                          ...fetchMoreResult.notificationsConnection.edges,
-                        ]
-                        return fetchMoreResult
-                      },
-                    })
-                  },
-                }}
-              />
-            ) : (
-              <EmptyFallback variant="small" title="You don't have any notifications" />
-            )}
-          </Content>
-        </Wrapper>
+                    },
+                    children: [
+                      <div key="single">
+                        {notifications.map((notification, idx) => (
+                          <NotificationTile
+                            key={`notification-${notification.id}-${idx}`}
+                            notification={notification}
+                            onClick={() => {
+                              popoverRef.current?.hide()
+                            }}
+                            onMarkAsRead={() => markNotificationsAsRead(notification)}
+                            onMarkAsUnread={() => markNotificationsAsUnread(notification)}
+                          />
+                        ))}
+                      </div>,
+                    ],
+                  }}
+                  footerProps={{
+                    type: 'infinite',
+                    reachedEnd: !pageInfo?.hasNextPage ?? true,
+                    fetchMore: async () => {
+                      await fetchMore({
+                        variables: {
+                          after: pageInfo?.endCursor,
+                          first: 10,
+                        },
+                        updateQuery: (prev, { fetchMoreResult }) => {
+                          fetchMoreResult.notificationsConnection.edges = [
+                            ...(prev.notificationsConnection?.edges ?? []),
+                            ...fetchMoreResult.notificationsConnection.edges,
+                          ]
+                          return fetchMoreResult
+                        },
+                      })
+                    },
+                  }}
+                />
+              ) : (
+                <EmptyFallback variant="small" title="You don't have any notifications" />
+              )}
+            </Content>
+          </Wrapper>
+        </CSSTransition>
       </Popover>
     </>
   )

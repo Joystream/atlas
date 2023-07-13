@@ -23,7 +23,7 @@ import { useUser } from '@/providers/user/user.hooks'
 import { VideoWorkspaceProvider, useVideoWorkspaceRouting } from '@/providers/videoWorkspace'
 import { transitions } from '@/styles'
 import { isAllowedBrowser } from '@/utils/browser'
-import { NotificationsView } from '@/views/notifications'
+import { ChannelNotificationsView } from '@/views/notifications/ChannelNotificationsView'
 import { CrtPreviewEditView } from '@/views/studio/CrtPreviewEditView'
 import { CrtPreviewView } from '@/views/studio/CrtPreviewView'
 import { CrtWelcomeView } from '@/views/studio/CrtWelcomeView/CrtWelcomeView'
@@ -189,9 +189,13 @@ const StudioLayout = () => {
                 }
               />
               <Route
-                path={relativeRoutes.studio.notifications()}
+                path={relativeRoutes.studio.channelNotifications()}
                 element={
-                  <PrivateRoute element={<NotificationsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                  <PrivateRoute
+                    element={<ChannelNotificationsView />}
+                    isAuth={channelSet}
+                    redirectTo={ENTRY_POINT_ROUTE}
+                  />
                 }
               />
               {atlasConfig.features.ypp.googleConsoleClientId && (

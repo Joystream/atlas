@@ -36,7 +36,7 @@ export const relativeRoutes = {
       withQueryParameters(`member/settings`, query),
     member: (handle = ':handle', query?: { [QUERY_PARAMS.TAB]?: MemberTabs }) =>
       withQueryParameters(`member/${handle}`, query),
-    notifications: () => 'notifications',
+    memberNotifications: () => 'notifications/member',
     marketplace: () => 'marketplace',
     ypp: (query?: { [QUERY_PARAMS.REFERRER_ID]?: string }) => withQueryParameters('ypp', query),
     yppDashboard: () => 'ypp-dashboard',
@@ -57,7 +57,7 @@ export const relativeRoutes = {
     videoWorkspace: () => 'video-workspace',
     uploads: () => 'uploads',
     signIn: () => 'signin',
-    notifications: () => 'notifications',
+    channelNotifications: () => 'notifications/channel',
     payments: () => 'payments',
     ypp: () => 'ypp',
     yppDashboard: () => 'ypp/dashboard',
