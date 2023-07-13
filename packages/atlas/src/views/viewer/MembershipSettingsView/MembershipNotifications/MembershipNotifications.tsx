@@ -1,5 +1,5 @@
-import { FC, Fragment, useEffect } from 'react'
-import { Controller, UseFormReturn, useForm } from 'react-hook-form'
+import { FC, Fragment, useEffect, useState } from 'react'
+import { Controller, UseFormReturn, useForm, useWatch } from 'react-hook-form'
 import useResizeObserver from 'use-resize-observer'
 
 import { Checkbox } from '@/components/_inputs/Checkbox'
@@ -8,7 +8,6 @@ import { EntitySettingTemplate } from '@/components/_templates/EntitySettingTemp
 import { StyledActionBar, Table, Wrapper } from './MembershipNotifications.styles'
 
 const TABLE_STRUCTURE = [
-  { name: 'All', label: '', rows: [{ name: 'ALL', label: 'Subscribe to all notifications' }] },
   {
     name: 'Generic',
     rows: [{ name: 'NEW_CHANNEL', label: 'New channel created' }],
@@ -50,7 +49,6 @@ const TABLE_STRUCTURE = [
 
 const dataFromBackend = {
   inApp: {
-    ALL: true,
     NEW_CHANNEL: true,
     COMMENT_REPY: true,
     COMMENT_REACTION: true,
@@ -67,7 +65,6 @@ const dataFromBackend = {
     FUND_FROM_WG: true,
   },
   email: {
-    ALL: true,
     NEW_CHANNEL: true,
     COMMENT_REPY: true,
     COMMENT_REACTION: true,
@@ -87,24 +84,28 @@ const dataFromBackend = {
 
 export const MembershipNotifications = () => {
   const form = useForm<Record<'inApp' | 'email', Record<string, boolean>>>()
+  const {
+    reset,
+    formState: { isDirty },
+  } = form
+
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  useEffect(() => {
+    // Depends on a backend query result
+    reset(dataFromBackend)
+  }, [reset])
 
   const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
 
-  useEffect(() => {
-    // Values will be set asynchronously
-    Object.entries(dataFromBackend).forEach(([notifType, values]) =>
-      Object.entries(values).forEach(([key, value]) => {
-        form.setValue(`${notifType as 'inApp' | 'email'}.${key}`, value)
-      })
-    )
-  }, [form])
-
   const handleEditMember = form.handleSubmit(async (data) => {
+    setIsSubmitting(true)
     // TODO
-    console.log(data)
+    await new Promise((r) => setTimeout(r, 2000))
+    reset(data) // Reset with new data
+    setIsSubmitting(false)
   })
 
-  const isSubmitting = false
   return (
     <EntitySettingTemplate
       isFirst
@@ -113,15 +114,20 @@ export const MembershipNotifications = () => {
     >
       <form onSubmit={handleEditMember}>
         <Wrapper actionBarHeight={actionBarBoundsHeight}>
-          <NotificationTableComponent sections={TABLE_STRUCTURE} form={form} />
+          <NotificationTable sections={TABLE_STRUCTURE} form={form} />
         </Wrapper>
 
         <StyledActionBar
           ref={actionBarRef}
           primaryButton={{
-            disabled: isSubmitting,
             text: isSubmitting ? 'Please wait...' : 'Publish changes',
+            disabled: isSubmitting || !isDirty,
             type: 'submit',
+          }}
+          secondaryButton={{
+            text: 'Cancel',
+            disabled: isSubmitting || !isDirty,
+            onClick: () => reset(),
           }}
         />
       </form>
@@ -133,7 +139,7 @@ type NotificationTableComponentProps = {
   sections: { name: string; label?: string; rows: { name: string; label: string }[] }[]
   form: UseFormReturn<Record<'inApp' | 'email', Record<string, boolean>>>
 }
-const NotificationTableComponent: FC<NotificationTableComponentProps> = ({ sections, form }) => (
+const NotificationTable: FC<NotificationTableComponentProps> = ({ sections, form }) => (
   <Table>
     <thead>
       <tr>
@@ -144,6 +150,8 @@ const NotificationTableComponent: FC<NotificationTableComponentProps> = ({ secti
     </thead>
 
     <tbody>
+      <SubscribeToAllRow form={form} />
+
       {sections.map(({ name, label = name, rows }) => (
         <Fragment key={name}>
           {label && (
@@ -176,3 +184,46 @@ const NotificationTableComponent: FC<NotificationTableComponentProps> = ({ secti
     </tbody>
   </Table>
 )
+
+const SubscribeToAllRow: FC<Pick<NotificationTableComponentProps, 'form'>> = ({ form }) => {
+  const [allInApp, setAllInApp] = useState<boolean | undefined>()
+  const [allEmail, setAllEmail] = useState<boolean | undefined>()
+
+  const values = useWatch({ control: form.control })
+  const { getValues, setValue } = form
+
+  useEffect(() => {
+    if (typeof allInApp === 'undefined' && typeof allEmail === 'undefined') return
+
+    const values = getValues()
+    if (typeof allInApp !== 'undefined') {
+      Object.entries(values.inApp).forEach(
+        ([key, value]) => value !== allInApp && setValue(`inApp.${key}`, allInApp, { shouldDirty: true })
+      )
+    }
+    if (typeof allEmail !== 'undefined') {
+      Object.entries(values.email).forEach(
+        ([key, value]) => value !== allEmail && setValue(`email.${key}`, allEmail, { shouldDirty: true })
+      )
+    }
+  }, [allInApp, allEmail, getValues, setValue])
+
+  useEffect(() => {
+    setAllInApp(values.inApp && Object.values(values.inApp).reduce((a, b) => (a === b ? a : undefined)))
+    setAllEmail(values.email && Object.values(values.email).reduce((a, b) => (a === b ? a : undefined)))
+  }, [values])
+
+  return (
+    <tr>
+      <td>Subscribe to all notifications</td>
+
+      <td>
+        <Checkbox value={allInApp ?? true} indeterminate={typeof allInApp === 'undefined'} onChange={setAllInApp} />
+      </td>
+
+      <td>
+        <Checkbox value={allEmail ?? true} indeterminate={typeof allEmail === 'undefined'} onChange={setAllEmail} />
+      </td>
+    </tr>
+  )
+}
