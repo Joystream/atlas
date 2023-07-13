@@ -66,7 +66,7 @@ export const useGetAssetUrl = (urls: string[] | undefined | null, type: 'image' 
   const [isLoading, setIsLoading] = useState(true)
   const { userBenchmarkTime } = useOperatorsContext()
   useEffect(() => {
-    if (url) {
+    if (url && urls?.includes(url)) {
       return
     }
     const init = async () => {
