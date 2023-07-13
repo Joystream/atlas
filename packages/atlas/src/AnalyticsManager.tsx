@@ -66,13 +66,5 @@ export const AnalyticsManager: FC = () => {
     initGA()
   }, [analyticsEnabled, initGA])
 
-  //track pageview in GA
-  useEffect(() => {
-    if (!analyticsEnabled || !atlasConfig.analytics.GA?.id) {
-      return
-    }
-    ReactGA.send({ hitType: 'pageview', page: location.pathname })
-  }, [location.pathname, analyticsEnabled])
-
   return null
 }
