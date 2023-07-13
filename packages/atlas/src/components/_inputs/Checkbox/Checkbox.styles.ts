@@ -69,6 +69,12 @@ export const CheckboxInput = styled.input<CheckboxInputProps>`
   cursor: inherit;
   z-index: ${zIndex.overlay};
 
+  :not(:checked) {
+    + ${Checkmark} {
+      background-color: ${cVar('colorBackgroundMutedAlpha')};
+    }
+  }
+
   :disabled:not(:checked) {
     + ${Checkmark} {
       background-color: ${cVar('colorBackgroundAlpha')};
