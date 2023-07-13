@@ -108,10 +108,9 @@ export const SignUpModal = () => {
   const handleEmailStepSubmit = useCallback(
     (email: string, confirmedTerms: boolean) => {
       setSignupFormData((userForm) => ({ ...userForm, email, confirmedTerms }))
-
-      if (memberId) {
+      if (memberId && emailAlreadyTakenError) {
         createNewOrionAccount({
-          data: { ...signUpFormData, email, confirmedTerms, memberId },
+          data: { ...signUpFormData, email, memberId },
           onError: (error) => {
             if (error === RegisterError.EmailAlreadyExists) {
               setEmailAlreadyTakenError(true)
@@ -135,10 +134,12 @@ export const SignUpModal = () => {
         })
         return
       }
+
       goToNextStep()
     },
     [
       createNewOrionAccount,
+      emailAlreadyTakenError,
       goToNextStep,
       goToStep,
       memberId,
@@ -152,10 +153,46 @@ export const SignUpModal = () => {
 
   const handlePasswordStepSubmit = useCallback(
     async (password: string) => {
-      goToNextStep()
       setSignupFormData((userForm) => ({ ...userForm, password }))
+      if (memberId) {
+        createNewOrionAccount({
+          data: { ...signUpFormData, password, memberId },
+          onError: (error) => {
+            if (error === RegisterError.EmailAlreadyExists) {
+              setEmailAlreadyTakenError(true)
+              goToStep(SignUpSteps.SignUpEmail)
+              return
+            }
+            goToStep(SignUpSteps.CreateMember)
+          },
+          onStart: () => goToStep(SignUpSteps.Creating),
+          onSuccess: ({ amountOfTokens }) => {
+            // if this is ypp flow, overwrite ytResponseData.email
+            if (ytResponseData) {
+              setYtResponseData({ ...ytResponseData, email: signUpFormData.email })
+              setAuthModalOpenName(undefined)
+              setYppModalOpenName('ypp-sync-options')
+            } else {
+              setAmountofTokens(amountOfTokens)
+              goToNextStep()
+            }
+          },
+        })
+        return
+      }
+      goToNextStep()
     },
-    [goToNextStep]
+    [
+      createNewOrionAccount,
+      goToNextStep,
+      goToStep,
+      memberId,
+      setAuthModalOpenName,
+      setYppModalOpenName,
+      setYtResponseData,
+      signUpFormData,
+      ytResponseData,
+    ]
   )
 
   const handleCreateMemberOnSeedStepSubmit = useCallback(
@@ -318,7 +355,6 @@ export const SignUpModal = () => {
           password={signUpFormData.password}
         />
       )}
-
       {currentStep === SignUpSteps.SignUpEmail && (
         <SignUpEmailStep
           {...commonProps}
