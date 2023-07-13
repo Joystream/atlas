@@ -27,9 +27,9 @@ export const MintNftModal = () => {
   const [shouldHideMintModal, setShouldHideMintModal] = useState(false)
   const [showRoyaltyInput, setShowRoyaltyInput] = useState(false)
 
-  const { tabData } = useVideoWorkspaceData('1')
   const handleVideoWorkspaceSubmit = useHandleVideoWorkspaceSubmit()
   const { setNftToMint, nftToMint, openNftPutOnSale } = useNftActions()
+  const { tabData } = useVideoWorkspaceData(nftToMint ?? undefined)
   const [showSaleConfirmationDialog, setShowSaleConfirmationDialog] = useState(false)
   const saleConfirmationDismissed = usePersonalDataStore((state) =>
     state.dismissedMessages.some((message) => message.id === SALE_CONFIRMATION_ID)
@@ -37,7 +37,7 @@ export const MintNftModal = () => {
   const updateMintConfirmationDismiss = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
 
   const form = useForm<VideoWorkspaceVideoFormFields>({
-    defaultValues: { ...tabData, mintNft: true } ?? undefined,
+    defaultValues: { ...tabData, mintNft: true },
   })
 
   const {
