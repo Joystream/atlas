@@ -79,6 +79,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
   const [utmSource, setUtmSource] = useState<string | null>(null)
   const navigate = useNavigate()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const createdChannelId = useRef<string | null>(null)
   const {
     unsyncedChannels: yppUnsyncedChannels,
     currentChannel: yppCurrentChannel,
@@ -92,8 +93,8 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
   const channelsLoaded = !!unSyncedChannels
   const [finalFormData, setFinalFormData] = useState<FinalFormData | null>(null)
   const selectedChannelId = useYppStore((store) => store.selectedChannelId)
-  const { referrerId, ytResponseData } = useYppStore((store) => store, shallow)
   const setSelectedChannelId = useYppStore((store) => store.actions.setSelectedChannelId)
+  const { referrerId, ytResponseData } = useYppStore((store) => store, shallow)
   const setReferrerId = useYppStore((store) => store.actions.setReferrerId)
   const setShouldContinueYppFlowAfterLogin = useYppStore((store) => store.actions.setShouldContinueYppFlowAfterLogin)
   const { mutateAsync: yppSignChannelMutation } = useMutation(
@@ -255,12 +256,15 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
         },
         onTxSync: async ({ channelId }) => {
           setActiveChannel(channelId)
+          createdChannelId.current = channelId
         },
         onCompleted: async () => {
           await refetchUserMemberships()
 
           const channelCreationResponse = await yppSignChannelMutation({
-            ...(selectedChannelId ? { joystreamChannelId: parseInt(selectedChannelId) } : {}),
+            ...(selectedChannelId || createdChannelId.current
+              ? { joystreamChannelId: parseInt(selectedChannelId || createdChannelId.current || '') }
+              : {}),
             ...(data.referrerChannelId ? { referrerChannelId: parseInt(data.referrerChannelId) } : {}),
             authorizationCode: ytResponseData?.authorizationCode,
             userId: ytResponseData?.userId,
@@ -272,7 +276,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
           trackYppOptIn(
             ytResponseData?.channelHandle,
             ytResponseData?.email,
-            data.videoCategoryId ? displayCategoriesLookup[data.videoCategoryId].name : undefined,
+            data.videoCategoryId ? displayCategoriesLookup[data.videoCategoryId]?.name : undefined,
             channelCreationResponse.data.channel.subscribersCount,
             data.referrerChannelId,
             utmSource || undefined

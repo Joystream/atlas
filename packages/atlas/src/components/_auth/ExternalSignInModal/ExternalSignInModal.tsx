@@ -77,7 +77,7 @@ export const ExternalSignInModal: FC = () => {
       case ModalSteps.Logging:
         return (
           <AuthenticationModalStepTemplate
-            title="Logginng in"
+            title="Logging in"
             subtitle="Please wait while we log you in. This should take about 10 seconds."
             loader
             hasNavigatedBack={false}
