@@ -2,6 +2,7 @@ import { FC, Fragment, useEffect, useState } from 'react'
 import { Controller, UseFormReturn, useForm, useWatch } from 'react-hook-form'
 import useResizeObserver from 'use-resize-observer'
 
+import { SvgActionComputer, SvgActionRead } from '@/assets/icons'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { EntitySettingTemplate } from '@/components/_templates/EntitySettingTemplate'
 
@@ -144,8 +145,14 @@ const NotificationTable: FC<NotificationTableComponentProps> = ({ sections, form
     <thead>
       <tr>
         <th />
-        <th>In App</th>
-        <th>Email</th>
+        <th>
+          <SvgActionComputer />
+          <span>In App</span>
+        </th>
+        <th>
+          <SvgActionRead />
+          <span>Email</span>
+        </th>
       </tr>
     </thead>
 

@@ -12,6 +12,12 @@ export const Table = styled.table`
     color: ${cVar('colorText')};
     padding: ${sizes(4)} ${sizes(2)};
     width: 33%;
+
+    svg {
+      display: inline-block;
+      margin-right: ${sizes(2)};
+      vertical-align: middle;
+    }
   }
 
   tbody {
