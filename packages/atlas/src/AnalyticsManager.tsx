@@ -1,6 +1,6 @@
 import ls from '@livesession/sdk'
 import { FC, useCallback, useEffect } from 'react'
-import ReactGA from 'react-ga'
+import ReactGA from 'react-ga4'
 import { useLocation } from 'react-router-dom'
 
 import { atlasConfig } from '@/config'
