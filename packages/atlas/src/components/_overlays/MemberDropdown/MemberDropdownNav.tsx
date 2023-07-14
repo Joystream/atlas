@@ -188,6 +188,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
             <ListItemOptions
               publisher={publisher}
               closeDropdown={onCloseDropdown}
+              hasAtLeastOneChannel={!!hasAtLeastOneChannel}
               listItems={[
                 {
                   asButton: true,
@@ -211,6 +212,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
             <ListItemOptions
               publisher={publisher}
               closeDropdown={onCloseDropdown}
+              hasAtLeastOneChannel={!!hasAtLeastOneChannel}
               listItems={[
                 {
                   asButton: true,
@@ -250,10 +252,11 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
 
 type ListItemOptionsProps = {
   publisher?: boolean
+  hasAtLeastOneChannel?: boolean
   closeDropdown?: () => void
   listItems: [ListItemProps, ListItemProps] | [ListItemProps]
 }
-const ListItemOptions: FC<ListItemOptionsProps> = ({ publisher, closeDropdown, listItems }) => {
+const ListItemOptions: FC<ListItemOptionsProps> = ({ publisher, closeDropdown, listItems, hasAtLeastOneChannel }) => {
   return (
     <>
       {listItems.map((listItemsProps, idx) => (
@@ -266,7 +269,7 @@ const ListItemOptions: FC<ListItemOptionsProps> = ({ publisher, closeDropdown, l
           label={atlasConfig.general.appName}
           to={absoluteRoutes.viewer.index()}
         />
-      ) : (
+      ) : hasAtLeastOneChannel ? (
         <>
           <ListItem
             onClick={closeDropdown}
@@ -275,7 +278,7 @@ const ListItemOptions: FC<ListItemOptionsProps> = ({ publisher, closeDropdown, l
             to={absoluteRoutes.studio.index()}
           />
         </>
-      )}
+      ) : null}
     </>
   )
 }

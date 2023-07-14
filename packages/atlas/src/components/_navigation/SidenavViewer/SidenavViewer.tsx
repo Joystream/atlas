@@ -1,6 +1,7 @@
 import { FC, useState } from 'react'
 
 import {
+  SvgActionAddChannel,
   SvgActionMember,
   SvgActionNewTab,
   SvgSidebarExplore,
@@ -58,9 +59,11 @@ export const SidenavViewer: FC = () => {
   const [expanded, setExpanded] = useState(false)
   const followedChannels = usePersonalDataStore((state) => state.followedChannels)
   const unFollow = usePersonalDataStore((state) => state.actions.unfollowChannel)
+  const { activeMembership } = useUser()
   const {
     actions: { setAuthModalOpenName },
   } = useAuthStore()
+  const hasAtLeastOneChannel = activeMembership?.channels.length && activeMembership?.channels.length >= 1
 
   const handleChannelNotFound = (id: string) => {
     ConsoleLogger.warn(`Followed channel not found, removing id: ${id}`)
@@ -77,7 +80,7 @@ export const SidenavViewer: FC = () => {
     <Button icon={<SvgActionMember />} onClick={closeAndSignIn}>
       Sign in
     </Button>
-  ) : (
+  ) : hasAtLeastOneChannel ? (
     <Button
       variant="secondary"
       to={absoluteRoutes.studio.index()}
@@ -85,6 +88,10 @@ export const SidenavViewer: FC = () => {
       icon={<SvgActionNewTab />}
     >
       Go to Studio
+    </Button>
+  ) : (
+    <Button variant="secondary" icon={<SvgActionAddChannel />} onClick={() => setAuthModalOpenName('createChannel')}>
+      Create channel
     </Button>
   )
 
