@@ -261,10 +261,10 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
         onCompleted: async () => {
           await refetchUserMemberships()
 
+          const channelId = selectedChannelId || createdChannelId.current
+
           const channelCreationResponse = await yppSignChannelMutation({
-            ...(selectedChannelId || createdChannelId.current
-              ? { joystreamChannelId: parseInt(selectedChannelId || createdChannelId.current || '') }
-              : {}),
+            ...(channelId ? { joystreamChannelId: parseInt(channelId) } : {}),
             ...(data.referrerChannelId ? { referrerChannelId: parseInt(data.referrerChannelId) } : {}),
             authorizationCode: ytResponseData?.authorizationCode,
             userId: ytResponseData?.userId,
