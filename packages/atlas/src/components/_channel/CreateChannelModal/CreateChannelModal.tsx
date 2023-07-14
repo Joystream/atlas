@@ -72,7 +72,11 @@ export const CreateChannelModal = () => {
                 render={({ field: { value } }) => (
                   <>
                     <StyledAvatar
-                      assetUrls={[value.croppedUrl || value.originalUrl || '']}
+                      assetUrls={
+                        value.croppedUrl || value.originalUrl
+                          ? ([value.croppedUrl || value.originalUrl] as string[])
+                          : []
+                      }
                       hasAvatarUploadFailed={hasAvatarUploadFailed}
                       size={88}
                       onClick={() => {
