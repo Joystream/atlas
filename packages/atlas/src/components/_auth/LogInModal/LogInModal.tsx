@@ -140,7 +140,7 @@ export const LogInModal = () => {
         </AuthenticationModalStepTemplate>
       ) : (
         <AuthenticationModalStepTemplate
-          title="Logginng in"
+          title="Logging in"
           subtitle="Please wait while we log you in. This should take about 10 seconds."
           loader
           hasNavigatedBack
