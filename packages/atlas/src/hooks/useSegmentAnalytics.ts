@@ -267,7 +267,7 @@ export const useSegmentAnalytics = () => {
         break
     }
     runNextQueueEvent()
-  }, [trackVideoPlaybackPaused, trackVideoPlaybackStarted])
+  }, [trackVideoPlaybackCompleted, trackVideoPlaybackPaused, trackVideoPlaybackResumed, trackVideoPlaybackStarted])
 
   const addEventToQueue = useCallback(
     (type: playbackEventType, params: videoPlaybackParams) => {
