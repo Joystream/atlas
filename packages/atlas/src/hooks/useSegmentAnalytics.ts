@@ -79,8 +79,8 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackVideoPlaybackStarted = useCallback(
-    (params: videoPlaybackParams) => {
-      analytics.track('Video playback started', {
+    async (params: videoPlaybackParams) => {
+      await analytics.track('Video playback started', {
         ...params,
       })
     },
@@ -88,8 +88,8 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackVideoPlaybackPaused = useCallback(
-    (params: videoPlaybackParams) => {
-      analytics.track('Video playback paused', {
+    async (params: videoPlaybackParams) => {
+      await analytics.track('Video playback paused', {
         ...params,
       })
     },
@@ -97,8 +97,8 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackVideoPlaybackResumed = useCallback(
-    (params: videoPlaybackParams) => {
-      analytics.track('Video playback resumed', {
+    async (params: videoPlaybackParams) => {
+      await analytics.track('Video playback resumed', {
         ...params,
       })
     },
@@ -106,8 +106,8 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackVideoPlaybackCompleted = useCallback(
-    (params: videoPlaybackParams) => {
-      analytics.track('Video playback completed', {
+    async (params: videoPlaybackParams) => {
+      await analytics.track('Video playback completed', {
         ...params,
       })
     },
