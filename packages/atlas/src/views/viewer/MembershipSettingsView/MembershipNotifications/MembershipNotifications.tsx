@@ -2,90 +2,133 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import useResizeObserver from 'use-resize-observer'
 
-import { NotificationsState, NotificationsTable } from '@/components/NotificationsTable'
+import { NotificationsTable } from '@/components/NotificationsTable'
 import { EntitySettingTemplate } from '@/components/_templates/EntitySettingTemplate'
 
 import { StyledActionBar, Wrapper } from './MembershipNotifications.styles'
 
 const TABLE_STRUCTURE = [
   {
-    name: 'Generic',
-    rows: [{ name: 'NEW_CHANNEL', label: 'New channel created' }],
-  },
-  {
-    name: 'Engagement',
+    title: 'Generic',
     rows: [
-      { name: 'COMMENT_REPY', label: 'Someone replied to your comment' },
-      { name: 'COMMENT_REACTION', label: 'Someone reacted to your comment' },
+      {
+        label: 'New channel created',
+        names: { inApp: 'channelCreatedInAppNotificationEnabled', email: 'channelCreatedMailNotificationEnabled' },
+      },
     ],
   },
   {
-    name: 'Followed channels',
+    title: 'Engagement',
     rows: [
-      { name: 'NEW_VIDEO', label: 'Posted a new video' },
-      { name: 'NEW_NFT_AUCTION', label: 'Put a new NFT on auction' },
-      { name: 'NEW_NFT_SALE', label: 'Put a new NFT on sale' },
+      {
+        label: 'Someone replied to your comment',
+        names: { inApp: 'commentRepyInAppNotificationEnabled', email: 'commentRepyMailNotificationEnabled' },
+      },
+      {
+        label: 'Someone reacted to your comment',
+        names: { inApp: 'commentReactionInAppNotificationEnabled', email: 'commentReactionMailNotificationEnabled' },
+      },
     ],
   },
   {
-    name: 'NFT',
+    title: 'Followed channels',
     rows: [
-      { name: 'AUCTION_OUT_BID', label: 'Someone placed higher bid than you' },
-      { name: 'AUCTION_EXPIRED', label: 'Auction you participated in expired' },
-      { name: 'AUCTION_WON', label: 'You won the auction' },
-      { name: 'AUCTION_LOST', label: 'You lost the auction' },
-      { name: 'AUCTION_BID_WITHDRAWAL', label: 'Your bid withdrawal is enabled' },
+      {
+        label: 'Posted a new video',
+        names: { inApp: 'newVideoInAppNotificationEnabled', email: 'newVideoMailNotificationEnabled' },
+      },
+      {
+        label: 'Put a new NFT on auction',
+        names: { inApp: 'newNftAuctionInAppNotificationEnabled', email: 'newNftAuctionMailNotificationEnabled' },
+      },
+      {
+        label: 'Put a new NFT on sale',
+        names: { inApp: 'newNftSaleInAppNotificationEnabled', email: 'newNftSaleMailNotificationEnabled' },
+      },
     ],
   },
   {
-    name: 'Payout',
+    title: 'NFT',
     rows: [
-      { name: 'FUND_FROM_COUNCIL', label: 'You receive funds from council' },
-      { name: 'FUND_SENT', label: 'You send funds to external wallet' },
-      { name: 'FUND_FROM_WG', label: 'You receive funds from working group' },
+      {
+        label: 'Someone placed higher bid than you',
+        names: { inApp: 'auctionOutBidInAppNotificationEnabled', email: 'auctionOutBidMailNotificationEnabled' },
+      },
+      {
+        label: 'Auction you participated in expired',
+        names: { inApp: 'auctionExpiredInAppNotificationEnabled', email: 'auctionExpiredMailNotificationEnabled' },
+      },
+      {
+        label: 'You won the auction',
+        names: { inApp: 'auctionWonInAppNotificationEnabled', email: 'auctionWonMailNotificationEnabled' },
+      },
+      {
+        label: 'You lost the auction',
+        names: { inApp: 'auctionLostInAppNotificationEnabled', email: 'auctionLostMailNotificationEnabled' },
+      },
+      {
+        label: 'Your bid withdrawal is enabled',
+        names: {
+          inApp: 'auctionBidWithdrawalInAppNotificationEnabled',
+          email: 'auctionBidWithdrawalMailNotificationEnabled',
+        },
+      },
+    ],
+  },
+  {
+    title: 'Payout',
+    rows: [
+      {
+        label: 'You receive funds from council',
+        names: { inApp: 'fundFromCouncilInAppNotificationEnabled', email: 'fundFromCouncilMailNotificationEnabled' },
+      },
+      {
+        label: 'You send funds to external wallet',
+        names: { inApp: 'fundSentInAppNotificationEnabled', email: 'fundSentMailNotificationEnabled' },
+      },
+      {
+        label: 'You receive funds from working group',
+        names: { inApp: 'fundFromWgInAppNotificationEnabled', email: 'fundFromWgMailNotificationEnabled' },
+      },
     ],
   },
 ]
 
 const useMemberSettingsData = () => {
-  const [data, setData] = useState<NotificationsState | undefined>()
+  const [data, setData] = useState<Record<string, boolean> | undefined>()
 
   useEffect(() => {
     // TODO: Fetch data from Orion
     new Promise((r) => setTimeout(r, 1000)).then(() =>
       setData({
-        inApp: {
-          NEW_CHANNEL: true,
-          COMMENT_REPY: true,
-          COMMENT_REACTION: true,
-          NEW_VIDEO: true,
-          NEW_NFT_AUCTION: true,
-          NEW_NFT_SALE: true,
-          AUCTION_OUT_BID: true,
-          AUCTION_EXPIRED: true,
-          AUCTION_WON: true,
-          AUCTION_LOST: true,
-          AUCTION_BID_WITHDRAWAL: true,
-          FUND_FROM_COUNCIL: true,
-          FUND_SENT: true,
-          FUND_FROM_WG: true,
-        },
-        email: {
-          NEW_CHANNEL: true,
-          COMMENT_REPY: true,
-          COMMENT_REACTION: true,
-          NEW_VIDEO: true,
-          NEW_NFT_AUCTION: true,
-          NEW_NFT_SALE: true,
-          AUCTION_OUT_BID: true,
-          AUCTION_EXPIRED: true,
-          AUCTION_WON: true,
-          AUCTION_LOST: true,
-          AUCTION_BID_WITHDRAWAL: true,
-          FUND_FROM_COUNCIL: true,
-          FUND_SENT: true,
-          FUND_FROM_WG: true,
-        },
+        channelCreatedInAppNotificationEnabled: true,
+        channelCreatedMailNotificationEnabled: true,
+        commentRepyInAppNotificationEnabled: true,
+        commentRepyMailNotificationEnabled: true,
+        commentReactionInAppNotificationEnabled: true,
+        commentReactionMailNotificationEnabled: true,
+        newVideoInAppNotificationEnabled: true,
+        newVideoMailNotificationEnabled: true,
+        newNftAuctionInAppNotificationEnabled: true,
+        newNftAuctionMailNotificationEnabled: true,
+        newNftSaleInAppNotificationEnabled: true,
+        newNftSaleMailNotificationEnabled: true,
+        auctionOutBidInAppNotificationEnabled: true,
+        auctionOutBidMailNotificationEnabled: true,
+        auctionExpiredInAppNotificationEnabled: true,
+        auctionExpiredMailNotificationEnabled: true,
+        auctionWonInAppNotificationEnabled: true,
+        auctionWonMailNotificationEnabled: true,
+        auctionLostInAppNotificationEnabled: true,
+        auctionLostMailNotificationEnabled: true,
+        auctionBidWithdrawalInAppNotificationEnabled: true,
+        auctionBidWithdrawalMailNotificationEnabled: true,
+        fundFromCouncilInAppNotificationEnabled: true,
+        fundFromCouncilMailNotificationEnabled: true,
+        fundSentInAppNotificationEnabled: true,
+        fundSentMailNotificationEnabled: true,
+        fundFromWgInAppNotificationEnabled: true,
+        fundFromWgMailNotificationEnabled: true,
       })
     )
   }, [])
@@ -96,7 +139,7 @@ const useMemberSettingsData = () => {
 export const MembershipNotifications = () => {
   const { data, isLoading } = useMemberSettingsData()
 
-  const form = useForm<NotificationsState>()
+  const form = useForm<Record<string, boolean>>()
   const {
     reset,
     formState: { isDirty },

@@ -1,4 +1,4 @@
-import { FC, Fragment, useEffect, useState } from 'react'
+import { FC, Fragment, useEffect, useMemo, useState } from 'react'
 import { Controller, UseFormReturn, useWatch } from 'react-hook-form'
 
 import { SvgActionComputer, SvgActionRead } from '@/assets/icons'
@@ -6,11 +6,9 @@ import { Checkbox } from '@/components/_inputs/Checkbox'
 
 import { Table } from './NotificationsTable.styles'
 
-export type NotificationsState = Record<'inApp' | 'email', Record<string, boolean>>
-
 type NotificationsTableComponentProps = {
-  sections: { name: string; label?: string; rows: { name: string; label: string }[] }[]
-  form: UseFormReturn<NotificationsState>
+  sections: { title: string; rows: { label: string; names: { inApp: string; email: string } }[] }[]
+  form: UseFormReturn<Record<string, boolean>>
   disabled?: boolean
 }
 export const NotificationsTable: FC<NotificationsTableComponentProps> = ({ sections, form, disabled }) => (
@@ -30,22 +28,20 @@ export const NotificationsTable: FC<NotificationsTableComponentProps> = ({ secti
     </thead>
 
     <tbody>
-      <SubscribeToAllRow form={form} disabled={disabled} />
+      <SubscribeToAllRow sections={sections} form={form} disabled={disabled} />
 
-      {sections.map(({ name, label = name, rows }) => (
-        <Fragment key={name}>
-          {label && (
-            <tr>
-              <th colSpan={3}>{label}</th>
-            </tr>
-          )}
+      {sections.map(({ title, rows }) => (
+        <Fragment key={title}>
+          <tr>
+            <th colSpan={3}>{title}</th>
+          </tr>
 
-          {rows.map(({ name, label }) => (
-            <tr key={name}>
+          {rows.map(({ label, names }) => (
+            <tr key={label}>
               <td>{label}</td>
               <td>
                 <Controller
-                  name={`inApp.${name}`}
+                  name={names.inApp}
                   control={form.control}
                   render={({ field: { value = false, onChange } }) => (
                     <Checkbox value={value} onChange={onChange} disabled={disabled} />
@@ -54,7 +50,7 @@ export const NotificationsTable: FC<NotificationsTableComponentProps> = ({ secti
               </td>
               <td>
                 <Controller
-                  name={`email.${name}`}
+                  name={names.email}
                   control={form.control}
                   render={({ field: { value = false, onChange } }) => (
                     <Checkbox value={value} onChange={onChange} disabled={disabled} />
@@ -69,10 +65,24 @@ export const NotificationsTable: FC<NotificationsTableComponentProps> = ({ secti
   </Table>
 )
 
-const SubscribeToAllRow: FC<Omit<NotificationsTableComponentProps, 'sections'>> = ({ form, disabled }) => {
+const SubscribeToAllRow: FC<NotificationsTableComponentProps> = ({ sections, form, disabled }) => {
   const [allInApp, setAllInApp] = useState<boolean | undefined>()
   const [allEmail, setAllEmail] = useState<boolean | undefined>()
 
+  const names = useMemo(
+    () =>
+      sections.reduce<{ inApp: string[]; email: string[] }>(
+        (acc, { rows }) => {
+          rows.forEach(({ names }) => {
+            acc.inApp.push(names.inApp)
+            acc.email.push(names.email)
+          })
+          return acc
+        },
+        { inApp: [], email: [] }
+      ),
+    [sections]
+  )
   const values = useWatch({ control: form.control })
   const { getValues, setValue } = form
 
@@ -81,21 +91,21 @@ const SubscribeToAllRow: FC<Omit<NotificationsTableComponentProps, 'sections'>> 
 
     const values = getValues()
     if (typeof allInApp !== 'undefined') {
-      Object.entries(values.inApp).forEach(([key, value]) => {
-        if (value !== allInApp) setValue(`inApp.${key}`, allInApp, { shouldDirty: true })
+      names.inApp.forEach((k) => {
+        if (values[k] !== allInApp) setValue(k, allInApp, { shouldDirty: true })
       })
     }
     if (typeof allEmail !== 'undefined') {
-      Object.entries(values.email).forEach(([key, value]) => {
-        if (value !== allEmail) setValue(`email.${key}`, allEmail, { shouldDirty: true })
+      names.email.forEach((k) => {
+        if (values[k] !== allEmail) setValue(k, allEmail, { shouldDirty: true })
       })
     }
-  }, [allInApp, allEmail, getValues, setValue])
+  }, [allInApp, allEmail, names, getValues, setValue])
 
   useEffect(() => {
-    setAllInApp(values.inApp && Object.values(values.inApp).reduce((a, b) => (a === b ? a : undefined)))
-    setAllEmail(values.email && Object.values(values.email).reduce((a, b) => (a === b ? a : undefined)))
-  }, [values])
+    setAllInApp(names.inApp.every((k) => values[k]) || (names.inApp.some((k) => values[k]) ? undefined : false))
+    setAllEmail(names.email.every((k) => values[k]) || (names.email.some((k) => values[k]) ? undefined : false))
+  }, [values, names])
 
   return (
     <tr>
