@@ -347,6 +347,13 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
             }
           }
 
+          if (ytRequirementsErrors.length) {
+            return {
+              text: 'Close',
+              onClick: () => setYppModalOpenName(null),
+            }
+          }
+
           // non signed users
           return {
             text: 'Create account',
@@ -358,8 +365,10 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
         }
 
         return {
-          title: 'Requirements',
-          description: `Before you can apply to the program, make sure your YouTube channel meets the below conditions.`,
+          title: ytRequirementsErrors.length ? 'Authorization failed' : 'Requirements',
+          description: ytRequirementsErrors.length
+            ? 'Looks like the YouTube channel you selected does not meet all conditions to be enrolled in the program. You can select another one or try again at a later time.'
+            : 'Before you can apply to the program, make sure your YouTube channel meets the below conditions.',
           primaryButton: getPrimaryButton(),
           component: <YppAuthorizationRequirementsStep requirmentsErrorCodes={ytRequirementsErrors} />,
         }
@@ -459,7 +468,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
 
     if (yppModalOpenName === 'ypp-requirements' && isLoggedIn) return
 
-    if (yppModalOpenName === 'ypp-requirements' && !isLoggedIn) {
+    if (yppModalOpenName === 'ypp-requirements' && !isLoggedIn && !ytRequirementsErrors.length) {
       return {
         text: 'Sign in',
         onClick: () => {
@@ -489,6 +498,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     isLoadingModal,
     yppModalOpenName,
     isLoggedIn,
+    ytRequirementsErrors.length,
     isSubmitting,
     handleGoBack,
     setShouldContinueYppFlowAfterLogin,
@@ -501,13 +511,14 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     <FormProvider {...detailsFormMethods}>
       <DialogModal
         contentRef={contentRef}
-        show={yppModalOpenName != null}
+        show={yppModalOpenName !== null}
         dividers={!isLoadingModal}
         additionalActionsNodeMobilePosition="bottom"
         primaryButton={authorizationStep?.primaryButton}
         secondaryButton={secondaryButton}
         additionalActionsNode={
-          !isLoadingModal && (
+          !isLoadingModal &&
+          !ytRequirementsErrors.length && (
             <Button variant="tertiary" disabled={isSubmitting} onClick={handleClose}>
               Cancel
             </Button>

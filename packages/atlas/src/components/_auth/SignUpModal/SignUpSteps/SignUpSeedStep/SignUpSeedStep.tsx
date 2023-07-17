@@ -91,7 +91,7 @@ export const SignUpSeedStep: FC<SignUpSeedStepProps> = ({
             validate: {
               valid: (value) => {
                 if (!value) {
-                  return 'Agree that you saved your mnemonic seed safely.'
+                  return 'Agree that you saved your wallet seed phrase safely.'
                 } else {
                   return value
                 }
@@ -105,7 +105,7 @@ export const SignUpSeedStep: FC<SignUpSeedStepProps> = ({
                 caption={errors.confirmedCopy?.message}
                 error={!!errors.confirmedCopy}
                 value={value}
-                label="I have saved my mnemonic seed safely"
+                label="I have saved my wallet seed phrase safely"
               />
             </CheckboxWrapper>
           )}
