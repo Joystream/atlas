@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useRef } from 'react'
 
 import useSegmentAnalyticsContext from '@/providers/segmentAnalytics/useSegmentAnalyticsContext'
 
@@ -25,7 +25,6 @@ export const useSegmentAnalytics = () => {
   const { analytics } = useSegmentAnalyticsContext()
 
   const playbackEventsQueue = useRef<{ type: playbackEventType; params: videoPlaybackParams }[]>([])
-  const [queueIsRunning, setQueueIsRunning] = useState(false)
 
   const identifyUser = useCallback(
     (email = 'no data') => {
@@ -242,11 +241,8 @@ export const useSegmentAnalytics = () => {
   )
 
   const runNextQueueEvent = useCallback(async () => {
-    setQueueIsRunning(true)
-
     const queueEvent = playbackEventsQueue.current.shift()
     if (!queueEvent) {
-      setQueueIsRunning(false)
       return
     }
 
@@ -271,12 +267,12 @@ export const useSegmentAnalytics = () => {
 
   const addEventToQueue = useCallback(
     (type: playbackEventType, params: videoPlaybackParams) => {
+      const queueIsEmpty = !playbackEventsQueue.current.length
+
       playbackEventsQueue.current.push({ type, params })
-      if (!queueIsRunning) {
-        runNextQueueEvent()
-      }
+      if (queueIsEmpty) runNextQueueEvent()
     },
-    [queueIsRunning, runNextQueueEvent]
+    [runNextQueueEvent]
   )
 
   return {
