@@ -6,11 +6,14 @@ import { Checkbox } from '@/components/_inputs/Checkbox'
 
 import { Table } from './NotificationsTable.styles'
 
+export type NotificationsState = Record<'inApp' | 'email', Record<string, boolean>>
+
 type NotificationsTableComponentProps = {
   sections: { name: string; label?: string; rows: { name: string; label: string }[] }[]
-  form: UseFormReturn<Record<'inApp' | 'email', Record<string, boolean>>>
+  form: UseFormReturn<NotificationsState>
+  disabled?: boolean
 }
-export const NotificationsTable: FC<NotificationsTableComponentProps> = ({ sections, form }) => (
+export const NotificationsTable: FC<NotificationsTableComponentProps> = ({ sections, form, disabled }) => (
   <Table>
     <thead>
       <tr>
@@ -27,7 +30,7 @@ export const NotificationsTable: FC<NotificationsTableComponentProps> = ({ secti
     </thead>
 
     <tbody>
-      <SubscribeToAllRow form={form} />
+      <SubscribeToAllRow form={form} disabled={disabled} />
 
       {sections.map(({ name, label = name, rows }) => (
         <Fragment key={name}>
@@ -44,14 +47,18 @@ export const NotificationsTable: FC<NotificationsTableComponentProps> = ({ secti
                 <Controller
                   name={`inApp.${name}`}
                   control={form.control}
-                  render={({ field: { value = false, onChange } }) => <Checkbox value={value} onChange={onChange} />}
+                  render={({ field: { value = false, onChange } }) => (
+                    <Checkbox value={value} onChange={onChange} disabled={disabled} />
+                  )}
                 />
               </td>
               <td>
                 <Controller
                   name={`email.${name}`}
                   control={form.control}
-                  render={({ field: { value = false, onChange } }) => <Checkbox value={value} onChange={onChange} />}
+                  render={({ field: { value = false, onChange } }) => (
+                    <Checkbox value={value} onChange={onChange} disabled={disabled} />
+                  )}
                 />
               </td>
             </tr>
@@ -62,7 +69,7 @@ export const NotificationsTable: FC<NotificationsTableComponentProps> = ({ secti
   </Table>
 )
 
-const SubscribeToAllRow: FC<Pick<NotificationsTableComponentProps, 'form'>> = ({ form }) => {
+const SubscribeToAllRow: FC<Omit<NotificationsTableComponentProps, 'sections'>> = ({ form, disabled }) => {
   const [allInApp, setAllInApp] = useState<boolean | undefined>()
   const [allEmail, setAllEmail] = useState<boolean | undefined>()
 
@@ -95,11 +102,21 @@ const SubscribeToAllRow: FC<Pick<NotificationsTableComponentProps, 'form'>> = ({
       <td>Subscribe to all notifications</td>
 
       <td>
-        <Checkbox value={allInApp ?? true} indeterminate={typeof allInApp === 'undefined'} onChange={setAllInApp} />
+        <Checkbox
+          value={allInApp ?? true}
+          indeterminate={typeof allInApp === 'undefined'}
+          onChange={setAllInApp}
+          disabled={disabled}
+        />
       </td>
 
       <td>
-        <Checkbox value={allEmail ?? true} indeterminate={typeof allEmail === 'undefined'} onChange={setAllEmail} />
+        <Checkbox
+          value={allEmail ?? true}
+          indeterminate={typeof allEmail === 'undefined'}
+          onChange={setAllEmail}
+          disabled={disabled}
+        />
       </td>
     </tr>
   )

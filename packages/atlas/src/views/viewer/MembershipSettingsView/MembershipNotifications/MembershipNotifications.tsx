@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import useResizeObserver from 'use-resize-observer'
 
-import { NotificationsTable } from '@/components/NotificationsTable'
+import { NotificationsState, NotificationsTable } from '@/components/NotificationsTable'
 import { EntitySettingTemplate } from '@/components/_templates/EntitySettingTemplate'
 
 import { StyledActionBar, Wrapper } from './MembershipNotifications.styles'
@@ -47,43 +47,56 @@ const TABLE_STRUCTURE = [
   },
 ]
 
-const dataFromBackend = {
-  inApp: {
-    NEW_CHANNEL: true,
-    COMMENT_REPY: true,
-    COMMENT_REACTION: true,
-    NEW_VIDEO: true,
-    NEW_NFT_AUCTION: true,
-    NEW_NFT_SALE: true,
-    AUCTION_OUT_BID: true,
-    AUCTION_EXPIRED: true,
-    AUCTION_WON: true,
-    AUCTION_LOST: true,
-    AUCTION_BID_WITHDRAWAL: true,
-    FUND_FROM_COUNCIL: true,
-    FUND_SENT: true,
-    FUND_FROM_WG: true,
-  },
-  email: {
-    NEW_CHANNEL: true,
-    COMMENT_REPY: true,
-    COMMENT_REACTION: true,
-    NEW_VIDEO: true,
-    NEW_NFT_AUCTION: true,
-    NEW_NFT_SALE: true,
-    AUCTION_OUT_BID: true,
-    AUCTION_EXPIRED: true,
-    AUCTION_WON: true,
-    AUCTION_LOST: true,
-    AUCTION_BID_WITHDRAWAL: true,
-    FUND_FROM_COUNCIL: true,
-    FUND_SENT: true,
-    FUND_FROM_WG: true,
-  },
+const useMemberSettingsData = () => {
+  const [data, setData] = useState<NotificationsState | undefined>()
+
+  useEffect(() => {
+    // TODO: Fetch data from Orion
+    new Promise((r) => setTimeout(r, 1000)).then(() =>
+      setData({
+        inApp: {
+          NEW_CHANNEL: true,
+          COMMENT_REPY: true,
+          COMMENT_REACTION: true,
+          NEW_VIDEO: true,
+          NEW_NFT_AUCTION: true,
+          NEW_NFT_SALE: true,
+          AUCTION_OUT_BID: true,
+          AUCTION_EXPIRED: true,
+          AUCTION_WON: true,
+          AUCTION_LOST: true,
+          AUCTION_BID_WITHDRAWAL: true,
+          FUND_FROM_COUNCIL: true,
+          FUND_SENT: true,
+          FUND_FROM_WG: true,
+        },
+        email: {
+          NEW_CHANNEL: true,
+          COMMENT_REPY: true,
+          COMMENT_REACTION: true,
+          NEW_VIDEO: true,
+          NEW_NFT_AUCTION: true,
+          NEW_NFT_SALE: true,
+          AUCTION_OUT_BID: true,
+          AUCTION_EXPIRED: true,
+          AUCTION_WON: true,
+          AUCTION_LOST: true,
+          AUCTION_BID_WITHDRAWAL: true,
+          FUND_FROM_COUNCIL: true,
+          FUND_SENT: true,
+          FUND_FROM_WG: true,
+        },
+      })
+    )
+  }, [])
+
+  return { isLoading: !data, data }
 }
 
 export const MembershipNotifications = () => {
-  const form = useForm<Record<'inApp' | 'email', Record<string, boolean>>>()
+  const { data, isLoading } = useMemberSettingsData()
+
+  const form = useForm<NotificationsState>()
   const {
     reset,
     formState: { isDirty },
@@ -91,16 +104,13 @@ export const MembershipNotifications = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  useEffect(() => {
-    // Depends on a backend query result
-    reset(dataFromBackend)
-  }, [reset])
+  useEffect(() => reset(data), [reset, data])
 
   const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
 
   const handleEditMember = form.handleSubmit(async (data) => {
     setIsSubmitting(true)
-    // TODO
+    // TODO: Send data to Orion
     await new Promise((r) => setTimeout(r, 2000))
     reset(data) // Reset with new data
     setIsSubmitting(false)
@@ -114,7 +124,7 @@ export const MembershipNotifications = () => {
     >
       <form onSubmit={handleEditMember}>
         <Wrapper actionBarHeight={actionBarBoundsHeight}>
-          <NotificationsTable sections={TABLE_STRUCTURE} form={form} />
+          <NotificationsTable sections={TABLE_STRUCTURE} form={form} disabled={isLoading} />
         </Wrapper>
 
         <StyledActionBar
