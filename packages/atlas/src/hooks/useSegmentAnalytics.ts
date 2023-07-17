@@ -260,10 +260,10 @@ export const useSegmentAnalytics = () => {
         await trackVideoPlaybackPaused(params)
         break
       case 'playbackResumed':
-        await trackVideoPlaybackStarted(params)
+        await trackVideoPlaybackResumed(params)
         break
       case 'playbackCompleted':
-        await trackVideoPlaybackStarted(params)
+        await trackVideoPlaybackCompleted(params)
         break
     }
     runNextQueueEvent()
