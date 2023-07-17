@@ -32,8 +32,8 @@ const schema = z.object({
     email: z.string().min(3, { message: 'Enter email address.' }).email({ message: 'Enter valid email address.' }),
     mnemonic: z
       .string()
-      .min(1, 'Enter mnemonic.')
-      .regex(/^(\w+\s){11}\w+$/, { message: 'Mnemonic should contain 12 words separated by spaces.' }),
+      .min(1, 'Enter wallet seed phrase.')
+      .regex(/^(\w+\s){11}\w+$/, { message: 'Wallet seed phrase should contain 12 words separated by spaces.' }),
   }),
   [ForgotPasswordStep.NewPasswordStep]: z
     .object({
@@ -90,7 +90,7 @@ export const ForgotPasswordModal = () => {
 
       if (accData.data?.accountData.email !== data['EmailAndSeedStep'].email) {
         form.setError(`${ForgotPasswordStep.EmailAndSeedStep}.email`, {
-          message: 'Provided email do not match mnemonic.',
+          message: 'Provided email do not match wallet seed phrase.',
         })
         logoutRequest().catch((error) => {
           SentryLogger.error('Failed to logout when recovering password', 'ForgotPasswordModal', error)
