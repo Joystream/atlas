@@ -5,11 +5,13 @@ import { SvgActionCheck, SvgActionMore, SvgActionNotifications, SvgActionSetting
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Section } from '@/components/Section/Section'
 import { Text } from '@/components/Text'
+import { StyledNotificationLoader } from '@/components/_notifications/NotificationsViewContent/NotificationsViewContent.styles'
 import { Popover, PopoverImperativeHandle, PopoverProps } from '@/components/_overlays/Popover'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useNotifications } from '@/providers/notifications/notifications.hooks'
 import { transitions } from '@/styles'
+import { createPlaceholderData } from '@/utils/data'
 
 import {
   Content,
@@ -35,6 +37,7 @@ export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ type, ...res
     markNotificationsAsUnread,
     pageInfo,
     fetchMore,
+    loading,
   } = useNotifications()
   const smMatch = useMediaMatch('sm')
   const firstNotification = notifications[0]
@@ -42,6 +45,7 @@ export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ type, ...res
   const contextMenuInstanceRef = useRef<PopoverImperativeHandle>(null)
   const isMemberType = type === 'member'
   const [isOpen, setIsOpen] = useState(false)
+  const placeholderItems = createPlaceholderData(loading ? 10 : 0)
 
   // set last seen notification block to first notification to manage the badge for notification button
   useEffect(() => {
@@ -115,7 +119,7 @@ export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ type, ...res
               </div>
             </Header>
             <Content>
-              {notifications.length > 0 ? (
+              {notifications.length > 0 || loading ? (
                 <Section
                   withoutGap
                   contentProps={{
@@ -127,17 +131,21 @@ export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ type, ...res
                     },
                     children: [
                       <div key="single">
-                        {notifications.map((notification, idx) => (
-                          <NotificationTile
-                            key={`notification-${notification.id}-${idx}`}
-                            notification={notification}
-                            onClick={() => {
-                              popoverRef.current?.hide()
-                            }}
-                            onMarkAsRead={() => markNotificationsAsRead(notification)}
-                            onMarkAsUnread={() => markNotificationsAsUnread(notification)}
-                          />
-                        ))}
+                        {[...notifications, ...placeholderItems].map((notification, idx) =>
+                          notification.id ? (
+                            <NotificationTile
+                              key={`notification-${notification.id}-${idx}`}
+                              notification={notification}
+                              onClick={() => {
+                                popoverRef.current?.hide()
+                              }}
+                              onMarkAsRead={() => markNotificationsAsRead(notification)}
+                              onMarkAsUnread={() => markNotificationsAsUnread(notification)}
+                            />
+                          ) : (
+                            <StyledNotificationLoader key={idx} />
+                          )
+                        )}
                       </div>,
                     ],
                   }}

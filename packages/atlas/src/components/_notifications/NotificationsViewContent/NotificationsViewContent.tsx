@@ -63,7 +63,6 @@ export const NotificationsViewContent = ({
             <Text as="h4" variant="h400">
               {isMemberType ? 'Member' : 'Channel'} notifications
             </Text>
-
             {unreadNumber ? <Pill label={`${unreadNumber} unread`} /> : null}
           </TitleContainer>
 

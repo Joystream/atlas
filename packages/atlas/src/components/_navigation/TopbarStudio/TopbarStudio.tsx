@@ -50,7 +50,7 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
   }
 
   // todo: add logic after orion is done
-  const unseedMemberNotifications = 1
+  const unseenMemberNotifications = 1
 
   return (
     <>
@@ -83,7 +83,7 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
                 size={40}
                 assetUrls={memberAvatarUrls}
                 onClick={handleDrawerToggle}
-                badge={unseedMemberNotifications}
+                badge={unseenMemberNotifications}
               />
             </StudioTopbarContainer>
           ) : (
