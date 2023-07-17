@@ -18,7 +18,7 @@ export const StyledAvatar = styled(Avatar)`
 `
 
 export const StyledForm = styled.form`
-  padding-bottom: 52px;
+  padding-bottom: ${sizes(13)};
 `
 
 export const StyledButton = styled(Button)`
