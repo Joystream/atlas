@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useRef, useState } from 'react'
 
 import useSegmentAnalyticsContext from '@/providers/segmentAnalytics/useSegmentAnalyticsContext'
 
@@ -19,8 +19,13 @@ type PageViewParams = {
   isYppFlow?: boolean
 }
 
+type playbackEventType = 'playbackStarted' | 'playbackPaused' | 'playbackResumed' | 'playbackCompleted'
+
 export const useSegmentAnalytics = () => {
   const { analytics } = useSegmentAnalyticsContext()
+
+  const playbackEventsQueue = useRef<{ type: playbackEventType; params: videoPlaybackParams }[]>([])
+  const [queueIsRunning, setQueueIsRunning] = useState(false)
 
   const identifyUser = useCallback(
     (email = 'no data') => {
@@ -236,6 +241,44 @@ export const useSegmentAnalytics = () => {
     [analytics]
   )
 
+  const runNextQueueEvent = useCallback(async () => {
+    setQueueIsRunning(true)
+
+    const queueEvent = playbackEventsQueue.current.shift()
+    if (!queueEvent) {
+      setQueueIsRunning(false)
+      return
+    }
+
+    const { type, params } = queueEvent
+
+    switch (type) {
+      case 'playbackStarted':
+        await trackVideoPlaybackStarted(params)
+        break
+      case 'playbackPaused':
+        await trackVideoPlaybackPaused(params)
+        break
+      case 'playbackResumed':
+        await trackVideoPlaybackStarted(params)
+        break
+      case 'playbackCompleted':
+        await trackVideoPlaybackStarted(params)
+        break
+    }
+    runNextQueueEvent()
+  }, [trackVideoPlaybackPaused, trackVideoPlaybackStarted])
+
+  const addEventToQueue = useCallback(
+    (type: playbackEventType, params: videoPlaybackParams) => {
+      playbackEventsQueue.current.push({ type, params })
+      if (!queueIsRunning) {
+        runNextQueueEvent()
+      }
+    },
+    [queueIsRunning, runNextQueueEvent]
+  )
+
   return {
     identifyUser,
     trackPageView,
@@ -259,5 +302,6 @@ export const useSegmentAnalytics = () => {
     trackFeaturedNFTNext,
     trackFeaturedNFTPrev,
     trackAllNftFilterUpdated,
+    addEventToQueue,
   }
 }
