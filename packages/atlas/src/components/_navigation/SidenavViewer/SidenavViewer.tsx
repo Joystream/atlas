@@ -63,7 +63,7 @@ export const SidenavViewer: FC = () => {
   const {
     actions: { setAuthModalOpenName },
   } = useAuthStore()
-  const hasAtLeastOneChannel = activeMembership?.channels.length && activeMembership?.channels.length >= 1
+  const hasAtLeastOneChannel = !!activeMembership?.channels.length && activeMembership?.channels.length >= 1
 
   const handleChannelNotFound = (id: string) => {
     ConsoleLogger.warn(`Followed channel not found, removing id: ${id}`)

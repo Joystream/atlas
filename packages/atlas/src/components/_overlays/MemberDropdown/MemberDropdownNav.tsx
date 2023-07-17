@@ -87,8 +87,8 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
   })
   const blockAnimationRef = useRef<HTMLDivElement>(null)
 
-  const hasAtLeastOneChannel = activeMembership?.channels.length && activeMembership?.channels.length >= 1
-  const hasAtleastTwoChannels = activeMembership?.channels.length && activeMembership?.channels.length >= 2
+  const hasAtLeastOneChannel = !!activeMembership?.channels.length && activeMembership?.channels.length >= 1
+  const hasAtleastTwoChannels = !!activeMembership?.channels.length && activeMembership?.channels.length >= 2
 
   const dropdownEntity = {
     title: type === 'member' ? activeMembership?.handle : selectedChannel?.title,
@@ -188,7 +188,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
             <ListItemOptions
               publisher={publisher}
               closeDropdown={onCloseDropdown}
-              hasAtLeastOneChannel={!!hasAtLeastOneChannel}
+              hasAtLeastOneChannel={hasAtLeastOneChannel}
               listItems={[
                 {
                   asButton: true,
@@ -212,7 +212,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
             <ListItemOptions
               publisher={publisher}
               closeDropdown={onCloseDropdown}
-              hasAtLeastOneChannel={!!hasAtLeastOneChannel}
+              hasAtLeastOneChannel={hasAtLeastOneChannel}
               listItems={[
                 {
                   asButton: true,
