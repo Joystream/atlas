@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useOverflowDetector } from 'react-detectable-overflow'
 import shallow from 'zustand/shallow'
 
@@ -55,7 +55,7 @@ export const SignUpModal = () => {
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogButtonProps>({ text: 'Continue' })
   const [amountOfTokens, setAmountofTokens] = useState<number>()
   const [memberId, setMemberId] = useState<string | null>(null)
-
+  const syncState = useRef<'synced' | 'tried' | null>(null)
   const ytResponseData = useYppStore((state) => state.ytResponseData)
   const setYppModalOpenName = useYppStore((state) => state.actions.setYppModalOpenName)
   const setYtResponseData = useYppStore((state) => state.actions.setYtResponseData)
@@ -154,7 +154,7 @@ export const SignUpModal = () => {
   const handlePasswordStepSubmit = useCallback(
     async (password: string) => {
       setSignupFormData((userForm) => ({ ...userForm, password }))
-      if (memberId) {
+      if (memberId && syncState.current === 'synced') {
         createNewOrionAccount({
           data: { ...signUpFormData, password, memberId },
           onError: (error) => {
@@ -180,6 +180,7 @@ export const SignUpModal = () => {
         })
         return
       }
+      syncState.current = 'tried'
       goToNextStep()
     },
     [
@@ -191,6 +192,7 @@ export const SignUpModal = () => {
       setYppModalOpenName,
       setYtResponseData,
       signUpFormData,
+      syncState,
       ytResponseData,
     ]
   )
@@ -226,25 +228,43 @@ export const SignUpModal = () => {
         return
       }
       goToNextStep()
-      const newMemberId = await createNewMember({
-        data: { ...signUpFormData, ...memberData },
-        onError: () => {
-          goToStep(SignUpSteps.CreateMember)
+      const newMemberId = await createNewMember(
+        {
+          data: { ...signUpFormData, ...memberData },
+          onError: () => {
+            goToStep(SignUpSteps.CreateMember)
+          },
         },
-      })
+        () => {
+          if (syncState.current === 'tried') {
+            syncState.current = 'synced'
+            handlePasswordStepSubmit(signUpFormData.password)
+          }
+          syncState.current = 'synced'
+        }
+      )
+      // in case of block sync logic failure assume member is synced after 10s
+      setTimeout(() => {
+        if (syncState.current === 'tried') {
+          syncState.current = 'synced'
+          handlePasswordStepSubmit(signUpFormData.password)
+        }
+      }, 10_000)
 
       if (newMemberId) {
         setMemberId(newMemberId)
       }
     },
     [
-      createNewMember,
-      generateUniqueMemberHandleBasedOnInput,
-      goToNextStep,
-      goToStep,
-      memberId,
       signUpFormData,
       ytResponseData,
+      memberId,
+      goToNextStep,
+      createNewMember,
+      generateUniqueMemberHandleBasedOnInput,
+      goToStep,
+      syncState,
+      handlePasswordStepSubmit,
     ]
   )
 
