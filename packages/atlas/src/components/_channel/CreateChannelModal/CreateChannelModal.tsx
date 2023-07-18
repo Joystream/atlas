@@ -14,7 +14,7 @@ import { useChannelForm } from '@/hooks/useChannelForm'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useSnackbar } from '@/providers/snackbars'
 import { useUser } from '@/providers/user/user.hooks'
-import { sizes } from '@/styles'
+import { media, sizes } from '@/styles'
 
 export const CreateChannelModal = () => {
   const { displaySnackbar } = useSnackbar()
@@ -52,6 +52,7 @@ export const CreateChannelModal = () => {
       }}
       show={authModalOpenName === 'createChannel'}
       noContentPadding
+      additionalActionsNodeMobilePosition="bottom"
     >
       <PaddingBox>
         <AuthenticationModalStepTemplate
@@ -134,5 +135,9 @@ const StyledAvatar = styled(Avatar)`
   top: 0;
 `
 const PaddingBox = styled.div`
-  padding: ${sizes(6)};
+  padding: ${sizes(4)};
+
+  ${media.sm} {
+    padding: ${sizes(6)};
+  }
 `
