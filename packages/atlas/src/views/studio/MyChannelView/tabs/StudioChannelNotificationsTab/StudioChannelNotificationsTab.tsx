@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { ActionBar } from '@/components/ActionBar'
 import { NotificationsTable } from '@/components/NotificationsTable'
 import { Portal } from '@/components/Portal'
+import { EntitySettingTemplate } from '@/components/_templates/EntitySettingTemplate'
 
 import { StyledForm } from './StudioChannelNotificationsTab.styles'
 
@@ -160,7 +161,12 @@ export const StudioChannelNotificationsTab = ({ actionBarPortal }: { actionBarPo
   return (
     <>
       <StyledForm>
-        <NotificationsTable sections={TABLE_STRUCTURE} form={form} disabled={isLoading} />
+        <EntitySettingTemplate
+          title="Channel notifications"
+          description="Set up all notifications regarding this channel."
+        >
+          <NotificationsTable sections={TABLE_STRUCTURE} form={form} disabled={isLoading} />
+        </EntitySettingTemplate>
       </StyledForm>
       <Portal containerRef={actionBarPortal}>
         <ActionBar
