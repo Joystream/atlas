@@ -10,11 +10,42 @@ import { StyledForm } from './StudioChannelNotificationsTab.styles'
 
 const TABLE_STRUCTURE = [
   {
-    title: 'Generic',
+    title: 'Content moderation and featuring',
     rows: [
       {
-        label: 'New channel created',
-        names: { inApp: 'channelCreatedInAppNotificationEnabled', email: 'channelCreatedMailNotificationEnabled' },
+        label: 'Your channel is excluded from the app',
+        names: {
+          inApp: 'channelCreatedInAppNotificationEnabled',
+          email: 'channelCreatedMailNotificationEnabled',
+        },
+      },
+      {
+        label: 'Your video is excluded from the app',
+        names: {
+          inApp: 'channelCreatedInAppNotificationEnabled',
+          email: 'channelCreatedMailNotificationEnabled',
+        },
+      },
+      {
+        label: 'Your video is featured on category page',
+        names: {
+          inApp: 'channelCreatedInAppNotificationEnabled',
+          email: 'channelCreatedMailNotificationEnabled',
+        },
+      },
+      {
+        label: 'Your NFT is featured on marketplace',
+        names: {
+          inApp: 'channelCreatedInAppNotificationEnabled',
+          email: 'channelCreatedMailNotificationEnabled',
+        },
+      },
+      {
+        label: 'Your video is featured as category hero video',
+        names: {
+          inApp: 'channelCreatedInAppNotificationEnabled',
+          email: 'channelCreatedMailNotificationEnabled',
+        },
       },
     ],
   },
@@ -22,74 +53,124 @@ const TABLE_STRUCTURE = [
     title: 'Engagement',
     rows: [
       {
-        label: 'Someone replied to your comment',
-        names: { inApp: 'commentRepyInAppNotificationEnabled', email: 'commentRepyMailNotificationEnabled' },
-      },
-      {
-        label: 'Someone reacted to your comment',
-        names: { inApp: 'commentReactionInAppNotificationEnabled', email: 'commentReactionMailNotificationEnabled' },
-      },
-    ],
-  },
-  {
-    title: 'Followed channels',
-    rows: [
-      {
-        label: 'Posted a new video',
-        names: { inApp: 'newVideoInAppNotificationEnabled', email: 'newVideoMailNotificationEnabled' },
-      },
-      {
-        label: 'Put a new NFT on auction',
-        names: { inApp: 'newNftAuctionInAppNotificationEnabled', email: 'newNftAuctionMailNotificationEnabled' },
-      },
-      {
-        label: 'Put a new NFT on sale',
-        names: { inApp: 'newNftSaleInAppNotificationEnabled', email: 'newNftSaleMailNotificationEnabled' },
-      },
-    ],
-  },
-  {
-    title: 'NFT',
-    rows: [
-      {
-        label: 'Someone placed higher bid than you',
-        names: { inApp: 'auctionOutBidInAppNotificationEnabled', email: 'auctionOutBidMailNotificationEnabled' },
-      },
-      {
-        label: 'Auction you participated in expired',
-        names: { inApp: 'auctionExpiredInAppNotificationEnabled', email: 'auctionExpiredMailNotificationEnabled' },
-      },
-      {
-        label: 'You won the auction',
-        names: { inApp: 'auctionWonInAppNotificationEnabled', email: 'auctionWonMailNotificationEnabled' },
-      },
-      {
-        label: 'You lost the auction',
-        names: { inApp: 'auctionLostInAppNotificationEnabled', email: 'auctionLostMailNotificationEnabled' },
-      },
-      {
-        label: 'Your bid withdrawal is enabled',
+        label: 'Someone followed your channel',
         names: {
-          inApp: 'auctionBidWithdrawalInAppNotificationEnabled',
-          email: 'auctionBidWithdrawalMailNotificationEnabled',
+          inApp: 'commentRepyInAppNotificationEnabled',
+          email: 'commentRepyMailNotificationEnabled',
+        },
+      },
+      {
+        label: 'Someone posted a comment on your video',
+        names: {
+          inApp: 'Someone liked your video',
+          email: 'commentReactionMailNotificationEnabled',
+        },
+      },
+      {
+        label: 'Someone liked your video',
+        names: {
+          inApp: 'commentReactionInAppNotificationEnabled',
+          email: 'commentReactionMailNotificationEnabled',
+        },
+      },
+      {
+        label: 'Someone disliked your video',
+        names: {
+          inApp: 'commentReactionInAppNotificationEnabled',
+          email: 'commentReactionMailNotificationEnabled',
         },
       },
     ],
   },
   {
-    title: 'Payout',
+    title: 'Youtube partnership program',
     rows: [
       {
-        label: 'You receive funds from council',
-        names: { inApp: 'fundFromCouncilInAppNotificationEnabled', email: 'fundFromCouncilMailNotificationEnabled' },
+        label: 'Your channel was successfully signed up to participate in the program',
+        names: {
+          inApp: 'newVideoInAppNotificationEnabled',
+          email: 'newVideoMailNotificationEnabled',
+        },
       },
       {
-        label: 'You send funds to external wallet',
-        names: { inApp: 'fundSentInAppNotificationEnabled', email: 'fundSentMailNotificationEnabled' },
+        label: 'Your channel was verified',
+        names: {
+          inApp: 'newNftAuctionInAppNotificationEnabled',
+          email: 'newNftAuctionMailNotificationEnabled',
+        },
       },
       {
-        label: 'You receive funds from working group',
-        names: { inApp: 'fundFromWgInAppNotificationEnabled', email: 'fundFromWgMailNotificationEnabled' },
+        label: 'Your channel was suspended in the program participation',
+        names: {
+          inApp: 'newNftSaleInAppNotificationEnabled',
+          email: 'newNftSaleMailNotificationEnabled',
+        },
+      },
+    ],
+  },
+  {
+    title: 'NFTS',
+    rows: [
+      {
+        label: 'Someone purchased your NFT',
+        names: {
+          inApp: 'auctionOutBidInAppNotificationEnabled',
+          email: 'auctionOutBidMailNotificationEnabled',
+        },
+      },
+      {
+        label: 'Someone placed a bid on your NFT',
+        names: {
+          inApp: 'auctionExpiredInAppNotificationEnabled',
+          email: 'auctionExpiredMailNotificationEnabled',
+        },
+      },
+      {
+        label: 'Your timed auction expired',
+        names: {
+          inApp: 'auctionWonInAppNotificationEnabled',
+          email: 'auctionWonMailNotificationEnabled',
+        },
+      },
+      {
+        label: 'You received NFT royalties',
+        names: {
+          inApp: 'auctionLostInAppNotificationEnabled',
+          email: 'auctionLostMailNotificationEnabled',
+        },
+      },
+    ],
+  },
+  {
+    title: 'Payouts',
+    rows: [
+      {
+        label: 'You received direct payment',
+        names: {
+          inApp: 'fundFromCouncilInAppNotificationEnabled',
+          email: 'fundFromCouncilMailNotificationEnabled',
+        },
+      },
+      {
+        label: 'You received funds from working group',
+        names: {
+          inApp: 'fundFromCouncilInAppNotificationEnabled',
+          email: 'fundFromCouncilMailNotificationEnabled',
+        },
+      },
+      {
+        label: 'New council payout is ready to be claimed',
+        names: {
+          inApp: 'fundSentInAppNotificationEnabled',
+          email: 'fundSentMailNotificationEnabled',
+        },
+      },
+      {
+        label: 'You transferred funds from channel wallet to member wallet',
+        names: {
+          inApp: 'fundFromWgInAppNotificationEnabled',
+          email: 'fundFromWgMailNotificationEnabled',
+        },
       },
     ],
   },
