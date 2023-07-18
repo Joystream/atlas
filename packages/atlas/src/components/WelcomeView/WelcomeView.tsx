@@ -2,9 +2,7 @@ import AOS from 'aos'
 import 'aos/dist/aos.css'
 import { ReactElement, ReactNode, useEffect } from 'react'
 
-// import crtDashbaord1x from '@/assets/images/crt-dashboard-1x.webp'
 import crtDashbaord2x from '@/assets/images/crt-dashboard-2x.webp'
-// import crtForm1x from '@/assets/images/crt-form-1x.webp'
 import crtForm2x from '@/assets/images/crt-form-2x.webp'
 import myUploads1x from '@/assets/images/my-uploads-1x.webp'
 import myUploads2x from '@/assets/images/my-uploads-2x.webp'
@@ -120,12 +118,7 @@ export const WelcomeView = ({
         {headTags}
         <StyledContainer>
           <ContentLayoutGrid>
-            <HeaderGridItem
-              colSpan={{ xxs: 12, sm: 8, md: 5 }}
-              colStart={{ sm: 3, md: 1 }}
-              rowStart={1}
-              rowSpan={{ md: 2 }}
-            >
+            <HeaderGridItem colSpan={{ xxs: 12, sm: 8, md: 5 }} colStart={{ sm: 3, md: 1 }} rowStart={1}>
               <ContentWrapper>
                 <Text as="h1" variant="h100" color="colorTextPrimary">
                   {pageTitle}
