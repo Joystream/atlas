@@ -1,12 +1,14 @@
 import BN from 'bn.js'
-import { RefObject } from 'react'
+import { ReactNode, RefObject, useCallback, useEffect } from 'react'
 import { Controller, FieldError } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 
 import { useFullChannel } from '@/api/hooks/channel'
 import { SvgActionShow } from '@/assets/icons'
 import { ActionBar } from '@/components/ActionBar'
 import { Portal } from '@/components/Portal'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
+import { Button } from '@/components/_buttons/Button'
 import { ChannelCover } from '@/components/_channel/ChannelCover'
 import { FormField } from '@/components/_inputs/FormField'
 import { TextInput } from '@/components/_inputs/Input/Input.styles'
@@ -32,13 +34,17 @@ const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
   { name: 'Unlisted (channel will not appear in feeds and search)', value: false },
 ]
 
-export const StudioChannelGeneralTab = ({ actionBarPortal }: { actionBarPortal: RefObject<HTMLDivElement> }) => {
+type StudioChannelGeneralTabProps = {
+  actionBarPortal: RefObject<HTMLDivElement>
+  setTrailingContent: (content: ReactNode) => void
+}
+
+export const StudioChannelGeneralTab = ({ actionBarPortal, setTrailingContent }: StudioChannelGeneralTabProps) => {
   const { channelId } = useUser()
   const { displaySnackbar } = useSnackbar()
-  const smMatch = useMediaMatch('sm')
   const xsMatch = useMediaMatch('xs')
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
-
+  const navigate = useNavigate()
   const {
     channel,
     loading,
@@ -92,6 +98,24 @@ export const StudioChannelGeneralTab = ({ actionBarPortal }: { actionBarPortal: 
     },
   })
 
+  const onViewChannel = useCallback(() => {
+    if (isDirty) {
+      openDialog()
+    } else {
+      navigate(absoluteRoutes.viewer.channel(channelId ?? ''))
+    }
+  }, [channelId, isDirty, navigate, openDialog])
+
+  useEffect(() => {
+    if (channelId && xsMatch) {
+      setTrailingContent(
+        <Button variant="secondary" onClick={onViewChannel} icon={<SvgActionShow />}>
+          View channel
+        </Button>
+      )
+    }
+  }, [channelId, onViewChannel, setTrailingContent, xsMatch])
+
   if (error) {
     return <ViewErrorFallback />
   }
@@ -100,12 +124,7 @@ export const StudioChannelGeneralTab = ({ actionBarPortal }: { actionBarPortal: 
     <>
       <StyledForm>
         {!xsMatch && channelId && (
-          <StyledButton
-            fullWidth
-            variant="secondary"
-            to={absoluteRoutes.viewer.channel(channelId)}
-            icon={<SvgActionShow />}
-          >
+          <StyledButton fullWidth variant="secondary" onClick={onViewChannel} icon={<SvgActionShow />}>
             View channel
           </StyledButton>
         )}
@@ -132,7 +151,7 @@ export const StudioChannelGeneralTab = ({ actionBarPortal }: { actionBarPortal: 
                         : []
                     }
                     hasAvatarUploadFailed={hasAvatarUploadFailed}
-                    size={smMatch ? 136 : 88}
+                    size={88}
                     onClick={() => {
                       avatarDialogRef.current?.open(
                         value.originalBlob,
@@ -209,6 +228,7 @@ export const StudioChannelGeneralTab = ({ actionBarPortal }: { actionBarPortal: 
         <EntitySettingTemplate
           title="Channel settings"
           description="Reach the right audience by selecting the channel settings that work best for you."
+          isLast
         >
           <InputsWrapper>
             <Controller
