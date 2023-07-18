@@ -163,7 +163,7 @@ export const MembershipNotifications = () => {
     <EntitySettingTemplate
       isFirst
       title="Membership address"
-      description="When your public membership was created, it was linked to a new substrate account address built on polkadot protocol. This account holds all assets like tokens and NFTs that your membership accumulates. Set up all notifications regarding channels that you follow or your assets."
+      description="Set up all notifications regarding channels that you follow or your assets."
     >
       <form onSubmit={handleEditMember}>
         <Wrapper actionBarHeight={actionBarBoundsHeight}>
@@ -182,6 +182,7 @@ export const MembershipNotifications = () => {
             disabled: isSubmitting || !isDirty,
             onClick: () => reset(),
           }}
+          isNoneCrypto
         />
       </form>
     </EntitySettingTemplate>
