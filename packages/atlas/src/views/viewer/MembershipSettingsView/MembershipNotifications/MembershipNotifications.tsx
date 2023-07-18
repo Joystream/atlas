@@ -13,7 +13,10 @@ const TABLE_STRUCTURE = [
     rows: [
       {
         label: 'New channel created',
-        names: { inApp: 'channelCreatedInAppNotificationEnabled', email: 'channelCreatedMailNotificationEnabled' },
+        names: {
+          inApp: 'channelCreatedInAppNotificationEnabled',
+          email: 'channelCreatedMailNotificationEnabled',
+        },
       },
     ],
   },
@@ -22,11 +25,17 @@ const TABLE_STRUCTURE = [
     rows: [
       {
         label: 'Someone replied to your comment',
-        names: { inApp: 'commentRepyInAppNotificationEnabled', email: 'commentRepyMailNotificationEnabled' },
+        names: {
+          inApp: 'commentRepyInAppNotificationEnabled',
+          email: 'commentRepyMailNotificationEnabled',
+        },
       },
       {
         label: 'Someone reacted to your comment',
-        names: { inApp: 'commentReactionInAppNotificationEnabled', email: 'commentReactionMailNotificationEnabled' },
+        names: {
+          inApp: 'commentReactionInAppNotificationEnabled',
+          email: 'commentReactionMailNotificationEnabled',
+        },
       },
     ],
   },
@@ -35,15 +44,24 @@ const TABLE_STRUCTURE = [
     rows: [
       {
         label: 'Posted a new video',
-        names: { inApp: 'newVideoInAppNotificationEnabled', email: 'newVideoMailNotificationEnabled' },
+        names: {
+          inApp: 'newVideoInAppNotificationEnabled',
+          email: 'newVideoMailNotificationEnabled',
+        },
       },
       {
         label: 'Put a new NFT on auction',
-        names: { inApp: 'newNftAuctionInAppNotificationEnabled', email: 'newNftAuctionMailNotificationEnabled' },
+        names: {
+          inApp: 'newNftAuctionInAppNotificationEnabled',
+          email: 'newNftAuctionMailNotificationEnabled',
+        },
       },
       {
         label: 'Put a new NFT on sale',
-        names: { inApp: 'newNftSaleInAppNotificationEnabled', email: 'newNftSaleMailNotificationEnabled' },
+        names: {
+          inApp: 'newNftSaleInAppNotificationEnabled',
+          email: 'newNftSaleMailNotificationEnabled',
+        },
       },
     ],
   },
@@ -52,19 +70,31 @@ const TABLE_STRUCTURE = [
     rows: [
       {
         label: 'Someone placed higher bid than you',
-        names: { inApp: 'auctionOutBidInAppNotificationEnabled', email: 'auctionOutBidMailNotificationEnabled' },
+        names: {
+          inApp: 'auctionOutBidInAppNotificationEnabled',
+          email: 'auctionOutBidMailNotificationEnabled',
+        },
       },
       {
         label: 'Auction you participated in expired',
-        names: { inApp: 'auctionExpiredInAppNotificationEnabled', email: 'auctionExpiredMailNotificationEnabled' },
+        names: {
+          inApp: 'auctionExpiredInAppNotificationEnabled',
+          email: 'auctionExpiredMailNotificationEnabled',
+        },
       },
       {
         label: 'You won the auction',
-        names: { inApp: 'auctionWonInAppNotificationEnabled', email: 'auctionWonMailNotificationEnabled' },
+        names: {
+          inApp: 'auctionWonInAppNotificationEnabled',
+          email: 'auctionWonMailNotificationEnabled',
+        },
       },
       {
         label: 'You lost the auction',
-        names: { inApp: 'auctionLostInAppNotificationEnabled', email: 'auctionLostMailNotificationEnabled' },
+        names: {
+          inApp: 'auctionLostInAppNotificationEnabled',
+          email: 'auctionLostMailNotificationEnabled',
+        },
       },
       {
         label: 'Your bid withdrawal is enabled',
@@ -76,19 +106,28 @@ const TABLE_STRUCTURE = [
     ],
   },
   {
-    title: 'Payout',
+    title: 'Payouts',
     rows: [
       {
         label: 'You receive funds from council',
-        names: { inApp: 'fundFromCouncilInAppNotificationEnabled', email: 'fundFromCouncilMailNotificationEnabled' },
+        names: {
+          inApp: 'fundFromCouncilInAppNotificationEnabled',
+          email: 'fundFromCouncilMailNotificationEnabled',
+        },
       },
       {
         label: 'You send funds to external wallet',
-        names: { inApp: 'fundSentInAppNotificationEnabled', email: 'fundSentMailNotificationEnabled' },
+        names: {
+          inApp: 'fundSentInAppNotificationEnabled',
+          email: 'fundSentMailNotificationEnabled',
+        },
       },
       {
         label: 'You receive funds from working group',
-        names: { inApp: 'fundFromWgInAppNotificationEnabled', email: 'fundFromWgMailNotificationEnabled' },
+        names: {
+          inApp: 'fundFromWgInAppNotificationEnabled',
+          email: 'fundFromWgMailNotificationEnabled',
+        },
       },
     ],
   },
