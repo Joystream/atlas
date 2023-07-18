@@ -69,3 +69,7 @@ export const StyledActionBar = styled(ActionBar)`
   bottom: 0;
   z-index: ${zIndex.sideNav - 1};
 `
+
+export const FallbackContainer = styled.div`
+  margin-top: 128px;
+`

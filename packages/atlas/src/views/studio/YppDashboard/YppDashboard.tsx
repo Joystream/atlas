@@ -8,12 +8,13 @@ import { atlasConfig } from '@/config'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
+import { YppDashboardReferralsTab } from '@/views/studio/YppDashboard/tabs/YppDashboardReferralsTab'
 
 import { TIERS } from './YppDashboard.config'
 import { Divider, Header, TabsWrapper, TierCount, TierDescription, TierWrapper } from './YppDashboard.styles'
 import { YppDashboardMainTab, YppDashboardSettingsTab } from './tabs'
 
-const TABS = ['Dashboard', 'Settings'] as const
+const TABS = ['Dashboard', 'Referrals', 'Settings'] as const
 
 export const YppDashboard: FC = () => {
   const headTags = useHeadTags('YouTube Partner Program')
@@ -38,6 +39,8 @@ export const YppDashboard: FC = () => {
     switch (TABS[currentVideosTab]) {
       case 'Dashboard':
         return <YppDashboardMainTab currentTier={currentTier} />
+      case 'Referrals':
+        return <YppDashboardReferralsTab />
       case 'Settings':
         return <YppDashboardSettingsTab />
     }
