@@ -1,11 +1,11 @@
+import BN from 'bn.js'
+
 import { SvgActionLinkUrl } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
-import { Table } from '@/components/Table'
+import { YppReferralTable } from '@/components/YppReferralTable/YppReferralTable'
 import { Button } from '@/components/_buttons/Button'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useUser } from '@/providers/user/user.hooks'
-
-import { COLUMNS, tableLoadingData } from './YppDashboardReferralsTab.utils'
 
 import { FallbackContainer } from '../YppDashboardTabs.styles'
 
@@ -13,7 +13,19 @@ export const YppDashboardReferralsTab = () => {
   const { copyToClipboard } = useClipboard()
   const { channelId } = useUser()
 
-  return <Table title="Channels you referred" columns={COLUMNS} data={tableLoadingData} />
+  return (
+    <YppReferralTable
+      data={[
+        {
+          channel: '134',
+          reward: new BN(1000000000000),
+          tier: 1,
+          date: new Date(),
+        },
+      ]}
+      isLoading={false}
+    />
+  )
   return (
     <FallbackContainer>
       <EmptyFallback
