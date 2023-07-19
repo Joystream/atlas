@@ -3,7 +3,7 @@ import 'aos/dist/aos.css'
 import axios from 'axios'
 import { FC, useCallback, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ParallaxProvider } from 'react-scroll-parallax'
 
 import { YppReferralBanner } from '@/components/_ypp/YppReferralBanner'
@@ -32,6 +32,7 @@ export const YppLandingView: FC = () => {
   const yppModalOpenName = useYppStore((state) => state.yppModalOpenName)
   const setYppModalOpen = useYppStore((state) => state.actions.setYppModalOpenName)
   const { activeMembership, channelId } = useUser()
+  const [searchParams] = useSearchParams()
   const { setSelectedChannelId, setShouldContinueYppFlowAfterCreatingChannel } = useYppStore((store) => store.actions)
   const { displaySnackbar } = useSnackbar()
   const navigate = useNavigate()
@@ -48,6 +49,7 @@ export const YppLandingView: FC = () => {
   const shouldContinueYppFlowAfterCreatingChannel = useYppStore(
     (store) => store.shouldContinueYppFlowAfterCreatingChannel
   )
+  const [referrer, utmSource] = [searchParams.get('referrerId'), searchParams.get('utm_source')]
 
   const { unsyncedChannels, isLoading, currentChannel } = useGetYppSyncedChannels()
   const isYppSigned = !!currentChannel
@@ -77,7 +79,7 @@ export const YppLandingView: FC = () => {
     }
 
     if (!yppModalOpenName) {
-      trackYppSignInButtonClick()
+      trackYppSignInButtonClick(referrer, utmSource)
       setYppModalOpen('ypp-requirements')
       return
     }

@@ -139,7 +139,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
   const { extendedChannel } = useBasicChannel(referrerId || '', {
     skip: !referrerId,
   })
-  const { trackPageView, trackYppOptIn } = useSegmentAnalytics()
+  const { trackPageView, trackYppOptIn, identifyUser } = useSegmentAnalytics()
 
   const channel = extendedChannel?.channel
 
@@ -276,8 +276,8 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
             shouldBeIngested: data.shouldBeIngested,
             videoCategoryId: data.videoCategoryId,
           })
-          setYtResponseData(null)
 
+          identifyUser(ytResponseData?.email)
           trackYppOptIn(
             ytResponseData?.channelHandle,
             ytResponseData?.email,
@@ -286,6 +286,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
             data.referrerChannelId,
             utmSource || undefined
           )
+          setYtResponseData(null)
 
           navigate(absoluteRoutes.studio.ypp())
           displaySnackbar({

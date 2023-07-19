@@ -35,7 +35,7 @@ export const useSegmentAnalytics = () => {
 
   const identifyUser = useCallback(
     (email = 'no data') => {
-      analytics.identify({ email })
+      analytics.identify(email, { email })
     },
     [analytics]
   )
@@ -194,9 +194,12 @@ export const useSegmentAnalytics = () => {
     [analytics]
   )
 
-  const trackYppSignInButtonClick = useCallback(() => {
-    analytics.track('YPP Landing Sign In w Google Clicked')
-  }, [analytics])
+  const trackYppSignInButtonClick = useCallback(
+    (referrer: string | null | undefined, utmSource: string | null | undefined) => {
+      analytics.track('YPP Landing Sign In w Google Clicked', { referrer, utmSource })
+    },
+    [analytics]
+  )
 
   const trackNFTCarouselNext = useCallback(
     (slideId: string, nftId?: string) => {
