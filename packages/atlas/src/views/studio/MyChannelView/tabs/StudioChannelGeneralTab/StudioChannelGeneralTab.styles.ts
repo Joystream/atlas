@@ -22,5 +22,5 @@ export const StyledForm = styled.form`
 `
 
 export const StyledButton = styled(Button)`
-  margin-bottom: ${sizes(10)};
+  margin: ${sizes(4)} 0;
 `

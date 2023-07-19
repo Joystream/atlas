@@ -70,6 +70,7 @@ export const useGetAssetUrl = (urls: string[] | undefined | null, type: 'image' 
       return
     }
     const init = async () => {
+      setUrl(undefined)
       setIsLoading(true)
       const resolvedUrl = await getSingleAssetUrl(urls, type, userBenchmarkTime ?? undefined)
       setIsLoading(false)
