@@ -94,7 +94,11 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
   const [finalFormData, setFinalFormData] = useState<FinalFormData | null>(null)
   const selectedChannelId = useYppStore((store) => store.selectedChannelId)
   const setSelectedChannelId = useYppStore((store) => store.actions.setSelectedChannelId)
-  const { referrerId, ytResponseData } = useYppStore((store) => store, shallow)
+  const {
+    referrerId,
+    ytResponseData,
+    actions: { setYtResponseData },
+  } = useYppStore((store) => store, shallow)
   const setReferrerId = useYppStore((store) => store.actions.setReferrerId)
   const setShouldContinueYppFlowAfterLogin = useYppStore((store) => store.actions.setShouldContinueYppFlowAfterLogin)
   const { mutateAsync: yppSignChannelMutation } = useMutation(
@@ -272,6 +276,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
             shouldBeIngested: data.shouldBeIngested,
             videoCategoryId: data.videoCategoryId,
           })
+          setYtResponseData(null)
 
           trackYppOptIn(
             ytResponseData?.channelHandle,
