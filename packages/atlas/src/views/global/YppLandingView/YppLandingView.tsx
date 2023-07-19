@@ -84,13 +84,15 @@ export const YppLandingView: FC = () => {
       return
     }
   }, [
-    displaySnackbar,
     isTodaysQuotaReached,
     isYppSigned,
+    yppModalOpenName,
+    displaySnackbar,
     navigate,
     trackYppSignInButtonClick,
+    referrer,
+    utmSource,
     setYppModalOpen,
-    yppModalOpenName,
   ])
 
   useEffect(() => {
