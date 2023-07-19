@@ -57,7 +57,7 @@ const locationToPageName = {
   '/channel': 'Channel',
   '/video': 'Video',
   '/membership/edit': 'Edit membership',
-  '/membership': 'Member',
+  '/member/': 'Member',
   '/notifications': 'Notifications',
   '/marketplace': 'Marketplace',
   '/ypp': 'YPP',

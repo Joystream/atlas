@@ -68,6 +68,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
           if (keypair.address === data.accountData.joystreamAccount) {
             setLoggedAddress(keypair.address)
             setCurrentUser(data.accountData)
+            identifyUser(data.accountData.email)
             setApiActiveAccount('seed', mnemonic)
             setIsAuthenticating(false)
             return
@@ -81,6 +82,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
           const res = await signInToWallet(lastUsedWalletName, true)
           if (res?.find((walletAcc) => walletAcc.address === data.accountData.joystreamAccount)) {
             setLoggedAddress(data.accountData.joystreamAccount)
+            identifyUser(data.accountData.email)
             setCurrentUser(data.accountData)
             setApiActiveAccount('address', data.accountData.joystreamAccount)
           }

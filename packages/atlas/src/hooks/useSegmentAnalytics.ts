@@ -19,6 +19,13 @@ type PageViewParams = {
   isYppFlow?: boolean
 }
 
+type AllNftFilters = {
+  priceFrom?: number
+  priceTo?: number
+  status?: string
+  sortBy?: string
+}
+
 type playbackEventType = 'playbackStarted' | 'playbackPaused' | 'playbackResumed' | 'playbackCompleted'
 
 export const useSegmentAnalytics = () => {
@@ -230,11 +237,21 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackAllNftFilterUpdated = useCallback(
-    (status?: string, price?: string, sorting?: string) => {
+    ({ priceFrom, priceTo, status, sortBy }: AllNftFilters) => {
       analytics.track('All NFTs section filter updated', {
         status,
-        price,
-        sorting,
+        priceFrom,
+        priceTo,
+        sortBy,
+      })
+    },
+    [analytics]
+  )
+
+  const trackReferralLinkGenerated = useCallback(
+    (channelId: string | null | undefined) => {
+      analytics.track('Referral link generated', {
+        channelId,
       })
     },
     [analytics]
@@ -276,28 +293,29 @@ export const useSegmentAnalytics = () => {
   )
 
   return {
+    addEventToQueue,
     identifyUser,
-    trackPageView,
-    trackYppOptIn,
-    trackMembershipCreation,
+    trackAllNftFilterUpdated,
     trackChannelCreation,
-    trackVideoPlaybackStarted,
-    trackVideoPlaybackPaused,
-    trackVideoPlaybackResumed,
-    trackVideoPlaybackCompleted,
-    trackVideoUpload,
-    trackNftMint,
-    trackNftSale,
-    trackCommentAdded,
-    trackLikeAdded,
-    trackDislikeAdded,
     trackChannelFollow,
-    trackYppSignInButtonClick,
-    trackNFTCarouselNext,
-    trackNFTCarouselPrev,
+    trackCommentAdded,
+    trackDislikeAdded,
     trackFeaturedNFTNext,
     trackFeaturedNFTPrev,
-    trackAllNftFilterUpdated,
-    addEventToQueue,
+    trackLikeAdded,
+    trackMembershipCreation,
+    trackNFTCarouselNext,
+    trackNFTCarouselPrev,
+    trackNftMint,
+    trackNftSale,
+    trackPageView,
+    trackReferralLinkGenerated,
+    trackVideoPlaybackCompleted,
+    trackVideoPlaybackPaused,
+    trackVideoPlaybackResumed,
+    trackVideoPlaybackStarted,
+    trackVideoUpload,
+    trackYppOptIn,
+    trackYppSignInButtonClick,
   }
 }

@@ -29,7 +29,15 @@ export const AllNftSection = () => {
   const onApplyFiltersCallback = (appliedFilters: SectionFilter[]) => {
     const status = appliedFilters.find((filter) => filter.name === 'status')
     const price = appliedFilters.find((filter) => filter.name === 'price')
-    trackAllNftFilterUpdated(status?.range?.toString(), price?.range?.toString(), order)
+    trackAllNftFilterUpdated({
+      status: status?.options
+        ?.filter((option) => option.selected)
+        .map((option) => option.value)
+        .toString(),
+      priceTo: price?.range?.max,
+      priceFrom: price?.range?.min,
+      sortBy: order,
+    })
     onApplyFilters(appliedFilters)
   }
 
