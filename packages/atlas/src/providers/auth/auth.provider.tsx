@@ -36,7 +36,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<GetCurrentAccountQuery['accountData'] | null>(null)
   const [lazyCurrentAccountQuery, { refetch }] = useGetCurrentAccountLazyQuery()
   const { setApiActiveAccount } = useJoystream()
-  const { identifyUser } = useSegmentAnalytics()
+  const { identifyUser, trackLogout } = useSegmentAnalytics()
   const client = useApolloClient()
   const {
     anonymousUserId,
@@ -224,11 +224,12 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         setAnonymousUserId(userId ?? null)
       })
       setCurrentUser(null)
+      trackLogout()
       setEncodedSeed(null)
     } catch (error) {
       SentryLogger.error('Error when logging out', 'auth.provider', error)
     }
-  }, [anonymousUserId, setAnonymousUserId, setEncodedSeed])
+  }, [anonymousUserId, setAnonymousUserId, setEncodedSeed, trackLogout])
 
   const isWalletUser = useMemo(() => encodedSeed === null && !!currentUser, [currentUser, encodedSeed])
 
