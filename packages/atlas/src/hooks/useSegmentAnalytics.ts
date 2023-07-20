@@ -33,9 +33,12 @@ export const useSegmentAnalytics = () => {
 
   const playbackEventsQueue = useRef<{ type: playbackEventType; params: videoPlaybackParams }[]>([])
 
-  const identifyUser = (email = 'no data') => {
-    analytics.identify(email, { email })
-  }
+  const identifyUser = useCallback(
+    (email = 'no data') => {
+      analytics.identify(email, { email })
+    },
+    [analytics]
+  )
 
   const trackPageView = useCallback(
     (name: string, params?: PageViewParams) => {
