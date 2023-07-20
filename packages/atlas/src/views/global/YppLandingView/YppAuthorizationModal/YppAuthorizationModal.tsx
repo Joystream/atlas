@@ -346,17 +346,17 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
             setSelectedChannelId(yppUnsyncedChannels[0].id)
           }
 
+          if (ytRequirementsErrors.length) {
+            return {
+              text: 'Close',
+              onClick: handleClose,
+            }
+          }
+
           if (yppUnsyncedChannels && yppUnsyncedChannels.length > 1) {
             return {
               text: 'Select channel',
               onClick: () => setYppModalOpenName('ypp-select-channel'),
-            }
-          }
-
-          if (ytRequirementsErrors.length) {
-            return {
-              text: 'Close',
-              onClick: () => setYppModalOpenName(null),
             }
           }
 
@@ -371,6 +371,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
         }
 
         return {
+          headerIcon: ytRequirementsErrors.length ? <SvgAlertsError32 /> : undefined,
           title: ytRequirementsErrors.length ? 'Authorization failed' : 'Requirements',
           description: ytRequirementsErrors.length
             ? 'Looks like the YouTube channel you selected does not meet all conditions to be enrolled in the program. You can select another one or try again at a later time.'
@@ -462,6 +463,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     yppUnsyncedChannels,
     navigate,
     setSelectedChannelId,
+    handleClose,
     setYppModalOpenName,
     handleAuthorizeClick,
     handleCreateOrUpdateChannel,
@@ -470,11 +472,11 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
   const isLoadingModal = yppModalOpenName === 'ypp-fetching-data' || yppModalOpenName === 'ypp-speaking-to-backend'
 
   const secondaryButton: DialogButtonProps | undefined = useMemo(() => {
-    if (isLoadingModal) return
+    if (isLoadingModal || ytRequirementsErrors.length) return
 
     if (yppModalOpenName === 'ypp-requirements' && isLoggedIn) return
 
-    if (yppModalOpenName === 'ypp-requirements' && !isLoggedIn && !ytRequirementsErrors.length) {
+    if (yppModalOpenName === 'ypp-requirements' && !isLoggedIn) {
       return {
         text: 'Sign in',
         onClick: () => {
