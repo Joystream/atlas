@@ -1,4 +1,4 @@
-import styled from '@emotion/styled/dist/emotion-styled.cjs'
+import styled from '@emotion/styled'
 
 import { Step } from '@/components/Step'
 import { BottomDrawer } from '@/components/_overlays/BottomDrawer'
