@@ -13,10 +13,8 @@ import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { VideoExtrinsicResult, VideoInputAssets } from '@/joystream-lib/types'
 import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
 import { useDraftStore } from '@/providers/drafts'
-import { useBloatFeesAndPerMbFees, useJoystream } from '@/providers/joystream/joystream.hooks'
-import { usePersonalDataStore } from '@/providers/personalData'
+import { useBloatFeesAndPerMbFees, useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
-import { useTransactionManagerStore } from '@/providers/transactions/transactions.store'
 import { useStartFileUpload } from '@/providers/uploads/uploads.hooks'
 import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { useAuthorizedUser } from '@/providers/user/user.hooks'
@@ -27,10 +25,6 @@ import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 export const useHandleVideoWorkspaceSubmit = () => {
   const { setIsWorkspaceOpen, editedVideoInfo, setEditedVideo } = useVideoWorkspace()
-  const isNftMintDismissed = usePersonalDataStore((state) =>
-    state.dismissedMessages.some((message) => message.id === 'first-mint')
-  )
-  const { setShowFistMintDialog } = useTransactionManagerStore((state) => state.actions)
   const { removeAssetFromUploads } = useUploadsStore((state) => state.actions)
 
   const { joystream, proxyCallback } = useJoystream()
@@ -48,7 +42,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
   const rawMetadataProcessor = useAppActionMetadataProcessor(channelId, AppActionActionType.CreateVideo)
 
   return useCallback(
-    async (data: VideoFormData, videoInfo?: VideoWorkspace, assetsToBeRemoved?: string[]) => {
+    async (data: VideoFormData, videoInfo?: VideoWorkspace, assetsToBeRemoved?: string[], onComplete?: () => void) => {
       if (!joystream) {
         ConsoleLogger.error('No Joystream instance! Has webworker been initialized?')
         return
@@ -207,7 +201,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
           modifyAssetUrlInCache(client, assetsIds.thumbnailPhoto, data.assets.thumbnailPhoto.url)
         }
       }
-
+      let videoId: string | undefined = undefined
       const completed = await handleTransaction({
         preProcess: processAssets,
         txFactory: async (updateStatus) =>
@@ -239,7 +233,10 @@ export const useHandleVideoWorkspaceSubmit = () => {
                 channelBucketsCount.toString(),
                 proxyCallback(updateStatus)
               ),
-        onTxSync: refetchDataAndUploadAssets,
+        onTxSync: async (result) => {
+          refetchDataAndUploadAssets(result)
+          videoId = result.videoId
+        },
         snackbarSuccessMessage: isNew ? undefined : { title: 'Changes published successfully' },
       })
 
@@ -249,12 +246,10 @@ export const useHandleVideoWorkspaceSubmit = () => {
         assetsToBeRemoved?.forEach((asset) => {
           removeAssetFromUploads(asset)
         })
+        onComplete?.()
+
         setIsWorkspaceOpen(false)
-        if (!isNftMintDismissed && data.nftMetadata) {
-          setTimeout(() => {
-            setShowFistMintDialog(true)
-          }, 2000)
-        }
+        return videoId as string | undefined
       }
     },
     [
@@ -276,9 +271,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
       rawMetadataProcessor,
       proxyCallback,
       setIsWorkspaceOpen,
-      isNftMintDismissed,
       removeAssetFromUploads,
-      setShowFistMintDialog,
       trackNftMint,
     ]
   )

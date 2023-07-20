@@ -8,6 +8,7 @@ import { SvgActionChevronB, SvgActionChevronT, SvgActionEdit, SvgActionMore, Svg
 import { AvatarGroupUrlAvatar } from '@/components/Avatar/AvatarGroup'
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
+import { ProtectedActionWrapper } from '@/components/_auth/ProtectedActionWrapper'
 import { TextButton } from '@/components/_buttons/Button'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
@@ -265,50 +266,62 @@ export const InternalComment: FC<InternalCommentProps> = ({
                     trigger={
                       <ReactionsWrapper>
                         {hasReactionsAndCommentIsNotDeleted && (
-                          <ReactionsAndPopover>
-                            {sortedReactions?.map(({ reactionId, active, count, state }) => (
-                              <ReactionChip
-                                key={reactionId}
-                                reactionId={reactionId}
-                                active={active}
-                                count={count}
-                                state={tempReactionId === reactionId ? 'processing' : state}
-                                onReactionClick={handleCommentReactionClick}
-                              />
-                            ))}
-                            {!allReactionsApplied && !isDeleted && (
-                              <ReactionPopover
-                                disabled={isSomeReactionDisabled}
-                                onReactionClick={handleCommentReactionClick}
-                              />
-                            )}
-                          </ReactionsAndPopover>
+                          <ProtectedActionWrapper
+                            title="You want to react to this comment?"
+                            description="Sign in to let others know what you think"
+                          >
+                            <ReactionsAndPopover>
+                              {sortedReactions?.map(({ reactionId, active, count, state }) => (
+                                <ReactionChip
+                                  key={reactionId}
+                                  reactionId={reactionId}
+                                  active={active}
+                                  count={count}
+                                  state={tempReactionId === reactionId ? 'processing' : state}
+                                  onReactionClick={handleCommentReactionClick}
+                                />
+                              ))}
+                              {!allReactionsApplied && !isDeleted && (
+                                <ReactionPopover
+                                  disabled={isSomeReactionDisabled}
+                                  onReactionClick={handleCommentReactionClick}
+                                />
+                              )}
+                            </ReactionsAndPopover>
+                          </ProtectedActionWrapper>
                         )}
+
                         <RepliesWrapper>
-                          {!!repliesCount && filteredDuplicatedAvatars.length ? (
-                            <StyledAvatarGroup
-                              size="small"
-                              avatarStrokeColor={highlighted ? cVar('colorBackground', true) : undefined}
-                              avatars={filteredDuplicatedAvatars}
-                              clickable={false}
-                            />
-                          ) : null}
-                          {onToggleReplies && !!repliesCount && (
-                            <TextButton
-                              onClick={onToggleReplies}
-                              variant="tertiary"
-                              size="small"
-                              iconPlacement="right"
-                              icon={repliesOpen ? <SvgActionChevronT /> : <SvgActionChevronB />}
-                            >
-                              {repliesOpen ? 'Hide' : 'Show'} {repliesCount} {repliesCount === 1 ? 'reply' : 'replies'}
-                            </TextButton>
-                          )}
-                          {onReplyClick && !isDeleted && !isProcessing && (commentHover || isTouchDevice) && (
-                            <ReplyButton onClick={onReplyClick} variant="tertiary" size="small" _textOnly>
-                              Reply
-                            </ReplyButton>
-                          )}
+                          <ProtectedActionWrapper
+                            title="You want to reply to this comment?"
+                            description="Sign in to let others know what you think"
+                          >
+                            {!!repliesCount && filteredDuplicatedAvatars.length ? (
+                              <StyledAvatarGroup
+                                size="small"
+                                avatarStrokeColor={highlighted ? cVar('colorBackground', true) : undefined}
+                                avatars={filteredDuplicatedAvatars}
+                                clickable={false}
+                              />
+                            ) : null}
+                            {onToggleReplies && !!repliesCount && (
+                              <TextButton
+                                onClick={onToggleReplies}
+                                variant="tertiary"
+                                size="small"
+                                iconPlacement="right"
+                                icon={repliesOpen ? <SvgActionChevronT /> : <SvgActionChevronB />}
+                              >
+                                {repliesOpen ? 'Hide' : 'Show'} {repliesCount}{' '}
+                                {repliesCount === 1 ? 'reply' : 'replies'}
+                              </TextButton>
+                            )}
+                            {onReplyClick && !isDeleted && !isProcessing && (commentHover || isTouchDevice) && (
+                              <ReplyButton onClick={onReplyClick} variant="tertiary" size="small" _textOnly>
+                                Reply
+                              </ReplyButton>
+                            )}
+                          </ProtectedActionWrapper>
                         </RepliesWrapper>
                       </ReactionsWrapper>
                     }

@@ -2,6 +2,10 @@ import { useContext } from 'react'
 
 import { SegmentAnalyticsContext } from './segment.provider'
 
-const useSegmentAnalyticsContext = () => useContext(SegmentAnalyticsContext)
+export const useSegmentAnalyticsContext = () => {
+  const ctx = useContext(SegmentAnalyticsContext)
 
-export default useSegmentAnalyticsContext
+  if (!ctx) throw new Error('useSegmentAnalyticsContext must be used within SegmentAnalyticsContext')
+
+  return ctx
+}

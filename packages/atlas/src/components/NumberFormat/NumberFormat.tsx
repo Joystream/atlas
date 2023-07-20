@@ -124,7 +124,7 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
     return (
       <>
         {withDenomination ? (
-          <Container orientation={withDenomination}>
+          <Container orientation={withDenomination === 'horizontal' ? _withDenomination : undefined}>
             {icon ? (
               <IconContainer>
                 {icon}
@@ -183,7 +183,7 @@ const Denomination = styled(Text)<{ align: 'right' | 'left' }>`
 `
 
 const Container = styled.div<{ orientation: NumberFormatProps['withDenomination'] }>`
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
   gap: ${sizes(1)};
   width: fit-content;

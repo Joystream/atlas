@@ -22,6 +22,7 @@ type ActionButtonProps = {
 
 export type BannerProps = {
   dismissibleId?: string
+  borderColor?: string
   title?: string
   description?: ReactNode
   className?: string
@@ -32,6 +33,7 @@ export type BannerProps = {
 
 export const Banner: FC<BannerProps> = ({
   title,
+  borderColor,
   description,
   className,
   icon,
@@ -49,7 +51,7 @@ export const Banner: FC<BannerProps> = ({
   }
 
   return (
-    <BannerWrapper size={size} className={className}>
+    <BannerWrapper size={size} className={className} borderColor={borderColor}>
       <Container>
         <div>
           {title && (

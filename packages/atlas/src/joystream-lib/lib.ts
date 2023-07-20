@@ -1,8 +1,9 @@
 // load type augments
-import '@joystream/types'
+import * as types from '@joystream/types'
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import { QueryableStorageMultiArg } from '@polkadot/api-base/types/storage'
 import { Signer } from '@polkadot/api/types'
+import { Keyring } from '@polkadot/keyring'
 import { getSpecTypes } from '@polkadot/types-known'
 import { Codec, SignerPayloadRawBase } from '@polkadot/types/types'
 import { base64Encode } from '@polkadot/util-crypto'
@@ -15,13 +16,15 @@ import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import { JoystreamLibError } from './errors'
 import { JoystreamLibExtrinsics } from './extrinsics'
-import { AccountId } from './types'
+import { AccountId, AtlasSigner } from './types'
+
+export const keyring = new Keyring({ type: 'sr25519', ss58Format: types.JOYSTREAM_ADDRESS_PREFIX })
 
 export class JoystreamLib {
   readonly api: ApiPromise
   readonly extrinsics: JoystreamLibExtrinsics
 
-  private _selectedAccountId: AccountId | null = null
+  private _selectedAccountId: AtlasSigner | null = null
   get selectedAccountId() {
     return this._selectedAccountId
   }
@@ -68,18 +71,25 @@ export class JoystreamLib {
   }
 
   /* Public */
-  async setActiveAccount(accountId: AccountId | null, signer?: Signer) {
-    if (!accountId) {
+  async setActiveAccount(payloadType: 'address' | 'seed', payload: string | null, signer?: Signer) {
+    if (!payload) {
       this._selectedAccountId = null
       this.api.setSigner({})
       return
-    } else if (!signer) {
+    } else if (!signer && payloadType === 'address') {
       SentryLogger.error('Missing signer for setActiveAccount', 'JoystreamLib')
       return
     }
 
-    this._selectedAccountId = accountId
-    this.api.setSigner(signer)
+    if (payloadType === 'seed') {
+      this._selectedAccountId = keyring.addFromMnemonic(payload)
+    } else {
+      this._selectedAccountId = payload
+    }
+
+    if (signer) {
+      this.api.setSigner(signer)
+    }
   }
 
   signMessage = async (signerPayload: SignerPayloadRawBase) => {

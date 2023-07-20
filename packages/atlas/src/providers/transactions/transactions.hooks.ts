@@ -12,9 +12,8 @@ import {
 import { absoluteRoutes } from '@/config/routes'
 import { ErrorCode, JoystreamLibError, JoystreamLibErrorType } from '@/joystream-lib/errors'
 import { ExtrinsicResult, ExtrinsicStatus, ExtrinsicStatusCallbackFn } from '@/joystream-lib/types'
-import { useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
-import { useUser } from '@/providers/user/user.hooks'
-import { useUserStore } from '@/providers/user/user.store'
+import { useSubscribeAccountBalance } from '@/providers/joystream'
+import { useWallet } from '@/providers/wallet/wallet.hooks'
 import { createId } from '@/utils/createId'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { wait, withTimeout } from '@/utils/misc'
@@ -64,8 +63,7 @@ export const useTransaction = (): HandleTransactionFn => {
   const { displaySnackbar } = useSnackbar()
   const getMetaprotocolTxStatus = useMetaprotocolTransactionStatus()
   const { totalBalance } = useSubscribeAccountBalance()
-  const { isSignerMetadataOutdated, updateSignerMetadata, skipSignerMetadataUpdate } = useUser()
-  const { wallet } = useUserStore()
+  const { isSignerMetadataOutdated, updateSignerMetadata, skipSignerMetadataUpdate, wallet } = useWallet()
 
   return useCallback(
     async ({
@@ -187,8 +185,8 @@ export const useTransaction = (): HandleTransactionFn => {
           }
           updateStatus(status)
         }
-        const result = await txFactory(handleTxStatusChange) // txFactory will return only once the tx has been included in a block and that block has been finalized
 
+        const result = await txFactory(handleTxStatusChange) // txFactory will return only once the tx has been included in a block and that block has been finalized
         /* === if provided, run finalize callback === */
         updateStatus(ExtrinsicStatus.Syncing)
         if (onTxFinalize) {

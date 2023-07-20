@@ -14,13 +14,12 @@ import { CommentInput } from '@/components/_comments/CommentInput'
 import { Select } from '@/components/_inputs/Select'
 import { QUERY_PARAMS } from '@/config/routes'
 import { COMMENTS_SORT_OPTIONS } from '@/config/sorting'
-import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
-import { useFee } from '@/providers/joystream/joystream.hooks'
+import { useFee } from '@/providers/joystream'
 import { useUser } from '@/providers/user/user.hooks'
 import { createPlaceholderData } from '@/utils/data'
 
@@ -53,8 +52,7 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
   const commentIdQueryParam = useRouterQuery(QUERY_PARAMS.COMMENT_ID)
   const mdMatch = useMediaMatch('md')
   const { id: videoId } = useParams()
-  const { memberId, signIn, activeMembership, isLoggedIn } = useUser()
-  const { openSignInDialog } = useDisplaySignInDialog({ interaction: true })
+  const { memberId, activeMembership, isLoggedIn } = useUser()
   const { isLoadingAsset: isMemberAvatarLoading, urls: memberAvatarUrls } = getMemberAvatar(activeMembership)
   const { trackCommentAdded } = useSegmentAnalytics()
 
@@ -235,7 +233,6 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
         fee={fee}
         feeLoading={feeLoading}
         hasInitialValueChanged={!!commentInputText}
-        onFocus={() => !memberId && openSignInDialog({ onConfirm: signIn })}
         onComment={() => handleComment()}
         onChange={(e) => setCommentInputText(e.target.value)}
         onCommentInputActive={(value) => {

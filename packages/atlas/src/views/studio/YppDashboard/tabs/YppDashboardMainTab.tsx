@@ -9,9 +9,10 @@ import { Button } from '@/components/_buttons/Button'
 import { BenefitCard } from '@/components/_ypp/BenefitCard'
 import { atlasConfig } from '@/config'
 import { useClipboard } from '@/hooks/useClipboard'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useUser } from '@/providers/user/user.hooks'
 import { configYppIconMapper } from '@/views/global/YppLandingView/YppFooter'
-import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/YppLandingView.hooks'
+import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
 
 import { RewardsWrapper, StyledBanner, StyledSvgAlertsInformative24, WidgetsWrapper } from './YppDashboardTabs.styles'
 
@@ -28,6 +29,7 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
   const { copyToClipboard } = useClipboard()
   const { channelId } = useUser()
   const { currentChannel } = useGetYppSyncedChannels()
+  const { trackReferralLinkGenerated } = useSegmentAnalytics()
   const multiplier = tiers ? tiers[currentTier].multiplier : 1
 
   return (
@@ -113,6 +115,7 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
                           'copyReferral' in reward.actionButton &&
                           reward.actionButton.copyReferral
                         ) {
+                          trackReferralLinkGenerated(channelId)
                           copyToClipboard(
                             `${window.location.host}/ypp?referrerId=${channelId}`,
                             'Referral link copied to clipboard'

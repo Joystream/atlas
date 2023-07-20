@@ -13,6 +13,7 @@ import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
 import { Select } from '@/components/_inputs/Select'
+import { MintNftModal } from '@/components/_overlays/MintNftModal'
 import { VideoTileDraft } from '@/components/_video/VideoTileDraft'
 import { VideoTilePublisher } from '@/components/_video/VideoTilePublisher'
 import { atlasConfig } from '@/config'
@@ -24,13 +25,14 @@ import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { chanelUnseenDraftsSelector, channelDraftsSelector, useDraftStore } from '@/providers/drafts'
+import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { sizes } from '@/styles'
 import { createPlaceholderData } from '@/utils/data'
 import { SentryLogger } from '@/utils/logs'
-import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/YppLandingView.hooks'
+import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
 import { YppVideoDto } from '@/views/studio/MyVideosView/MyVideosView.types'
 
 import {
@@ -66,6 +68,7 @@ export const MyVideosView = () => {
   const videosPerPage = ROWS_AMOUNT * videosPerRow
   const smMatch = useMediaMatch('sm')
   const mdMatch = useMediaMatch('md')
+  const { setNftToMint } = useNftActions()
 
   const { isLoading: isCurrentlyUploadedVideoIdsLoading, data: yppDAta } = useQuery(
     `ypp-ba-videos-${channelId}`,
@@ -296,7 +299,7 @@ export const MyVideosView = () => {
             onMintNftClick={(e) => {
               e?.stopPropagation()
               e?.preventDefault()
-              handleEditVideoClick(video.id, { mintNft: true })
+              if (video.id) setNftToMint(video.id)
             }}
             onDeleteVideoClick={() => video.id && deleteVideo(video.id)}
             onReuploadVideoClick={() =>
@@ -324,113 +327,117 @@ export const MyVideosView = () => {
 
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: tab === 'Drafts' ? unseenDrafts.length : 0 }))
   return (
-    <LimitedWidthContainer>
-      {headTags}
-      <Text as="h1" variant="h700" margin={{ top: 12, bottom: 12 }}>
-        My videos
-      </Text>
-      {!smMatch && sortVisibleAndUploadButtonVisible && (
-        <MobileButton size="large" icon={<SvgActionAddVideo />} fullWidth {...uploadVideoButtonProps}>
-          Upload video
-        </MobileButton>
-      )}
-      {hasNoVideos ? (
-        <EmptyFallback
-          verticalCentered
-          title="Add your first video"
-          subtitle="No videos uploaded yet. Start publishing by adding your first video to Joystream."
-          button={
-            <Button icon={<SvgActionUpload />} variant="secondary" size="large" {...uploadVideoButtonProps}>
-              Upload video
-            </Button>
-          }
-        />
-      ) : (
-        <>
-          <TabsContainer>
-            <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
-            {mdMatch && sortVisibleAndUploadButtonVisible && sortSelectNode}
-            {smMatch && sortVisibleAndUploadButtonVisible && (
-              <Button {...uploadVideoButtonProps} icon={<SvgActionAddVideo />}>
+    <>
+      <MintNftModal />
+
+      <LimitedWidthContainer>
+        {headTags}
+        <Text as="h1" variant="h700" margin={{ top: 12, bottom: 12 }}>
+          My videos
+        </Text>
+        {!smMatch && sortVisibleAndUploadButtonVisible && (
+          <MobileButton size="large" icon={<SvgActionAddVideo />} fullWidth {...uploadVideoButtonProps}>
+            Upload video
+          </MobileButton>
+        )}
+        {hasNoVideos ? (
+          <EmptyFallback
+            verticalCentered
+            title="Add your first video"
+            subtitle="No videos uploaded yet. Start publishing by adding your first video to Joystream."
+            button={
+              <Button icon={<SvgActionUpload />} variant="secondary" size="large" {...uploadVideoButtonProps}>
                 Upload video
               </Button>
-            )}
-          </TabsContainer>
-          {currentChannel && isAllVideosTab && (
-            <StyledBanner
-              dismissibleId="yppSyncInfo"
-              title="YouTube Sync is enabled"
-              icon={<SvgAlertsInformative24 />}
-              description={`Whenever you upload video to ${currentChannel.title} YouTube channel, it will automatically appear here after a short while. You can change this setting in your YouTube Partner Program dashboard.`}
-            />
-          )}
-          {isDraftTab && (
-            <StyledBanner
-              dismissibleId="video-draft-saved-locally-warning"
-              title="Video drafts are saved locally"
-              icon={<SvgAlertsInformative24 />}
-              description="You will only be able to access drafts on the device you used to create them. Clearing your browser history will delete all your drafts."
-            />
-          )}
-          {isUnlistedTab && (
-            <StyledBanner
-              dismissibleId="unlisted-video-link-info"
-              title="Unlisted videos can be seen only with direct link"
-              icon={<SvgAlertsInformative24 />}
-              description="You can share a private video with others by sharing a direct link to it. Unlisted video is not going to be searchable on our platform."
-            />
-          )}
-          {!mdMatch && sortVisibleAndUploadButtonVisible && (
-            <StyledSelect
-              size="medium"
-              inlineLabel="Sort by"
-              value={sortVideosBy}
-              items={VIDEO_SORT_OPTIONS}
-              onChange={handleSorting}
-            />
-          )}
-          <StyledGrid maxColumns={null} onResize={handleOnResizeGrid} gap={sizes(mdMatch ? 6 : 4)}>
-            {gridContent}
-          </StyledGrid>
-          {((isDraftTab && drafts.length === 0) ||
-            (!isDraftTab && !loading && totalCount === 0 && (!videos || videos.length === 0))) && (
-            <EmptyFallback
-              verticalCentered
-              title={
-                isAllVideosTab
-                  ? 'No videos yet'
-                  : isPublicTab
-                  ? 'No public videos yet'
-                  : isDraftTab
-                  ? 'No drafts here yet'
-                  : 'No unlisted videos here yet'
-              }
-              subtitle={
-                isAllVideosTab
-                  ? null
-                  : isPublicTab
-                  ? 'Videos published with "Public" privacy setting will show up here.'
-                  : isDraftTab
-                  ? "Each video that hasn't been published yet will be available here as a draft."
-                  : 'Videos published with "Unlisted" privacy setting will show up here.'
-              }
-              button={
-                <Button icon={<SvgActionUpload />} variant="secondary" size="large" {...uploadVideoButtonProps}>
+            }
+          />
+        ) : (
+          <>
+            <TabsContainer>
+              <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
+              {mdMatch && sortVisibleAndUploadButtonVisible && sortSelectNode}
+              {smMatch && sortVisibleAndUploadButtonVisible && (
+                <Button {...uploadVideoButtonProps} icon={<SvgActionAddVideo />}>
                   Upload video
                 </Button>
-              }
+              )}
+            </TabsContainer>
+            {currentChannel && isAllVideosTab && (
+              <StyledBanner
+                dismissibleId="yppSyncInfo"
+                title="YouTube Sync is enabled"
+                icon={<SvgAlertsInformative24 />}
+                description={`Whenever you upload video to ${currentChannel.title} YouTube channel, it will automatically appear here after a short while. You can change this setting in your YouTube Partner Program dashboard.`}
+              />
+            )}
+            {isDraftTab && (
+              <StyledBanner
+                dismissibleId="video-draft-saved-locally-warning"
+                title="Video drafts are saved locally"
+                icon={<SvgAlertsInformative24 />}
+                description="You will only be able to access drafts on the device you used to create them. Clearing your browser history will delete all your drafts."
+              />
+            )}
+            {isUnlistedTab && (
+              <StyledBanner
+                dismissibleId="unlisted-video-link-info"
+                title="Unlisted videos can be seen only with direct link"
+                icon={<SvgAlertsInformative24 />}
+                description="You can share a private video with others by sharing a direct link to it. Unlisted video is not going to be searchable on our platform."
+              />
+            )}
+            {!mdMatch && sortVisibleAndUploadButtonVisible && (
+              <StyledSelect
+                size="medium"
+                inlineLabel="Sort by"
+                value={sortVideosBy}
+                items={VIDEO_SORT_OPTIONS}
+                onChange={handleSorting}
+              />
+            )}
+            <StyledGrid maxColumns={null} onResize={handleOnResizeGrid} gap={sizes(mdMatch ? 6 : 4)}>
+              {gridContent}
+            </StyledGrid>
+            {((isDraftTab && drafts.length === 0) ||
+              (!isDraftTab && !loading && totalCount === 0 && (!videos || videos.length === 0))) && (
+              <EmptyFallback
+                verticalCentered
+                title={
+                  isAllVideosTab
+                    ? 'No videos yet'
+                    : isPublicTab
+                    ? 'No public videos yet'
+                    : isDraftTab
+                    ? 'No drafts here yet'
+                    : 'No unlisted videos here yet'
+                }
+                subtitle={
+                  isAllVideosTab
+                    ? null
+                    : isPublicTab
+                    ? 'Videos published with "Public" privacy setting will show up here.'
+                    : isDraftTab
+                    ? "Each video that hasn't been published yet will be available here as a draft."
+                    : 'Videos published with "Unlisted" privacy setting will show up here.'
+                }
+                button={
+                  <Button icon={<SvgActionUpload />} variant="secondary" size="large" {...uploadVideoButtonProps}>
+                    Upload video
+                  </Button>
+                }
+              />
+            )}
+            <StyledPagination
+              onChangePage={handleChangePage}
+              page={currentPage}
+              itemsPerPage={videosPerPage}
+              // +1 is for new video tile
+              totalCount={isDraftTab ? drafts.length : (totalCount || 0) + 1}
             />
-          )}
-          <StyledPagination
-            onChangePage={handleChangePage}
-            page={currentPage}
-            itemsPerPage={videosPerPage}
-            // +1 is for new video tile
-            totalCount={isDraftTab ? drafts.length : (totalCount || 0) + 1}
-          />
-        </>
-      )}
-    </LimitedWidthContainer>
+          </>
+        )}
+      </LimitedWidthContainer>
+    </>
   )
 }
 

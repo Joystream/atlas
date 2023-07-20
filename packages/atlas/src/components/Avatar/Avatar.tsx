@@ -1,6 +1,7 @@
-import { FC, MouseEvent, PropsWithChildren, useCallback } from 'react'
+import { FC, MouseEvent, PropsWithChildren, useCallback, useEffect } from 'react'
 
 import { SvgActionNewChannel } from '@/assets/icons'
+import { validateImage } from '@/utils/image'
 
 import {
   AvatarSize,
@@ -21,6 +22,7 @@ import { Text } from '../Text'
 
 export type AvatarProps = PropsWithChildren<{
   onClick?: (event: MouseEvent<HTMLElement>) => void
+  onImageValidation?: (validImage: boolean) => void
   onError?: () => void
   assetUrls?: string[] | null
   hasAvatarUploadFailed?: boolean
@@ -45,9 +47,30 @@ export const Avatar: FC<AvatarProps> = ({
   clickable,
   onError,
   onClick,
+  onImageValidation,
   disableHoverDimm,
 }) => {
   const isEditable = !loading && editable && size !== 32 && size !== 24
+
+  const checkIfImageIsValid = useCallback(async () => {
+    if (!assetUrls?.[0]) {
+      onImageValidation?.(true)
+      return
+    }
+    try {
+      await validateImage(assetUrls?.[0])
+      onImageValidation?.(true)
+    } catch (error) {
+      onImageValidation?.(false)
+    }
+  }, [assetUrls, onImageValidation])
+
+  useEffect(() => {
+    if (!assetUrls?.[0]) {
+      return
+    }
+    checkIfImageIsValid()
+  }, [assetUrls, checkIfImageIsValid])
 
   const getEditableIconSize = useCallback(() => {
     const smallIconSizes = [24, 32, 40]

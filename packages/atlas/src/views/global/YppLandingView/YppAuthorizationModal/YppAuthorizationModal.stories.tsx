@@ -10,7 +10,6 @@ import { OverlayManagerProvider } from '@/providers/overlayManager'
 import { UserProvider } from '@/providers/user/user.provider'
 
 import { YppAuthorizationModal, YppAuthorizationModalProps } from './YppAuthorizationModal'
-import { YppAuthorizationStepsType } from './YppAuthorizationModal.types'
 
 export default {
   title: 'ypp/YppAuthorizationModal',
@@ -18,23 +17,6 @@ export default {
   component: YppAuthorizationModal,
   args: {
     step: 'requirements',
-  },
-  argTypes: {
-    currentStep: { table: { disable: true } },
-    step: {
-      control: {
-        type: 'select',
-        options: [
-          'requirements',
-          'details',
-          'fetching-data',
-          'select-channel',
-          'summary',
-          'terms-and-conditions',
-          'channel-already-registered',
-        ] as YppAuthorizationStepsType[],
-      },
-    },
   },
   decorators: [
     (Story) => {
@@ -58,12 +40,12 @@ export default {
   ],
 } as Meta<YppAuthorizationModalProps>
 
-const Template: Story<YppAuthorizationModalProps & { step: YppAuthorizationStepsType }> = (args) => {
+const Template: Story<YppAuthorizationModalProps> = (args) => {
   const apolloClient = createApolloClient()
   return (
     <ApolloProvider client={apolloClient}>
       <OverlayManagerProvider>
-        <YppAuthorizationModal {...args} currentStep={args.step} />
+        <YppAuthorizationModal {...args} />
       </OverlayManagerProvider>
     </ApolloProvider>
   )

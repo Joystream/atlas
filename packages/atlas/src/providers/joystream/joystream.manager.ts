@@ -1,6 +1,6 @@
 import { FC, useEffect, useRef } from 'react'
 
-import { useJoystream } from './joystream.hooks'
+import { useJoystream } from './joystream.provider'
 import { useJoystreamStore } from './joystream.store'
 
 export const JoystreamManager: FC = () => {
