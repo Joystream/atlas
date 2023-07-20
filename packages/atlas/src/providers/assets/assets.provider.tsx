@@ -26,9 +26,12 @@ import {
   GetStorageBucketsWithBagsQuery,
   GetStorageBucketsWithBagsQueryVariables,
 } from '@/api/queries/__generated__/storage.generated'
+import { useGetBasicVideosLazyQuery } from '@/api/queries/__generated__/videos.generated'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
+import { useMountEffect } from '@/hooks/useMountEffect'
+import { getFastestImageUrl } from '@/providers/assets/assets.helpers'
 import { UserCoordinates, useUserLocationStore } from '@/providers/userLocation'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
@@ -41,6 +44,7 @@ type OperatorsContextValue = {
   failedStorageOperatorIds: string[]
   setFailedStorageOperatorIds: Dispatch<SetStateAction<string[]>>
   fetchStorageOperators: () => Promise<BagOperatorsMapping>
+  userBenchmarkTime: number | null
 }
 const OperatorsContext = createContext<OperatorsContextValue | undefined>(undefined)
 OperatorsContext.displayName = 'OperatorsContext'
@@ -49,6 +53,8 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
   const storageOperatorsMappingPromiseRef = useRef<Promise<BagOperatorsMapping>>()
   const [storageOperatorsError, setStorageOperatorsError] = useState<unknown>(null)
   const [failedStorageOperatorIds, setFailedStorageOperatorIds] = useState<string[]>([])
+  const [userBenchmarkTime, setUserBenchmarkTime] = useState<number | null>(null)
+  const [getBasicVideo] = useGetBasicVideosLazyQuery()
   const {
     coordinates,
     expiry,
@@ -145,6 +151,37 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
     fetchStorageOperators()
   }, [fetchStorageOperators, isStudio])
 
+  useMountEffect(() => {
+    const initBenchmark = async () => {
+      const { data } = await getBasicVideo({
+        variables: {
+          limit: 1,
+          where: {
+            thumbnailPhoto: {
+              isAccepted_eq: true,
+            },
+          },
+        },
+      })
+      const thumbnail = data?.videos[0].thumbnailPhoto
+      if (thumbnail) {
+        const promiseRace = getFastestImageUrl(thumbnail.resolvedUrls)
+        const startTime = performance.now()
+        await promiseRace
+        const msDuration = performance.now() - startTime
+        const previousTimeout = userBenchmarkTime ?? atlasConfig.storage.assetResponseTimeout
+        if (msDuration > previousTimeout || msDuration < previousTimeout / 2) {
+          setUserBenchmarkTime((msDuration + previousTimeout) * 0.75)
+        }
+      }
+    }
+    initBenchmark()
+    const id = setInterval(initBenchmark, 30 * 1_000)
+    return () => {
+      clearInterval(id)
+    }
+  })
+
   if (storageOperatorsError) {
     return <ViewErrorFallback />
   }
@@ -156,6 +193,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
         failedStorageOperatorIds,
         setFailedStorageOperatorIds,
         fetchStorageOperators,
+        userBenchmarkTime,
       }}
     >
       {children}

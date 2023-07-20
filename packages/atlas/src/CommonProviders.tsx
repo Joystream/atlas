@@ -8,10 +8,12 @@ import { createApolloClient } from '@/api'
 import { useGetKillSwitch } from '@/api/hooks/admin'
 import { AdminModal } from '@/components/_overlays/AdminModal'
 import { OperatorsContextProvider } from '@/providers/assets/assets.provider'
+import { AuthProvider } from '@/providers/auth/auth.provider'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
 import { SegmentAnalyticsProvider } from '@/providers/segmentAnalytics/segment.provider'
 import { UserProvider } from '@/providers/user/user.provider'
+import { WalletProvider } from '@/providers/wallet/wallet.provider'
 import { GlobalStyles } from '@/styles'
 
 import { FORCE_MAINTENANCE } from './config/env'
@@ -31,24 +33,28 @@ export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
   return (
     <>
       <GlobalStyles />
-      <ApolloProvider client={apolloClient}>
-        <QueryClientProvider client={queryClient}>
-          <UserProvider>
-            <OverlayManagerProvider>
-              <SegmentAnalyticsProvider>
-                <ConfirmationModalProvider>
-                  <BrowserRouter>
-                    <AdminModal />
-                    <MaintenanceWrapper>
-                      <OperatorsContextProvider>{children}</OperatorsContextProvider>
-                    </MaintenanceWrapper>
-                  </BrowserRouter>
-                </ConfirmationModalProvider>
-              </SegmentAnalyticsProvider>
-            </OverlayManagerProvider>
-          </UserProvider>
-        </QueryClientProvider>
-      </ApolloProvider>
+      <SegmentAnalyticsProvider>
+        <ApolloProvider client={apolloClient}>
+          <QueryClientProvider client={queryClient}>
+            <WalletProvider>
+              <AuthProvider>
+                <UserProvider>
+                  <OverlayManagerProvider>
+                    <ConfirmationModalProvider>
+                      <BrowserRouter>
+                        <AdminModal />
+                        <MaintenanceWrapper>
+                          <OperatorsContextProvider>{children}</OperatorsContextProvider>
+                        </MaintenanceWrapper>
+                      </BrowserRouter>
+                    </ConfirmationModalProvider>
+                  </OverlayManagerProvider>
+                </UserProvider>
+              </AuthProvider>
+            </WalletProvider>
+          </QueryClientProvider>
+        </ApolloProvider>
+      </SegmentAnalyticsProvider>
     </>
   )
 }

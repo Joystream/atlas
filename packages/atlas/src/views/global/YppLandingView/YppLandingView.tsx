@@ -3,7 +3,7 @@ import 'aos/dist/aos.css'
 import axios from 'axios'
 import { FC, useCallback, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ParallaxProvider } from 'react-scroll-parallax'
 
 import { YppReferralBanner } from '@/components/_ypp/YppReferralBanner'
@@ -17,22 +17,23 @@ import { useYppStore } from '@/providers/ypp/ypp.store'
 import { SentryLogger } from '@/utils/logs'
 
 import { YppAuthorizationModal } from './YppAuthorizationModal'
-import { YppAuthorizationStepsType } from './YppAuthorizationModal/YppAuthorizationModal.types'
 import { YppCardsSections } from './YppCardsSections'
 import { YppFooter } from './YppFooter'
 import { YppHero } from './YppHero'
-import { useGetYppSyncedChannels } from './YppLandingView.hooks'
 import { Wrapper } from './YppLandingView.styles'
 import { YppRewardSection } from './YppRewardSection'
 import { YppThreeStepsSection } from './YppThreeStepsSection'
+import { useGetYppSyncedChannels } from './useGetYppSyncedChannels'
 
 const SINGUP_DAILY_QUOTA = 500 // 2% of the total daily quota
 
 export const YppLandingView: FC = () => {
   const headTags = useHeadTags('YouTube Partner Program')
-  const [currentStep, setCurrentStep] = useState<YppAuthorizationStepsType>(null)
-  const { isLoggedIn, signIn, activeMembership, channelId, walletStatus } = useUser()
-  const { setSelectedChannelId, setShouldContinueYppFlow } = useYppStore((store) => store.actions)
+  const yppModalOpenName = useYppStore((state) => state.yppModalOpenName)
+  const setYppModalOpen = useYppStore((state) => state.actions.setYppModalOpenName)
+  const { activeMembership, channelId } = useUser()
+  const [searchParams] = useSearchParams()
+  const { setSelectedChannelId, setShouldContinueYppFlowAfterCreatingChannel } = useYppStore((store) => store.actions)
   const { displaySnackbar } = useSnackbar()
   const navigate = useNavigate()
   const { trackYppSignInButtonClick } = useSegmentAnalytics()
@@ -45,7 +46,10 @@ export const YppLandingView: FC = () => {
   )
   const [wasSignInTriggered, setWasSignInTriggered] = useState(false)
   const isTodaysQuotaReached = data ? data.signupQuotaUsed > SINGUP_DAILY_QUOTA : false
-  const shouldContinueYppFlow = useYppStore((store) => store.shouldContinueYppFlow)
+  const shouldContinueYppFlowAfterCreatingChannel = useYppStore(
+    (store) => store.shouldContinueYppFlowAfterCreatingChannel
+  )
+  const [referrer, utmSource] = [searchParams.get('referrerId'), searchParams.get('utm_source')]
 
   const { unsyncedChannels, isLoading, currentChannel } = useGetYppSyncedChannels()
   const isYppSigned = !!currentChannel
@@ -69,31 +73,26 @@ export const YppLandingView: FC = () => {
       return
     }
 
-    if (!isLoggedIn) {
-      trackYppSignInButtonClick()
-      await signIn()
-      setWasSignInTriggered(true)
-      return
-    }
-
     if (isYppSigned) {
       navigate(absoluteRoutes.studio.ypp())
       return
     }
 
-    if (!currentStep) {
-      setCurrentStep('requirements')
+    if (!yppModalOpenName) {
+      trackYppSignInButtonClick(referrer, utmSource)
+      setYppModalOpen('ypp-requirements')
       return
     }
   }, [
-    currentStep,
-    displaySnackbar,
-    isLoggedIn,
     isTodaysQuotaReached,
     isYppSigned,
+    yppModalOpenName,
+    displaySnackbar,
     navigate,
-    signIn,
     trackYppSignInButtonClick,
+    referrer,
+    utmSource,
+    setYppModalOpen,
   ])
 
   useEffect(() => {
@@ -105,20 +104,23 @@ export const YppLandingView: FC = () => {
   }, [handleYppSignUpClick, wasSignInTriggered])
 
   useEffect(() => {
-    if (shouldContinueYppFlow) {
+    if (shouldContinueYppFlowAfterCreatingChannel) {
       setSelectedChannelId(channelId)
-      setShouldContinueYppFlow(false)
-      setCurrentStep('requirements')
+      setShouldContinueYppFlowAfterCreatingChannel(false)
+      setYppModalOpen('ypp-requirements')
     }
-  }, [channelId, handleYppSignUpClick, setSelectedChannelId, setShouldContinueYppFlow, shouldContinueYppFlow])
+  }, [
+    channelId,
+    handleYppSignUpClick,
+    setSelectedChannelId,
+    setShouldContinueYppFlowAfterCreatingChannel,
+    setYppModalOpen,
+    shouldContinueYppFlowAfterCreatingChannel,
+  ])
 
   const getYppAtlasStatus = () => {
     if (isLoading) {
       return null
-    }
-
-    if (walletStatus !== 'connected') {
-      return 'connect-wallet'
     }
 
     if (!activeMembership?.channels.length) {
@@ -133,15 +135,11 @@ export const YppLandingView: FC = () => {
   return (
     <Wrapper>
       {headTags}
-      <YppAuthorizationModal
-        unSyncedChannels={unsyncedChannels}
-        currentStep={currentStep}
-        onChangeStep={setCurrentStep}
-      />
+      <YppAuthorizationModal unSyncedChannels={unsyncedChannels} />
       <ParallaxProvider>
         <YppReferralBanner />
         <YppHero
-          onSelectChannel={() => setCurrentStep('select-channel')}
+          onSelectChannel={() => setYppModalOpen('ypp-select-channel')}
           onSignUpClick={handleYppSignUpClick}
           yppAtlasStatus={getYppAtlasStatus()}
           hasAnotherUnsyncedChannel={hasAnotherUnsyncedChannel}

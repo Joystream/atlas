@@ -1,6 +1,7 @@
 import BN from 'bn.js'
 import { FC, useRef, useState } from 'react'
 
+import { ProtectedActionWrapper } from '@/components/_auth/ProtectedActionWrapper'
 import { VideoReaction } from '@/joystream-lib/types'
 
 import { ReactionButton, ReactionSteppperState } from './ReactionButton'
@@ -17,6 +18,8 @@ export type ReactionStepperProps = {
   onCalculateFee?: (reaction: VideoReaction) => Promise<void>
 }
 
+const reactions: VideoReaction[] = ['like', 'dislike']
+
 export const ReactionStepper: FC<ReactionStepperProps> = ({
   likes = 0,
   dislikes = 0,
@@ -31,7 +34,6 @@ export const ReactionStepper: FC<ReactionStepperProps> = ({
   const total = likes + dislikes
   const likesPercent = total ? Number((likes / total).toFixed(4)) : 0
   const reactionStepperWrapperRef = useRef<HTMLDivElement>(null)
-  const reactions: VideoReaction[] = ['like', 'dislike']
   return (
     <>
       {state === 'processing' && (
@@ -43,21 +45,26 @@ export const ReactionStepper: FC<ReactionStepperProps> = ({
       )}
       <ReactionStepperWrapper className={className} ref={reactionStepperWrapperRef}>
         {reactions.map((reaction) => (
-          <ReactionButton
-            fee={fee}
+          <ProtectedActionWrapper
             key={reaction}
-            state={state}
-            reactionPopoverDismissed={reactionPopoverDismissed}
-            onReact={onReact}
-            type={reaction}
-            reactionsNumber={reaction === 'like' ? likes : dislikes}
-            onPopoverShow={async () => {
-              setIsPopoverOpen(true)
-              await onCalculateFee?.(reaction)
-            }}
-            onPopoverHide={() => setIsPopoverOpen(false)}
-            isPopoverOpen={isPopoverOpen}
-          />
+            title={reaction === 'like' ? 'You like this video?' : 'You don’t like this video?'}
+            description="Sign in to make your vote count"
+          >
+            <ReactionButton
+              fee={fee}
+              state={state}
+              reactionPopoverDismissed={reactionPopoverDismissed}
+              onReact={onReact}
+              type={reaction}
+              reactionsNumber={reaction === 'like' ? likes : dislikes}
+              onPopoverShow={async () => {
+                setIsPopoverOpen(true)
+                await onCalculateFee?.(reaction)
+              }}
+              onPopoverHide={() => setIsPopoverOpen(false)}
+              isPopoverOpen={isPopoverOpen}
+            />
+          </ProtectedActionWrapper>
         ))}
         <ReactionBar loaded={state !== 'loading'}>
           <ReactionBarProgress likesPercent={likesPercent} isProcessing={state === 'processing' || isPopoverOpen} />

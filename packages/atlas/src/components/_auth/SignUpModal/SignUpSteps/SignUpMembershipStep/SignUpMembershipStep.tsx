@@ -1,0 +1,219 @@
+import HCaptcha from '@hcaptcha/react-hcaptcha'
+import debouncePromise from 'awesome-debounce-promise'
+import { FC, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import shallow from 'zustand/shallow'
+
+import { AuthenticationModalStepTemplate } from '@/components/_auth/AuthenticationModalStepTemplate'
+import { TextButton } from '@/components/_buttons/Button'
+import { FormField } from '@/components/_inputs/FormField'
+import { Input } from '@/components/_inputs/Input'
+import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
+import { atlasConfig } from '@/config'
+import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
+import { MemberFormData } from '@/hooks/useCreateMember'
+import { useUniqueMemberHandle } from '@/hooks/useUniqueMemberHandle'
+import { useAuthStore } from '@/providers/auth/auth.store'
+
+import { StyledAvatar, StyledForm, SubtitleContainer } from './SignUpMembershipStep.styles'
+
+import { SignUpStepsCommonProps } from '../SignUpSteps.types'
+
+type SignInModalMembershipStepProps = SignUpStepsCommonProps & {
+  onSubmit: (data: MemberFormData) => void
+  dialogContentRef?: RefObject<HTMLDivElement>
+} & Pick<MemberFormData, 'avatar' | 'handle'>
+
+export const SignUpMembershipStep: FC<SignInModalMembershipStepProps> = ({
+  setPrimaryButtonProps,
+  onSubmit,
+  hasNavigatedBack,
+  dialogContentRef,
+  avatar,
+  handle,
+}) => {
+  const {
+    register,
+    handleSubmit: createSubmitHandler,
+    trigger,
+    watch,
+    control,
+    formState: { errors, isSubmitting },
+  } = useForm<MemberFormData>({
+    reValidateMode: 'onSubmit',
+    defaultValues: {
+      avatar,
+      handle,
+    },
+  })
+  const { setAuthModalOpenName } = useAuthStore(
+    (state) => ({
+      setAuthModalOpenName: state.actions.setAuthModalOpenName,
+    }),
+    shallow
+  )
+  const handleInputRef = useRef<HTMLInputElement | null>(null)
+  const captchaInputRef = useRef<HTMLDivElement | null>(null)
+  const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
+
+  const [isHandleValidating, setIsHandleValidating] = useState(false)
+  // used to scroll the form to the bottom upon first handle field focus - this is done to let the user see Captcha form field
+  const hasDoneInitialScroll = useRef(false)
+
+  const { checkIfMemberIsAvailable } = useUniqueMemberHandle()
+
+  const requestFormSubmit = useCallback(() => {
+    setIsHandleValidating(false)
+    createSubmitHandler(onSubmit)()
+  }, [onSubmit, createSubmitHandler])
+
+  // send updates to SignInModal on state of primary button
+  useEffect(() => {
+    setPrimaryButtonProps({
+      text: 'Continue',
+      disabled: isSubmitting,
+      onClick: requestFormSubmit,
+    })
+  }, [isHandleValidating, isSubmitting, requestFormSubmit, setPrimaryButtonProps])
+
+  const { ref, ...handleRest } = useMemo(
+    () =>
+      register('handle', {
+        onChange: debouncePromise(
+          async () => {
+            await trigger('handle')
+            setIsHandleValidating(false)
+          },
+          500,
+          {
+            key() {
+              setIsHandleValidating(true)
+              return null
+            },
+          }
+        ),
+        validate: {
+          valid: (value) => (!value ? true : MEMBERSHIP_NAME_PATTERN.test(value) || 'Enter a valid member handle.'),
+          unique: async (value) => {
+            const valid = await checkIfMemberIsAvailable(value)
+            return valid || 'This member handle is already in use.'
+          },
+        },
+        required: { value: true, message: 'Member handle is required.' },
+        minLength: { value: 5, message: 'Member handle must be at least 5 characters long.' },
+      }),
+    [checkIfMemberIsAvailable, register, trigger]
+  )
+
+  useEffect(() => {
+    if (errors.handle) {
+      handleInputRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }
+
+    if (errors.captchaToken) {
+      captchaInputRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [errors.captchaToken, errors.handle])
+
+  return (
+    <AuthenticationModalStepTemplate
+      darkBackground
+      title="Create membership"
+      backgroundImage={watch('avatar')?.url || undefined}
+      subtitle={
+        <SubtitleContainer>
+          Already have an account? <TextButton onClick={() => setAuthModalOpenName('logIn')}>Sign in</TextButton>
+        </SubtitleContainer>
+      }
+      hasNavigatedBack={hasNavigatedBack}
+      formNode={
+        <StyledForm onSubmit={createSubmitHandler(onSubmit)}>
+          <Controller
+            control={control}
+            name="avatar"
+            render={({ field: { value: imageInputFile, onChange } }) => (
+              <>
+                <StyledAvatar
+                  size={88}
+                  onClick={() =>
+                    avatarDialogRef.current?.open(
+                      imageInputFile?.originalBlob ? imageInputFile.originalBlob : imageInputFile?.blob,
+                      imageInputFile?.imageCropData,
+                      !!imageInputFile?.blob
+                    )
+                  }
+                  assetUrls={imageInputFile?.url ? [imageInputFile.url] : []}
+                  editable
+                />
+                <ImageCropModal
+                  imageType="avatar"
+                  onConfirm={(blob, url, _, imageCropData, originalBlob) => {
+                    onChange({
+                      blob,
+                      url,
+                      imageCropData,
+                      originalBlob,
+                    })
+                  }}
+                  onDelete={() => {
+                    onChange(undefined)
+                  }}
+                  ref={avatarDialogRef}
+                />
+              </>
+            )}
+          />
+          <FormField
+            disableErrorAnimation={document.activeElement === handleInputRef.current}
+            label="Member handle"
+            description="Member handle may contain only lowercase letters, numbers and underscores."
+            error={errors.handle?.message}
+          >
+            <Input
+              {...handleRest}
+              ref={(e) => {
+                ref(e)
+                handleInputRef.current = e
+              }}
+              placeholder="johnnysmith"
+              error={!!errors.handle}
+              processing={isHandleValidating || isSubmitting}
+              autoComplete="off"
+              onClick={() => {
+                if (hasDoneInitialScroll.current || !dialogContentRef?.current) return
+                hasDoneInitialScroll.current = true
+                dialogContentRef.current.scrollTo({ top: dialogContentRef.current.scrollHeight, behavior: 'smooth' })
+              }}
+            />
+          </FormField>
+          {atlasConfig.features.members.hcaptchaSiteKey && (
+            <Controller
+              control={control}
+              name="captchaToken"
+              render={({ field: { onChange }, fieldState: { error } }) => (
+                <FormField error={error?.message} ref={captchaInputRef}>
+                  <HCaptcha
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    sitekey={atlasConfig.features.members.hcaptchaSiteKey!}
+                    theme="dark"
+                    languageOverride="en"
+                    onVerify={(token) => {
+                      onChange(token)
+                      trigger('captchaToken')
+                    }}
+                  />
+                </FormField>
+              )}
+              rules={{
+                required: {
+                  value: !!atlasConfig.features.members.hcaptchaSiteKey,
+                  message: "Verify that you're not a robot.",
+                },
+              }}
+            />
+          )}
+        </StyledForm>
+      }
+    />
+  )
+}

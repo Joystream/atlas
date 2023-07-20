@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useParams } from 'react-router'
 
 import { useCategoriesFeaturedVideos } from '@/api/hooks/categoriesFeaturedVideos'
@@ -6,6 +7,7 @@ import { CategoryIcon } from '@/components/CategoryIcon'
 import { VideoCategoryHero } from '@/components/_video/VideoCategoryHero'
 import { displayCategoriesLookup } from '@/config/categories'
 import { useHeadTags } from '@/hooks/useHeadTags'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { cVar } from '@/styles'
 
 import { CategoryVideos } from './CategoryVideos'
@@ -16,12 +18,19 @@ export const CategoryView = () => {
   const currentCategory = displayCategoriesLookup[id]
 
   const headTags = useHeadTags(currentCategory?.name)
+  const { trackPageView } = useSegmentAnalytics()
 
   const { categoriesFeaturedVideos, loading: categoriesFeaturedVideosLoading } = useCategoriesFeaturedVideos(
     currentCategory?.defaultVideoCategory || ''
   )
 
   const videoHeroVideos = useVideoHeroVideos(categoriesFeaturedVideos)
+
+  useEffect(() => {
+    if (id) {
+      trackPageView(`Category ${currentCategory?.name}`)
+    }
+  }, [currentCategory?.name, id, trackPageView])
 
   return (
     <>

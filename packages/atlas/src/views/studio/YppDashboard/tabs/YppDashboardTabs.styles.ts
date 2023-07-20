@@ -1,8 +1,9 @@
 import styled from '@emotion/styled'
 
 import { SvgActionArrowRight, SvgAlertsInformative24, SvgAlertsWarning32 } from '@/assets/icons'
+import { ActionBar } from '@/components/ActionBar'
 import { Banner } from '@/components/Banner'
-import { cVar, media, sizes } from '@/styles'
+import { cVar, media, sizes, zIndex } from '@/styles'
 
 export { Divider } from '../YppDashboard.styles'
 
@@ -59,4 +60,12 @@ export const StyledSvgAlertsWarning32 = styled(SvgAlertsWarning32)`
 
 export const StyledBanner = styled(Banner)`
   margin-bottom: ${sizes(6)};
+`
+
+export const StyledActionBar = styled(ActionBar)`
+  position: fixed;
+  left: var(--size-sidenav-width-collapsed);
+  right: 0;
+  bottom: 0;
+  z-index: ${zIndex.sideNav - 1};
 `

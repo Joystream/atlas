@@ -31,7 +31,7 @@ const createApolloClient = () => {
     })
   )
 
-  const orionLink = ApolloLink.from([delayLink, new HttpLink({ uri: ORION_GRAPHQL_URL })])
+  const orionLink = ApolloLink.from([delayLink, new HttpLink({ uri: ORION_GRAPHQL_URL, credentials: 'include' })])
 
   const operationSplitLink = split(
     ({ query, setContext }) => {

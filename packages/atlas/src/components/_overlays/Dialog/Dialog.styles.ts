@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { cVar, media, sizes } from '@/styles'
+import { cVar, media, sizes, zIndex } from '@/styles'
 
 export type DialogSize = 'default' | 'compact'
 
@@ -35,6 +35,7 @@ export const DialogContainer = styled.div`
   flex-direction: column;
   width: 100%;
   overflow: hidden;
+  z-index: ${zIndex.modals + 2};
   background-color: ${cVar('colorBackgroundStrong')};
   border-radius: ${cVar('radiusMedium')};
   box-shadow: ${cVar('effectElevation24Layer1')}, ${cVar('effectElevation24Layer2')};

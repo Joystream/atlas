@@ -32,6 +32,7 @@ const TextAreaComponent: ForwardRefRenderFunction<HTMLTextAreaElement, TextAreaP
     value,
     rows,
     disabled,
+    className,
     counter,
     spellcheck = true,
     maxLength,
@@ -59,6 +60,7 @@ const TextAreaComponent: ForwardRefRenderFunction<HTMLTextAreaElement, TextAreaP
     <TextAreaWrapper>
       <TextAreaContainer>
         <StyledTextArea
+          className={className}
           name={name}
           ref={mergeRefs([ref, textAreaRef])}
           error={error}

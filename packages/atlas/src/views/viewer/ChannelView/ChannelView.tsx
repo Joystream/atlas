@@ -13,6 +13,7 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ViewWrapper } from '@/components/ViewWrapper'
+import { ProtectedActionWrapper } from '@/components/_auth/ProtectedActionWrapper'
 import { Button } from '@/components/_buttons/Button'
 import { ChannelCover } from '@/components/_channel/ChannelCover'
 import { CollectorsBox } from '@/components/_channel/CollectorsBox'
@@ -26,7 +27,8 @@ import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
-import { useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
+import { useSubscribeAccountBalance } from '@/providers/joystream'
+import { useUser } from '@/providers/user/user.hooks'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
@@ -64,6 +66,7 @@ export const ChannelView: FC = () => {
   const videoRows = useVideoGridRows('main')
   const navigate = useNavigate()
   const [showReportDialog, setShowReportDialog] = useState(false)
+  const { activeMembership, setActiveChannel } = useUser()
 
   const tilesPerPage = videoRows * tilesPerRow
 
@@ -81,12 +84,14 @@ export const ChannelView: FC = () => {
   const smMatch = useMediaMatch('sm')
   const mdMatch = useMediaMatch('md')
   const { id } = useParams()
+  const isChannelOwner = activeMembership?.channels.some((channel) => channel.id === id)
   const {
     channel,
     activeVideosCount,
     loading,
     error: channelError,
   } = useFullChannel(id ?? '', {
+    skip: !id,
     onError: (error) => SentryLogger.error('Failed to fetch channel', 'ChannelView', error, { channel: { id } }),
   })
   const {
@@ -277,6 +282,7 @@ export const ChannelView: FC = () => {
                       format="short"
                       color="colorText"
                       variant="t300"
+                      withDenomination="after"
                     />
                   </Balance>
                 </ChannelInfoContainer>
@@ -292,25 +298,56 @@ export const ChannelView: FC = () => {
             <CollectorsBox collectors={mappedChannelNftCollectors} maxShowedCollectors={4} />
           )}
           <StyledButtonContainer>
-            <StyledButton
-              icon={isFollowing ? <SvgActionCheck /> : <SvgActionPlus />}
-              variant={isFollowing ? 'secondary' : 'primary'}
-              onClick={toggleFollowing}
-              size="large"
-            >
-              {isFollowing ? 'Unfollow' : 'Follow'}
-            </StyledButton>
-            <ContextMenu
-              placement="bottom-end"
-              items={[
-                {
-                  onClick: () => setShowReportDialog(true),
-                  label: 'Report channel',
-                  nodeStart: <SvgActionFlag />,
-                },
-              ]}
-              trigger={<Button icon={<SvgActionMore />} variant="tertiary" size="large" />}
-            />
+            {isChannelOwner ? (
+              <>
+                <StyledButton
+                  variant="secondary"
+                  onClick={() => id && setActiveChannel(id)}
+                  to={absoluteRoutes.studio.myChannel()}
+                >
+                  Customize channel
+                </StyledButton>
+                <StyledButton
+                  variant="secondary"
+                  onClick={() => id && setActiveChannel(id)}
+                  to={absoluteRoutes.studio.videos()}
+                >
+                  Manage videos
+                </StyledButton>
+              </>
+            ) : (
+              <>
+                <ProtectedActionWrapper
+                  title="You want to follow this channel?"
+                  description={`Sign in to follow ${channel?.title}`}
+                >
+                  <StyledButton
+                    icon={isFollowing ? <SvgActionCheck /> : <SvgActionPlus />}
+                    variant={isFollowing ? 'secondary' : 'primary'}
+                    onClick={toggleFollowing}
+                    size="large"
+                  >
+                    {isFollowing ? 'Unfollow' : 'Follow'}
+                  </StyledButton>
+                </ProtectedActionWrapper>
+                <ContextMenu
+                  placement="bottom-end"
+                  items={[
+                    {
+                      onClick: () => setShowReportDialog(true),
+                      label: 'Report channel',
+                      nodeStart: <SvgActionFlag />,
+                      protected: {
+                        title: 'You want to report this channel?',
+                        description: 'Sign in to report harmful content',
+                      },
+                    },
+                  ]}
+                  trigger={<Button icon={<SvgActionMore />} variant="tertiary" size="large" />}
+                />
+              </>
+            )}
+
             {channel?.id && (
               <ReportModal
                 show={showReportDialog}

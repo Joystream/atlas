@@ -32,7 +32,7 @@ import {
   wrapMetadata,
 } from './metadata'
 import {
-  AccountId,
+  AtlasSigner,
   ChannelExtrinsicResult,
   ChannelId,
   ChannelInputAssets,
@@ -63,7 +63,7 @@ import {
   VideoReaction,
 } from './types'
 
-type AccountIdAccessor = () => AccountId | null
+type AccountIdAccessor = () => AtlasSigner | null
 type PublicExtrinsic<TxFunction, ReturnValue> = TxFunction extends (...a: infer U) => unknown
   ? (...a: [...U, ExtrinsicStatusCallbackFn | undefined]) => Promise<ReturnValue>
   : never
@@ -196,7 +196,8 @@ export class JoystreamLibExtrinsics {
     inputBuckets: ChannelInputBuckets,
     expectedDataObjectStateBloatBond: StringifiedNumber,
     expectedChannelStateBloatBond: StringifiedNumber,
-    rawMetadataProcessor?: RawMetadataProcessorFn
+    rawMetadataProcessor?: RawMetadataProcessorFn,
+    collaboratorMemberId?: MemberId | null
   ) => {
     await this.ensureApi()
 
@@ -210,7 +211,16 @@ export class JoystreamLibExtrinsics {
     const creationParameters = createType('PalletContentChannelCreationParametersRecord', {
       meta: channelMetadata,
       assets: channelAssets,
-      collaborators: createType('BTreeMap<u64, BTreeSet<PalletContentIterableEnumsChannelActionPermission>>', {}),
+      collaborators: createType(
+        'BTreeMap<u64, BTreeSet<PalletContentIterableEnumsChannelActionPermission>>',
+        collaboratorMemberId
+          ? {
+              [collaboratorMemberId]: createType('BTreeSet<PalletContentIterableEnumsChannelActionPermission>', [
+                'AddVideo',
+              ]),
+            }
+          : {}
+      ),
       storageBuckets: createType('BTreeSet<u64>', inputBuckets.storage),
       distributionBuckets: createType('BTreeSet<PalletStorageDistributionBucketIdRecord>', inputBuckets.distribution),
       expectedDataObjectStateBloatBond: new BN(expectedDataObjectStateBloatBond),
@@ -230,6 +240,7 @@ export class JoystreamLibExtrinsics {
     expectedDataObjectStateBloatBond,
     expectedChannelStateBloatBond,
     rawMetadataProcessor,
+    collaboratorMemberId,
     cb
   ) => {
     const tx = await this.createChannelTx(
@@ -239,7 +250,8 @@ export class JoystreamLibExtrinsics {
       inputBuckets,
       expectedDataObjectStateBloatBond,
       expectedChannelStateBloatBond,
-      rawMetadataProcessor
+      rawMetadataProcessor,
+      collaboratorMemberId
     )
 
     const { block, getEventData } = await this.sendExtrinsic(tx, cb)

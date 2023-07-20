@@ -27,7 +27,7 @@ import {
 } from '@/api/queries/__generated__/videos.generated'
 import { absoluteRoutes } from '@/config/routes'
 import { CommentReaction, VideoReaction } from '@/joystream-lib/types'
-import { useJoystream } from '@/providers/joystream/joystream.hooks'
+import { useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'

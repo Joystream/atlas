@@ -1,12 +1,13 @@
 import { FC } from 'react'
 
-import { SvgActionPlay } from '@/assets/icons'
+import { SvgActionAddChannel, SvgActionMember, SvgActionPlay } from '@/assets/icons'
 import { Text } from '@/components/Text'
 import { SubTitle, WelcomeView } from '@/components/WelcomeView'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
-import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
+import { useAuthStore } from '@/providers/auth/auth.store'
 import { useUser } from '@/providers/user/user.hooks'
 
 import { InlineText, LeftStep, RightStep, StepsContainer, StyledSvgActionChevronR } from './StudioWelcomeView.styles'
@@ -19,9 +20,11 @@ export type Membership = {
 }
 
 export const StudioWelcomeView: FC = () => {
-  const { signIn, isLoggedIn } = useUser()
-  const { openSignInDialog } = useDisplaySignInDialog()
+  const { isLoggedIn } = useUser()
   const mdMatch = useMediaMatch('md')
+  const {
+    actions: { setAuthModalOpenName },
+  } = useAuthStore()
 
   return (
     <WelcomeView
@@ -90,8 +93,18 @@ export const StudioWelcomeView: FC = () => {
       }
       buttons={[
         isLoggedIn
-          ? { size: 'large', to: absoluteRoutes.studio.newChannel(), children: 'Create channel' }
-          : { size: 'large', onClick: () => signIn(undefined, openSignInDialog), children: 'Set up membership' },
+          ? {
+              size: 'large',
+              onClick: () => setAuthModalOpenName('createChannel'),
+              children: 'Create channel',
+              icon: <SvgActionAddChannel />,
+            }
+          : {
+              size: 'large',
+              onClick: () => setAuthModalOpenName(getCorrectLoginModal()),
+              children: 'Sign in',
+              icon: <SvgActionMember />,
+            },
         {
           size: 'large',
           variant: 'tertiary',

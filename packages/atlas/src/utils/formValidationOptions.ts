@@ -1,5 +1,6 @@
 import { isValid } from 'date-fns'
 import { RegisterOptions, Validate } from 'react-hook-form'
+import { z } from 'zod'
 
 type TextValidationArgs = {
   name: string
@@ -59,3 +60,28 @@ export const pastDateValidation = (date: Date | null, required = false) => {
   const currentDate = new Date()
   return currentDate >= date
 }
+export const passwordAndRepeatPasswordSchema = z
+  .object({
+    password: z
+      .string()
+      .min(9, { message: 'Password has to meet requirements.' })
+      .max(64, { message: 'Password has to meet requirements.' }),
+    confirmPassword: z.string(),
+  })
+  .refine(
+    (data) => {
+      return data.password === data.confirmPassword
+    },
+    {
+      path: ['confirmPassword'],
+      message: 'Password address has to match.',
+    }
+  )
+  .refine(
+    (data) =>
+      !!data.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/)?.length,
+    {
+      path: ['password'],
+      message: 'Password has to meet requirements.',
+    }
+  )

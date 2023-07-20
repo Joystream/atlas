@@ -9,6 +9,7 @@ import { StyledSvgAlertsInformative24 } from '@/components/Tooltip/Tooltip.style
 import { NftTileViewer } from '@/components/_nft/NftTileViewer'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useJoystreamStore } from '@/providers/joystream/joystream.store'
 import { useUser } from '@/providers/user/user.hooks'
 import { breakpoints } from '@/styles'
@@ -52,6 +53,7 @@ export const FeaturedNftsSection: FC = () => {
   const { activeChannel } = useUser()
   const [isFeatureNftModalOpen, setIsFeatureNfrModalOpen] = useState(false)
   const { currentBlock } = useJoystreamStore()
+  const { trackFeaturedNFTNext, trackFeaturedNFTPrev } = useSegmentAnalytics()
 
   const { nfts, loading } = useNfts({
     variables: {
@@ -150,6 +152,10 @@ export const FeaturedNftsSection: FC = () => {
               children: items.map((nft, idx) => <NftTileViewer isInCarousel nftId={nft.id} key={idx} />),
               spaceBetween: mdMatch ? 24 : 16,
               breakpoints: responsive,
+            }}
+            slideCallbacks={{
+              slideLeftCallback: (page) => trackFeaturedNFTPrev(page),
+              slideRightCallback: (page) => trackFeaturedNFTNext(page),
             }}
           />
         )}

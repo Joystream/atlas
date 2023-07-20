@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react'
 
 import { AuctionDatePickerValue } from '@/components/_inputs/AuctionDatePicker'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
-import { useJoystream } from '@/providers/joystream/joystream.hooks'
+import { useJoystream } from '@/providers/joystream'
 import { daysToMilliseconds } from '@/utils/time'
 
 import { Listing } from './NftForm.types'

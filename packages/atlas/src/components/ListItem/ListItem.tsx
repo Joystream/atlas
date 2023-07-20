@@ -40,6 +40,10 @@ export type ListItemProps = {
   }
   isSeparator?: boolean
   isInteractive?: boolean
+  protected?: {
+    title: string
+    description: string
+  }
 }
 
 export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
