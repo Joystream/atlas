@@ -43,12 +43,12 @@ export const RatioSlider = forwardRef<HTMLInputElement, Props>(
         <Track xmlns="http://www.w3.org/2000/svg">
           <circle className="knob" cx={valuePercent} cy={sizes(3)} r={sizes(2)} />
 
-          <mask id="myMask">
+          <mask id="cutout-mask">
             <rect x="-5%" y="0%" width="110%" height="100%" fill="#fff" />
             <circle className="cutout-mask" cx={valuePercent} cy={sizes(3)} r={sizes(3)} />
           </mask>
 
-          <g className="rail" mask="url(#myMask)">
+          <g className="rail" mask="url(#cutout-mask)">
             <line className="rail-left" x1="0%" x2={valuePercent} y1={sizes(3)} y2={sizes(3)} />
             <line className="rail-rigth" x1={valuePercent} x2="100%" y1={sizes(3)} y2={sizes(3)} />
 
