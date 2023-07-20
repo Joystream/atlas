@@ -312,8 +312,8 @@ export const SignUpModal = () => {
   }, [isSuccess, signUpFormData.email, signUpFormData.handle, trackMembershipCreation])
 
   useEffect(() => {
-    trackPageView(stepToPageName[currentStep] ?? '', { isYppFlow })
-  }, [currentStep, isYppFlow, trackPageView])
+    authModalOpenName === 'signUp' && trackPageView(stepToPageName[currentStep] ?? '', { isYppFlow })
+  }, [authModalOpenName, currentStep, isYppFlow, trackPageView])
 
   const smMatch = useMediaMatch('sm')
   return (
