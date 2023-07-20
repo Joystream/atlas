@@ -35,6 +35,7 @@ export const useSegmentAnalytics = () => {
 
   const identifyUser = useCallback(
     (email = 'no data') => {
+      if (!analytics) return
       analytics.identify(email, { email })
     },
     [analytics]
@@ -42,6 +43,7 @@ export const useSegmentAnalytics = () => {
 
   const trackPageView = useCallback(
     (name: string, params?: PageViewParams) => {
+      if (!analytics) return
       analytics.page(undefined, name, params)
     },
     [analytics]
@@ -56,6 +58,7 @@ export const useSegmentAnalytics = () => {
       referrerId = 'no data',
       utmSource = 'no data'
     ) => {
+      if (!analytics) return
       analytics.track('YPP Sign Up Completed', {
         handle,
         email,
@@ -70,6 +73,7 @@ export const useSegmentAnalytics = () => {
 
   const trackMembershipCreation = useCallback(
     (handle: string, email: string) => {
+      if (!analytics) return
       analytics.track('Membership created', {
         handle,
         email,
@@ -80,6 +84,7 @@ export const useSegmentAnalytics = () => {
 
   const trackChannelCreation = useCallback(
     (channelId: string, channelTitle: string, language: string) => {
+      if (!analytics) return
       analytics.track('Channel created', {
         channelId,
         channelTitle,
@@ -91,6 +96,7 @@ export const useSegmentAnalytics = () => {
 
   const trackVideoPlaybackStarted = useCallback(
     async (params: videoPlaybackParams) => {
+      if (!analytics) return
       await analytics.track('Video playback started', {
         ...params,
       })
@@ -100,6 +106,7 @@ export const useSegmentAnalytics = () => {
 
   const trackVideoPlaybackPaused = useCallback(
     async (params: videoPlaybackParams) => {
+      if (!analytics) return
       await analytics.track('Video playback paused', {
         ...params,
       })
@@ -109,6 +116,7 @@ export const useSegmentAnalytics = () => {
 
   const trackVideoPlaybackResumed = useCallback(
     async (params: videoPlaybackParams) => {
+      if (!analytics) return
       await analytics.track('Video playback resumed', {
         ...params,
       })
@@ -118,6 +126,7 @@ export const useSegmentAnalytics = () => {
 
   const trackVideoPlaybackCompleted = useCallback(
     async (params: videoPlaybackParams) => {
+      if (!analytics) return
       await analytics.track('Video playback completed', {
         ...params,
       })
@@ -127,6 +136,7 @@ export const useSegmentAnalytics = () => {
 
   const trackVideoUpload = useCallback(
     (title: string, channelId: string) => {
+      if (!analytics) return
       analytics.track('Video uploaded', {
         channelId,
         title,
@@ -137,6 +147,7 @@ export const useSegmentAnalytics = () => {
 
   const trackNftMint = useCallback(
     (title: string, channelId: string) => {
+      if (!analytics) return
       analytics.track('NFT minted', {
         title,
         channelId,
@@ -147,6 +158,7 @@ export const useSegmentAnalytics = () => {
 
   const trackNftSale = useCallback(
     (saleType: string, price: string) => {
+      if (!analytics) return
       analytics.track('NFT put on sale', {
         saleType,
         price,
@@ -157,6 +169,7 @@ export const useSegmentAnalytics = () => {
 
   const trackCommentAdded = useCallback(
     (commentBody: string, videoId: string) => {
+      if (!analytics) return
       analytics.track('Comment added', {
         commentBody,
         videoId,
@@ -167,6 +180,7 @@ export const useSegmentAnalytics = () => {
 
   const trackLikeAdded = useCallback(
     (videoId: string, memberId: string) => {
+      if (!analytics) return
       analytics.track('Like added', {
         memberId,
         videoId,
@@ -177,6 +191,7 @@ export const useSegmentAnalytics = () => {
 
   const trackDislikeAdded = useCallback(
     (videoId: string, memberId: string) => {
+      if (!analytics) return
       analytics.track('Dislike added', {
         memberId,
         videoId,
@@ -187,6 +202,7 @@ export const useSegmentAnalytics = () => {
 
   const trackChannelFollow = useCallback(
     (channelId: string) => {
+      if (!analytics) return
       analytics.track('Channel followed', {
         channelId,
       })
@@ -196,6 +212,7 @@ export const useSegmentAnalytics = () => {
 
   const trackYppSignInButtonClick = useCallback(
     (referrer: string | null | undefined, utmSource: string | null | undefined) => {
+      if (!analytics) return
       analytics.track('YPP Landing Sign In w Google Clicked', { referrer, utmSource })
     },
     [analytics]
@@ -203,6 +220,7 @@ export const useSegmentAnalytics = () => {
 
   const trackNFTCarouselNext = useCallback(
     (slideId: string, nftId?: string) => {
+      if (!analytics) return
       analytics.track('Featured NFT carousel next slide', {
         slideId,
         nftId,
@@ -213,6 +231,7 @@ export const useSegmentAnalytics = () => {
 
   const trackNFTCarouselPrev = useCallback(
     (slideId: string, nftId?: string) => {
+      if (!analytics) return
       analytics.track('Featured NFT carousel next slide', {
         slideId,
         nftId,
@@ -223,6 +242,7 @@ export const useSegmentAnalytics = () => {
 
   const trackFeaturedNFTNext = useCallback(
     (page?: string) => {
+      if (!analytics) return
       analytics.track('Featured NFT next page', {
         page,
       })
@@ -232,6 +252,7 @@ export const useSegmentAnalytics = () => {
 
   const trackFeaturedNFTPrev = useCallback(
     (page?: string) => {
+      if (!analytics) return
       analytics.track('Featured NFT prev page', {
         page,
       })
@@ -241,6 +262,7 @@ export const useSegmentAnalytics = () => {
 
   const trackAllNftFilterUpdated = useCallback(
     ({ priceFrom, priceTo, status, sortBy }: AllNftFilters) => {
+      if (!analytics) return
       analytics.track('All NFTs section filter updated', {
         status,
         priceFrom,
@@ -253,6 +275,7 @@ export const useSegmentAnalytics = () => {
 
   const trackReferralLinkGenerated = useCallback(
     (channelId: string | null | undefined) => {
+      if (!analytics) return
       analytics.track('Referral link generated', {
         channelId,
       })
@@ -261,6 +284,7 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackLogout = useCallback(() => {
+    if (!analytics) return
     analytics.reset()
   }, [analytics])
 

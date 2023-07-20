@@ -12,7 +12,7 @@ interface AnalyticsProviderProps {
 }
 
 const defaultAnalyticsContext = {
-  analytics: new AnalyticsBrowser(),
+  analytics: null,
 }
 
 export const SegmentAnalyticsContext = createContext<AnalyticsContextProps>(defaultAnalyticsContext)
@@ -23,7 +23,7 @@ export const SegmentAnalyticsProvider: FC<AnalyticsProviderProps> = ({ children 
   const writeKey = (analyticsEnabled && atlasConfig.analytics.segment?.id) || ''
 
   const segmentAnalytics: AnalyticsContextProps = useMemo(
-    () => ({ analytics: writeKey ? AnalyticsBrowser.load({ writeKey }) : new AnalyticsBrowser() }),
+    () => ({ analytics: writeKey ? AnalyticsBrowser.load({ writeKey }) : null }),
     [writeKey]
   )
 
