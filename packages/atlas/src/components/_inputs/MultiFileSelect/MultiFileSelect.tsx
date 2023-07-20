@@ -6,6 +6,7 @@ import useResizeObserver from 'use-resize-observer'
 import { SvgActionChevronR } from '@/assets/icons'
 import { Step } from '@/components/Step'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
+import { ImageInputMetadata, MediaInputMetadata } from '@/providers/videoWorkspace'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { FileType } from '@/types/files'
 import { validateImage } from '@/utils/image'
@@ -22,20 +23,7 @@ type InputFile = {
   title?: string
 }
 
-export type MediaInputMetadata = {
-  duration?: number | null
-  mediaPixelWidth?: number
-  mediaPixelHeight?: number
-  mimeType?: string
-  size?: number
-}
-
 export type VideoInputFile = MediaInputMetadata & InputFile
-
-export type ImageInputMetadata = {
-  imageCropData?: ImageCropData
-  assetDimensions?: AssetDimensions
-}
 
 export type ImageInputFile = {
   originalBlob?: Blob | File | null

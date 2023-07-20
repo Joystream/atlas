@@ -2,7 +2,7 @@ import BN from 'bn.js'
 import { useState } from 'react'
 
 import { atlasConfig } from '@/config'
-import { useTokenPrice } from '@/providers/joystream/joystream.hooks'
+import { useTokenPrice } from '@/providers/joystream'
 
 export const PlaygroundTokenPrice = () => {
   const { convertHapiToUSD, convertUSDToHapi } = useTokenPrice()

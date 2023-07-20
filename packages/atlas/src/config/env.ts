@@ -1,7 +1,7 @@
 import { useEnvironmentStore } from '@/providers/environment'
 import { getEnvName } from '@/utils/envVariables'
 
-type BuildEnv = 'production' | 'development'
+type BuildEnv = 'production' | 'development' | 'accounts'
 
 export const ENV_PREFIX = 'VITE'
 
@@ -34,9 +34,11 @@ export const readEnv = (name: string, required = true, direct = false): string =
 
 // variables that depends on chosen environment
 export const ORION_GRAPHQL_URL = readEnv('ORION_URL')
+export const ORION_AUTH_URL = readEnv('ORION_AUTH_URL')
 export const QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL = readEnv('QUERY_NODE_SUBSCRIPTION_URL')
 export const NODE_URL = readEnv('NODE_URL')
 export const FAUCET_URL = readEnv('FAUCET_URL')
+export const YPP_FAUCET_URL = readEnv('YPP_FAUCET_URL')
 
 // direct variables
 export const GOOGLE_OAUTH_ENDPOINT = 'https://accounts.google.com/o/oauth2/v2/auth'

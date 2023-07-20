@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { BUILD_ENV } from '@/config/env'
 import { AssetLogger, ConsoleLogger, DataObjectResponseMetric, DistributorEventEntry } from '@/utils/logs'
@@ -51,7 +53,10 @@ export const testAssetDownload = (url: string, type: 'image' | 'video' | 'subtit
 
     if (type === 'image') {
       img = new Image()
-      img.addEventListener('load', resolve)
+      img.addEventListener('load', (e) => {
+        e.preventDefault()
+        resolve()
+      })
       img.addEventListener('error', reject)
       img.src = url
     } else if (type === 'video') {
@@ -104,4 +109,15 @@ export const logDistributorPerformance = async (assetUrl: string, eventEntry: Di
   }
 
   AssetLogger.logDistributorResponseTime(eventEntry, metric)
+}
+
+export const getFastestImageUrl = async (urls: string[]) => {
+  const promises = urls.map((url) => {
+    return axios.head(url, {
+      headers: {
+        'Cache-Control': 'no-cache',
+      },
+    })
+  })
+  return Promise.race(promises)
 }

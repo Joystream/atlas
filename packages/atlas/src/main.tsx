@@ -1,3 +1,4 @@
+import { Buffer } from 'buffer'
 import { createRoot } from 'react-dom/client'
 
 import { atlasConfig } from '@/config'
@@ -10,6 +11,10 @@ const initApp = async () => {
   if (BUILD_ENV === 'production') {
     SentryLogger.initialize(atlasConfig.analytics.sentry?.dsn)
     AssetLogger.initialize(atlasConfig.analytics.assetLogs?.url)
+  }
+
+  if (typeof globalThis !== 'undefined') {
+    globalThis.Buffer = Buffer
   }
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

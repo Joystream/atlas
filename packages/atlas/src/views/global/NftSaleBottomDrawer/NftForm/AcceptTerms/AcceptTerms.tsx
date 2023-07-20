@@ -8,7 +8,7 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { atlasConfig } from '@/config'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
-import { useJoystream } from '@/providers/joystream/joystream.hooks'
+import { useJoystream } from '@/providers/joystream'
 import { formatDateTime } from '@/utils/time'
 
 import {
@@ -133,7 +133,7 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({
             <StyledInformation text="Only bids higher than this value will be accepted" placement="top" multiline />
           </Title>
           <Description>
-            <NumberFormat as="span" value={formData.startingPrice} variant="h400" withToken />
+            <NumberFormat as="span" value={formData.startingPrice} variant="h400" withToken withDenomination="before" />
           </Description>
         </Row>
       )}
@@ -152,7 +152,7 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({
             />
           </Title>
           <Description>
-            <NumberFormat as="span" value={formData.buyNowPrice} variant="h400" withToken />
+            <NumberFormat as="span" value={formData.buyNowPrice} variant="h400" withToken withDenomination="before" />
           </Description>
         </Row>
       )}
@@ -239,7 +239,7 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({
           />
         </Title>
         <Description>
-          <NumberFormat as="span" value={fee} format="full" withToken variant="h400" />
+          <NumberFormat as="span" value={fee} format="full" withToken variant="h400" withDenomination="before" />
         </Description>
       </Row>
     </>

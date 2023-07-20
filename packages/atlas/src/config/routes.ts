@@ -7,6 +7,10 @@ export const BASE_PATHS = {
   playground: '/playground',
 } as const
 
+export type MemberSettingsTabs = 'Public profile' | 'Wallet' | 'Notifications'
+export type MemberTabs = 'NFTs' | 'Activity' | 'About'
+export type MyChannelTabs = 'General' | 'Notifications'
+
 const withQueryParameters = (basePath: string, query: Record<string, string> = {}) => {
   if (Object.values(query).length) {
     const queryParams = new URLSearchParams()
@@ -28,7 +32,8 @@ export const relativeRoutes = {
     channel: (id = ':id') => `channel/${id}`,
     channels: () => 'channels',
     video: (id = ':id', query?: { [QUERY_PARAMS.COMMENT_ID]?: string }) => withQueryParameters(`video/${id}`, query),
-    editMembership: () => 'member/edit',
+    memberSettings: (query?: { [QUERY_PARAMS.TAB]?: MemberSettingsTabs }) =>
+      withQueryParameters(`member/settings`, query),
     member: (handle = ':handle', query?: { [QUERY_PARAMS.TAB]?: MemberTabs }) =>
       withQueryParameters(`member/${handle}`, query),
     notifications: () => 'notifications',
@@ -44,8 +49,7 @@ export const relativeRoutes = {
   },
   studio: {
     index: () => '',
-    newChannel: () => 'channel/new',
-    editChannel: () => 'channel',
+    myChannel: (query?: { [QUERY_PARAMS.TAB]?: MyChannelTabs }) => withQueryParameters('channel', query),
     videos: () => 'videos',
     crtWelcome: () => 'crt-welcome',
     crtTokenPreview: () => 'crt-preview',
@@ -81,8 +85,6 @@ export const absoluteRoutes = Object.entries(BASE_PATHS).reduce((absoluteRoutesA
 
   return absoluteRoutesAcc
 }, {} as typeof relativeRoutes)
-
-export type MemberTabs = 'NFTs' | 'Activity' | 'About'
 
 export const QUERY_PARAMS = {
   SEARCH: 'query',

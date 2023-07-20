@@ -1,38 +1,19 @@
-import { useSignerWallet } from './user.helpers'
+import { useAuth } from '@/providers/auth/auth.hooks'
+
 import { useUserContext } from './user.provider'
-import { UserStoreActions, useUserStore } from './user.store'
-import { ActiveUserState, SignerWalletAccount, SignerWalletStatus, UserContextValue } from './user.types'
+import { UserContextValue } from './user.types'
 
-type UseUserHookReturn = ActiveUserState &
-  UserStoreActions &
-  UserContextValue & {
-    walletAccounts: SignerWalletAccount[]
-    walletStatus: SignerWalletStatus
-
-    isLoggedIn: boolean
-    isWalletLoading: boolean
-
-    getWalletsList: ReturnType<typeof useSignerWallet>['getWalletsList']
-  }
+type UseUserHookReturn = UserContextValue & {
+  isLoggedIn: boolean
+}
 
 export const useUser = (): UseUserHookReturn => {
-  const { accountId, memberId, channelId, walletStatus, walletAccounts, actions } = useUserStore()
   const userContext = useUserContext()
-  const { getWalletsList } = useSignerWallet()
-
-  const isLoggedIn = !!accountId && !!memberId && walletStatus === 'connected'
+  const { isLoggedIn } = useAuth()
 
   return {
-    accountId,
-    memberId,
-    channelId,
-    walletStatus,
-    walletAccounts,
     isLoggedIn,
-    isWalletLoading: walletStatus === 'pending',
-    getWalletsList,
     ...userContext,
-    ...actions,
   }
 }
 export const useAuthorizedUser = () => {

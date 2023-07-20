@@ -5,6 +5,7 @@ import useResizeObserver from 'use-resize-observer'
 
 import { Fee } from '@/components/Fee'
 import { Text } from '@/components/Text'
+import { ProtectedActionWrapper } from '@/components/_auth/ProtectedActionWrapper'
 import { Button } from '@/components/_buttons/Button'
 import { useHasEnoughBalance } from '@/hooks/useHasEnoughBalance'
 import { useSnackbar } from '@/providers/snackbars'
@@ -116,81 +117,86 @@ export const CommentInput = forwardRef<HTMLTextAreaElement, CommentInputProps>(
     const show = !!value || active || !!processing
     const canComment = !!value && hasInitialValueChanged
     return (
-      <StyledCommentRow {...rest} processing={processing} isInput show={show} className={className}>
-        <Container
-          ref={containerRef}
-          onFocus={() => {
-            onFocus?.()
-            !readOnly && setActive(true)
-          }}
-          data-show={show}
-          height={textAreaHeight}
-          onKeyDown={(e) => {
-            // handle submit by keyboard shortcut
-            if (canComment && (e.nativeEvent.ctrlKey || e.nativeEvent.metaKey) && e.nativeEvent.code === 'Enter') {
-              validateLengthAndProcess()
-            }
-            if (e.nativeEvent.code === 'Escape') {
-              textAreaRef.current?.blur()
-            }
-          }}
-        >
-          <TextAreaWrapper>
-            <StyledTextArea
-              ref={mergeRefs([textAreaRef, measureRef, ref])}
-              rows={1}
-              value={value}
-              placeholder={`Leave a public ${reply ? 'reply' : 'comment'} as ${
-                memberHandle ? ` ${memberHandle}` : '...'
-              }`}
-              onChange={(e) => !readOnly && onChange?.(e)}
-              disabled={processing}
-              data-processing={processing}
-            />
-            <CustomPlaceholder as="p" variant="t200" color="colorTextMuted">
-              Leave a public {reply ? 'reply' : 'comment'} as
-              {memberHandle ? (
-                <Text as="span" variant="t200-strong" color="inherit">
-                  {' '}
-                  {memberHandle}
-                </Text>
-              ) : (
-                '...'
-              )}
-            </CustomPlaceholder>
-          </TextAreaWrapper>
-
-          <ButtonsContainer>
-            <Flex>
-              <Fee
-                amount={fee}
-                color="colorText"
-                variant="t100"
-                hideOnMobile
-                loading={feeLoading}
-                tooltipHeaderText="Comments on blockchain"
-                tooltipText="Publishing a comment requires a blockchain transaction, which comes with a fee based on its length. Transaction fees are covered from your membership account balance."
-              />
-            </Flex>
-            {onCancel && (
-              <Button
-                onClick={() => {
-                  setActive(false)
-                  onCancel()
-                }}
+      <ProtectedActionWrapper
+        title="You want to comment this video?"
+        description="Sign in to let others know what you think"
+      >
+        <StyledCommentRow {...rest} processing={processing} isInput show={show} className={className}>
+          <Container
+            ref={containerRef}
+            onFocus={() => {
+              onFocus?.()
+              !readOnly && setActive(true)
+            }}
+            data-show={show}
+            height={textAreaHeight}
+            onKeyDown={(e) => {
+              // handle submit by keyboard shortcut
+              if (canComment && (e.nativeEvent.ctrlKey || e.nativeEvent.metaKey) && e.nativeEvent.code === 'Enter') {
+                validateLengthAndProcess()
+              }
+              if (e.nativeEvent.code === 'Escape') {
+                textAreaRef.current?.blur()
+              }
+            }}
+          >
+            <TextAreaWrapper>
+              <StyledTextArea
+                ref={mergeRefs([textAreaRef, measureRef, ref])}
+                rows={1}
+                value={value}
+                placeholder={`Leave a public ${reply ? 'reply' : 'comment'} as ${
+                  memberHandle ? ` ${memberHandle}` : '...'
+                }`}
+                onChange={(e) => !readOnly && onChange?.(e)}
                 disabled={processing}
-                variant="secondary"
-              >
-                Cancel
+                data-processing={processing}
+              />
+              <CustomPlaceholder as="p" variant="t200" color="colorTextMuted">
+                Leave a public {reply ? 'reply' : 'comment'} as
+                {memberHandle ? (
+                  <Text as="span" variant="t200-strong" color="inherit">
+                    {' '}
+                    {memberHandle}
+                  </Text>
+                ) : (
+                  '...'
+                )}
+              </CustomPlaceholder>
+            </TextAreaWrapper>
+
+            <ButtonsContainer>
+              <Flex>
+                <Fee
+                  amount={fee}
+                  color="colorText"
+                  variant="t100"
+                  hideOnMobile
+                  loading={feeLoading}
+                  tooltipHeaderText="Comments on blockchain"
+                  tooltipText="Publishing a comment requires a blockchain transaction, which comes with a fee based on its length. Transaction fees are covered from your membership account balance."
+                />
+              </Flex>
+              {onCancel && (
+                <Button
+                  onClick={() => {
+                    setActive(false)
+                    onCancel()
+                  }}
+                  disabled={processing}
+                  variant="secondary"
+                >
+                  Cancel
+                </Button>
+              )}
+              <Button onClick={signTransactionHandler} disabled={processing || !canComment || loadingState}>
+                {processing ? 'Processing' : loadingState ? 'Please wait...' : 'Comment'}
               </Button>
-            )}
-            <Button onClick={signTransactionHandler} disabled={processing || !canComment || loadingState}>
-              {processing ? 'Processing' : loadingState ? 'Please wait...' : 'Comment'}
-            </Button>
-          </ButtonsContainer>
-        </Container>
-        <Border data-focused={active} data-processing={processing} />
-      </StyledCommentRow>
+            </ButtonsContainer>
+          </Container>
+          <Border data-focused={active} data-processing={processing} />
+        </StyledCommentRow>
+      </ProtectedActionWrapper>
     )
   }
 )

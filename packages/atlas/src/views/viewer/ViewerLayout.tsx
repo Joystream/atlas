@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
-import { FC } from 'react'
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
+import { FC, useEffect } from 'react'
+import { Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { ViewErrorBoundary } from '@/components/ViewErrorFallback'
@@ -12,6 +12,7 @@ import { TopbarViewer } from '@/components/_navigation/TopbarViewer'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useSearchStore } from '@/providers/search'
 import { useUser } from '@/providers/user/user.hooks'
 import { transitions } from '@/styles'
@@ -23,10 +24,10 @@ import { CategoryView } from './CategoryView'
 import { ChannelView } from './ChannelView'
 import { ChannelsView } from './ChannelsView'
 import { DiscoverView } from './DiscoverView'
-import { EditMembershipView } from './EditMembershipView'
 import { HomeView } from './HomeView'
 import { MarketplaceView } from './MarketplaceView'
 import { MemberView } from './MemberView'
+import { MembershipSettingsView } from './MembershipSettingsView'
 import { NotFoundView } from './NotFoundView'
 import { SearchView } from './SearchView'
 import { VideoView } from './VideoView'
@@ -48,15 +49,73 @@ const viewerRoutes = [
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.viewer.index()
 
+const locationToPageName = {
+  '/discover': 'Discover',
+  '/category': 'Category',
+  '/search': 'Search',
+  '/channels': 'Channels',
+  '/channel': 'Channel',
+  '/video': 'Video',
+  '/membership/edit': 'Edit membership',
+  '/member/': 'Member',
+  '/notifications': 'Notifications',
+  '/marketplace': 'Marketplace',
+  '/ypp': 'YPP',
+  '/ypp-dashboard': 'YPP Dashboard',
+}
+
 export const ViewerLayout: FC = () => {
   const location = useLocation()
   const locationState = location.state as RoutingState
   const { isLoggedIn } = useUser()
+  const [searchParams] = useSearchParams()
+  const { trackPageView } = useSegmentAnalytics()
 
   const navigate = useNavigate()
   const mdMatch = useMediaMatch('md')
   const searchOpen = useSearchStore((state) => state.searchOpen)
   const displayedLocation = locationState?.overlaidLocation || location
+
+  useEffect(() => {
+    if (!location.pathname.includes('studio')) {
+      const pageName =
+        location.pathname === '/'
+          ? 'Home'
+          : Object.entries(locationToPageName).find(([key]) => location.pathname.includes(key))?.[1]
+
+      //category page view will be tracked by categoryView component in order to include the id
+      if (pageName === 'Category') {
+        return
+      }
+
+      const query = searchParams.get('query')
+      const tab = searchParams.get('tab')
+      const referrer = searchParams.get('referrerId')
+      const utmSource = searchParams.get('utm_source')
+
+      const buildPageName = () => {
+        if (pageName === 'Search') {
+          return `Search result page '${query}'`
+        } else return pageName || 'unknown'
+      }
+
+      // had to include this timeout to make sure the page title is updated
+      const trackRequestTimeout = setTimeout(
+        () =>
+          trackPageView(buildPageName(), {
+            ...(location.pathname === absoluteRoutes.viewer.ypp()
+              ? { referrer: referrer || undefined, utm_source: utmSource || undefined }
+              : {}),
+            ...(location.pathname === absoluteRoutes.viewer.channel() ? { tab: tab || undefined } : {}),
+          }),
+        1000
+      )
+
+      return () => {
+        clearTimeout(trackRequestTimeout)
+      }
+    }
+  }, [location.pathname, searchParams, trackPageView])
 
   return (
     <>
@@ -80,9 +139,13 @@ export const ViewerLayout: FC = () => {
                   <Route key={route.path} {...route} />
                 ))}
                 <Route
-                  path={relativeRoutes.viewer.editMembership()}
+                  path={relativeRoutes.viewer.memberSettings()}
                   element={
-                    <PrivateRoute isAuth={isLoggedIn} element={<EditMembershipView />} redirectTo={ENTRY_POINT_ROUTE} />
+                    <PrivateRoute
+                      isAuth={isLoggedIn}
+                      element={<MembershipSettingsView />}
+                      redirectTo={ENTRY_POINT_ROUTE}
+                    />
                   }
                 />
                 <Route

@@ -19,7 +19,6 @@ export const LEFT_ANIMATION_MD = 'left-animation-md'
 
 export const OverflowHiddenContainer = styled.div`
   margin: 0 calc(-1 * var(--size-global-horizontal-padding)) 0;
-  overflow: hidden;
 
   [data-aos=${LEFT_ANIMATION_MD}] {
     opacity: 0;

@@ -13,18 +13,18 @@ import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
 import { useConfirmationModal } from '@/providers/confirmationModal'
-import { useBloatFeesAndPerMbFees, useJoystream } from '@/providers/joystream/joystream.hooks'
+import { useBloatFeesAndPerMbFees, useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { TX_SIGN_CANCELLED_SNACKBAR_TIMEOUT } from '@/providers/transactions/transactions.config'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
-import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/YppLandingView.hooks'
-import { StyledActionBar } from '@/views/viewer/EditMembershipView/EditMembershipView.styles'
+import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
 
 import {
   Divider,
   SettingsInputsWrapper,
+  StyledActionBar,
   StyledSvgActionArrowRight,
   StyledSvgAlertsWarning32,
 } from './YppDashboardTabs.styles'

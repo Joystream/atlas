@@ -1,12 +1,22 @@
 import { cloneDeepWith } from 'lodash-es'
 
-import { SelectItem } from '@/components/_inputs/Select'
+import { ListItemProps } from '@/components/ListItem/ListItem'
 import { createLookup } from '@/utils/data'
 import { ConsoleLogger } from '@/utils/logs'
 
 import { RawConfig, configSchema } from './configSchema'
 
 import rawConfig from '../../atlas.config.yml'
+
+type SelectItem<T = string> = {
+  value: T
+  name: string
+  // replaces the name in the menu list
+  menuName?: string
+  // hides the item in the menu list
+  hideInMenu?: boolean
+  onClick?: () => void
+} & Omit<ListItemProps, 'label' | 'highlight' | 'size'>
 
 type SelectValue = Pick<SelectItem, 'value' | 'name'>
 export type Config = RawConfig & {
