@@ -7,6 +7,8 @@ export const Wrapper = styled.div`
   width: 100%;
 `
 
+const TRANSITION_DURATION = '100ms'
+
 export const Track = styled.svg`
   pointer-events: none;
   overflow: visible;
@@ -17,6 +19,7 @@ export const Track = styled.svg`
   .rail {
     stroke-width: ${sizes(1 / 2)};
     stroke: ${cVar('colorCoreNeutral600')};
+    transition: all ${TRANSITION_DURATION};
 
     &-left {
       stroke: ${cVar('colorBackgroundPrimary')};
@@ -32,6 +35,7 @@ export const Track = styled.svg`
     stroke-width: 0;
     stroke: ${cVar('colorBackgroundPrimary')};
     fill: ${cVar('colorBackgroundPrimary')};
+    transition: all ${TRANSITION_DURATION};
   }
 
   .cutout-mask {
@@ -39,6 +43,7 @@ export const Track = styled.svg`
     stroke-width: 0;
     stroke: #000;
     fill: #000;
+    transition: all ${TRANSITION_DURATION};
   }
 
   text {
