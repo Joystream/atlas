@@ -10,12 +10,7 @@ import { AnalyticsContextProps } from './segment.types'
 interface AnalyticsProviderProps {
   children: ReactNode
 }
-
-const defaultAnalyticsContext = {
-  analytics: new AnalyticsBrowser(),
-}
-
-export const SegmentAnalyticsContext = createContext<AnalyticsContextProps>(defaultAnalyticsContext)
+export const SegmentAnalyticsContext = createContext<undefined | AnalyticsContextProps>(undefined)
 
 export const SegmentAnalyticsProvider: FC<AnalyticsProviderProps> = ({ children }) => {
   const cookiesAccepted = usePersonalDataStore((state) => state.cookiesAccepted)
