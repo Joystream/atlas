@@ -271,7 +271,12 @@ export const SignUpModal = () => {
   const handleMemberStepSubmit = useCallback(
     (data: MemberFormData) => {
       goToNextStep()
-      setSignupFormData((userForm) => ({ ...userForm, handle: data.handle, avatar: data.avatar }))
+      setSignupFormData((userForm) => ({
+        ...userForm,
+        handle: data.handle,
+        avatar: data.avatar,
+        captchaToken: data.captchaToken,
+      }))
     },
     [goToNextStep]
   )
