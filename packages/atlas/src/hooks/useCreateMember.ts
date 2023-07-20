@@ -15,6 +15,7 @@ import { useAuthStore } from '@/providers/auth/auth.store'
 import { OrionAccountError } from '@/providers/auth/auth.types'
 import { useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
+import { useTransactionManagerStore } from '@/providers/transactions/transactions.store'
 import { UploadAvatarServiceError, uploadAvatarImage } from '@/utils/image'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
@@ -73,6 +74,7 @@ export const useCreateMember = () => {
   const setAnonymousUserId = useAuthStore((store) => store.actions.setAnonymousUserId)
   const { joystream } = useJoystream()
   const { displaySnackbar } = useSnackbar()
+  const { addBlockAction } = useTransactionManagerStore((state) => state.actions)
 
   const { mutateAsync: avatarMutation } = useMutation('avatar-post', (croppedBlob: Blob) =>
     uploadAvatarImage(croppedBlob)
@@ -83,7 +85,7 @@ export const useCreateMember = () => {
   )
 
   const createNewMember = useCallback(
-    async (params: CreateNewMemberParams) => {
+    async (params: CreateNewMemberParams, onBlockSync?: () => void) => {
       const { data, onError } = params
       let fileUrl
       const keypair = keyring.addFromMnemonic(data.mnemonic)
@@ -101,6 +103,7 @@ export const useCreateMember = () => {
       }
       try {
         const response = await faucetMutation(body)
+        onBlockSync && addBlockAction({ callback: onBlockSync, targetBlock: response.data.block })
 
         return String(response.data.memberId)
       } catch (error) {
@@ -160,7 +163,7 @@ export const useCreateMember = () => {
         return
       }
     },
-    [avatarMutation, displaySnackbar, faucetMutation]
+    [addBlockAction, avatarMutation, displaySnackbar, faucetMutation]
   )
 
   const createNewOrionAccount = useCallback(
@@ -190,9 +193,10 @@ export const useCreateMember = () => {
           const errorMessage = error.message
           if (errorMessage === 'Account with the provided e-mail address already exists.') {
             displaySnackbar({
-              title: 'Something went wrong',
-              description: `Account with the provided e-mail address already exists. Use different e-mail.`,
               iconType: 'error',
+              title: 'This email was used already',
+              description:
+                'To create new membership you need to use an email that is not connected to already existing account.',
             })
             onError?.(RegisterError.EmailAlreadyExists)
           } else {

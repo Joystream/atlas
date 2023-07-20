@@ -10,27 +10,20 @@ type ProcessedBlockAction = {
 type TransactionManagerStoreState = {
   blockActions: ProcessedBlockAction[]
   transactions: Record<string, Transaction>
-  showFirstMintDialog: boolean
 }
 
 type TransactionManagerStoreActions = {
   addBlockAction: (action: ProcessedBlockAction) => void
   removeOldBlockActions: (currentBlock: number) => void
-
   addTransaction: (transaction: Transaction) => void
   updateTransaction: (id: string, transaction: Transaction) => void
   removeTransaction: (id: string) => void
-
-  setShowFistMintDialog: (show: boolean) => void
 }
 
 export const useTransactionManagerStore = createStore<TransactionManagerStoreState, TransactionManagerStoreActions>({
   state: {
     blockActions: [],
-
     transactions: {},
-
-    showFirstMintDialog: false,
   },
   actionsFactory: (set) => ({
     addBlockAction: (action) =>
@@ -41,7 +34,6 @@ export const useTransactionManagerStore = createStore<TransactionManagerStoreSta
       set((state) => {
         state.blockActions = state.blockActions.filter((action) => action.targetBlock > currentBlock)
       }),
-
     addTransaction: (transaction) =>
       set((state) => {
         state.transactions[transaction.id] = transaction
@@ -53,11 +45,6 @@ export const useTransactionManagerStore = createStore<TransactionManagerStoreSta
     removeTransaction: (id) =>
       set((state) => {
         delete state.transactions[id]
-      }),
-
-    setShowFistMintDialog: (show) =>
-      set((state) => {
-        state.showFirstMintDialog = show
       }),
   }),
 })

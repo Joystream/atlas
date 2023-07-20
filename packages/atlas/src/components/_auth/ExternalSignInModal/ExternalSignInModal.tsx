@@ -77,7 +77,7 @@ export const ExternalSignInModal: FC = () => {
       case ModalSteps.Logging:
         return (
           <AuthenticationModalStepTemplate
-            title="Logginng in"
+            title="Logging in"
             subtitle="Please wait while we log you in. This should take about 10 seconds."
             loader
             hasNavigatedBack={false}
@@ -96,7 +96,7 @@ export const ExternalSignInModal: FC = () => {
         return (
           <AuthenticationModalStepTemplate
             title="No memberships connected"
-            subtitle="It looks like you don’t have a membership connected to this wallet. Use your email and password to log in."
+            subtitle="It looks like you don’t have a membership connected to this wallet. Use your email and password to sign in."
             hasNavigatedBack={false}
           />
         )
@@ -140,6 +140,7 @@ export const ExternalSignInModal: FC = () => {
       show={authModalOpenName === 'externalLogIn'}
       additionalActionsNodeMobilePosition="bottom"
       contentRef={dialogContentRef}
+      dividers={currentStep === ModalSteps.Membership}
       disableBackdropAnimation
     >
       <FormProvider {...form}>{renderStep()}</FormProvider>

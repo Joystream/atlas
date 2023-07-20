@@ -2,9 +2,10 @@ import HCaptcha from '@hcaptcha/react-hcaptcha'
 import debouncePromise from 'awesome-debounce-promise'
 import { FC, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import shallow from 'zustand/shallow'
 
-import { Text } from '@/components/Text'
 import { AuthenticationModalStepTemplate } from '@/components/_auth/AuthenticationModalStepTemplate'
+import { TextButton } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
@@ -12,8 +13,9 @@ import { atlasConfig } from '@/config'
 import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
 import { MemberFormData } from '@/hooks/useCreateMember'
 import { useUniqueMemberHandle } from '@/hooks/useUniqueMemberHandle'
+import { useAuthStore } from '@/providers/auth/auth.store'
 
-import { Anchor, StyledAvatar, StyledForm } from './SignUpMembershipStep.styles'
+import { StyledAvatar, StyledForm, SubtitleContainer } from './SignUpMembershipStep.styles'
 
 import { SignUpStepsCommonProps } from '../SignUpSteps.types'
 
@@ -44,6 +46,12 @@ export const SignUpMembershipStep: FC<SignInModalMembershipStepProps> = ({
       handle,
     },
   })
+  const { setAuthModalOpenName } = useAuthStore(
+    (state) => ({
+      setAuthModalOpenName: state.actions.setAuthModalOpenName,
+    }),
+    shallow
+  )
   const handleInputRef = useRef<HTMLInputElement | null>(null)
   const captchaInputRef = useRef<HTMLDivElement | null>(null)
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
@@ -113,14 +121,9 @@ export const SignUpMembershipStep: FC<SignInModalMembershipStepProps> = ({
       title="Create membership"
       backgroundImage={watch('avatar')?.url || undefined}
       subtitle={
-        <>
-          To get the full {atlasConfig.general.appName} experience, you need a free Joystream blockchain membership.
-          <Text as="p" variant="t100" color="inherit">
-            <Anchor href={atlasConfig.general.joystreamLandingPageUrl} target="_blank">
-              Learn about Joystream &rarr;
-            </Anchor>
-          </Text>
-        </>
+        <SubtitleContainer>
+          Already have an account? <TextButton onClick={() => setAuthModalOpenName('logIn')}>Sign in</TextButton>
+        </SubtitleContainer>
       }
       hasNavigatedBack={hasNavigatedBack}
       formNode={
@@ -139,7 +142,7 @@ export const SignUpMembershipStep: FC<SignInModalMembershipStepProps> = ({
                       !!imageInputFile?.blob
                     )
                   }
-                  assetUrls={[imageInputFile?.url || '']}
+                  assetUrls={imageInputFile?.url ? [imageInputFile.url] : []}
                   editable
                 />
                 <ImageCropModal

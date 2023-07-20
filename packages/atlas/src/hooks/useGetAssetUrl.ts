@@ -66,10 +66,11 @@ export const useGetAssetUrl = (urls: string[] | undefined | null, type: 'image' 
   const [isLoading, setIsLoading] = useState(true)
   const { userBenchmarkTime } = useOperatorsContext()
   useEffect(() => {
-    if (url) {
+    if (url && urls?.includes(url)) {
       return
     }
     const init = async () => {
+      setUrl(undefined)
       setIsLoading(true)
       const resolvedUrl = await getSingleAssetUrl(urls, type, userBenchmarkTime ?? undefined)
       setIsLoading(false)
@@ -79,6 +80,10 @@ export const useGetAssetUrl = (urls: string[] | undefined | null, type: 'image' 
     }
 
     init()
+
+    return () => {
+      setIsLoading(false)
+    }
   }, [type, url, urls, userBenchmarkTime])
 
   return { url, isLoading }

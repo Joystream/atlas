@@ -4284,7 +4284,7 @@ __metadata:
     react-detectable-overflow: ^0.7.1
     react-dom: ^18.2.0
     react-dropzone: ^14.2.3
-    react-ga: ^3.3.1
+    react-ga4: ^2.1.0
     react-helmet: ^6.1.0
     react-hook-form: ^7.40.0
     react-hooks-testing-library: ^0.6.0
@@ -18469,13 +18469,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-ga@npm:^3.3.1":
-  version: 3.3.1
-  resolution: "react-ga@npm:3.3.1"
-  peerDependencies:
-    prop-types: ^15.6.0
-    react: ^15.6.2 || ^16.0 || ^17 || ^18
-  checksum: 3026976d0249fbf80e7b5dad7707964198064d7ac460f3397de40524e76dd6c29dead0900f850e2bd3135a86a9b083af8cda9cfa087f195852bf8d2b17c1fcfb
+"react-ga4@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "react-ga4@npm:2.1.0"
+  checksum: f7fb41141418d4ad14756f1126a1e9958db37d4d84ae6cd798043dc03a390b6dba74d69311af0349f0b9580a43bda8930138194ccc29c4100efe446e2d6eb057
   languageName: node
   linkType: hard
 

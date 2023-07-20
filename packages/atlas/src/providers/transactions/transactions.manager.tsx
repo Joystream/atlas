@@ -1,10 +1,8 @@
 import { FC, useEffect, useRef, useState } from 'react'
 
 import { useQueryNodeStateSubscription } from '@/api/hooks/queryNode'
-import { MintNftFirstTimeModal } from '@/components/_overlays/MintNftFirstTimeModal'
 import { TransactionModal } from '@/components/_overlays/TransactionModal'
 import { ExtrinsicStatus } from '@/joystream-lib/types'
-import { usePersonalDataStore } from '@/providers/personalData'
 import { useSnackbar } from '@/providers/snackbars'
 import { useWalletStore } from '@/providers/wallet/wallet.store'
 import { SentryLogger } from '@/utils/logs'
@@ -15,11 +13,9 @@ import { useTransactionManagerStore } from './transactions.store'
 export const TransactionsManager: FC = () => {
   const {
     transactions,
-    showFirstMintDialog,
-    actions: { removeOldBlockActions, setShowFistMintDialog, removeTransaction },
+    actions: { removeOldBlockActions, removeTransaction },
   } = useTransactionManagerStore((state) => state)
 
-  const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
   const userWalletName = useWalletStore((state) => state.wallet?.title)
 
   const lastProcessedQnBlockRef = useRef(0)
@@ -94,14 +90,8 @@ export const TransactionsManager: FC = () => {
     },
   })
 
-  const handleFirstMintDialogClose = () => {
-    updateDismissedMessages('first-mint')
-    setShowFistMintDialog(false)
-  }
-
   return (
     <>
-      <MintNftFirstTimeModal show={showFirstMintDialog} onClose={handleFirstMintDialogClose} />
       {firstNonMinimizedTransaction && (
         <TransactionModal
           status={firstNonMinimizedTransaction.status}

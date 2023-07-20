@@ -161,7 +161,7 @@ export const TopbarViewer: FC = () => {
                         size="medium"
                         onClick={() => setAuthModalOpenName(getCorrectLoginModal())}
                       >
-                        Log in
+                        Sign in
                       </Button>
                     )
                   )
@@ -172,7 +172,7 @@ export const TopbarViewer: FC = () => {
                 )}
                 {!searchQuery && !mdMatch && !isLoggedIn && !topbarButtonLoading && (
                   <StyledIconButton onClick={() => setAuthModalOpenName(getCorrectLoginModal())}>
-                    Log in
+                    Sign in
                   </StyledIconButton>
                 )}
               </ButtonWrapper>

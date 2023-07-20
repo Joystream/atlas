@@ -10,7 +10,7 @@ export const useHeadTags = (title?: string | null, metaTagsMapping: MetaTags = {
     const pageTitle = title ? `${title} - ${atlasConfig.general.appName}` : atlasConfig.general.appName
     const commonTags = generateCommonMetaTags(
       atlasConfig.general.appName,
-      atlasConfig.general.appDescription,
+      atlasConfig.general.appUrl,
       pageTitle,
       atlasConfig.general.appDescription,
       atlasConfig.general.appOgImgPath,

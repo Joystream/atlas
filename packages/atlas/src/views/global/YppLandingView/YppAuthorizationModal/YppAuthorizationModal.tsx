@@ -60,6 +60,15 @@ export type YppAuthorizationModalProps = {
   unSyncedChannels?: FullMembershipFieldsFragment['channels']
 }
 
+const stepToPageName = {
+  'ypp-select-channel': 'YPP Select Channel modal',
+  'ypp-requirements': 'YPP Requirements modal',
+  'ypp-fetching-data': 'YPP Fetching Data modal',
+  'ypp-sync-options': 'YPP Category And Referrer Modal',
+  'ypp-channel-already-registered': 'YPP channel already registered modal',
+  'ypp-speaking-to-backend': 'YPP processing modal',
+}
+
 const APP_NAME = atlasConfig.general.appName
 const COLLABORATOR_ID = atlasConfig.features.ypp.youtubeCollaboratorMemberId
 const DEFAULT_LANGUAGE = atlasConfig.derived.popularLanguagesSelectValues[0].value
@@ -70,6 +79,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
   const [utmSource, setUtmSource] = useState<string | null>(null)
   const navigate = useNavigate()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const createdChannelId = useRef<string | null>(null)
   const {
     unsyncedChannels: yppUnsyncedChannels,
     currentChannel: yppCurrentChannel,
@@ -83,8 +93,12 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
   const channelsLoaded = !!unSyncedChannels
   const [finalFormData, setFinalFormData] = useState<FinalFormData | null>(null)
   const selectedChannelId = useYppStore((store) => store.selectedChannelId)
-  const { referrerId, ytResponseData } = useYppStore((store) => store, shallow)
   const setSelectedChannelId = useYppStore((store) => store.actions.setSelectedChannelId)
+  const {
+    referrerId,
+    ytResponseData,
+    actions: { setYtResponseData },
+  } = useYppStore((store) => store, shallow)
   const setReferrerId = useYppStore((store) => store.actions.setReferrerId)
   const setShouldContinueYppFlowAfterLogin = useYppStore((store) => store.actions.setShouldContinueYppFlowAfterLogin)
   const { mutateAsync: yppSignChannelMutation } = useMutation(
@@ -125,12 +139,11 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
   const { extendedChannel } = useBasicChannel(referrerId || '', {
     skip: !referrerId,
   })
-  const { trackPageView } = useSegmentAnalytics()
+  const { trackPageView, trackYppOptIn, identifyUser } = useSegmentAnalytics()
 
   const channel = extendedChannel?.channel
 
   const { displaySnackbar } = useSnackbar()
-  const { trackYppOptIn } = useSegmentAnalytics()
 
   const { handleAuthorizeClick, ytRequirementsErrors, setYtRequirementsErrors, alreadyRegisteredChannel } =
     useYppGoogleAuth({
@@ -138,14 +151,14 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     })
 
   useEffect(() => {
-    if (searchParams.get('UTM_source')) {
-      setUtmSource(searchParams.get('UTM_source'))
+    if (searchParams.get('utm_source')) {
+      setUtmSource(searchParams.get('utm_source'))
     }
   }, [searchParams])
 
   useEffect(() => {
     contentRef.current?.scrollTo({ top: 0 })
-    yppModalOpenName && trackPageView(yppModalOpenName)
+    yppModalOpenName && trackPageView(stepToPageName[yppModalOpenName])
   }, [trackPageView, yppModalOpenName])
 
   const handleClose = useCallback(() => {
@@ -247,12 +260,15 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
         },
         onTxSync: async ({ channelId }) => {
           setActiveChannel(channelId)
+          createdChannelId.current = channelId
         },
         onCompleted: async () => {
           await refetchUserMemberships()
 
+          const channelId = selectedChannelId || createdChannelId.current
+
           const channelCreationResponse = await yppSignChannelMutation({
-            ...(selectedChannelId ? { joystreamChannelId: parseInt(selectedChannelId) } : {}),
+            ...(channelId ? { joystreamChannelId: parseInt(channelId) } : {}),
             ...(data.referrerChannelId ? { referrerChannelId: parseInt(data.referrerChannelId) } : {}),
             authorizationCode: ytResponseData?.authorizationCode,
             userId: ytResponseData?.userId,
@@ -261,14 +277,16 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
             videoCategoryId: data.videoCategoryId,
           })
 
+          identifyUser(ytResponseData?.email)
           trackYppOptIn(
             ytResponseData?.channelHandle,
             ytResponseData?.email,
-            data.videoCategoryId ? displayCategoriesLookup[data.videoCategoryId].name : undefined,
+            data.videoCategoryId ? displayCategoriesLookup[data.videoCategoryId]?.name : undefined,
             channelCreationResponse.data.channel.subscribersCount,
             data.referrerChannelId,
             utmSource || undefined
           )
+          setYtResponseData(null)
 
           navigate(absoluteRoutes.studio.ypp())
           displaySnackbar({
@@ -335,6 +353,13 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
             }
           }
 
+          if (ytRequirementsErrors.length) {
+            return {
+              text: 'Close',
+              onClick: () => setYppModalOpenName(null),
+            }
+          }
+
           // non signed users
           return {
             text: 'Create account',
@@ -346,8 +371,10 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
         }
 
         return {
-          title: 'Requirements',
-          description: `Before you can apply to the program, make sure your YouTube channel meets the below conditions.`,
+          title: ytRequirementsErrors.length ? 'Authorization failed' : 'Requirements',
+          description: ytRequirementsErrors.length
+            ? 'Looks like the YouTube channel you selected does not meet all conditions to be enrolled in the program. You can select another one or try again at a later time.'
+            : 'Before you can apply to the program, make sure your YouTube channel meets the below conditions.',
           primaryButton: getPrimaryButton(),
           component: <YppAuthorizationRequirementsStep requirmentsErrorCodes={ytRequirementsErrors} />,
         }
@@ -447,7 +474,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
 
     if (yppModalOpenName === 'ypp-requirements' && isLoggedIn) return
 
-    if (yppModalOpenName === 'ypp-requirements' && !isLoggedIn) {
+    if (yppModalOpenName === 'ypp-requirements' && !isLoggedIn && !ytRequirementsErrors.length) {
       return {
         text: 'Sign in',
         onClick: () => {
@@ -477,6 +504,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     isLoadingModal,
     yppModalOpenName,
     isLoggedIn,
+    ytRequirementsErrors.length,
     isSubmitting,
     handleGoBack,
     setShouldContinueYppFlowAfterLogin,
@@ -489,13 +517,14 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     <FormProvider {...detailsFormMethods}>
       <DialogModal
         contentRef={contentRef}
-        show={yppModalOpenName != null}
+        show={yppModalOpenName !== null}
         dividers={!isLoadingModal}
         additionalActionsNodeMobilePosition="bottom"
         primaryButton={authorizationStep?.primaryButton}
         secondaryButton={secondaryButton}
         additionalActionsNode={
-          !isLoadingModal && (
+          !isLoadingModal &&
+          !ytRequirementsErrors.length && (
             <Button variant="tertiary" disabled={isSubmitting} onClick={handleClose}>
               Cancel
             </Button>

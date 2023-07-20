@@ -1,6 +1,6 @@
 import { cloneDeepWith } from 'lodash-es'
 
-import { ListItemProps } from '@/components/ListItem'
+import { ListItemProps } from '@/components/ListItem/ListItem'
 import { createLookup } from '@/utils/data'
 import { ConsoleLogger } from '@/utils/logs'
 

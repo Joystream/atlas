@@ -34,25 +34,29 @@ const getNotificationText = (notification: NotificationRecord): ReactNode => {
     case 'bid-made':
       return (
         <>
-          bid on your NFT for <NumberFormat as="span" value={notification.bidAmount} format="short" withToken />
+          bid on your NFT for{' '}
+          <NumberFormat as="span" value={notification.bidAmount} format="short" withToken withDenomination="before" />
         </>
       )
     case 'got-outbid':
       return (
         <>
-          outbid you at <NumberFormat as="span" value={notification.bidAmount} format="short" withToken />
+          outbid you at{' '}
+          <NumberFormat as="span" value={notification.bidAmount} format="short" withToken withDenomination="before" />
         </>
       )
     case 'bought':
       return (
         <>
-          purchased your NFT for <NumberFormat as="span" value={notification.price} format="short" withToken />
+          purchased your NFT for{' '}
+          <NumberFormat as="span" value={notification.price} format="short" withToken withDenomination="before" />
         </>
       )
     case 'bid-accepted':
       return (
         <>
-          has accepted your bid of <NumberFormat as="span" value={notification.bidAmount} format="short" withToken />
+          has accepted your bid of{' '}
+          <NumberFormat as="span" value={notification.bidAmount} format="short" withToken withDenomination="before" />
         </>
       )
     case 'auction-settled-owner':

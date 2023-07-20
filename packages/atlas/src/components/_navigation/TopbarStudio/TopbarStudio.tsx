@@ -88,7 +88,7 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
             </StudioTopbarContainer>
           ) : (
             <Button size="medium" onClick={() => setAuthModalOpenName(getCorrectLoginModal())}>
-              Log in
+              Sign in
             </Button>
           ))}
       </StyledTopbarBase>
