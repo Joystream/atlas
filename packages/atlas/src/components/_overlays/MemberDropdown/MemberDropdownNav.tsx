@@ -256,8 +256,8 @@ type ListItemOptionsProps = {
 }
 const ListItemOptions: FC<ListItemOptionsProps> = ({ publisher, closeDropdown, listItems }) => {
   // todo: add logic after orion is done
-  const unseedChannelNotifications = 2
-  const unseedMemberNotifications = 1
+  const unseenChannelNotifications = 2
+  const unseenMemberNotifications = 1
   return (
     <>
       {listItems.map((listItemsProps, idx) => (
@@ -269,7 +269,7 @@ const ListItemOptions: FC<ListItemOptionsProps> = ({ publisher, closeDropdown, l
           nodeStart={<IconWrapper icon={<SvgActionPlay />} />}
           label={atlasConfig.general.appName}
           to={absoluteRoutes.viewer.index()}
-          nodeEnd={<Badge data-badge={unseedMemberNotifications} />}
+          nodeEnd={<Badge data-badge={unseenMemberNotifications} />}
         />
       ) : (
         <>
@@ -278,7 +278,7 @@ const ListItemOptions: FC<ListItemOptionsProps> = ({ publisher, closeDropdown, l
             nodeStart={<IconWrapper icon={<SvgActionAddVideo />} />}
             label="Studio"
             to={absoluteRoutes.studio.index()}
-            nodeEnd={<Badge data-badge={unseedChannelNotifications} />}
+            nodeEnd={<Badge data-badge={unseenChannelNotifications} />}
           />
         </>
       )}

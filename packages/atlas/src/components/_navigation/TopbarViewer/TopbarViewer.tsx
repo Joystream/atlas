@@ -98,7 +98,7 @@ export const TopbarViewer: FC = () => {
 
   const topbarButtonLoading = isAuthenticating || membershipsLoading
   // todo: add logic after orion is done
-  const unseedChannelNotifications = 2
+  const unseenChannelNotifications = 2
   return (
     <>
       <StyledTopbarBase
@@ -140,7 +140,7 @@ export const TopbarViewer: FC = () => {
                           assetUrls={memberAvatarUrls}
                           loading={memberAvatarLoading}
                           onClick={handleDrawerToggle}
-                          badge={unseedChannelNotifications}
+                          badge={unseenChannelNotifications}
                         />
                       )}
                       {mdMatch && (
@@ -149,7 +149,7 @@ export const TopbarViewer: FC = () => {
                           assetUrls={memberAvatarUrls}
                           onClick={handleDrawerToggle}
                           loading={memberAvatarLoading}
-                          badge={unseedChannelNotifications}
+                          badge={unseenChannelNotifications}
                         />
                       )}
                     </SignedButtonsWrapper>
