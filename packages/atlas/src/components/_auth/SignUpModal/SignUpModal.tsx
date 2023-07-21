@@ -230,7 +230,12 @@ export const SignUpModal = () => {
       goToNextStep()
       const newMemberId = await createNewMember(
         {
-          data: { ...signUpFormData, ...memberData, authorizationCode: ytResponseData?.authorizationCode },
+          data: {
+            ...signUpFormData,
+            ...memberData,
+            authorizationCode: ytResponseData?.authorizationCode,
+            userId: ytResponseData?.userId,
+          },
           onError: () => {
             goToStep(SignUpSteps.CreateMember)
           },

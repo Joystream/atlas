@@ -26,6 +26,7 @@ export type MemberFormData = {
   captchaToken?: string
   mnemonic: string
   authorizationCode?: string
+  userId?: string
   confirmedCopy: boolean
 }
 
@@ -76,7 +77,6 @@ type CreateNewMemberParams = SignUpParams<Omit<MemberFormData, 'confirmedCopy' |
 export const useCreateMember = () => {
   const { handleLogin } = useAuth()
   const setAnonymousUserId = useAuthStore((store) => store.actions.setAnonymousUserId)
-  const { anonymousUserId } = useAuthStore()
   const { joystream } = useJoystream()
   const { displaySnackbar } = useSnackbar()
   const { addBlockAction } = useTransactionManagerStore((state) => state.actions)
@@ -107,7 +107,7 @@ export const useCreateMember = () => {
         captchaToken: data.captchaToken,
         ...(ytResponseData
           ? {
-              userId: anonymousUserId || undefined,
+              userId: data.userId,
               authorizationCode: data.authorizationCode,
             }
           : {}),
@@ -174,7 +174,7 @@ export const useCreateMember = () => {
         return
       }
     },
-    [addBlockAction, anonymousUserId, avatarMutation, displaySnackbar, faucetMutation, ytResponseData]
+    [addBlockAction, avatarMutation, displaySnackbar, faucetMutation, ytResponseData]
   )
 
   const createNewOrionAccount = useCallback(
