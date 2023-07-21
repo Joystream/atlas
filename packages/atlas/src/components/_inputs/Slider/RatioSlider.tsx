@@ -4,7 +4,7 @@ import { sizes } from '@/styles'
 
 import { Range, Track, Wrapper } from './RatioSlider.styles'
 
-type Props = {
+type RatioSliderProps = {
   min?: number
   max?: number
   step?: number
@@ -13,7 +13,7 @@ type Props = {
   onChange?: (value: number) => void
 }
 
-export const RatioSlider = forwardRef<HTMLInputElement, Props>(
+export const RatioSlider = forwardRef<HTMLInputElement, RatioSliderProps>(
   ({ min = 0, max = 100, step = 10, defaultValue = 50, value: controlledValue, onChange }, ref) => {
     const [internalValue, setInternalValue] = useState<number>(defaultValue)
     const value = controlledValue ?? internalValue
