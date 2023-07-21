@@ -25,6 +25,8 @@ export type MemberFormData = {
   avatar?: ImageInputFile
   captchaToken?: string
   mnemonic: string
+  authorizationCode?: string
+  userId?: string
   confirmedCopy: boolean
 }
 
@@ -52,6 +54,8 @@ type FaucetParams = {
   handle: string
   avatar: string | undefined
   captchaToken: string | undefined
+  userId?: string
+  authorizationCode?: string
 }
 
 export enum RegisterError {
@@ -101,6 +105,12 @@ export const useCreateMember = () => {
         handle: data.handle,
         avatar: fileUrl,
         captchaToken: data.captchaToken,
+        ...(ytResponseData
+          ? {
+              userId: data.userId,
+              authorizationCode: data.authorizationCode,
+            }
+          : {}),
       }
       try {
         const response = await faucetMutation(body)
@@ -164,7 +174,7 @@ export const useCreateMember = () => {
         return
       }
     },
-    [addBlockAction, avatarMutation, displaySnackbar, faucetMutation]
+    [addBlockAction, avatarMutation, displaySnackbar, faucetMutation, ytResponseData]
   )
 
   const createNewOrionAccount = useCallback(
