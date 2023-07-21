@@ -54,7 +54,7 @@ export const RatioSlider = forwardRef<HTMLInputElement, RatioSliderProps>(
 
             <g className="steps">
               {steps.map((x, index) => {
-                const cls = `step step${Math.min(index * step, max) <= internalValue ? '--active' : ''}`
+                const cls = Math.min(index * step, max) <= internalValue ? 'active' : ''
                 return <line key={index} className={cls} x1={x} x2={x} y1={sizes(3 / 2)} y2={sizes(9 / 2)} radius={4} />
               })}
             </g>

@@ -25,7 +25,7 @@ export const Track = styled.svg`
       stroke: ${cVar('colorBackgroundPrimary')};
     }
 
-    .steps .step--active {
+    .steps .active {
       stroke: ${cVar('colorBackgroundPrimary')};
     }
   }
