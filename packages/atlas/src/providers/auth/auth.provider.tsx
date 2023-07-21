@@ -137,34 +137,34 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       }
       let signatureOverPayload = null
       let localEntropy: string | null = null
-      if (params.type === 'internal') {
-        const { email, password } = params
-        const id = await getArtifactId(email, password)
-        const data = await getArtifacts(id, email, password)
-        if (!data) {
-          setIsAuthenticating(false)
-          throw new Error(LogInErrors.ArtifactsNotFound)
-        }
-        const { keypair, decryptedEntropy } = data
-        localEntropy = decryptedEntropy
-        payload.joystreamAccountId = keypair.address
-        signatureOverPayload = u8aToHex(keypair.sign(JSON.stringify(payload)))
-      }
-
-      if (params.type === 'external') {
-        payload.joystreamAccountId = params.address
-        try {
-          signatureOverPayload = await params.sign(JSON.stringify(payload))
-        } catch (e) {
-          setIsAuthenticating(false)
-          if (e.message === 'Cancelled') {
-            throw new Error(LogInErrors.SignatureCancelled)
-          }
-          throw new Error(LogInErrors.UnknownError)
-        }
-      }
-
       try {
+        if (params.type === 'internal') {
+          const { email, password } = params
+          const id = await getArtifactId(email, password)
+          const data = await getArtifacts(id, email, password)
+          if (!data) {
+            setIsAuthenticating(false)
+            throw new Error(LogInErrors.ArtifactsNotFound)
+          }
+          const { keypair, decryptedEntropy } = data
+          localEntropy = decryptedEntropy
+          payload.joystreamAccountId = keypair.address
+          signatureOverPayload = u8aToHex(keypair.sign(JSON.stringify(payload)))
+        }
+
+        if (params.type === 'external') {
+          payload.joystreamAccountId = params.address
+          try {
+            signatureOverPayload = await params.sign(JSON.stringify(payload))
+          } catch (e) {
+            setIsAuthenticating(false)
+            if (e.message === 'Cancelled') {
+              throw new Error(LogInErrors.SignatureCancelled)
+            }
+            throw new Error(LogInErrors.UnknownError)
+          }
+        }
+
         const response = await axios.post<{ accountId: string }>(
           `${ORION_AUTH_URL}/login`,
           {
