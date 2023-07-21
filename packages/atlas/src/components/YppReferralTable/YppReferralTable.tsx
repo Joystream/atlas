@@ -1,14 +1,11 @@
-import BN from 'bn.js'
 import { useMemo } from 'react'
 
 import { useBasicChannel } from '@/api/hooks/channel'
 import { Avatar } from '@/components/Avatar'
-import { JoyTokenIcon } from '@/components/JoyTokenIcon'
-import { NumberFormat } from '@/components/NumberFormat'
 import { Table, TableProps } from '@/components/Table'
 import { SenderItem, StyledLink } from '@/components/TablePaymentsHistory/TablePaymentsHistory.styles'
 import { Text } from '@/components/Text'
-import { RewardWrapper, TierText } from '@/components/YppReferralTable/YppReferralTable.styles'
+import { TierText } from '@/components/YppReferralTable/YppReferralTable.styles'
 import { absoluteRoutes } from '@/config/routes'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { SentryLogger } from '@/utils/logs'
@@ -19,11 +16,10 @@ import { TierDescription, TierWrapper } from '@/views/studio/YppDashboard/YppDas
 
 import { COLUMNS, tableLoadingData } from './YppReferralTable.utils'
 
-type YppReferral = {
+export type YppReferral = {
   date: Date
   channel: string
-  tier: number
-  reward: BN
+  subscribers: number
 }
 
 type YppReferralTableProps = {
@@ -37,21 +33,7 @@ export const YppReferralTable = ({ isLoading, data }: YppReferralTableProps) => 
       data.map((entry) => ({
         date: <Date date={entry.date} />,
         channel: <Channel channel={entry.channel} />,
-        tier: <Tier tier={entry.tier} />,
-        reward: (
-          <RewardWrapper>
-            <NumberFormat
-              icon={<JoyTokenIcon variant="gray" />}
-              variant="t200-strong"
-              as="p"
-              value={entry.reward}
-              margin={{ left: 1 }}
-              format="short"
-              withDenomination
-              denominationAlign="right"
-            />
-          </RewardWrapper>
-        ),
+        tier: <Tier subscribers={entry.subscribers} />,
       })),
     [data]
   )
@@ -90,17 +72,24 @@ const Channel = ({ channel }: { channel: YppReferral['channel'] }) => {
   )
 }
 
-const Tier = ({ tier }: { tier: number }) => {
+const Tier = ({ subscribers }: { subscribers: number }) => {
+  const currentTier = TIERS.reduce((prev, current, idx) => {
+    if (subscribers >= (current?.subscribers || 0)) {
+      return idx
+    } else {
+      return prev
+    }
+  }, 0)
   return (
     <TierWrapper>
-      {TIERS[tier].icon}
+      {TIERS[currentTier].icon}
       <TierDescription>
         <div style={{ display: 'grid' }}>
           <TierText variant="h300" as="span">
-            Tier {tier + 1}{' '}
+            Tier {currentTier + 1}{' '}
           </TierText>
           <Text variant="t100" as="p" color="colorText">
-            {TIERS[tier].rules}
+            {TIERS[currentTier].rules}
           </Text>
         </div>
       </TierDescription>

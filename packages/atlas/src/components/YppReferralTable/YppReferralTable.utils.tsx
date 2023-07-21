@@ -1,5 +1,5 @@
 import { TableProps } from '@/components/Table'
-import { ColumnBox, RightAlignedHeader, RowBox } from '@/components/Table/Table.styles'
+import { ColumnBox, RowBox } from '@/components/Table/Table.styles'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 
 export const tableLoadingData = Array.from({ length: 5 }, () => ({
@@ -15,13 +15,7 @@ export const tableLoadingData = Array.from({ length: 5 }, () => ({
       <SkeletonLoader height={20} width="40%" />
     </ColumnBox>
   ),
-  tier: <SkeletonLoader height={40} width={70} />,
-  reward: (
-    <RowBox align="end">
-      <SkeletonLoader height={20} width="40%" />
-      <SkeletonLoader height={20} width="30%" />
-    </RowBox>
-  ),
+  tier: <SkeletonLoader height={32} width={70} />,
 }))
 
 export const COLUMNS: TableProps['columns'] = [
@@ -38,11 +32,6 @@ export const COLUMNS: TableProps['columns'] = [
   {
     Header: 'Popularity tier',
     accessor: 'tier',
-    width: 100,
-  },
-  {
-    Header: () => <RightAlignedHeader>REFERRAL REWARD</RightAlignedHeader>,
-    accessor: 'reward',
     width: 100,
   },
 ]
