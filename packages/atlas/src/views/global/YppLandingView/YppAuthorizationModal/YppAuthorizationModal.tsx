@@ -84,6 +84,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     unsyncedChannels: yppUnsyncedChannels,
     currentChannel: yppCurrentChannel,
     isLoading,
+    refetchYppSyncedChannels,
   } = useGetYppSyncedChannels()
 
   const setYppModalOpenName = useYppStore((state) => state.actions.setYppModalOpenName)
@@ -264,6 +265,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
         },
         onCompleted: async () => {
           await refetchUserMemberships()
+          await refetchYppSyncedChannels()
 
           const channelId = selectedChannelId || createdChannelId.current
 

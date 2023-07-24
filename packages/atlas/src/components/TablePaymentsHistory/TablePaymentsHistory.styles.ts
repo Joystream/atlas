@@ -80,16 +80,3 @@ export const TextWrapper = styled.div`
 export const DialogText = styled(Text)`
   text-align: justify;
 `
-
-export const RowBox = styled.div<{ align?: 'start' | 'end' }>`
-  display: flex;
-  flex-direction: column;
-  gap: ${sizes(1)};
-  align-items: ${(props) => (props.align === 'end' ? 'flex-end' : 'flex-start')};
-`
-
-export const ColumnBox = styled.div`
-  display: flex;
-  gap: ${sizes(2)};
-  align-items: center;
-`

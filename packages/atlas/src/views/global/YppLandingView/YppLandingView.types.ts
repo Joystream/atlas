@@ -17,4 +17,10 @@ export type YppSyncedChannel = {
   }
   subscribersCount: number
   createdAt: string
+  referredChannels: {
+    joystreamChannelId: number
+    createdAt: string
+    subscribersCount: number
+  }[]
+  referrerChannelId: string
 }
