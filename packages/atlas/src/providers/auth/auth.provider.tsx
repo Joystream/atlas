@@ -137,34 +137,39 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       }
       let signatureOverPayload = null
       let localEntropy: string | null = null
-      try {
-        if (params.type === 'internal') {
+      if (params.type === 'internal') {
+        try {
           const { email, password } = params
           const id = await getArtifactId(email, password)
           const data = await getArtifacts(id, email, password)
-          if (!data) {
-            setIsAuthenticating(false)
-            throw new Error(LogInErrors.ArtifactsNotFound)
-          }
           const { keypair, decryptedEntropy } = data
           localEntropy = decryptedEntropy
           payload.joystreamAccountId = keypair.address
           signatureOverPayload = u8aToHex(keypair.sign(JSON.stringify(payload)))
-        }
-
-        if (params.type === 'external') {
-          payload.joystreamAccountId = params.address
-          try {
-            signatureOverPayload = await params.sign(JSON.stringify(payload))
-          } catch (e) {
+        } catch (e) {
+          // disable isAuthenticating and propagate further
+          const errorMessage = e.message
+          if (errorMessage === LogInErrors.ArtifactsNotFound) {
             setIsAuthenticating(false)
-            if (e.message === 'Cancelled') {
-              throw new Error(LogInErrors.SignatureCancelled)
-            }
-            throw new Error(LogInErrors.UnknownError)
+            throw new Error(LogInErrors.ArtifactsNotFound)
           }
         }
+      }
 
+      if (params.type === 'external') {
+        payload.joystreamAccountId = params.address
+        try {
+          signatureOverPayload = await params.sign(JSON.stringify(payload))
+        } catch (e) {
+          setIsAuthenticating(false)
+          if (e.message === 'Cancelled') {
+            throw new Error(LogInErrors.SignatureCancelled)
+          }
+          throw new Error(LogInErrors.UnknownError)
+        }
+      }
+
+      try {
         const response = await axios.post<{ accountId: string }>(
           `${ORION_AUTH_URL}/login`,
           {
