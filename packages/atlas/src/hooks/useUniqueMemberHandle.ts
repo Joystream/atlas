@@ -39,7 +39,7 @@ export const useUniqueMemberHandle = () => {
 
       const isAvailable = await checkIfMemberIsAvailable(sanitizedHandle)
       if (!isAvailable) {
-        const modified = attempt === 1 ? `${sanitizedHandle}${attempt}` : `${sanitizedHandle.slice(-1)}${attempt}`
+        const modified = attempt === 1 ? `${sanitizedHandle}${attempt}` : `${sanitizedHandle.slice(0, -1)}${attempt}`
 
         return generateUniqueMemberHandleBasedOnInput(modified, attempt + 1)
       }

@@ -1,7 +1,7 @@
 import { useApolloClient } from '@apollo/client'
 import { u8aToHex } from '@polkadot/util'
 import { cryptoWaitReady } from '@polkadot/util-crypto'
-import axios from 'axios'
+import axios, { isAxiosError } from 'axios'
 import { AES, enc, lib, mode } from 'crypto-js'
 import { FC, PropsWithChildren, createContext, useCallback, useContext, useMemo, useState } from 'react'
 
@@ -193,18 +193,24 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
         return response.data.accountId
       } catch (error) {
+        if (error.message === LogInErrors.ArtifactsNotFound) {
+          throw error
+        }
+
         // if user receive "Session artifacts already saved", remove artifacts by signing user out and run login again
         if (retryCount === 0 && error.message === LogInErrors.ArtifactsAlreadySaved) {
           await logoutRequest()
           return handleLogin(params, retryCount + 1)
         } else {
-          const orionMessage = error.response.data.message
-          if (orionMessage.includes('Invalid credentials')) {
-            throw new Error(LogInErrors.NoAccountFound)
-          }
+          if (isAxiosError(error)) {
+            const orionMessage = error.response?.data.message
+            if (orionMessage.includes('Invalid credentials')) {
+              throw new Error(LogInErrors.NoAccountFound)
+            }
 
-          if (orionMessage.includes('Payload signature is invalid.')) {
-            throw new Error(LogInErrors.InvalidPayload)
+            if (orionMessage.includes('Payload signature is invalid.')) {
+              throw new Error(LogInErrors.InvalidPayload)
+            }
           }
 
           SentryLogger.error('Unsupported error when posting login action', 'auth.provider', error)

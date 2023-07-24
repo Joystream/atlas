@@ -102,7 +102,8 @@ export const useConfirmationModal = (modalProps?: AlertDialogModalProps & FeePro
           <AlertDialogModal {...commonProps} />
         )
       }),
-    [openModal, modalId, modalProps, _closeModal]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [openModal, modalId, JSON.stringify(modalProps), _closeModal]
   )
 
   return [_openModal, _closeModal]

@@ -254,6 +254,7 @@ export const SignUpModal = () => {
           syncState.current = 'synced'
           handlePasswordStepSubmit(signUpFormData.password)
         }
+        syncState.current = 'synced'
       }, 10_000)
 
       if (newMemberId) {
