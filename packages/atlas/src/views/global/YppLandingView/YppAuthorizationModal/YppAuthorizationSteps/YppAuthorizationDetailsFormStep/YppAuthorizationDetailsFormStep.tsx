@@ -93,7 +93,7 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
                   channel: {
                     title_startsWith: value,
                     ownerMember: {
-                      id_not_eq: memberId,
+                      id_not_eq: memberId || '',
                     },
                   },
                 },
