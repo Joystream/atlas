@@ -209,9 +209,17 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     setYppModalOpenName('ypp-speaking-to-backend')
 
     try {
-      const avatarBlob = ytResponseData?.avatarUrl ? await imageUrlToBlob(ytResponseData?.avatarUrl) : null
+      const avatarBlob = ytResponseData?.avatarUrl
+        ? (await imageUrlToBlob(ytResponseData?.avatarUrl).catch((err) =>
+            SentryLogger.error('Failed to process YT avatar image', 'handleCreateOrUpdateChannel', err)
+          )) ?? null
+        : null
 
-      const coverBlob = ytResponseData?.bannerUrl ? await imageUrlToBlob(ytResponseData?.bannerUrl, 1920, 480) : null
+      const coverBlob = ytResponseData?.bannerUrl
+        ? (await imageUrlToBlob(ytResponseData?.bannerUrl, 1920, 480).catch((err) =>
+            SentryLogger.error('Failed to process YT banner image', 'handleCreateOrUpdateChannel', err)
+          )) ?? null
+        : null
 
       const avatarContentId = `local-avatar-${createId()}`
       const coverContentId = `local-cover-${createId()}`
