@@ -15,6 +15,7 @@ import { useYppStore } from '@/providers/ypp/ypp.store'
 import { media } from '@/styles'
 import { createId } from '@/utils/createId'
 import { imageUrlToBlob } from '@/utils/image'
+import { SentryLogger } from '@/utils/logs'
 
 import { SignUpSteps } from './SignUpModal.types'
 import {
@@ -204,7 +205,11 @@ export const SignUpModal = () => {
 
       if (ytResponseData) {
         // replace handle and avatar if they are provided via ypp flow
-        blob = ytResponseData.avatarUrl ? await imageUrlToBlob(ytResponseData.avatarUrl) : null
+        blob = ytResponseData.avatarUrl
+          ? (await imageUrlToBlob(ytResponseData.avatarUrl).catch((err) =>
+              SentryLogger.error('Failed to process YT avatar image', 'handleCreateOrUpdateChannel', err)
+            )) ?? null
+          : null
         handle = ytResponseData.channelHandle
           ? await generateUniqueMemberHandleBasedOnInput(ytResponseData.channelHandle)
           : `user${createId()}`
