@@ -17,7 +17,7 @@ export const useTimeMismatchWarning = () => {
   useEffect(() => {
     if (!timeMismatchDisabled) {
       axios.get('http://worldtimeapi.org/api/ip').then((response) => {
-        const serverTime = new Date(response.data.utc_datetime).getTime()
+        const serverTime = response.data.unixtime
         const clientTime = Date.now()
         const timeDiff = serverTime - clientTime
         if (Math.abs(timeDiff) > 1000 * 60 * 5) {
