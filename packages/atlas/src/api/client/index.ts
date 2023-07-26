@@ -44,8 +44,8 @@ const errorLink = onError(({ graphQLErrors, networkError, operation, forward, re
     },
     {
       data: {
-        operation,
-        response,
+        operation: JSON.stringify(operation),
+        response: JSON.stringify(response),
       },
     }
   )
