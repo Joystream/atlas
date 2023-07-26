@@ -7,7 +7,6 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import {
   AnimatedContainer,
   BackgroundImage,
-  BackgroundImageOverlay,
   ContentContainer,
   CustomBackgroundContainer,
   HeaderContainer,
@@ -47,12 +46,7 @@ export const AuthenticationModalStepTemplate: FC<AuthenticationModalStepTemplate
         hasDivider={!!(backgroundImage || darkBackground)}
         hasBottomPadding={!!(backgroundImage || darkBackground)}
       >
-        {backgroundImage && (
-          <>
-            <BackgroundImage src={backgroundImage} alt="" />
-            <BackgroundImageOverlay />
-          </>
-        )}
+        {backgroundImage && <BackgroundImage src={backgroundImage} alt="" />}
         <AnimatedContainer hasNavigatedBack={hasNavigatedBack}>
           <LogoContainer>
             {loader ? <Loader variant="medium" /> : <StyledAppLogo variant="short-monochrome" />}
