@@ -14,16 +14,9 @@ const defaultJoystreamProps: Omit<LineSvgProps, 'data'> = {
     type: 'linear',
     min: 'auto',
     max: 'auto',
-    stacked: true,
+    stacked: false,
     reverse: false,
   },
-  tooltip: (value) => (
-    <ChartTooltip>
-      <Text variant="t100" as="p" color="colorTextStrong">
-        {value.point.data.yStacked}
-      </Text>
-    </ChartTooltip>
-  ),
   axisTop: null,
   axisRight: null,
   axisBottom: {
@@ -33,7 +26,7 @@ const defaultJoystreamProps: Omit<LineSvgProps, 'data'> = {
   axisLeft: {
     tickSize: 5,
     tickPadding: 5,
-    tickValues: 5,
+    tickValues: 6,
   },
   colors: (d) => d.color,
   theme: {
@@ -48,8 +41,8 @@ const defaultJoystreamProps: Omit<LineSvgProps, 'data'> = {
           stroke: cVar('colorBackgroundAlpha'),
         },
         text: {
-          color: cVar('colorTextMuted'),
-          fontSize: 12,
+          fill: cVar('colorTextMuted'),
+          font: cVar('typographyDesktopT100'),
         },
       },
     },
@@ -71,7 +64,7 @@ export const LineChart = (props: LineChartProps) => {
       tooltip={(point) => (
         <ChartTooltip>
           <Text variant="t100" as="p" color="colorTextStrong">
-            {props.tooltip ? props.tooltip(point.point) : point.point.data.yStacked}
+            {props.tooltip ? props.tooltip(point.point) : String(point.point.data.y)}
           </Text>
         </ChartTooltip>
       )}
