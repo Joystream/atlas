@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react'
 
-import useSegmentAnalyticsContext from '@/providers/segmentAnalytics/useSegmentAnalyticsContext'
+import { useSegmentAnalyticsContext } from '@/providers/segmentAnalytics/useSegmentAnalyticsContext'
 
 export type videoPlaybackParams = {
   videoId: string
@@ -260,6 +260,10 @@ export const useSegmentAnalytics = () => {
     [analytics]
   )
 
+  const trackLogout = useCallback(() => {
+    analytics.reset()
+  }, [analytics])
+
   const runNextQueueEvent = useCallback(async () => {
     const queueEvent = playbackEventsQueue.current.shift()
     if (!queueEvent) {
@@ -306,6 +310,7 @@ export const useSegmentAnalytics = () => {
     trackFeaturedNFTNext,
     trackFeaturedNFTPrev,
     trackLikeAdded,
+    trackLogout,
     trackMembershipCreation,
     trackNFTCarouselNext,
     trackNFTCarouselPrev,

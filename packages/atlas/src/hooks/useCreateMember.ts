@@ -5,7 +5,7 @@ import { useCallback } from 'react'
 import { useMutation } from 'react-query'
 
 import { ImageInputFile } from '@/components/_inputs/MultiFileSelect'
-import { FAUCET_URL } from '@/config/env'
+import { FAUCET_URL, YPP_FAUCET_URL } from '@/config/env'
 import { keyring } from '@/joystream-lib/lib'
 import { MemberId } from '@/joystream-lib/types'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
@@ -16,6 +16,7 @@ import { OrionAccountError } from '@/providers/auth/auth.types'
 import { useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransactionManagerStore } from '@/providers/transactions/transactions.store'
+import { useYppStore } from '@/providers/ypp/ypp.store'
 import { UploadAvatarServiceError, uploadAvatarImage } from '@/utils/image'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
@@ -24,6 +25,8 @@ export type MemberFormData = {
   avatar?: ImageInputFile
   captchaToken?: string
   mnemonic: string
+  authorizationCode?: string
+  userId?: string
   confirmedCopy: boolean
 }
 
@@ -51,6 +54,8 @@ type FaucetParams = {
   handle: string
   avatar: string | undefined
   captchaToken: string | undefined
+  userId?: string
+  authorizationCode?: string
 }
 
 export enum RegisterError {
@@ -75,13 +80,13 @@ export const useCreateMember = () => {
   const { joystream } = useJoystream()
   const { displaySnackbar } = useSnackbar()
   const { addBlockAction } = useTransactionManagerStore((state) => state.actions)
+  const ytResponseData = useYppStore((state) => state.ytResponseData)
 
   const { mutateAsync: avatarMutation } = useMutation('avatar-post', (croppedBlob: Blob) =>
     uploadAvatarImage(croppedBlob)
   )
   const { mutateAsync: faucetMutation } = useMutation('faucet-post', (body: FaucetParams) =>
-    // todo change faucet url if request is done via ypp
-    axios.post<NewMemberResponse>(FAUCET_URL, body)
+    axios.post<NewMemberResponse>(ytResponseData ? YPP_FAUCET_URL : FAUCET_URL, body)
   )
 
   const createNewMember = useCallback(
@@ -100,6 +105,12 @@ export const useCreateMember = () => {
         handle: data.handle,
         avatar: fileUrl,
         captchaToken: data.captchaToken,
+        ...(ytResponseData
+          ? {
+              userId: data.userId,
+              authorizationCode: data.authorizationCode,
+            }
+          : {}),
       }
       try {
         const response = await faucetMutation(body)
@@ -163,7 +174,7 @@ export const useCreateMember = () => {
         return
       }
     },
-    [addBlockAction, avatarMutation, displaySnackbar, faucetMutation]
+    [addBlockAction, avatarMutation, displaySnackbar, faucetMutation, ytResponseData]
   )
 
   const createNewOrionAccount = useCallback(

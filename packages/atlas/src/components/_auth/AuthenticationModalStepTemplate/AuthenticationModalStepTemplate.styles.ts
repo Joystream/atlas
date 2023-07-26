@@ -46,19 +46,10 @@ const backAnimation = keyframes`
   }
   `
 
-export const BackgroundImageOverlay = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: ${cVar('colorBackgroundOverlay')};
-  z-index: -1;
-  backdrop-filter: blur(${sizes(8)});
-`
-
 export const BackgroundImage = styled.img`
   position: absolute;
+  filter: blur(${sizes(8)});
+  opacity: 0.25;
   top: 0;
   left: 0;
   object-fit: cover;

@@ -84,6 +84,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     unsyncedChannels: yppUnsyncedChannels,
     currentChannel: yppCurrentChannel,
     isLoading,
+    refetchYppSyncedChannels,
   } = useGetYppSyncedChannels()
 
   const setYppModalOpenName = useYppStore((state) => state.actions.setYppModalOpenName)
@@ -208,9 +209,17 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     setYppModalOpenName('ypp-speaking-to-backend')
 
     try {
-      const avatarBlob = ytResponseData?.avatarUrl ? await imageUrlToBlob(ytResponseData?.avatarUrl) : null
+      const avatarBlob = ytResponseData?.avatarUrl
+        ? (await imageUrlToBlob(ytResponseData?.avatarUrl).catch((err) =>
+            SentryLogger.error('Failed to process YT avatar image', 'handleCreateOrUpdateChannel', err)
+          )) ?? null
+        : null
 
-      const coverBlob = ytResponseData?.bannerUrl ? await imageUrlToBlob(ytResponseData?.bannerUrl, 1920, 480) : null
+      const coverBlob = ytResponseData?.bannerUrl
+        ? (await imageUrlToBlob(ytResponseData?.bannerUrl, 1920, 480).catch((err) =>
+            SentryLogger.error('Failed to process YT banner image', 'handleCreateOrUpdateChannel', err)
+          )) ?? null
+        : null
 
       const avatarContentId = `local-avatar-${createId()}`
       const coverContentId = `local-cover-${createId()}`
@@ -264,6 +273,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
         },
         onCompleted: async () => {
           await refetchUserMemberships()
+          await refetchYppSyncedChannels()
 
           const channelId = selectedChannelId || createdChannelId.current
 
@@ -346,17 +356,17 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
             setSelectedChannelId(yppUnsyncedChannels[0].id)
           }
 
+          if (ytRequirementsErrors.length) {
+            return {
+              text: 'Close',
+              onClick: handleClose,
+            }
+          }
+
           if (yppUnsyncedChannels && yppUnsyncedChannels.length > 1) {
             return {
               text: 'Select channel',
               onClick: () => setYppModalOpenName('ypp-select-channel'),
-            }
-          }
-
-          if (ytRequirementsErrors.length) {
-            return {
-              text: 'Close',
-              onClick: () => setYppModalOpenName(null),
             }
           }
 
@@ -371,6 +381,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
         }
 
         return {
+          headerIcon: ytRequirementsErrors.length ? <SvgAlertsError32 /> : undefined,
           title: ytRequirementsErrors.length ? 'Authorization failed' : 'Requirements',
           description: ytRequirementsErrors.length
             ? 'Looks like the YouTube channel you selected does not meet all conditions to be enrolled in the program. You can select another one or try again at a later time.'
@@ -462,6 +473,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     yppUnsyncedChannels,
     navigate,
     setSelectedChannelId,
+    handleClose,
     setYppModalOpenName,
     handleAuthorizeClick,
     handleCreateOrUpdateChannel,
@@ -470,11 +482,11 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
   const isLoadingModal = yppModalOpenName === 'ypp-fetching-data' || yppModalOpenName === 'ypp-speaking-to-backend'
 
   const secondaryButton: DialogButtonProps | undefined = useMemo(() => {
-    if (isLoadingModal) return
+    if (isLoadingModal || ytRequirementsErrors.length) return
 
     if (yppModalOpenName === 'ypp-requirements' && isLoggedIn) return
 
-    if (yppModalOpenName === 'ypp-requirements' && !isLoggedIn && !ytRequirementsErrors.length) {
+    if (yppModalOpenName === 'ypp-requirements' && !isLoggedIn) {
       return {
         text: 'Sign in',
         onClick: () => {

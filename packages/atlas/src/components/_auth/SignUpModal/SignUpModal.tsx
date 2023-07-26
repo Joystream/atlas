@@ -15,6 +15,7 @@ import { useYppStore } from '@/providers/ypp/ypp.store'
 import { media } from '@/styles'
 import { createId } from '@/utils/createId'
 import { imageUrlToBlob } from '@/utils/image'
+import { SentryLogger } from '@/utils/logs'
 
 import { SignUpSteps } from './SignUpModal.types'
 import {
@@ -204,7 +205,11 @@ export const SignUpModal = () => {
 
       if (ytResponseData) {
         // replace handle and avatar if they are provided via ypp flow
-        blob = ytResponseData.avatarUrl ? await imageUrlToBlob(ytResponseData.avatarUrl) : null
+        blob = ytResponseData.avatarUrl
+          ? (await imageUrlToBlob(ytResponseData.avatarUrl).catch((err) =>
+              SentryLogger.error('Failed to process YT avatar image', 'handleCreateOrUpdateChannel', err)
+            )) ?? null
+          : null
         handle = ytResponseData.channelHandle
           ? await generateUniqueMemberHandleBasedOnInput(ytResponseData.channelHandle)
           : `user${createId()}`
@@ -230,7 +235,12 @@ export const SignUpModal = () => {
       goToNextStep()
       const newMemberId = await createNewMember(
         {
-          data: { ...signUpFormData, ...memberData },
+          data: {
+            ...signUpFormData,
+            ...memberData,
+            authorizationCode: ytResponseData?.authorizationCode,
+            userId: ytResponseData?.userId,
+          },
           onError: () => {
             goToStep(SignUpSteps.CreateMember)
           },
@@ -249,6 +259,7 @@ export const SignUpModal = () => {
           syncState.current = 'synced'
           handlePasswordStepSubmit(signUpFormData.password)
         }
+        syncState.current = 'synced'
       }, 10_000)
 
       if (newMemberId) {
@@ -271,7 +282,12 @@ export const SignUpModal = () => {
   const handleMemberStepSubmit = useCallback(
     (data: MemberFormData) => {
       goToNextStep()
-      setSignupFormData((userForm) => ({ ...userForm, handle: data.handle, avatar: data.avatar }))
+      setSignupFormData((userForm) => ({
+        ...userForm,
+        handle: data.handle,
+        avatar: data.avatar,
+        captchaToken: data.captchaToken,
+      }))
     },
     [goToNextStep]
   )
@@ -312,8 +328,8 @@ export const SignUpModal = () => {
   }, [isSuccess, signUpFormData.email, signUpFormData.handle, trackMembershipCreation])
 
   useEffect(() => {
-    trackPageView(stepToPageName[currentStep] ?? '', { isYppFlow })
-  }, [currentStep, isYppFlow, trackPageView])
+    authModalOpenName === 'signUp' && trackPageView(stepToPageName[currentStep] ?? '', { isYppFlow })
+  }, [authModalOpenName, currentStep, isYppFlow, trackPageView])
 
   const smMatch = useMediaMatch('sm')
   return (

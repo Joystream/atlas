@@ -9,7 +9,6 @@ import { NotificationsWidget } from '@/components/_notifications/NotificationsWi
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useUser } from '@/providers/user/user.hooks'
@@ -24,15 +23,13 @@ type StudioTopbarProps = {
 }
 
 export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembershipLoaded }) => {
-  const { channelId, activeMembership } = useUser()
+  const { channelId, activeMembership, activeChannel } = useUser()
   const mdMatch = useMediaMatch('md')
   const hasAtLeastOneChannel = !!activeMembership?.channels.length && activeMembership?.channels.length >= 1
   const {
     actions: { setAuthModalOpenName },
   } = useAuthStore()
   const { isWorkspaceOpen, setIsWorkspaceOpen, uploadVideoButtonProps } = useVideoWorkspace()
-
-  const { urls: memberAvatarUrls } = getMemberAvatar(activeMembership)
 
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
 
@@ -81,7 +78,7 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
               <NotificationsWidget type="channel" trigger={<NotificationsButton />} />
               <StyledAvatar
                 size={40}
-                assetUrls={memberAvatarUrls}
+                assetUrls={activeChannel?.avatarPhoto?.resolvedUrls}
                 onClick={handleDrawerToggle}
                 badge={unseenMemberNotifications}
               />
@@ -95,7 +92,7 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
       <MemberDropdown
         onChannelChange={handleChannelChange}
         isActive={isMemberDropdownActive}
-        publisher={!!hasAtLeastOneChannel}
+        publisher={hasAtLeastOneChannel}
         closeDropdown={() => setIsMemberDropdownActive(false)}
       />
     </>
