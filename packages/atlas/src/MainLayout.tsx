@@ -6,6 +6,7 @@ import { StudioLoading } from '@/components/_loaders/StudioLoading'
 import { CookiePopover } from '@/components/_overlays/CookiePopover'
 import { atlasConfig } from '@/config'
 import { BASE_PATHS, absoluteRoutes } from '@/config/routes'
+import { useTimeMismatchWarning } from '@/hooks/useTimeMismatchWarning'
 import { transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
 import { isBrowserOutdated } from '@/utils/browser'
@@ -38,6 +39,7 @@ const LoadablePlaygroundLayout = loadable(() => import('./views/playground/Playg
 })
 
 export const MainLayout: FC = () => {
+  useTimeMismatchWarning()
   const scrollPosition = useRef<number>(0)
   const location = useLocation()
 

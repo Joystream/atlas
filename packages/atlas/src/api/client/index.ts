@@ -1,10 +1,12 @@
 import { ApolloClient, ApolloLink, FetchResult, HttpLink, Observable, split } from '@apollo/client'
+import { onError } from '@apollo/client/link/error'
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { createClient } from 'graphql-ws'
 
 import { ORION_GRAPHQL_URL, QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL } from '@/config/env'
 import { useUserLocationStore } from '@/providers/userLocation'
+import { SentryLogger } from '@/utils/logs'
 
 import cache from './cache'
 
@@ -23,6 +25,33 @@ const delayLink = new ApolloLink((operation, forward) => {
   })
 })
 
+const errorLink = onError(({ graphQLErrors, networkError, operation, forward, response }) => {
+  if (graphQLErrors?.some(({ message }) => message === 'Unauthorized')) {
+    forward(operation)
+    return
+  }
+  if (networkError?.message === 'Response not successful: Received status code 400') {
+    forward(operation)
+    return
+  }
+
+  SentryLogger.error(
+    'Apollo Error',
+    'Error Link',
+    {
+      graphQLErrors,
+      networkError,
+    },
+    {
+      data: {
+        operation: JSON.stringify(operation),
+        response: JSON.stringify(response),
+      },
+    }
+  )
+  forward(operation)
+})
+
 const createApolloClient = () => {
   const subscriptionLink = new GraphQLWsLink(
     createClient({
@@ -31,7 +60,11 @@ const createApolloClient = () => {
     })
   )
 
-  const orionLink = ApolloLink.from([delayLink, new HttpLink({ uri: ORION_GRAPHQL_URL, credentials: 'include' })])
+  const orionLink = ApolloLink.from([
+    errorLink,
+    delayLink,
+    new HttpLink({ uri: ORION_GRAPHQL_URL, credentials: 'include' }),
+  ])
 
   const operationSplitLink = split(
     ({ query, setContext }) => {
