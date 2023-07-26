@@ -260,7 +260,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 export const useAuthContext = () => {
   const ctx = useContext(AuthContext)
   if (ctx === undefined) {
-    throw new Error('useActiveUserContext must be used within a UserProvider')
+    throw new Error('useActiveUserContext must be used within a AuthProvider')
   }
   return ctx
 }
