@@ -234,7 +234,7 @@ export const useTransaction = (): HandleTransactionFn => {
             }
           })
 
-        await withTimeout(queryNodeSyncPromiseFactory(), 15_000).catch(async (error) => {
+        await withTimeout(queryNodeSyncPromiseFactory(), 20_000).catch(async (error) => {
           SentryLogger.error('TEST: Processor sync promise timeout error', 'TransactionManager', {
             error,
             txResult: result,
