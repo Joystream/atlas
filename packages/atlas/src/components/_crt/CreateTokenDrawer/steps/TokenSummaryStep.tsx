@@ -1,12 +1,14 @@
 import styled from '@emotion/styled'
-import { ReactNode, useEffect } from 'react'
+import { ReactNode } from 'react'
 
 import { SvgAlertsInformative24 } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
+import { CreateTokenForm } from '@/components/_crt/CreateTokenDrawer/CreateTokenDrawer.types'
 import { CrtFormWrapper } from '@/components/_crt/CrtFormWrapper'
+import { useMountEffect } from '@/hooks/useMountEffect'
 import { sizes } from '@/styles'
 
 import { CommonStepProps } from './types'
@@ -24,12 +26,16 @@ const cliffBanner = (
   />
 )
 
-export const TokenSummaryStep = ({ setPrimaryButtonProps }: CommonStepProps) => {
-  useEffect(() => {
+type TokenSummaryStepProps = {
+  form: CreateTokenForm
+} & CommonStepProps
+
+export const TokenSummaryStep = ({ setPrimaryButtonProps, form }: TokenSummaryStepProps) => {
+  useMountEffect(() => {
     setPrimaryButtonProps({
       text: 'Create token',
     })
-  }, [setPrimaryButtonProps])
+  })
 
   return (
     <CrtFormWrapper title="Set up your token" subtitle="" titleLink="">
@@ -39,45 +45,53 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps }: CommonStepProps) => 
         </Text>
         <SectionRow title="Name" tooltipText="XD">
           <Text variant="h300" as="p" color="colorTextStrong">
-            $ABC
+            ${form.name}
           </Text>
         </SectionRow>
         <SectionRow title="Access" tooltipText="XD">
           <Text variant="h300" as="p" color="colorTextStrong">
-            Anyone
+            {form.isOpen ? 'Anyone' : 'Invite only'}
           </Text>
         </SectionRow>
         <SectionRow title="Revenue share with holders" tooltipText="XD">
           <Text variant="h300" as="p" color="colorTextStrong">
-            Channel: 50% Holders: 50%
+            Channel: {form.revenueShare}% Holders: {100 - form.revenueShare}%
           </Text>
         </SectionRow>
         <SectionRow title="Annual creator reward" tooltipText="XD">
           <Text variant="h300" as="p" color="colorTextStrong">
-            30%
+            {form.creatorReward}%
           </Text>
         </SectionRow>
         <SectionRow title="Tokens issued to your wallet" tooltipText="XD">
           <Text variant="h300" as="p" color="colorTextStrong">
-            5 000 $ABC
+            {form.creatorIssueAmount} ${form.name}
           </Text>
         </SectionRow>
-        <SectionRow title="Cliff" tooltipText="XD">
-          <Text variant="h300" as="p" color="colorTextStrong">
-            6 months
-          </Text>
-        </SectionRow>
-        {cliffBanner}
-        <SectionRow title="Vesting period" tooltipText="XD">
-          <Text variant="h300" as="p" color="colorTextStrong">
-            1 year
-          </Text>
-        </SectionRow>
-        <SectionRow title="First payout" tooltipText="XD">
-          <Text variant="h300" as="p" color="colorTextStrong">
-            50%
-          </Text>
-        </SectionRow>
+        {form.cliff && (
+          <>
+            <SectionRow title="Cliff" tooltipText="XD">
+              <Text variant="h300" as="p" color="colorTextStrong">
+                {form.cliff} months
+              </Text>
+            </SectionRow>
+            {cliffBanner}
+          </>
+        )}
+        {form.vesting && (
+          <SectionRow title="Vesting period" tooltipText="XD">
+            <Text variant="h300" as="p" color="colorTextStrong">
+              {form.vesting} months
+            </Text>
+          </SectionRow>
+        )}
+        {form.firstPayout && (
+          <SectionRow title="First payout" tooltipText="XD">
+            <Text variant="h300" as="p" color="colorTextStrong">
+              {form.firstPayout}
+            </Text>
+          </SectionRow>
+        )}
       </Section>
 
       <Section>

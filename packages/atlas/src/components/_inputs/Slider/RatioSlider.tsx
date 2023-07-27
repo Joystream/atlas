@@ -18,7 +18,9 @@ export const RatioSlider = forwardRef<HTMLInputElement, RatioSliderProps>(
   ({ min = 0, max = 100, step = 10, defaultValue = 50, value: controlledValue, onChange, id = '' }, ref) => {
     const [internalValue, setInternalValue] = useState<number>(defaultValue)
     const value = controlledValue ?? internalValue
-
+    if (id === 'revenueShare') {
+      console.log('con', value, typeof controlledValue === 'undefined')
+    }
     const handleChange: ChangeEventHandler<HTMLInputElement> = useMemo(
       () =>
         typeof controlledValue === 'undefined'
@@ -55,7 +57,7 @@ export const RatioSlider = forwardRef<HTMLInputElement, RatioSliderProps>(
 
             <g className="steps">
               {steps.map((x, index) => {
-                const cls = Math.min(index * step, max) <= internalValue ? 'active' : ''
+                const cls = Math.min(index * step, max) <= value ? 'active' : ''
                 return <line key={index} className={cls} x1={x} x2={x} y1={sizes(3 / 2)} y2={sizes(9 / 2)} radius={4} />
               })}
             </g>
@@ -65,7 +67,7 @@ export const RatioSlider = forwardRef<HTMLInputElement, RatioSliderProps>(
             {min}%
           </text>
           <text x="50%" y={sizes(10)}>
-            {internalValue}%
+            {value}%
           </text>
           <text x="100%" y={sizes(10)}>
             {max}%

@@ -1,8 +1,9 @@
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { SvgAlertsInformative24 } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
+import { IssuanceStepForm } from '@/components/_crt/CreateTokenDrawer/CreateTokenDrawer.types'
 import { CommonStepProps } from '@/components/_crt/CreateTokenDrawer/steps/types'
 import { CrtFormWrapper } from '@/components/_crt/CrtFormWrapper'
 import { FormField } from '@/components/_inputs/FormField'
@@ -10,6 +11,7 @@ import { Input } from '@/components/_inputs/Input'
 import { RadioButtonGroup } from '@/components/_inputs/RadioButtonGroup'
 import { Select } from '@/components/_inputs/Select'
 import { TokenInput } from '@/components/_inputs/TokenInput'
+import { useMountEffect } from '@/hooks/useMountEffect'
 
 const assuranceOptions = [
   {
@@ -37,7 +39,7 @@ const assuranceOptions = [
 
 const vestingOptions = [
   {
-    value: 'none',
+    value: 0,
     name: 'No vesting',
   },
   {
@@ -56,7 +58,7 @@ const vestingOptions = [
 
 const cliffOptions = [
   {
-    value: 'none',
+    value: 0,
     name: 'No cliff',
   },
   {
@@ -86,19 +88,19 @@ const cliffBanner = (
   />
 )
 
-export const TokenIssuanceStep = ({ setActionBarProps }: CommonStepProps) => {
-  const { register, control, watch } = useForm()
+type TokenIssuanceStepProps = {
+  onSubmit: (form: IssuanceStepForm) => void
+} & CommonStepProps
 
-  useEffect(() => {
-    setActionBarProps({
-      primaryButton: {
-        text: 'Next step',
-      },
-      secondaryButton: {
-        text: 'Back',
-      },
+export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit }: TokenIssuanceStepProps) => {
+  const { register, control, watch, handleSubmit } = useForm<IssuanceStepForm>()
+
+  useMountEffect(() => {
+    setPrimaryButtonProps({
+      text: 'Next step',
+      onClick: () => handleSubmit(onSubmit)(),
     })
-  }, [setActionBarProps])
+  })
 
   const assuranceType = watch('assuranceType')
 
@@ -124,7 +126,7 @@ export const TokenIssuanceStep = ({ setActionBarProps }: CommonStepProps) => {
                 render={({ field }) => <Select items={cliffOptions} {...field} />}
               />
             </FormField>
-            {customCliff !== 'none' && cliffBanner}
+            {customCliff !== null && cliffBanner}
             <FormField
               label="Vesting period"
               description="All tokens minted that are not part of the first payout get unlocked gradually over the course of the vesting period. Vesting period starts after the cliff has passed."
@@ -138,7 +140,7 @@ export const TokenIssuanceStep = ({ setActionBarProps }: CommonStepProps) => {
                 render={({ field }) => <Select items={vestingOptions} {...field} />}
               />
             </FormField>
-            {customVesting !== 'none' && (
+            {customVesting !== null && (
               <FormField
                 label="First payout"
                 description="A portion of your own tokens that will be released to you right after cliff period."
@@ -168,7 +170,7 @@ export const TokenIssuanceStep = ({ setActionBarProps }: CommonStepProps) => {
         label="Tokens issued to your wallet"
         description="Decide how many tokens you want to create for yourself. This amount cannot be changed later. You will be able to sell these tokens to your audience directly or enable a public sale, where others can mint more of your channel tokens in exchange for JOYs."
       >
-        <Input {...register('issuedAmount')} />
+        <Input {...register('creatorIssueAmount')} />
       </FormField>
       <FormField
         label="Token assurances"

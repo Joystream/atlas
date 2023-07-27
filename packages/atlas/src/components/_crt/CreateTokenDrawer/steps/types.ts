@@ -1,5 +1,5 @@
 import { CrtDrawerProps } from '@/components/CrtDrawer'
 
 export type CommonStepProps = {
-  setActionBarProps: (props: CrtDrawerProps['actionBar']) => void
+  setPrimaryButtonProps: (props: NonNullable<CrtDrawerProps['actionBar']>['primaryButton']) => void
 }

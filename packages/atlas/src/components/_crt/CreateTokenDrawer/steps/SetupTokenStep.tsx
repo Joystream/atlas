@@ -1,12 +1,13 @@
-import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { SvgActionLock, SvgActionUnlocked } from '@/assets/icons'
+import { SetupStepForm } from '@/components/_crt/CreateTokenDrawer/CreateTokenDrawer.types'
 import { CrtFormWrapper } from '@/components/_crt/CrtFormWrapper'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { OptionCardGroupRadio } from '@/components/_inputs/OptionCardGroup'
 import { RatioSlider } from '@/components/_inputs/Slider'
+import { useMountEffect } from '@/hooks/useMountEffect'
 
 import { CommonStepProps } from './types'
 
@@ -15,38 +16,38 @@ const accessOptions = [
     label: 'Anyone',
     caption: 'Everyone can own your token.',
     icon: <SvgActionUnlocked />,
-    value: 'anyone',
+    value: true,
   },
   {
     label: 'Invite only',
     caption: 'Only members on allowlist can own your token. ',
     icon: <SvgActionLock />,
-    value: 'locked',
+    value: false,
   },
 ]
 
 const defaultValues = {
-  access: 'anyone',
+  isOpen: true,
   name: '',
   revenueShare: 50,
   creatorReward: 50,
 }
 
-export const SetupTokenStep = ({ setActionBarProps }: CommonStepProps) => {
-  const { register, control } = useForm({
+type SetupTokenStepProps = {
+  onSubmit: (form: SetupStepForm) => void
+} & CommonStepProps
+
+export const SetupTokenStep = ({ setPrimaryButtonProps, onSubmit }: SetupTokenStepProps) => {
+  const { register, control, handleSubmit, watch } = useForm<SetupStepForm>({
     defaultValues,
   })
 
-  useEffect(() => {
-    setActionBarProps({
-      primaryButton: {
-        text: 'Next step',
-      },
-      secondaryButton: {
-        text: 'Cancel',
-      },
+  useMountEffect(() => {
+    setPrimaryButtonProps({
+      text: 'Next step',
+      onClick: () => handleSubmit(onSubmit)(),
     })
-  }, [setActionBarProps])
+  })
 
   return (
     <CrtFormWrapper title="Set up your token" subtitle="Enter basic token information and settings." titleLink="">
@@ -58,7 +59,7 @@ export const SetupTokenStep = ({ setActionBarProps }: CommonStepProps) => {
       </FormField>
       <FormField label="Access" description="Define if everyone can buy your token or only selected memebers.">
         <Controller
-          name="access"
+          name="isOpen"
           control={control}
           render={({ field: { value, onChange } }) => (
             <OptionCardGroupRadio options={accessOptions} onChange={onChange} selectedValue={value} />
