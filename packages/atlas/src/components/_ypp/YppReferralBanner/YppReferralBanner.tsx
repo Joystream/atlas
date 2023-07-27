@@ -57,7 +57,9 @@ export const YppReferralBanner: FC<YppReferralBannerProps> = ({ className }) => 
 
   // persist referrer id in store
   useEffect(() => {
-    setReferrerId(channel ? channel.id : null)
+    if (channel) {
+      setReferrerId(channel ? channel.id : null)
+    }
   }, [channel, setReferrerId])
 
   const isLoading = isLoadingChannel
