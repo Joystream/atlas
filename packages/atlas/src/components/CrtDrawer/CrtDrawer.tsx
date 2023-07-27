@@ -14,13 +14,13 @@ import {
   StyledStep,
 } from './CrtDrawer.styles'
 
-export type CrtDrawerProps = {
-  form?: ReactNode
+export type CrtDrawerProps<T = string> = {
+  children?: ReactNode
   preview?: ReactNode
-  steps: string[]
+  steps: T[]
   activeStep: number
 } & BottomDrawerProps
-export const CrtDrawer = ({ form, preview, steps, activeStep, ...drawerProps }: CrtDrawerProps) => {
+export const CrtDrawer = ({ children, preview, steps, activeStep, ...drawerProps }: CrtDrawerProps) => {
   const smMatch = useMediaMatch('sm')
   return (
     <StyledBottomDrawer {...drawerProps}>
@@ -36,13 +36,13 @@ export const CrtDrawer = ({ form, preview, steps, activeStep, ...drawerProps }: 
                     title={step}
                     key={idx}
                     number={idx + 1}
-                    variant={idx + 1 < activeStep ? 'completed' : idx + 1 === activeStep ? 'current' : 'future'}
+                    variant={idx + 1 < activeStep ? 'completed' : idx === activeStep ? 'current' : 'future'}
                   />
                 </>
               ))}
             </StepContainer>
           </StepWrapper>
-          {form}
+          {children}
         </FormContainer>
         {smMatch && <PreviewContainer>{preview}</PreviewContainer>}
       </Container>

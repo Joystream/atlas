@@ -61,6 +61,7 @@ export const StepWrapper = styled.div`
   scrollbar-width: none;
   box-shadow: ${cVar('effectDividersBottom')};
   margin-bottom: ${sizes(8)};
+  min-height: 82px;
 
   ::-webkit-scrollbar {
     display: none;
