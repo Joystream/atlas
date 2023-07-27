@@ -36,6 +36,7 @@ import {
   ReactionsWrapper,
   RepliesWrapper,
   ReplyButton,
+  ReplyButtonWrapper,
   StyledAvatarGroup,
   StyledFooterSkeletonLoader,
   StyledLink,
@@ -292,36 +293,37 @@ export const InternalComment: FC<InternalCommentProps> = ({
                         )}
 
                         <RepliesWrapper>
-                          <ProtectedActionWrapper
-                            title="You want to reply to this comment?"
-                            description="Sign in to let others know what you think"
-                          >
-                            {!!repliesCount && filteredDuplicatedAvatars.length ? (
-                              <StyledAvatarGroup
-                                size="small"
-                                avatarStrokeColor={highlighted ? cVar('colorBackground', true) : undefined}
-                                avatars={filteredDuplicatedAvatars}
-                                clickable={false}
-                              />
-                            ) : null}
-                            {onToggleReplies && !!repliesCount && (
-                              <TextButton
-                                onClick={onToggleReplies}
-                                variant="tertiary"
-                                size="small"
-                                iconPlacement="right"
-                                icon={repliesOpen ? <SvgActionChevronT /> : <SvgActionChevronB />}
+                          {!!repliesCount && filteredDuplicatedAvatars.length ? (
+                            <StyledAvatarGroup
+                              size="small"
+                              avatarStrokeColor={highlighted ? cVar('colorBackground', true) : undefined}
+                              avatars={filteredDuplicatedAvatars}
+                              clickable={false}
+                            />
+                          ) : null}
+                          {onToggleReplies && !!repliesCount && (
+                            <TextButton
+                              onClick={onToggleReplies}
+                              variant="tertiary"
+                              size="small"
+                              iconPlacement="right"
+                              icon={repliesOpen ? <SvgActionChevronT /> : <SvgActionChevronB />}
+                            >
+                              {repliesOpen ? 'Hide' : 'Show'} {repliesCount} {repliesCount === 1 ? 'reply' : 'replies'}
+                            </TextButton>
+                          )}
+                          {onReplyClick && !isDeleted && !isProcessing && (commentHover || isTouchDevice) && (
+                            <ReplyButtonWrapper>
+                              <ProtectedActionWrapper
+                                title="You want to reply to this comment?"
+                                description="Sign in to let others know what you think"
                               >
-                                {repliesOpen ? 'Hide' : 'Show'} {repliesCount}{' '}
-                                {repliesCount === 1 ? 'reply' : 'replies'}
-                              </TextButton>
-                            )}
-                            {onReplyClick && !isDeleted && !isProcessing && (commentHover || isTouchDevice) && (
-                              <ReplyButton onClick={onReplyClick} variant="tertiary" size="small" _textOnly>
-                                Reply
-                              </ReplyButton>
-                            )}
-                          </ProtectedActionWrapper>
+                                <ReplyButton onClick={onReplyClick} variant="tertiary" size="small" _textOnly>
+                                  Reply
+                                </ReplyButton>
+                              </ProtectedActionWrapper>
+                            </ReplyButtonWrapper>
+                          )}
                         </RepliesWrapper>
                       </ReactionsWrapper>
                     }
