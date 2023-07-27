@@ -5,6 +5,7 @@ import { sizes } from '@/styles'
 import { Range, Track, Wrapper } from './RatioSlider.styles'
 
 type RatioSliderProps = {
+  id?: string
   min?: number
   max?: number
   step?: number
@@ -14,7 +15,7 @@ type RatioSliderProps = {
 }
 
 export const RatioSlider = forwardRef<HTMLInputElement, RatioSliderProps>(
-  ({ min = 0, max = 100, step = 10, defaultValue = 50, value: controlledValue, onChange }, ref) => {
+  ({ min = 0, max = 100, step = 10, defaultValue = 50, value: controlledValue, onChange, id = '' }, ref) => {
     const [internalValue, setInternalValue] = useState<number>(defaultValue)
     const value = controlledValue ?? internalValue
 
@@ -43,12 +44,12 @@ export const RatioSlider = forwardRef<HTMLInputElement, RatioSliderProps>(
         <Track xmlns="http://www.w3.org/2000/svg">
           <circle className="knob" cx={valuePercent} cy={sizes(3)} r={sizes(2)} />
 
-          <mask id="cutout-mask">
+          <mask id={`cutout-mask-${id}`}>
             <rect x="-5%" y="0%" width="110%" height="100%" fill="#fff" />
             <circle className="cutout-mask" cx={valuePercent} cy={sizes(3)} r={sizes(3)} />
           </mask>
 
-          <g className="rail" mask="url(#cutout-mask)">
+          <g className="rail" mask={`url(#cutout-mask-${id})`}>
             <line className="rail-left" x1="0%" x2={valuePercent} y1={sizes(3)} y2={sizes(3)} />
             <line className="rail-rigth" x1={valuePercent} x2="100%" y1={sizes(3)} y2={sizes(3)} />
 
