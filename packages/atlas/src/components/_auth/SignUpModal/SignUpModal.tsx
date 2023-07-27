@@ -260,7 +260,7 @@ export const SignUpModal = () => {
           handlePasswordStepSubmit(signUpFormData.password)
         }
         syncState.current = 'synced'
-      }, 10_000)
+      }, 20_000)
 
       if (newMemberId) {
         setMemberId(newMemberId)
