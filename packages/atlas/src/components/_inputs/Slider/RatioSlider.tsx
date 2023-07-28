@@ -18,9 +18,7 @@ export const RatioSlider = forwardRef<HTMLInputElement, RatioSliderProps>(
   ({ min = 0, max = 100, step = 10, defaultValue = 50, value: controlledValue, onChange, id = '' }, ref) => {
     const [internalValue, setInternalValue] = useState<number>(defaultValue)
     const value = controlledValue ?? internalValue
-    if (id === 'revenueShare') {
-      console.log('con', value, typeof controlledValue === 'undefined')
-    }
+
     const handleChange: ChangeEventHandler<HTMLInputElement> = useMemo(
       () =>
         typeof controlledValue === 'undefined'

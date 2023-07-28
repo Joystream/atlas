@@ -1,6 +1,7 @@
 import { Controller, useForm } from 'react-hook-form'
 
 import { SvgActionLock, SvgActionUnlocked } from '@/assets/icons'
+import { Text } from '@/components/Text'
 import { SetupStepForm } from '@/components/_crt/CreateTokenDrawer/CreateTokenDrawer.types'
 import { CrtFormWrapper } from '@/components/_crt/CrtFormWrapper'
 import { FormField } from '@/components/_inputs/FormField'
@@ -38,7 +39,12 @@ type SetupTokenStepProps = {
 } & CommonStepProps
 
 export const SetupTokenStep = ({ setPrimaryButtonProps, onSubmit }: SetupTokenStepProps) => {
-  const { register, control, handleSubmit, watch } = useForm<SetupStepForm>({
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SetupStepForm>({
     defaultValues,
   })
 
@@ -54,8 +60,34 @@ export const SetupTokenStep = ({ setPrimaryButtonProps, onSubmit }: SetupTokenSt
       <FormField
         label="Name"
         description="Choose 3 letter name for your token to be displayed on your token page, tokens marketplace and in your buyers’ portfolio."
+        error={errors.name?.message}
       >
-        <Input {...register('name')} placeholder="$ABC" />
+        <Input
+          {...register('name', {
+            maxLength: {
+              value: 3,
+              message: 'Name must be 3 letters long.',
+            },
+            minLength: {
+              value: 3,
+              message: 'Name must be 3 letters long.',
+            },
+            required: {
+              value: true,
+              message: 'Name is required.',
+            },
+            pattern: {
+              value: /[A-Z]+/,
+              message: 'Name should contain only uppercase letters.',
+            },
+          })}
+          placeholder="ABC"
+          nodeStart={
+            <Text variant="t300" as="p" color="colorTextMuted">
+              $
+            </Text>
+          }
+        />
       </FormField>
       <FormField label="Access" description="Define if everyone can buy your token or only selected memebers.">
         <Controller
