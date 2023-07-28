@@ -171,7 +171,10 @@ export const SignUpModal = () => {
             }
             goToStep(SignUpSteps.CreateMember)
           },
-          onStart: () => goToStep(SignUpSteps.Creating),
+          onStart: () => {
+            goToStep(SignUpSteps.Creating)
+            syncState.current = null
+          },
           onSuccess: ({ amountOfTokens }) => {
             // if this is ypp flow, overwrite ytResponseData.email
             if (ytResponseData) {
