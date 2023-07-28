@@ -105,104 +105,77 @@ export const SignUpModal = () => {
     [currentStep]
   )
 
+  const handleOrionAccountCreation = useCallback(() => {
+    if (!memberRef.current) {
+      throw new Error('MemberID ref is empty, do a check before calling handleOrionAccountCreation function')
+    }
+
+    return createNewOrionAccount({
+      data: { ...signUpFormData.current, memberId: memberRef.current },
+      onError: (error) => {
+        if (error === RegisterError.EmailAlreadyExists) {
+          setEmailAlreadyTakenError(true)
+          goToStep(SignUpSteps.SignUpEmail)
+          return
+        }
+        if (error === RegisterError.MembershipNotFound) {
+          setTimeout(() => {
+            handleOrionAccountCreation()
+          }, 10_000)
+          return
+        }
+        goToStep(SignUpSteps.CreateMember)
+      },
+      onStart: () => {
+        goToStep(SignUpSteps.Creating)
+        syncState.current = null
+      },
+      onSuccess: ({ amountOfTokens }) => {
+        // if this is ypp flow, overwrite ytResponseData.email
+        if (ytResponseData) {
+          setYtResponseData({ ...ytResponseData, email: signUpFormData.current.email })
+          setAuthModalOpenName(undefined)
+          setYppModalOpenName('ypp-sync-options')
+        } else {
+          setAmountofTokens(amountOfTokens)
+          goToNextStep()
+        }
+      },
+    })
+  }, [
+    createNewOrionAccount,
+    goToNextStep,
+    goToStep,
+    setAuthModalOpenName,
+    setYppModalOpenName,
+    setYtResponseData,
+    ytResponseData,
+  ])
+
   const handleEmailStepSubmit = useCallback(
     (email: string, confirmedTerms: boolean) => {
       signUpFormData.current = { ...signUpFormData.current, email, confirmedTerms }
       if (memberRef.current && emailAlreadyTakenError) {
-        createNewOrionAccount({
-          data: { ...signUpFormData.current, email, memberId: memberRef.current },
-          onError: (error) => {
-            if (error === RegisterError.EmailAlreadyExists) {
-              setEmailAlreadyTakenError(true)
-              goToStep(SignUpSteps.SignUpEmail)
-              return
-            }
-
-            goToStep(SignUpSteps.CreateMember)
-          },
-          onStart: () => goToStep(SignUpSteps.Creating),
-          onSuccess: ({ amountOfTokens }) => {
-            // if this is ypp flow, overwrite ytResponseData.email
-            if (ytResponseData) {
-              setYtResponseData({ ...ytResponseData, email })
-              setAuthModalOpenName(undefined)
-              setYppModalOpenName('ypp-sync-options')
-            } else {
-              setAmountofTokens(amountOfTokens)
-              goToNextStep()
-            }
-          },
-        })
+        handleOrionAccountCreation()
         return
       }
 
       goToNextStep()
     },
-    [
-      createNewOrionAccount,
-      emailAlreadyTakenError,
-      goToNextStep,
-      goToStep,
-      setAuthModalOpenName,
-      setYppModalOpenName,
-      setYtResponseData,
-      signUpFormData,
-      ytResponseData,
-    ]
+    [emailAlreadyTakenError, goToNextStep, handleOrionAccountCreation]
   )
 
   const handlePasswordStepSubmit = useCallback(
     async (password: string) => {
       signUpFormData.current = { ...signUpFormData.current, password }
       if (memberRef.current && syncState.current === 'synced') {
-        createNewOrionAccount({
-          data: { ...signUpFormData.current, password, memberId: memberRef.current },
-          onError: (error) => {
-            if (error === RegisterError.EmailAlreadyExists) {
-              setEmailAlreadyTakenError(true)
-              goToStep(SignUpSteps.SignUpEmail)
-              return
-            }
-            if (error === RegisterError.MembershipNotFound) {
-              setTimeout(() => {
-                handlePasswordStepSubmit(signUpFormData.current.password)
-              }, 10_000)
-              return
-            }
-            goToStep(SignUpSteps.CreateMember)
-          },
-          onStart: () => {
-            goToStep(SignUpSteps.Creating)
-            syncState.current = null
-          },
-          onSuccess: ({ amountOfTokens }) => {
-            // if this is ypp flow, overwrite ytResponseData.email
-            if (ytResponseData) {
-              setYtResponseData({ ...ytResponseData, email: signUpFormData.current.email })
-              setAuthModalOpenName(undefined)
-              setYppModalOpenName('ypp-sync-options')
-            } else {
-              setAmountofTokens(amountOfTokens)
-              goToNextStep()
-            }
-          },
-        })
+        handleOrionAccountCreation()
         return
       }
       syncState.current = 'tried'
       goToNextStep()
     },
-    [
-      createNewOrionAccount,
-      goToNextStep,
-      goToStep,
-      setAuthModalOpenName,
-      setYppModalOpenName,
-      setYtResponseData,
-      signUpFormData,
-      syncState,
-      ytResponseData,
-    ]
+    [goToNextStep, handleOrionAccountCreation]
   )
 
   const handleCreateMemberOnSeedStepSubmit = useCallback(
