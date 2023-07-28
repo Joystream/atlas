@@ -61,6 +61,7 @@ type FaucetParams = {
 export enum RegisterError {
   EmailAlreadyExists = 'EmailAlreadyExists',
   UnknownError = 'UnknownError',
+  MembershipNotFound = 'MembershipNotFound',
 }
 
 type SignUpParams<T> = {
@@ -210,6 +211,8 @@ export const useCreateMember = () => {
                 'To create new membership you need to use an email that is not connected to already existing account.',
             })
             onError?.(RegisterError.EmailAlreadyExists)
+          } else if (errorMessage.startsWith('Membership not found by id')) {
+            onError?.(RegisterError.MembershipNotFound)
           } else {
             displaySnackbar({
               title: 'Something went wrong',
