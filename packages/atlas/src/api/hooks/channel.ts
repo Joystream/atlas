@@ -1,6 +1,8 @@
 import { MutationHookOptions, QueryHookOptions } from '@apollo/client'
+import { BN_ZERO } from '@polkadot/util'
+import BN from 'bn.js'
 import { shuffle } from 'lodash-es'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import {
   FollowChannelMutation,
@@ -17,12 +19,14 @@ import {
   UnfollowChannelMutation,
   useFollowChannelMutation,
   useGetChannelNftCollectorsQuery,
+  useGetChannelsPaymentEventsQuery,
   useGetDiscoverChannelsQuery,
   useGetExtendedBasicChannelsQuery,
   useGetExtendedFullChannelsQuery,
   useGetTop10ChannelsQuery,
   useUnfollowChannelMutation,
 } from '@/api/queries/__generated__/channels.generated'
+import { BasicChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 
 export const useBasicChannel = (
@@ -79,6 +83,30 @@ export const useBasicChannels = (
     extendedChannels: data?.extendedChannels,
     ...rest,
   }
+}
+
+type ChannelPayment = { channel: BasicChannelFieldsFragment; amount: BN }
+export const useRecentlyPaidChannels = (): { channels: ChannelPayment[] | undefined; loading: boolean } => {
+  const { data, loading } = useGetChannelsPaymentEventsQuery()
+
+  type PaymentMap = Map<string, ChannelPayment>
+  const channels = useMemo<PaymentMap | undefined>(
+    () =>
+      data?.events.reduce<PaymentMap>((channels, { data }) => {
+        if (data.__typename !== 'ChannelPaymentMadeEventData' || !data.payeeChannel) return channels
+
+        const exisitng = channels.get(data.payeeChannel.id)
+        const channel = exisitng?.channel ?? data.payeeChannel
+        const amount = new BN(data.amount).add(exisitng?.amount ?? BN_ZERO)
+
+        channels.set(data.payeeChannel.id, { channel, amount })
+
+        return channels
+      }, new Map()),
+    [data]
+  )
+
+  return { channels: channels && Array.from(channels.values()), loading }
 }
 
 export const useFollowChannel = (opts?: MutationHookOptions<FollowChannelMutation>) => {

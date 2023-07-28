@@ -2,6 +2,7 @@ import { FC } from 'react'
 import { useParallax } from 'react-scroll-parallax'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { useRecentlyPaidChannels } from '@/api/hooks/channel'
 import { SvgActionChevronR, SvgLogoGoogleWhiteFull, SvgLogoYoutubeWhiteFull } from '@/assets/icons'
 import hero576 from '@/assets/images/ypp-hero/hero-576.webp'
 import hero864 from '@/assets/images/ypp-hero/hero-864.webp'
@@ -31,7 +32,6 @@ import {
   StyledInfiniteCarousel,
 } from './YppHero.styles'
 import { BackgroundContainer, StyledLimitedWidthContainer } from './YppLandingView.styles'
-import { useGetYppLastVerifiedChannels } from './useGetYppLastVerifiedChannels'
 
 export type YppAtlasStatus = 'have-channel' | 'no-channel' | 'ypp-signed' | 'connect-wallet' | null
 
@@ -60,7 +60,7 @@ export const YppHero: FC<YppHeroProps> = ({
     translateY: [0, -15],
   })
 
-  const { channels, loading } = useGetYppLastVerifiedChannels()
+  const { channels, loading } = useRecentlyPaidChannels()
   const items = !loading
     ? channels?.map((extendedChannels) => (
         <ChannelCard key={extendedChannels.channel.id} channel={extendedChannels.channel} withFollowButton={false} />
