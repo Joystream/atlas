@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 
 import {
@@ -17,6 +17,7 @@ import { Select, SelectItem } from '@/components/_inputs/Select'
 import { atlasConfig } from '@/config'
 import { displayCategories } from '@/config/categories'
 import { useUser } from '@/providers/user/user.hooks'
+import { useYppStore } from '@/providers/ypp/ypp.store'
 
 import { FormFieldsWrapper } from './YppAuthorizationDetailsFormStep.styles'
 
@@ -40,6 +41,14 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
     formState: { errors },
     setValue,
   } = useFormContext<DetailsFormData>()
+
+  const referrerId = useYppStore((state) => state.referrerId)
+
+  useEffect(() => {
+    if (referrerId) {
+      setValue('referrerChannelId', referrerId)
+    }
+  }, [referrerId, setValue])
 
   return (
     <FormFieldsWrapper>
