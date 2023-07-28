@@ -10,7 +10,7 @@ export type SetupStepForm = {
 export type IssuanceStepForm = {
   creatorIssueAmount: number
   assuranceType: 'safe' | 'risky' | 'secure' | 'default' | 'custom'
-  cliff: 0 | 1 | 3 | 6 | null
-  vesting: 0 | 1 | 3 | 6 | null
-  firstPayout: number
+  cliff: '0' | '1' | '3' | '6' | null
+  vesting: '0' | '1' | '3' | '6' | null
+  firstPayout?: number
 }

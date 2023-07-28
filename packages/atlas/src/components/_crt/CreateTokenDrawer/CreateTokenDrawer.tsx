@@ -1,11 +1,9 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 import { CrtDrawer, CrtDrawerProps } from '@/components/CrtDrawer'
-import { CreateTokenForm } from '@/components/_crt/CreateTokenDrawer/CreateTokenDrawer.types'
-import { SetupTokenStep } from '@/components/_crt/CreateTokenDrawer/steps/SetupTokenStep'
-import { TokenSummaryStep } from '@/components/_crt/CreateTokenDrawer/steps/TokenSummaryStep'
 
-import { TokenIssuanceStep } from './steps/TokenIssuanceStep'
+import { CreateTokenForm } from './CreateTokenDrawer.types'
+import { SetupTokenStep, TokenIssuanceStep, TokenSummaryStep } from './steps'
 
 enum CREATE_TOKEN_STEPS {
   setup,
@@ -29,7 +27,7 @@ const CREATOR_TOKEN_INITIAL_DATA: CreateTokenForm = {
 
 export const CreateTokenDrawer = () => {
   const [activeStep, setActiveStep] = useState(CREATE_TOKEN_STEPS.setup)
-  const [formData, setFormData] = useState<CreateTokenForm>(CREATOR_TOKEN_INITIAL_DATA)
+  const formData = useRef<CreateTokenForm>(CREATOR_TOKEN_INITIAL_DATA)
   const [primaryButtonProps, setPrimaryButtonProps] =
     useState<NonNullable<CrtDrawerProps['actionBar']>['primaryButton']>()
 
@@ -47,7 +45,7 @@ export const CreateTokenDrawer = () => {
       {activeStep === CREATE_TOKEN_STEPS.setup && (
         <SetupTokenStep
           onSubmit={(data) => {
-            setFormData((prev) => ({ ...prev, ...data }))
+            formData.current = { ...formData.current, ...data }
             setActiveStep(CREATE_TOKEN_STEPS.issuance)
           }}
           setPrimaryButtonProps={setPrimaryButtonProps}
@@ -55,15 +53,16 @@ export const CreateTokenDrawer = () => {
       )}
       {activeStep === CREATE_TOKEN_STEPS.issuance && (
         <TokenIssuanceStep
+          tokenName={formData.current.name}
           onSubmit={(data) => {
-            setFormData((prev) => ({ ...prev, ...data }))
+            formData.current = { ...formData.current, ...data }
             setActiveStep(CREATE_TOKEN_STEPS.summary)
           }}
           setPrimaryButtonProps={setPrimaryButtonProps}
         />
       )}
       {activeStep === CREATE_TOKEN_STEPS.summary && (
-        <TokenSummaryStep form={formData} setPrimaryButtonProps={setPrimaryButtonProps} />
+        <TokenSummaryStep form={formData.current} setPrimaryButtonProps={setPrimaryButtonProps} />
       )}
     </CrtDrawer>
   )

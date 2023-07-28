@@ -1,79 +1,21 @@
-import { useMemo } from 'react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { SvgAlertsInformative24 } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
+import { Text } from '@/components/Text'
 import { IssuanceStepForm } from '@/components/_crt/CreateTokenDrawer/CreateTokenDrawer.types'
 import { CommonStepProps } from '@/components/_crt/CreateTokenDrawer/steps/types'
 import { CrtFormWrapper } from '@/components/_crt/CrtFormWrapper'
 import { FormField } from '@/components/_inputs/FormField'
-import { Input } from '@/components/_inputs/Input'
 import { RadioButtonGroup } from '@/components/_inputs/RadioButtonGroup'
 import { Select } from '@/components/_inputs/Select'
 import { TokenInput } from '@/components/_inputs/TokenInput'
 import { useMountEffect } from '@/hooks/useMountEffect'
+import { formatNumber } from '@/utils/number'
 
-const assuranceOptions = [
-  {
-    label: 'Secure',
-    caption:
-      '6 months cliff & 1 year vesting. You won’t receive any tokens now. You will receive 50% of tokens after 6 months of cliff.',
-    value: 'secure',
-  },
-  {
-    label: 'Safe (Default)',
-    caption: 'No cliff & 6 months vesting. You will receive 50% of tokens now.',
-    value: 'safe',
-  },
-  {
-    label: 'Risky',
-    caption: 'No cliff & No vesting. You receive all tokens now.',
-    value: 'risky',
-  },
-  {
-    label: 'Custom',
-    caption: 'Set your own custom cliff, vesting and first payout.',
-    value: 'custom',
-  },
-]
-
-const vestingOptions = [
-  {
-    value: 0,
-    name: 'No vesting',
-  },
-  {
-    value: 1,
-    name: '1 month',
-  },
-  {
-    value: 3,
-    name: '3 month',
-  },
-  {
-    value: 6,
-    name: '6 month',
-  },
-]
-
-const cliffOptions = [
-  {
-    value: 0,
-    name: 'No cliff',
-  },
-  {
-    value: 1,
-    name: '1 month',
-  },
-  {
-    value: 3,
-    name: '3 month',
-  },
-  {
-    value: 6,
-    name: '6 month',
-  },
-]
+import { assuranceOptions, cliffOptions, createTokenIssuanceSchema, vestingOptions } from './TokenIssuanceStep.utils'
 
 const cliffBanner = (
   <Banner
@@ -90,10 +32,22 @@ const cliffBanner = (
 
 type TokenIssuanceStepProps = {
   onSubmit: (form: IssuanceStepForm) => void
+  tokenName: string
 } & CommonStepProps
 
-export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit }: TokenIssuanceStepProps) => {
-  const { register, control, watch, handleSubmit } = useForm<IssuanceStepForm>()
+export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit, tokenName }: TokenIssuanceStepProps) => {
+  const {
+    control,
+    watch,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<IssuanceStepForm>({
+    resolver: zodResolver(createTokenIssuanceSchema(tokenName)),
+    defaultValues: {
+      assuranceType: 'safe',
+    },
+  })
 
   useMountEffect(() => {
     setPrimaryButtonProps({
@@ -103,10 +57,19 @@ export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit }: TokenIssu
   })
 
   const assuranceType = watch('assuranceType')
+  const creatorIssueAmount = watch('creatorIssueAmount')
+  const customVesting = watch('vesting')
+  const customCliff = watch('cliff')
 
-  const assuranceDetails = useMemo(() => {
-    const customVesting = watch('vesting')
-    const customCliff = watch('cliff')
+  useEffect(() => {
+    if (assuranceType !== 'custom') {
+      setValue('cliff', null)
+      setValue('vesting', null)
+      setValue('firstPayout', undefined)
+    }
+  }, [assuranceType, setValue])
+
+  const getAssuranceDetails = () => {
     switch (assuranceType) {
       case 'secure':
         return cliffBanner
@@ -119,6 +82,7 @@ export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit }: TokenIssu
               tooltip={{
                 text: 'If you want to obtain extra security during first few weeks or months from minting your tokens, you may choose to set up a longer cliff. Some choose to focus on the marketing campaign and build up the momentum before tokens get unlocked and can be sold to the audience.',
               }}
+              error={errors.cliff?.message}
             >
               <Controller
                 name="cliff"
@@ -126,13 +90,14 @@ export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit }: TokenIssu
                 render={({ field }) => <Select items={cliffOptions} {...field} />}
               />
             </FormField>
-            {customCliff !== null && cliffBanner}
+            {customCliff && customCliff !== '0' ? cliffBanner : null}
             <FormField
               label="Vesting period"
               description="All tokens minted that are not part of the first payout get unlocked gradually over the course of the vesting period. Vesting period starts after the cliff has passed."
               tooltip={{
                 text: 'Do you want your tokens to be gradually available for you to sell, sending the signal to your audience that this project is aimed on long term success? Then choose longer vesting.',
               }}
+              error={errors.vesting?.message}
             >
               <Controller
                 name="vesting"
@@ -140,17 +105,41 @@ export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit }: TokenIssu
                 render={({ field }) => <Select items={vestingOptions} {...field} />}
               />
             </FormField>
-            {customVesting !== null && (
+            {customVesting && customVesting !== '0' ? (
               <FormField
                 label="First payout"
                 description="A portion of your own tokens that will be released to you right after cliff period."
                 tooltip={{
                   text: 'Do you want to send the signal to your token buyers that only a portion of all created tokens is possible to get sold and the rest will get unlocked over time, signalling about long term goals of your project? Then we advise you to choose amount less than 50% here.',
                 }}
+                error={errors.firstPayout?.message}
               >
-                <Controller name="firstPayout" control={control} render={({ field }) => <TokenInput {...field} />} />
+                <Controller
+                  name="firstPayout"
+                  control={control}
+                  render={({ field }) => (
+                    <TokenInput
+                      {...field}
+                      placeholder="25"
+                      nodeStart={
+                        <Text
+                          variant="t300"
+                          as="p"
+                          color={typeof field.value === 'undefined' ? 'colorTextMuted' : undefined}
+                        >
+                          %
+                        </Text>
+                      }
+                      nodeEnd={
+                        <Text variant="t300" as="p" color="colorTextMuted">
+                          {formatNumber((creatorIssueAmount * Number(field.value || 0)) / 100)} ${tokenName}
+                        </Text>
+                      }
+                    />
+                  )}
+                />
               </FormField>
-            )}
+            ) : null}
           </>
         )
       case 'risky':
@@ -158,7 +147,7 @@ export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit }: TokenIssu
       default:
         return null
     }
-  }, [assuranceType, control, watch])
+  }
 
   return (
     <CrtFormWrapper
@@ -169,8 +158,23 @@ export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit }: TokenIssu
       <FormField
         label="Tokens issued to your wallet"
         description="Decide how many tokens you want to create for yourself. This amount cannot be changed later. You will be able to sell these tokens to your audience directly or enable a public sale, where others can mint more of your channel tokens in exchange for JOYs."
+        error={errors.creatorIssueAmount?.message}
       >
-        <Input {...register('creatorIssueAmount')} />
+        <Controller
+          name="creatorIssueAmount"
+          control={control}
+          render={({ field }) => (
+            <TokenInput
+              {...field}
+              placeholder="1 000"
+              nodeEnd={
+                <Text variant="t300" as="p" color="colorTextMuted">
+                  ${tokenName}
+                </Text>
+              }
+            />
+          )}
+        />
       </FormField>
       <FormField
         label="Token assurances"
@@ -185,7 +189,7 @@ export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit }: TokenIssu
           render={({ field }) => <RadioButtonGroup {...field} options={assuranceOptions} />}
         />
       </FormField>
-      {assuranceDetails}
+      {getAssuranceDetails()}
     </CrtFormWrapper>
   )
 }
