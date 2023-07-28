@@ -296,6 +296,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
             data.referrerChannelId,
             utmSource || undefined
           )
+          setReferrerId(null)
           setYtResponseData(null)
 
           navigate(absoluteRoutes.studio.ypp())
