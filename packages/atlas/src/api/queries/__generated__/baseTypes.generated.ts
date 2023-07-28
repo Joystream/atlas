@@ -16,6 +16,153 @@ export type Scalars = {
   DateTime: Date
 }
 
+/** A Gateway Account */
+export type Account = {
+  __typename?: 'Account'
+  /** Gateway account's e-mail address */
+  email: Scalars['String']
+  /** Unique identifier (can be sequential) */
+  id: Scalars['String']
+  /** Indicates whether the access to the gateway account is blocked */
+  isBlocked: Scalars['Boolean']
+  /** Indicates whether the gateway account's e-mail has been confirmed or not. */
+  isEmailConfirmed: Scalars['Boolean']
+  /** Blockchain (joystream) account associated with the gateway account */
+  joystreamAccount: Scalars['String']
+  /** On-chain membership associated with the gateway account */
+  membership: Membership
+  /** Time when the gateway account was registered */
+  registeredAt: Scalars['DateTime']
+  /** The user associated with the gateway account (the Gateway Account Owner) */
+  user: User
+}
+
+export type AccountData = {
+  __typename?: 'AccountData'
+  email: Scalars['String']
+  id: Scalars['String']
+  isEmailConfirmed: Scalars['Boolean']
+  joystreamAccount: Scalars['String']
+  membershipId: Scalars['String']
+}
+
+export type AccountEdge = {
+  __typename?: 'AccountEdge'
+  cursor: Scalars['String']
+  node: Account
+}
+
+export enum AccountOrderByInput {
+  EmailAsc = 'email_ASC',
+  EmailDesc = 'email_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  IsBlockedAsc = 'isBlocked_ASC',
+  IsBlockedDesc = 'isBlocked_DESC',
+  IsEmailConfirmedAsc = 'isEmailConfirmed_ASC',
+  IsEmailConfirmedDesc = 'isEmailConfirmed_DESC',
+  JoystreamAccountAsc = 'joystreamAccount_ASC',
+  JoystreamAccountDesc = 'joystreamAccount_DESC',
+  MembershipControllerAccountAsc = 'membership_controllerAccount_ASC',
+  MembershipControllerAccountDesc = 'membership_controllerAccount_DESC',
+  MembershipCreatedAtAsc = 'membership_createdAt_ASC',
+  MembershipCreatedAtDesc = 'membership_createdAt_DESC',
+  MembershipHandleAsc = 'membership_handle_ASC',
+  MembershipHandleDesc = 'membership_handle_DESC',
+  MembershipIdAsc = 'membership_id_ASC',
+  MembershipIdDesc = 'membership_id_DESC',
+  MembershipTotalChannelsCreatedAsc = 'membership_totalChannelsCreated_ASC',
+  MembershipTotalChannelsCreatedDesc = 'membership_totalChannelsCreated_DESC',
+  RegisteredAtAsc = 'registeredAt_ASC',
+  RegisteredAtDesc = 'registeredAt_DESC',
+  UserIdAsc = 'user_id_ASC',
+  UserIdDesc = 'user_id_DESC',
+  UserIsRootAsc = 'user_isRoot_ASC',
+  UserIsRootDesc = 'user_isRoot_DESC',
+}
+
+export type AccountWhereInput = {
+  AND?: InputMaybe<Array<AccountWhereInput>>
+  OR?: InputMaybe<Array<AccountWhereInput>>
+  email_contains?: InputMaybe<Scalars['String']>
+  email_containsInsensitive?: InputMaybe<Scalars['String']>
+  email_endsWith?: InputMaybe<Scalars['String']>
+  email_eq?: InputMaybe<Scalars['String']>
+  email_gt?: InputMaybe<Scalars['String']>
+  email_gte?: InputMaybe<Scalars['String']>
+  email_in?: InputMaybe<Array<Scalars['String']>>
+  email_isNull?: InputMaybe<Scalars['Boolean']>
+  email_lt?: InputMaybe<Scalars['String']>
+  email_lte?: InputMaybe<Scalars['String']>
+  email_not_contains?: InputMaybe<Scalars['String']>
+  email_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  email_not_endsWith?: InputMaybe<Scalars['String']>
+  email_not_eq?: InputMaybe<Scalars['String']>
+  email_not_in?: InputMaybe<Array<Scalars['String']>>
+  email_not_startsWith?: InputMaybe<Scalars['String']>
+  email_startsWith?: InputMaybe<Scalars['String']>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  isBlocked_eq?: InputMaybe<Scalars['Boolean']>
+  isBlocked_isNull?: InputMaybe<Scalars['Boolean']>
+  isBlocked_not_eq?: InputMaybe<Scalars['Boolean']>
+  isEmailConfirmed_eq?: InputMaybe<Scalars['Boolean']>
+  isEmailConfirmed_isNull?: InputMaybe<Scalars['Boolean']>
+  isEmailConfirmed_not_eq?: InputMaybe<Scalars['Boolean']>
+  joystreamAccount_contains?: InputMaybe<Scalars['String']>
+  joystreamAccount_containsInsensitive?: InputMaybe<Scalars['String']>
+  joystreamAccount_endsWith?: InputMaybe<Scalars['String']>
+  joystreamAccount_eq?: InputMaybe<Scalars['String']>
+  joystreamAccount_gt?: InputMaybe<Scalars['String']>
+  joystreamAccount_gte?: InputMaybe<Scalars['String']>
+  joystreamAccount_in?: InputMaybe<Array<Scalars['String']>>
+  joystreamAccount_isNull?: InputMaybe<Scalars['Boolean']>
+  joystreamAccount_lt?: InputMaybe<Scalars['String']>
+  joystreamAccount_lte?: InputMaybe<Scalars['String']>
+  joystreamAccount_not_contains?: InputMaybe<Scalars['String']>
+  joystreamAccount_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  joystreamAccount_not_endsWith?: InputMaybe<Scalars['String']>
+  joystreamAccount_not_eq?: InputMaybe<Scalars['String']>
+  joystreamAccount_not_in?: InputMaybe<Array<Scalars['String']>>
+  joystreamAccount_not_startsWith?: InputMaybe<Scalars['String']>
+  joystreamAccount_startsWith?: InputMaybe<Scalars['String']>
+  membership?: InputMaybe<MembershipWhereInput>
+  membership_isNull?: InputMaybe<Scalars['Boolean']>
+  registeredAt_eq?: InputMaybe<Scalars['DateTime']>
+  registeredAt_gt?: InputMaybe<Scalars['DateTime']>
+  registeredAt_gte?: InputMaybe<Scalars['DateTime']>
+  registeredAt_in?: InputMaybe<Array<Scalars['DateTime']>>
+  registeredAt_isNull?: InputMaybe<Scalars['Boolean']>
+  registeredAt_lt?: InputMaybe<Scalars['DateTime']>
+  registeredAt_lte?: InputMaybe<Scalars['DateTime']>
+  registeredAt_not_eq?: InputMaybe<Scalars['DateTime']>
+  registeredAt_not_in?: InputMaybe<Array<Scalars['DateTime']>>
+  user?: InputMaybe<UserWhereInput>
+  user_isNull?: InputMaybe<Scalars['Boolean']>
+}
+
+export type AccountsConnection = {
+  __typename?: 'AccountsConnection'
+  edges: Array<AccountEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
 export type AddVideoViewResult = {
   __typename?: 'AddVideoViewResult'
   added: Scalars['Boolean']
@@ -2811,6 +2958,110 @@ export type DistributionBucketsConnection = {
   totalCount: Scalars['Int']
 }
 
+export type EncryptionArtifacts = {
+  __typename?: 'EncryptionArtifacts'
+  /** The account the encryption artifacts are associated with */
+  account: Account
+  /** The IV used to encrypt the wallet seed with user credentials */
+  cipherIv: Scalars['String']
+  /** Wallet seed encrypted with user credentials */
+  encryptedSeed: Scalars['String']
+  /** ID / lookupKey */
+  id: Scalars['String']
+}
+
+export type EncryptionArtifactsConnection = {
+  __typename?: 'EncryptionArtifactsConnection'
+  edges: Array<EncryptionArtifactsEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type EncryptionArtifactsEdge = {
+  __typename?: 'EncryptionArtifactsEdge'
+  cursor: Scalars['String']
+  node: EncryptionArtifacts
+}
+
+export enum EncryptionArtifactsOrderByInput {
+  AccountEmailAsc = 'account_email_ASC',
+  AccountEmailDesc = 'account_email_DESC',
+  AccountIdAsc = 'account_id_ASC',
+  AccountIdDesc = 'account_id_DESC',
+  AccountIsBlockedAsc = 'account_isBlocked_ASC',
+  AccountIsBlockedDesc = 'account_isBlocked_DESC',
+  AccountIsEmailConfirmedAsc = 'account_isEmailConfirmed_ASC',
+  AccountIsEmailConfirmedDesc = 'account_isEmailConfirmed_DESC',
+  AccountJoystreamAccountAsc = 'account_joystreamAccount_ASC',
+  AccountJoystreamAccountDesc = 'account_joystreamAccount_DESC',
+  AccountRegisteredAtAsc = 'account_registeredAt_ASC',
+  AccountRegisteredAtDesc = 'account_registeredAt_DESC',
+  CipherIvAsc = 'cipherIv_ASC',
+  CipherIvDesc = 'cipherIv_DESC',
+  EncryptedSeedAsc = 'encryptedSeed_ASC',
+  EncryptedSeedDesc = 'encryptedSeed_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+}
+
+export type EncryptionArtifactsWhereInput = {
+  AND?: InputMaybe<Array<EncryptionArtifactsWhereInput>>
+  OR?: InputMaybe<Array<EncryptionArtifactsWhereInput>>
+  account?: InputMaybe<AccountWhereInput>
+  account_isNull?: InputMaybe<Scalars['Boolean']>
+  cipherIv_contains?: InputMaybe<Scalars['String']>
+  cipherIv_containsInsensitive?: InputMaybe<Scalars['String']>
+  cipherIv_endsWith?: InputMaybe<Scalars['String']>
+  cipherIv_eq?: InputMaybe<Scalars['String']>
+  cipherIv_gt?: InputMaybe<Scalars['String']>
+  cipherIv_gte?: InputMaybe<Scalars['String']>
+  cipherIv_in?: InputMaybe<Array<Scalars['String']>>
+  cipherIv_isNull?: InputMaybe<Scalars['Boolean']>
+  cipherIv_lt?: InputMaybe<Scalars['String']>
+  cipherIv_lte?: InputMaybe<Scalars['String']>
+  cipherIv_not_contains?: InputMaybe<Scalars['String']>
+  cipherIv_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  cipherIv_not_endsWith?: InputMaybe<Scalars['String']>
+  cipherIv_not_eq?: InputMaybe<Scalars['String']>
+  cipherIv_not_in?: InputMaybe<Array<Scalars['String']>>
+  cipherIv_not_startsWith?: InputMaybe<Scalars['String']>
+  cipherIv_startsWith?: InputMaybe<Scalars['String']>
+  encryptedSeed_contains?: InputMaybe<Scalars['String']>
+  encryptedSeed_containsInsensitive?: InputMaybe<Scalars['String']>
+  encryptedSeed_endsWith?: InputMaybe<Scalars['String']>
+  encryptedSeed_eq?: InputMaybe<Scalars['String']>
+  encryptedSeed_gt?: InputMaybe<Scalars['String']>
+  encryptedSeed_gte?: InputMaybe<Scalars['String']>
+  encryptedSeed_in?: InputMaybe<Array<Scalars['String']>>
+  encryptedSeed_isNull?: InputMaybe<Scalars['Boolean']>
+  encryptedSeed_lt?: InputMaybe<Scalars['String']>
+  encryptedSeed_lte?: InputMaybe<Scalars['String']>
+  encryptedSeed_not_contains?: InputMaybe<Scalars['String']>
+  encryptedSeed_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  encryptedSeed_not_endsWith?: InputMaybe<Scalars['String']>
+  encryptedSeed_not_eq?: InputMaybe<Scalars['String']>
+  encryptedSeed_not_in?: InputMaybe<Array<Scalars['String']>>
+  encryptedSeed_not_startsWith?: InputMaybe<Scalars['String']>
+  encryptedSeed_startsWith?: InputMaybe<Scalars['String']>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+}
+
 export type EnglishAuctionSettledEventData = {
   __typename?: 'EnglishAuctionSettledEventData'
   /** NFT owner before the english auction was settled */
@@ -3850,11 +4101,9 @@ export type MutationSetVideoViewPerIpTimeLimitArgs = {
 
 export type MutationSetVideoWeightsArgs = {
   commentsWeight: Scalars['Float']
-  joysteamTimestampSubWeight: Scalars['Float']
   newnessWeight: Scalars['Float']
   reactionsWeight: Scalars['Float']
   viewsWeight: Scalars['Float']
-  ytTimestampSubWeight: Scalars['Float']
 }
 
 export type MutationSignAppActionCommitmentArgs = {
@@ -4612,6 +4861,12 @@ export type ProcessorState = {
 
 export type Query = {
   __typename?: 'Query'
+  accountById?: Maybe<Account>
+  /** @deprecated Use accountById */
+  accountByUniqueInput?: Maybe<Account>
+  accountData: AccountData
+  accounts: Array<Account>
+  accountsConnection: AccountsConnection
   appById?: Maybe<App>
   /** @deprecated Use appById */
   appByUniqueInput?: Maybe<App>
@@ -4698,6 +4953,11 @@ export type Query = {
   distributionBucketOperatorsConnection: DistributionBucketOperatorsConnection
   distributionBuckets: Array<DistributionBucket>
   distributionBucketsConnection: DistributionBucketsConnection
+  encryptionArtifacts: Array<EncryptionArtifacts>
+  encryptionArtifactsById?: Maybe<EncryptionArtifacts>
+  /** @deprecated Use encryptionArtifactsById */
+  encryptionArtifactsByUniqueInput?: Maybe<EncryptionArtifacts>
+  encryptionArtifactsConnection: EncryptionArtifactsConnection
   endingAuctionsNfts: Array<OwnedNft>
   eventById?: Maybe<Event>
   /** @deprecated Use eventById */
@@ -4755,6 +5015,16 @@ export type Query = {
   reportByUniqueInput?: Maybe<Report>
   reports: Array<Report>
   reportsConnection: ReportsConnection
+  sessionById?: Maybe<Session>
+  /** @deprecated Use sessionById */
+  sessionByUniqueInput?: Maybe<Session>
+  sessionEncryptionArtifacts: Array<SessionEncryptionArtifacts>
+  sessionEncryptionArtifactsById?: Maybe<SessionEncryptionArtifacts>
+  /** @deprecated Use sessionEncryptionArtifactsById */
+  sessionEncryptionArtifactsByUniqueInput?: Maybe<SessionEncryptionArtifacts>
+  sessionEncryptionArtifactsConnection: SessionEncryptionArtifactsConnection
+  sessions: Array<Session>
+  sessionsConnection: SessionsConnection
   squidStatus?: Maybe<SquidStatus>
   storageBagById?: Maybe<StorageBag>
   /** @deprecated Use storageBagById */
@@ -4781,7 +5051,17 @@ export type Query = {
   storageDataObjectByUniqueInput?: Maybe<StorageDataObject>
   storageDataObjects: Array<StorageDataObject>
   storageDataObjectsConnection: StorageDataObjectsConnection
+  tokenById?: Maybe<Token>
+  /** @deprecated Use tokenById */
+  tokenByUniqueInput?: Maybe<Token>
+  tokens: Array<Token>
+  tokensConnection: TokensConnection
   topSellingChannels: Array<TopSellingChannelsResult>
+  userById?: Maybe<User>
+  /** @deprecated Use userById */
+  userByUniqueInput?: Maybe<User>
+  users: Array<User>
+  usersConnection: UsersConnection
   videoById?: Maybe<Video>
   /** @deprecated Use videoById */
   videoByUniqueInput?: Maybe<Video>
@@ -4828,6 +5108,28 @@ export type Query = {
   videoViewEventsConnection: VideoViewEventsConnection
   videos: Array<Video>
   videosConnection: VideosConnection
+}
+
+export type QueryAccountByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryAccountByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryAccountsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<AccountOrderByInput>>
+  where?: InputMaybe<AccountWhereInput>
+}
+
+export type QueryAccountsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<AccountOrderByInput>
+  where?: InputMaybe<AccountWhereInput>
 }
 
 export type QueryAppByIdArgs = {
@@ -5210,6 +5512,28 @@ export type QueryDistributionBucketsConnectionArgs = {
   where?: InputMaybe<DistributionBucketWhereInput>
 }
 
+export type QueryEncryptionArtifactsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<EncryptionArtifactsOrderByInput>>
+  where?: InputMaybe<EncryptionArtifactsWhereInput>
+}
+
+export type QueryEncryptionArtifactsByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryEncryptionArtifactsByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryEncryptionArtifactsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<EncryptionArtifactsOrderByInput>
+  where?: InputMaybe<EncryptionArtifactsWhereInput>
+}
+
 export type QueryEndingAuctionsNftsArgs = {
   limit?: InputMaybe<Scalars['Int']>
   offset?: InputMaybe<Scalars['Int']>
@@ -5458,6 +5782,50 @@ export type QueryReportsConnectionArgs = {
   where?: InputMaybe<ReportWhereInput>
 }
 
+export type QuerySessionByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QuerySessionByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QuerySessionEncryptionArtifactsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<SessionEncryptionArtifactsOrderByInput>>
+  where?: InputMaybe<SessionEncryptionArtifactsWhereInput>
+}
+
+export type QuerySessionEncryptionArtifactsByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QuerySessionEncryptionArtifactsByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QuerySessionEncryptionArtifactsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<SessionEncryptionArtifactsOrderByInput>
+  where?: InputMaybe<SessionEncryptionArtifactsWhereInput>
+}
+
+export type QuerySessionsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<SessionOrderByInput>>
+  where?: InputMaybe<SessionWhereInput>
+}
+
+export type QuerySessionsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<SessionOrderByInput>
+  where?: InputMaybe<SessionWhereInput>
+}
+
 export type QueryStorageBagByIdArgs = {
   id: Scalars['String']
 }
@@ -5568,10 +5936,54 @@ export type QueryStorageDataObjectsConnectionArgs = {
   where?: InputMaybe<StorageDataObjectWhereInput>
 }
 
+export type QueryTokenByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryTokenByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryTokensArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<TokenOrderByInput>>
+  where?: InputMaybe<TokenWhereInput>
+}
+
+export type QueryTokensConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<TokenOrderByInput>
+  where?: InputMaybe<TokenWhereInput>
+}
+
 export type QueryTopSellingChannelsArgs = {
   limit: Scalars['Int']
   periodDays: Scalars['Int']
   where?: InputMaybe<ExtendedChannelWhereInput>
+}
+
+export type QueryUserByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryUserByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryUsersArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<UserOrderByInput>>
+  where?: InputMaybe<UserWhereInput>
+}
+
+export type QueryUsersConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<UserOrderByInput>
+  where?: InputMaybe<UserWhereInput>
 }
 
 export type QueryVideoByIdArgs = {
@@ -5918,6 +6330,315 @@ export type ReportsConnection = {
 export type RestoreContentResult = {
   __typename?: 'RestoreContentResult'
   numberOfEntitiesAffected: Scalars['Int']
+}
+
+export type Session = {
+  __typename?: 'Session'
+  /** Account associated with the session (if any) */
+  account?: Maybe<Account>
+  /** Browser (as deterimned based on user-agent header) */
+  browser: Scalars['String']
+  /** Device (as deterimned based on user-agent header) */
+  device: Scalars['String']
+  /** Device type (as deterimned based on user-agent header) */
+  deviceType?: Maybe<Scalars['String']>
+  /** Time when the session expires or did expire */
+  expiry: Scalars['DateTime']
+  /** Unique identifier (32-byte string, securely random) */
+  id: Scalars['String']
+  /** IP address associated with the session */
+  ip: Scalars['String']
+  /** Operating system (as deterimned based on user-agent header) */
+  os: Scalars['String']
+  /** Time when the session started */
+  startedAt: Scalars['DateTime']
+  /** User associated with the session */
+  user: User
+}
+
+export type SessionEdge = {
+  __typename?: 'SessionEdge'
+  cursor: Scalars['String']
+  node: Session
+}
+
+export type SessionEncryptionArtifacts = {
+  __typename?: 'SessionEncryptionArtifacts'
+  /** The IV used to encrypt the seed with cipherKey */
+  cipherIv: Scalars['String']
+  /** cipherKey used to encrypt the seed stored client-side for the duration of the session */
+  cipherKey: Scalars['String']
+  /** Unique identifier */
+  id: Scalars['String']
+  /** The session the encryption artifacts are associated with */
+  session: Session
+}
+
+export type SessionEncryptionArtifactsConnection = {
+  __typename?: 'SessionEncryptionArtifactsConnection'
+  edges: Array<SessionEncryptionArtifactsEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type SessionEncryptionArtifactsEdge = {
+  __typename?: 'SessionEncryptionArtifactsEdge'
+  cursor: Scalars['String']
+  node: SessionEncryptionArtifacts
+}
+
+export enum SessionEncryptionArtifactsOrderByInput {
+  CipherIvAsc = 'cipherIv_ASC',
+  CipherIvDesc = 'cipherIv_DESC',
+  CipherKeyAsc = 'cipherKey_ASC',
+  CipherKeyDesc = 'cipherKey_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  SessionBrowserAsc = 'session_browser_ASC',
+  SessionBrowserDesc = 'session_browser_DESC',
+  SessionDeviceTypeAsc = 'session_deviceType_ASC',
+  SessionDeviceTypeDesc = 'session_deviceType_DESC',
+  SessionDeviceAsc = 'session_device_ASC',
+  SessionDeviceDesc = 'session_device_DESC',
+  SessionExpiryAsc = 'session_expiry_ASC',
+  SessionExpiryDesc = 'session_expiry_DESC',
+  SessionIdAsc = 'session_id_ASC',
+  SessionIdDesc = 'session_id_DESC',
+  SessionIpAsc = 'session_ip_ASC',
+  SessionIpDesc = 'session_ip_DESC',
+  SessionOsAsc = 'session_os_ASC',
+  SessionOsDesc = 'session_os_DESC',
+  SessionStartedAtAsc = 'session_startedAt_ASC',
+  SessionStartedAtDesc = 'session_startedAt_DESC',
+}
+
+export type SessionEncryptionArtifactsWhereInput = {
+  AND?: InputMaybe<Array<SessionEncryptionArtifactsWhereInput>>
+  OR?: InputMaybe<Array<SessionEncryptionArtifactsWhereInput>>
+  cipherIv_contains?: InputMaybe<Scalars['String']>
+  cipherIv_containsInsensitive?: InputMaybe<Scalars['String']>
+  cipherIv_endsWith?: InputMaybe<Scalars['String']>
+  cipherIv_eq?: InputMaybe<Scalars['String']>
+  cipherIv_gt?: InputMaybe<Scalars['String']>
+  cipherIv_gte?: InputMaybe<Scalars['String']>
+  cipherIv_in?: InputMaybe<Array<Scalars['String']>>
+  cipherIv_isNull?: InputMaybe<Scalars['Boolean']>
+  cipherIv_lt?: InputMaybe<Scalars['String']>
+  cipherIv_lte?: InputMaybe<Scalars['String']>
+  cipherIv_not_contains?: InputMaybe<Scalars['String']>
+  cipherIv_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  cipherIv_not_endsWith?: InputMaybe<Scalars['String']>
+  cipherIv_not_eq?: InputMaybe<Scalars['String']>
+  cipherIv_not_in?: InputMaybe<Array<Scalars['String']>>
+  cipherIv_not_startsWith?: InputMaybe<Scalars['String']>
+  cipherIv_startsWith?: InputMaybe<Scalars['String']>
+  cipherKey_contains?: InputMaybe<Scalars['String']>
+  cipherKey_containsInsensitive?: InputMaybe<Scalars['String']>
+  cipherKey_endsWith?: InputMaybe<Scalars['String']>
+  cipherKey_eq?: InputMaybe<Scalars['String']>
+  cipherKey_gt?: InputMaybe<Scalars['String']>
+  cipherKey_gte?: InputMaybe<Scalars['String']>
+  cipherKey_in?: InputMaybe<Array<Scalars['String']>>
+  cipherKey_isNull?: InputMaybe<Scalars['Boolean']>
+  cipherKey_lt?: InputMaybe<Scalars['String']>
+  cipherKey_lte?: InputMaybe<Scalars['String']>
+  cipherKey_not_contains?: InputMaybe<Scalars['String']>
+  cipherKey_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  cipherKey_not_endsWith?: InputMaybe<Scalars['String']>
+  cipherKey_not_eq?: InputMaybe<Scalars['String']>
+  cipherKey_not_in?: InputMaybe<Array<Scalars['String']>>
+  cipherKey_not_startsWith?: InputMaybe<Scalars['String']>
+  cipherKey_startsWith?: InputMaybe<Scalars['String']>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  session?: InputMaybe<SessionWhereInput>
+  session_isNull?: InputMaybe<Scalars['Boolean']>
+}
+
+export enum SessionOrderByInput {
+  AccountEmailAsc = 'account_email_ASC',
+  AccountEmailDesc = 'account_email_DESC',
+  AccountIdAsc = 'account_id_ASC',
+  AccountIdDesc = 'account_id_DESC',
+  AccountIsBlockedAsc = 'account_isBlocked_ASC',
+  AccountIsBlockedDesc = 'account_isBlocked_DESC',
+  AccountIsEmailConfirmedAsc = 'account_isEmailConfirmed_ASC',
+  AccountIsEmailConfirmedDesc = 'account_isEmailConfirmed_DESC',
+  AccountJoystreamAccountAsc = 'account_joystreamAccount_ASC',
+  AccountJoystreamAccountDesc = 'account_joystreamAccount_DESC',
+  AccountRegisteredAtAsc = 'account_registeredAt_ASC',
+  AccountRegisteredAtDesc = 'account_registeredAt_DESC',
+  BrowserAsc = 'browser_ASC',
+  BrowserDesc = 'browser_DESC',
+  DeviceTypeAsc = 'deviceType_ASC',
+  DeviceTypeDesc = 'deviceType_DESC',
+  DeviceAsc = 'device_ASC',
+  DeviceDesc = 'device_DESC',
+  ExpiryAsc = 'expiry_ASC',
+  ExpiryDesc = 'expiry_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  IpAsc = 'ip_ASC',
+  IpDesc = 'ip_DESC',
+  OsAsc = 'os_ASC',
+  OsDesc = 'os_DESC',
+  StartedAtAsc = 'startedAt_ASC',
+  StartedAtDesc = 'startedAt_DESC',
+  UserIdAsc = 'user_id_ASC',
+  UserIdDesc = 'user_id_DESC',
+  UserIsRootAsc = 'user_isRoot_ASC',
+  UserIsRootDesc = 'user_isRoot_DESC',
+}
+
+export type SessionWhereInput = {
+  AND?: InputMaybe<Array<SessionWhereInput>>
+  OR?: InputMaybe<Array<SessionWhereInput>>
+  account?: InputMaybe<AccountWhereInput>
+  account_isNull?: InputMaybe<Scalars['Boolean']>
+  browser_contains?: InputMaybe<Scalars['String']>
+  browser_containsInsensitive?: InputMaybe<Scalars['String']>
+  browser_endsWith?: InputMaybe<Scalars['String']>
+  browser_eq?: InputMaybe<Scalars['String']>
+  browser_gt?: InputMaybe<Scalars['String']>
+  browser_gte?: InputMaybe<Scalars['String']>
+  browser_in?: InputMaybe<Array<Scalars['String']>>
+  browser_isNull?: InputMaybe<Scalars['Boolean']>
+  browser_lt?: InputMaybe<Scalars['String']>
+  browser_lte?: InputMaybe<Scalars['String']>
+  browser_not_contains?: InputMaybe<Scalars['String']>
+  browser_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  browser_not_endsWith?: InputMaybe<Scalars['String']>
+  browser_not_eq?: InputMaybe<Scalars['String']>
+  browser_not_in?: InputMaybe<Array<Scalars['String']>>
+  browser_not_startsWith?: InputMaybe<Scalars['String']>
+  browser_startsWith?: InputMaybe<Scalars['String']>
+  deviceType_contains?: InputMaybe<Scalars['String']>
+  deviceType_containsInsensitive?: InputMaybe<Scalars['String']>
+  deviceType_endsWith?: InputMaybe<Scalars['String']>
+  deviceType_eq?: InputMaybe<Scalars['String']>
+  deviceType_gt?: InputMaybe<Scalars['String']>
+  deviceType_gte?: InputMaybe<Scalars['String']>
+  deviceType_in?: InputMaybe<Array<Scalars['String']>>
+  deviceType_isNull?: InputMaybe<Scalars['Boolean']>
+  deviceType_lt?: InputMaybe<Scalars['String']>
+  deviceType_lte?: InputMaybe<Scalars['String']>
+  deviceType_not_contains?: InputMaybe<Scalars['String']>
+  deviceType_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  deviceType_not_endsWith?: InputMaybe<Scalars['String']>
+  deviceType_not_eq?: InputMaybe<Scalars['String']>
+  deviceType_not_in?: InputMaybe<Array<Scalars['String']>>
+  deviceType_not_startsWith?: InputMaybe<Scalars['String']>
+  deviceType_startsWith?: InputMaybe<Scalars['String']>
+  device_contains?: InputMaybe<Scalars['String']>
+  device_containsInsensitive?: InputMaybe<Scalars['String']>
+  device_endsWith?: InputMaybe<Scalars['String']>
+  device_eq?: InputMaybe<Scalars['String']>
+  device_gt?: InputMaybe<Scalars['String']>
+  device_gte?: InputMaybe<Scalars['String']>
+  device_in?: InputMaybe<Array<Scalars['String']>>
+  device_isNull?: InputMaybe<Scalars['Boolean']>
+  device_lt?: InputMaybe<Scalars['String']>
+  device_lte?: InputMaybe<Scalars['String']>
+  device_not_contains?: InputMaybe<Scalars['String']>
+  device_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  device_not_endsWith?: InputMaybe<Scalars['String']>
+  device_not_eq?: InputMaybe<Scalars['String']>
+  device_not_in?: InputMaybe<Array<Scalars['String']>>
+  device_not_startsWith?: InputMaybe<Scalars['String']>
+  device_startsWith?: InputMaybe<Scalars['String']>
+  expiry_eq?: InputMaybe<Scalars['DateTime']>
+  expiry_gt?: InputMaybe<Scalars['DateTime']>
+  expiry_gte?: InputMaybe<Scalars['DateTime']>
+  expiry_in?: InputMaybe<Array<Scalars['DateTime']>>
+  expiry_isNull?: InputMaybe<Scalars['Boolean']>
+  expiry_lt?: InputMaybe<Scalars['DateTime']>
+  expiry_lte?: InputMaybe<Scalars['DateTime']>
+  expiry_not_eq?: InputMaybe<Scalars['DateTime']>
+  expiry_not_in?: InputMaybe<Array<Scalars['DateTime']>>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  ip_contains?: InputMaybe<Scalars['String']>
+  ip_containsInsensitive?: InputMaybe<Scalars['String']>
+  ip_endsWith?: InputMaybe<Scalars['String']>
+  ip_eq?: InputMaybe<Scalars['String']>
+  ip_gt?: InputMaybe<Scalars['String']>
+  ip_gte?: InputMaybe<Scalars['String']>
+  ip_in?: InputMaybe<Array<Scalars['String']>>
+  ip_isNull?: InputMaybe<Scalars['Boolean']>
+  ip_lt?: InputMaybe<Scalars['String']>
+  ip_lte?: InputMaybe<Scalars['String']>
+  ip_not_contains?: InputMaybe<Scalars['String']>
+  ip_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  ip_not_endsWith?: InputMaybe<Scalars['String']>
+  ip_not_eq?: InputMaybe<Scalars['String']>
+  ip_not_in?: InputMaybe<Array<Scalars['String']>>
+  ip_not_startsWith?: InputMaybe<Scalars['String']>
+  ip_startsWith?: InputMaybe<Scalars['String']>
+  os_contains?: InputMaybe<Scalars['String']>
+  os_containsInsensitive?: InputMaybe<Scalars['String']>
+  os_endsWith?: InputMaybe<Scalars['String']>
+  os_eq?: InputMaybe<Scalars['String']>
+  os_gt?: InputMaybe<Scalars['String']>
+  os_gte?: InputMaybe<Scalars['String']>
+  os_in?: InputMaybe<Array<Scalars['String']>>
+  os_isNull?: InputMaybe<Scalars['Boolean']>
+  os_lt?: InputMaybe<Scalars['String']>
+  os_lte?: InputMaybe<Scalars['String']>
+  os_not_contains?: InputMaybe<Scalars['String']>
+  os_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  os_not_endsWith?: InputMaybe<Scalars['String']>
+  os_not_eq?: InputMaybe<Scalars['String']>
+  os_not_in?: InputMaybe<Array<Scalars['String']>>
+  os_not_startsWith?: InputMaybe<Scalars['String']>
+  os_startsWith?: InputMaybe<Scalars['String']>
+  startedAt_eq?: InputMaybe<Scalars['DateTime']>
+  startedAt_gt?: InputMaybe<Scalars['DateTime']>
+  startedAt_gte?: InputMaybe<Scalars['DateTime']>
+  startedAt_in?: InputMaybe<Array<Scalars['DateTime']>>
+  startedAt_isNull?: InputMaybe<Scalars['Boolean']>
+  startedAt_lt?: InputMaybe<Scalars['DateTime']>
+  startedAt_lte?: InputMaybe<Scalars['DateTime']>
+  startedAt_not_eq?: InputMaybe<Scalars['DateTime']>
+  startedAt_not_in?: InputMaybe<Array<Scalars['DateTime']>>
+  user?: InputMaybe<UserWhereInput>
+  user_isNull?: InputMaybe<Scalars['Boolean']>
+}
+
+export type SessionsConnection = {
+  __typename?: 'SessionsConnection'
+  edges: Array<SessionEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
 }
 
 export type SetCategoryFeaturedVideosResult = {
@@ -6575,6 +7296,7 @@ export type StorageDataObject = {
   ipfsHash: Scalars['String']
   /** Whether the data object was uploaded and accepted by the storage provider */
   isAccepted: Scalars['Boolean']
+  resolvedUrl?: Maybe<Scalars['String']>
   /** Resolved asset urls */
   resolvedUrls: Array<Scalars['String']>
   /** Data object size in bytes */
@@ -6713,6 +7435,8 @@ export type StorageDataObjectsConnection = {
 
 export type Subscription = {
   __typename?: 'Subscription'
+  accountById?: Maybe<Account>
+  accounts: Array<Account>
   appById?: Maybe<App>
   apps: Array<App>
   auctionById?: Maybe<Auction>
@@ -6747,6 +7471,8 @@ export type Subscription = {
   distributionBucketOperatorMetadataById?: Maybe<DistributionBucketOperatorMetadata>
   distributionBucketOperators: Array<DistributionBucketOperator>
   distributionBuckets: Array<DistributionBucket>
+  encryptionArtifacts: Array<EncryptionArtifacts>
+  encryptionArtifactsById?: Maybe<EncryptionArtifacts>
   eventById?: Maybe<Event>
   events: Array<Event>
   licenseById?: Maybe<License>
@@ -6768,6 +7494,10 @@ export type Subscription = {
   processorState: ProcessorState
   reportById?: Maybe<Report>
   reports: Array<Report>
+  sessionById?: Maybe<Session>
+  sessionEncryptionArtifacts: Array<SessionEncryptionArtifacts>
+  sessionEncryptionArtifactsById?: Maybe<SessionEncryptionArtifacts>
+  sessions: Array<Session>
   storageBagById?: Maybe<StorageBag>
   storageBags: Array<StorageBag>
   storageBucketBagById?: Maybe<StorageBucketBag>
@@ -6778,6 +7508,10 @@ export type Subscription = {
   storageBuckets: Array<StorageBucket>
   storageDataObjectById?: Maybe<StorageDataObject>
   storageDataObjects: Array<StorageDataObject>
+  tokenById?: Maybe<Token>
+  tokens: Array<Token>
+  userById?: Maybe<User>
+  users: Array<User>
   videoById?: Maybe<Video>
   videoCategories: Array<VideoCategory>
   videoCategoryById?: Maybe<VideoCategory>
@@ -6796,6 +7530,17 @@ export type Subscription = {
   videoViewEventById?: Maybe<VideoViewEvent>
   videoViewEvents: Array<VideoViewEvent>
   videos: Array<Video>
+}
+
+export type SubscriptionAccountByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionAccountsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<AccountOrderByInput>>
+  where?: InputMaybe<AccountWhereInput>
 }
 
 export type SubscriptionAppByIdArgs = {
@@ -6985,6 +7730,17 @@ export type SubscriptionDistributionBucketsArgs = {
   where?: InputMaybe<DistributionBucketWhereInput>
 }
 
+export type SubscriptionEncryptionArtifactsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<EncryptionArtifactsOrderByInput>>
+  where?: InputMaybe<EncryptionArtifactsWhereInput>
+}
+
+export type SubscriptionEncryptionArtifactsByIdArgs = {
+  id: Scalars['String']
+}
+
 export type SubscriptionEventByIdArgs = {
   id: Scalars['String']
 }
@@ -7095,6 +7851,28 @@ export type SubscriptionReportsArgs = {
   where?: InputMaybe<ReportWhereInput>
 }
 
+export type SubscriptionSessionByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionSessionEncryptionArtifactsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<SessionEncryptionArtifactsOrderByInput>>
+  where?: InputMaybe<SessionEncryptionArtifactsWhereInput>
+}
+
+export type SubscriptionSessionEncryptionArtifactsByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionSessionsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<SessionOrderByInput>>
+  where?: InputMaybe<SessionWhereInput>
+}
+
 export type SubscriptionStorageBagByIdArgs = {
   id: Scalars['String']
 }
@@ -7148,6 +7926,28 @@ export type SubscriptionStorageDataObjectsArgs = {
   offset?: InputMaybe<Scalars['Int']>
   orderBy?: InputMaybe<Array<StorageDataObjectOrderByInput>>
   where?: InputMaybe<StorageDataObjectWhereInput>
+}
+
+export type SubscriptionTokenByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionTokensArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<TokenOrderByInput>>
+  where?: InputMaybe<TokenWhereInput>
+}
+
+export type SubscriptionUserByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionUsersArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<UserOrderByInput>>
+  where?: InputMaybe<UserWhereInput>
 }
 
 export type SubscriptionVideoByIdArgs = {
@@ -7249,6 +8049,107 @@ export type SubscriptionVideosArgs = {
   where?: InputMaybe<VideoWhereInput>
 }
 
+export type Token = {
+  __typename?: 'Token'
+  /** When does the token expire or when has it expired */
+  expiry: Scalars['DateTime']
+  /** The token itself (32-byte string, securely random) */
+  id: Scalars['String']
+  /** When was the token issued */
+  issuedAt: Scalars['DateTime']
+  /** The account the token was issued for */
+  issuedFor: Account
+  /** Type of the token (its intended purpose) */
+  type: TokenType
+}
+
+export type TokenEdge = {
+  __typename?: 'TokenEdge'
+  cursor: Scalars['String']
+  node: Token
+}
+
+export enum TokenOrderByInput {
+  ExpiryAsc = 'expiry_ASC',
+  ExpiryDesc = 'expiry_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  IssuedAtAsc = 'issuedAt_ASC',
+  IssuedAtDesc = 'issuedAt_DESC',
+  IssuedForEmailAsc = 'issuedFor_email_ASC',
+  IssuedForEmailDesc = 'issuedFor_email_DESC',
+  IssuedForIdAsc = 'issuedFor_id_ASC',
+  IssuedForIdDesc = 'issuedFor_id_DESC',
+  IssuedForIsBlockedAsc = 'issuedFor_isBlocked_ASC',
+  IssuedForIsBlockedDesc = 'issuedFor_isBlocked_DESC',
+  IssuedForIsEmailConfirmedAsc = 'issuedFor_isEmailConfirmed_ASC',
+  IssuedForIsEmailConfirmedDesc = 'issuedFor_isEmailConfirmed_DESC',
+  IssuedForJoystreamAccountAsc = 'issuedFor_joystreamAccount_ASC',
+  IssuedForJoystreamAccountDesc = 'issuedFor_joystreamAccount_DESC',
+  IssuedForRegisteredAtAsc = 'issuedFor_registeredAt_ASC',
+  IssuedForRegisteredAtDesc = 'issuedFor_registeredAt_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+}
+
+export enum TokenType {
+  EmailConfirmation = 'EMAIL_CONFIRMATION',
+}
+
+export type TokenWhereInput = {
+  AND?: InputMaybe<Array<TokenWhereInput>>
+  OR?: InputMaybe<Array<TokenWhereInput>>
+  expiry_eq?: InputMaybe<Scalars['DateTime']>
+  expiry_gt?: InputMaybe<Scalars['DateTime']>
+  expiry_gte?: InputMaybe<Scalars['DateTime']>
+  expiry_in?: InputMaybe<Array<Scalars['DateTime']>>
+  expiry_isNull?: InputMaybe<Scalars['Boolean']>
+  expiry_lt?: InputMaybe<Scalars['DateTime']>
+  expiry_lte?: InputMaybe<Scalars['DateTime']>
+  expiry_not_eq?: InputMaybe<Scalars['DateTime']>
+  expiry_not_in?: InputMaybe<Array<Scalars['DateTime']>>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  issuedAt_eq?: InputMaybe<Scalars['DateTime']>
+  issuedAt_gt?: InputMaybe<Scalars['DateTime']>
+  issuedAt_gte?: InputMaybe<Scalars['DateTime']>
+  issuedAt_in?: InputMaybe<Array<Scalars['DateTime']>>
+  issuedAt_isNull?: InputMaybe<Scalars['Boolean']>
+  issuedAt_lt?: InputMaybe<Scalars['DateTime']>
+  issuedAt_lte?: InputMaybe<Scalars['DateTime']>
+  issuedAt_not_eq?: InputMaybe<Scalars['DateTime']>
+  issuedAt_not_in?: InputMaybe<Array<Scalars['DateTime']>>
+  issuedFor?: InputMaybe<AccountWhereInput>
+  issuedFor_isNull?: InputMaybe<Scalars['Boolean']>
+  type_eq?: InputMaybe<TokenType>
+  type_in?: InputMaybe<Array<TokenType>>
+  type_isNull?: InputMaybe<Scalars['Boolean']>
+  type_not_eq?: InputMaybe<TokenType>
+  type_not_in?: InputMaybe<Array<TokenType>>
+}
+
+export type TokensConnection = {
+  __typename?: 'TokensConnection'
+  edges: Array<TokenEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
 export type TopSellingChannelsResult = {
   __typename?: 'TopSellingChannelsResult'
   amount: Scalars['String']
@@ -7330,6 +8231,75 @@ export type TransactionalStatusWhereInput = {
   price_lte?: InputMaybe<Scalars['BigInt']>
   price_not_eq?: InputMaybe<Scalars['BigInt']>
   price_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+}
+
+export type User = {
+  __typename?: 'User'
+  /** The account associated with the user (if any) */
+  account?: Maybe<Account>
+  /** Unique identifier (32-byte string, securely random) */
+  id: Scalars['String']
+  /** Whether the user has root (gateway operator) privileges */
+  isRoot: Scalars['Boolean']
+}
+
+export type UserEdge = {
+  __typename?: 'UserEdge'
+  cursor: Scalars['String']
+  node: User
+}
+
+export enum UserOrderByInput {
+  AccountEmailAsc = 'account_email_ASC',
+  AccountEmailDesc = 'account_email_DESC',
+  AccountIdAsc = 'account_id_ASC',
+  AccountIdDesc = 'account_id_DESC',
+  AccountIsBlockedAsc = 'account_isBlocked_ASC',
+  AccountIsBlockedDesc = 'account_isBlocked_DESC',
+  AccountIsEmailConfirmedAsc = 'account_isEmailConfirmed_ASC',
+  AccountIsEmailConfirmedDesc = 'account_isEmailConfirmed_DESC',
+  AccountJoystreamAccountAsc = 'account_joystreamAccount_ASC',
+  AccountJoystreamAccountDesc = 'account_joystreamAccount_DESC',
+  AccountRegisteredAtAsc = 'account_registeredAt_ASC',
+  AccountRegisteredAtDesc = 'account_registeredAt_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  IsRootAsc = 'isRoot_ASC',
+  IsRootDesc = 'isRoot_DESC',
+}
+
+export type UserWhereInput = {
+  AND?: InputMaybe<Array<UserWhereInput>>
+  OR?: InputMaybe<Array<UserWhereInput>>
+  account?: InputMaybe<AccountWhereInput>
+  account_isNull?: InputMaybe<Scalars['Boolean']>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  isRoot_eq?: InputMaybe<Scalars['Boolean']>
+  isRoot_isNull?: InputMaybe<Scalars['Boolean']>
+  isRoot_not_eq?: InputMaybe<Scalars['Boolean']>
+}
+
+export type UsersConnection = {
+  __typename?: 'UsersConnection'
+  edges: Array<UserEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
 }
 
 export type Video = {

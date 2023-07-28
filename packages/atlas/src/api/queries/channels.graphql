@@ -296,6 +296,21 @@ query GetChannelPaymentEvents($channelId: String) {
   }
 }
 
+query GetChannelsPaymentEvents($limit: Int = 30) {
+  events(orderBy: inBlock_DESC, limit: $limit, where: { data: { isTypeOf_eq: "ChannelPaymentMadeEventData" } }) {
+    inBlock
+    timestamp
+    data {
+      ... on ChannelPaymentMadeEventData {
+        amount
+        payeeChannel {
+          ...BasicChannelFields
+        }
+      }
+    }
+  }
+}
+
 query GetTopSellingChannelsFromThreePeriods($limit: Int!, $where: ExtendedChannelWhereInput) {
   topAllTimeSellingChannels: topSellingChannels(where: $where, limit: $limit, periodDays: 0) {
     amount
