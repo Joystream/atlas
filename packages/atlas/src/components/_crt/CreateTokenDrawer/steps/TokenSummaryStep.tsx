@@ -6,7 +6,6 @@ import { Banner } from '@/components/Banner'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
-import { CreateTokenForm } from '@/components/_crt/CreateTokenDrawer/CreateTokenDrawer.types'
 import { CrtFormWrapper } from '@/components/_crt/CrtFormWrapper'
 import { useMountEffect } from '@/hooks/useMountEffect'
 import { sizes } from '@/styles'
@@ -28,11 +27,7 @@ const cliffBanner = (
   />
 )
 
-type TokenSummaryStepProps = {
-  form: CreateTokenForm
-} & CommonStepProps
-
-export const TokenSummaryStep = ({ setPrimaryButtonProps, form }: TokenSummaryStepProps) => {
+export const TokenSummaryStep = ({ setPrimaryButtonProps, form }: CommonStepProps) => {
   useMountEffect(() => {
     setPrimaryButtonProps({
       text: 'Create token',
@@ -89,14 +84,16 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form }: TokenSummarySt
             {form.creatorReward}%
           </Text>
         </SectionRow>
-        <SectionRow
-          title="Tokens issued to your wallet"
-          tooltipText="Decide how many tokens do you want to create for yourself. This amount cannot be changed. You will be able to sell these tokens to your audience directly or enable a public sale, where others can mint more of your channel tokens in exchange for JOYs."
-        >
-          <Text variant="h300" as="p" color="colorTextStrong">
-            {formatNumber(form.creatorIssueAmount)} ${form.name}
-          </Text>
-        </SectionRow>
+        {form.creatorIssueAmount && (
+          <SectionRow
+            title="Tokens issued to your wallet"
+            tooltipText="Decide how many tokens do you want to create for yourself. This amount cannot be changed. You will be able to sell these tokens to your audience directly or enable a public sale, where others can mint more of your channel tokens in exchange for JOYs."
+          >
+            <Text variant="h300" as="p" color="colorTextStrong">
+              {formatNumber(form.creatorIssueAmount)} ${form.name}
+            </Text>
+          </SectionRow>
+        )}
         {form.cliff && (
           <>
             <SectionRow
@@ -120,7 +117,7 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form }: TokenSummarySt
             </Text>
           </SectionRow>
         )}
-        {form.firstPayout && (
+        {!!(form.creatorIssueAmount && form.firstPayout) && (
           <SectionRow
             title="First payout"
             tooltipText="A portion of your own tokens that will be released to you right after cliff period."

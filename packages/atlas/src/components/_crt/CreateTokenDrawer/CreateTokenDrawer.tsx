@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 
 import { CrtDrawer, CrtDrawerProps } from '@/components/CrtDrawer'
 
@@ -16,10 +16,10 @@ const steps: string[] = ['Set up token', 'Tokens issuance', 'Token summary']
 const CREATOR_TOKEN_INITIAL_DATA: CreateTokenForm = {
   name: '',
   isOpen: true,
-  revenueShare: 0,
-  creatorReward: 0,
-  creatorIssueAmount: 0,
-  assuranceType: 'default',
+  revenueShare: 50,
+  creatorReward: 50,
+  creatorIssueAmount: undefined,
+  assuranceType: 'safe',
   cliff: null,
   vesting: null,
   firstPayout: 0,
@@ -31,6 +31,23 @@ export const CreateTokenDrawer = () => {
   const [primaryButtonProps, setPrimaryButtonProps] =
     useState<NonNullable<CrtDrawerProps['actionBar']>['primaryButton']>()
 
+  const secondaryButton = useMemo(() => {
+    switch (activeStep) {
+      case CREATE_TOKEN_STEPS.setup:
+        return undefined
+      case CREATE_TOKEN_STEPS.issuance:
+        return {
+          text: 'Back',
+          onClick: () => setActiveStep(CREATE_TOKEN_STEPS.setup),
+        }
+      case CREATE_TOKEN_STEPS.summary:
+        return {
+          text: 'Back',
+          onClick: () => setActiveStep(CREATE_TOKEN_STEPS.issuance),
+        }
+    }
+  }, [activeStep])
+
   return (
     <CrtDrawer
       steps={steps}
@@ -40,10 +57,12 @@ export const CreateTokenDrawer = () => {
       actionBar={{
         isNoneCrypto: true,
         primaryButton: primaryButtonProps ?? {},
+        secondaryButton,
       }}
     >
       {activeStep === CREATE_TOKEN_STEPS.setup && (
         <SetupTokenStep
+          form={formData.current}
           onSubmit={(data) => {
             formData.current = { ...formData.current, ...data }
             setActiveStep(CREATE_TOKEN_STEPS.issuance)
@@ -53,7 +72,7 @@ export const CreateTokenDrawer = () => {
       )}
       {activeStep === CREATE_TOKEN_STEPS.issuance && (
         <TokenIssuanceStep
-          tokenName={formData.current.name}
+          form={formData.current}
           onSubmit={(data) => {
             formData.current = { ...formData.current, ...data }
             setActiveStep(CREATE_TOKEN_STEPS.summary)

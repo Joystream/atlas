@@ -32,10 +32,9 @@ const cliffBanner = (
 
 type TokenIssuanceStepProps = {
   onSubmit: (form: IssuanceStepForm) => void
-  tokenName: string
 } & CommonStepProps
 
-export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit, tokenName }: TokenIssuanceStepProps) => {
+export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit, form }: TokenIssuanceStepProps) => {
   const {
     control,
     watch,
@@ -43,10 +42,8 @@ export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit, tokenName }
     setValue,
     formState: { errors },
   } = useForm<IssuanceStepForm>({
-    resolver: zodResolver(createTokenIssuanceSchema(tokenName)),
-    defaultValues: {
-      assuranceType: 'safe',
-    },
+    resolver: zodResolver(createTokenIssuanceSchema(form.name)),
+    defaultValues: form,
   })
 
   useMountEffect(() => {
@@ -132,7 +129,7 @@ export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit, tokenName }
                       }
                       nodeEnd={
                         <Text variant="t300" as="p" color="colorTextMuted">
-                          {formatNumber((creatorIssueAmount * Number(field.value || 0)) / 100)} ${tokenName}
+                          {formatNumber((creatorIssueAmount * Number(field.value || 0)) / 100)} ${form.name}
                         </Text>
                       }
                     />
@@ -169,7 +166,7 @@ export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit, tokenName }
               placeholder="1 000"
               nodeEnd={
                 <Text variant="t300" as="p" color="colorTextMuted">
-                  ${tokenName}
+                  ${form.name}
                 </Text>
               }
             />

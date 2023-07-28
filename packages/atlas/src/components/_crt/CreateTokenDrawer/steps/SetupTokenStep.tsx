@@ -27,25 +27,18 @@ const accessOptions = [
   },
 ]
 
-const defaultValues = {
-  isOpen: true,
-  name: '',
-  revenueShare: 50,
-  creatorReward: 50,
-}
-
 type SetupTokenStepProps = {
   onSubmit: (form: SetupStepForm) => void
 } & CommonStepProps
 
-export const SetupTokenStep = ({ setPrimaryButtonProps, onSubmit }: SetupTokenStepProps) => {
+export const SetupTokenStep = ({ setPrimaryButtonProps, onSubmit, form }: SetupTokenStepProps) => {
   const {
     register,
     control,
     handleSubmit,
     formState: { errors },
   } = useForm<SetupStepForm>({
-    defaultValues,
+    defaultValues: form,
   })
 
   useMountEffect(() => {
