@@ -33,6 +33,7 @@ export const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: ${sizes(8)};
   ${media.md} {
     grid-column: 2/3;
