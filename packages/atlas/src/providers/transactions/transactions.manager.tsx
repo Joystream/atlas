@@ -88,6 +88,7 @@ export const TransactionsManager: FC = () => {
       const lastProcessedBlock = subscriptionData.data.processorState?.lastProcessedBlock
       handleNewLastProcessedBlockRef.current(lastProcessedBlock)
     },
+    shouldResubscribe: true,
   })
 
   return (
