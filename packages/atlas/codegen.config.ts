@@ -3,7 +3,6 @@ import { CodegenConfig } from '@graphql-codegen/cli'
 import { customSchemaLoader } from './scripts/customSchemaLoader'
 
 const schemaUrl = 'https://orion.gleev.xyz/graphql'
-console.log(schemaUrl)
 
 const config: CodegenConfig = {
   overwrite: true,
