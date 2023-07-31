@@ -1,10 +1,10 @@
-import axios from 'axios'
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useMutation } from 'react-query'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import shallow from 'zustand/shallow'
 
+import { axiosInstance } from '@/api/axios'
 import { useBasicChannel, useFullChannel } from '@/api/hooks/channel'
 import { FullMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgAlertsError32 } from '@/assets/icons'
@@ -105,7 +105,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
   const { mutateAsync: yppSignChannelMutation } = useMutation(
     'ypp-channels-post',
     (finalFormData: FinalFormData | null) =>
-      axios.post(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels`, finalFormData)
+      axiosInstance.post(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels`, finalFormData)
   )
 
   const { setAuthModalOpenName } = useAuthStore(
@@ -273,7 +273,6 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
         },
         onCompleted: async () => {
           await refetchUserMemberships()
-          await refetchYppSyncedChannels()
 
           const channelId = selectedChannelId || createdChannelId.current
 
@@ -286,6 +285,8 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
             shouldBeIngested: data.shouldBeIngested,
             videoCategoryId: data.videoCategoryId,
           })
+
+          await refetchYppSyncedChannels()
 
           identifyUser(ytResponseData?.email)
           trackYppOptIn(
