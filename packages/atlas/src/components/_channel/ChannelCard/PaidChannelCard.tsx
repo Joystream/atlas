@@ -40,8 +40,9 @@ export const PaidChannelCard: FC<PaidChannelCardProps> = ({ onClick, channel, am
             <InfoWrapper>
               {loading || !channel ? (
                 <>
-                  <SkeletonLoader width="100%" height={41} bottomSpace={16} />
-                  <SkeletonLoader width={100} height={mdMatch ? 20 : 16} bottomSpace={4} />
+                  <SkeletonLoader width={200} height={40} bottomSpace={4} />
+                  <SkeletonLoader width={70} height={mdMatch ? 20 : 16} bottomSpace={8} />
+                  <SkeletonLoader width={120} height={mdMatch ? 20 : 16} />
                 </>
               ) : (
                 <>
@@ -50,7 +51,7 @@ export const PaidChannelCard: FC<PaidChannelCardProps> = ({ onClick, channel, am
                     as="span"
                     withToken="small"
                     withTooltip
-                    withDenomination="after"
+                    withDenomination="vertical"
                     format="short"
                     variant={mdMatch ? 'h300' : 't200-strong'}
                   />

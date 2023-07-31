@@ -1,4 +1,3 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
@@ -7,29 +6,7 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { cVar, sizes, square } from '@/styles'
 
-export const ChannelCardArticle = styled.article<{ activeDisabled?: boolean }>`
-  position: relative;
-  display: flex;
-  min-width: 260px;
-
-  :hover {
-    ${() => ChannelCardAnchor} {
-      transform: translate(-${sizes(2)}, -${sizes(2)});
-      box-shadow: ${sizes(2)} ${sizes(2)} 0 ${cVar('colorCoreBlue500')};
-    }
-  }
-
-  :active {
-    ${() => ChannelCardAnchor} {
-      ${({ activeDisabled }) =>
-        !activeDisabled &&
-        css`
-          transform: translate(0, 0);
-          box-shadow: ${sizes(0)} ${sizes(0)} 0 ${cVar('colorCoreBlue500')};
-        `}
-    }
-  }
-`
+export { ChannelCardArticle } from './ChannelCard.styles'
 
 export const ChannelCardAnchor = styled(Link)`
   width: 100%;
@@ -54,14 +31,18 @@ export const InfoWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: start;
+
+  .denomination {
+    font-size: 16px;
+  }
 `
 
 export const Amount = styled(NumberFormat)`
   font-size: 32px;
   line-height: ${sizes(10)};
-  margin-bottom: ${sizes(1)};
+  height: ${sizes(10)};
 
-  &::before {
+  ::before {
     content: '+ ';
     color: ${cVar('colorTextMuted')};
   }
@@ -72,9 +53,9 @@ export const ChannelTitle = styled(Text)`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin-bottom: ${sizes(4)};
+  margin-top: ${sizes(2)};
 
-  &::before {
+  ::before {
     content: 'for ';
     color: ${cVar('colorTextMuted')};
   }

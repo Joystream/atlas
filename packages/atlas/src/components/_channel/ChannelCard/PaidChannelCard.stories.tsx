@@ -19,7 +19,7 @@ export default {
 
   args: {
     loading: false,
-    amount: 123_000,
+    amount: 123_456,
     channel: {
       title: 'my channel',
       id: '3',
