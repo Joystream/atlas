@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 
-import { axiosInstance } from '@/api'
+import { axiosInstance } from '@/api/axios'
 import { atlasConfig } from '@/config'
 import { SentryLogger } from '@/utils/logs'
 

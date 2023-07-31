@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 
-import { axiosInstance } from '@/api'
+import { axiosInstance } from '@/api/axios'
 import { useFullVideosConnection } from '@/api/hooks/videosConnection'
 import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { SvgActionAddVideo, SvgActionUpload, SvgAlertsInformative24 } from '@/assets/icons'

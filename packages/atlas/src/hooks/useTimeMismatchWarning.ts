@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-import { axiosInstance } from '@/api'
+import { axiosInstance } from '@/api/axios'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useSnackbar } from '@/providers/snackbars'
 import { SentryLogger } from '@/utils/logs'

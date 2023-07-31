@@ -5,7 +5,7 @@ import { useQuery } from 'react-query'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ParallaxProvider } from 'react-scroll-parallax'
 
-import { axiosInstance } from '@/api'
+import { axiosInstance } from '@/api/axios'
 import { YppReferralBanner } from '@/components/_ypp/YppReferralBanner'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'

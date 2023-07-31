@@ -17,7 +17,7 @@ import {
 import { useMutation } from 'react-query'
 import { useLocation } from 'react-router'
 
-import { axiosInstance } from '@/api'
+import { axiosInstance } from '@/api/axios'
 import {
   GetAvailableStorageBucketsForBagDocument,
   GetAvailableStorageBucketsForBagQuery,

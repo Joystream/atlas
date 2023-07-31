@@ -5,7 +5,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import shallow from 'zustand/shallow'
 
-import { axiosInstance } from '@/api'
+import { axiosInstance } from '@/api/axios'
 import { useGetCurrentAccountLazyQuery } from '@/api/queries/__generated__/accounts.generated'
 import { AuthenticationModalStepTemplate } from '@/components/_auth/AuthenticationModalStepTemplate'
 import { EmailAndSeedStep } from '@/components/_auth/ForgotPasswordModal/steps/EmailAndSeedStep'

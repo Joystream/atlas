@@ -1,4 +1,4 @@
-import { axiosInstance } from '@/api'
+import { axiosInstance } from '@/api/axios'
 import { atlasConfig } from '@/config'
 
 export const validateImage = async (fileOrUrl: File | string): Promise<File | string> => {

@@ -1,7 +1,7 @@
 import { ChangeEvent, ChangeEventHandler, FC, useRef } from 'react'
 import { useMutation } from 'react-query'
 
-import { axiosInstance } from '@/api'
+import { axiosInstance } from '@/api/axios'
 import { SvgActionDownload, SvgActionMore, SvgActionTrash } from '@/assets/icons'
 import { ListItemProps } from '@/components/ListItem'
 import { Text } from '@/components/Text'

@@ -4,7 +4,7 @@ import BN from 'bn.js'
 import { useCallback } from 'react'
 import { useMutation } from 'react-query'
 
-import { axiosInstance } from '@/api'
+import { axiosInstance } from '@/api/axios'
 import { ImageInputFile } from '@/components/_inputs/MultiFileSelect'
 import { FAUCET_URL, YPP_FAUCET_URL } from '@/config/env'
 import { keyring } from '@/joystream-lib/lib'

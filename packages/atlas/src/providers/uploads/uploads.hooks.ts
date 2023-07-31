@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router'
 import * as rax from 'retry-axios'
 import { RetryConfig } from 'retry-axios'
 
-import { axiosInstance } from '@/api'
+import { axiosInstance } from '@/api/axios'
 import { absoluteRoutes } from '@/config/routes'
 import { useStorageOperators } from '@/providers/assets/assets.provider'
 import { OperatorInfo } from '@/providers/assets/assets.types'

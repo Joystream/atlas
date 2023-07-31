@@ -1,6 +1,6 @@
 import { debounce } from 'lodash-es'
 
-import { axiosInstance } from '@/api'
+import { axiosInstance } from '@/api/axios'
 import { DataObjectType } from '@/api/queries/__generated__/baseTypes.generated'
 
 import { ConsoleLogger } from './console'

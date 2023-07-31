@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query'
 
-import { axiosInstance } from '@/api'
+import { axiosInstance } from '@/api/axios'
 import { useBasicChannels } from '@/api/hooks/channel'
 import { atlasConfig } from '@/config'
 import { SentryLogger } from '@/utils/logs'

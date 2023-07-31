@@ -5,7 +5,7 @@ import { useMutation } from 'react-query'
 import { useSearchParams } from 'react-router-dom'
 import shallow from 'zustand/shallow'
 
-import { axiosInstance } from '@/api'
+import { axiosInstance } from '@/api/axios'
 import {
   GetFullChannelDocument,
   GetFullChannelQuery,

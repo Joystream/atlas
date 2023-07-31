@@ -5,7 +5,7 @@ import { isAxiosError } from 'axios'
 import { AES, enc, lib, mode } from 'crypto-js'
 import { FC, PropsWithChildren, createContext, useCallback, useContext, useMemo, useState } from 'react'
 
-import { axiosInstance } from '@/api'
+import { axiosInstance } from '@/api/axios'
 import { GetCurrentAccountQuery, useGetCurrentAccountLazyQuery } from '@/api/queries/__generated__/accounts.generated'
 import { atlasConfig } from '@/config'
 import { ORION_AUTH_URL } from '@/config/env'

@@ -7,7 +7,7 @@ import { entropyToMnemonic as _entropyToMnemonic } from 'bip39'
 import { Buffer } from 'buffer'
 import { AES, enc, lib, mode } from 'crypto-js'
 
-import { axiosInstance } from '@/api'
+import { axiosInstance } from '@/api/axios'
 import { atlasConfig } from '@/config'
 import { ORION_AUTH_URL } from '@/config/env'
 import { keyring } from '@/joystream-lib/lib'

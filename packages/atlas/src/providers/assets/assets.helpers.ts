@@ -1,4 +1,4 @@
-import { axiosInstance } from '@/api'
+import { axiosInstance } from '@/api/axios'
 import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { BUILD_ENV } from '@/config/env'
 import { AssetLogger, ConsoleLogger, DataObjectResponseMetric, DistributorEventEntry } from '@/utils/logs'

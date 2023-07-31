@@ -4,7 +4,7 @@ import { useMutation } from 'react-query'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import shallow from 'zustand/shallow'
 
-import { axiosInstance } from '@/api'
+import { axiosInstance } from '@/api/axios'
 import { useBasicChannel, useFullChannel } from '@/api/hooks/channel'
 import { FullMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgAlertsError32 } from '@/assets/icons'
