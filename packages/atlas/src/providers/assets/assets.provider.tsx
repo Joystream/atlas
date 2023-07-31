@@ -46,7 +46,7 @@ type OperatorsContextValue = {
   fetchStorageOperators: () => Promise<BagOperatorsMapping>
   userBenchmarkTime: number | null
 }
-const OperatorsContext = createContext<OperatorsContextValue | undefined>(undefined)
+export const OperatorsContext = createContext<OperatorsContextValue | undefined>(undefined)
 OperatorsContext.displayName = 'OperatorsContext'
 
 export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) => {
