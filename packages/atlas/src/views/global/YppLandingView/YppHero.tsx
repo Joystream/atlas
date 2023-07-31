@@ -16,7 +16,7 @@ import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { GoogleButton } from '@/components/_buttons/GoogleButton'
-import { ChannelCard } from '@/components/_channel/ChannelCard'
+import { PaidChannelCard } from '@/components/_channel/ChannelCard/PaidChannelCard'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -63,9 +63,13 @@ export const YppHero: FC<YppHeroProps> = ({
   const { channels, loading } = useRecentlyPaidChannels()
   const items = !loading
     ? channels?.map((extendedChannels) => (
-        <ChannelCard key={extendedChannels.channel.id} channel={extendedChannels.channel} withFollowButton={false} />
+        <PaidChannelCard
+          key={extendedChannels.channel.id}
+          amount={extendedChannels.amount}
+          channel={extendedChannels.channel}
+        />
       ))
-    : Array.from({ length: 30 }).map((_, idx) => <ChannelCard key={idx} loading withFollowButton={false} />)
+    : Array.from({ length: 30 }).map((_, idx) => <PaidChannelCard key={idx} loading />)
 
   return (
     <BackgroundContainer noBackground>
@@ -169,8 +173,8 @@ export const YppHero: FC<YppHeroProps> = ({
         <StyledInfiniteCarousel
           headerGridItemProps={{ colStart: { base: 1, lg: 2 }, colSpan: { base: 12, lg: 10 } }}
           carouselHorizonthalOffset={-32}
-          title="Recent verified channels"
-          itemWidth={200}
+          title="Recently paid channels"
+          itemWidth={350}
           items={items}
           subTitle="What is a verified channel?"
           informationProps={{
