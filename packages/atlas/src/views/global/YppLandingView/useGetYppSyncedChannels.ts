@@ -1,7 +1,7 @@
-import axios from 'axios'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useQuery } from 'react-query'
 
+import { axiosInstance } from '@/api/axios'
 import { atlasConfig } from '@/config'
 import { useUser } from '@/providers/user/user.hooks'
 import { SentryLogger } from '@/utils/logs'
@@ -28,7 +28,7 @@ export const useGetYppSyncedChannels = () => {
       const syncedChannels = await Promise.all(
         channels.map(async (channel) => {
           try {
-            const response = await axios.get<YppSyncedChannel>(`${YPP_SYNC_URL}/channels/${channel.id}`)
+            const response = await axiosInstance.get<YppSyncedChannel>(`${YPP_SYNC_URL}/channels/${channel.id}`)
             return response?.data
           } catch (error) {
             return

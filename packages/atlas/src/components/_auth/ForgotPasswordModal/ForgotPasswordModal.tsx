@@ -1,11 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod/dist/zod'
 import { u8aToHex } from '@polkadot/util'
-import axios from 'axios'
 import { useCallback, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import shallow from 'zustand/shallow'
 
+import { axiosInstance } from '@/api'
 import { useGetCurrentAccountLazyQuery } from '@/api/queries/__generated__/accounts.generated'
 import { AuthenticationModalStepTemplate } from '@/components/_auth/AuthenticationModalStepTemplate'
 import { EmailAndSeedStep } from '@/components/_auth/ForgotPasswordModal/steps/EmailAndSeedStep'
@@ -143,7 +143,7 @@ export const ForgotPasswordModal = () => {
         }
         const forgetPayloadSignature = await keypair.sign(JSON.stringify(forgetPayload))
 
-        await axios.post<{ accountId: string }>(
+        await axiosInstance.post<{ accountId: string }>(
           `${ORION_AUTH_URL}/change-account`,
           {
             signature: u8aToHex(forgetPayloadSignature),

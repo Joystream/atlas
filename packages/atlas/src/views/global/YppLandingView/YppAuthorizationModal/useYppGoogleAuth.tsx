@@ -1,11 +1,11 @@
 import { useApolloClient } from '@apollo/client'
-import axios from 'axios'
 import { isArray } from 'lodash-es'
 import { useCallback, useEffect, useState } from 'react'
 import { useMutation } from 'react-query'
 import { useSearchParams } from 'react-router-dom'
 import shallow from 'zustand/shallow'
 
+import { axiosInstance } from '@/api'
 import {
   GetFullChannelDocument,
   GetFullChannelQuery,
@@ -58,7 +58,7 @@ export const useYppGoogleAuth = ({ channelsLoaded }: { channelsLoaded: boolean }
 
   const [alreadyRegisteredChannel, setAlreadyRegisteredChannel] = useState<AlreadyRegisteredChannel | null>(null)
   const { mutateAsync: authMutation } = useMutation('ypp-auth-post', (authorizationCode: string) =>
-    axios.post<ChannelVerificationSuccessResponse>(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/users`, {
+    axiosInstance.post<ChannelVerificationSuccessResponse>(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/users`, {
       authorizationCode,
       youtubeRedirectUri: window.location.href,
     })

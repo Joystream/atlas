@@ -1,8 +1,8 @@
-import axios from 'axios'
 import { useEffect, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 
+import { axiosInstance } from '@/api'
 import { useFullVideosConnection } from '@/api/hooks/videosConnection'
 import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { SvgActionAddVideo, SvgActionUpload, SvgAlertsInformative24 } from '@/assets/icons'
@@ -72,7 +72,7 @@ export const MyVideosView = () => {
 
   const { isLoading: isCurrentlyUploadedVideoIdsLoading, data: yppDAta } = useQuery(
     `ypp-ba-videos-${channelId}`,
-    () => axios.get<YppVideoDto[]>(`${YOUTUBE_BACKEND_URL}/channels/${channelId}/videos`),
+    () => axiosInstance.get<YppVideoDto[]>(`${YOUTUBE_BACKEND_URL}/channels/${channelId}/videos`),
     {
       enabled: !!channelId && !!YOUTUBE_BACKEND_URL,
       retry: 1,
