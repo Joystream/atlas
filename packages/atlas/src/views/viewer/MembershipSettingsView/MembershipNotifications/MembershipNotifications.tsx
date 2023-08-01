@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import useResizeObserver from 'use-resize-observer'
 
-import { NotificationsTable } from '@/components/NotificationsTable'
+import { NotificationsState, NotificationsTable } from '@/components/NotificationsTable'
 import { EntitySettingTemplate } from '@/components/_templates/EntitySettingTemplate'
 
 import { useMemberSettingsData } from './MembershipNotifications.hooks'
@@ -12,7 +12,7 @@ import { TABLE_STRUCTURE } from './MembershipNotifications.utils'
 export const MembershipNotifications = () => {
   const { data, isLoading } = useMemberSettingsData()
 
-  const form = useForm<Record<string, boolean>>()
+  const form = useForm<NotificationsState>()
   const {
     reset,
     formState: { isDirty },

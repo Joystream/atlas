@@ -6,9 +6,11 @@ import { Checkbox } from '@/components/_inputs/Checkbox'
 
 import { Table } from './NotificationsTable.styles'
 
+export type NotificationsState = Record<string, { inAppEnabled: boolean; emailEnabled: boolean }>
+
 type NotificationsTableComponentProps = {
-  sections: { title: string; rows: { label: string; names: { inApp: string; email: string } }[] }[]
-  form: UseFormReturn<Record<string, boolean>>
+  sections: { title: string; rows: { label: string; name: string }[] }[]
+  form: UseFormReturn<NotificationsState>
   disabled?: boolean
 }
 export const NotificationsTable: FC<NotificationsTableComponentProps> = ({ sections, form, disabled }) => (
@@ -36,12 +38,12 @@ export const NotificationsTable: FC<NotificationsTableComponentProps> = ({ secti
             <th colSpan={3}>{title}</th>
           </tr>
 
-          {rows.map(({ label, names }) => (
+          {rows.map(({ label, name }) => (
             <tr key={label}>
               <td>{label}</td>
               <td>
                 <Controller
-                  name={names.inApp}
+                  name={`${name}.inAppEnabled`}
                   control={form.control}
                   render={({ field: { value = false, onChange } }) => (
                     <Checkbox value={value} onChange={onChange} disabled={disabled} />
@@ -50,7 +52,7 @@ export const NotificationsTable: FC<NotificationsTableComponentProps> = ({ secti
               </td>
               <td>
                 <Controller
-                  name={names.email}
+                  name={`${name}.emailEnabled`}
                   control={form.control}
                   render={({ field: { value = false, onChange } }) => (
                     <Checkbox value={value} onChange={onChange} disabled={disabled} />
@@ -69,20 +71,7 @@ const SubscribeToAllRow: FC<NotificationsTableComponentProps> = ({ sections, for
   const [allInApp, setAllInApp] = useState<boolean | undefined>()
   const [allEmail, setAllEmail] = useState<boolean | undefined>()
 
-  const names = useMemo(
-    () =>
-      sections.reduce<{ inApp: string[]; email: string[] }>(
-        (acc, { rows }) => {
-          rows.forEach(({ names }) => {
-            acc.inApp.push(names.inApp)
-            acc.email.push(names.email)
-          })
-          return acc
-        },
-        { inApp: [], email: [] }
-      ),
-    [sections]
-  )
+  const names = useMemo(() => sections.flatMap(({ rows }) => rows.map(({ name }) => name)), [sections])
   const values = useWatch({ control: form.control })
   const { getValues, setValue } = form
 
@@ -91,20 +80,26 @@ const SubscribeToAllRow: FC<NotificationsTableComponentProps> = ({ sections, for
 
     const values = getValues()
     if (typeof allInApp !== 'undefined') {
-      names.inApp.forEach((k) => {
-        if (values[k] !== allInApp) setValue(k, allInApp, { shouldDirty: true })
+      names.forEach((name) => {
+        if (values[name].inAppEnabled !== allInApp) setValue(`${name}.inAppEnabled`, allInApp, { shouldDirty: true })
       })
     }
     if (typeof allEmail !== 'undefined') {
-      names.email.forEach((k) => {
-        if (values[k] !== allEmail) setValue(k, allEmail, { shouldDirty: true })
+      names.forEach((name) => {
+        if (values[name].emailEnabled !== allEmail) setValue(`${name}.emailEnabled`, allEmail, { shouldDirty: true })
       })
     }
   }, [allInApp, allEmail, names, getValues, setValue])
 
   useEffect(() => {
-    setAllInApp(names.inApp.every((k) => values[k]) || (names.inApp.some((k) => values[k]) ? undefined : false))
-    setAllEmail(names.email.every((k) => values[k]) || (names.email.some((k) => values[k]) ? undefined : false))
+    setAllInApp(
+      names.every((name) => values[name]?.inAppEnabled) ||
+        (names.some((name) => values[name]?.inAppEnabled) ? undefined : false)
+    )
+    setAllEmail(
+      names.every((name) => values[name]?.emailEnabled) ||
+        (names.some((name) => values[name]?.emailEnabled) ? undefined : false)
+    )
   }, [values, names])
 
   return (

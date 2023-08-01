@@ -4,10 +4,7 @@ export const TABLE_STRUCTURE = [
     rows: [
       {
         label: 'New channel created',
-        names: {
-          inApp: 'channelCreatedInAppNotificationEnabled',
-          email: 'channelCreatedMailNotificationEnabled',
-        },
+        name: 'channelCreatedNotificationEnabled',
       },
     ],
   },
@@ -16,17 +13,11 @@ export const TABLE_STRUCTURE = [
     rows: [
       {
         label: 'Someone replied to your comment',
-        names: {
-          inApp: 'commentRepyInAppNotificationEnabled',
-          email: 'commentRepyMailNotificationEnabled',
-        },
+        name: 'replyToCommentNotificationEnabled',
       },
       {
         label: 'Someone reacted to your comment',
-        names: {
-          inApp: 'commentReactionInAppNotificationEnabled',
-          email: 'commentReactionMailNotificationEnabled',
-        },
+        name: 'reactionToCommentNotificationEnabled',
       },
     ],
   },
@@ -35,24 +26,15 @@ export const TABLE_STRUCTURE = [
     rows: [
       {
         label: 'Posted a new video',
-        names: {
-          inApp: 'newVideoInAppNotificationEnabled',
-          email: 'newVideoMailNotificationEnabled',
-        },
+        name: 'videoPostedNotificationEnabled',
       },
       {
         label: 'Put a new NFT on auction',
-        names: {
-          inApp: 'newNftAuctionInAppNotificationEnabled',
-          email: 'newNftAuctionMailNotificationEnabled',
-        },
+        name: 'newNftOnAuctionNotificationEnabled',
       },
       {
         label: 'Put a new NFT on sale',
-        names: {
-          inApp: 'newNftSaleInAppNotificationEnabled',
-          email: 'newNftSaleMailNotificationEnabled',
-        },
+        name: 'newNftOnSaleNotificationEnabled',
       },
     ],
   },
@@ -61,38 +43,23 @@ export const TABLE_STRUCTURE = [
     rows: [
       {
         label: 'Someone placed higher bid than you',
-        names: {
-          inApp: 'auctionOutBidInAppNotificationEnabled',
-          email: 'auctionOutBidMailNotificationEnabled',
-        },
+        name: 'higherBidThanYoursMadeNotificationEnabled',
       },
       {
         label: 'Auction you participated in expired',
-        names: {
-          inApp: 'auctionExpiredInAppNotificationEnabled',
-          email: 'auctionExpiredMailNotificationEnabled',
-        },
+        name: 'auctionExpiredNotificationEnabled',
       },
       {
         label: 'You won the auction',
-        names: {
-          inApp: 'auctionWonInAppNotificationEnabled',
-          email: 'auctionWonMailNotificationEnabled',
-        },
+        name: 'auctionWonNotificationEnabled',
       },
       {
         label: 'You lost the auction',
-        names: {
-          inApp: 'auctionLostInAppNotificationEnabled',
-          email: 'auctionLostMailNotificationEnabled',
-        },
+        name: 'auctionLostNotificationEnabled',
       },
       {
         label: 'Your bid withdrawal is enabled',
-        names: {
-          inApp: 'auctionBidWithdrawalInAppNotificationEnabled',
-          email: 'auctionBidWithdrawalMailNotificationEnabled',
-        },
+        name: 'openAuctionBidCanBeWithdrawnNotificationEnabled',
       },
     ],
   },
@@ -101,24 +68,15 @@ export const TABLE_STRUCTURE = [
     rows: [
       {
         label: 'You receive funds from council',
-        names: {
-          inApp: 'fundFromCouncilInAppNotificationEnabled',
-          email: 'fundFromCouncilMailNotificationEnabled',
-        },
+        name: 'fundsFromCouncilReceivedNotificationEnabled',
       },
       {
         label: 'You send funds to external wallet',
-        names: {
-          inApp: 'fundSentInAppNotificationEnabled',
-          email: 'fundSentMailNotificationEnabled',
-        },
+        name: 'fundsToExternalWalletSentNotificationEnabled',
       },
       {
         label: 'You receive funds from working group',
-        names: {
-          inApp: 'fundFromWgInAppNotificationEnabled',
-          email: 'fundFromWgMailNotificationEnabled',
-        },
+        name: 'fundsFromWgReceivedNotificationEnabled',
       },
     ],
   },
