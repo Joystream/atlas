@@ -10,9 +10,7 @@ export type Scalars = {
   Boolean: boolean
   Int: number
   Float: number
-  /** Big number integer */
   BigInt: string
-  /** A date-time string in simplified extended ISO 8601 format (YYYY-MM-DDTHH:mm:ss.sssZ) */
   DateTime: Date
 }
 
@@ -40,6 +38,7 @@ export type Account = {
 export type AccountData = {
   __typename?: 'AccountData'
   email: Scalars['String']
+  followedChannels: Array<FollowedChannel>
   id: Scalars['String']
   isEmailConfirmed: Scalars['Boolean']
   joystreamAccount: Scalars['String']
@@ -1296,12 +1295,12 @@ export type ChannelFollow = {
   __typename?: 'ChannelFollow'
   /** ID of the channel being followed (the channel may no longer exist) */
   channelId: Scalars['String']
-  /** Unique identifier of the follow, also serves as a 'cancelToken' that needs to be provided when unfollowing the channel (to prevent abuse / inconsistent state) */
+  /** Unique identifier of the follow */
   id: Scalars['String']
-  /** IP address of the follower */
-  ip: Scalars['String']
   /** Time when user started following the channel */
   timestamp: Scalars['DateTime']
+  /** User that followed the channel */
+  user: User
 }
 
 export type ChannelFollowEdge = {
@@ -1315,17 +1314,19 @@ export enum ChannelFollowOrderByInput {
   ChannelIdDesc = 'channelId_DESC',
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
-  IpAsc = 'ip_ASC',
-  IpDesc = 'ip_DESC',
   TimestampAsc = 'timestamp_ASC',
   TimestampDesc = 'timestamp_DESC',
+  UserIdAsc = 'user_id_ASC',
+  UserIdDesc = 'user_id_DESC',
+  UserIsRootAsc = 'user_isRoot_ASC',
+  UserIsRootDesc = 'user_isRoot_DESC',
 }
 
 export type ChannelFollowResult = {
   __typename?: 'ChannelFollowResult'
   added: Scalars['Boolean']
-  cancelToken: Scalars['String']
   channelId: Scalars['String']
+  followId: Scalars['String']
   follows: Scalars['Int']
 }
 
@@ -1366,23 +1367,6 @@ export type ChannelFollowWhereInput = {
   id_not_in?: InputMaybe<Array<Scalars['String']>>
   id_not_startsWith?: InputMaybe<Scalars['String']>
   id_startsWith?: InputMaybe<Scalars['String']>
-  ip_contains?: InputMaybe<Scalars['String']>
-  ip_containsInsensitive?: InputMaybe<Scalars['String']>
-  ip_endsWith?: InputMaybe<Scalars['String']>
-  ip_eq?: InputMaybe<Scalars['String']>
-  ip_gt?: InputMaybe<Scalars['String']>
-  ip_gte?: InputMaybe<Scalars['String']>
-  ip_in?: InputMaybe<Array<Scalars['String']>>
-  ip_isNull?: InputMaybe<Scalars['Boolean']>
-  ip_lt?: InputMaybe<Scalars['String']>
-  ip_lte?: InputMaybe<Scalars['String']>
-  ip_not_contains?: InputMaybe<Scalars['String']>
-  ip_not_containsInsensitive?: InputMaybe<Scalars['String']>
-  ip_not_endsWith?: InputMaybe<Scalars['String']>
-  ip_not_eq?: InputMaybe<Scalars['String']>
-  ip_not_in?: InputMaybe<Array<Scalars['String']>>
-  ip_not_startsWith?: InputMaybe<Scalars['String']>
-  ip_startsWith?: InputMaybe<Scalars['String']>
   timestamp_eq?: InputMaybe<Scalars['DateTime']>
   timestamp_gt?: InputMaybe<Scalars['DateTime']>
   timestamp_gte?: InputMaybe<Scalars['DateTime']>
@@ -1392,6 +1376,8 @@ export type ChannelFollowWhereInput = {
   timestamp_lte?: InputMaybe<Scalars['DateTime']>
   timestamp_not_eq?: InputMaybe<Scalars['DateTime']>
   timestamp_not_in?: InputMaybe<Array<Scalars['DateTime']>>
+  user?: InputMaybe<UserWhereInput>
+  user_isNull?: InputMaybe<Scalars['Boolean']>
 }
 
 export type ChannelFollowsConnection = {
@@ -1555,7 +1541,6 @@ export type ChannelReportInfo = {
   createdAt: Scalars['DateTime']
   id: Scalars['String']
   rationale: Scalars['String']
-  reporterIp: Scalars['String']
 }
 
 export type ChannelRewardClaimedAndWithdrawnEventData = {
@@ -3086,7 +3071,6 @@ export type EntityReportInfo = {
   createdAt: Scalars['DateTime']
   id: Scalars['String']
   rationale: Scalars['String']
-  reporterIp: Scalars['String']
 }
 
 export type Event = {
@@ -3468,6 +3452,92 @@ export type ExtendedVideoCategory = {
 export type FeaturedVideoInput = {
   videoCutUrl?: InputMaybe<Scalars['String']>
   videoId: Scalars['String']
+}
+
+export type FollowedChannel = {
+  __typename?: 'FollowedChannel'
+  channelId: Scalars['String']
+  timestamp: Scalars['String']
+}
+
+export type GatewayConfig = {
+  __typename?: 'GatewayConfig'
+  /** Unique name of the configuration variable */
+  id: Scalars['String']
+  /** Last time the configuration variable was updated */
+  updatedAt: Scalars['DateTime']
+  /** Value of the configuration variable serialized to a string */
+  value: Scalars['String']
+}
+
+export type GatewayConfigEdge = {
+  __typename?: 'GatewayConfigEdge'
+  cursor: Scalars['String']
+  node: GatewayConfig
+}
+
+export enum GatewayConfigOrderByInput {
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC',
+  ValueAsc = 'value_ASC',
+  ValueDesc = 'value_DESC',
+}
+
+export type GatewayConfigWhereInput = {
+  AND?: InputMaybe<Array<GatewayConfigWhereInput>>
+  OR?: InputMaybe<Array<GatewayConfigWhereInput>>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  updatedAt_eq?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']>
+  updatedAt_in?: InputMaybe<Array<Scalars['DateTime']>>
+  updatedAt_isNull?: InputMaybe<Scalars['Boolean']>
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']>
+  updatedAt_not_eq?: InputMaybe<Scalars['DateTime']>
+  updatedAt_not_in?: InputMaybe<Array<Scalars['DateTime']>>
+  value_contains?: InputMaybe<Scalars['String']>
+  value_containsInsensitive?: InputMaybe<Scalars['String']>
+  value_endsWith?: InputMaybe<Scalars['String']>
+  value_eq?: InputMaybe<Scalars['String']>
+  value_gt?: InputMaybe<Scalars['String']>
+  value_gte?: InputMaybe<Scalars['String']>
+  value_in?: InputMaybe<Array<Scalars['String']>>
+  value_isNull?: InputMaybe<Scalars['Boolean']>
+  value_lt?: InputMaybe<Scalars['String']>
+  value_lte?: InputMaybe<Scalars['String']>
+  value_not_contains?: InputMaybe<Scalars['String']>
+  value_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  value_not_endsWith?: InputMaybe<Scalars['String']>
+  value_not_eq?: InputMaybe<Scalars['String']>
+  value_not_in?: InputMaybe<Array<Scalars['String']>>
+  value_not_startsWith?: InputMaybe<Scalars['String']>
+  value_startsWith?: InputMaybe<Scalars['String']>
+}
+
+export type GatewayConfigsConnection = {
+  __typename?: 'GatewayConfigsConnection'
+  edges: Array<GatewayConfigEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
 }
 
 export type GeneratedSignature = {
@@ -4030,7 +4100,7 @@ export type Mutation = {
   setKillSwitch: KillSwitch
   setSupportedCategories: SetSupportedCategoriesResult
   setVideoHero: SetVideoHeroResult
-  setVideoViewPerIpTimeLimit: VideoViewPerIpTimeLimit
+  setVideoViewPerUserTimeLimit: VideoViewPerUserTimeLimit
   setVideoWeights: VideoWeights
   signAppActionCommitment: GeneratedSignature
   unfollowChannel: ChannelUnfollowResult
@@ -4095,7 +4165,7 @@ export type MutationSetVideoHeroArgs = {
   videoId: Scalars['String']
 }
 
-export type MutationSetVideoViewPerIpTimeLimitArgs = {
+export type MutationSetVideoViewPerUserTimeLimitArgs = {
   limitInSeconds: Scalars['Int']
 }
 
@@ -4116,7 +4186,6 @@ export type MutationSignAppActionCommitmentArgs = {
 
 export type MutationUnfollowChannelArgs = {
   channelId: Scalars['String']
-  token: Scalars['String']
 }
 
 export type NftActivitiesConnection = {
@@ -4212,21 +4281,20 @@ export type NftFeaturedRequstInfo = {
   id: Scalars['String']
   nftId: Scalars['String']
   rationale: Scalars['String']
-  reporterIp: Scalars['String']
 }
 
 export type NftFeaturingRequest = {
   __typename?: 'NftFeaturingRequest'
   /** Unique identifier of the request */
   id: Scalars['String']
-  /** IP address of the reporter */
-  ip: Scalars['String']
   /** ID of the nft that is being requested to be featured by operator */
   nftId: Scalars['String']
   /** Rationale behind the request */
   rationale: Scalars['String']
   /** Time of the request */
   timestamp: Scalars['DateTime']
+  /** User that requested the nft to be featured */
+  user: User
 }
 
 export type NftFeaturingRequestEdge = {
@@ -4238,14 +4306,16 @@ export type NftFeaturingRequestEdge = {
 export enum NftFeaturingRequestOrderByInput {
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
-  IpAsc = 'ip_ASC',
-  IpDesc = 'ip_DESC',
   NftIdAsc = 'nftId_ASC',
   NftIdDesc = 'nftId_DESC',
   RationaleAsc = 'rationale_ASC',
   RationaleDesc = 'rationale_DESC',
   TimestampAsc = 'timestamp_ASC',
   TimestampDesc = 'timestamp_DESC',
+  UserIdAsc = 'user_id_ASC',
+  UserIdDesc = 'user_id_DESC',
+  UserIsRootAsc = 'user_isRoot_ASC',
+  UserIsRootDesc = 'user_isRoot_DESC',
 }
 
 export type NftFeaturingRequestWhereInput = {
@@ -4268,23 +4338,6 @@ export type NftFeaturingRequestWhereInput = {
   id_not_in?: InputMaybe<Array<Scalars['String']>>
   id_not_startsWith?: InputMaybe<Scalars['String']>
   id_startsWith?: InputMaybe<Scalars['String']>
-  ip_contains?: InputMaybe<Scalars['String']>
-  ip_containsInsensitive?: InputMaybe<Scalars['String']>
-  ip_endsWith?: InputMaybe<Scalars['String']>
-  ip_eq?: InputMaybe<Scalars['String']>
-  ip_gt?: InputMaybe<Scalars['String']>
-  ip_gte?: InputMaybe<Scalars['String']>
-  ip_in?: InputMaybe<Array<Scalars['String']>>
-  ip_isNull?: InputMaybe<Scalars['Boolean']>
-  ip_lt?: InputMaybe<Scalars['String']>
-  ip_lte?: InputMaybe<Scalars['String']>
-  ip_not_contains?: InputMaybe<Scalars['String']>
-  ip_not_containsInsensitive?: InputMaybe<Scalars['String']>
-  ip_not_endsWith?: InputMaybe<Scalars['String']>
-  ip_not_eq?: InputMaybe<Scalars['String']>
-  ip_not_in?: InputMaybe<Array<Scalars['String']>>
-  ip_not_startsWith?: InputMaybe<Scalars['String']>
-  ip_startsWith?: InputMaybe<Scalars['String']>
   nftId_contains?: InputMaybe<Scalars['String']>
   nftId_containsInsensitive?: InputMaybe<Scalars['String']>
   nftId_endsWith?: InputMaybe<Scalars['String']>
@@ -4328,6 +4381,8 @@ export type NftFeaturingRequestWhereInput = {
   timestamp_lte?: InputMaybe<Scalars['DateTime']>
   timestamp_not_eq?: InputMaybe<Scalars['DateTime']>
   timestamp_not_in?: InputMaybe<Array<Scalars['DateTime']>>
+  user?: InputMaybe<UserWhereInput>
+  user_isNull?: InputMaybe<Scalars['Boolean']>
 }
 
 export type NftFeaturingRequestsConnection = {
@@ -4966,8 +5021,12 @@ export type Query = {
   eventsConnection: EventsConnection
   extendedChannels: Array<ExtendedChannel>
   extendedVideoCategories: Array<ExtendedVideoCategory>
+  gatewayConfigById?: Maybe<GatewayConfig>
+  /** @deprecated Use gatewayConfigById */
+  gatewayConfigByUniqueInput?: Maybe<GatewayConfig>
+  gatewayConfigs: Array<GatewayConfig>
+  gatewayConfigsConnection: GatewayConfigsConnection
   getKillSwitch: KillSwitch
-  getVideoViewPerIpTimeLimit: VideoViewPerIpTimeLimit
   licenseById?: Maybe<License>
   /** @deprecated Use licenseById */
   licenseByUniqueInput?: Maybe<License>
@@ -5566,6 +5625,28 @@ export type QueryExtendedChannelsArgs = {
   limit?: InputMaybe<Scalars['Int']>
   orderBy?: InputMaybe<Array<ChannelOrderByInput>>
   where?: InputMaybe<ExtendedChannelWhereInput>
+}
+
+export type QueryGatewayConfigByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryGatewayConfigByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryGatewayConfigsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<GatewayConfigOrderByInput>>
+  where?: InputMaybe<GatewayConfigWhereInput>
+}
+
+export type QueryGatewayConfigsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<GatewayConfigOrderByInput>
+  where?: InputMaybe<GatewayConfigWhereInput>
 }
 
 export type QueryLicenseByIdArgs = {
@@ -6190,12 +6271,12 @@ export type Report = {
   channelId?: Maybe<Scalars['String']>
   /** Unique identifier of the report */
   id: Scalars['String']
-  /** IP address of the reporter */
-  ip: Scalars['String']
   /** Rationale behind the report */
   rationale: Scalars['String']
   /** Time of the report */
   timestamp: Scalars['DateTime']
+  /** User that reported the channel / video */
+  user: User
   /** If it's a video report: ID of the video being reported (the video may no longer exist) */
   videoId?: Maybe<Scalars['String']>
 }
@@ -6211,12 +6292,14 @@ export enum ReportOrderByInput {
   ChannelIdDesc = 'channelId_DESC',
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
-  IpAsc = 'ip_ASC',
-  IpDesc = 'ip_DESC',
   RationaleAsc = 'rationale_ASC',
   RationaleDesc = 'rationale_DESC',
   TimestampAsc = 'timestamp_ASC',
   TimestampDesc = 'timestamp_DESC',
+  UserIdAsc = 'user_id_ASC',
+  UserIdDesc = 'user_id_DESC',
+  UserIsRootAsc = 'user_isRoot_ASC',
+  UserIsRootDesc = 'user_isRoot_DESC',
   VideoIdAsc = 'videoId_ASC',
   VideoIdDesc = 'videoId_DESC',
 }
@@ -6258,23 +6341,6 @@ export type ReportWhereInput = {
   id_not_in?: InputMaybe<Array<Scalars['String']>>
   id_not_startsWith?: InputMaybe<Scalars['String']>
   id_startsWith?: InputMaybe<Scalars['String']>
-  ip_contains?: InputMaybe<Scalars['String']>
-  ip_containsInsensitive?: InputMaybe<Scalars['String']>
-  ip_endsWith?: InputMaybe<Scalars['String']>
-  ip_eq?: InputMaybe<Scalars['String']>
-  ip_gt?: InputMaybe<Scalars['String']>
-  ip_gte?: InputMaybe<Scalars['String']>
-  ip_in?: InputMaybe<Array<Scalars['String']>>
-  ip_isNull?: InputMaybe<Scalars['Boolean']>
-  ip_lt?: InputMaybe<Scalars['String']>
-  ip_lte?: InputMaybe<Scalars['String']>
-  ip_not_contains?: InputMaybe<Scalars['String']>
-  ip_not_containsInsensitive?: InputMaybe<Scalars['String']>
-  ip_not_endsWith?: InputMaybe<Scalars['String']>
-  ip_not_eq?: InputMaybe<Scalars['String']>
-  ip_not_in?: InputMaybe<Array<Scalars['String']>>
-  ip_not_startsWith?: InputMaybe<Scalars['String']>
-  ip_startsWith?: InputMaybe<Scalars['String']>
   rationale_contains?: InputMaybe<Scalars['String']>
   rationale_containsInsensitive?: InputMaybe<Scalars['String']>
   rationale_endsWith?: InputMaybe<Scalars['String']>
@@ -6301,6 +6367,8 @@ export type ReportWhereInput = {
   timestamp_lte?: InputMaybe<Scalars['DateTime']>
   timestamp_not_eq?: InputMaybe<Scalars['DateTime']>
   timestamp_not_in?: InputMaybe<Array<Scalars['DateTime']>>
+  user?: InputMaybe<UserWhereInput>
+  user_isNull?: InputMaybe<Scalars['Boolean']>
   videoId_contains?: InputMaybe<Scalars['String']>
   videoId_containsInsensitive?: InputMaybe<Scalars['String']>
   videoId_endsWith?: InputMaybe<Scalars['String']>
@@ -7475,6 +7543,8 @@ export type Subscription = {
   encryptionArtifactsById?: Maybe<EncryptionArtifacts>
   eventById?: Maybe<Event>
   events: Array<Event>
+  gatewayConfigById?: Maybe<GatewayConfig>
+  gatewayConfigs: Array<GatewayConfig>
   licenseById?: Maybe<License>
   licenses: Array<License>
   memberMetadata: Array<MemberMetadata>
@@ -7750,6 +7820,17 @@ export type SubscriptionEventsArgs = {
   offset?: InputMaybe<Scalars['Int']>
   orderBy?: InputMaybe<Array<EventOrderByInput>>
   where?: InputMaybe<EventWhereInput>
+}
+
+export type SubscriptionGatewayConfigByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionGatewayConfigsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<GatewayConfigOrderByInput>>
+  where?: InputMaybe<GatewayConfigWhereInput>
 }
 
 export type SubscriptionLicenseByIdArgs = {
@@ -8237,10 +8318,46 @@ export type User = {
   __typename?: 'User'
   /** The account associated with the user (if any) */
   account?: Maybe<Account>
+  /** User's channel follows */
+  channelFollows: Array<ChannelFollow>
   /** Unique identifier (32-byte string, securely random) */
   id: Scalars['String']
   /** Whether the user has root (gateway operator) privileges */
   isRoot: Scalars['Boolean']
+  /** NFT featuring requests associated with the user */
+  nftFeaturingRequests: Array<NftFeaturingRequest>
+  /** Reports associated with the user */
+  reports: Array<Report>
+  /** Video views associated with the user */
+  videoViewEvents: Array<VideoViewEvent>
+}
+
+export type UserChannelFollowsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<ChannelFollowOrderByInput>>
+  where?: InputMaybe<ChannelFollowWhereInput>
+}
+
+export type UserNftFeaturingRequestsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<NftFeaturingRequestOrderByInput>>
+  where?: InputMaybe<NftFeaturingRequestWhereInput>
+}
+
+export type UserReportsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<ReportOrderByInput>>
+  where?: InputMaybe<ReportWhereInput>
+}
+
+export type UserVideoViewEventsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<VideoViewEventOrderByInput>>
+  where?: InputMaybe<VideoViewEventWhereInput>
 }
 
 export type UserEdge = {
@@ -8273,6 +8390,9 @@ export type UserWhereInput = {
   OR?: InputMaybe<Array<UserWhereInput>>
   account?: InputMaybe<AccountWhereInput>
   account_isNull?: InputMaybe<Scalars['Boolean']>
+  channelFollows_every?: InputMaybe<ChannelFollowWhereInput>
+  channelFollows_none?: InputMaybe<ChannelFollowWhereInput>
+  channelFollows_some?: InputMaybe<ChannelFollowWhereInput>
   id_contains?: InputMaybe<Scalars['String']>
   id_containsInsensitive?: InputMaybe<Scalars['String']>
   id_endsWith?: InputMaybe<Scalars['String']>
@@ -8293,6 +8413,15 @@ export type UserWhereInput = {
   isRoot_eq?: InputMaybe<Scalars['Boolean']>
   isRoot_isNull?: InputMaybe<Scalars['Boolean']>
   isRoot_not_eq?: InputMaybe<Scalars['Boolean']>
+  nftFeaturingRequests_every?: InputMaybe<NftFeaturingRequestWhereInput>
+  nftFeaturingRequests_none?: InputMaybe<NftFeaturingRequestWhereInput>
+  nftFeaturingRequests_some?: InputMaybe<NftFeaturingRequestWhereInput>
+  reports_every?: InputMaybe<ReportWhereInput>
+  reports_none?: InputMaybe<ReportWhereInput>
+  reports_some?: InputMaybe<ReportWhereInput>
+  videoViewEvents_every?: InputMaybe<VideoViewEventWhereInput>
+  videoViewEvents_none?: InputMaybe<VideoViewEventWhereInput>
+  videoViewEvents_some?: InputMaybe<VideoViewEventWhereInput>
 }
 
 export type UsersConnection = {
@@ -9433,7 +9562,6 @@ export type VideoReportInfo = {
   createdAt: Scalars['DateTime']
   id: Scalars['String']
   rationale: Scalars['String']
-  reporterIp: Scalars['String']
   videoId: Scalars['String']
 }
 
@@ -9614,10 +9742,10 @@ export type VideoViewEvent = {
   __typename?: 'VideoViewEvent'
   /** Unique identifier of the video view event */
   id: Scalars['String']
-  /** IP address of the viewer */
-  ip: Scalars['String']
   /** Video view event timestamp */
   timestamp: Scalars['DateTime']
+  /** User that viewed the video */
+  user: User
   /** ID of the video that was viewed (the video may no longer exist) */
   videoId: Scalars['String']
 }
@@ -9631,10 +9759,12 @@ export type VideoViewEventEdge = {
 export enum VideoViewEventOrderByInput {
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
-  IpAsc = 'ip_ASC',
-  IpDesc = 'ip_DESC',
   TimestampAsc = 'timestamp_ASC',
   TimestampDesc = 'timestamp_DESC',
+  UserIdAsc = 'user_id_ASC',
+  UserIdDesc = 'user_id_DESC',
+  UserIsRootAsc = 'user_isRoot_ASC',
+  UserIsRootDesc = 'user_isRoot_DESC',
   VideoIdAsc = 'videoId_ASC',
   VideoIdDesc = 'videoId_DESC',
 }
@@ -9659,23 +9789,6 @@ export type VideoViewEventWhereInput = {
   id_not_in?: InputMaybe<Array<Scalars['String']>>
   id_not_startsWith?: InputMaybe<Scalars['String']>
   id_startsWith?: InputMaybe<Scalars['String']>
-  ip_contains?: InputMaybe<Scalars['String']>
-  ip_containsInsensitive?: InputMaybe<Scalars['String']>
-  ip_endsWith?: InputMaybe<Scalars['String']>
-  ip_eq?: InputMaybe<Scalars['String']>
-  ip_gt?: InputMaybe<Scalars['String']>
-  ip_gte?: InputMaybe<Scalars['String']>
-  ip_in?: InputMaybe<Array<Scalars['String']>>
-  ip_isNull?: InputMaybe<Scalars['Boolean']>
-  ip_lt?: InputMaybe<Scalars['String']>
-  ip_lte?: InputMaybe<Scalars['String']>
-  ip_not_contains?: InputMaybe<Scalars['String']>
-  ip_not_containsInsensitive?: InputMaybe<Scalars['String']>
-  ip_not_endsWith?: InputMaybe<Scalars['String']>
-  ip_not_eq?: InputMaybe<Scalars['String']>
-  ip_not_in?: InputMaybe<Array<Scalars['String']>>
-  ip_not_startsWith?: InputMaybe<Scalars['String']>
-  ip_startsWith?: InputMaybe<Scalars['String']>
   timestamp_eq?: InputMaybe<Scalars['DateTime']>
   timestamp_gt?: InputMaybe<Scalars['DateTime']>
   timestamp_gte?: InputMaybe<Scalars['DateTime']>
@@ -9685,6 +9798,8 @@ export type VideoViewEventWhereInput = {
   timestamp_lte?: InputMaybe<Scalars['DateTime']>
   timestamp_not_eq?: InputMaybe<Scalars['DateTime']>
   timestamp_not_in?: InputMaybe<Array<Scalars['DateTime']>>
+  user?: InputMaybe<UserWhereInput>
+  user_isNull?: InputMaybe<Scalars['Boolean']>
   videoId_contains?: InputMaybe<Scalars['String']>
   videoId_containsInsensitive?: InputMaybe<Scalars['String']>
   videoId_endsWith?: InputMaybe<Scalars['String']>
@@ -9711,8 +9826,8 @@ export type VideoViewEventsConnection = {
   totalCount: Scalars['Int']
 }
 
-export type VideoViewPerIpTimeLimit = {
-  __typename?: 'VideoViewPerIpTimeLimit'
+export type VideoViewPerUserTimeLimit = {
+  __typename?: 'VideoViewPerUserTimeLimit'
   limitInSeconds: Scalars['Int']
 }
 

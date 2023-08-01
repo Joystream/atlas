@@ -37,7 +37,7 @@ export const TransactionsManager: FC = () => {
     }
     setCachedAnyMinimizedTransactionPendingSignature(!!anyMinimizedTransactionsPendingSignature)
 
-    if (anyMinimizedTransactionsPendingSignature) {
+    if (anyMinimizedTransactionsPendingSignature && userWalletName) {
       displaySnackbar({
         customId: METAPROTOCOL_SNACKBAR_ID,
         title: `Continue in ${userWalletName}`,
@@ -88,6 +88,7 @@ export const TransactionsManager: FC = () => {
       const lastProcessedBlock = subscriptionData.data.processorState?.lastProcessedBlock
       handleNewLastProcessedBlockRef.current(lastProcessedBlock)
     },
+    shouldResubscribe: true,
   })
 
   return (

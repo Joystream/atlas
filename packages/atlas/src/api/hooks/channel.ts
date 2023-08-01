@@ -147,12 +147,11 @@ export const useFollowChannel = (opts?: MutationHookOptions<FollowChannelMutatio
 export const useUnfollowChannel = (opts?: MutationHookOptions<UnfollowChannelMutation>) => {
   const [unfollowChannel, rest] = useUnfollowChannelMutation()
   return {
-    unfollowChannel: (id: string, token: string) =>
+    unfollowChannel: (id: string) =>
       unfollowChannel({
         ...opts,
         variables: {
           channelId: id,
-          token,
         },
         update: (cache, mutationResult) => {
           cache.modify({

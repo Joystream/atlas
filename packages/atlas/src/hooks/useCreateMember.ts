@@ -1,9 +1,10 @@
 import { cryptoWaitReady } from '@polkadot/util-crypto'
-import axios, { isAxiosError } from 'axios'
+import { isAxiosError } from 'axios'
 import BN from 'bn.js'
 import { useCallback } from 'react'
 import { useMutation } from 'react-query'
 
+import { axiosInstance } from '@/api/axios'
 import { ImageInputFile } from '@/components/_inputs/MultiFileSelect'
 import { FAUCET_URL, YPP_FAUCET_URL } from '@/config/env'
 import { keyring } from '@/joystream-lib/lib'
@@ -61,6 +62,7 @@ type FaucetParams = {
 export enum RegisterError {
   EmailAlreadyExists = 'EmailAlreadyExists',
   UnknownError = 'UnknownError',
+  MembershipNotFound = 'MembershipNotFound',
 }
 
 type SignUpParams<T> = {
@@ -86,7 +88,7 @@ export const useCreateMember = () => {
     uploadAvatarImage(croppedBlob)
   )
   const { mutateAsync: faucetMutation } = useMutation('faucet-post', (body: FaucetParams) =>
-    axios.post<NewMemberResponse>(ytResponseData ? YPP_FAUCET_URL : FAUCET_URL, body)
+    axiosInstance.post<NewMemberResponse>(ytResponseData ? YPP_FAUCET_URL : FAUCET_URL, body)
   )
 
   const createNewMember = useCallback(
@@ -210,6 +212,8 @@ export const useCreateMember = () => {
                 'To create new membership you need to use an email that is not connected to already existing account.',
             })
             onError?.(RegisterError.EmailAlreadyExists)
+          } else if (errorMessage.startsWith('Membership not found by id')) {
+            onError?.(RegisterError.MembershipNotFound)
           } else {
             displaySnackbar({
               title: 'Something went wrong',
