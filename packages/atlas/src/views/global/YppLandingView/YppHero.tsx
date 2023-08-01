@@ -173,7 +173,7 @@ export const YppHero: FC<YppHeroProps> = ({
         <StyledInfiniteCarousel
           headerGridItemProps={{ colStart: { base: 1, lg: 2 }, colSpan: { base: 12, lg: 10 } }}
           carouselHorizonthalOffset={-32}
-          title="Recently paid channels"
+          title="Signed up channels"
           itemWidth={260}
           items={items}
           subTitle="What is a verified channel?"

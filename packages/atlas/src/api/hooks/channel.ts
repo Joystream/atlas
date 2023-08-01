@@ -1,7 +1,6 @@
 import { MutationHookOptions, QueryHookOptions } from '@apollo/client'
 import { BN_ZERO } from '@polkadot/util'
 import BN from 'bn.js'
-import { startOfDay, subMonths } from 'date-fns'
 import { shuffle } from 'lodash-es'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
@@ -88,8 +87,7 @@ export const useBasicChannels = (
 
 type ChannelPayment = { channel: BasicChannelFieldsFragment; amount: BN }
 export const useRecentlyPaidChannels = (): { channels: ChannelPayment[] | undefined; loading: boolean } => {
-  const aMonthAgo = useMemo(() => startOfDay(subMonths(Date.now(), 1)), [])
-  const { data, loading } = useGetChannelsPaymentEventsQuery({ variables: { from: aMonthAgo } })
+  const { data, loading } = useGetChannelsPaymentEventsQuery({ variables: { limit: 2000 } })
 
   const channels = useMemo<ChannelPayment[] | undefined>(() => {
     type PaymentMap = Map<string, ChannelPayment>

@@ -296,12 +296,8 @@ query GetChannelPaymentEvents($channelId: String) {
   }
 }
 
-query GetChannelsPaymentEvents($from: DateTime!) {
-  events(
-    where: { timestamp_gte: $from, data: { isTypeOf_eq: "ChannelPaymentMadeEventData" } }
-    orderBy: inBlock_DESC
-    limit: 500
-  ) {
+query GetChannelsPaymentEvents($limit: Int = 500) {
+  events(where: { data: { isTypeOf_eq: "ChannelPaymentMadeEventData" } }, orderBy: inBlock_DESC, limit: $limit) {
     data {
       ... on ChannelPaymentMadeEventData {
         amount
