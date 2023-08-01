@@ -13,6 +13,7 @@ import { ORION_AUTH_URL } from '@/config/env'
 import { keyring } from '@/joystream-lib/lib'
 import { getWalletsList } from '@/providers/wallet/wallet.helpers'
 import { SentryLogger } from '@/utils/logs'
+import { withTimeout } from '@/utils/misc'
 
 import { AuthModals, LogInErrors, OrionAccountError, RegisterParams, RegisterPayload } from './auth.types'
 
@@ -166,12 +167,12 @@ export const prepareEncryptionArtifacts = async (email: string, password: string
 export const registerAccount = async (params: RegisterParams) => {
   try {
     await cryptoWaitReady()
-
+    const timestamp = (await getAuthEpoch()) - 30_000
     const registerPayload: RegisterPayload = {
       gatewayName: 'Gleev',
       memberId: params.memberId,
       joystreamAccountId: '',
-      timestamp: Date.now() - 30_000,
+      timestamp,
       action: 'createAccount',
       email: params.email,
     }
@@ -237,11 +238,11 @@ export const changePassword = async ({
   try {
     const keypair = keyring.addFromMnemonic(mnemonic)
     const newArtifacts = await prepareEncryptionArtifacts(email, newPassword, mnemonic)
-
+    const timestamp = (await getAuthEpoch()) - 30_000
     const changePasswordPayload = {
       joystreamAccountId,
       gatewayName: atlasConfig.general.appName,
-      timestamp: Date.now() - 30_000,
+      timestamp,
       action: 'changeAccount',
       gatewayAccountId,
       newArtifacts,
@@ -270,4 +271,23 @@ export const getMnemonicFromeEmailAndPassword = async (email: string, password: 
   }
   const mnemonic = entropyToMnemonic(data?.decryptedEntropy)
   return mnemonic
+}
+
+export const getAuthEpoch = async () => {
+  let epoch: number
+  try {
+    const res = await withTimeout(axios.get('https://worldtimeapi.org/api/ip'), 5_000)
+    if (res.data?.unixtime) {
+      epoch = res.data.unixtime * 1000
+    } else {
+      epoch = Date.now()
+    }
+  } catch (error) {
+    epoch = Date.now()
+    SentryLogger.error('Error fetching auth epoch time', 'getAuthEpoch', {
+      error,
+    })
+  }
+
+  return epoch
 }
