@@ -8,7 +8,6 @@ export type WatchedVideo = {
 
 export type FollowedChannel = {
   id: string
-  cancelToken: string
 }
 
 export type RecentSearch = {
