@@ -112,9 +112,19 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
               notFoundLabel="Channel with this title not found, please check spelling and try again."
               documentQuery={GetExtendedBasicChannelsDocument}
               queryVariablesFactory={queryVariablesFactory}
-              perfectMatcher={(res, val) =>
-                res.extendedChannels.find((extendedChannel) => extendedChannel.channel.title === val)
-              }
+              perfectMatcher={(res, val) => {
+                const initialResults = res.extendedChannels.filter(
+                  (extendedChannel) => extendedChannel.channel.title === val
+                )
+                if (initialResults.length === 1 || !referrerId) {
+                  return initialResults[0]
+                }
+
+                return (
+                  initialResults.find((extendedChannel) => extendedChannel.channel.id === referrerId) ??
+                  initialResults[0]
+                )
+              }}
               renderItem={(result) =>
                 result.extendedChannels.map((extendedChannel) => ({
                   ...extendedChannel,
