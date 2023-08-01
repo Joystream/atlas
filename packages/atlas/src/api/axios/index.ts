@@ -1,8 +1,6 @@
 import axios from 'axios'
 
-export const axiosInstance = axios.create({
-  withCredentials: true,
-})
+export const axiosInstance = axios.create()
 
 axiosInstance.interceptors.response.use(
   (response) => response,
