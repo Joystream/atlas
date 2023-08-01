@@ -611,7 +611,7 @@ export type GetChannelPaymentEventsQuery = {
 }
 
 export type GetChannelsPaymentEventsQueryVariables = Types.Exact<{
-  from: Types.Scalars['DateTime']
+  limit?: Types.InputMaybe<Types.Scalars['Int']>
 }>
 
 export type GetChannelsPaymentEventsQuery = {
@@ -1590,12 +1590,8 @@ export type GetChannelPaymentEventsQueryResult = Apollo.QueryResult<
   GetChannelPaymentEventsQueryVariables
 >
 export const GetChannelsPaymentEventsDocument = gql`
-  query GetChannelsPaymentEvents($from: DateTime!) {
-    events(
-      where: { timestamp_gte: $from, data: { isTypeOf_eq: "ChannelPaymentMadeEventData" } }
-      orderBy: inBlock_DESC
-      limit: 500
-    ) {
+  query GetChannelsPaymentEvents($limit: Int = 500) {
+    events(where: { data: { isTypeOf_eq: "ChannelPaymentMadeEventData" } }, orderBy: inBlock_DESC, limit: $limit) {
       data {
         ... on ChannelPaymentMadeEventData {
           amount
@@ -1621,12 +1617,12 @@ export const GetChannelsPaymentEventsDocument = gql`
  * @example
  * const { data, loading, error } = useGetChannelsPaymentEventsQuery({
  *   variables: {
- *      from: // value for 'from'
+ *      limit: // value for 'limit'
  *   },
  * });
  */
 export function useGetChannelsPaymentEventsQuery(
-  baseOptions: Apollo.QueryHookOptions<GetChannelsPaymentEventsQuery, GetChannelsPaymentEventsQueryVariables>
+  baseOptions?: Apollo.QueryHookOptions<GetChannelsPaymentEventsQuery, GetChannelsPaymentEventsQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useQuery<GetChannelsPaymentEventsQuery, GetChannelsPaymentEventsQueryVariables>(
