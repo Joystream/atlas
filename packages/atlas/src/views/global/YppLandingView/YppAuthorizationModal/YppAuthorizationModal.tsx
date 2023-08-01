@@ -76,7 +76,6 @@ const DEFAULT_LANGUAGE = atlasConfig.derived.popularLanguagesSelectValues[0].val
 export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSyncedChannels }) => {
   const { memberId, refetchUserMemberships, setActiveChannel, channelId, isLoggedIn } = useUser()
   const [searchParams] = useSearchParams()
-  const [utmSource, setUtmSource] = useState<string | null>(null)
   const navigate = useNavigate()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const createdChannelId = useRef<string | null>(null)
@@ -98,7 +97,8 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
   const {
     referrerId,
     ytResponseData,
-    actions: { setYtResponseData },
+    utmSource,
+    actions: { setYtResponseData, setUtmSource },
   } = useYppStore((store) => store, shallow)
   const setReferrerId = useYppStore((store) => store.actions.setReferrerId)
   const setShouldContinueYppFlowAfterLogin = useYppStore((store) => store.actions.setShouldContinueYppFlowAfterLogin)
@@ -155,7 +155,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     if (searchParams.get('utm_source')) {
       setUtmSource(searchParams.get('utm_source'))
     }
-  }, [searchParams])
+  }, [searchParams, setUtmSource])
 
   useEffect(() => {
     contentRef.current?.scrollTo({ top: 0 })
