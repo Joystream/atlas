@@ -81,3 +81,18 @@ export const RightAlignedHeader = styled.div`
   width: 100%;
   text-align: right;
 `
+
+export const RowBox = styled.div<{ align?: 'start' | 'end' }>`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: ${sizes(1)};
+  align-items: ${(props) => (props.align === 'end' ? 'flex-end' : 'flex-start')};
+`
+
+export const ColumnBox = styled.div`
+  display: flex;
+  gap: ${sizes(2)};
+  width: 100%;
+  align-items: center;
+`

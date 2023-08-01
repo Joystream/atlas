@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useCallback, useEffect, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 
 import {
@@ -17,6 +17,7 @@ import { Select, SelectItem } from '@/components/_inputs/Select'
 import { atlasConfig } from '@/config'
 import { displayCategories } from '@/config/categories'
 import { useUser } from '@/providers/user/user.hooks'
+import { useYppStore } from '@/providers/ypp/ypp.store'
 
 import { FormFieldsWrapper } from './YppAuthorizationDetailsFormStep.styles'
 
@@ -40,6 +41,28 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
     formState: { errors },
     setValue,
   } = useFormContext<DetailsFormData>()
+
+  const referrerId = useYppStore((state) => state.referrerId)
+
+  useEffect(() => {
+    if (referrerId) {
+      setValue('referrerChannelId', referrerId)
+    }
+  }, [referrerId, setValue])
+
+  const queryVariablesFactory = useCallback(
+    (value: string) => ({
+      where: {
+        channel: {
+          title_startsWith: value,
+          ownerMember: {
+            id_not_eq: memberId,
+          },
+        },
+      },
+    }),
+    [memberId]
+  )
 
   return (
     <FormFieldsWrapper>
@@ -88,16 +111,7 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
             >
               notFoundLabel="Channel with this title not found, please check spelling and try again."
               documentQuery={GetExtendedBasicChannelsDocument}
-              queryVariablesFactory={(value) => ({
-                where: {
-                  channel: {
-                    title_startsWith: value,
-                    ownerMember: {
-                      id_not_eq: memberId,
-                    },
-                  },
-                },
-              })}
+              queryVariablesFactory={queryVariablesFactory}
               perfectMatcher={(res, val) =>
                 res.extendedChannels.find((extendedChannel) => extendedChannel.channel.title === val)
               }

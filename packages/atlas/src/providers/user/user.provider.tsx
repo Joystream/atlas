@@ -2,7 +2,6 @@ import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffec
 
 import { useMemberships } from '@/api/hooks/membership'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
-import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useJoystream } from '@/providers/joystream/joystream.provider'
 import { AssetLogger, SentryLogger } from '@/utils/logs'
 
@@ -17,7 +16,6 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   const { currentUser } = useAuth()
   const [channelId, setChannelId] = useState<string | null>(null)
   const { setApiActiveAccount } = useJoystream()
-  const { identifyUser } = useSegmentAnalytics()
 
   const {
     memberships: currentMemberships,
@@ -52,10 +50,6 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       channelId: currentMemberships?.[0].channels[0]?.id,
     }
 
-    if (currentUser?.email) {
-      identifyUser(currentUser?.email)
-    }
-
     SentryLogger.setUser(user)
     AssetLogger.setUser(user)
   }, [
@@ -63,7 +57,6 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
     currentUser?.email,
     currentUser?.joystreamAccount,
     currentUser?.membershipId,
-    identifyUser,
     setApiActiveAccount,
   ])
 

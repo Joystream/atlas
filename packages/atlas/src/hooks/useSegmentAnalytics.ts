@@ -1,6 +1,6 @@
-import { useCallback } from 'react'
+import { useCallback, useRef } from 'react'
 
-import useSegmentAnalyticsContext from '@/providers/segmentAnalytics/useSegmentAnalyticsContext'
+import { useSegmentAnalyticsContext } from '@/providers/segmentAnalytics/useSegmentAnalyticsContext'
 
 export type videoPlaybackParams = {
   videoId: string
@@ -12,22 +12,37 @@ export type videoPlaybackParams = {
   quality: string
 }
 
+type PageViewParams = {
+  referrer?: string
+  tab?: string
+  utm_source?: string
+  isYppFlow?: boolean
+}
+
+type AllNftFilters = {
+  priceFrom?: number
+  priceTo?: number
+  status?: string
+  sortBy?: string
+}
+
+type playbackEventType = 'playbackStarted' | 'playbackPaused' | 'playbackResumed' | 'playbackCompleted'
+
 export const useSegmentAnalytics = () => {
   const { analytics } = useSegmentAnalyticsContext()
 
+  const playbackEventsQueue = useRef<{ type: playbackEventType; params: videoPlaybackParams }[]>([])
+
   const identifyUser = useCallback(
     (email = 'no data') => {
-      analytics.identify({ email })
+      analytics.identify(email, { email })
     },
     [analytics]
   )
 
   const trackPageView = useCallback(
-    (name: string, referrer?: string, tab?: string) => {
-      analytics.page(undefined, name, {
-        ...(referrer ? { referrer } : {}),
-        ...(tab ? { tab } : {}),
-      })
+    (name: string, params?: PageViewParams) => {
+      analytics.page(undefined, name, params)
     },
     [analytics]
   )
@@ -75,8 +90,8 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackVideoPlaybackStarted = useCallback(
-    (params: videoPlaybackParams) => {
-      analytics.track('Video playback started', {
+    async (params: videoPlaybackParams) => {
+      await analytics.track('Video playback started', {
         ...params,
       })
     },
@@ -84,8 +99,8 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackVideoPlaybackPaused = useCallback(
-    (params: videoPlaybackParams) => {
-      analytics.track('Video playback paused', {
+    async (params: videoPlaybackParams) => {
+      await analytics.track('Video playback paused', {
         ...params,
       })
     },
@@ -93,8 +108,8 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackVideoPlaybackResumed = useCallback(
-    (params: videoPlaybackParams) => {
-      analytics.track('Video playback resumed', {
+    async (params: videoPlaybackParams) => {
+      await analytics.track('Video playback resumed', {
         ...params,
       })
     },
@@ -102,8 +117,8 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackVideoPlaybackCompleted = useCallback(
-    (params: videoPlaybackParams) => {
-      analytics.track('Video playback completed', {
+    async (params: videoPlaybackParams) => {
+      await analytics.track('Video playback completed', {
         ...params,
       })
     },
@@ -179,9 +194,12 @@ export const useSegmentAnalytics = () => {
     [analytics]
   )
 
-  const trackYppSignInButtonClick = useCallback(() => {
-    analytics.track('YPP Landing Sign In w Google Clicked')
-  }, [analytics])
+  const trackYppSignInButtonClick = useCallback(
+    (referrer: string | null | undefined, utmSource: string | null | undefined) => {
+      analytics.track('YPP Landing Sign In w Google Clicked', { referrer, utmSource })
+    },
+    [analytics]
+  )
 
   const trackNFTCarouselNext = useCallback(
     (slideId: string, nftId?: string) => {
@@ -222,38 +240,90 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackAllNftFilterUpdated = useCallback(
-    (status?: string, price?: string, sorting?: string) => {
+    ({ priceFrom, priceTo, status, sortBy }: AllNftFilters) => {
       analytics.track('All NFTs section filter updated', {
         status,
-        price,
-        sorting,
+        priceFrom,
+        priceTo,
+        sortBy,
       })
     },
     [analytics]
   )
 
+  const trackReferralLinkGenerated = useCallback(
+    (channelId: string | null | undefined) => {
+      analytics.track('Referral link generated', {
+        channelId,
+      })
+    },
+    [analytics]
+  )
+
+  const trackLogout = useCallback(() => {
+    analytics.reset()
+  }, [analytics])
+
+  const runNextQueueEvent = useCallback(async () => {
+    const queueEvent = playbackEventsQueue.current.shift()
+    if (!queueEvent) {
+      return
+    }
+
+    const { type, params } = queueEvent
+
+    switch (type) {
+      case 'playbackStarted':
+        await trackVideoPlaybackStarted(params)
+        break
+      case 'playbackPaused':
+        await trackVideoPlaybackPaused(params)
+        break
+      case 'playbackResumed':
+        await trackVideoPlaybackResumed(params)
+        break
+      case 'playbackCompleted':
+        await trackVideoPlaybackCompleted(params)
+        break
+    }
+    runNextQueueEvent()
+  }, [trackVideoPlaybackCompleted, trackVideoPlaybackPaused, trackVideoPlaybackResumed, trackVideoPlaybackStarted])
+
+  const addEventToQueue = useCallback(
+    (type: playbackEventType, params: videoPlaybackParams) => {
+      const queueIsEmpty = !playbackEventsQueue.current.length
+
+      playbackEventsQueue.current.push({ type, params })
+      if (queueIsEmpty) runNextQueueEvent()
+    },
+    [runNextQueueEvent]
+  )
+
   return {
+    addEventToQueue,
     identifyUser,
-    trackPageView,
-    trackYppOptIn,
-    trackMembershipCreation,
+    trackAllNftFilterUpdated,
     trackChannelCreation,
-    trackVideoPlaybackStarted,
-    trackVideoPlaybackPaused,
-    trackVideoPlaybackResumed,
-    trackVideoPlaybackCompleted,
-    trackVideoUpload,
-    trackNftMint,
-    trackNftSale,
-    trackCommentAdded,
-    trackLikeAdded,
-    trackDislikeAdded,
     trackChannelFollow,
-    trackYppSignInButtonClick,
-    trackNFTCarouselNext,
-    trackNFTCarouselPrev,
+    trackCommentAdded,
+    trackDislikeAdded,
     trackFeaturedNFTNext,
     trackFeaturedNFTPrev,
-    trackAllNftFilterUpdated,
+    trackLikeAdded,
+    trackLogout,
+    trackMembershipCreation,
+    trackNFTCarouselNext,
+    trackNFTCarouselPrev,
+    trackNftMint,
+    trackNftSale,
+    trackPageView,
+    trackReferralLinkGenerated,
+    trackVideoPlaybackCompleted,
+    trackVideoPlaybackPaused,
+    trackVideoPlaybackResumed,
+    trackVideoPlaybackStarted,
+    trackVideoUpload,
+    trackYppOptIn,
+    trackYppSignInButtonClick,
   }
 }

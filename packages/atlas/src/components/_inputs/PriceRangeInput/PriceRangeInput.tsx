@@ -25,7 +25,7 @@ export const PriceRangeInput = forwardRef<HTMLInputElement, RangeInputsProps>(
           nodeStart={<SvgJoyTokenMonochrome16 />}
           placeholder="Min"
           value={value?.min ?? ''}
-          onChange={(e) => onChange?.({ ...value, min: parseInt(e.target.value, 10) })}
+          onChange={(e) => onChange?.({ ...value, min: e.target.value ? parseInt(e.target.value, 10) : undefined })}
         />
         <Input
           type="number"
@@ -33,7 +33,7 @@ export const PriceRangeInput = forwardRef<HTMLInputElement, RangeInputsProps>(
           nodeStart={<SvgJoyTokenMonochrome16 />}
           placeholder="Max"
           value={value?.max ?? ''}
-          onChange={(e) => onChange?.({ ...value, max: parseInt(e.target.value, 10) })}
+          onChange={(e) => onChange?.({ ...value, max: e.target.value ? parseInt(e.target.value, 10) : undefined })}
         />
       </InputsContainer>
     )

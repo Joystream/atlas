@@ -19,7 +19,7 @@ export const useHandleFollowChannel = (id?: string, name?: string | null) => {
       return
     }
     try {
-      if (follow && follow.cancelToken) {
+      if (follow) {
         openUnfollowDialog({
           type: 'warning',
           title: 'Do you want to unfollow?',
@@ -28,7 +28,7 @@ export const useHandleFollowChannel = (id?: string, name?: string | null) => {
             text: 'Unfollow',
             onClick: () => {
               unfollowChannelInStore(id)
-              unfollowChannel(id, follow.cancelToken)
+              unfollowChannel(id)
               closeUnfollowDialog()
             },
             variant: 'destructive',
@@ -41,11 +41,8 @@ export const useHandleFollowChannel = (id?: string, name?: string | null) => {
           },
         })
       } else {
-        const followResponse = await followChannel(id)
-        const cancelToken = followResponse.data?.followChannel.cancelToken
-        if (cancelToken) {
-          followChannelInStore(id, cancelToken)
-        }
+        await followChannel(id)
+        followChannelInStore(id)
       }
     } catch (error) {
       SentryLogger.error('Failed to update channel following', 'useHandleFollowChannel', error, { channel: { id } })

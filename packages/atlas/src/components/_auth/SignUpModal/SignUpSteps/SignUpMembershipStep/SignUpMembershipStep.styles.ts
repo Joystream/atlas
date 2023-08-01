@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { Avatar } from '@/components/Avatar'
 import { DialogModal } from '@/components/_overlays/DialogModal'
-import { cVar, media, sizes } from '@/styles'
+import { media, sizes } from '@/styles'
 
 export const StyledDialogModal = styled(DialogModal)`
   max-height: calc(100vh - 80px);
@@ -25,11 +25,9 @@ export const StyledForm = styled.form`
   margin-bottom: ${sizes(6)};
 `
 
-export const Anchor = styled.a`
+export const SubtitleContainer = styled.div`
   display: inline-block;
   text-decoration: none;
   margin-top: ${sizes(2)};
   margin-bottom: ${sizes(11)};
-  cursor: pointer;
-  color: ${cVar('colorTextPrimary')};
 `

@@ -119,7 +119,7 @@ export const CommentInput = forwardRef<HTMLTextAreaElement, CommentInputProps>(
     return (
       <ProtectedActionWrapper
         title="You want to comment this video?"
-        description="Log in to let others know what you think"
+        description="Sign in to let others know what you think"
       >
         <StyledCommentRow {...rest} processing={processing} isInput show={show} className={className}>
           <Container

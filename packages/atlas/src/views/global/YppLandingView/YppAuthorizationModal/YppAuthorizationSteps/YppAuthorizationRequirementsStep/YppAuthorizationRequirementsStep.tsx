@@ -32,7 +32,7 @@ export const YppAuthorizationRequirementsStep: FC<YppAuthorizationRequirementsSt
   const requirements = useGetYppChannelRequirements()
   const checkRequirmentError = (errorCode: YppAuthorizationErrorCode) =>
     !requirmentsErrorCodes.some((error) => error === errorCode)
-
+  const hasAtLeastOneError = !!requirmentsErrorCodes.length
   return (
     <>
       <StyledList>
@@ -68,9 +68,11 @@ export const YppAuthorizationRequirementsStep: FC<YppAuthorizationRequirementsSt
           public.
         </SingleRequirement>
       </StyledList>
-      <Banner
-        description={`${atlasConfig.general.appName} uses Google OAuth to get access to your public profile and account email address as part of sign up flow, and integrates with YouTube API to obtain details about your YouTube channel data, such as followers and video statistics.`}
-      />
+      {!hasAtLeastOneError && (
+        <Banner
+          description={`${atlasConfig.general.appName} uses Google OAuth to get access to your public profile and account email address as part of sign up flow, and integrates with YouTube API to obtain details about your YouTube channel data, such as followers and video statistics.`}
+        />
+      )}
     </>
   )
 }

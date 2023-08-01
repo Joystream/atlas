@@ -1,3 +1,5 @@
+import { NftIssuanceInputMetadata } from '@/joystream-lib/types'
+import { VideoWorkspaceVideoFormFields } from '@/providers/videoWorkspace'
 import { ConsoleLogger } from '@/utils/logs'
 import { formatDateAgo } from '@/utils/time'
 
@@ -40,4 +42,12 @@ export const getVideoMetadata = async (file: File): Promise<VideoMetadata> => {
       reject(new Error("Can't play video file"))
     }
   })
+}
+
+export const createNftInputMetadata = (data: VideoWorkspaceVideoFormFields): NftIssuanceInputMetadata | undefined => {
+  return data.mintNft
+    ? {
+        royalty: data.nftRoyaltiesPercent || undefined,
+      }
+    : undefined
 }

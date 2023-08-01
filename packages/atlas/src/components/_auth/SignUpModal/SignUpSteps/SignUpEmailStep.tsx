@@ -78,14 +78,14 @@ export const SignUpEmailStep: FC<SignUpEmailStepProps> = ({
 
   useEffect(() => {
     setPrimaryButtonProps({
-      text: 'Sign up',
+      text: 'Continue',
       onClick: handleGoToNextStep,
     })
   }, [handleGoToNextStep, isEmailAlreadyTakenError, setPrimaryButtonProps])
 
   useMountEffect(() => {
     if (isEmailAlreadyTakenError) {
-      setError('email', { message: 'Email already taken.' })
+      setError('email', { message: 'This email is already in use.' })
     }
   })
 

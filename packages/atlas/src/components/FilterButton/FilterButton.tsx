@@ -41,6 +41,9 @@ export const FilterButton: FC<FilterButtonProps> = (props) => {
   const triggerRef = useRef<HTMLButtonElement>(null)
   const firstRangeInput = useRef<HTMLInputElement | null>(null)
   const [shouldFocus, setShouldFocus] = useState(false)
+  const [filterValue, setFilterValue] = useState<FilterRange | FilterButtonOption[] | undefined>(
+    props.type === 'range' ? props.range : props.options
+  )
   const { ref, inView } = useInView()
 
   useEffect(() => {
@@ -51,33 +54,34 @@ export const FilterButton: FC<FilterButtonProps> = (props) => {
   }, [inView, shouldFocus])
 
   if (props.type === 'checkbox' || props.type === 'radio') {
-    const { type, name, onChange, className, icon, label, options = [] } = props
+    const { type, name, onChange, className, icon, label = [] } = props
 
-    const counter = options.filter((option) => option.applied)?.length
-
+    const currentValue = filterValue as FilterButtonOption[]
+    const counter = currentValue.filter((option) => option.applied)?.length
     const handleApply = () => {
-      onChange(options.map((option) => ({ ...option, applied: option.selected })))
+      onChange(currentValue.map((option) => ({ ...option, applied: option.selected })))
       triggerRef.current?.click()
     }
 
     const handleCheckboxSelection = (num: number) => {
-      const selected = options.map((option, idx) => {
+      const selected = currentValue.map((option, idx) => {
         if (num === idx) {
           return { ...option, selected: !option.selected }
         }
         return option
       })
-      onChange(selected)
+      setFilterValue(selected)
     }
 
     const handleRadioButtonClick = (e: ChangeEvent<Omit<HTMLInputElement, 'value'> & { value: string | boolean }>) => {
-      const optionIdx = options.findIndex((option) => option.value === e.currentTarget.value)
-      const selected = options.map((option, idx) => ({ ...option, selected: optionIdx === idx }))
-      onChange(selected)
+      const optionIdx = currentValue.findIndex((option) => option.value === e.currentTarget.value)
+      const selected = currentValue.map((option, idx) => ({ ...option, selected: optionIdx === idx }))
+      setFilterValue(selected)
     }
 
     const handleClear = () => {
-      onChange(options.map((option) => ({ ...option, selected: false, applied: false })))
+      setFilterValue(currentValue.map((option) => ({ ...option, selected: false, applied: false })))
+      onChange(currentValue)
       triggerRef.current?.click()
     }
 
@@ -105,16 +109,18 @@ export const FilterButton: FC<FilterButtonProps> = (props) => {
         {type === 'checkbox' && (
           <CheckboxGroup
             name={name}
-            options={options.map((option) => ({ ...option, value: option.selected }))}
-            checkedIds={options.map((option, index) => (option.selected ? index : -1)).filter((index) => index !== -1)}
+            options={currentValue.map((option) => ({ ...option, value: option.selected }))}
+            checkedIds={currentValue
+              .map((option, index) => (option.selected ? index : -1))
+              .filter((index) => index !== -1)}
             onChange={handleCheckboxSelection}
           />
         )}
         {type === 'radio' && (
           <RadioButtonGroup
             name={name}
-            options={options}
-            value={options.find((option) => option.selected)?.value}
+            options={currentValue}
+            value={currentValue.find((option) => option.selected)?.value}
             onChange={handleRadioButtonClick}
           />
         )}
@@ -128,12 +134,16 @@ export const FilterButton: FC<FilterButtonProps> = (props) => {
     const isApplied = Boolean(range?.appliedMax || range?.appliedMin)
 
     const handleApply = () => {
-      onChange({ ...range, appliedMin: range?.min, appliedMax: range?.max })
+      const currentValue = filterValue as FilterRange
+      onChange({ ...currentValue, appliedMin: currentValue?.min, appliedMax: currentValue?.max })
       triggerRef.current?.click()
     }
 
     const handleClear = () => {
-      onChange({ min: undefined, max: undefined, appliedMin: undefined, appliedMax: undefined })
+      setFilterValue({ min: undefined, max: undefined, appliedMin: undefined, appliedMax: undefined })
+      if (filterValue) {
+        onChange(filterValue)
+      }
       triggerRef.current?.click()
     }
 
@@ -164,8 +174,8 @@ export const FilterButton: FC<FilterButtonProps> = (props) => {
             ref(inputRef)
             firstRangeInput.current = inputRef
           }}
-          value={range}
-          onChange={(value) => onChange({ ...range, ...value })}
+          value={filterValue as FilterRange}
+          onChange={(value) => setFilterValue({ ...range, ...value })}
         />
       </DialogPopover>
     )

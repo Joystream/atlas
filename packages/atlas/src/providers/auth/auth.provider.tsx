@@ -1,14 +1,16 @@
 import { useApolloClient } from '@apollo/client'
 import { u8aToHex } from '@polkadot/util'
 import { cryptoWaitReady } from '@polkadot/util-crypto'
-import axios from 'axios'
+import { isAxiosError } from 'axios'
 import { AES, enc, lib, mode } from 'crypto-js'
 import { FC, PropsWithChildren, createContext, useCallback, useContext, useMemo, useState } from 'react'
 
+import { axiosInstance } from '@/api/axios'
 import { GetCurrentAccountQuery, useGetCurrentAccountLazyQuery } from '@/api/queries/__generated__/accounts.generated'
 import { atlasConfig } from '@/config'
 import { ORION_AUTH_URL } from '@/config/env'
 import { useMountEffect } from '@/hooks/useMountEffect'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { keyring } from '@/joystream-lib/lib'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useJoystream } from '@/providers/joystream/joystream.provider'
@@ -35,6 +37,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<GetCurrentAccountQuery['accountData'] | null>(null)
   const [lazyCurrentAccountQuery, { refetch }] = useGetCurrentAccountLazyQuery()
   const { setApiActiveAccount } = useJoystream()
+  const { identifyUser, trackLogout } = useSegmentAnalytics()
   const client = useApolloClient()
   const {
     anonymousUserId,
@@ -66,6 +69,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
           if (keypair.address === data.accountData.joystreamAccount) {
             setLoggedAddress(keypair.address)
             setCurrentUser(data.accountData)
+            identifyUser(data.accountData.email)
             setApiActiveAccount('seed', mnemonic)
             setIsAuthenticating(false)
             return
@@ -79,10 +83,11 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
           const res = await signInToWallet(lastUsedWalletName, true)
           if (res?.find((walletAcc) => walletAcc.address === data.accountData.joystreamAccount)) {
             setLoggedAddress(data.accountData.joystreamAccount)
+            identifyUser(data.accountData.email)
             setCurrentUser(data.accountData)
-            setIsAuthenticating(false)
             setApiActiveAccount('address', data.accountData.joystreamAccount)
           }
+          setIsAuthenticating(false)
         }, 200)
         return
       }
@@ -102,7 +107,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       })
 
       try {
-        await axios.post(
+        await axiosInstance.post(
           `${ORION_AUTH_URL}/session-artifacts`,
           {
             cipherKey,
@@ -133,35 +138,35 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       }
       let signatureOverPayload = null
       let localEntropy: string | null = null
-      if (params.type === 'internal') {
-        const { email, password } = params
-        const id = await getArtifactId(email, password)
-        const data = await getArtifacts(id, email, password)
-        if (!data) {
-          setIsAuthenticating(false)
-          throw new Error(LogInErrors.ArtifactsNotFound)
-        }
-        const { keypair, decryptedEntropy } = data
-        localEntropy = decryptedEntropy
-        payload.joystreamAccountId = keypair.address
-        signatureOverPayload = u8aToHex(keypair.sign(JSON.stringify(payload)))
-      }
-
-      if (params.type === 'external') {
-        payload.joystreamAccountId = params.address
-        try {
-          signatureOverPayload = await params.sign(JSON.stringify(payload))
-        } catch (e) {
-          setIsAuthenticating(false)
-          if (e.message === 'Cancelled') {
-            throw new Error(LogInErrors.SignatureCancelled)
-          }
-          throw new Error(LogInErrors.UnknownError)
-        }
-      }
-
       try {
-        const response = await axios.post<{ accountId: string }>(
+        if (params.type === 'internal') {
+          const { email, password } = params
+          const id = await getArtifactId(email, password)
+          const data = await getArtifacts(id, email, password)
+          if (!data) {
+            setIsAuthenticating(false)
+            throw new Error(LogInErrors.ArtifactsNotFound)
+          }
+          const { keypair, decryptedEntropy } = data
+          localEntropy = decryptedEntropy
+          payload.joystreamAccountId = keypair.address
+          signatureOverPayload = u8aToHex(keypair.sign(JSON.stringify(payload)))
+        }
+
+        if (params.type === 'external') {
+          payload.joystreamAccountId = params.address
+          try {
+            signatureOverPayload = await params.sign(JSON.stringify(payload))
+          } catch (e) {
+            setIsAuthenticating(false)
+            if (e.message === 'Cancelled') {
+              throw new Error(LogInErrors.SignatureCancelled)
+            }
+            throw new Error(LogInErrors.UnknownError)
+          }
+        }
+
+        const response = await axiosInstance.post<{ accountId: string }>(
           `${ORION_AUTH_URL}/login`,
           {
             signature: signatureOverPayload,
@@ -185,21 +190,28 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
         const res = await refetch()
         setCurrentUser(res.data.accountData)
+        identifyUser(res.data.accountData.email)
 
         return response.data.accountId
       } catch (error) {
+        if (error.message === LogInErrors.ArtifactsNotFound) {
+          throw error
+        }
+
         // if user receive "Session artifacts already saved", remove artifacts by signing user out and run login again
         if (retryCount === 0 && error.message === LogInErrors.ArtifactsAlreadySaved) {
           await logoutRequest()
           return handleLogin(params, retryCount + 1)
         } else {
-          const orionMessage = error.response.data.message
-          if (orionMessage.includes('Invalid credentials')) {
-            throw new Error(LogInErrors.NoAccountFound)
-          }
+          if (isAxiosError(error)) {
+            const orionMessage = error.response?.data.message
+            if (orionMessage.includes('Invalid credentials')) {
+              throw new Error(LogInErrors.NoAccountFound)
+            }
 
-          if (orionMessage.includes('Payload signature is invalid.')) {
-            throw new Error(LogInErrors.InvalidPayload)
+            if (orionMessage.includes('Payload signature is invalid.')) {
+              throw new Error(LogInErrors.InvalidPayload)
+            }
           }
 
           SentryLogger.error('Unsupported error when posting login action', 'auth.provider', error)
@@ -209,7 +221,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         setIsAuthenticating(false)
       }
     },
-    [refetch, saveEncodedSeed, setAnonymousUserId, setApiActiveAccount]
+    [identifyUser, refetch, saveEncodedSeed, setAnonymousUserId, setApiActiveAccount]
   )
 
   const handleLogout: AuthContextValue['handleLogout'] = useCallback(async () => {
@@ -219,11 +231,12 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         setAnonymousUserId(userId ?? null)
       })
       setCurrentUser(null)
+      trackLogout()
       setEncodedSeed(null)
     } catch (error) {
       SentryLogger.error('Error when logging out', 'auth.provider', error)
     }
-  }, [anonymousUserId, setAnonymousUserId, setEncodedSeed])
+  }, [anonymousUserId, setAnonymousUserId, setEncodedSeed, trackLogout])
 
   const isWalletUser = useMemo(() => encodedSeed === null && !!currentUser, [currentUser, encodedSeed])
 

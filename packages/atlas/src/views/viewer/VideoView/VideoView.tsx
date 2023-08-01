@@ -368,7 +368,7 @@ export const VideoView: FC = () => {
                   nodeStart: <SvgActionFlag />,
                   protected: {
                     title: 'You want to report this video?',
-                    description: 'Log in to report harmful content',
+                    description: 'Sign in to report harmful content',
                   },
                 },
               ]}

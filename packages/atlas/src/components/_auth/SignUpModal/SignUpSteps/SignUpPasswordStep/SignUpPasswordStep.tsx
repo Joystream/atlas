@@ -56,8 +56,8 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
 
   useEffect(() => {
     setPrimaryButtonProps({
-      text: 'Continue',
-      onClick: () => handleGoToNextStep(),
+      text: 'Sign up',
+      onClick: handleGoToNextStep,
     })
   }, [handleGoToNextStep, setPrimaryButtonProps])
 

@@ -12,7 +12,7 @@ import {
   SvgActionMember,
   SvgActionNewTab,
   SvgActionPlay,
-  SvgActionSwitchMember,
+  SvgActionShow,
 } from '@/assets/icons'
 import { IconWrapper } from '@/components/IconWrapper'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
@@ -87,8 +87,8 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
   })
   const blockAnimationRef = useRef<HTMLDivElement>(null)
 
-  const hasAtLeastOneChannel = activeMembership?.channels.length && activeMembership?.channels.length >= 1
-  const hasAtleastTwoChannels = activeMembership?.channels.length && activeMembership?.channels.length >= 2
+  const hasAtLeastOneChannel = !!activeMembership?.channels.length && activeMembership?.channels.length >= 1
+  const hasAtleastTwoChannels = !!activeMembership?.channels.length && activeMembership?.channels.length >= 2
 
   const dropdownEntity = {
     title: type === 'member' ? activeMembership?.handle : selectedChannel?.title,
@@ -188,6 +188,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
             <ListItemOptions
               publisher={publisher}
               closeDropdown={onCloseDropdown}
+              hasAtLeastOneChannel={hasAtLeastOneChannel}
               listItems={[
                 {
                   asButton: true,
@@ -198,7 +199,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                 },
                 {
                   asButton: true,
-                  label: hasAtLeastOneChannel ? 'My channels' : 'Add new channel',
+                  label: hasAtLeastOneChannel ? 'My channels' : 'Create channel',
                   nodeStart: (
                     <IconWrapper icon={hasAtLeastOneChannel ? <SvgActionChannel /> : <SvgActionAddChannel />} />
                   ),
@@ -211,12 +212,13 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
             <ListItemOptions
               publisher={publisher}
               closeDropdown={onCloseDropdown}
+              hasAtLeastOneChannel={hasAtLeastOneChannel}
               listItems={[
                 {
                   asButton: true,
                   label: 'View channel',
                   onClick: onCloseDropdown,
-                  nodeStart: <IconWrapper icon={<SvgActionChannel />} />,
+                  nodeStart: <IconWrapper icon={<SvgActionShow />} />,
                   to: hasAtLeastOneChannel
                     ? absoluteRoutes.viewer.channel(channelId ?? undefined)
                     : absoluteRoutes.studio.signIn(),
@@ -224,7 +226,9 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                 {
                   asButton: true,
                   label: hasAtleastTwoChannels ? 'Switch channel' : 'Add new channel',
-                  nodeStart: <IconWrapper icon={<SvgActionSwitchMember />} />,
+                  nodeStart: (
+                    <IconWrapper icon={hasAtleastTwoChannels ? <SvgActionChannel /> : <SvgActionAddChannel />} />
+                  ),
                   nodeEnd: hasAtleastTwoChannels && <SvgActionChevronR />,
                   onClick: () => (hasAtleastTwoChannels ? onSwitchToList(type) : onAddNewChannel?.()),
                 },
@@ -250,10 +254,11 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
 
 type ListItemOptionsProps = {
   publisher?: boolean
+  hasAtLeastOneChannel?: boolean
   closeDropdown?: () => void
   listItems: [ListItemProps, ListItemProps] | [ListItemProps]
 }
-const ListItemOptions: FC<ListItemOptionsProps> = ({ publisher, closeDropdown, listItems }) => {
+const ListItemOptions: FC<ListItemOptionsProps> = ({ publisher, closeDropdown, listItems, hasAtLeastOneChannel }) => {
   return (
     <>
       {listItems.map((listItemsProps, idx) => (
@@ -266,7 +271,7 @@ const ListItemOptions: FC<ListItemOptionsProps> = ({ publisher, closeDropdown, l
           label={atlasConfig.general.appName}
           to={absoluteRoutes.viewer.index()}
         />
-      ) : (
+      ) : hasAtLeastOneChannel ? (
         <>
           <ListItem
             onClick={closeDropdown}
@@ -275,7 +280,7 @@ const ListItemOptions: FC<ListItemOptionsProps> = ({ publisher, closeDropdown, l
             to={absoluteRoutes.studio.index()}
           />
         </>
-      )}
+      ) : null}
     </>
   )
 }

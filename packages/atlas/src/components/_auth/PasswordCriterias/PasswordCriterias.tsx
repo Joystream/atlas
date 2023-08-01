@@ -98,7 +98,7 @@ export const PasswordCriterias: FC<PasswordCriteriasProps> = ({ path = 'password
         length: getValidationState(password.length <= 9 || password.length >= 64),
         number: getValidationState(/^[^0-9]*$/.test(password)),
         upperCase: getValidationState(/^[^A-Z]*$/.test(password)),
-        specialCharacter: getValidationState(/^[^!@#$%^&*()_+]*$/.test(password)),
+        specialCharacter: getValidationState(/^[^!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]*$/.test(password)),
       }))
     })
     return () => subscription.unsubscribe()

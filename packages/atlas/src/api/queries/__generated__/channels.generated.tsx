@@ -298,12 +298,11 @@ export type FollowChannelMutationVariables = Types.Exact<{
 
 export type FollowChannelMutation = {
   __typename?: 'Mutation'
-  followChannel: { __typename?: 'ChannelFollowResult'; channelId: string; follows: number; cancelToken: string }
+  followChannel: { __typename?: 'ChannelFollowResult'; channelId: string; follows: number; added: boolean }
 }
 
 export type UnfollowChannelMutationVariables = Types.Exact<{
   channelId: Types.Scalars['String']
-  token: Types.Scalars['String']
 }>
 
 export type UnfollowChannelMutation = {
@@ -941,7 +940,7 @@ export const FollowChannelDocument = gql`
     followChannel(channelId: $channelId) {
       channelId
       follows
-      cancelToken
+      added
     }
   }
 `
@@ -977,8 +976,8 @@ export type FollowChannelMutationOptions = Apollo.BaseMutationOptions<
   FollowChannelMutationVariables
 >
 export const UnfollowChannelDocument = gql`
-  mutation UnfollowChannel($channelId: String!, $token: String!) {
-    unfollowChannel(channelId: $channelId, token: $token) {
+  mutation UnfollowChannel($channelId: String!) {
+    unfollowChannel(channelId: $channelId) {
       channelId
       follows
     }
@@ -1003,7 +1002,6 @@ export type UnfollowChannelMutationFn = Apollo.MutationFunction<
  * const [unfollowChannelMutation, { data, loading, error }] = useUnfollowChannelMutation({
  *   variables: {
  *      channelId: // value for 'channelId'
- *      token: // value for 'token'
  *   },
  * });
  */

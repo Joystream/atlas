@@ -1,9 +1,21 @@
 import BN from 'bn.js'
 
-import { ImageInputMetadata, MediaInputMetadata } from '@/components/_inputs/MultiFileSelect'
 import { NftIssuanceInputMetadata, VideoAssets, VideoInputMetadata } from '@/joystream-lib/types'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { SubtitlesInput } from '@/types/subtitles'
+
+export type MediaInputMetadata = {
+  duration?: number | null
+  mediaPixelWidth?: number
+  mediaPixelHeight?: number
+  mimeType?: string
+  size?: number
+}
+
+export type ImageInputMetadata = {
+  imageCropData?: ImageCropData
+  assetDimensions?: AssetDimensions
+}
 
 export type VideoWorkspaceVideoAssets = {
   video: {
