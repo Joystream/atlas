@@ -1,11 +1,12 @@
 import { cryptoWaitReady } from '@polkadot/util-crypto'
-import axios, { isAxiosError } from 'axios'
+import { isAxiosError } from 'axios'
 import BN from 'bn.js'
 import { useCallback } from 'react'
 import { useMutation } from 'react-query'
 
+import { axiosInstance } from '@/api/axios'
 import { ImageInputFile } from '@/components/_inputs/MultiFileSelect'
-import { FAUCET_URL } from '@/config/env'
+import { FAUCET_URL, YPP_FAUCET_URL } from '@/config/env'
 import { keyring } from '@/joystream-lib/lib'
 import { MemberId } from '@/joystream-lib/types'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
@@ -15,6 +16,8 @@ import { useAuthStore } from '@/providers/auth/auth.store'
 import { OrionAccountError } from '@/providers/auth/auth.types'
 import { useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
+import { useTransactionManagerStore } from '@/providers/transactions/transactions.store'
+import { useYppStore } from '@/providers/ypp/ypp.store'
 import { UploadAvatarServiceError, uploadAvatarImage } from '@/utils/image'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
@@ -23,6 +26,8 @@ export type MemberFormData = {
   avatar?: ImageInputFile
   captchaToken?: string
   mnemonic: string
+  authorizationCode?: string
+  userId?: string
   confirmedCopy: boolean
 }
 
@@ -50,11 +55,14 @@ type FaucetParams = {
   handle: string
   avatar: string | undefined
   captchaToken: string | undefined
+  userId?: string
+  authorizationCode?: string
 }
 
 export enum RegisterError {
   EmailAlreadyExists = 'EmailAlreadyExists',
   UnknownError = 'UnknownError',
+  MembershipNotFound = 'MembershipNotFound',
 }
 
 type SignUpParams<T> = {
@@ -73,17 +81,18 @@ export const useCreateMember = () => {
   const setAnonymousUserId = useAuthStore((store) => store.actions.setAnonymousUserId)
   const { joystream } = useJoystream()
   const { displaySnackbar } = useSnackbar()
+  const { addBlockAction } = useTransactionManagerStore((state) => state.actions)
+  const ytResponseData = useYppStore((state) => state.ytResponseData)
 
   const { mutateAsync: avatarMutation } = useMutation('avatar-post', (croppedBlob: Blob) =>
     uploadAvatarImage(croppedBlob)
   )
   const { mutateAsync: faucetMutation } = useMutation('faucet-post', (body: FaucetParams) =>
-    // todo change faucet url if request is done via ypp
-    axios.post<NewMemberResponse>(FAUCET_URL, body)
+    axiosInstance.post<NewMemberResponse>(ytResponseData ? YPP_FAUCET_URL : FAUCET_URL, body)
   )
 
   const createNewMember = useCallback(
-    async (params: CreateNewMemberParams) => {
+    async (params: CreateNewMemberParams, onBlockSync?: () => void) => {
       const { data, onError } = params
       let fileUrl
       const keypair = keyring.addFromMnemonic(data.mnemonic)
@@ -98,9 +107,16 @@ export const useCreateMember = () => {
         handle: data.handle,
         avatar: fileUrl,
         captchaToken: data.captchaToken,
+        ...(ytResponseData
+          ? {
+              userId: data.userId,
+              authorizationCode: data.authorizationCode,
+            }
+          : {}),
       }
       try {
         const response = await faucetMutation(body)
+        onBlockSync && addBlockAction({ callback: onBlockSync, targetBlock: response.data.block })
 
         return String(response.data.memberId)
       } catch (error) {
@@ -160,7 +176,7 @@ export const useCreateMember = () => {
         return
       }
     },
-    [avatarMutation, displaySnackbar, faucetMutation]
+    [addBlockAction, avatarMutation, displaySnackbar, faucetMutation, ytResponseData]
   )
 
   const createNewOrionAccount = useCallback(
@@ -190,11 +206,14 @@ export const useCreateMember = () => {
           const errorMessage = error.message
           if (errorMessage === 'Account with the provided e-mail address already exists.') {
             displaySnackbar({
-              title: 'Something went wrong',
-              description: `Account with the provided e-mail address already exists. Use different e-mail.`,
               iconType: 'error',
+              title: 'This email was used already',
+              description:
+                'To create new membership you need to use an email that is not connected to already existing account.',
             })
             onError?.(RegisterError.EmailAlreadyExists)
+          } else if (errorMessage.startsWith('Membership not found by id')) {
+            onError?.(RegisterError.MembershipNotFound)
           } else {
             displaySnackbar({
               title: 'Something went wrong',

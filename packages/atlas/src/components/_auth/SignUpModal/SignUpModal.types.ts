@@ -1,8 +1,8 @@
 export enum SignUpSteps {
   CreateMember,
   SignUpSeed,
-  SignUpPassword,
   SignUpEmail,
+  SignUpPassword,
   Creating,
   Success,
 }

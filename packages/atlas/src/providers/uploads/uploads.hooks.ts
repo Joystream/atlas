@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosProgressEvent, AxiosRequestConfig } from 'axios'
+import { AxiosError, AxiosProgressEvent, AxiosRequestConfig } from 'axios'
 import { debounce } from 'lodash-es'
 import { useCallback, useRef } from 'react'
 import { useMutation } from 'react-query'
@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router'
 import * as rax from 'retry-axios'
 import { RetryConfig } from 'retry-axios'
 
+import { axiosInstance } from '@/api/axios'
 import { absoluteRoutes } from '@/config/routes'
 import { useStorageOperators } from '@/providers/assets/assets.provider'
 import { OperatorInfo } from '@/providers/assets/assets.types'
@@ -33,7 +34,7 @@ export const useStartFileUpload = () => {
   const { displaySnackbar } = useSnackbar()
   const { getClosestStorageOperatorForBag, markStorageOperatorFailed } = useStorageOperators()
   const { mutateAsync: uploadMutation } = useMutation('upload-assets', (params: MutationParams) =>
-    axios.post(params.url, params.data, params.config)
+    axiosInstance.post(params.url, params.data, params.config)
   )
 
   const { addAssetFile, addAssetToUploads, setUploadStatus, addProcessingAsset } = useUploadsStore(

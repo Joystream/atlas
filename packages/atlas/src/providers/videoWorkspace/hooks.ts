@@ -29,12 +29,12 @@ export const useVideoWorkspace = () => {
   return ctx
 }
 
-export const useVideoWorkspaceData = () => {
+export const useVideoWorkspaceData = (id?: string) => {
   const { editedVideoInfo } = useVideoWorkspace()
   const { channelId } = useAuthorizedUser()
   const drafts = useDraftStore(channelDraftsSelector(channelId))
   const { video, loading, error } = useFullVideo(
-    editedVideoInfo?.id ?? '',
+    id ?? editedVideoInfo?.id ?? '',
     {
       skip: editedVideoInfo?.isDraft,
       onError: (error) => SentryLogger.error('Failed to fetch video', 'useVideoWorkspaceData', error),

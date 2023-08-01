@@ -9,6 +9,7 @@ import { AuthenticationModalStepTemplate } from '@/components/_auth/Authenticati
 import { ExternalSignInModalEmailStep } from '@/components/_auth/ExternalSignInModal/ExternalSignInSteps/ExternalSignInModalEmailStep'
 import { Button } from '@/components/_buttons/Button'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useAuthStore } from '@/providers/auth/auth.store'
 
 import { StyledDialogModal } from './ExternalSignInModal.styles'
@@ -19,6 +20,14 @@ import {
   SignInStepProps,
 } from './ExternalSignInSteps'
 
+const stepToPageName: Partial<Record<ModalSteps, string>> = {
+  [ModalSteps.Email]: 'External sign in modal - Add email to existing membership',
+  [ModalSteps.Logging]: 'External sign in modal - logging',
+  [ModalSteps.Wallet]: 'External sign in modal - wallet selection',
+  [ModalSteps.Membership]: 'External sign in modal - membership params',
+  [ModalSteps.NoMembership]: 'External sign in modal - no membership',
+  [ModalSteps.Register]: 'External sign in modal - register',
+}
 export const ExternalSignInModal: FC = () => {
   const [currentStep, setCurrentStep] = useState<ModalSteps>(ModalSteps.Wallet)
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogButtonProps>({ text: 'Select wallet' }) // start with sensible default so that there are no jumps after first effect runs
@@ -26,6 +35,7 @@ export const ExternalSignInModal: FC = () => {
   const [selectedMembership, setSelectedMembership] = useState<string | null>(null)
   const [availableMemberships, setAvailableMemberships] = useState<GetMembershipsQuery['memberships'] | null>(null)
   const dialogContentRef = useRef<HTMLDivElement>(null)
+  const { trackPageView } = useSegmentAnalytics()
   const form = useForm<{ email: string }>({
     resolver: zodResolver(
       z.object({
@@ -53,6 +63,10 @@ export const ExternalSignInModal: FC = () => {
     dialogContentRef.current.scrollTo({ top: 0 })
   }, [currentStep])
 
+  useEffect(() => {
+    authModalOpenName === 'externalLogIn' && trackPageView(stepToPageName[currentStep] ?? '')
+  }, [authModalOpenName, currentStep, trackPageView])
+
   const renderStep = () => {
     const commonProps: SignInStepProps = {
       setPrimaryButtonProps,
@@ -77,7 +91,7 @@ export const ExternalSignInModal: FC = () => {
       case ModalSteps.Logging:
         return (
           <AuthenticationModalStepTemplate
-            title="Logginng in"
+            title="Logging in"
             subtitle="Please wait while we log you in. This should take about 10 seconds."
             loader
             hasNavigatedBack={false}
@@ -96,7 +110,7 @@ export const ExternalSignInModal: FC = () => {
         return (
           <AuthenticationModalStepTemplate
             title="No memberships connected"
-            subtitle="It looks like you don’t have a membership connected to this wallet. Use your email and password to log in."
+            subtitle="It looks like you don’t have a membership connected to this wallet. Use your email and password to sign in."
             hasNavigatedBack={false}
           />
         )
@@ -140,6 +154,7 @@ export const ExternalSignInModal: FC = () => {
       show={authModalOpenName === 'externalLogIn'}
       additionalActionsNodeMobilePosition="bottom"
       contentRef={dialogContentRef}
+      dividers={currentStep === ModalSteps.Membership}
       disableBackdropAnimation
     >
       <FormProvider {...form}>{renderStep()}</FormProvider>

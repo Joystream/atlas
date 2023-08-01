@@ -12,6 +12,7 @@ export const useHidePasswordInInput = (): [InputProps, () => void] => {
       actionButton: {
         icon: isPasswordVisible ? <SvgActionHide /> : <SvgActionShow />,
         onClick: () => setIsPasswordVisible((isPasswordVisible) => !isPasswordVisible),
+        tooltipText: isPasswordVisible ? 'Hide' : 'Show',
       },
     },
     () => setIsPasswordVisible(false),

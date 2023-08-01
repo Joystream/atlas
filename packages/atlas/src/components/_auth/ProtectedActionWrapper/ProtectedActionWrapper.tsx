@@ -58,7 +58,7 @@ export const ProtectedActionWrapper = ({
             }}
             variant="primary"
           >
-            Log in
+            Sign in
           </Button>
         </Wrapper>
       </Popover>

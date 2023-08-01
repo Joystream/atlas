@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import { SvgActionPlay } from '@/assets/icons'
+import { SvgActionAddChannel, SvgActionMember, SvgActionPlay } from '@/assets/icons'
 import { Text } from '@/components/Text'
 import { SubTitle, WelcomeView } from '@/components/WelcomeView'
 import { atlasConfig } from '@/config'
@@ -93,8 +93,18 @@ export const StudioWelcomeView: FC = () => {
       }
       buttons={[
         isLoggedIn
-          ? { size: 'large', onClick: () => setAuthModalOpenName('createChannel'), children: 'Create channel' }
-          : { size: 'large', onClick: () => setAuthModalOpenName(getCorrectLoginModal()), children: 'Log in' },
+          ? {
+              size: 'large',
+              onClick: () => setAuthModalOpenName('createChannel'),
+              children: 'Create channel',
+              icon: <SvgActionAddChannel />,
+            }
+          : {
+              size: 'large',
+              onClick: () => setAuthModalOpenName(getCorrectLoginModal()),
+              children: 'Sign in',
+              icon: <SvgActionMember />,
+            },
         {
           size: 'large',
           variant: 'tertiary',

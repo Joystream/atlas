@@ -1,4 +1,5 @@
 import { QueryHookOptions } from '@apollo/client'
+import { useMemo } from 'react'
 
 import { useNftsConnection } from '@/api/hooks/nfts'
 import { GetNftsConnectionQuery, GetNftsConnectionQueryVariables } from '@/api/queries/__generated__/nfts.generated'
@@ -30,14 +31,18 @@ export const useInfiniteNftsGrid = (
   )
 
   const firstLoad = !nfts && loading
-  const firstLoadPlaceholders = firstLoad ? createPlaceholderData(columns * initialRowsToLoad) : []
 
   const itemsLeft = (totalCount || 0) - (nfts?.length || 0)
   const itemsToLoad = Math.min(itemsLeft, columns * 4)
 
-  const nextLoadPlaceholders = !pageInfo?.hasNextPage || false ? [] : createPlaceholderData(itemsToLoad)
+  const tiles = useMemo(() => {
+    const firstLoadPlaceholders = firstLoad ? createPlaceholderData(columns * initialRowsToLoad) : []
+    const nextLoadPlaceholders = !pageInfo?.hasNextPage ? [] : createPlaceholderData(itemsToLoad)
+    return [...firstLoadPlaceholders, ...(nfts || []), ...(loading ? nextLoadPlaceholders : [])]
+  }, [columns, firstLoad, initialRowsToLoad, itemsToLoad, loading, nfts, pageInfo?.hasNextPage])
+
   return {
-    tiles: [...firstLoadPlaceholders, ...(nfts || []), ...(loading ? nextLoadPlaceholders : [])],
+    tiles,
     fetchMore,
     pageInfo,
     totalCount,

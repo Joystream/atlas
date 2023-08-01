@@ -5,19 +5,25 @@ import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { media, sizes, zIndex } from '@/styles'
 
-export const MemberSettingsPageWrapper = styled.div`
-  padding-bottom: ${sizes(13)};
-`
-
 export const NoGlobalPaddingWrapper = styled.div`
   margin: 0 calc(-1 * var(--size-global-horizontal-padding));
+  height: 100%;
+  overflow: hidden;
 `
 
 export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)`
-  margin: ${sizes(4)} auto;
+  margin: ${sizes(4)};
   ${media.md} {
-    margin: ${sizes(8)} auto;
+    margin: ${sizes(8)};
   }
+`
+
+export const ScrollWrapper = styled.div`
+  overflow-y: auto;
+  height: calc(100% - 56px);
+  display: flex;
+  justify-content: center;
+  padding-bottom: ${sizes(9)};
 `
 
 export const StyledActionBar = styled(ActionBar)`

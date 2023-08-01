@@ -1,7 +1,7 @@
 import { FC, useMemo } from 'react'
 
 import { FullMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
-import { SvgActionChannel, SvgActionChevronL } from '@/assets/icons'
+import { SvgActionAddChannel, SvgActionChevronL } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
 import { IconWrapper } from '@/components/IconWrapper'
 import { ListItem } from '@/components/ListItem'
@@ -54,13 +54,11 @@ export const MemberDropdownList: FC<MemberDropdownListProps> = ({
             selected={type === 'channel' ? channel.id === channelId : false}
           />
         ))}
-        {type === 'channel' && (
-          <ListItem
-            nodeStart={<IconWrapper icon={<SvgActionChannel />} />}
-            onClick={() => onAddNewChannel?.()}
-            label="Add new channel..."
-          />
-        )}
+        <ListItem
+          nodeStart={<IconWrapper icon={<SvgActionAddChannel />} />}
+          onClick={() => onAddNewChannel?.()}
+          label="Add new channel..."
+        />
       </SectionContainer>
     </div>
   )

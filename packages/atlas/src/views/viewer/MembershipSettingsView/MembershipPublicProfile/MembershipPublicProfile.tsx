@@ -247,7 +247,7 @@ export const MembershipPublicProfile: FC<MembershipPublicProfileProps> = ({
                   )
                 }}
                 onImageValidation={setIsImageValid}
-                assetUrls={[avatarInputFile?.url || '']}
+                assetUrls={avatarInputFile?.url ? [avatarInputFile.url] : []}
                 loading={!isLoggedIn}
                 hasAvatarUploadFailed={!isImageValid}
               />

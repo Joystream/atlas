@@ -19,7 +19,7 @@ import { useBloatFeesAndPerMbFees, useFee, useJoystream } from '@/providers/joys
 import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { useUser } from '@/providers/user/user.hooks'
 import { createId } from '@/utils/createId'
-import { SentryLogger } from '@/utils/logs'
+import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 export const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
   { name: 'Public', value: true },
@@ -199,40 +199,64 @@ export const useChannelForm = (props: FormType) => {
   )
 
   useEffect(() => {
-    if (newChannel || !channel) {
-      return
+    const init = async () => {
+      if (newChannel || !channel) {
+        return
+      }
+
+      const { title, description, isPublic, language, avatarPhoto, coverPhoto } = channel
+
+      const foundLanguage = atlasConfig.derived.languagesSelectValues.find(({ value }) => value === language)
+      let avatarBlob
+      let coverBlob
+      const originalBlobPromises = []
+      const isChannelChanged = cachedChannelId.current !== channel.id
+      if (avatarPhoto?.isAccepted && avatarPhoto.resolvedUrls[0]) {
+        originalBlobPromises.push(
+          fetch(avatarPhoto.resolvedUrls[0])
+            .then((r) => r.blob())
+            .then((createdBlob) => (avatarBlob = createdBlob))
+            .catch((err) => ConsoleLogger.warn(`Cannot fetch avatar`, err))
+        )
+      }
+      if (coverPhoto?.isAccepted && coverPhoto.resolvedUrls[0]) {
+        originalBlobPromises.push(
+          fetch(coverPhoto.resolvedUrls[0])
+            .then((r) => r.blob())
+            .then((createdBlob) => (coverBlob = createdBlob))
+            .catch((err) => ConsoleLogger.warn(`Cannot fetch cover`, err))
+        )
+      }
+
+      await Promise.all(originalBlobPromises)
+      // This condition should prevent from updating cover/avatar when the upload is done
+      if (isChannelChanged || firstRender.current) {
+        reset({
+          avatar: {
+            contentId: avatarPhoto?.id,
+            assetDimensions: null,
+            imageCropData: null,
+            originalBlob: avatarBlob,
+            originalUrl: channel.avatarPhoto?.resolvedUrls[0],
+          },
+          cover: {
+            contentId: coverPhoto?.id,
+            assetDimensions: null,
+            imageCropData: null,
+            originalBlob: coverBlob,
+            originalUrl: channel.coverPhoto?.resolvedUrls[0],
+          },
+          title: title || '',
+          description: description || '',
+          isPublic: isPublic ?? false,
+          language: foundLanguage?.value || DEFAULT_LANGUAGE,
+        })
+        firstRender.current = false
+        cachedChannelId.current = channel.id
+      }
     }
 
-    const { title, description, isPublic, language, avatarPhoto, coverPhoto } = channel
-
-    const foundLanguage = atlasConfig.derived.languagesSelectValues.find(({ value }) => value === language)
-    const isChannelChanged = cachedChannelId.current !== channel.id
-
-    // This condition should prevent from updating cover/avatar when the upload is done
-    if (isChannelChanged || firstRender.current) {
-      reset({
-        avatar: {
-          contentId: avatarPhoto?.id,
-          assetDimensions: null,
-          imageCropData: null,
-          originalBlob: undefined,
-          originalUrl: channel.avatarPhoto?.resolvedUrls[0],
-        },
-        cover: {
-          contentId: coverPhoto?.id,
-          assetDimensions: null,
-          imageCropData: null,
-          originalBlob: undefined,
-          originalUrl: channel.coverPhoto?.resolvedUrls[0],
-        },
-        title: title || '',
-        description: description || '',
-        isPublic: isPublic ?? false,
-        language: foundLanguage?.value || DEFAULT_LANGUAGE,
-      })
-      firstRender.current = false
-      cachedChannelId.current = channel.id
-    }
+    init()
   }, [channel, newChannel, reset])
 
   const handleSubmit = (onCompleted?: (channelId: string) => void) =>

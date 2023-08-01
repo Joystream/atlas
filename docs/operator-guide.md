@@ -210,6 +210,8 @@ Below is the list of all the variables used by Atlas with a short description:
 
 `VITE_YOUTUBE_COLLABORATOR_MEMBER_ID` - The collaborator can add videos to a channel for a user. Every time a user signs up with the program, we're sending the `updateChannel` extrinsic and adding a collaborator to that channel. The collaborator is defined on the youtube-synch backend and needs to be the same in the front-end.
 
+`VITE_{environment}_YPP_FAUCET_URL` - Faucet URL for simplified YPP signup. Allows YPP backend to create membership automatically.
+
 `VITE_GA_ID` - Google Analytics ID. Used to enable Google Analytics.
 
 `VITE_SEGMENT_ID` - Segment ID. Used to enable Segment analytics tool.

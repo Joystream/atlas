@@ -1,28 +1,24 @@
-import { useApolloClient } from '@apollo/client'
 import { useCallback } from 'react'
 
-import {
-  GetMembershipsDocument,
-  GetMembershipsQuery,
-  GetMembershipsQueryVariables,
-} from '@/api/queries/__generated__/memberships.generated'
+import { useGetMembershipsLazyQuery } from '@/api/queries/__generated__/memberships.generated'
 import { createId } from '@/utils/createId'
 import { removeSpecialCharacters } from '@/utils/text'
 
 export const useUniqueMemberHandle = () => {
-  const client = useApolloClient()
+  const [getMemberships] = useGetMembershipsLazyQuery()
 
   const checkIfMemberIsAvailable = useCallback(
     async (value: string) => {
-      const {
-        data: { memberships },
-      } = await client.query<GetMembershipsQuery, GetMembershipsQueryVariables>({
-        query: GetMembershipsDocument,
-        variables: { where: { handle_eq: value } },
+      const { data } = await getMemberships({
+        variables: {
+          where: {
+            handle_eq: value,
+          },
+        },
       })
-      return !memberships[0]
+      return !data?.memberships[0]
     },
-    [client]
+    [getMemberships]
   )
 
   const generateUniqueMemberHandleBasedOnInput = useCallback(
@@ -39,7 +35,7 @@ export const useUniqueMemberHandle = () => {
 
       const isAvailable = await checkIfMemberIsAvailable(sanitizedHandle)
       if (!isAvailable) {
-        const modified = attempt === 1 ? `${sanitizedHandle}${attempt}` : `${sanitizedHandle.slice(-1)}${attempt}`
+        const modified = attempt === 1 ? `${sanitizedHandle}${attempt}` : `${sanitizedHandle.slice(0, -1)}${attempt}`
 
         return generateUniqueMemberHandleBasedOnInput(modified, attempt + 1)
       }

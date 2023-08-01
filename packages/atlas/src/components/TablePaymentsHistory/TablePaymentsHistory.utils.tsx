@@ -3,8 +3,9 @@ import { ReactElement } from 'react'
 import { SvgActionCouncil, SvgActionCrown, SvgActionNft, SvgActionPayment, SvgActionRevenueShare } from '@/assets/icons'
 import { SvgEmptyStateIllustration } from '@/assets/illustrations'
 import { TableProps } from '@/components/Table'
-import { ColumnBox, RowBox } from '@/components/TablePaymentsHistory/TablePaymentsHistory.styles'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+
+import { ColumnBox, RowBox } from '../Table/Table.styles'
 
 export const tableLoadingData = Array.from({ length: 5 }, () => ({
   date: (

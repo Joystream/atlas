@@ -1,11 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod/dist/zod'
 import { u8aToHex } from '@polkadot/util'
-import axios from 'axios'
 import { useCallback, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import shallow from 'zustand/shallow'
 
+import { axiosInstance } from '@/api/axios'
 import { useGetCurrentAccountLazyQuery } from '@/api/queries/__generated__/accounts.generated'
 import { AuthenticationModalStepTemplate } from '@/components/_auth/AuthenticationModalStepTemplate'
 import { EmailAndSeedStep } from '@/components/_auth/ForgotPasswordModal/steps/EmailAndSeedStep'
@@ -32,8 +32,8 @@ const schema = z.object({
     email: z.string().min(3, { message: 'Enter email address.' }).email({ message: 'Enter valid email address.' }),
     mnemonic: z
       .string()
-      .min(1, 'Enter mnemonic.')
-      .regex(/^(\w+\s){11}\w+$/, { message: 'Mnemonic should contain 12 words separated by spaces.' }),
+      .min(1, 'Enter wallet seed phrase.')
+      .regex(/^(\w+\s){11}\w+$/, { message: 'Wallet seed phrase should contain 12 words separated by spaces.' }),
   }),
   [ForgotPasswordStep.NewPasswordStep]: z
     .object({
@@ -90,7 +90,7 @@ export const ForgotPasswordModal = () => {
 
       if (accData.data?.accountData.email !== data['EmailAndSeedStep'].email) {
         form.setError(`${ForgotPasswordStep.EmailAndSeedStep}.email`, {
-          message: 'Provided email do not match mnemonic.',
+          message: 'Provided email do not match wallet seed phrase.',
         })
         logoutRequest().catch((error) => {
           SentryLogger.error('Failed to logout when recovering password', 'ForgotPasswordModal', error)
@@ -143,7 +143,7 @@ export const ForgotPasswordModal = () => {
         }
         const forgetPayloadSignature = await keypair.sign(JSON.stringify(forgetPayload))
 
-        await axios.post<{ accountId: string }>(
+        await axiosInstance.post<{ accountId: string }>(
           `${ORION_AUTH_URL}/change-account`,
           {
             signature: u8aToHex(forgetPayloadSignature),
@@ -158,7 +158,7 @@ export const ForgotPasswordModal = () => {
         )
         displaySnackbar({
           title: 'Password has been changed',
-          description: 'You can now log in to your account using the new password',
+          description: 'You can now sign in to your account using the new password',
           iconType: 'success',
         })
         setAuthModalName('logIn')

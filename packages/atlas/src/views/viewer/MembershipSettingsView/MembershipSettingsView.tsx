@@ -9,11 +9,7 @@ import { useUser } from '@/providers/user/user.hooks'
 
 import { MembershipNotifications } from './MembershipNotifications'
 import { MembershipPublicProfile } from './MembershipPublicProfile'
-import {
-  MemberSettingsPageWrapper,
-  NoGlobalPaddingWrapper,
-  StyledLimitedWidthContainer,
-} from './MembershipSettingsView.styles'
+import { NoGlobalPaddingWrapper, ScrollWrapper, StyledLimitedWidthContainer } from './MembershipSettingsView.styles'
 import { MembershipWallet } from './MembershipWallet'
 
 const TABS: MemberSettingsTabs[] = ['Public profile', 'Wallet', 'Notifications']
@@ -73,38 +69,38 @@ export const MembershipSettingsView: FC = () => {
   )
 
   return (
-    <MemberSettingsPageWrapper>
-      <NoGlobalPaddingWrapper>
-        <PageTabs
-          tabs={TABS.map((tab) => ({ name: tab }))}
-          onSelectTab={handleChangeTab}
-          selected={currentTab}
-          backAction={{
-            to: !isFormDirty ? absoluteRoutes.viewer.member(activeMembership?.handle) : undefined,
-            onClick: isFormDirty
-              ? () =>
-                  handleOpenUnsavedChangesDialog({
-                    text: 'Discard changes',
-                    to: absoluteRoutes.viewer.member(activeMembership?.handle),
-                    onClick: () => {
-                      closeUnsavedChangesDialog()
-                    },
-                  })
-              : undefined,
-          }}
-        />
-      </NoGlobalPaddingWrapper>
-      <StyledLimitedWidthContainer>
-        {currentTab === 0 && (
-          <MembershipPublicProfile
-            onDirty={setIsFormDirty}
-            onOpenUnsavedChangesDialog={handleOpenUnsavedChangesDialog}
-            onCloseUnsavedChangesDialog={closeUnsavedChangesDialog}
-          />
-        )}
-        {currentTab === 1 && <MembershipWallet />}
-        {currentTab === 2 && <MembershipNotifications />}
-      </StyledLimitedWidthContainer>
-    </MemberSettingsPageWrapper>
+    <NoGlobalPaddingWrapper>
+      <PageTabs
+        tabs={TABS.map((tab) => ({ name: tab }))}
+        onSelectTab={handleChangeTab}
+        selected={currentTab}
+        backAction={{
+          to: !isFormDirty ? absoluteRoutes.viewer.member(activeMembership?.handle) : undefined,
+          onClick: isFormDirty
+            ? () =>
+                handleOpenUnsavedChangesDialog({
+                  text: 'Discard changes',
+                  to: absoluteRoutes.viewer.member(activeMembership?.handle),
+                  onClick: () => {
+                    closeUnsavedChangesDialog()
+                  },
+                })
+            : undefined,
+        }}
+      />
+      <ScrollWrapper>
+        <StyledLimitedWidthContainer>
+          {currentTab === 0 && (
+            <MembershipPublicProfile
+              onDirty={setIsFormDirty}
+              onOpenUnsavedChangesDialog={handleOpenUnsavedChangesDialog}
+              onCloseUnsavedChangesDialog={closeUnsavedChangesDialog}
+            />
+          )}
+          {currentTab === 1 && <MembershipWallet />}
+          {currentTab === 2 && <MembershipNotifications />}
+        </StyledLimitedWidthContainer>
+      </ScrollWrapper>
+    </NoGlobalPaddingWrapper>
   )
 }

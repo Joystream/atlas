@@ -11,6 +11,7 @@ import { useAuthStore } from '@/providers/auth/auth.store'
 import { LogInErrors } from '@/providers/auth/auth.types'
 import { useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
+import { SentryLogger } from '@/utils/logs'
 import { shortenString } from '@/utils/misc'
 
 import { ListItemsWrapper, StyledListItem } from './ExternalSignInSteps.styles'
@@ -72,6 +73,8 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
             iconType: 'error',
             title: 'There was a problem with signature. Please try again.',
           })
+          goToStep(ModalSteps.Membership)
+          return
         }
         if (error.message === LogInErrors.SignatureCancelled) {
           displaySnackbar({
@@ -79,7 +82,14 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
             title: 'Message signing cancelled',
           })
           goToStep(ModalSteps.Membership)
+          return
         }
+        goToStep(ModalSteps.Membership)
+        SentryLogger.error(
+          'Unknown error when logging with external wallet',
+          'ExternalSignInModalMembershipsStep',
+          error
+        )
       })
   }, [
     displaySnackbar,
@@ -101,7 +111,7 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
   // send updates to SignInModal on state of primary button
   useEffect(() => {
     setPrimaryButtonProps({
-      text: 'Log in',
+      text: 'Sign in',
       disabled: !memberId,
       onClick: handleConfirm,
     })
@@ -110,7 +120,7 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
   return (
     <AuthenticationModalStepTemplate
       title="Select membership"
-      subtitle="It looks like you have multiple memberships connected to this wallet. Select membership which you want to log in."
+      subtitle="It looks like you have multiple memberships connected to this wallet. Select membership which you want to sign in."
       hasNavigatedBack={hasNavigatedBack}
     >
       <ListItemsWrapper>
