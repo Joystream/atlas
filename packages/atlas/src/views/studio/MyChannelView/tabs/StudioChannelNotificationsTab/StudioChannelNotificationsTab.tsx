@@ -2,7 +2,7 @@ import { RefObject, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { ActionBar } from '@/components/ActionBar'
-import { NotificationsTable } from '@/components/NotificationsTable'
+import { NotificationsState, NotificationsTable } from '@/components/NotificationsTable'
 import { Portal } from '@/components/Portal'
 import { EntitySettingTemplate } from '@/components/_templates/EntitySettingTemplate'
 
@@ -13,7 +13,7 @@ import { useMemberSettingsData } from './StudioChannelNotificationsTabStudio.hoo
 export const StudioChannelNotificationsTab = ({ actionBarPortal }: { actionBarPortal: RefObject<HTMLDivElement> }) => {
   const { data, isLoading } = useMemberSettingsData()
 
-  const form = useForm<Record<string, boolean>>()
+  const form = useForm<NotificationsState>()
   const {
     reset,
     formState: { isDirty },

@@ -4,38 +4,23 @@ export const TABLE_STRUCTURE = [
     rows: [
       {
         label: 'Your channel is excluded from the app',
-        names: {
-          inApp: 'channelCreatedInAppNotificationEnabled',
-          email: 'channelCreatedMailNotificationEnabled',
-        },
+        name: 'channelExcludedFromAppNotificationEnabled',
       },
       {
         label: 'Your video is excluded from the app',
-        names: {
-          inApp: 'channelCreatedInAppNotificationEnabled',
-          email: 'channelCreatedMailNotificationEnabled',
-        },
+        name: 'videoExcludedFromAppNotificationEnabled',
       },
       {
         label: 'Your video is featured on category page',
-        names: {
-          inApp: 'channelCreatedInAppNotificationEnabled',
-          email: 'channelCreatedMailNotificationEnabled',
-        },
+        name: 'videoFeaturedOnCategoryPageNotificationEnabled',
       },
       {
         label: 'Your NFT is featured on marketplace',
-        names: {
-          inApp: 'channelCreatedInAppNotificationEnabled',
-          email: 'channelCreatedMailNotificationEnabled',
-        },
+        name: 'nftFeaturedOnMarketPlace',
       },
       {
         label: 'Your video is featured as category hero video',
-        names: {
-          inApp: 'channelCreatedInAppNotificationEnabled',
-          email: 'channelCreatedMailNotificationEnabled',
-        },
+        name: 'videoFeaturedAsHeroNotificationEnabled',
       },
     ],
   },
@@ -44,31 +29,19 @@ export const TABLE_STRUCTURE = [
     rows: [
       {
         label: 'Someone followed your channel',
-        names: {
-          inApp: 'commentRepyInAppNotificationEnabled',
-          email: 'commentRepyMailNotificationEnabled',
-        },
+        name: 'newChannelFollowerNotificationPreferences',
       },
       {
         label: 'Someone posted a comment on your video',
-        names: {
-          inApp: 'Someone liked your video',
-          email: 'commentReactionMailNotificationEnabled',
-        },
+        name: 'videoCommentCreatedNotificationEnabled',
       },
       {
         label: 'Someone liked your video',
-        names: {
-          inApp: 'commentReactionInAppNotificationEnabled',
-          email: 'commentReactionMailNotificationEnabled',
-        },
+        name: 'videoLikedNotificationEnabled',
       },
       {
         label: 'Someone disliked your video',
-        names: {
-          inApp: 'commentReactionInAppNotificationEnabled',
-          email: 'commentReactionMailNotificationEnabled',
-        },
+        name: 'videoDislikedNotificationEnabled',
       },
     ],
   },
@@ -77,25 +50,16 @@ export const TABLE_STRUCTURE = [
     rows: [
       {
         label: 'Your channel was successfully signed up to participate in the program',
-        names: {
-          inApp: 'newVideoInAppNotificationEnabled',
-          email: 'newVideoMailNotificationEnabled',
-        },
+        name: 'yppSignupSuccessfulNotificationEnabled',
       },
       {
         label: 'Your channel was verified',
-        names: {
-          inApp: 'newNftAuctionInAppNotificationEnabled',
-          email: 'newNftAuctionMailNotificationEnabled',
-        },
+        name: 'yppChannelVerifiedNotificationEnabled',
       },
-      {
-        label: 'Your channel was suspended in the program participation',
-        names: {
-          inApp: 'newNftSaleInAppNotificationEnabled',
-          email: 'newNftSaleMailNotificationEnabled',
-        },
-      },
+      // {
+      //   label: 'Your channel was suspended in the program participation',
+      //   name: '',
+      // },
     ],
   },
   {
@@ -103,31 +67,22 @@ export const TABLE_STRUCTURE = [
     rows: [
       {
         label: 'Someone purchased your NFT',
-        names: {
-          inApp: 'auctionOutBidInAppNotificationEnabled',
-          email: 'auctionOutBidMailNotificationEnabled',
-        },
+        name: 'nftBoughtNotificationEnabled',
       },
       {
         label: 'Someone placed a bid on your NFT',
-        names: {
-          inApp: 'auctionExpiredInAppNotificationEnabled',
-          email: 'auctionExpiredMailNotificationEnabled',
-        },
+        name: 'bidMadeOnNftNotificationEnabled',
       },
-      {
-        label: 'Your timed auction expired',
-        names: {
-          inApp: 'auctionWonInAppNotificationEnabled',
-          email: 'auctionWonMailNotificationEnabled',
-        },
-      },
+      // {
+      //   label: 'Your timed auction expired',
+      //   names: {
+      //     inApp: 'auctionWonInAppNotificationEnabled',
+      //     email: 'auctionWonMailNotificationEnabled',
+      //   },
+      // },
       {
         label: 'You received NFT royalties',
-        names: {
-          inApp: 'auctionLostInAppNotificationEnabled',
-          email: 'auctionLostMailNotificationEnabled',
-        },
+        name: 'royaltyReceivedNotificationEnabled',
       },
     ],
   },
@@ -136,31 +91,19 @@ export const TABLE_STRUCTURE = [
     rows: [
       {
         label: 'You received direct payment',
-        names: {
-          inApp: 'fundFromCouncilInAppNotificationEnabled',
-          email: 'fundFromCouncilMailNotificationEnabled',
-        },
+        name: 'channelPaymentReceivedNotificationEnabled',
       },
       {
         label: 'You received funds from working group',
-        names: {
-          inApp: 'fundFromCouncilInAppNotificationEnabled',
-          email: 'fundFromCouncilMailNotificationEnabled',
-        },
+        name: 'channelReceivedFundsFromWgNotificationEnabled',
       },
       {
         label: 'New council payout is ready to be claimed',
-        names: {
-          inApp: 'fundSentInAppNotificationEnabled',
-          email: 'fundSentMailNotificationEnabled',
-        },
+        name: 'newPayoutUpdatedByCouncilNotificationEnabled',
       },
       {
         label: 'You transferred funds from channel wallet to member wallet',
-        names: {
-          inApp: 'fundFromWgInAppNotificationEnabled',
-          email: 'fundFromWgMailNotificationEnabled',
-        },
+        name: 'channelFundsWithdrawnNotificationEnabled',
       },
     ],
   },
