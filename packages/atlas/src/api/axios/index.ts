@@ -11,6 +11,6 @@ axiosInstance.interceptors.response.use(
       response.errorData = JSON.stringify(response.config.data)
     }
     response.endpoint = response.config.url
-    return response
+    throw response
   }
 )
