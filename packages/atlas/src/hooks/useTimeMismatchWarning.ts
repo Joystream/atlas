@@ -1,6 +1,6 @@
-import axios from 'axios'
 import { useEffect } from 'react'
 
+import { axiosInstance } from '@/api/axios'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useSnackbar } from '@/providers/snackbars'
 import { SentryLogger } from '@/utils/logs'
@@ -16,7 +16,7 @@ export const useTimeMismatchWarning = () => {
 
   useEffect(() => {
     if (!timeMismatchDisabled) {
-      axios.get('https://worldtimeapi.org/api/ip').then((response) => {
+      axiosInstance.get('https://worldtimeapi.org/api/ip').then((response) => {
         const serverTime = response.data.unixtime * 1000
         const clientTime = Date.now()
         const timeDiff = serverTime - clientTime

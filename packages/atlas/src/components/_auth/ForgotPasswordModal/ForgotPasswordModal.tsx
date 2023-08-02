@@ -1,11 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod/dist/zod'
 import { u8aToHex } from '@polkadot/util'
-import axios from 'axios'
 import { useCallback, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import shallow from 'zustand/shallow'
 
+import { axiosInstance } from '@/api/axios'
 import { useGetCurrentAccountLazyQuery } from '@/api/queries/__generated__/accounts.generated'
 import { AuthenticationModalStepTemplate } from '@/components/_auth/AuthenticationModalStepTemplate'
 import { EmailAndSeedStep } from '@/components/_auth/ForgotPasswordModal/steps/EmailAndSeedStep'
@@ -15,7 +15,7 @@ import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
 import { ORION_AUTH_URL } from '@/config/env'
 import { keyring } from '@/joystream-lib/lib'
-import { loginRequest, logoutRequest, prepareEncryptionArtifacts } from '@/providers/auth/auth.helpers'
+import { getAuthEpoch, loginRequest, logoutRequest, prepareEncryptionArtifacts } from '@/providers/auth/auth.helpers'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useSnackbar } from '@/providers/snackbars'
 import { SentryLogger } from '@/utils/logs'
@@ -74,14 +74,13 @@ export const ForgotPasswordModal = () => {
     setIsLoading(true)
 
     try {
-      const time = Date.now() - 10_000
-
+      const timestamp = (await getAuthEpoch()) - 30_000
       const keypair = keyring.addFromMnemonic(data['EmailAndSeedStep'].mnemonic)
       const address = keypair.address
       const loginPayload = {
         joystreamAccountId: address,
         gatewayName: atlasConfig.general.appName,
-        timestamp: time,
+        timestamp,
         action: 'login' as const,
       }
       const loginSignature = await keypair.sign(JSON.stringify(loginPayload))
@@ -123,7 +122,7 @@ export const ForgotPasswordModal = () => {
         return
       }
       setCurrentStep(ForgotPasswordStep.LoadingStep)
-      const time = Date.now() - 10_000
+      const timestamp = (await getAuthEpoch()) - 30_000
       try {
         const keypair = keyring.addFromMnemonic(data['EmailAndSeedStep'].mnemonic)
         const address = keypair.address
@@ -136,14 +135,14 @@ export const ForgotPasswordModal = () => {
         const forgetPayload = {
           joystreamAccountId: address,
           gatewayName: atlasConfig.general.appName,
-          timestamp: time,
+          timestamp,
           action: 'changeAccount',
           gatewayAccountId: accountId,
           newArtifacts,
         }
         const forgetPayloadSignature = await keypair.sign(JSON.stringify(forgetPayload))
 
-        await axios.post<{ accountId: string }>(
+        await axiosInstance.post<{ accountId: string }>(
           `${ORION_AUTH_URL}/change-account`,
           {
             signature: u8aToHex(forgetPayloadSignature),

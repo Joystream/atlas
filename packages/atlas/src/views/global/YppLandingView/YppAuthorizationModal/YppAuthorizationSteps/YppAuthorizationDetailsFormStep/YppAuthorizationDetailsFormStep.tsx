@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useCallback, useEffect, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 
 import {
@@ -50,6 +50,20 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
     }
   }, [referrerId, setValue])
 
+  const queryVariablesFactory = useCallback(
+    (value: string) => ({
+      where: {
+        channel: {
+          title_startsWith: value,
+          ownerMember: {
+            id_not_eq: memberId,
+          },
+        },
+      },
+    }),
+    [memberId]
+  )
+
   return (
     <FormFieldsWrapper>
       <FormField
@@ -97,19 +111,20 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
             >
               notFoundLabel="Channel with this title not found, please check spelling and try again."
               documentQuery={GetExtendedBasicChannelsDocument}
-              queryVariablesFactory={(value) => ({
-                where: {
-                  channel: {
-                    title_startsWith: value,
-                    ownerMember: {
-                      id_not_eq: memberId,
-                    },
-                  },
-                },
-              })}
-              perfectMatcher={(res, val) =>
-                res.extendedChannels.find((extendedChannel) => extendedChannel.channel.title === val)
-              }
+              queryVariablesFactory={queryVariablesFactory}
+              perfectMatcher={(res, val) => {
+                const initialResults = res.extendedChannels.filter(
+                  (extendedChannel) => extendedChannel.channel.title === val
+                )
+                if (initialResults.length === 1 || !referrerId) {
+                  return initialResults[0]
+                }
+
+                return (
+                  initialResults.find((extendedChannel) => extendedChannel.channel.id === referrerId) ??
+                  initialResults[0]
+                )
+              }}
               renderItem={(result) =>
                 result.extendedChannels.map((extendedChannel) => ({
                   ...extendedChannel,

@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.3.0] - 2023-08-02
+
+### Added
+
+- Added sentry stacktrace
+
+### Changed
+
+- Bumped NodeJS version to 18 for Github actions and project package.json
+- Changed YPP to sync only verified channels
+- Email is now prepopulated for YPP sign up
+- YPP carousel now shows recently paid channels
+
+### Fixed
+
+- Fixed referrer autocomplete
+- Fixed errors with wrong user system time
+- Fixed bugs in segment analytics events
+
 ## [4.2.0] - 2023-07-28
 
 ### Added
@@ -13,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed QN subscriptions connection 
+- Fixed QN subscriptions connection
 - Fixed issues with sign up flow
 
 ## [4.1.0] - 2023-07-26
