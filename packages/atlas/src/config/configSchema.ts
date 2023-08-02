@@ -46,6 +46,7 @@ export const configSchema = z.object({
       landingPageOgImgPath: z.string().nullable(),
       enrollmentReward: z.number().nullable(),
       enrollmentUsdReward: z.number().nullable(),
+      referralBaseReward: z.number().nullable(),
       tiersDefinition: z
         .object({
           tiersTooltip: z.string().nullable(),

@@ -2,6 +2,7 @@ import { FC } from 'react'
 import { useParallax } from 'react-scroll-parallax'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { useRecentlyPaidChannels } from '@/api/hooks/channel'
 import { SvgActionChevronR, SvgLogoGoogleWhiteFull, SvgLogoYoutubeWhiteFull } from '@/assets/icons'
 import hero576 from '@/assets/images/ypp-hero/hero-576.webp'
 import hero864 from '@/assets/images/ypp-hero/hero-864.webp'
@@ -15,7 +16,7 @@ import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { GoogleButton } from '@/components/_buttons/GoogleButton'
-import { ChannelCard } from '@/components/_channel/ChannelCard'
+import { PaidChannelCard } from '@/components/_channel/ChannelCard'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -31,7 +32,6 @@ import {
   StyledInfiniteCarousel,
 } from './YppHero.styles'
 import { BackgroundContainer, StyledLimitedWidthContainer } from './YppLandingView.styles'
-import { useGetYppLastVerifiedChannels } from './useGetYppLastVerifiedChannels'
 
 export type YppAtlasStatus = 'have-channel' | 'no-channel' | 'ypp-signed' | 'connect-wallet' | null
 
@@ -60,12 +60,16 @@ export const YppHero: FC<YppHeroProps> = ({
     translateY: [0, -15],
   })
 
-  const { channels, loading } = useGetYppLastVerifiedChannels()
+  const { channels, loading } = useRecentlyPaidChannels()
   const items = !loading
     ? channels?.map((extendedChannels) => (
-        <ChannelCard key={extendedChannels.channel.id} channel={extendedChannels.channel} withFollowButton={false} />
+        <PaidChannelCard
+          key={extendedChannels.channel.id}
+          amount={extendedChannels.amount}
+          channel={extendedChannels.channel}
+        />
       ))
-    : Array.from({ length: 30 }).map((_, idx) => <ChannelCard key={idx} loading withFollowButton={false} />)
+    : Array.from({ length: 30 }).map((_, idx) => <PaidChannelCard key={idx} loading />)
 
   return (
     <BackgroundContainer noBackground>
@@ -169,8 +173,8 @@ export const YppHero: FC<YppHeroProps> = ({
         <StyledInfiniteCarousel
           headerGridItemProps={{ colStart: { base: 1, lg: 2 }, colSpan: { base: 12, lg: 10 } }}
           carouselHorizonthalOffset={-32}
-          title="Recent verified channels"
-          itemWidth={200}
+          title="Signed up channels"
+          itemWidth={260}
           items={items}
           subTitle="What is a verified channel?"
           informationProps={{
