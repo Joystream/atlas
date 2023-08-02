@@ -12,8 +12,6 @@ const filesDir = path.resolve(`src/assets/${type}/svgs`)
 
 let counter = 0
 
-const getFileName = (name) => `${config.PREFIX ?? ''}${kebabCase(name)}.svg`
-
 const checkIfFileExists = async (path) => {
   try {
     await fs.access(path)
@@ -45,16 +43,15 @@ const prompt = async (query) => {
  */
 const deleteFiles = async (files) => {
   for (const file of files) {
-    const fileName = getFileName(file)
     try {
-      const path = `${filesDir}/${fileName}`
+      const path = `${filesDir}/${file}.svg`
       const fileExists = await checkIfFileExists(path)
       if (fileExists) {
         await fs.unlink(path)
-        console.log(`${fileName} successfully deleted!`)
+        console.log(`${file}.svg successfully deleted!`)
       }
     } catch (err) {
-      console.error(`Error while deleting ${fileName}`)
+      console.error(`Error while deleting ${file}.svg`)
     }
   }
 }
@@ -82,6 +79,8 @@ const clearFilesDir = async () => {
 const generateIconOrIllustration = async (svgNode, total) => {
   const fileUrl = await getSvgImageUrl(svgNode.id)
 
+  const fileName = kebabCase(svgNode.name)
+
   try {
     await fs.access(filesDir)
   } catch (error) {
@@ -90,8 +89,7 @@ const generateIconOrIllustration = async (svgNode, total) => {
 
   const { data: fileContent } = await getImageContent(fileUrl)
 
-  const fileName = getFileName(svgNode.name)
-  await Promise.all([await fs.writeFile(path.resolve(filesDir, fileName), fileContent, 'utf-8')])
+  await Promise.all([await fs.writeFile(path.resolve(filesDir, `${fileName}.svg`), fileContent, 'utf-8')])
 
   counter++
   process.stdout.write(` ${counter}/${total} files has been saved\r`)
@@ -128,7 +126,7 @@ const main = async () => {
       const filesToGenerate =
         shouldRegenerateAllFiles &&
         (await prompt('Which files do you want to import? (Provide string-separated string with no .svg extension) '))
-      arrayOfFilesToGenerate = filesToGenerate.split(' ').map(kebabCase)
+      arrayOfFilesToGenerate = filesToGenerate.split(' ')
       await deleteFiles(arrayOfFilesToGenerate)
     } else {
       await clearFilesDir()
@@ -138,10 +136,9 @@ const main = async () => {
       type === 'icons' ? config.FRAME_WITH_ICONS_ID : config.FRAME_WITH_ILLUSTRATIONS_ID
     )
 
-    const nodesToGenerate =
-      arrayOfFilesToGenerate.length === 0
-        ? filesNodesArr
-        : filesNodesArr.filter((node) => arrayOfFilesToGenerate.includes(kebabCase(node.name)))
+    const nodesToGenerate = filesNodesArr.filter((node) =>
+      arrayOfFilesToGenerate.length ? arrayOfFilesToGenerate.includes(node.name) : true
+    )
 
     if (!nodesToGenerate?.length) {
       console.error('No nodes found')
