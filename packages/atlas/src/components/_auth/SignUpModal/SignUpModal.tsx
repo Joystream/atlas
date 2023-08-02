@@ -377,7 +377,7 @@ export const SignUpModal = () => {
           isOverflowing={overflow || !smMatch}
           isEmailAlreadyTakenError={emailAlreadyTakenError}
           onEmailSubmit={handleEmailStepSubmit}
-          email={signUpFormData.current.email}
+          email={signUpFormData.current.email || (ytResponseData?.email ?? '')}
           confirmedTerms={signUpFormData.current.confirmedTerms}
         />
       )}

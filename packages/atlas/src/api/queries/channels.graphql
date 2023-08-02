@@ -57,13 +57,13 @@ mutation FollowChannel($channelId: String!) {
   followChannel(channelId: $channelId) {
     channelId
     follows
-    cancelToken
+    added
   }
 }
 
 # CHANGE: `ID` is now `String`
-mutation UnfollowChannel($channelId: String!, $token: String!) {
-  unfollowChannel(channelId: $channelId, token: $token) {
+mutation UnfollowChannel($channelId: String!) {
+  unfollowChannel(channelId: $channelId) {
     channelId
     follows
   }
@@ -290,6 +290,24 @@ query GetChannelPaymentEvents($channelId: String) {
         rationale
         payer {
           controllerAccount
+        }
+      }
+    }
+  }
+}
+
+query GetChannelsPaymentEvents($limit: Int = 500) {
+  events(where: { data: { isTypeOf_eq: "ChannelPaymentMadeEventData" } }, orderBy: inBlock_DESC, limit: $limit) {
+    data {
+      ... on ChannelPaymentMadeEventData {
+        amount
+        payeeChannel {
+          id
+          title
+          avatarPhoto {
+            resolvedUrls
+            isAccepted
+          }
         }
       }
     }

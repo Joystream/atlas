@@ -1,10 +1,11 @@
 import { useApolloClient } from '@apollo/client'
 import { u8aToHex } from '@polkadot/util'
 import { cryptoWaitReady } from '@polkadot/util-crypto'
-import axios, { isAxiosError } from 'axios'
+import { isAxiosError } from 'axios'
 import { AES, enc, lib, mode } from 'crypto-js'
 import { FC, PropsWithChildren, createContext, useCallback, useContext, useMemo, useState } from 'react'
 
+import { axiosInstance } from '@/api/axios'
 import { GetCurrentAccountQuery, useGetCurrentAccountLazyQuery } from '@/api/queries/__generated__/accounts.generated'
 import { atlasConfig } from '@/config'
 import { ORION_AUTH_URL } from '@/config/env'
@@ -22,6 +23,7 @@ import {
   entropyToMnemonic,
   getArtifactId,
   getArtifacts,
+  getAuthEpoch,
   handleAnonymousAuth,
   logoutRequest,
 } from './auth.helpers'
@@ -106,7 +108,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       })
 
       try {
-        await axios.post(
+        await axiosInstance.post(
           `${ORION_AUTH_URL}/session-artifacts`,
           {
             cipherKey,
@@ -128,11 +130,11 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     async (params, retryCount = 0) => {
       setIsAuthenticating(true)
       await cryptoWaitReady()
-      const time = Date.now() - 30_000
+      const timestamp = (await getAuthEpoch()) - 30_000
       const payload = {
         joystreamAccountId: '',
         gatewayName: atlasConfig.general.appName,
-        timestamp: time,
+        timestamp,
         action: 'login',
       }
       let signatureOverPayload = null
@@ -165,7 +167,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
           }
         }
 
-        const response = await axios.post<{ accountId: string }>(
+        const response = await axiosInstance.post<{ accountId: string }>(
           `${ORION_AUTH_URL}/login`,
           {
             signature: signatureOverPayload,

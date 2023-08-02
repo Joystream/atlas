@@ -22,6 +22,7 @@ export const TIERS = configTiers
         ),
         icon: <SvgTierIcon1 />,
         subscribers: configTiers?.[0].minimumSubscribers,
+        multiplier: configTiers?.[0].multiplier,
       },
       {
         rules: (
@@ -46,6 +47,7 @@ export const TIERS = configTiers
         ),
         icon: <SvgTierIcon2 />,
         subscribers: configTiers?.[1].minimumSubscribers,
+        multiplier: configTiers?.[1].multiplier,
       },
       {
         rules: (
@@ -63,6 +65,7 @@ export const TIERS = configTiers
         ),
         icon: <SvgTierIcon3 />,
         subscribers: configTiers?.[2].minimumSubscribers - 1,
+        multiplier: configTiers?.[2].multiplier,
       },
     ]
   : []

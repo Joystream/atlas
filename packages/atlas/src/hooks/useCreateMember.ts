@@ -1,9 +1,10 @@
 import { cryptoWaitReady } from '@polkadot/util-crypto'
-import axios, { isAxiosError } from 'axios'
+import { isAxiosError } from 'axios'
 import BN from 'bn.js'
 import { useCallback } from 'react'
 import { useMutation } from 'react-query'
 
+import { axiosInstance } from '@/api/axios'
 import { ImageInputFile } from '@/components/_inputs/MultiFileSelect'
 import { FAUCET_URL, YPP_FAUCET_URL } from '@/config/env'
 import { keyring } from '@/joystream-lib/lib'
@@ -87,7 +88,7 @@ export const useCreateMember = () => {
     uploadAvatarImage(croppedBlob)
   )
   const { mutateAsync: faucetMutation } = useMutation('faucet-post', (body: FaucetParams) =>
-    axios.post<NewMemberResponse>(ytResponseData ? YPP_FAUCET_URL : FAUCET_URL, body)
+    axiosInstance.post<NewMemberResponse>(ytResponseData ? YPP_FAUCET_URL : FAUCET_URL, body)
   )
 
   const createNewMember = useCallback(
