@@ -302,7 +302,12 @@ query GetChannelsPaymentEvents($limit: Int = 500) {
       ... on ChannelPaymentMadeEventData {
         amount
         payeeChannel {
-          ...BasicChannelFields
+          id
+          title
+          avatarPhoto {
+            resolvedUrls
+            isAccepted
+          }
         }
       }
     }

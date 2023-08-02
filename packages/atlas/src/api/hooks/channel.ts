@@ -26,7 +26,6 @@ import {
   useGetTop10ChannelsQuery,
   useUnfollowChannelMutation,
 } from '@/api/queries/__generated__/channels.generated'
-import { BasicChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 
 export const useBasicChannel = (
@@ -85,12 +84,17 @@ export const useBasicChannels = (
   }
 }
 
-type ChannelPayment = { channel: BasicChannelFieldsFragment; amount: BN }
-export const useRecentlyPaidChannels = (): { channels: ChannelPayment[] | undefined; loading: boolean } => {
+type PayeeChannel = {
+  id: string
+  title?: string | null
+  avatarPhoto?: { resolvedUrls: string[] } | null
+}
+export type YPPPaidChannels = { channel: PayeeChannel; amount: BN }
+export const useRecentlyPaidChannels = (): { channels: YPPPaidChannels[] | undefined; loading: boolean } => {
   const { data, loading } = useGetChannelsPaymentEventsQuery({ variables: { limit: 2000 } })
 
-  const channels = useMemo<ChannelPayment[] | undefined>(() => {
-    type PaymentMap = Map<string, ChannelPayment>
+  const channels = useMemo<YPPPaidChannels[] | undefined>(() => {
+    type PaymentMap = Map<string, YPPPaidChannels>
     const paymentMap = data?.events.reduce<PaymentMap>((channels, { data }) => {
       if (data.__typename !== 'ChannelPaymentMadeEventData' || !data.payeeChannel) return channels
 

@@ -1,8 +1,7 @@
-import BN from 'bn.js'
 import { FC } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { BasicChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { YPPPaidChannels } from '@/api/hooks/channel'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -17,11 +16,9 @@ import {
   StyledAvatar,
 } from './PaidChannelCard.styles'
 
-export type PaidChannelCardProps = {
+export type PaidChannelCardProps = Partial<YPPPaidChannels> & {
   onClick?: () => void
   loading?: boolean
-  channel?: BasicChannelFieldsFragment
-  amount?: BN
 }
 
 export const PaidChannelCard: FC<PaidChannelCardProps> = ({ onClick, channel, amount, loading }) => {

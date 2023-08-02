@@ -633,29 +633,7 @@ export type GetChannelsPaymentEventsQuery = {
             __typename?: 'Channel'
             id: string
             title?: string | null
-            description?: string | null
-            createdAt: Date
-            followsNum: number
-            rewardAccount: string
-            channelStateBloatBond: string
-            avatarPhoto?: {
-              __typename?: 'StorageDataObject'
-              id: string
-              resolvedUrls: Array<string>
-              createdAt: Date
-              size: string
-              isAccepted: boolean
-              ipfsHash: string
-              storageBag: { __typename?: 'StorageBag'; id: string }
-              type?:
-                | { __typename: 'DataObjectTypeChannelAvatar' }
-                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                | { __typename: 'DataObjectTypeVideoMedia' }
-                | { __typename: 'DataObjectTypeVideoSubtitle' }
-                | { __typename: 'DataObjectTypeVideoThumbnail' }
-                | null
-            } | null
+            avatarPhoto?: { __typename?: 'StorageDataObject'; resolvedUrls: Array<string>; isAccepted: boolean } | null
           } | null
         }
       | { __typename?: 'ChannelPayoutsUpdatedEventData' }
@@ -1596,13 +1574,17 @@ export const GetChannelsPaymentEventsDocument = gql`
         ... on ChannelPaymentMadeEventData {
           amount
           payeeChannel {
-            ...BasicChannelFields
+            id
+            title
+            avatarPhoto {
+              resolvedUrls
+              isAccepted
+            }
           }
         }
       }
     }
   }
-  ${BasicChannelFieldsFragmentDoc}
 `
 
 /**
