@@ -29,7 +29,12 @@ const CREATOR_TOKEN_INITIAL_DATA: CreateTokenForm = {
   firstPayout: 0,
 }
 
-export const CreateTokenDrawer = () => {
+type CreateTokenDrawerProps = {
+  show: boolean
+  onClose: () => void
+}
+
+export const CreateTokenDrawer = ({ show, onClose }: CreateTokenDrawerProps) => {
   const [activeStep, setActiveStep] = useState(CREATE_TOKEN_STEPS.setup)
   const formData = useRef<CreateTokenForm>(CREATOR_TOKEN_INITIAL_DATA)
   const [primaryButtonProps, setPrimaryButtonProps] =
@@ -46,6 +51,7 @@ export const CreateTokenDrawer = () => {
       text: 'Confirm and discard',
       onClick: () => {
         closeDialog()
+        onClose()
       },
     },
     secondaryButton: {
@@ -59,7 +65,7 @@ export const CreateTokenDrawer = () => {
       case CREATE_TOKEN_STEPS.setup:
         return {
           text: 'Cancel',
-          onClick: () => (CREATOR_TOKEN_INITIAL_DATA === formData.current ? undefined : openDialog()),
+          onClick: () => (CREATOR_TOKEN_INITIAL_DATA === formData.current ? onClose() : openDialog()),
         }
       case CREATE_TOKEN_STEPS.issuance:
         return {
@@ -82,14 +88,14 @@ export const CreateTokenDrawer = () => {
           },
         }
     }
-  }, [activeStep, openDialog])
+  }, [activeStep, onClose, openDialog])
 
   return (
     <CrtDrawer
       steps={steps}
       activeStep={activeStep}
-      isOpen={true}
-      onClose={() => undefined}
+      isOpen={show}
+      onClose={() => onClose()}
       actionBar={{
         isNoneCrypto: true,
         primaryButton: primaryButtonProps ?? {},
