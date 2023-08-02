@@ -61,12 +61,12 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
               Once verified, you will qualify for the rewards. Payouts are made on a weekly basis, every Friday, for the
               previous calendar week. Your first payment will involve the reward for the sign up of{' '}
               <NumberFormat
-                value={(atlasConfig.features.ypp.enrollmentReward ?? 0) * multiplier}
-                format="short"
+                value={(atlasConfig.features.ypp.enrollmentUsdReward ?? 0) * multiplier}
+                format="dollar"
                 as="span"
-                withToken
-              />
-              !
+                withTooltip={false}
+              />{' '}
+              USD paid out in ${atlasConfig.joystream.tokenTicker} tokens based on the market rate.
             </Text>
           }
         />
