@@ -8,8 +8,7 @@
 
 module.exports = {
   FIGMA_TOKEN: '',
-  FILE_KEY: '2tlBY1JQtRMoyjmjJQ9jam',
-  FRAME_WITH_ICONS_ID: '304:2559',
-  PREFIX: 'action-',
+  FILE_KEY: '1uxugLps6oooI38PGmdrn9',
+  FRAME_WITH_ICONS_ID: '1547:4330',
   FRAME_WITH_ILLUSTRATIONS_ID: '1008:6558'
 }
