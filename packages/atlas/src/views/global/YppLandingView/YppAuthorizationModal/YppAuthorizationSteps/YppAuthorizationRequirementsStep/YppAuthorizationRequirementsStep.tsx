@@ -3,7 +3,6 @@ import { FC, PropsWithChildren } from 'react'
 
 import { SvgActionCheck, SvgActionClose } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
-import { Text } from '@/components/Text'
 import { atlasConfig } from '@/config'
 import { pluralizeNoun } from '@/utils/misc'
 
@@ -37,17 +36,14 @@ export const YppAuthorizationRequirementsStep: FC<YppAuthorizationRequirementsSt
     <>
       <StyledList>
         {atlasConfig.general.appContentFocus && (
-          <SingleRequirement fulfilled>
-            <>
-              The main topic of your videos is{' '}
-              <Text variant="t200-strong" as="span">
-                {atlasConfig.general.appContentFocus}
-              </Text>
+          <SingleRequirement fulfilled important>
+            <span>
+              The main topic of your videos is {atlasConfig.general.appContentFocus}
               <CategoriesText variant="t100" as="span" color="colorTextMuted">
                 {atlasConfig.general.appName} video categories:{' '}
                 {atlasConfig.content.categories.map((category) => category.name).join(', ')}
               </CategoriesText>
-            </>
+            </span>
           </SingleRequirement>
         )}
         <SingleRequirement
@@ -79,13 +75,14 @@ export const YppAuthorizationRequirementsStep: FC<YppAuthorizationRequirementsSt
 
 type SingleRequirmentProps = PropsWithChildren<{
   fulfilled: boolean
+  important?: boolean
 }>
 
-export const SingleRequirement: FC<SingleRequirmentProps> = ({ fulfilled, children }) => {
+export const SingleRequirement: FC<SingleRequirmentProps> = ({ fulfilled, important, children }) => {
   return (
     <ListItem as="li" variant="t200" color="colorText">
       <TickWrapper fulfilled={fulfilled}>{fulfilled ? <SvgActionCheck /> : <SvgActionClose />}</TickWrapper>
-      <Paragraph>{children}</Paragraph>
+      <Paragraph important={important}>{children}</Paragraph>
     </ListItem>
   )
 }

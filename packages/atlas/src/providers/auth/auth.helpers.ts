@@ -276,7 +276,7 @@ export const getMnemonicFromeEmailAndPassword = async (email: string, password: 
 export const getAuthEpoch = async () => {
   let epoch: number
   try {
-    const res = await withTimeout(axios.get('https://worldtimeapi.org/api/ip'), 5_000)
+    const res = await withTimeout(axiosInstance.get('https://worldtimeapi.org/api/ip'), 5_000)
     if (res.data?.unixtime) {
       epoch = res.data.unixtime * 1000
     } else {
