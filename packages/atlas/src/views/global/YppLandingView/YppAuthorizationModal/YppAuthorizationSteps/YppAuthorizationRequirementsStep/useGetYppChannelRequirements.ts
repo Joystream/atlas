@@ -1,7 +1,7 @@
-import axios from 'axios'
 import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 
+import { axiosInstance } from '@/api/axios'
 import { atlasConfig } from '@/config'
 import { SentryLogger } from '@/utils/logs'
 
@@ -9,7 +9,7 @@ import { ChannelRequirements, Requirements } from '../../YppAuthorizationModal.t
 
 export const useGetYppChannelRequirements = () => {
   const { data } = useQuery('ypp-requirements-fetch', () =>
-    axios
+    axiosInstance
       .get<ChannelRequirements>(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/induction/requirements`)
       .then((res) => res.data)
       .catch((error) => SentryLogger.error("Couldn't fetch requirements", 'YppAuthorizationModal.hooks', error))

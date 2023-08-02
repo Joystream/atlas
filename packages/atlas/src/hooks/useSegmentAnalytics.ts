@@ -26,6 +26,16 @@ type AllNftFilters = {
   sortBy?: string
 }
 
+type YppOptInParams = {
+  handle?: string
+  email?: string
+  category?: string
+  subscribersCount?: string
+  referrerId?: string
+  utmSource?: string
+  utmCampaign?: string
+}
+
 type playbackEventType = 'playbackStarted' | 'playbackPaused' | 'playbackResumed' | 'playbackCompleted'
 
 export const useSegmentAnalytics = () => {
@@ -48,14 +58,7 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackYppOptIn = useCallback(
-    (
-      handle = 'no data',
-      email = 'no data',
-      category = 'no data',
-      subscribersCount: string,
-      referrerId = 'no data',
-      utmSource = 'no data'
-    ) => {
+    ({ handle, email, category, subscribersCount, referrerId, utmSource, utmCampaign }: YppOptInParams) => {
       analytics.track('YPP Sign Up Completed', {
         handle,
         email,
@@ -63,6 +66,7 @@ export const useSegmentAnalytics = () => {
         subscribersCount,
         referrerId,
         utmSource,
+        utmCampaign,
       })
     },
     [analytics]
@@ -195,8 +199,12 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackYppSignInButtonClick = useCallback(
-    (referrer: string | null | undefined, utmSource: string | null | undefined) => {
-      analytics.track('YPP Landing Sign In w Google Clicked', { referrer, utmSource })
+    (
+      referrer: string | null | undefined,
+      utmSource: string | null | undefined,
+      utmCampaign: string | null | undefined
+    ) => {
+      analytics.track('YPP Landing Sign In w Google Clicked', { referrer, utmSource, utmCampaign })
     },
     [analytics]
   )

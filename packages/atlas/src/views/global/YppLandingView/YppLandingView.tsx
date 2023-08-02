@@ -1,11 +1,11 @@
 import AOS from 'aos'
 import 'aos/dist/aos.css'
-import axios from 'axios'
 import { FC, useCallback, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ParallaxProvider } from 'react-scroll-parallax'
 
+import { axiosInstance } from '@/api/axios'
 import { YppReferralBanner } from '@/components/_ypp/YppReferralBanner'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
@@ -39,7 +39,7 @@ export const YppLandingView: FC = () => {
   const { trackYppSignInButtonClick } = useSegmentAnalytics()
   const selectedChannelTitle = activeMembership?.channels.find((channel) => channel.id === channelId)?.title
   const { data } = useQuery('ypp-quota-fetch', () =>
-    axios
+    axiosInstance
       .get<{ signupQuotaUsed: number }>(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/youtube/quota-usage/today`)
       .then((res) => res.data)
       .catch((e) => SentryLogger.error('Quota fetch failed', 'YppLandingView', e))
@@ -49,7 +49,11 @@ export const YppLandingView: FC = () => {
   const shouldContinueYppFlowAfterCreatingChannel = useYppStore(
     (store) => store.shouldContinueYppFlowAfterCreatingChannel
   )
-  const [referrer, utmSource] = [searchParams.get('referrerId'), searchParams.get('utm_source')]
+  const [referrer, utmSource, utmCampaign] = [
+    searchParams.get('referrerId'),
+    searchParams.get('utm_source'),
+    searchParams.get('utm_campaign'),
+  ]
 
   const { unsyncedChannels, isLoading, currentChannel } = useGetYppSyncedChannels()
   const isYppSigned = !!currentChannel
@@ -79,7 +83,7 @@ export const YppLandingView: FC = () => {
     }
 
     if (!yppModalOpenName) {
-      trackYppSignInButtonClick(referrer, utmSource)
+      trackYppSignInButtonClick(referrer, utmSource, utmCampaign)
       setYppModalOpen('ypp-requirements')
       return
     }
@@ -92,6 +96,7 @@ export const YppLandingView: FC = () => {
     trackYppSignInButtonClick,
     referrer,
     utmSource,
+    utmCampaign,
     setYppModalOpen,
   ])
 
