@@ -2,10 +2,11 @@ import { useMemo } from 'react'
 
 import { useBasicChannel } from '@/api/hooks/channel'
 import { Avatar } from '@/components/Avatar'
+import { Pill } from '@/components/Pill'
 import { Table, TableProps } from '@/components/Table'
 import { SenderItem, StyledLink } from '@/components/TablePaymentsHistory/TablePaymentsHistory.styles'
 import { Text } from '@/components/Text'
-import { TierText } from '@/components/YppReferralTable/YppReferralTable.styles'
+import { LeftAlignText, RightAlignText } from '@/components/YppReferralTable/YppReferralTable.styles'
 import { absoluteRoutes } from '@/config/routes'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { SentryLogger } from '@/utils/logs'
@@ -19,7 +20,9 @@ import { COLUMNS, tableLoadingData } from './YppReferralTable.utils'
 export type YppReferral = {
   date: Date
   channel: string
-  subscribers: number
+  tier: number
+  rewardUsd: number
+  status: 'Unverified' | 'Suspended' | 'Verified'
 }
 
 type YppReferralTableProps = {
@@ -33,7 +36,9 @@ export const YppReferralTable = ({ isLoading, data }: YppReferralTableProps) => 
       data.map((entry) => ({
         date: <Date date={entry.date} />,
         channel: <Channel channel={entry.channel} />,
-        tier: <Tier subscribers={entry.subscribers} />,
+        tier: <Tier tier={entry.tier} />,
+        status: <Status status={entry.status} />,
+        reward: <Reward reward={entry.rewardUsd} />,
       })),
     [data]
   )
@@ -72,27 +77,32 @@ const Channel = ({ channel }: { channel: YppReferral['channel'] }) => {
   )
 }
 
-const Tier = ({ subscribers }: { subscribers: number }) => {
-  const currentTier = TIERS.reduce((prev, current, idx) => {
-    if (subscribers >= (current?.subscribers || 0)) {
-      return idx
-    } else {
-      return prev
-    }
-  }, 0)
+const Tier = ({ tier }: { tier: number }) => {
   return (
     <TierWrapper>
-      {TIERS[currentTier].icon}
+      {TIERS[tier].icon}
       <TierDescription>
         <div style={{ display: 'grid' }}>
-          <TierText variant="h300" as="span">
-            Tier {currentTier + 1}{' '}
-          </TierText>
+          <LeftAlignText variant="h300" as="span">
+            Tier {tier + 1}{' '}
+          </LeftAlignText>
           <Text variant="t100" as="p" color="colorText">
-            {TIERS[currentTier].rules}
+            {TIERS[tier].rules}
           </Text>
         </div>
       </TierDescription>
     </TierWrapper>
   )
 }
+
+const Reward = ({ reward }: { reward: number }) => {
+  return (
+    <RightAlignText as="p" variant="t100-strong">
+      ${reward}
+    </RightAlignText>
+  )
+}
+
+const Status = ({ status }: { status: 'Unverified' | 'Suspended' | 'Verified' }) => (
+  <Pill variant={status === 'Verified' ? 'success' : 'default'} label={status} />
+)
