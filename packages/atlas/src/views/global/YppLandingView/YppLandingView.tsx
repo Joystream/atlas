@@ -49,7 +49,11 @@ export const YppLandingView: FC = () => {
   const shouldContinueYppFlowAfterCreatingChannel = useYppStore(
     (store) => store.shouldContinueYppFlowAfterCreatingChannel
   )
-  const [referrer, utmSource] = [searchParams.get('referrerId'), searchParams.get('utm_source')]
+  const [referrer, utmSource, utmCampaign] = [
+    searchParams.get('referrerId'),
+    searchParams.get('utm_source'),
+    searchParams.get('utm_campaign'),
+  ]
 
   const { unsyncedChannels, isLoading, currentChannel } = useGetYppSyncedChannels()
   const isYppSigned = !!currentChannel
@@ -79,7 +83,7 @@ export const YppLandingView: FC = () => {
     }
 
     if (!yppModalOpenName) {
-      trackYppSignInButtonClick(referrer, utmSource)
+      trackYppSignInButtonClick(referrer, utmSource, utmCampaign)
       setYppModalOpen('ypp-requirements')
       return
     }
@@ -92,6 +96,7 @@ export const YppLandingView: FC = () => {
     trackYppSignInButtonClick,
     referrer,
     utmSource,
+    utmCampaign,
     setYppModalOpen,
   ])
 
