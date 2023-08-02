@@ -1,8 +1,6 @@
 import axios from 'axios'
 
-export const axiosInstance = axios.create({
-  withCredentials: true,
-})
+export const axiosInstance = axios.create({})
 
 axiosInstance.interceptors.response.use(
   (response) => response,
@@ -11,6 +9,6 @@ axiosInstance.interceptors.response.use(
       response.errorData = JSON.stringify(response.config.data)
     }
     response.endpoint = response.config.url
-    return response
+    throw response
   }
 )
