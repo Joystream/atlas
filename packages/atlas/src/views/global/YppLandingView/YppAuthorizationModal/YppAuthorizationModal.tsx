@@ -98,7 +98,8 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     referrerId,
     ytResponseData,
     utmSource,
-    actions: { setYtResponseData, setUtmSource },
+    utmCampaign,
+    actions: { setYtResponseData, setUtmSource, setUtmCampaign },
   } = useYppStore((store) => store, shallow)
   const setReferrerId = useYppStore((store) => store.actions.setReferrerId)
   const setShouldContinueYppFlowAfterLogin = useYppStore((store) => store.actions.setShouldContinueYppFlowAfterLogin)
@@ -155,7 +156,10 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     if (searchParams.get('utm_source')) {
       setUtmSource(searchParams.get('utm_source'))
     }
-  }, [searchParams, setUtmSource])
+    if (searchParams.get('utm_campaign')) {
+      setUtmCampaign(searchParams.get('utm_campaign'))
+    }
+  }, [searchParams, setUtmCampaign, setUtmSource])
 
   useEffect(() => {
     contentRef.current?.scrollTo({ top: 0 })
@@ -289,14 +293,15 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
           await refetchYppSyncedChannels()
 
           identifyUser(ytResponseData?.email)
-          trackYppOptIn(
-            ytResponseData?.channelHandle,
-            ytResponseData?.email,
-            data.videoCategoryId ? displayCategoriesLookup[data.videoCategoryId]?.name : undefined,
-            channelCreationResponse.data.channel.subscribersCount,
-            data.referrerChannelId,
-            utmSource || undefined
-          )
+          trackYppOptIn({
+            handle: ytResponseData?.channelHandle,
+            email: ytResponseData?.email,
+            category: data.videoCategoryId ? displayCategoriesLookup[data.videoCategoryId]?.name : undefined,
+            subscribersCount: channelCreationResponse.data.channel.subscribersCount,
+            referrerId: data.referrerChannelId,
+            utmSource: utmSource || undefined,
+            utmCampaign: utmCampaign || undefined,
+          })
           setReferrerId(null)
           setYtResponseData(null)
 
