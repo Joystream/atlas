@@ -3,6 +3,7 @@ import { flushSync } from 'react-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { CrtDrawer, CrtDrawerProps } from '@/components/CrtDrawer'
+import { useConfirmationModal } from '@/providers/confirmationModal'
 import { transitions } from '@/styles'
 
 import { CreateTokenForm } from './CreateTokenDrawer.types'
@@ -35,11 +36,31 @@ export const CreateTokenDrawer = () => {
     useState<NonNullable<CrtDrawerProps['actionBar']>['primaryButton']>()
   const nodeRef = useRef<HTMLDivElement>(null)
   const [isGoingBack, setIsGoingBack] = useState(false)
+  const [openDialog, closeDialog] = useConfirmationModal({
+    type: 'warning',
+    title: 'Discard changes?',
+    description:
+      'You have unsaved changes which are going to be lost if you close this window. Are you sure you want to continue?',
+    primaryButton: {
+      variant: 'warning',
+      text: 'Confirm and discard',
+      onClick: () => {
+        closeDialog()
+      },
+    },
+    secondaryButton: {
+      text: 'Cancel',
+      onClick: () => closeDialog(),
+    },
+  })
 
   const secondaryButton = useMemo(() => {
     switch (activeStep) {
       case CREATE_TOKEN_STEPS.setup:
-        return undefined
+        return {
+          text: 'Cancel',
+          onClick: () => (CREATOR_TOKEN_INITIAL_DATA === formData.current ? undefined : openDialog()),
+        }
       case CREATE_TOKEN_STEPS.issuance:
         return {
           text: 'Back',
@@ -61,7 +82,7 @@ export const CreateTokenDrawer = () => {
           },
         }
     }
-  }, [activeStep])
+  }, [activeStep, openDialog])
 
   return (
     <CrtDrawer
