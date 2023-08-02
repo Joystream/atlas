@@ -113,6 +113,7 @@
     "@joystream/prettier-config": "^1.0.0",
     "@modyfi/vite-plugin-yaml": "^1.0.3",
     "@rollup/plugin-babel": "^6.0.3",
+    "@sentry/vite-plugin": "^2.5.0",
     "@storybook/addon-actions": "7.0.7",
     "@storybook/addon-docs": "7.0.7",
     "@storybook/addon-essentials": "7.0.7",
