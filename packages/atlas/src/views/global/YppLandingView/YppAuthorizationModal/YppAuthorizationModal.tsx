@@ -302,12 +302,10 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
 
           navigate(absoluteRoutes.studio.ypp())
           displaySnackbar({
-            title: 'YouTube Synch Enabled',
+            title: 'Sign up successful!',
             description:
-              'We started importing your YouTube videos. Allow up to 30 minutes for the YouTube videos to start showing in your channel.',
-            actionText: 'Go to My videos',
-            onActionClick: () => navigate(absoluteRoutes.studio.videos()),
-            iconType: 'info',
+              'We will start importing your YouTube videos once your channel is verified. Please allow 30 to 60 minutes after verification for your videos to start showing on the My videos page.',
+            iconType: 'success',
           })
         },
       })
