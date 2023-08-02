@@ -49,24 +49,28 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
           }
         />
       )}
-      <StyledBanner
-        title="When rewards are paid out?"
-        icon={<SvgAlertsInformative24 />}
-        description={
-          <>
-            Payouts are made on a weekly basis, every Friday, for the previous calendar week. Your first payment will
-            involve the reward for the sign up of{' '}
-            <NumberFormat
-              value={(atlasConfig.features.ypp.enrollmentReward ?? 0) * multiplier}
-              format="short"
-              as="span"
-              withToken
-            />{' '}
-            after your channel is verified.
-          </>
-        }
-        dismissibleId="ypp-first-reward-information"
-      />
+      {currentChannel?.yppStatus === 'Unverified' && (
+        <StyledBanner
+          title="Channel Verification Pending"
+          icon={<SvgAlertsInformative24 />}
+          description={
+            <Text variant="t200" as="span" color="colorCoreNeutral200">
+              Your channel needs to get verified before content syncing starts. It normally takes 12-48 hours for
+              channels to get verified.
+              <br />
+              Once verified, you will qualify for the rewards. Payouts are made on a weekly basis, every Friday, for the
+              previous calendar week. Your first payment will involve the reward for the sign up of{' '}
+              <NumberFormat
+                value={(atlasConfig.features.ypp.enrollmentReward ?? 0) * multiplier}
+                format="short"
+                as="span"
+                withToken
+              />
+              !
+            </Text>
+          }
+        />
+      )}
       {atlasConfig.features.ypp.widgets && (
         <WidgetsWrapper>
           {atlasConfig.features.ypp.widgets.map((widget) => (
