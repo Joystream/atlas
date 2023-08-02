@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const axiosInstance = axios.create({})
+export const axiosInstance = axios.create()
 
 axiosInstance.interceptors.response.use(
   (response) => response,

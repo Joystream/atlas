@@ -23,6 +23,7 @@ import {
   entropyToMnemonic,
   getArtifactId,
   getArtifacts,
+  getAuthEpoch,
   handleAnonymousAuth,
   logoutRequest,
 } from './auth.helpers'
@@ -129,11 +130,11 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     async (params, retryCount = 0) => {
       setIsAuthenticating(true)
       await cryptoWaitReady()
-      const time = Date.now() - 30_000
+      const timestamp = (await getAuthEpoch()) - 30_000
       const payload = {
         joystreamAccountId: '',
         gatewayName: atlasConfig.general.appName,
-        timestamp: time,
+        timestamp,
         action: 'login',
       }
       let signatureOverPayload = null
