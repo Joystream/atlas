@@ -9,7 +9,7 @@ type TextValidationArgs = {
   required?: boolean
   pattern?: RegExp
   patternMessage?: string
-  validate?: Validate<string>
+  validate?: Validate<string, object>
 }
 
 export const textFieldValidation = ({

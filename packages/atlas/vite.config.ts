@@ -22,7 +22,7 @@ export default defineConfig(({ mode }) => {
   return {
     root: './src',
     build: {
-      sourcemap: true,
+      sourcemap: false,
       target: ['chrome87', 'edge88', 'es2020', 'firefox78', 'safari14'],
       emptyOutDir: true,
       outDir: path.resolve(__dirname, 'dist'),
