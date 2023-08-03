@@ -49,7 +49,7 @@ export const SetupTokenStep = ({ setPrimaryButtonProps, onSubmit, form }: SetupT
   })
 
   return (
-    <CrtFormWrapper title="Set up your token" subtitle="Enter basic token information and settings." titleLink="">
+    <CrtFormWrapper title="Set up your token" subtitle="Enter basic token information and settings." learnMoreLink="">
       <FormField
         label="Name"
         description="Choose 3 letter name for your token to be displayed on your token page, tokens marketplace and in your buyers’ portfolio."

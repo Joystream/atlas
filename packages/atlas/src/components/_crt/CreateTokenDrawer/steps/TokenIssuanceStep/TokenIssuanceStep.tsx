@@ -128,9 +128,11 @@ export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit, form }: Tok
                         </Text>
                       }
                       nodeEnd={
-                        <Text variant="t300" as="p" color="colorTextMuted">
-                          {formatNumber((creatorIssueAmount * Number(field.value || 0)) / 100)} ${form.name}
-                        </Text>
+                        creatorIssueAmount ? (
+                          <Text variant="t300" as="p" color="colorTextMuted">
+                            {formatNumber((creatorIssueAmount * Number(field.value || 0)) / 100)} ${form.name}
+                          </Text>
+                        ) : null
                       }
                     />
                   )}
@@ -149,7 +151,7 @@ export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit, form }: Tok
   return (
     <CrtFormWrapper
       title="Token issuance"
-      titleLink=""
+      learnMoreLink=""
       subtitle="At this stage you can issue as many tokens as you want. The more tokens you have in circulation, the less each individual token sold or purchased will impact the token's price if sold on public market."
     >
       <FormField

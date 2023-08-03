@@ -4,7 +4,6 @@ import { FC } from 'react'
 import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { GetBasicVideosConnectionDocument } from '@/api/queries/__generated__/videos.generated'
 import { Section } from '@/components/Section/Section'
-import { CreateTokenDrawer } from '@/components/_crt/CreateTokenDrawer/CreateTokenDrawer'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { publicVideoFilter } from '@/config/contentFilter'
@@ -26,7 +25,6 @@ export const HomeView: FC = () => {
   return (
     <VideoContentTemplate>
       {headTags}
-      <CreateTokenDrawer />
       <StyledSection
         contentProps={{
           type: 'grid',

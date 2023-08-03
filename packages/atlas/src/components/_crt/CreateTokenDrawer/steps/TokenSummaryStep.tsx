@@ -35,7 +35,7 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form }: CommonStepProp
   })
 
   return (
-    <CrtFormWrapper title="Set up your token" subtitle="" titleLink="">
+    <CrtFormWrapper title="Set up your token" subtitle="" learnMoreLink="">
       <Section>
         <Text variant="h400" as="h4">
           Token settings
