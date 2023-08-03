@@ -201,14 +201,14 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
     const fileHash = await computeFileHash(croppedBlob)
     if (fileHash !== asset.ipfsHash) {
       const blob = croppedBlob as File
-      const newAssset = {
+      const newAsset = {
         ...blob,
         size: croppedBlob?.size,
         url: croppedUrl,
-      }
+      } as File & { size?: string; url?: string }
       const isChannelUpload = asset.parentObject.type === 'channel'
       const handleUpdate = async () =>
-        await handleAvatarUpdate(newAssset, croppedBlob, croppedUrl, dimensions, cropData, originalBlob)
+        await handleAvatarUpdate(newAsset, croppedBlob, croppedUrl, dimensions, cropData, originalBlob)
       if (asset.imageCropData) {
         openDifferentImageModal({
           fee: isChannelUpload
@@ -219,8 +219,8 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
                   memberId ?? '',
                   { ownerAccount: accountId ?? '' },
                   asset.type === 'avatar'
-                    ? { avatarPhoto: { ...newAssset, ipfsHash: fileHash } }
-                    : { coverPhoto: { ...newAssset, ipfsHash: fileHash } },
+                    ? { avatarPhoto: { ...newAsset, ipfsHash: fileHash } }
+                    : { coverPhoto: { ...newAsset, ipfsHash: fileHash } },
                   [asset.id],
                   dataObjectStateBloatBondValue.toString(),
                   channelBucketsCount.toString(),
@@ -233,7 +233,7 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
                   memberId ?? '',
                   { clearSubtitles: true },
                   undefined,
-                  { thumbnailPhoto: { ...newAssset, ipfsHash: fileHash } },
+                  { thumbnailPhoto: { ...newAsset, ipfsHash: fileHash } },
                   [asset.id],
                   dataObjectStateBloatBondValue.toString(),
                   channelBucketsCount.toString(),
