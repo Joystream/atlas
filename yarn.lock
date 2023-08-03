@@ -8872,10 +8872,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^16.0.0, @types/node@npm:^16.18.8":
+"@types/node@npm:^16.0.0":
   version: 16.18.8
   resolution: "@types/node@npm:16.18.8"
   checksum: 149f6a6d010a0c8842800b4b7e0e9db842d3133b9461e48224c769cfc8e1960ecb2791596ad18295a7318b3189475c88d007dee122be0b77bf54db025465cf21
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^18.16.20":
+  version: 18.17.1
+  resolution: "@types/node@npm:18.17.1"
+  checksum: 56201bda9a2d05d68602df63b4e67b0545ac8c6d0280bd5fb31701350a978a577a027501fbf49db99bf177f2242ebd1244896bfd35e89042d5bd7dfebff28d4e
   languageName: node
   linkType: hard
 
@@ -20017,7 +20024,7 @@ __metadata:
     "@joystream/prettier-config": ^1.0.0
     "@stylelint/postcss-css-in-js": ^0.38.0
     "@trivago/prettier-plugin-sort-imports": ^4.0.0
-    "@types/node": ^16.18.8
+    "@types/node": ^18.16.20
     "@typescript-eslint/eslint-plugin": ^5.46.1
     "@typescript-eslint/parser": ^5.46.1
     eslint: ^8.29.0
