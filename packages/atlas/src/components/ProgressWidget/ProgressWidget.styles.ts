@@ -10,6 +10,7 @@ export const Header = styled.div<{ progressWidth: string }>`
   align-items: center;
   padding: ${sizes(9)} ${sizes(8)};
   position: relative;
+  overflow: hidden;
 
   ::after {
     content: ' ';
@@ -79,6 +80,7 @@ export const ProgressBar = styled.div<{ progress: number }>`
     width: ${({ progress }) => `${progress}%`};
     transition: width 1s linear;
     border-radius: ${sizes(8)};
+    min-width: 25px;
   }
 `
 
@@ -87,9 +89,13 @@ export const StepCardContainer = styled.div<{ isActive: boolean }>`
   flex-direction: column;
   gap: ${sizes(6)};
   background-color: ${cVar('colorBackgroundMutedAlpha')};
-  border-left: 4px solid
-    ${(props) => (props.isActive ? cVar('colorBackgroundPrimary') : cVar('colorBackgroundMutedAlpha'))};
+  border-left: 4px solid ${(props) => (props.isActive ? cVar('colorBackgroundPrimary') : 'transparent')};
   padding: 16px;
+
+  .stepNumber {
+    background-color: ${(props) =>
+      props.isActive ? cVar('colorBackgroundPrimary') : cVar('colorBackgroundStrongAlpha')};
+  }
 `
 
 export const StepNumber = styled.div`

@@ -1,13 +1,14 @@
 import { useRef, useState } from 'react'
 
 import {
+  SvgActionCheck,
   SvgActionChevronB,
   SvgActionChevronL,
   SvgActionChevronR,
   SvgActionChevronT,
   SvgActionPlay,
 } from '@/assets/icons'
-import { Carousel, CarouselProps, SwiperInstance } from '@/components/Carousel'
+import { Carousel, SwiperInstance } from '@/components/Carousel'
 import {
   ColumnBox,
   DetailsDrawer,
@@ -21,7 +22,8 @@ import {
 import { Text } from '@/components/Text'
 import { Button, ButtonProps, TextButton } from '@/components/_buttons/Button'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { breakpoints } from '@/styles'
+
+import { getProgressPercentage, responsive } from './ProgressWidget.utils'
 
 type StepButtonProps = {
   text: string
@@ -33,54 +35,28 @@ type StepProps = {
   primaryButton: StepButtonProps
 }
 
-const step = {
-  title: 'Write blblblba',
-  description: 'Long description ahahabebeb',
-  primaryButton: {
-    text: 'Write to me!',
-  },
+type ProgressWidgetProps = {
+  steps: StepProps[]
+  activeStep: number
 }
 
-const responsive: CarouselProps['breakpoints'] = {
-  [parseInt(breakpoints.xs)]: {
-    slidesPerView: 1,
-    slidesPerGroup: 1,
-  },
-  [parseInt(breakpoints.sm)]: {
-    slidesPerView: 2,
-    slidesPerGroup: 2,
-  },
-  [parseInt(breakpoints.lg)]: {
-    slidesPerView: 3,
-    slidesPerGroup: 3,
-  },
-  [parseInt(breakpoints.xl)]: {
-    slidesPerView: 4,
-    slidesPerGroup: 4,
-  },
-  [parseInt(breakpoints.xxl)]: {
-    slidesPerView: 5,
-    slidesPerGroup: 5,
-  },
-}
-
-export const ProgressWidget = () => {
+export const ProgressWidget = ({ steps, activeStep }: ProgressWidgetProps) => {
   const [isVisible, setIsVisible] = useState(false)
   const [glider, setGlider] = useState<SwiperInstance | null>(null)
   const drawer = useRef<HTMLDivElement>(null)
   const xsMatch = useMediaMatch('xs')
   const smMatch = useMediaMatch('sm')
-
+  const isDone = activeStep + 1 > steps.length
   return (
     <div style={{ position: 'relative' }}>
-      <Header progressWidth={isVisible ? '0%' : '25%'}>
+      <Header progressWidth={isVisible ? '0%' : `${Math.round((activeStep / steps.length) * 100)}%`}>
         <RowBox gap={4}>
           <Text variant="h500" as="h5">
             Your progress
           </Text>
           {!isVisible && (
             <Text variant="t200-strong" as="p">
-              (1/4)
+              ({isDone ? steps.length : activeStep}/{steps.length})
             </Text>
           )}
         </RowBox>
@@ -99,7 +75,11 @@ export const ProgressWidget = () => {
       <DetailsDrawer isActive={isVisible} ref={drawer} maxHeight={drawer?.current?.scrollHeight}>
         <DropdownContainer>
           <RowBox gap={12}>
-            <ExtendedProgressBar />
+            <ExtendedProgressBar
+              activeStep={steps[isDone ? steps.length - 1 : activeStep]}
+              activeStepNumber={activeStep}
+              totalSteps={steps.length}
+            />
             {smMatch && (
               <RowBox gap={4}>
                 <Button icon={<SvgActionChevronL />} onClick={() => glider?.slidePrev()} variant="secondary" />
@@ -108,39 +88,49 @@ export const ProgressWidget = () => {
             )}
           </RowBox>
           <Carousel
-            initialSlide={4}
+            initialSlide={activeStep + 1}
             spaceBetween={12}
             navigation
             dotsVisible
             breakpoints={responsive}
             onSwiper={(swiper) => setGlider(swiper)}
           >
-            <StepCard step={step} isActive={true} />
-            <StepCard step={step} isActive={true} />
-            <StepCard step={step} isActive={true} />
-            <StepCard step={step} isActive={true} />
+            {steps.map((step, idx) => (
+              <StepCard
+                key={step.title}
+                step={step}
+                status={idx === activeStep ? 'active' : idx < activeStep ? 'done' : 'next'}
+                stepNumber={idx + 1}
+              />
+            ))}
           </Carousel>
         </DropdownContainer>
       </DetailsDrawer>
     </div>
   )
 }
+type ExtendedProgressBarProps = {
+  activeStep: StepProps
+  activeStepNumber: number
+  totalSteps: number
+}
+const ExtendedProgressBar = ({ activeStep, activeStepNumber, totalSteps }: ExtendedProgressBarProps) => {
+  const isDone = activeStepNumber + 1 > totalSteps
 
-const ExtendedProgressBar = () => {
   return (
     <ColumnBox gap={2}>
       <Text variant="t300-strong" as="p">
-        Token owner
+        {activeStep.title}
       </Text>
       <RowBox gap={4}>
-        <ProgressBar progress={60} />
+        <ProgressBar progress={getProgressPercentage(activeStepNumber, totalSteps)} />
         <Text variant="t200-strong" as="p">
-          1/4
+          {isDone ? totalSteps : activeStepNumber}/{totalSteps}
         </Text>
       </RowBox>
       <RowBox gap={2} wrap>
         <Text variant="t200" as="p">
-          Complete 2 more steps to achive
+          {isDone ? 'You have achieved' : ` Complete ${totalSteps - activeStepNumber} more steps to achive`}
         </Text>
         <TextButton>Token master</TextButton>
       </RowBox>
@@ -150,17 +140,18 @@ const ExtendedProgressBar = () => {
 
 type StepCardProps = {
   step: StepProps
-  isActive: boolean
+  status: 'active' | 'done' | 'next'
+  stepNumber: number
 }
 
-const StepCard = ({ step, isActive }: StepCardProps) => {
+const StepCard = ({ step, status, stepNumber }: StepCardProps) => {
   const smMatch = useMediaMatch('xs')
 
   return (
-    <StepCardContainer isActive={isActive}>
-      <StepNumber>
+    <StepCardContainer isActive={status === 'active'}>
+      <StepNumber className="stepNumber">
         <Text variant="t200-strong" as="p">
-          2
+          {status === 'done' ? <SvgActionCheck /> : stepNumber}
         </Text>
       </StepNumber>
       <ColumnBox gap={2}>
@@ -173,7 +164,12 @@ const StepCard = ({ step, isActive }: StepCardProps) => {
       </ColumnBox>
 
       <RowBox gap={4} wrap>
-        <Button {...step.primaryButton} fullWidth={!smMatch}>
+        <Button
+          {...step.primaryButton}
+          variant={status === 'active' ? 'primary' : 'secondary'}
+          disabled={status === 'done'}
+          fullWidth={!smMatch}
+        >
           {step.primaryButton.text}
         </Button>
         <Button variant="tertiary" fullWidth={!smMatch} _textOnly icon={<SvgActionPlay />} iconPlacement="right">
