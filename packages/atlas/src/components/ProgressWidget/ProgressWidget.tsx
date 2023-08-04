@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { ReactNode, useRef, useState } from 'react'
 
 import {
   SvgActionCheck,
@@ -20,7 +20,7 @@ import {
   StepNumber,
 } from '@/components/ProgressWidget/ProgressWidget.styles'
 import { Text } from '@/components/Text'
-import { Button, ButtonProps, TextButton } from '@/components/_buttons/Button'
+import { Button, ButtonProps } from '@/components/_buttons/Button'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { getProgressPercentage, responsive } from './ProgressWidget.utils'
@@ -35,12 +35,13 @@ type StepProps = {
   primaryButton: StepButtonProps
 }
 
-type ProgressWidgetProps = {
+export type ProgressWidgetProps = {
   steps: StepProps[]
   activeStep: number
+  goalComponent: ReactNode
 }
 
-export const ProgressWidget = ({ steps, activeStep }: ProgressWidgetProps) => {
+export const ProgressWidget = ({ steps, activeStep, goalComponent }: ProgressWidgetProps) => {
   const [isVisible, setIsVisible] = useState(false)
   const [glider, setGlider] = useState<SwiperInstance | null>(null)
   const drawer = useRef<HTMLDivElement>(null)
@@ -70,7 +71,6 @@ export const ProgressWidget = ({ steps, activeStep }: ProgressWidgetProps) => {
             {isVisible ? 'Show less' : 'Show more'}
           </Button>
         )}
-        {}
       </Header>
       <DetailsDrawer isActive={isVisible} ref={drawer} maxHeight={drawer?.current?.scrollHeight}>
         <DropdownContainer>
@@ -79,6 +79,7 @@ export const ProgressWidget = ({ steps, activeStep }: ProgressWidgetProps) => {
               activeStep={steps[isDone ? steps.length - 1 : activeStep]}
               activeStepNumber={activeStep}
               totalSteps={steps.length}
+              goalComponent={goalComponent}
             />
             {smMatch && (
               <RowBox gap={4}>
@@ -113,8 +114,9 @@ type ExtendedProgressBarProps = {
   activeStep: StepProps
   activeStepNumber: number
   totalSteps: number
+  goalComponent: ReactNode
 }
-const ExtendedProgressBar = ({ activeStep, activeStepNumber, totalSteps }: ExtendedProgressBarProps) => {
+const ExtendedProgressBar = ({ activeStep, activeStepNumber, totalSteps, goalComponent }: ExtendedProgressBarProps) => {
   const isDone = activeStepNumber + 1 > totalSteps
 
   return (
@@ -128,12 +130,7 @@ const ExtendedProgressBar = ({ activeStep, activeStepNumber, totalSteps }: Exten
           {isDone ? totalSteps : activeStepNumber}/{totalSteps}
         </Text>
       </RowBox>
-      <RowBox gap={2} wrap>
-        <Text variant="t200" as="p">
-          {isDone ? 'You have achieved' : ` Complete ${totalSteps - activeStepNumber} more steps to achive`}
-        </Text>
-        <TextButton>Token master</TextButton>
-      </RowBox>
+      {goalComponent}
     </ColumnBox>
   )
 }
