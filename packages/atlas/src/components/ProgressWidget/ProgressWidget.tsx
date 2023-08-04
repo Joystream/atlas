@@ -146,7 +146,7 @@ const StepCard = ({ step, status, stepNumber }: StepCardProps) => {
 
   return (
     <StepCardContainer isActive={status === 'active'}>
-      <StepNumber className="stepNumber">
+      <StepNumber className="step-number">
         <Text variant="t200-strong" as="p">
           {status === 'done' ? <SvgActionCheck /> : stepNumber}
         </Text>
