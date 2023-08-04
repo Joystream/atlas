@@ -14,7 +14,7 @@ export const Header = styled.div<{ progressWidth: string }>`
   ::after {
     content: ' ';
     display: block;
-    background-color: red;
+    background-color: ${cVar('colorBackgroundPrimary')};
     position: absolute;
     bottom: 0;
     height: 4px;
@@ -23,10 +23,11 @@ export const Header = styled.div<{ progressWidth: string }>`
   }
 `
 
-export const RowBox = styled.div<{ gap: number }>`
+export const RowBox = styled.div<{ gap: number; wrap?: boolean }>`
   display: flex;
   gap: ${(props) => sizes(props.gap)};
   align-items: center;
+  flex-wrap: ${(props) => (props.wrap ? 'wrap' : 'none')};
 `
 
 export const ColumnBox = styled.div<{ gap: number }>`
@@ -88,7 +89,6 @@ export const StepCardContainer = styled.div<{ isActive: boolean }>`
   background-color: ${cVar('colorBackgroundMutedAlpha')};
   border-left: 4px solid
     ${(props) => (props.isActive ? cVar('colorBackgroundPrimary') : cVar('colorBackgroundMutedAlpha'))};
-  max-width: 350px;
   padding: 16px;
 `
 

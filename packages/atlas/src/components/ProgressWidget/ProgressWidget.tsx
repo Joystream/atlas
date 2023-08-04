@@ -7,7 +7,7 @@ import {
   SvgActionChevronT,
   SvgActionPlay,
 } from '@/assets/icons'
-import { Carousel } from '@/components/Carousel'
+import { Carousel, CarouselProps, SwiperInstance } from '@/components/Carousel'
 import {
   ColumnBox,
   DetailsDrawer,
@@ -21,6 +21,7 @@ import {
 import { Text } from '@/components/Text'
 import { Button, ButtonProps, TextButton } from '@/components/_buttons/Button'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { breakpoints } from '@/styles'
 
 type StepButtonProps = {
   text: string
@@ -40,12 +41,36 @@ const step = {
   },
 }
 
+const responsive: CarouselProps['breakpoints'] = {
+  [parseInt(breakpoints.xs)]: {
+    slidesPerView: 1,
+    slidesPerGroup: 1,
+  },
+  [parseInt(breakpoints.sm)]: {
+    slidesPerView: 2,
+    slidesPerGroup: 2,
+  },
+  [parseInt(breakpoints.lg)]: {
+    slidesPerView: 3,
+    slidesPerGroup: 3,
+  },
+  [parseInt(breakpoints.xl)]: {
+    slidesPerView: 4,
+    slidesPerGroup: 4,
+  },
+  [parseInt(breakpoints.xxl)]: {
+    slidesPerView: 5,
+    slidesPerGroup: 5,
+  },
+}
+
 export const ProgressWidget = () => {
   const [isVisible, setIsVisible] = useState(false)
+  const [glider, setGlider] = useState<SwiperInstance | null>(null)
   const drawer = useRef<HTMLDivElement>(null)
   const xsMatch = useMediaMatch('xs')
   const smMatch = useMediaMatch('sm')
-  console.log(drawer.current?.scrollHeight, 'xd')
+
   return (
     <div style={{ position: 'relative' }}>
       <Header progressWidth={isVisible ? '0%' : '25%'}>
@@ -59,14 +84,17 @@ export const ProgressWidget = () => {
             </Text>
           )}
         </RowBox>
-        <RowBox gap={2} onClick={() => setIsVisible((prev) => !prev)}>
-          {xsMatch && (
-            <Text variant="t200-strong" as="p">
-              {isVisible ? 'Show less' : 'Show more'}
-            </Text>
-          )}
-          {isVisible ? <SvgActionChevronT /> : <SvgActionChevronB />}
-        </RowBox>
+        {xsMatch && (
+          <Button
+            onClick={() => setIsVisible((prev) => !prev)}
+            icon={isVisible ? <SvgActionChevronT /> : <SvgActionChevronB />}
+            iconPlacement="right"
+            variant="tertiary"
+          >
+            {isVisible ? 'Show less' : 'Show more'}
+          </Button>
+        )}
+        {}
       </Header>
       <DetailsDrawer isActive={isVisible} ref={drawer} maxHeight={drawer?.current?.scrollHeight}>
         <DropdownContainer>
@@ -74,12 +102,19 @@ export const ProgressWidget = () => {
             <ExtendedProgressBar />
             {smMatch && (
               <RowBox gap={4}>
-                <Button icon={<SvgActionChevronL />} variant="secondary" />
-                <Button icon={<SvgActionChevronR />} variant="secondary" />
+                <Button icon={<SvgActionChevronL />} onClick={() => glider?.slidePrev()} variant="secondary" />
+                <Button icon={<SvgActionChevronR />} onClick={() => glider?.slideNext()} variant="secondary" />
               </RowBox>
             )}
           </RowBox>
-          <Carousel slidesPerView={3} spaceBetween={12} navigation dotsVisible>
+          <Carousel
+            initialSlide={4}
+            spaceBetween={12}
+            navigation
+            dotsVisible
+            breakpoints={responsive}
+            onSwiper={(swiper) => setGlider(swiper)}
+          >
             <StepCard step={step} isActive={true} />
             <StepCard step={step} isActive={true} />
             <StepCard step={step} isActive={true} />
@@ -103,7 +138,7 @@ const ExtendedProgressBar = () => {
           1/4
         </Text>
       </RowBox>
-      <RowBox gap={2} style={{ flexWrap: 'wrap' }}>
+      <RowBox gap={2} wrap>
         <Text variant="t200" as="p">
           Complete 2 more steps to achive
         </Text>
@@ -119,6 +154,8 @@ type StepCardProps = {
 }
 
 const StepCard = ({ step, isActive }: StepCardProps) => {
+  const smMatch = useMediaMatch('xs')
+
   return (
     <StepCardContainer isActive={isActive}>
       <StepNumber>
@@ -135,9 +172,11 @@ const StepCard = ({ step, isActive }: StepCardProps) => {
         </Text>
       </ColumnBox>
 
-      <RowBox gap={4}>
-        <Button {...step.primaryButton}>{step.primaryButton.text}</Button>
-        <Button variant="tertiary" _textOnly icon={<SvgActionPlay />} iconPlacement="right">
+      <RowBox gap={4} wrap>
+        <Button {...step.primaryButton} fullWidth={!smMatch}>
+          {step.primaryButton.text}
+        </Button>
+        <Button variant="tertiary" fullWidth={!smMatch} _textOnly icon={<SvgActionPlay />} iconPlacement="right">
           Learn more
         </Button>
       </RowBox>
