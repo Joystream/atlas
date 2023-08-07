@@ -1,3 +1,4 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
@@ -29,8 +30,14 @@ export const TickWrapper = styled.div<{ fulfilled: boolean }>`
   border-radius: 50%;
 `
 
-export const Paragraph = styled.p`
+export const Paragraph = styled.p<{ important?: boolean }>`
   margin: 0;
+
+  ${(props) =>
+    props.important &&
+    css`
+      color: ${cVar('colorTextCaution')};
+    `}
 `
 
 export const CategoriesText = styled(Text)`

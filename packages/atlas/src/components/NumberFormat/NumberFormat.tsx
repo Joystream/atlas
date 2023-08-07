@@ -8,7 +8,7 @@ import { Text, TextProps, TextVariant } from '@/components/Text'
 import { atlasConfig } from '@/config'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useTokenPrice } from '@/providers/joystream/joystream.hooks'
-import { sizes } from '@/styles'
+import { cVar, sizes } from '@/styles'
 import { formatNumber } from '@/utils/number'
 
 import { Tooltip } from '../Tooltip'
@@ -17,7 +17,7 @@ export type NumberFormatProps = {
   value: BN | number
   format?: 'full' | 'short' | 'dollar'
   withTooltip?: boolean
-  withToken?: boolean
+  withToken?: boolean | 'small'
   children?: never
   variant?: TextVariant
   displayedValue?: string | number
@@ -100,10 +100,10 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
           {...textProps}
           color={bnValue.isNeg() || isNegative ? 'colorTextError' : color}
           variant={variant}
+          withToken={withToken}
           ref={mergeRefs([ref, textRef])}
         >
           {displayedValue || formattedValue}
-          {withToken && ` ${atlasConfig.joystream.tokenTicker}`}
         </StyledText>
         {withDenomination === 'after' && (
           <Text
@@ -173,8 +173,20 @@ export const ContentContainer = styled.div`
   display: inline-block;
 `
 
-const StyledText = styled(Text)`
+const StyledText = styled(Text)<TextProps & Pick<NumberFormatProps, 'withToken'>>`
   display: inline-block;
+  ${({ withToken }) =>
+    withToken &&
+    css`
+      &::after {
+        content: ' ${atlasConfig.joystream.tokenTicker}';
+        ${withToken === 'small' &&
+        css`
+          font-size: 0.62em;
+          color: ${cVar('colorTextMuted')};
+        `}
+      }
+    `}
 `
 
 const Denomination = styled(Text)<{ align: 'right' | 'left' }>`

@@ -1,6 +1,6 @@
-import axios from 'axios'
 import { debounce } from 'lodash-es'
 
+import { axiosInstance } from '@/api/axios'
 import { DataObjectType } from '@/api/queries/__generated__/baseTypes.generated'
 
 import { ConsoleLogger } from './console'
@@ -67,7 +67,7 @@ class _AssetLogger {
     this.pendingEvents = []
 
     try {
-      await axios.post(this.logUrl, payload)
+      await axiosInstance.post(this.logUrl, payload)
     } catch (e) {
       SentryLogger.error('Failed to send asset events', 'AssetLogger', e, { request: { url: this.logUrl } })
     }

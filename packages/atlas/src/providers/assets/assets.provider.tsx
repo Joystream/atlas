@@ -1,5 +1,4 @@
 import { useApolloClient } from '@apollo/client'
-import axios from 'axios'
 import haversine from 'haversine-distance'
 import { uniqBy } from 'lodash-es'
 import {
@@ -18,6 +17,7 @@ import {
 import { useMutation } from 'react-query'
 import { useLocation } from 'react-router'
 
+import { axiosInstance } from '@/api/axios'
 import {
   GetAvailableStorageBucketsForBagDocument,
   GetAvailableStorageBucketsForBagQuery,
@@ -46,7 +46,7 @@ type OperatorsContextValue = {
   fetchStorageOperators: () => Promise<BagOperatorsMapping>
   userBenchmarkTime: number | null
 }
-const OperatorsContext = createContext<OperatorsContextValue | undefined>(undefined)
+export const OperatorsContext = createContext<OperatorsContextValue | undefined>(undefined)
 OperatorsContext.displayName = 'OperatorsContext'
 
 export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) => {
@@ -62,7 +62,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
     actions: { setUserLocation },
   } = useUserLocationStore()
   const { mutateAsync: geolocationFetch } = useMutation('geolocation-fetch', () =>
-    axios.get<UserCoordinates>(atlasConfig.storage.geolocationServiceUrl ?? '')
+    axiosInstance.get<UserCoordinates>(atlasConfig.storage.geolocationServiceUrl ?? '')
   )
 
   const client = useApolloClient()

@@ -123,3 +123,9 @@ export const ReplyButton = styled(Button)`
     margin-left: ${sizes(3)};
   }
 `
+
+export const ReplyButtonWrapper = styled.div`
+  :not(:only-child) {
+    margin-left: ${sizes(3)};
+  }
+`

@@ -1,8 +1,8 @@
-import axios from 'axios'
 import { useCallback, useEffect, useState } from 'react'
 import { useMutation } from 'react-query'
 import { useNavigate } from 'react-router'
 
+import { axiosInstance } from '@/api/axios'
 import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
 import { OptionCardGroupRadio } from '@/components/_inputs/OptionCardGroup'
@@ -62,7 +62,7 @@ export const YppDashboardSettingsTab = () => {
   const { mutateAsync: settingsMutation } = useMutation(
     ['ypp-settings-post', currentChannel],
     (params: SettingsParams) =>
-      axios.put(
+      axiosInstance.put(
         `${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/${currentChannel?.joystreamChannelId}/ingest`,
         params
       )
@@ -204,7 +204,7 @@ export const YppDashboardSettingsTab = () => {
         })
 
         if (completed) {
-          const data = await axios.put(
+          const data = await axiosInstance.put(
             `${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/${currentChannel.joystreamChannelId}/optout`,
             { message, signature }
           )

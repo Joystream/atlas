@@ -1,10 +1,10 @@
-import axios from 'axios'
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useMutation } from 'react-query'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import shallow from 'zustand/shallow'
 
+import { axiosInstance } from '@/api/axios'
 import { useBasicChannel, useFullChannel } from '@/api/hooks/channel'
 import { FullMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgAlertsError32 } from '@/assets/icons'
@@ -76,7 +76,6 @@ const DEFAULT_LANGUAGE = atlasConfig.derived.popularLanguagesSelectValues[0].val
 export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSyncedChannels }) => {
   const { memberId, refetchUserMemberships, setActiveChannel, channelId, isLoggedIn } = useUser()
   const [searchParams] = useSearchParams()
-  const [utmSource, setUtmSource] = useState<string | null>(null)
   const navigate = useNavigate()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const createdChannelId = useRef<string | null>(null)
@@ -98,14 +97,16 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
   const {
     referrerId,
     ytResponseData,
-    actions: { setYtResponseData },
+    utmSource,
+    utmCampaign,
+    actions: { setYtResponseData, setUtmSource, setUtmCampaign },
   } = useYppStore((store) => store, shallow)
   const setReferrerId = useYppStore((store) => store.actions.setReferrerId)
   const setShouldContinueYppFlowAfterLogin = useYppStore((store) => store.actions.setShouldContinueYppFlowAfterLogin)
   const { mutateAsync: yppSignChannelMutation } = useMutation(
     'ypp-channels-post',
     (finalFormData: FinalFormData | null) =>
-      axios.post(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels`, finalFormData)
+      axiosInstance.post(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels`, finalFormData)
   )
 
   const { setAuthModalOpenName } = useAuthStore(
@@ -155,7 +156,10 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     if (searchParams.get('utm_source')) {
       setUtmSource(searchParams.get('utm_source'))
     }
-  }, [searchParams])
+    if (searchParams.get('utm_campaign')) {
+      setUtmCampaign(searchParams.get('utm_campaign'))
+    }
+  }, [searchParams, setUtmCampaign, setUtmSource])
 
   useEffect(() => {
     contentRef.current?.scrollTo({ top: 0 })
@@ -273,7 +277,6 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
         },
         onCompleted: async () => {
           await refetchUserMemberships()
-          await refetchYppSyncedChannels()
 
           const channelId = selectedChannelId || createdChannelId.current
 
@@ -287,25 +290,27 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
             videoCategoryId: data.videoCategoryId,
           })
 
+          await refetchYppSyncedChannels()
+
           identifyUser(ytResponseData?.email)
-          trackYppOptIn(
-            ytResponseData?.channelHandle,
-            ytResponseData?.email,
-            data.videoCategoryId ? displayCategoriesLookup[data.videoCategoryId]?.name : undefined,
-            channelCreationResponse.data.channel.subscribersCount,
-            data.referrerChannelId,
-            utmSource || undefined
-          )
+          trackYppOptIn({
+            handle: ytResponseData?.channelHandle,
+            email: ytResponseData?.email,
+            category: data.videoCategoryId ? displayCategoriesLookup[data.videoCategoryId]?.name : undefined,
+            subscribersCount: channelCreationResponse.data.channel.subscribersCount,
+            referrerId: data.referrerChannelId,
+            utmSource: utmSource || undefined,
+            utmCampaign: utmCampaign || undefined,
+          })
+          setReferrerId(null)
           setYtResponseData(null)
 
           navigate(absoluteRoutes.studio.ypp())
           displaySnackbar({
-            title: 'YouTube Synch Enabled',
+            title: 'Sign up successful!',
             description:
-              'We started importing your YouTube videos. Allow up to 30 minutes for the YouTube videos to start showing in your channel.',
-            actionText: 'Go to My videos',
-            onActionClick: () => navigate(absoluteRoutes.studio.videos()),
-            iconType: 'info',
+              'We will start importing your YouTube videos once your channel is verified. Please allow 30 to 60 minutes after verification for your videos to start showing on the My videos page.',
+            iconType: 'success',
           })
         },
       })
