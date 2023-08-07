@@ -56,7 +56,7 @@ const SNACKBAR_TIMEOUT = 5000
 
 const YOUTUBE_BACKEND_URL = atlasConfig.features.ypp.youtubeSyncApiUrl
 
-export const MyVideosView = () => {
+const MyVideosView = () => {
   const headTags = useHeadTags('My videos')
   const navigate = useNavigate()
   const { channelId } = useAuthorizedUser()
@@ -449,3 +449,5 @@ const usePagination = (currentTab: number) => {
   }, [currentTab])
   return { currentPage, setCurrentPage }
 }
+
+export default MyVideosView

@@ -1,1 +1,1 @@
-export * from './VideoView'
+export { default } from './VideoView'

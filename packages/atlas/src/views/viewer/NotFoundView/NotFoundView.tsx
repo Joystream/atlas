@@ -4,7 +4,7 @@ import { Svg404PatternBottomLeft, Svg404PatternTopRight, SvgSmallCursor } from '
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 
-export const NotFoundView = () => {
+const NotFoundView = () => {
   return (
     <>
       <StyledPattern1 />
@@ -53,3 +53,5 @@ const StyledPattern2 = styled(Svg404PatternBottomLeft)`
   left: 0;
   bottom: 0;
 `
+
+export default NotFoundView

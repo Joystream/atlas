@@ -1,1 +1,1 @@
-export * from './StudioEntrypoint'
+export { default } from './StudioEntrypoint'

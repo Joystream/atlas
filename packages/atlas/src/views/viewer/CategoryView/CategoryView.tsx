@@ -12,7 +12,7 @@ import { cVar } from '@/styles'
 
 import { CategoryVideos } from './CategoryVideos'
 
-export const CategoryView = () => {
+const CategoryView = () => {
   const { id = '' } = useParams()
 
   const currentCategory = displayCategoriesLookup[id]
@@ -86,3 +86,5 @@ const useVideoHeroVideos = (featuredVideos: BasicVideoFeaturedInCategoryFragment
 
   return videoHeroVideos
 }
+
+export default CategoryView

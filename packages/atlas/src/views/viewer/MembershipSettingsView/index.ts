@@ -1,1 +1,1 @@
-export * from './MembershipSettingsView'
+export { default } from './MembershipSettingsView'

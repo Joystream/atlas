@@ -1,1 +1,1 @@
-export * from './MarketplaceView'
+export { default } from './MarketplaceView'

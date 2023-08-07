@@ -14,7 +14,7 @@ import { useHandleVideoWorkspaceSubmit } from './VideoWorkspace.hooks'
 
 const MINTING_CONFIRMATION_ID = 'minting-confirmation'
 
-export const VideoWorkspace: FC = memo(() => {
+const VideoWorkspace: FC = memo(() => {
   const [formStatus, setFormStatus] = useState<VideoWorkspaceFormStatus | null>(null)
   const [showMintConfirmationDialog, setShowMintConfirmationDialog] = useState(false)
   const [shouldHideMintModal, setShouldHideMintModal] = useState(false)
@@ -151,3 +151,5 @@ export const VideoWorkspace: FC = memo(() => {
   )
 })
 VideoWorkspace.displayName = 'VideoWorkspace'
+
+export default VideoWorkspace

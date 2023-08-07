@@ -17,7 +17,7 @@ export const StudioLoading: FC = () => {
   )
 }
 
-const LoadingStudioContainer = styled.main`
+export const LoadingStudioContainer = styled.main`
   position: relative;
   width: 100%;
   height: 100vh;

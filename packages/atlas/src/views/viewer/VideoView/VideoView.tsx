@@ -61,7 +61,7 @@ import {
   VideoUtils,
 } from './VideoView.styles'
 
-export const VideoView: FC = () => {
+const VideoView: FC = () => {
   const { id } = useParams()
   const { memberId, isLoggedIn } = useUser()
   const [showReportDialog, setShowReportDialog] = useState(false)
@@ -486,3 +486,5 @@ const useIntersectionObserver = (options: IntersectionObserverInit = {}): [boole
 
   return [isIntersecting, ref]
 }
+
+export default VideoView

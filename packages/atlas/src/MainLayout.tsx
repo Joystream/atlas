@@ -108,12 +108,14 @@ export const MainLayout: FC = () => {
   return (
     <>
       <CookiePopover />
+      {/*<Suspense fallback={<div>adawd</div>}>*/}
       <Routes>
         <Route path={BASE_PATHS.viewer + '/*'} element={<ViewerLayout />} />
         <Route path={BASE_PATHS.legal + '/*'} element={<LegalLayout />} />
         <Route path={BASE_PATHS.studio + '/*'} element={<LoadableStudioLayout />} />
         <Route path={BASE_PATHS.playground + '/*'} element={<LoadablePlaygroundLayout />} />
       </Routes>
+      {/*</Suspense>*/}
     </>
   )
 }
