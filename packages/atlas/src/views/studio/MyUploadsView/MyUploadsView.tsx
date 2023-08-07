@@ -20,7 +20,7 @@ type GroupByParentObjectIdAcc = {
   [key: string]: AssetUpload[]
 }
 
-export const MyUploadsView: FC = () => {
+const MyUploadsView: FC = () => {
   const { channelId } = useUser()
 
   const headTags = useHeadTags('My uploads')
@@ -72,3 +72,5 @@ export const MyUploadsView: FC = () => {
     </UploadsContainer>
   )
 }
+
+export default MyUploadsView

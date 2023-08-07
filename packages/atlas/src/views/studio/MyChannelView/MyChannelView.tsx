@@ -17,7 +17,7 @@ import { StudioChannelGeneralTab } from './tabs/StudioChannelGeneralTab'
 
 const TABS = ['General'] as const
 
-export const MyChannelView = () => {
+const MyChannelView = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [currentTab, setCurrentTab] = useState<number>(0)
   const [trailingContent, setTrailingContent] = useState<null | ReactNode>(null)
@@ -63,3 +63,5 @@ export const MyChannelView = () => {
     </>
   )
 }
+
+export default MyChannelView

@@ -59,7 +59,7 @@ import { TABS } from './utils'
 
 export const INITIAL_TILES_PER_ROW = 4
 
-export const ChannelView: FC = () => {
+const ChannelView: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [tilesPerRow, setTilesPerRow] = useState(INITIAL_TILES_PER_ROW)
   const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
@@ -410,3 +410,5 @@ export const ChannelView: FC = () => {
     </ViewWrapper>
   )
 }
+
+export default ChannelView

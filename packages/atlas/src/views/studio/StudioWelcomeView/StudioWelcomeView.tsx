@@ -19,7 +19,7 @@ export type Membership = {
   avatarUri?: string
 }
 
-export const StudioWelcomeView: FC = () => {
+const StudioWelcomeView: FC = () => {
   const { isLoggedIn } = useUser()
   const mdMatch = useMediaMatch('md')
   const {
@@ -119,3 +119,5 @@ export const StudioWelcomeView: FC = () => {
     />
   )
 }
+
+export default StudioWelcomeView

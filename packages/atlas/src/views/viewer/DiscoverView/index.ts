@@ -1,1 +1,1 @@
-export * from './DiscoverView'
+export { default } from './DiscoverView'

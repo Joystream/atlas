@@ -1,8 +1,10 @@
-import errorAnimation from '@/assets/animations/error.json'
-import processingAssetsAnimation from '@/assets/animations/transaction/processing-assets.json'
-import processingTransactionAnimation from '@/assets/animations/transaction/processing-transaction.json'
-import propagatingChangesAnimation from '@/assets/animations/transaction/propagating-changes.json'
-import signatureAnimation from '@/assets/animations/transaction/signature.json'
+import {
+  errorAnimation,
+  processingAssetsAnimation,
+  processingTransactionAnimation,
+  propagatingChangesAnimation,
+  signatureAnimation,
+} from '@/assets/animations'
 import '@/config/config'
 import { ErrorCode } from '@/joystream-lib/errors'
 import { ExtrinsicStatus } from '@/joystream-lib/types'

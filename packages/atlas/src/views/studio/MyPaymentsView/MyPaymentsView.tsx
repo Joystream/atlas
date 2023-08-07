@@ -11,27 +11,27 @@ import { PaymentTransactions } from './PaymentsTransactions'
 
 const PAYOUTS_WELCOME_MESSAGE = 'payouts-welcome'
 
-export const MyPaymentsView = () => {
+const MyPaymentsView = () => {
   const headTags = useHeadTags('My payments')
   const isDismissedMessage = usePersonalDataStore((state) =>
     state.dismissedMessages.some((message) => message.id === PAYOUTS_WELCOME_MESSAGE)
   )
   const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
-  const [openPayoutsWelcomeModal, closePayoutsWelcomeModal] = useConfirmationModal({
-    noIcon: true,
-    children: <PayoutsWelcomeDialogContent />,
-    primaryButton: {
-      text: 'Continue',
-      onClick: () => {
-        updateDismissedMessages(PAYOUTS_WELCOME_MESSAGE)
-        closePayoutsWelcomeModal()
-      },
-    },
-  })
+  const [openPayoutsWelcomeModal, closePayoutsWelcomeModal] = useConfirmationModal()
 
   useMountEffect(() => {
     if (!isDismissedMessage) {
-      openPayoutsWelcomeModal()
+      openPayoutsWelcomeModal({
+        noIcon: true,
+        children: <PayoutsWelcomeDialogContent />,
+        primaryButton: {
+          text: 'Continue',
+          onClick: () => {
+            updateDismissedMessages(PAYOUTS_WELCOME_MESSAGE)
+            closePayoutsWelcomeModal()
+          },
+        },
+      })
     }
   })
 
@@ -46,3 +46,5 @@ export const MyPaymentsView = () => {
     </LimitedWidthContainer>
   )
 }
+
+export default MyPaymentsView

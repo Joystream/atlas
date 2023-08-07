@@ -1,10 +1,12 @@
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
-import { FC, useEffect } from 'react'
+import { FC, Suspense, lazy, useEffect } from 'react'
 import { Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { ViewErrorBoundary } from '@/components/ViewErrorFallback'
+import { Spinner } from '@/components/_loaders/Spinner'
+import { LoadingStudioContainer } from '@/components/_loaders/StudioLoading'
 import { BottomNav } from '@/components/_navigation/BottomNav'
 import { PrivateRoute } from '@/components/_navigation/PrivateRoute'
 import { SidenavViewer } from '@/components/_navigation/SidenavViewer'
@@ -17,20 +19,21 @@ import { useSearchStore } from '@/providers/search'
 import { useUser } from '@/providers/user/user.hooks'
 import { transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
-import { YppLandingView } from '@/views/global/YppLandingView'
-import { NotificationsView } from '@/views/notifications'
 
-import { CategoryView } from './CategoryView'
-import { ChannelView } from './ChannelView'
-import { ChannelsView } from './ChannelsView'
-import { DiscoverView } from './DiscoverView'
-import { HomeView } from './HomeView'
-import { MarketplaceView } from './MarketplaceView'
-import { MemberView } from './MemberView'
-import { MembershipSettingsView } from './MembershipSettingsView'
-import { NotFoundView } from './NotFoundView'
-import { SearchView } from './SearchView'
-import { VideoView } from './VideoView'
+const YppLandingView = lazy(() => import('@/views/global/YppLandingView'))
+const NotificationsView = lazy(() => import('@/views/notifications'))
+
+const CategoryView = lazy(() => import('./CategoryView'))
+const ChannelView = lazy(() => import('./ChannelView'))
+const ChannelsView = lazy(() => import('./ChannelsView'))
+const DiscoverView = lazy(() => import('./DiscoverView'))
+const HomeView = lazy(() => import('./HomeView'))
+const MarketplaceView = lazy(() => import('./MarketplaceView'))
+const MemberView = lazy(() => import('./MemberView'))
+const MembershipSettingsView = lazy(() => import('./MembershipSettingsView'))
+const NotFoundView = lazy(() => import('./NotFoundView'))
+const SearchView = lazy(() => import('./SearchView'))
+const VideoView = lazy(() => import('./VideoView'))
 
 const viewerRoutes = [
   { path: relativeRoutes.viewer.search(), element: <SearchView /> },
@@ -134,28 +137,40 @@ export const ViewerLayout: FC = () => {
               classNames={transitions.names.fadeAndSlide}
               key={displayedLocation.pathname}
             >
-              <Routes location={displayedLocation}>
-                {viewerRoutes.map((route) => (
-                  <Route key={route.path} {...route} />
-                ))}
-                <Route
-                  path={relativeRoutes.viewer.memberSettings()}
-                  element={
-                    <PrivateRoute
-                      isAuth={isLoggedIn}
-                      element={<MembershipSettingsView />}
-                      redirectTo={ENTRY_POINT_ROUTE}
-                    />
-                  }
-                />
-                <Route
-                  path={absoluteRoutes.viewer.notifications()}
-                  element={
-                    <PrivateRoute isAuth={isLoggedIn} element={<NotificationsView />} redirectTo={ENTRY_POINT_ROUTE} />
-                  }
-                />
-                <Route path="*" element={<NotFoundView />} />
-              </Routes>
+              <Suspense
+                fallback={
+                  <LoadingStudioContainer>
+                    <Spinner size="large" />
+                  </LoadingStudioContainer>
+                }
+              >
+                <Routes location={displayedLocation}>
+                  {viewerRoutes.map((route) => (
+                    <Route key={route.path} {...route} />
+                  ))}
+                  <Route
+                    path={relativeRoutes.viewer.memberSettings()}
+                    element={
+                      <PrivateRoute
+                        isAuth={isLoggedIn}
+                        element={<MembershipSettingsView />}
+                        redirectTo={ENTRY_POINT_ROUTE}
+                      />
+                    }
+                  />
+                  <Route
+                    path={absoluteRoutes.viewer.notifications()}
+                    element={
+                      <PrivateRoute
+                        isAuth={isLoggedIn}
+                        element={<NotificationsView />}
+                        redirectTo={ENTRY_POINT_ROUTE}
+                      />
+                    }
+                  />
+                  <Route path="*" element={<NotFoundView />} />
+                </Routes>
+              </Suspense>
             </CSSTransition>
           </SwitchTransition>
         </ErrorBoundary>

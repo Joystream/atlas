@@ -16,7 +16,7 @@ import { YppDashboardMainTab, YppDashboardSettingsTab } from './tabs'
 
 const TABS = ['Dashboard', 'Referrals', 'Settings'] as const
 
-export const YppDashboard: FC = () => {
+const YppDashboard: FC = () => {
   const headTags = useHeadTags('YouTube Partner Program')
   const mdMatch = useMediaMatch('md')
   const [currentVideosTab, setCurrentVideosTab] = useState(0)
@@ -85,3 +85,5 @@ export const YppDashboard: FC = () => {
     </>
   )
 }
+
+export default YppDashboard

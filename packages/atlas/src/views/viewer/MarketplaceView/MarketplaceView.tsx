@@ -10,7 +10,7 @@ import { useHeadTags } from '@/hooks/useHeadTags'
 import { FeaturedNftsSection } from './FeaturedNftsSection/FeaturedNftsSection'
 import { MarketplaceWrapper, TableFullWitdhtWrapper } from './MarketplaceView.styles'
 
-export const MarketplaceView: FC = () => {
+const MarketplaceView: FC = () => {
   const headTags = useHeadTags('Marketplace')
   const { nfts, loading } = useFeaturedNftsVideos()
 
@@ -30,3 +30,5 @@ export const MarketplaceView: FC = () => {
     </MarketplaceWrapper>
   )
 }
+
+export default MarketplaceView

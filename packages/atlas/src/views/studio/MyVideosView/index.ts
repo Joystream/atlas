@@ -1,1 +1,1 @@
-export { MyVideosView } from './MyVideosView'
+export { default } from './MyVideosView'
