@@ -8,7 +8,7 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
   gap: ${sizes(2)};
-  background-color: ${cVar('colorBackgroundMutedAlpha')};
+  background-color: ${cVar('colorCoreNeutral800Lighten')};
   padding: ${sizes(2)} ${sizes(4)};
   border-radius: 99px;
   width: fit-content;

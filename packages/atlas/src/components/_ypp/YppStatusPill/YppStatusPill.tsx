@@ -20,16 +20,18 @@ const getTooltipText = (status: YppStatusPillProps['status']) => {
   }
 }
 
-export const YppStatusPill = ({ status }: YppStatusPillProps) => {
+const STATUS_FROM_BE = 'operational'
+
+export const YppStatusPill = () => {
   const statusRef = useRef<HTMLDivElement>(null)
-  const [tooltipTitle, tooltipText] = getTooltipText(status)
+  const [tooltipTitle, tooltipText] = getTooltipText(STATUS_FROM_BE)
   return (
     <>
       <Container ref={statusRef}>
         <Text variant="t200" as="p">
           YPP Sync Status:
         </Text>
-        <StatusDot status={status} />
+        <StatusDot status={STATUS_FROM_BE} />
       </Container>
       <Tooltip
         reference={statusRef}
