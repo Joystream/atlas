@@ -1,1 +1,1 @@
-export { default } from './MyChannelView'
+export * from './MyChannelView'

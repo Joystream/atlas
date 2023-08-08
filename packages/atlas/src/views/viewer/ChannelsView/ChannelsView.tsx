@@ -9,7 +9,7 @@ import { VideoContentTemplate } from '@/components/_templates/VideoContentTempla
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { SentryLogger } from '@/utils/logs'
 
-const ChannelsView: FC = () => {
+export const ChannelsView: FC = () => {
   const { channels, loading, error } = useTop10Channels(
     {},
     { onError: (error) => SentryLogger.error('Failed to fetch channels', 'ChannelsView', error) }
@@ -28,5 +28,3 @@ const ChannelsView: FC = () => {
     </>
   )
 }
-
-export default ChannelsView

@@ -12,7 +12,7 @@ import { useInfiniteVideoGrid } from '@/hooks/useInfiniteVideoGrid'
 import { DEFAULT_VIDEO_GRID, sizes } from '@/styles'
 import { InfiniteLoadingOffsets } from '@/utils/loading.contants'
 
-const HomeView: FC = () => {
+export const HomeView: FC = () => {
   const headTags = useHeadTags()
   const { columns, fetchMore, pageInfo, tiles } = useInfiniteVideoGrid({
     query: GetBasicVideosConnectionDocument,
@@ -52,5 +52,3 @@ const HomeView: FC = () => {
 const StyledSection = styled(Section)`
   padding: ${sizes(8)} 0;
 `
-
-export default HomeView

@@ -25,7 +25,7 @@ import {
   StyledPill,
 } from './NotificationsView.styles'
 
-const NotificationsView = () => {
+export const NotificationsView = () => {
   const smMatch = useMediaMatch('sm')
   const open = useBottomNavStore((state) => state.open)
   const headTags = useHeadTags('Notifications')
@@ -191,5 +191,3 @@ const NotificationsEmptyFallback = () => {
     </>
   )
 }
-
-export default NotificationsView

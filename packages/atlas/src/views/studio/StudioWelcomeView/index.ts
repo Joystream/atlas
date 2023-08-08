@@ -1,1 +1,1 @@
-export { default } from './StudioWelcomeView'
+export * from './StudioWelcomeView'

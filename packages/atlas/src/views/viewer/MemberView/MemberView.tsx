@@ -38,7 +38,7 @@ const ACTIVITY_SORTING_FILTERS = [
   },
 ]
 
-const MemberView: FC = () => {
+export const MemberView: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const currentTabName = searchParams.get(QUERY_PARAMS.TAB) as MemberTabs | null
   const [sortByTimestamp, setSortByTimestamp] = useState<NftActivityOrderByInput>(
@@ -290,5 +290,3 @@ const MemberView: FC = () => {
     </ViewWrapper>
   )
 }
-
-export default MemberView

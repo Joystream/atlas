@@ -1,1 +1,1 @@
-export { default } from './CrtWelcomeView'
+export * from './CrtWelcomeView'

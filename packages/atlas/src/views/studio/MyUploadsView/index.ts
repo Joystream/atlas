@@ -1,1 +1,1 @@
-export { default } from './MyUploadsView'
+export * from './MyUploadsView'

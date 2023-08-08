@@ -1,6 +1,6 @@
 import { CrtView } from '@/views/studio/CrtView'
 
-const CrtWelcomeView = () => {
+export const CrtWelcomeView = () => {
   return (
     <CrtView />
     // todo: uncomment when CRT are ready
@@ -24,5 +24,3 @@ const CrtWelcomeView = () => {
     // />
   )
 }
-
-export default CrtWelcomeView

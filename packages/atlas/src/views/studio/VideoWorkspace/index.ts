@@ -1,1 +1,1 @@
-export { default } from './VideoWorkspace'
+export { VideoWorkspace } from './VideoWorkspace'

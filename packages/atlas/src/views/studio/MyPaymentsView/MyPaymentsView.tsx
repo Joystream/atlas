@@ -11,7 +11,7 @@ import { PaymentTransactions } from './PaymentsTransactions'
 
 const PAYOUTS_WELCOME_MESSAGE = 'payouts-welcome'
 
-const MyPaymentsView = () => {
+export const MyPaymentsView = () => {
   const headTags = useHeadTags('My payments')
   const isDismissedMessage = usePersonalDataStore((state) =>
     state.dismissedMessages.some((message) => message.id === PAYOUTS_WELCOME_MESSAGE)
@@ -46,5 +46,3 @@ const MyPaymentsView = () => {
     </LimitedWidthContainer>
   )
 }
-
-export default MyPaymentsView
