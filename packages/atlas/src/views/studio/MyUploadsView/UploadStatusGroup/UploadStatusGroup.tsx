@@ -39,7 +39,7 @@ export const UploadStatusGroup: FC<UploadStatusGroupProps> = ({ uploads }) => {
   const [runCompletedAnimation, setRunCompletedAnimation] = useState(false)
   const [uploadGroupState, setUploadGroupState] = useState<UploadGroupState>(null)
   const drawer = useRef<HTMLDivElement>(null)
-  const uploadsStatuses = useUploadsStore((state) => uploads.map((u) => state.uploadsStatus[u.id], shallow))
+  const uploadsStatuses = useUploadsStore((state) => uploads.map((u) => state.uploadsStatus[u.id]), shallow)
   const location = useLocation()
   const mdMatch = useMediaMatch('md')
 
