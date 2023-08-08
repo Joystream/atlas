@@ -19,6 +19,7 @@ import { InputAssetUpload, StartFileUploadOptions } from './uploads.types'
 
 import { useSnackbar } from '../snackbars'
 
+const MAX_BUCKET_RETRY = 1
 const RETRIES_COUNT = 3
 const RETRY_DELAY = 1000
 const UPLOADING_SNACKBAR_TIMEOUT = 8000
@@ -183,6 +184,11 @@ export const useStartFileUpload = () => {
           (!axiosError.response?.status || (axiosError.response.status >= 400 && axiosError.response.status <= 500))
         if (networkFailure) {
           markStorageOperatorFailed(uploadOperator.id)
+        }
+
+        const retry = opts?.retry ?? 0
+        if (networkFailure && retry < MAX_BUCKET_RETRY) {
+          return startFileUpload(file, asset, { ...opts, retry: retry + 1 })
         }
 
         const snackbarDescription = networkFailure ? 'Host is not responding' : 'Unexpected error occurred'

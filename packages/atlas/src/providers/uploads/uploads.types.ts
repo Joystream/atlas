@@ -31,6 +31,7 @@ export type StartFileUploadOptions = {
   isReUpload?: boolean
   changeHost?: boolean
   hasNft?: boolean
+  retry?: number
 }
 
 export type UploadsStatusRecord = Record<string, UploadStatus | undefined>

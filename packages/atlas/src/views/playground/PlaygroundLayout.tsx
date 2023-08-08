@@ -51,7 +51,7 @@ const playgroundRoutes = [
   { path: 'sign-up', element: <PlaygroundSignUp />, name: 'Sign up' },
 ]
 
-const PlaygroundLayout = () => {
+export const PlaygroundLayout = () => {
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
   const { activeMembership, isLoggedIn } = useUser()
   const { urls: memberAvatarUrls, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(activeMembership)
@@ -152,5 +152,3 @@ const ContentContainer = styled.div`
   padding-left: 30px;
   overflow: hidden;
 `
-
-export default PlaygroundLayout
