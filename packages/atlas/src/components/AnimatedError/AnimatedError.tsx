@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import errorAnimation from '@/assets/animations/error.json'
+import { errorAnimation } from '@/assets/animations'
 import { LottiePlayer } from '@/components/LottiePlayer'
 
 type AnimatedErrorProps = {

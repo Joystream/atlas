@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import confettiAnimation from '@/assets/animations/confetti.json'
+import { confettiAnimation } from '@/assets/animations'
 import { AppKV } from '@/components/AppKV'
 import { Avatar } from '@/components/Avatar'
 import { LottiePlayer } from '@/components/LottiePlayer'

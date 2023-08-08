@@ -8,7 +8,7 @@ import { ORION_GRAPHQL_URL, QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL } from '@/config
 import { useUserLocationStore } from '@/providers/userLocation'
 import { SentryLogger } from '@/utils/logs'
 
-import cache from './cache'
+import { cache } from './cache'
 
 const delayLink = new ApolloLink((operation, forward) => {
   const ctx = operation.getContext()
@@ -52,7 +52,7 @@ const errorLink = onError(({ graphQLErrors, networkError, operation, forward, re
   forward(operation)
 })
 
-const createApolloClient = () => {
+export const createApolloClient = () => {
   const subscriptionLink = new GraphQLWsLink(
     createClient({
       url: QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL,
@@ -97,5 +97,3 @@ const createApolloClient = () => {
     link: operationSplitLink,
   })
 }
-
-export default createApolloClient
