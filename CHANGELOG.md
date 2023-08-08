@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.4.0] - 2023-08-08
+
+### Added
+
+- Added upload retry after distributor blacklisting
+
+### Changed
+
+- Adjusted chunks and lazy loading to reduce bundle size
+
+#### Fixed
+
+- Fixed extended delays for YPP sign up
+
 ## [4.3.1] - 2023-08-02
 
 ### Fixed
