@@ -62,3 +62,9 @@ export const StatusDot = styled.div<DotProps>`
 
   animation: 10s ease-out ${getDotAnimation} infinite;
 `
+
+export const TooltipBox = styled.div`
+  padding: ${sizes(1)};
+  display: grid;
+  gap: ${sizes(2)};
+`
