@@ -14,6 +14,7 @@ import {
   DetailsDrawer,
   DropdownContainer,
   Header,
+  MainWrapper,
   ProgressBar,
   RowBox,
   StepCardContainer,
@@ -49,8 +50,8 @@ export const ProgressWidget = ({ steps, activeStep, goalComponent }: ProgressWid
   const smMatch = useMediaMatch('sm')
   const isDone = activeStep + 1 > steps.length
   return (
-    <div style={{ position: 'relative' }}>
-      <Header progressWidth={isVisible ? '0%' : `${Math.round((activeStep / steps.length) * 100)}%`}>
+    <MainWrapper>
+      <Header progressWidth={isVisible ? '0%' : `${getProgressPercentage(activeStep, steps.length)}%`}>
         <RowBox gap={4}>
           <Text variant="h500" as="h5">
             Your progress
@@ -107,7 +108,7 @@ export const ProgressWidget = ({ steps, activeStep, goalComponent }: ProgressWid
           </Carousel>
         </DropdownContainer>
       </DetailsDrawer>
-    </div>
+    </MainWrapper>
   )
 }
 type ExtendedProgressBarProps = {

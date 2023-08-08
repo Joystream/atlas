@@ -13,7 +13,7 @@ export default {
 const steps: ProgressWidgetProps['steps'] = [
   {
     title: 'Create token',
-    description: 'Createn own token and share it with your viewers!',
+    description: 'Create own token and share it with your viewers!',
     primaryButton: {
       text: 'Create token',
     },
@@ -42,8 +42,7 @@ Default.args = {
   steps,
   goalComponent: (
     <Text variant="t200" as="p">
-      Complete 1 more step to achive
-      <TextButton>Token master</TextButton>
+      Complete 1 more step to achieve <TextButton>Token master</TextButton>
     </Text>
   ),
 }

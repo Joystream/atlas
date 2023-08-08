@@ -107,3 +107,7 @@ export const StepNumber = styled.div`
   width: 28px;
   height: 28px;
 `
+
+export const MainWrapper = styled.div`
+  position: relative;
+`
