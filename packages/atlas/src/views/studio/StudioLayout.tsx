@@ -26,24 +26,42 @@ import { isAllowedBrowser } from '@/utils/browser'
 
 import { useGetYppSyncedChannels } from '../global/YppLandingView/useGetYppSyncedChannels'
 
-const StudioEntrypoint = lazy(() => import('@/components/StudioEntrypoint'))
+const StudioEntrypoint = lazy(() =>
+  import('@/components/StudioEntrypoint').then((module) => ({ default: module.StudioEntrypoint }))
+)
 
-const NotificationsView = lazy(() => import('@/views/notifications'))
-const CrtPreviewEditView = lazy(() => import('@/views/studio/CrtPreviewEditView'))
-const CrtPreviewView = lazy(() => import('@/views/studio/CrtPreviewView'))
-const CrtWelcomeView = lazy(() => import('@/views/studio/CrtWelcomeView'))
-const MyChannelView = lazy(() => import('@/views/studio/MyChannelView'))
-const MyPaymentsView = lazy(() => import('@/views/studio/MyPaymentsView'))
+const NotificationsView = lazy(() =>
+  import('@/views/notifications').then((module) => ({ default: module.NotificationsView }))
+)
+const CrtPreviewEditView = lazy(() =>
+  import('@/views/studio/CrtPreviewEditView').then((module) => ({ default: module.CrtPreviewEditView }))
+)
+const CrtPreviewView = lazy(() =>
+  import('@/views/studio/CrtPreviewView').then((module) => ({ default: module.CrtPreviewView }))
+)
+const CrtWelcomeView = lazy(() =>
+  import('@/views/studio/CrtWelcomeView').then((module) => ({ default: module.CrtWelcomeView }))
+)
+const MyChannelView = lazy(() =>
+  import('@/views/studio/MyChannelView').then((module) => ({ default: module.MyChannelView }))
+)
+const MyPaymentsView = lazy(() =>
+  import('@/views/studio/MyPaymentsView').then((module) => ({ default: module.MyPaymentsView }))
+)
 
-const MyUploadsView = lazy(() => import('./MyUploadsView'))
-const MyVideosView = lazy(() => import('./MyVideosView'))
-const StudioWelcomeView = lazy(() => import('./StudioWelcomeView'))
-const VideoWorkspace = lazy(() => import('./VideoWorkspace'))
-const YppDashboard = lazy(() => import('./YppDashboard'))
+const MyUploadsView = lazy(() => import('./MyUploadsView').then((module) => ({ default: module.MyUploadsView })))
+const MyVideosView = lazy(() => import('./MyVideosView').then((module) => ({ default: module.MyVideosView })))
+const StudioWelcomeView = lazy(() =>
+  import('./StudioWelcomeView').then((module) => ({ default: module.StudioWelcomeView }))
+)
+const VideoWorkspace = lazy(() => import('./VideoWorkspace').then((module) => ({ default: module.VideoWorkspace })))
+const YppDashboard = lazy(() => import('./YppDashboard').then((module) => ({ default: module.YppDashboard })))
 
-const YppLandingView = lazy(() => import('../global/YppLandingView'))
+const YppLandingView = lazy(() =>
+  import('../global/YppLandingView').then((module) => ({ default: module.YppLandingView }))
+)
 
-const NotFoundView = lazy(() => import('../viewer/NotFoundView'))
+const NotFoundView = lazy(() => import('../viewer/NotFoundView').then((module) => ({ default: module.NotFoundView })))
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
 
@@ -63,7 +81,7 @@ const locationToPageName = {
   '/ypp-dashboard': 'YPP Dashboard',
 }
 
-const StudioLayout = () => {
+const _StudioLayout = () => {
   const location = useLocation()
   const displayedLocation = useVideoWorkspaceRouting()
   const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
@@ -245,7 +263,7 @@ const StudioLayout = () => {
   )
 }
 
-StudioLayout.displayName = 'StudioLayout'
+_StudioLayout.displayName = 'StudioLayout'
 
 const MainContainer = styled.main<{ hasSidebar: boolean }>`
   --size-sidenav-width: ${({ hasSidebar }) => (hasSidebar ? 'var(--size-sidenav-width-collapsed)' : 0)};
@@ -278,7 +296,7 @@ const StyledSidenavStudio = styled(SidenavStudio)`
   }
 `
 
-const StudioLayoutWrapper: FC = () => {
+export const StudioLayout: FC = () => {
   const navigate = useNavigate()
   return (
     <ErrorBoundary
@@ -290,10 +308,8 @@ const StudioLayoutWrapper: FC = () => {
       <VideoWorkspaceProvider>
         <ConnectionStatusManager />
         <UploadsManager />
-        <StudioLayout />
+        <_StudioLayout />
       </VideoWorkspaceProvider>
     </ErrorBoundary>
   )
 }
-
-export default StudioLayoutWrapper
