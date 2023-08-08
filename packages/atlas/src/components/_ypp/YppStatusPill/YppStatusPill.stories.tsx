@@ -1,15 +1,12 @@
 import { Meta, StoryFn } from '@storybook/react'
 
-import { YppStatusPill, YppStatusPillProps } from '@/components/_ypp/YppStatusPill/YppStatusPill'
+import { YppStatusPill } from '@/components/_ypp/YppStatusPill/YppStatusPill'
 
 export default {
   title: 'components/YppStatusPill',
   component: YppStatusPill,
-} as Meta<YppStatusPillProps>
+} as Meta
 
-const Template: StoryFn<YppStatusPillProps> = (args) => <YppStatusPill {...args} />
+const Template: StoryFn = () => <YppStatusPill />
 
 export const Default = Template.bind({})
-Default.args = {
-  status: 'operational',
-}
