@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import lazy from '@loadable/component'
 import { ErrorBoundary } from '@sentry/react'
 import { FC, useEffect } from 'react'
 import { Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
@@ -17,20 +18,26 @@ import { useSearchStore } from '@/providers/search'
 import { useUser } from '@/providers/user/user.hooks'
 import { transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
-import { YppLandingView } from '@/views/global/YppLandingView'
-import { NotificationsView } from '@/views/notifications'
 
-import { CategoryView } from './CategoryView'
-import { ChannelView } from './ChannelView'
-import { ChannelsView } from './ChannelsView'
-import { DiscoverView } from './DiscoverView'
-import { HomeView } from './HomeView'
-import { MarketplaceView } from './MarketplaceView'
-import { MemberView } from './MemberView'
-import { MembershipSettingsView } from './MembershipSettingsView'
-import { NotFoundView } from './NotFoundView'
-import { SearchView } from './SearchView'
-import { VideoView } from './VideoView'
+const YppLandingView = lazy(() =>
+  import('@/views/global/YppLandingView').then((module) => ({ default: module.YppLandingView }))
+)
+const NotificationsView = lazy(() =>
+  import('@/views/notifications').then((module) => ({ default: module.NotificationsView }))
+)
+const CategoryView = lazy(() => import('./CategoryView').then((module) => ({ default: module.CategoryView })))
+const ChannelView = lazy(() => import('./ChannelView').then((module) => ({ default: module.ChannelView })))
+const ChannelsView = lazy(() => import('./ChannelsView').then((module) => ({ default: module.ChannelsView })))
+const DiscoverView = lazy(() => import('./DiscoverView').then((module) => ({ default: module.DiscoverView })))
+const HomeView = lazy(() => import('./HomeView').then((module) => ({ default: module.HomeView })))
+const MarketplaceView = lazy(() => import('./MarketplaceView').then((module) => ({ default: module.MarketplaceView })))
+const MemberView = lazy(() => import('./MemberView').then((module) => ({ default: module.MemberView })))
+const MembershipSettingsView = lazy(() =>
+  import('./MembershipSettingsView').then((module) => ({ default: module.MembershipSettingsView }))
+)
+const NotFoundView = lazy(() => import('./NotFoundView').then((module) => ({ default: module.NotFoundView })))
+const SearchView = lazy(() => import('./SearchView').then((module) => ({ default: module.SearchView })))
+const VideoView = lazy(() => import('./VideoView').then((module) => ({ default: module.VideoView })))
 
 const viewerRoutes = [
   { path: relativeRoutes.viewer.search(), element: <SearchView /> },

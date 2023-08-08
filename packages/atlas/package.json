@@ -147,7 +147,7 @@
     "react-ga4": "^2.1.0",
     "react-hooks-testing-library": "^0.6.0",
     "rimraf": "^3.0.2",
-    "rollup-plugin-visualizer": "^5.8.3",
+    "rollup-plugin-visualizer": "^5.9.2",
     "storybook": "7.0.7",
     "style-dictionary": "^3.7.1",
     "vite": "^4.3.9",

@@ -1,7 +1,7 @@
 import { FC, MouseEvent, PropsWithChildren, useEffect, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import confettiAnimation from '@/assets/animations/confetti.json'
+import { confettiAnimation } from '@/assets/animations'
 import { LottiePlayer } from '@/components/LottiePlayer'
 import { Portal } from '@/components/Portal'
 import { useMountEffect } from '@/hooks/useMountEffect'

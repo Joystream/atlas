@@ -1,14 +1,14 @@
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
-import { FC, useCallback, useEffect, useState } from 'react'
+import { FC, Suspense, lazy, useCallback, useEffect, useLayoutEffect, useState } from 'react'
 import { Route, Routes } from 'react-router'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
 import { NoConnectionIndicator } from '@/components/NoConnectionIndicator'
-import { StudioEntrypoint } from '@/components/StudioEntrypoint'
 import { ViewErrorBoundary } from '@/components/ViewErrorFallback'
-import { StudioLoading } from '@/components/_loaders/StudioLoading'
+import { Spinner } from '@/components/_loaders/Spinner'
+import { LoadingStudioContainer, StudioLoading } from '@/components/_loaders/StudioLoading'
 import { PrivateRoute } from '@/components/_navigation/PrivateRoute'
 import { SidenavStudio } from '@/components/_navigation/SidenavStudio'
 import { TopbarStudio } from '@/components/_navigation/TopbarStudio'
@@ -23,22 +23,45 @@ import { useUser } from '@/providers/user/user.hooks'
 import { VideoWorkspaceProvider, useVideoWorkspaceRouting } from '@/providers/videoWorkspace'
 import { transitions } from '@/styles'
 import { isAllowedBrowser } from '@/utils/browser'
-import { NotificationsView } from '@/views/notifications'
-import { CrtPreviewEditView } from '@/views/studio/CrtPreviewEditView'
-import { CrtPreviewView } from '@/views/studio/CrtPreviewView'
-import { CrtWelcomeView } from '@/views/studio/CrtWelcomeView/CrtWelcomeView'
-import { MyChannelView } from '@/views/studio/MyChannelView'
-import { MyPaymentsView } from '@/views/studio/MyPaymentsView'
 
-import { MyUploadsView } from './MyUploadsView'
-import { MyVideosView } from './MyVideosView'
-import { StudioWelcomeView } from './StudioWelcomeView'
-import { VideoWorkspace } from './VideoWorkspace'
-import { YppDashboard } from './YppDashboard'
-
-import { YppLandingView } from '../global/YppLandingView'
 import { useGetYppSyncedChannels } from '../global/YppLandingView/useGetYppSyncedChannels'
-import { NotFoundView } from '../viewer/NotFoundView'
+
+const StudioEntrypoint = lazy(() =>
+  import('@/components/StudioEntrypoint').then((module) => ({ default: module.StudioEntrypoint }))
+)
+
+const NotificationsView = lazy(() =>
+  import('@/views/notifications').then((module) => ({ default: module.NotificationsView }))
+)
+const CrtPreviewEditView = lazy(() =>
+  import('@/views/studio/CrtPreviewEditView').then((module) => ({ default: module.CrtPreviewEditView }))
+)
+const CrtPreviewView = lazy(() =>
+  import('@/views/studio/CrtPreviewView').then((module) => ({ default: module.CrtPreviewView }))
+)
+const CrtWelcomeView = lazy(() =>
+  import('@/views/studio/CrtWelcomeView').then((module) => ({ default: module.CrtWelcomeView }))
+)
+const MyChannelView = lazy(() =>
+  import('@/views/studio/MyChannelView').then((module) => ({ default: module.MyChannelView }))
+)
+const MyPaymentsView = lazy(() =>
+  import('@/views/studio/MyPaymentsView').then((module) => ({ default: module.MyPaymentsView }))
+)
+
+const MyUploadsView = lazy(() => import('./MyUploadsView').then((module) => ({ default: module.MyUploadsView })))
+const MyVideosView = lazy(() => import('./MyVideosView').then((module) => ({ default: module.MyVideosView })))
+const StudioWelcomeView = lazy(() =>
+  import('./StudioWelcomeView').then((module) => ({ default: module.StudioWelcomeView }))
+)
+const VideoWorkspace = lazy(() => import('./VideoWorkspace').then((module) => ({ default: module.VideoWorkspace })))
+const YppDashboard = lazy(() => import('./YppDashboard').then((module) => ({ default: module.YppDashboard })))
+
+const YppLandingView = lazy(() =>
+  import('../global/YppLandingView').then((module) => ({ default: module.YppLandingView }))
+)
+
+const NotFoundView = lazy(() => import('../viewer/NotFoundView').then((module) => ({ default: module.NotFoundView })))
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
 
@@ -58,7 +81,7 @@ const locationToPageName = {
   '/ypp-dashboard': 'YPP Dashboard',
 }
 
-const StudioLayout = () => {
+const _StudioLayout = () => {
   const location = useLocation()
   const displayedLocation = useVideoWorkspaceRouting()
   const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
@@ -77,7 +100,7 @@ const StudioLayout = () => {
   const isLoadingYPPData = isLoading || membershipsLoading || isAuthenticating
   const isYppSigned = !!currentChannel
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!isAllowedBrowser()) {
       openUnsupportedBrowserDialog({
         type: 'warning',
@@ -137,91 +160,101 @@ const StudioLayout = () => {
             <StyledSidenavStudio />
           </CSSTransition>
           <MainContainer hasSidebar={channelSet}>
-            <Routes location={displayedLocation}>
-              <Route
-                path={relativeRoutes.studio.index()}
-                element={<StudioEntrypoint enterLocation={enterLocation} />}
-              />
-              <Route
-                path={relativeRoutes.studio.signIn()}
-                element={
-                  <PrivateRoute element={<StudioWelcomeView />} isAuth={!channelSet} redirectTo={ENTRY_POINT_ROUTE} />
-                }
-              />
-              <Route
-                path={relativeRoutes.studio.myChannel()}
-                element={
-                  <PrivateRoute element={<MyChannelView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
-                }
-              />
-              <Route
-                path={relativeRoutes.studio.uploads()}
-                element={
-                  <PrivateRoute element={<MyUploadsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
-                }
-              />
-              <Route
-                path={relativeRoutes.studio.payments()}
-                element={
-                  <PrivateRoute element={<MyPaymentsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
-                }
-              />
-              <Route
-                path={relativeRoutes.studio.videos()}
-                element={<PrivateRoute element={<MyVideosView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />}
-              />
-              <Route
-                path={relativeRoutes.studio.crtWelcome()}
-                element={
-                  <PrivateRoute element={<CrtWelcomeView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
-                }
-              />
-              <Route
-                path={relativeRoutes.studio.crtTokenPreview()}
-                element={
-                  <PrivateRoute element={<CrtPreviewView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
-                }
-              />
-              <Route
-                path={relativeRoutes.studio.crtTokenPreviewEdit()}
-                element={
-                  <PrivateRoute element={<CrtPreviewEditView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
-                }
-              />
-              <Route
-                path={relativeRoutes.studio.notifications()}
-                element={
-                  <PrivateRoute element={<NotificationsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
-                }
-              />
-              {atlasConfig.features.ypp.googleConsoleClientId && (
-                <>
-                  <Route
-                    path={relativeRoutes.studio.ypp()}
-                    element={
-                      <PrivateRoute
-                        isLoadingAuthData={isLoadingYPPData}
-                        element={<YppLandingView />}
-                        isAuth={channelSet && !isYppSigned}
-                        redirectTo={absoluteRoutes.studio.yppDashboard()}
-                      />
-                    }
-                  />
-                  <Route
-                    path={relativeRoutes.studio.yppDashboard()}
-                    element={
-                      <PrivateRoute
-                        isLoadingAuthData={isLoadingYPPData}
-                        element={<YppDashboard />}
-                        isAuth={channelSet && isYppSigned}
-                        redirectTo={yppRedirect()}
-                      />
-                    }
-                  />
-                </>
-              )}
-              <Route path="*" element={<NotFoundView />} />
-            </Routes>
+            <Suspense
+              fallback={
+                <LoadingStudioContainer>
+                  <Spinner size="large" />
+                </LoadingStudioContainer>
+              }
+            >
+              <Routes location={displayedLocation}>
+                <Route
+                  path={relativeRoutes.studio.index()}
+                  element={<StudioEntrypoint enterLocation={enterLocation} />}
+                />
+                <Route
+                  path={relativeRoutes.studio.signIn()}
+                  element={
+                    <PrivateRoute element={<StudioWelcomeView />} isAuth={!channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                  }
+                />
+                <Route
+                  path={relativeRoutes.studio.myChannel()}
+                  element={
+                    <PrivateRoute element={<MyChannelView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                  }
+                />
+                <Route
+                  path={relativeRoutes.studio.uploads()}
+                  element={
+                    <PrivateRoute element={<MyUploadsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                  }
+                />
+                <Route
+                  path={relativeRoutes.studio.payments()}
+                  element={
+                    <PrivateRoute element={<MyPaymentsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                  }
+                />
+                <Route
+                  path={relativeRoutes.studio.videos()}
+                  element={
+                    <PrivateRoute element={<MyVideosView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                  }
+                />
+                <Route
+                  path={relativeRoutes.studio.crtWelcome()}
+                  element={
+                    <PrivateRoute element={<CrtWelcomeView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                  }
+                />
+                <Route
+                  path={relativeRoutes.studio.crtTokenPreview()}
+                  element={
+                    <PrivateRoute element={<CrtPreviewView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                  }
+                />
+                <Route
+                  path={relativeRoutes.studio.crtTokenPreviewEdit()}
+                  element={
+                    <PrivateRoute element={<CrtPreviewEditView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                  }
+                />
+                <Route
+                  path={relativeRoutes.studio.notifications()}
+                  element={
+                    <PrivateRoute element={<NotificationsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                  }
+                />
+                {atlasConfig.features.ypp.googleConsoleClientId && (
+                  <>
+                    <Route
+                      path={relativeRoutes.studio.ypp()}
+                      element={
+                        <PrivateRoute
+                          isLoadingAuthData={isLoadingYPPData}
+                          element={<YppLandingView />}
+                          isAuth={channelSet && !isYppSigned}
+                          redirectTo={absoluteRoutes.studio.yppDashboard()}
+                        />
+                      }
+                    />
+                    <Route
+                      path={relativeRoutes.studio.yppDashboard()}
+                      element={
+                        <PrivateRoute
+                          isLoadingAuthData={isLoadingYPPData}
+                          element={<YppDashboard />}
+                          isAuth={channelSet && isYppSigned}
+                          redirectTo={yppRedirect()}
+                        />
+                      }
+                    />
+                  </>
+                )}
+                <Route path="*" element={<NotFoundView />} />
+              </Routes>
+            </Suspense>
           </MainContainer>
           {channelSet && <VideoWorkspace />}
         </>
@@ -230,7 +263,7 @@ const StudioLayout = () => {
   )
 }
 
-StudioLayout.displayName = 'StudioLayout'
+_StudioLayout.displayName = 'StudioLayout'
 
 const MainContainer = styled.main<{ hasSidebar: boolean }>`
   --size-sidenav-width: ${({ hasSidebar }) => (hasSidebar ? 'var(--size-sidenav-width-collapsed)' : 0)};
@@ -263,7 +296,7 @@ const StyledSidenavStudio = styled(SidenavStudio)`
   }
 `
 
-const StudioLayoutWrapper: FC = () => {
+export const StudioLayout: FC = () => {
   const navigate = useNavigate()
   return (
     <ErrorBoundary
@@ -275,10 +308,8 @@ const StudioLayoutWrapper: FC = () => {
       <VideoWorkspaceProvider>
         <ConnectionStatusManager />
         <UploadsManager />
-        <StudioLayout />
+        <_StudioLayout />
       </VideoWorkspaceProvider>
     </ErrorBoundary>
   )
 }
-
-export default StudioLayoutWrapper
