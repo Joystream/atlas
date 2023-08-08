@@ -96,11 +96,7 @@ export const SetupTokenStep = ({ setPrimaryButtonProps, onSubmit, form }: SetupT
         description="Define the share of your channel revenue that goes to yourself vs shared with your token holders.
 Recommended values — Channel: 80%, Holders:20%. "
       >
-        <Controller
-          name="revenueShare"
-          control={control}
-          render={({ field }) => <RatioSlider id="revenueShare" {...field} />}
-        />
+        <Controller name="revenueShare" control={control} render={({ field }) => <RatioSlider {...field} />} />
       </FormField>
       <FormField
         label="Annual creator reward"
@@ -112,11 +108,7 @@ Recommended values — Channel: 80%, Holders:20%. "
         }}
         description="Define your own reward for managing the tokens. 10% means that if you have 10000k of tokens exist and this amount does not change, an additional 1k tokens will get minted and added to your wallet gradually over the course of 1 year."
       >
-        <Controller
-          name="creatorReward"
-          control={control}
-          render={({ field }) => <RatioSlider id="creatorReward" {...field} />}
-        />
+        <Controller name="creatorReward" control={control} render={({ field }) => <RatioSlider {...field} />} />
       </FormField>
     </CrtFormWrapper>
   )

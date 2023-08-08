@@ -1,6 +1,7 @@
 import { ChangeEventHandler, forwardRef, useMemo, useState } from 'react'
 
 import { sizes } from '@/styles'
+import { createId } from '@/utils/createId'
 
 import { Range, Track, Wrapper } from './RatioSlider.styles'
 
@@ -15,7 +16,7 @@ type RatioSliderProps = {
 }
 
 export const RatioSlider = forwardRef<HTMLInputElement, RatioSliderProps>(
-  ({ min = 0, max = 100, step = 10, defaultValue = 50, value: controlledValue, onChange, id = '' }, ref) => {
+  ({ min = 0, max = 100, step = 10, defaultValue = 50, value: controlledValue, onChange, id }, ref) => {
     const [internalValue, setInternalValue] = useState<number>(defaultValue)
     const value = controlledValue ?? internalValue
 
@@ -37,6 +38,8 @@ export const RatioSlider = forwardRef<HTMLInputElement, RatioSliderProps>(
       )
     }, [step, length])
 
+    const internalId = useMemo(() => id ?? createId(), [id])
+
     return (
       <Wrapper>
         <Range ref={ref} type="range" min={min} max={max} step={step} value={value} onChange={handleChange} />
@@ -44,7 +47,7 @@ export const RatioSlider = forwardRef<HTMLInputElement, RatioSliderProps>(
         <Track xmlns="http://www.w3.org/2000/svg">
           <circle className="knob" cx={valuePercent} cy={sizes(3)} r={sizes(2)} />
 
-          <mask id={`cutout-mask-${id}`}>
+          <mask id={`cutout-mask-${internalId}`}>
             <rect x="-5%" y="0%" width="110%" height="100%" fill="#fff" />
             <circle className="cutout-mask" cx={valuePercent} cy={sizes(3)} r={sizes(3)} />
           </mask>
