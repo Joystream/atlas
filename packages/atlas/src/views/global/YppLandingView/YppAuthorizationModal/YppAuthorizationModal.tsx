@@ -439,7 +439,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
           headerIcon: <Loader variant="medium" />,
           title: 'Speaking with backend...',
           description:
-            'Please wait while the server is processing the request. It may take up to 15 seconds a slow network.',
+            'Please wait while the server is processing the request. It may take up to 15 seconds on a slow network.',
           primaryButton: {
             text: 'Waiting...',
             disabled: true,
