@@ -1,1 +1,1 @@
-export { default } from './YppLandingView'
+export { YppLandingView } from './YppLandingView'

@@ -1,1 +1,1 @@
-export { default } from './YppDashboard'
+export * from './YppDashboard'

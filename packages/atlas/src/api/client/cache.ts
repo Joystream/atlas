@@ -246,7 +246,7 @@ const channelCacheFields: CachePolicyFields<keyof FullChannelFieldsFragment> = {
   createdAt: createDateHandler(),
 }
 
-const cache = new InMemoryCache({
+export const cache = new InMemoryCache({
   possibleTypes: {
     NftOwner: ['NftOwnerChannel', 'NftOwnerMember'],
   },
@@ -290,5 +290,3 @@ const cache = new InMemoryCache({
     },
   },
 })
-
-export default cache

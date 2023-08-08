@@ -1,7 +1,5 @@
 import { CrtPreviewLayout } from '@/components/CrtPreviewLayout'
 
-const CrtPreviewEditView = () => {
+export const CrtPreviewEditView = () => {
   return <CrtPreviewLayout mode="edit" />
 }
-
-export default CrtPreviewEditView

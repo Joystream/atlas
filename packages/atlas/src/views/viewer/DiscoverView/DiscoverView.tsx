@@ -23,7 +23,7 @@ const GRID: Grid = {
   },
 }
 
-const DiscoverView: FC = () => {
+export const DiscoverView: FC = () => {
   const { loading, displayCategoriesWithCounter, totalVideosCount } = useVideoDisplayCategoriesWithCounter()
 
   const categoriesNumber = atlasConfig.content.categories.length
@@ -58,5 +58,3 @@ const DiscoverView: FC = () => {
     </StyledLimitedWidthContainer>
   )
 }
-
-export default DiscoverView

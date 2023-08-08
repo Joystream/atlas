@@ -27,7 +27,7 @@ import { useGetYppSyncedChannels } from './useGetYppSyncedChannels'
 
 const SINGUP_DAILY_QUOTA = 500 // 2% of the total daily quota
 
-const YppLandingView: FC = () => {
+export const YppLandingView: FC = () => {
   const headTags = useHeadTags('YouTube Partner Program')
   const yppModalOpenName = useYppStore((state) => state.yppModalOpenName)
   const setYppModalOpen = useYppStore((state) => state.actions.setYppModalOpenName)
@@ -158,5 +158,3 @@ const YppLandingView: FC = () => {
     </Wrapper>
   )
 }
-
-export default YppLandingView

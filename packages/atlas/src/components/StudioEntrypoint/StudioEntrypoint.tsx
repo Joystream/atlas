@@ -11,7 +11,7 @@ type StudioEntrypointProps = {
   enterLocation: string
 }
 
-const StudioEntrypoint: FC<StudioEntrypointProps> = ({ enterLocation }) => {
+export const StudioEntrypoint: FC<StudioEntrypointProps> = ({ enterLocation }) => {
   const { channelId, isLoggedIn, activeMembership } = useUser()
 
   const channelSet = !!(channelId && activeMembership?.channels.find((channel) => channel.id === channelId))
@@ -35,5 +35,3 @@ const StudioEntrypoint: FC<StudioEntrypointProps> = ({ enterLocation }) => {
 
   return <StudioLoading />
 }
-
-export default StudioEntrypoint

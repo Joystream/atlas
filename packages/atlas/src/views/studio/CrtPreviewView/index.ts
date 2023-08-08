@@ -1,1 +1,1 @@
-export { default } from './CrtPreviewView'
+export * from './CrtPreviewView'

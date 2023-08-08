@@ -6,7 +6,7 @@ import { useRouterQuery } from '@/hooks/useRouterQuery'
 
 import { SearchResults } from './SearchResults'
 
-const SearchView: FC = () => {
+export const SearchView: FC = () => {
   const searchQuery = useRouterQuery(QUERY_PARAMS.SEARCH)
   const headTags = useHeadTags(searchQuery)
 
@@ -17,5 +17,3 @@ const SearchView: FC = () => {
     </>
   )
 }
-
-export default SearchView

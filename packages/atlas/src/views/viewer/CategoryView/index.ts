@@ -1,1 +1,1 @@
-export { default } from './CategoryView'
+export * from './CategoryView'

@@ -13,7 +13,7 @@ import { MembershipWallet } from './MembershipWallet'
 
 const TABS: MemberSettingsTabs[] = ['Public profile', 'Wallet']
 
-const MembershipSettingsView: FC = () => {
+export const MembershipSettingsView: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [currentTab, setCurrentTab] = useState<number>(0)
   const [isFormDirty, setIsFormDirty] = useState(false)
@@ -102,5 +102,3 @@ const MembershipSettingsView: FC = () => {
     </NoGlobalPaddingWrapper>
   )
 }
-
-export default MembershipSettingsView
