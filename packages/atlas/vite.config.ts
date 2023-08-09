@@ -76,11 +76,6 @@ export default defineConfig(({ mode }) => {
       EmbeddedFallbackPlugin,
       OptimizePlugin,
       ViteYaml(),
-      sentryVitePlugin({
-        authToken: env.VITE_SENTRY_AUTH_TOKEN,
-        org: 'jsgenesis',
-        project: 'atlas',
-      }),
       react({
         exclude: /\.stories\.[tj]sx?$/,
       }),
@@ -104,6 +99,11 @@ export default defineConfig(({ mode }) => {
         }),
         enforce: 'post',
       },
+      sentryVitePlugin({
+        authToken: env.VITE_SENTRY_AUTH_TOKEN,
+        org: 'jsgenesis',
+        project: 'atlas',
+      }),
     ],
     resolve: {
       alias: {
