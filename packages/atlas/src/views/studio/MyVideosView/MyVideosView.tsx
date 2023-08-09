@@ -31,7 +31,7 @@ import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { sizes } from '@/styles'
 import { createPlaceholderData } from '@/utils/data'
-import { SentryLogger } from '@/utils/logs'
+import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
 import { YppVideoDto } from '@/views/studio/MyVideosView/MyVideosView.types'
 
@@ -72,7 +72,10 @@ export const MyVideosView = () => {
 
   const { isLoading: isCurrentlyUploadedVideoIdsLoading, data: yppDAta } = useQuery(
     `ypp-ba-videos-${channelId}`,
-    () => axiosInstance.get<YppVideoDto[]>(`${YOUTUBE_BACKEND_URL}/channels/${channelId}/videos`),
+    () =>
+      axiosInstance
+        .get<YppVideoDto[]>(`${YOUTUBE_BACKEND_URL}/channels/${channelId}/videos`)
+        .catch(() => ConsoleLogger.error('Failed to fetch YPP videos from channel')),
     {
       enabled: !!channelId && !!YOUTUBE_BACKEND_URL,
       retry: 1,
