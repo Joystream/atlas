@@ -162,7 +162,6 @@ export const NftCarouselDetails = ({
         <BackgroundVideoPlayer
           videoId={nft.video.id}
           withFade={active}
-          autoPlay={active}
           playing={active}
           muted={true}
           onPause={() => setIsPaused(true)}

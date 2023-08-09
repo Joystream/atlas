@@ -24,10 +24,10 @@ export default defineConfig(({ mode }) => {
     build: {
       target: ['chrome87', 'edge88', 'es2020', 'firefox78', 'safari14'],
       emptyOutDir: true,
+      sourcemap: true,
       outDir: path.resolve(__dirname, 'dist'),
       rollupOptions: {
         output: {
-          sourcemap: true,
           sourcemapIgnoreList: (relativeSourcePath) => {
             // will ignore-list all files with node_modules in their paths
             return relativeSourcePath.includes('node_modules')
@@ -76,11 +76,6 @@ export default defineConfig(({ mode }) => {
       EmbeddedFallbackPlugin,
       OptimizePlugin,
       ViteYaml(),
-      sentryVitePlugin({
-        authToken: env.VITE_SENTRY_AUTH_TOKEN,
-        org: 'jsgenesis',
-        project: 'atlas',
-      }),
       react({
         exclude: /\.stories\.[tj]sx?$/,
       }),
@@ -104,6 +99,11 @@ export default defineConfig(({ mode }) => {
         }),
         enforce: 'post',
       },
+      sentryVitePlugin({
+        authToken: env.VITE_SENTRY_AUTH_TOKEN,
+        org: 'jsgenesis',
+        project: 'atlas',
+      }),
     ],
     resolve: {
       alias: {
