@@ -1,4 +1,4 @@
-import { FC, SyntheticEvent, VideoHTMLAttributes, useEffect, useRef, useState } from 'react'
+import { FC, SyntheticEvent, VideoHTMLAttributes, useCallback, useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { SvgActionPause, SvgActionPlay, SvgActionSoundOff, SvgActionSoundOn } from '@/assets/icons'
@@ -51,7 +51,7 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
     }
   }, [autoPlay, playing])
 
-  const playVideo = () => {
+  const playVideo = useCallback(() => {
     if (videoRef.current && canPlay) {
       videoRef.current
         .play()
@@ -63,9 +63,9 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
           ConsoleLogger.error('Failed to play video', error)
         })
     }
-  }
+  }, [canPlay])
 
-  const pauseVideo = () => {
+  const pauseVideo = useCallback(() => {
     if (videoRef.current && canPlay) {
       videoRef.current.pause()
       setIsPlaying(false)
@@ -73,7 +73,7 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
         setIsPosterVisible(true)
       }
     }
-  }
+  }, [canPlay])
 
   useEffect(() => {
     // show poster again when src changes
@@ -86,7 +86,7 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
     } else {
       pauseVideo()
     }
-  }, [canPlay, handleActions, playing, src])
+  }, [canPlay, handleActions, pauseVideo, playVideo, playing, src])
 
   const handlePlay = (e: SyntheticEvent<HTMLVideoElement, Event>) => {
     setIsPlaying(true)
