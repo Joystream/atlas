@@ -37,7 +37,7 @@ class _SentryLogger {
       beforeSend: (event, hint) => {
         if ('message' in (hint.originalException as ApolloError)) {
           const error = hint.originalException as ApolloError
-          return error.message.includes('code 400') ? null : error
+          return error.message.includes('code 400') ? null : event
         }
         return event
       },
