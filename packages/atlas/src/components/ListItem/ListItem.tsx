@@ -44,6 +44,7 @@ export type ListItemProps = {
     title: string
     description: string
   }
+  nodeEndPosition?: 'top' | 'bottom'
 }
 
 export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
@@ -67,6 +68,7 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
       externalLink,
       isSeparator,
       isInteractive = true,
+      nodeEndPosition,
     },
     ref
   ) => {
@@ -120,7 +122,12 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
           </LabelCaptionContainer>
           {selected && <SelectedIcon />}
           {!!nodeEnd && (
-            <NodeContainer isSelected={selected} isHovering={isInteractive && isHovering} destructive={destructive}>
+            <NodeContainer
+              position={nodeEndPosition}
+              isSelected={selected}
+              isHovering={isInteractive && isHovering}
+              destructive={destructive}
+            >
               {nodeEnd}
             </NodeContainer>
           )}
