@@ -1,3 +1,4 @@
+import { ApolloError } from '@apollo/client'
 import * as Sentry from '@sentry/react'
 import { Replay, Severity, SeverityLevel } from '@sentry/react'
 
@@ -33,6 +34,13 @@ class _SentryLogger {
       // This sets the sample rate to be 0%, so we'll only use manually recorded replays
       replaysSessionSampleRate: 0,
       replaysOnErrorSampleRate: 0,
+      beforeSend: (event, hint) => {
+        if ('message' in (hint.originalException as ApolloError)) {
+          const error = hint.originalException as ApolloError
+          return error.message.includes('code 400') ? null : error
+        }
+        return event
+      },
     })
     this.replay = new Sentry.Replay({ sessionSampleRate: 0, errorSampleRate: 0 })
     this.initialized = true
