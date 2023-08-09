@@ -42,7 +42,7 @@ export const CustomBorder = styled.div<{ disabled?: boolean }>`
   transition-property: transform, background-color, opacity;
 `
 
-export const StyledTextArea = styled.textarea<{ inputSize: InputSize; error?: boolean }>`
+export const TextAreaStyles = ({ inputSize, error }: { inputSize: InputSize; error?: boolean }) => css`
   width: 100%;
   resize: vertical;
   display: block;
@@ -50,10 +50,10 @@ export const StyledTextArea = styled.textarea<{ inputSize: InputSize; error?: bo
   overflow-x: hidden;
   box-shadow: unset;
 
-  ${({ error }) => getBaseInputStyles({ error, ignoreBoxShadow: true })}
+  ${getBaseInputStyles({ error, ignoreBoxShadow: true })}
 
   :hover:not(:disabled) + ${CustomBorder} {
-    background-color: ${({ error }) => (error ? inputBorderColors.error : inputBorderColors.hover)};
+    background-color: ${error ? inputBorderColors.error : inputBorderColors.hover};
   }
 
   :focus:not(:disabled) + ${CustomBorder} {
@@ -61,15 +61,14 @@ export const StyledTextArea = styled.textarea<{ inputSize: InputSize; error?: bo
     transform: scaleY(2);
   }
 
-  ${({ error }) =>
-    error &&
-    css`
-      + ${CustomBorder} {
-        background-color: ${inputBorderColors.error};
-      }
-    `};
+  ${error &&
+  css`
+    + ${CustomBorder} {
+      background-color: ${inputBorderColors.error};
+    }
+  `};
 
-  ${({ inputSize }) => baseStyles[inputSize]}
+  ${baseStyles[inputSize]}
 
   ::-webkit-scrollbar-corner {
     background: ${cVar('colorCoreNeutral800Lighten')};
@@ -87,6 +86,10 @@ export const StyledTextArea = styled.textarea<{ inputSize: InputSize; error?: bo
     background-repeat: no-repeat;
     background-position: 75% 75%;
   }
+`
+
+export const StyledTextArea = styled.textarea<{ inputSize: InputSize; error?: boolean }>`
+  ${TextAreaStyles}
 `
 
 export const StyledText = styled(Text)<{ disabled?: boolean }>`
