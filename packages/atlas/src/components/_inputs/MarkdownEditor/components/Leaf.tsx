@@ -36,5 +36,5 @@ export const Leaf: FC<LeafProps> = ({ leaf, attributes, children }) => {
 }
 
 const Mark = styled.span`
-  display: none;
+  opacity: 0.5;
 `

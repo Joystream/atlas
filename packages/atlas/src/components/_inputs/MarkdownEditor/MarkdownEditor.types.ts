@@ -18,7 +18,7 @@ import {
   Text,
 } from 'mdast'
 
-type UnistNode = { type: string; text?: string }
+export type BaseNode = { type: string; text?: string; children?: BaseNode[] }
 
 export type TextNode = LiteralToLeaf<Text>
 export type MarkNode = { type: 'mark'; text: string; position: Content['position'] }
@@ -35,8 +35,8 @@ export type LeafNode =
   | ParentToLeaf<Delete>
   | ParentToLeaf<Link>
 
-type LiteralToElement<T extends Literal> = Omit<T, 'value'> & { children: UnistNode[] }
-type ParentToElement<T extends Parent> = Omit<T, 'children'> & { children: UnistNode[] }
+type LiteralToElement<T extends Literal> = Omit<T, 'value'> & { children: BaseNode[] }
+type ParentToElement<T extends Parent> = Omit<T, 'children'> & { children: BaseNode[] }
 export type ElementNode =
   | LiteralToElement<Code>
   | ParentToElement<Root>
@@ -47,6 +47,3 @@ export type ElementNode =
   | ParentToElement<Blockquote>
 
 export type EditorNode = ElementNode | LeafNode
-
-type MiscAttrs = { url?: string; title?: string | null; lang?: string | null; meta?: string | null; value?: string }
-export type MdNode = { type: Content['type']; children?: MdNode[] } & MiscAttrs

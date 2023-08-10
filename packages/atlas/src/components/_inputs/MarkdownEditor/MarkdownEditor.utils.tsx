@@ -1,24 +1,40 @@
 import { last, merge, omit } from 'lodash-es'
 import { Content, Delete, Emphasis, Link, Root, Strong } from 'mdast'
 import remarkParse from 'remark-parse'
-import remarkStringify from 'remark-stringify'
-import { Descendant, Text } from 'slate'
+import { Descendant, Node, Text } from 'slate'
 import { unified } from 'unified'
 import flatMap from 'unist-util-flatmap'
 
-import { EditorNode, LeafNode, MarkNode, MdNode, TextNode } from './MarkdownEditor.types'
+import { BaseNode, EditorNode, LeafNode, MarkNode, TextNode } from './MarkdownEditor.types'
 import { Element, ElementProps } from './components/Element'
 import { Leaf, LeafProps } from './components/Leaf'
+
+export const areNodesEquals = (mdNodes: BaseNode[] | undefined, slateNodes: BaseNode[] | undefined) => {
+  if (!mdNodes || !slateNodes) return false
+
+  const nonMarkMd = mdNodes.filter((node) => node.type !== 'mark')
+  const nonMarkSlate = slateNodes.filter(
+    // Filter empty paragraph on the editor obj as they are ignored by remark
+    (node) =>
+      node.type !== 'mark' && !(node.type === 'paragraph' && node.children?.every((node) => node.text?.trim() === ''))
+  )
+
+  if (nonMarkMd.length !== nonMarkSlate.length) return false
+
+  return nonMarkMd.every((mdNode, index): boolean => {
+    const slateNode = nonMarkSlate[index]
+    if (mdNode.type !== slateNode.type) return false
+    if ('text' in mdNode) return mdNode.text === slateNode.text?.trim()
+    if (!mdNode.children || !slateNode.children) return false
+    return areNodesEquals(mdNode.children, slateNode.children)
+  })
+}
 
 export const renderElement = (props: ElementProps) => <Element {...props} />
 
 export const renderLeaf = (props: LeafProps) => <Leaf {...props} />
 
-export const serialize = (nodes: Descendant[]): string => {
-  const slateTree = { type: 'root', children: nodes.map((n) => merge({}, n)) } // deep clone nodes because unist-util-flatmap mutates the tree
-  const mdTree = flatMap(slateTree as EditorNode, fromSlateToMd) as unknown as Root
-  return unified().use(remarkStringify).stringify(mdTree)
-}
+export const serialize = (nodes: Descendant[]): string => nodes.map((node) => Node.string(node)).join('\n\n')
 
 export const deserialize = (markdown: string): Descendant[] => {
   const mdTree: Root = unified().use(remarkParse).parse(markdown)
@@ -131,41 +147,3 @@ const fromMdToEditorNode = (node: Root | Content): EditorNode | undefined => {
   }
 }
 const asValue = (node: Emphasis | Strong | Delete | Link) => (node.children[0] as unknown as Text).text
-
-const fromSlateToMd = (node: EditorNode): MdNode[] => {
-  switch (node.type) {
-    // Inline literals (https://github.com/syntax-tree/mdast#literal)
-    case 'text':
-    case 'inlineCode':
-    case 'html':
-      return [{ type: node.type, value: node.text }]
-
-    // Inline parents (https://github.com/syntax-tree/mdast#parent)
-    case 'emphasis':
-    case 'strong':
-    case 'delete':
-      return [{ type: node.type, children: [{ type: 'text', value: node.text }] }]
-
-    case 'link':
-      return [{ type: node.type, url: node.url, title: node.title, children: [{ type: 'text', value: node.text }] }]
-
-    // Block literals (https://github.com/syntax-tree/mdast#literal)
-    case 'code': {
-      const value = (node.children?.[0] as unknown as { value: string }).value
-      return [{ type: node.type, lang: node.lang, meta: node.meta, value }]
-    }
-
-    // Block parents (https://github.com/syntax-tree/mdast#parent)
-    case 'root':
-    case 'paragraph':
-    case 'heading':
-    case 'blockquote':
-    case 'list':
-    case 'listItem':
-      return [node as MdNode]
-
-    // Not supported yet
-    default:
-      return []
-  }
-}

@@ -5,7 +5,7 @@ import { Slate, withReact } from 'slate-react'
 import { useMountEffect } from '@/hooks/useMountEffect'
 
 import { CustomBorder, EditorAreaContainer, StyledEditable } from './MarkdownEditor.styles'
-import { deserialize, renderElement, renderLeaf, serialize } from './MarkdownEditor.utils'
+import { areNodesEquals, deserialize, renderElement, renderLeaf, serialize } from './MarkdownEditor.utils'
 
 export type MarkdownEditorProps = {
   value?: string
@@ -21,9 +21,16 @@ export const MarkdownEditor = ({ value = '', onChange }: MarkdownEditorProps) =>
   const handleChange = useCallback(
     (nodes: Descendant[]) => {
       internalValue.current = serialize(nodes)
+      const newNodes = deserialize(internalValue.current)
+      // console.log(JSON.stringify(newNodes, null, 2))
+      // console.log(areNodesEquals(newNodes, nodes) ? 'same tree' : 'DIFFERENT')
+      if (!areNodesEquals(newNodes, nodes)) {
+        console.log('DIFFERENT')
+        setEditorValue?.(newNodes)
+      }
       onChange?.(internalValue.current)
     },
-    [onChange]
+    [onChange, setEditorValue]
   )
 
   if (value !== internalValue.current) {
