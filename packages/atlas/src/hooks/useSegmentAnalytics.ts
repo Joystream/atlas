@@ -268,6 +268,15 @@ export const useSegmentAnalytics = () => {
     [analytics]
   )
 
+  const trackLivesessionRecording = useCallback(
+    (url: string | null | undefined) => {
+      analytics.track('Livesession recording', {
+        url,
+      })
+    },
+    [analytics]
+  )
+
   const trackLogout = useCallback(() => {
     analytics.reset()
   }, [analytics])
@@ -318,6 +327,7 @@ export const useSegmentAnalytics = () => {
     trackFeaturedNFTNext,
     trackFeaturedNFTPrev,
     trackLikeAdded,
+    trackLivesessionRecording,
     trackLogout,
     trackMembershipCreation,
     trackNFTCarouselNext,
