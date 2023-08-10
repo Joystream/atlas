@@ -18,6 +18,7 @@ import { ConnectionStatusManager } from '@/providers/connectionStatus'
 import { useUser } from '@/providers/user/user.hooks'
 import { UserProvider } from '@/providers/user/user.provider'
 import { cVar } from '@/styles'
+import { PlaygroundVideoPicker } from '@/views/playground/Playgrounds/PlaygroundVideoPicker'
 
 import {
   PlaygroundCaptcha,
@@ -49,6 +50,7 @@ const playgroundRoutes = [
   { path: 'input-autocomplete', element: <PlaygroundInputAutocomplete />, name: 'Input autocomplete' },
   { path: 'marketplace-carousel', element: <PlaygroundMarketplaceCarousel />, name: 'Marketplace carousel' },
   { path: 'sign-up', element: <PlaygroundSignUp />, name: 'Sign up' },
+  { path: 'video-picker', element: <PlaygroundVideoPicker />, name: 'Video picker' },
 ]
 
 const PlaygroundLayout = () => {
