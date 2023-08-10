@@ -5,7 +5,7 @@ import { Slate, withReact } from 'slate-react'
 import { useMountEffect } from '@/hooks/useMountEffect'
 
 import { CustomBorder, EditorAreaContainer, StyledEditable } from './MarkdownEditor.styles'
-import { deserialize, serialize } from './MarkdownEditor.utils'
+import { deserialize, renderElement, renderLeaf, serialize } from './MarkdownEditor.utils'
 
 export type MarkdownEditorProps = {
   value?: string
@@ -54,7 +54,7 @@ const Editor = memo(({ initialValue, initSetEditorValue: setUpdateValue, onChang
   return (
     <Slate editor={editor} initialValue={initialValue} onChange={onChange}>
       <EditorAreaContainer>
-        <StyledEditable inputSize="large" />
+        <StyledEditable inputSize="large" renderElement={renderElement} renderLeaf={renderLeaf} />
         <CustomBorder disabled={false} />
       </EditorAreaContainer>
     </Slate>
