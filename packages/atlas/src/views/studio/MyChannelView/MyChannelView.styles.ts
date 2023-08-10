@@ -11,6 +11,8 @@ export const NoGlobalPaddingWrapper = styled.div`
 
 export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)`
   margin: 0 ${sizes(4)};
+  height: fit-content;
+
   ${media.md} {
     margin: 0 ${sizes(8)};
   }
@@ -21,7 +23,6 @@ export const ScrollWrapper = styled.div`
   height: 100%;
   display: flex;
   justify-content: center;
-  padding-bottom: ${sizes(9)};
 `
 
 export const BottomContainer = styled.div`
