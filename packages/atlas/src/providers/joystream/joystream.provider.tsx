@@ -1,3 +1,4 @@
+import { cryptoWaitReady } from '@polkadot/util-crypto'
 import BN from 'bn.js'
 import { ProxyMarked, Remote, proxy, wrap } from 'comlink'
 import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
@@ -75,6 +76,7 @@ export const JoystreamProvider: FC<PropsWithChildren> = ({ children }) => {
     const getJoystream = async () => {
       try {
         setNodeConnection('connecting')
+        await cryptoWaitReady()
         joystream.current = await new api(nodeOverride ?? NODE_URL, proxy(handleNodeConnectionUpdate))
         setInitialized(true)
       } catch (e) {
