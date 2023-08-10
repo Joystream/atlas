@@ -1,15 +1,35 @@
 import styled from '@emotion/styled'
 
-import { cVar, sizes } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
+
+export const MainWrapper = styled.div`
+  overflow: hidden;
+  margin-bottom: 20px;
+  position: relative;
+  min-height: 280px;
+
+  ${media.sm} {
+    padding-top: 0;
+    aspect-ratio: 16/9;
+  }
+`
 
 export const PlaceholderBox = styled.div`
+  position: absolute;
   display: flex;
   flex-direction: column;
   gap: ${sizes(6)};
   align-items: center;
   justify-content: center;
   background-color: ${cVar('colorBackgroundMuted')};
-  padding: ${sizes(6)};
+  padding: ${sizes(4)};
+  top: 0;
+  width: 100%;
+  height: 100%;
+
+  ${media.sm} {
+    padding: ${sizes(6)};
+  }
 `
 
 export const TextBox = styled.div`
@@ -32,8 +52,10 @@ export const VideoBox = styled.div`
 `
 
 export const ThumbnailContainer = styled.div`
-  position: relative;
-  height: 400px;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
 `
 
 export const ThumbnailOverlay = styled.div`
@@ -46,9 +68,16 @@ export const ThumbnailOverlay = styled.div`
   background-color: #101214bf;
   opacity: 0;
   cursor: pointer;
-  transition: opacity 250ms ease-in-out;
+  transition: all ${cVar('animationTransitionFast')};
 
   :hover {
     opacity: 1;
   }
+`
+
+export const RowBox = styled.div<{ gap: number }>`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: ${(props) => sizes(props.gap)};
 `
