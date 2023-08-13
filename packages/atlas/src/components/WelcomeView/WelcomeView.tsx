@@ -118,7 +118,12 @@ export const WelcomeView = ({
         {headTags}
         <StyledContainer>
           <ContentLayoutGrid>
-            <HeaderGridItem colSpan={{ xxs: 12, sm: 8, md: 5 }} colStart={{ sm: 3, md: 1 }} rowStart={1}>
+            <HeaderGridItem
+              colSpan={{ xxs: 12, sm: 8, md: 5 }}
+              colStart={{ sm: 3, md: 1 }}
+              rowStart={1}
+              rowSpan={showLegalLinks ? undefined : { md: 2 }}
+            >
               <ContentWrapper>
                 <Text as="h1" variant="h100" color="colorTextPrimary">
                   {pageTitle}
@@ -146,7 +151,7 @@ export const WelcomeView = ({
               </ContentWrapper>
             </HeaderGridItem>
 
-            {showLegalLinks && (
+            {showLegalLinks ? (
               <LinksGroupHeaderItem colSpan={{ xxs: 12, sm: 8, md: 5 }} colStart={{ sm: 3, md: 1 }} rowStart={2}>
                 <Text as="span" variant="t100" color="inherit" margin={{ top: 2 }}>
                   <StyledAnchor href={atlasConfig.general.joystreamLandingPageUrl} target="_blank">
@@ -171,6 +176,8 @@ export const WelcomeView = ({
                   </Text>
                 </StyledLink>
               </LinksGroupHeaderItem>
+            ) : (
+              <div />
             )}
             <ImageGridItem
               colSpan={{ xxs: 12, sm: 8, md: 6 }}
