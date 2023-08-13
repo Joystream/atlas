@@ -25,6 +25,7 @@ export type NumberFormatProps = {
   icon?: ReactNode
   withDenomination?: boolean | 'horizontal' | 'vertical' | 'before' | 'after'
   denominationAlign?: 'left' | 'right'
+  customTicker?: string
 } & Omit<TextProps, 'children' | 'variant'>
 
 const TEXT_DENOMINATION_ALIGNMENTS: NumberFormatProps['withDenomination'][] = ['before', 'after']
@@ -43,6 +44,7 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
       withDenomination: _withDenomination,
       denominationAlign = 'left',
       icon,
+      customTicker,
       ...textProps
     },
     ref
@@ -104,6 +106,7 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
           ref={mergeRefs([ref, textRef])}
         >
           {displayedValue ? <span>{displayedValue}</span> : <span>{formattedValue}</span>}
+            {withToken ? ` ${customTicker}` ?? ` ${atlasConfig.joystream.tokenTicker}` : null}
         </StyledText>
         {withDenomination === 'after' && (
           <Text
