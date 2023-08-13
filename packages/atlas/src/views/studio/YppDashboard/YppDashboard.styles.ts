@@ -15,6 +15,17 @@ export const Header = styled.header`
   }
 `
 
+export const HeaderContentBox = styled.div`
+  display: flex;
+  flex-direction: column-reverse;
+  gap: ${sizes(6)};
+
+  ${media.sm} {
+    gap: ${sizes(8)};
+    flex-direction: row;
+  }
+`
+
 const commonGridStyles = css`
   display: grid;
   align-items: center;
