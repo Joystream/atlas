@@ -36,6 +36,7 @@ export const configSchema = z.object({
   }),
   features: z.object({
     ypp: z.object({
+      suspensionReasonsLink: z.string().nullable(),
       yppDelayThreshold: z.number().nullable(),
       googleConsoleClientId: z.string().nullable(),
       youtubeSyncApiUrl: z.string().nullable(),
