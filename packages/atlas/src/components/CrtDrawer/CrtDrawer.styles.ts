@@ -33,6 +33,7 @@ export const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: ${sizes(8)};
   ${media.md} {
     grid-column: 2/3;
@@ -61,6 +62,7 @@ export const StepWrapper = styled.div`
   scrollbar-width: none;
   box-shadow: ${cVar('effectDividersBottom')};
   margin-bottom: ${sizes(8)};
+  min-height: 82px;
 
   ::-webkit-scrollbar {
     display: none;
