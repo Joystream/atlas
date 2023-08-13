@@ -24,6 +24,7 @@ import { VideoWorkspaceProvider, useVideoWorkspaceRouting } from '@/providers/vi
 import { transitions } from '@/styles'
 import { isAllowedBrowser } from '@/utils/browser'
 import { NotificationsView } from '@/views/notifications'
+import { CrtDashboard } from '@/views/studio/CrtDashboard'
 import { CrtPreviewEditView } from '@/views/studio/CrtPreviewEditView'
 import { CrtPreviewView } from '@/views/studio/CrtPreviewView'
 import { CrtWelcomeView } from '@/views/studio/CrtWelcomeView/CrtWelcomeView'
@@ -175,6 +176,10 @@ const StudioLayout = () => {
                 element={
                   <PrivateRoute element={<CrtWelcomeView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
                 }
+              />
+              <Route
+                path={relativeRoutes.studio.crtDashboard()}
+                element={<PrivateRoute element={<CrtDashboard />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />}
               />
               <Route
                 path={relativeRoutes.studio.crtTokenPreview()}
