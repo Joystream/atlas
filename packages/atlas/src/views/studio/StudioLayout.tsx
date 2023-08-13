@@ -35,6 +35,9 @@ const ChannelNotificationsView = lazy(() =>
     default: module.ChannelNotificationsView,
   }))
 )
+const CrtDashboard = lazy(() =>
+    import('@/views/studio/CrtDashboard').then((module) => ({ default: module.CrtWelcomeView }))
+)
 const CrtPreviewEditView = lazy(() =>
   import('@/views/studio/CrtPreviewEditView').then((module) => ({ default: module.CrtPreviewEditView }))
 )
@@ -204,6 +207,10 @@ const _StudioLayout = () => {
                   element={
                     <PrivateRoute element={<CrtWelcomeView />} showWhen={channelSet} redirectTo={SIGN_IN_ROUTE} />
                   }
+                />
+                <Route
+                    path={relativeRoutes.studio.crtDashboard()}
+                    element={<PrivateRoute element={<CrtDashboard />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />}
                 />
                 <Route
                   path={relativeRoutes.studio.crtTokenPreview()}
