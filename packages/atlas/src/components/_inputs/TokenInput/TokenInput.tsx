@@ -9,12 +9,12 @@ import { useTokenPrice } from '@/providers/joystream'
 export type TokenInputProps = {
   value: number | null | undefined
   onChange: (value: number | null) => void
-} & Omit<InputProps, 'value' | 'onChange' | 'nodeStart' | 'nodeEnd'>
+} & Omit<InputProps, 'value' | 'onChange'>
 
 const MAX_LENGTH = 15
 
 const _TokenInput: ForwardRefRenderFunction<HTMLInputElement, TokenInputProps> = (
-  { value, onChange, ...rest },
+  { value, onChange, nodeEnd, nodeStart, ...rest },
   ref
 ) => {
   const valueBN = value && tokenNumberToHapiBn(value)
@@ -37,11 +37,13 @@ const _TokenInput: ForwardRefRenderFunction<HTMLInputElement, TokenInputProps> =
       {...rest}
       ref={ref}
       type="number"
-      nodeStart={<JoyTokenIcon variant="gray" size={16} />}
+      nodeStart={nodeStart ?? <JoyTokenIcon variant="gray" size={16} />}
       nodeEnd={
-        !!valueInUSD && (
-          <NumberFormat as="span" variant="t300" format="dollar" color="colorTextMuted" value={valueInUSD} />
-        )
+        nodeEnd
+          ? nodeEnd
+          : !!valueInUSD && (
+              <NumberFormat as="span" variant="t300" format="dollar" color="colorTextMuted" value={valueInUSD} />
+            )
       }
       value={internalValue}
       onChange={(event: ChangeEvent<HTMLInputElement>) => {
