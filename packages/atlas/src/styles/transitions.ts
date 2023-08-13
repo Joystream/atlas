@@ -25,6 +25,8 @@ export const transitions = {
     dropdown: 'dropdown',
     enterFromLeft: 'enterFromLeft',
     enterFromRight: 'enterFromRight',
+    forwardSlideSwitch: 'forward-slide-switch',
+    backwardSlideSwitch: 'backward-slide-switch',
   },
 }
 
@@ -195,6 +197,46 @@ export const transitionStyles = css`
   .${transitions.names.enterFromLeft}-exit-active {
     opacity: 0;
     transform: translateX(-280px);
+    transition: ${cVar('animationTimingMedium')} ${transitions.switch};
+  }
+
+  .${transitions.names.forwardSlideSwitch}-enter {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  .${transitions.names.forwardSlideSwitch}-enter-active {
+    opacity: 1;
+    transform: translateX(0%);
+  }
+  .${transitions.names.forwardSlideSwitch}-exit {
+    opacity: 1;
+    transform: translateX(0%);
+  }
+  .${transitions.names.forwardSlideSwitch}-exit-active {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  .${transitions.names.forwardSlideSwitch}-enter-active, .${transitions.names.forwardSlideSwitch}-exit-active {
+    transition: ${cVar('animationTimingMedium')} ${transitions.switch};
+  }
+
+  .${transitions.names.backwardSlideSwitch}-enter {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  .${transitions.names.backwardSlideSwitch}-enter-active {
+    opacity: 1;
+    transform: translateX(0%);
+  }
+  .${transitions.names.backwardSlideSwitch}-exit {
+    opacity: 1;
+    transform: translateX(0%);
+  }
+  .${transitions.names.backwardSlideSwitch}-exit-active {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  .${transitions.names.backwardSlideSwitch}-enter-active, .${transitions.names.backwardSlideSwitch}-exit-active {
     transition: ${cVar('animationTimingMedium')} ${transitions.switch};
   }
 `
