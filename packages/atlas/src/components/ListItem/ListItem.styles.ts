@@ -125,9 +125,12 @@ type NodeContainerProps = {
   destructive?: boolean
   isHovering?: boolean
   isSelected?: boolean
+  position?: 'top' | 'bottom'
 }
 export const NodeContainer = styled.div<NodeContainerProps>`
   ${iconStyles};
+
+  align-self: ${(props) => (props.position === 'top' ? 'flex-start' : 'unset')};
 `
 
 export const SeparatorWrapper = styled.div`
