@@ -37,6 +37,7 @@ joystream:
 
 features:
   ypp:
+    yppDelayThreshold: 300 # When the YPP sync backlog exceeds the threshold, Atlas will consider the YPP sync delayed.
     landingPageOgTitle: null # Open graph title for YPP landing page - used in open graph meta tags in HTML
     landingPageOgDescription: null # Open graph description for YPP landing page - used in open graph meta tags in HTML
     landingPageOgImgPath: null # Path to the open graph image for the YPP landing page - if not set, the default image will be used
