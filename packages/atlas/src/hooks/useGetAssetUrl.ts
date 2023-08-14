@@ -4,7 +4,7 @@ import { atlasConfig } from '@/config'
 import { testAssetDownload } from '@/providers/assets/assets.helpers'
 import { useOperatorsContext } from '@/providers/assets/assets.provider'
 import { ConsoleLogger } from '@/utils/logs'
-import { TimeoutError, withTimeout } from '@/utils/misc'
+import { withTimeout } from '@/utils/misc'
 
 export const getSingleAssetUrl = async (
   urls: string[] | undefined | null,
@@ -16,8 +16,6 @@ export const getSingleAssetUrl = async (
   }
 
   for (const distributionAssetUrl of urls) {
-    const distributorUrl = distributionAssetUrl.split(`/${atlasConfig.storage.assetPath}/`)[0]
-
     const assetTestPromise = testAssetDownload(distributionAssetUrl, type)
     const assetTestPromiseWithTimeout = withTimeout(
       assetTestPromise,
@@ -28,17 +26,8 @@ export const getSingleAssetUrl = async (
       await assetTestPromiseWithTimeout
 
       return distributionAssetUrl
-    } catch (err) {
-      if (err instanceof TimeoutError) {
-        // AssetLogger.logDistributorResponseTimeout(eventEntry)
-        ConsoleLogger.warn(
-          `Distributor didn't respond in ${timeout ?? atlasConfig.storage.assetResponseTimeout} seconds`,
-          {
-            distributorUrl: distributorUrl,
-            assetUrl: distributionAssetUrl,
-          }
-        )
-      }
+    } catch {
+      /**/
     }
   }
 
@@ -66,7 +55,7 @@ export const useGetAssetUrl = (urls: string[] | undefined | null, type: 'image' 
   const [isLoading, setIsLoading] = useState(true)
   const { userBenchmarkTime } = useOperatorsContext()
   useEffect(() => {
-    if (!urls || (url && urls.includes(url))) {
+    if (!urls || (url && urls.includes(url)) || (!url && !urls.length)) {
       setIsLoading(false)
       return
     }
