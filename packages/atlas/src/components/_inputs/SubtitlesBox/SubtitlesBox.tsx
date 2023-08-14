@@ -10,7 +10,9 @@ import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { atlasConfig } from '@/config'
 import { useGetAssetUrl } from '@/hooks/useGetAssetUrl'
 import { useConfirmationModal } from '@/providers/confirmationModal'
+import { useSnackbar } from '@/providers/snackbars'
 import { SubtitlesInput } from '@/types/subtitles'
+import { SentryLogger } from '@/utils/logs'
 
 import {
   InvisibleInput,
@@ -39,6 +41,7 @@ export const SubtitlesBox: FC<SubtitleBoxProps> = ({
 }) => {
   const inputRef = useRef<HTMLInputElement>(null)
   const [openUnsuportedFileDialog, closeUnsuportedFileDialog] = useConfirmationModal()
+  const { displaySnackbar } = useSnackbar()
   const hasFile = !!file || !!id
   const { mutateAsync: subtitlesFetch } = useMutation('subtitles-fetch', (url: string) =>
     axiosInstance.get(url, { responseType: 'blob' })
@@ -46,14 +49,22 @@ export const SubtitlesBox: FC<SubtitleBoxProps> = ({
   const { url } = useGetAssetUrl(asset?.resolvedUrls, 'subtitle')
 
   const handleDownload = async (url = '') => {
-    const response = await subtitlesFetch(url)
-    const objectURL = window.URL.createObjectURL(new Blob([response.data]))
-    const link = document.createElement('a')
-    link.href = objectURL
-    link.setAttribute('download', `${id}-${languageIso.toLowerCase()}.vtt`)
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
+    try {
+      const response = await subtitlesFetch(url)
+      const objectURL = window.URL.createObjectURL(new Blob([response.data]))
+      const link = document.createElement('a')
+      link.href = objectURL
+      link.setAttribute('download', `${id}-${languageIso.toLowerCase()}.vtt`)
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    } catch (error) {
+      SentryLogger.error('Failed to fetch subtitles for download', 'handleDownload', error)
+      displaySnackbar({
+        title: 'Failed to connect to distributor',
+        iconType: 'error',
+      })
+    }
   }
 
   const contexMenuItems: ListItemProps[] = [
