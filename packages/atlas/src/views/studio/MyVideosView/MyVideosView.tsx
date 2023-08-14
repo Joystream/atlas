@@ -77,7 +77,7 @@ export const MyVideosView = () => {
     () =>
       axiosInstance
         .get<YppVideoDto[]>(`${YOUTUBE_BACKEND_URL}/channels/${channelId}/videos`)
-        .catch(() => ConsoleLogger.error('Failed to fetch YPP videos from channel')),
+        .catch(() => ConsoleLogger.warn('Failed to fetch YPP videos from channel')),
     {
       enabled: !!channelId && !!YOUTUBE_BACKEND_URL,
       retry: 1,
