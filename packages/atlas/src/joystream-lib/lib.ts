@@ -6,7 +6,7 @@ import { Signer } from '@polkadot/api/types'
 import { Keyring } from '@polkadot/keyring'
 import { getSpecTypes } from '@polkadot/types-known'
 import { Codec, SignerPayloadRawBase } from '@polkadot/types/types'
-import { base64Encode } from '@polkadot/util-crypto'
+import { base64Encode, cryptoWaitReady } from '@polkadot/util-crypto'
 import BN from 'bn.js'
 import { proxy } from 'comlink'
 
@@ -80,7 +80,7 @@ export class JoystreamLib {
       SentryLogger.error('Missing signer for setActiveAccount', 'JoystreamLib')
       return
     }
-
+    await cryptoWaitReady()
     if (payloadType === 'seed') {
       this._selectedAccountId = keyring.addFromMnemonic(payload)
     } else {
