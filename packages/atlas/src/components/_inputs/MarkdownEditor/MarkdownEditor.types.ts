@@ -15,13 +15,12 @@ import type {
   Strong,
 } from 'mdast'
 
-export type TextNode = { type: 'text'; children: [{ text: string }] }
+export type TextNode = { text: string }
 export type BaseNode = { type: string; children: BaseNode[] } | TextNode
 
 type LiteralToLeaf<T extends Literal> = Omit<T, 'value'> & { isBlock?: false; children: BaseNode[] }
 type ParentToLeaf<T extends Parent> = Omit<T, 'children'> & { isBlock?: false; children: BaseNode[] }
-export type LeafNode =
-  | TextNode
+export type InlineNode =
   | LiteralToLeaf<InlineCode>
   | ParentToLeaf<Emphasis>
   | ParentToLeaf<Strong>
@@ -30,7 +29,7 @@ export type LeafNode =
 
 type LiteralToElement<T extends Literal> = Omit<T, 'value'> & { isBlock: true; isList?: false; children: BaseNode[] }
 type ParentToElement<T extends Parent> = Omit<T, 'children'> & { isBlock: true; isList?: false; children: BaseNode[] }
-export type ElementNode =
+export type BlockNode =
   | LiteralToElement<Code>
   | ParentToElement<Root>
   | ParentToElement<Paragraph>
@@ -39,7 +38,7 @@ export type ElementNode =
   | ParentToElement<ListItem>
   | ParentToElement<Blockquote>
 
-export type EditorNode = ElementNode | LeafNode
+export type EditorNode = BlockNode | InlineNode
 
 type MiscAttrs = { url?: string; title?: string | null; lang?: string | null; meta?: string | null; value?: string }
 export type MdNode = { type: RootContent['type']; depth?: Heading['depth']; children?: MdNode[] } & MiscAttrs

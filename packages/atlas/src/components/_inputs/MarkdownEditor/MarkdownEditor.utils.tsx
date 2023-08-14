@@ -7,7 +7,7 @@ import { gfm } from 'micromark-extension-gfm'
 import type { Descendant, Editor } from 'slate'
 import flatMap from 'unist-util-flatmap'
 
-import { BaseNode, EditorNode, ElementNode, LeafNode, MdNode, TextNode } from './MarkdownEditor.types'
+import { BaseNode, BlockNode, EditorNode, InlineNode, MdNode, TextNode } from './MarkdownEditor.types'
 import { Element, ElementProps } from './components/Element'
 
 export const withMarkdown = (editor: Editor) => {
@@ -35,7 +35,7 @@ const toEditorNodes = (node: Root | RootContent): EditorNode[] => {
   return editorNode ? [omit(editorNode, 'position') as EditorNode] : []
 }
 
-const fromMdToEditorNode = (node: Root | RootContent): EditorNode | undefined => {
+const fromMdToEditorNode = (node: Root | RootContent): EditorNode | TextNode | undefined => {
   switch (node.type) {
     // Inline literals (https://github.com/syntax-tree/mdast#literal)
     case 'text':
@@ -48,8 +48,8 @@ const fromMdToEditorNode = (node: Root | RootContent): EditorNode | undefined =>
     case 'strong':
     case 'delete':
     case 'link': {
-      const children = node.children.length ? node.children : asTextNode('')
-      return { ...node, isBlock: false, children } as LeafNode
+      const children: BaseNode[] = node.children.length ? (node.children as BaseNode[]) : [asTextNode('')]
+      return { ...node, isBlock: false, children } as InlineNode
     }
 
     // Block literals (https://github.com/syntax-tree/mdast#literal)
@@ -70,7 +70,7 @@ const fromMdToEditorNode = (node: Root | RootContent): EditorNode | undefined =>
         isBlock: true,
         isList: node.type === 'list',
         children,
-      } as ElementNode
+      } as BlockNode
     }
 
     // Not supported yet
@@ -79,7 +79,7 @@ const fromMdToEditorNode = (node: Root | RootContent): EditorNode | undefined =>
   }
 }
 
-const asTextNode = (text: string): TextNode => ({ type: 'text', children: [{ text }] })
+const asTextNode = (text: string): TextNode => ({ text })
 
 const asElementType = (node: Root | Paragraph | Heading | Blockquote | List | ListItem) => {
   switch (node.type) {
@@ -98,19 +98,13 @@ const fromSlateToMd = (node: EditorNode | { text: string }): MdNode[] => {
   const _node = omit(node, 'isBlock', 'isList') as EditorNode | { text: string }
 
   if (!('type' in _node)) {
-    return [{ type: 'text', value: _node.text }]
+    return _node.text ? [{ type: 'text', value: _node.text }] : []
   }
 
   switch (_node.type) {
-    case 'text':
-      return [..._node.children] as unknown as MdNode[]
-
     // Inline literals (https://github.com/syntax-tree/mdast#literal)
     case 'inlineCode':
-      return ([..._node.children] as unknown as [Text]).map(({ value }) => ({
-        ...omit(_node, 'children'),
-        value,
-      }))
+      return [{ ...omit(_node, 'children'), value: (_node.children[0] as unknown as Text).value }]
 
     // Inline parents (https://github.com/syntax-tree/mdast#parent)
     case 'emphasis':
@@ -121,10 +115,7 @@ const fromSlateToMd = (node: EditorNode | { text: string }): MdNode[] => {
 
     // Block literals (https://github.com/syntax-tree/mdast#literal)
     case 'code':
-      return ([..._node.children] as unknown as [Text]).map(({ value }) => ({
-        ...omit(_node, 'children'),
-        value,
-      }))
+      return [{ ...omit(_node, 'children'), value: (_node.children[0] as unknown as Text).value }]
 
     // Block parents (https://github.com/syntax-tree/mdast#parent)
     case 'paragraph':

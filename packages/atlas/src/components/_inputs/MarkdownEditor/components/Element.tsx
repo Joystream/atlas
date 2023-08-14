@@ -12,8 +12,6 @@ export const Element: FC<ElementProps> = ({ element, attributes, children }) => 
 
   switch (element.type) {
     // Inline
-    case 'text':
-      return <span {...attrs} />
     case 'link':
       return <a href="#" {...attrs} />
 
