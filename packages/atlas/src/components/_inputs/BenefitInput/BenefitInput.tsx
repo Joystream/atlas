@@ -1,13 +1,14 @@
 import { ChangeEvent } from 'react'
 
-import { SvgActionChevronB, SvgActionChevronT, SvgActionTrash } from '@/assets/icons'
+import { SvgActionChevronB, SvgActionChevronT } from '@/assets/icons'
 import { Button } from '@/components/_buttons/Button'
-import { Container, FlexBox } from '@/components/_inputs/BenefitInput/BenefitInput.styles'
+import { Container, FlexBox, StyledSvgActionTrash } from '@/components/_inputs/BenefitInput/BenefitInput.styles'
 import { Input } from '@/components/_inputs/Input'
 import { TextArea } from '@/components/_inputs/TextArea'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 type BenefitInputProps = {
+  position: 'last' | 'first' | 'middle'
   onMoveUp: () => void
   onMoveDown: () => void
   onRemove: () => void
@@ -25,6 +26,7 @@ export const BenefitInput = ({
   description,
   onDescriptionChange,
   onTitleChange,
+  position,
 }: BenefitInputProps) => {
   const smMatch = useMediaMatch('sm')
   return (
@@ -37,9 +39,9 @@ export const BenefitInput = ({
         <TextArea placeholder="Add benefit description" value={description} onChange={onDescriptionChange} />
       </FlexBox>
       <FlexBox dir={smMatch ? 'column' : 'row'}>
-        <Button variant="tertiary" icon={<SvgActionChevronT />} onClick={onMoveUp} />
-        <Button variant="tertiary" icon={<SvgActionChevronB />} onClick={onMoveDown} />
-        <Button variant="tertiary" icon={<SvgActionTrash />} onClick={onRemove} />
+        <Button variant="tertiary" icon={<SvgActionChevronT />} onClick={onMoveUp} disabled={position === 'first'} />
+        <Button variant="tertiary" icon={<SvgActionChevronB />} onClick={onMoveDown} disabled={position === 'last'} />
+        <Button variant="tertiary" icon={<StyledSvgActionTrash />} onClick={onRemove} />
       </FlexBox>
     </Container>
   )

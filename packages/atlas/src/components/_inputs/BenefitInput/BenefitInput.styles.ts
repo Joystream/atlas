@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 
-import { media, sizes } from '@/styles'
+import { SvgActionTrash } from '@/assets/icons'
+import { cVar, media, sizes } from '@/styles'
 
 export const Container = styled.div`
   display: grid;
@@ -35,4 +36,9 @@ export const FlexBox = styled.div<{ dir?: 'column' | 'row' }>`
   display: flex;
   flex-direction: ${(props) => props.dir ?? 'row'};
   gap: ${sizes(2)};
+`
+export const StyledSvgActionTrash = styled(SvgActionTrash)`
+  path {
+    fill: ${cVar('colorTextError')};
+  }
 `
