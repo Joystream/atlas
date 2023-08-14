@@ -58,7 +58,7 @@ features:
           multiplier: 2.5
         - minimumSubscribers: 50000
           multiplier: 5
-      tiersTooltip: The more subscribers you have on YouTube, the higher the payouts in the program. Below displayed rewards are calculated for your channel.
+      tiersTooltip: The more subscribers you have on YouTube, the higher the payouts in the program.
     rewards:
       - title: Sign Up to YouTube Partner Program
         showInDashboard: false # Optional. If false the reward will be shown only on YouTube partner program landing page. Default true
