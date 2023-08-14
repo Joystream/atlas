@@ -84,6 +84,7 @@ export const configSchema = z.object({
                 }),
               ])
               .nullable(),
+            customMultiplier: z.array(z.number()).optional(),
             actionButtonText: z.string().optional(),
             actionButtonAction: z
               .string()
