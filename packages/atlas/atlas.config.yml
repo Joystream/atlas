@@ -58,7 +58,7 @@ features:
           multiplier: 2.5
         - minimumSubscribers: 50000
           multiplier: 5
-      tiersTooltip: The more subscribers you have on YouTube, the higher the payouts in the program. For 5-50K subscribers, payouts are multiplied by 2.5, for more than 50K subscribers, payouts are 5x as high. Below displayed rewards are calculated for your channel.
+      tiersTooltip: The more subscribers you have on YouTube, the higher the payouts in the program. Below displayed rewards are calculated for your channel.
     rewards:
       - title: Sign Up to YouTube Partner Program
         showInDashboard: false # Optional. If false the reward will be shown only on YouTube partner program landing page. Default true
@@ -72,9 +72,10 @@ features:
           - Make sure the auto-sync feature enabled.
           - Wait till your videos get synced to your $VITE_APP_NAME channel.
           - Publish new videos to your YouTube channel.
-          - Get rewarded for every new video synced to $VITE_APP_NAME.
+          - Get rewarded for every new video synced to $VITE_APP_NAME. Min length of rewarded video is 5 minutes. Sync rewards capped to 3 per week.
         baseAmount: null
-        baseUsdAmount: 3
+        baseUsdAmount: 1
+        customMultiplier: [1, 5, 10]
       - title: Refer another YouTube creator
         shortDescription: Get JOY for every new creator who signs up to YPP program using your referral link. Referrals multiplier depends on the popularity tier of the channel signed up using referral link.
         stepsDescription: Earn when another YouTube creator signs up to the program by using your your referral link.
