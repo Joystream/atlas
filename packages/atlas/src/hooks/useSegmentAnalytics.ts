@@ -1,4 +1,5 @@
 import { useCallback, useRef } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
 import { useSegmentAnalyticsContext } from '@/providers/segmentAnalytics/useSegmentAnalyticsContext'
 
@@ -15,8 +16,18 @@ export type videoPlaybackParams = {
 type PageViewParams = {
   referrer?: string
   tab?: string
-  utm_source?: string
+  utmSource?: string
   isYppFlow?: boolean
+} & VideoPageViewParams &
+  ChannelPageViewParams
+
+type VideoPageViewParams = {
+  videoId?: string
+  category?: string
+}
+
+type ChannelPageViewParams = {
+  channelName?: string
 }
 
 type AllNftFilters = {
@@ -42,6 +53,7 @@ export const useSegmentAnalytics = () => {
   const { analytics } = useSegmentAnalyticsContext()
 
   const playbackEventsQueue = useRef<{ type: playbackEventType; params: videoPlaybackParams }[]>([])
+  const [searchParams] = useSearchParams()
 
   const identifyUser = useCallback(
     (email = 'no data') => {
@@ -65,8 +77,8 @@ export const useSegmentAnalytics = () => {
         category,
         subscribersCount,
         referrerId,
-        utmSource,
-        utmCampaign,
+        utm_source: utmSource,
+        utm_campaign: utmCampaign,
       })
     },
     [analytics]
@@ -159,6 +171,27 @@ export const useSegmentAnalytics = () => {
     [analytics]
   )
 
+  const trackClickTopBarSignInButton = useCallback(
+    (utmSource?: string | null, utmCampaign?: string | null) => {
+      analytics.track('Top Nav Sign In Clicked', { utm_source: utmSource, utm_campaign: utmCampaign })
+    },
+    [analytics]
+  )
+
+  const trackClickAuthModalSignInButton = useCallback(
+    (utmSource?: string | null, utmCampaign?: string | null) => {
+      analytics.track('YPP Reqs Modal - Sign In Clicked', { utm_source: utmSource, utm_campaign: utmCampaign })
+    },
+    [analytics]
+  )
+
+  const trackClickAuthModalSignUpButton = useCallback(
+    (utmSource?: string | null, utmCampaign?: string | null) => {
+      analytics.track('YPP Reqs Modal - Create Account Clicked', { utm_source: utmSource, utm_campaign: utmCampaign })
+    },
+    [analytics]
+  )
+
   const trackCommentAdded = useCallback(
     (commentBody: string, videoId: string) => {
       analytics.track('Comment added', {
@@ -204,7 +237,11 @@ export const useSegmentAnalytics = () => {
       utmSource: string | null | undefined,
       utmCampaign: string | null | undefined
     ) => {
-      analytics.track('YPP Landing Sign In w Google Clicked', { referrer, utmSource, utmCampaign })
+      analytics.track('YPP Landing Sign In w Google Clicked', {
+        referrer,
+        utm_source: utmSource,
+        utm_campaign: utmCampaign,
+      })
     },
     [analytics]
   )
@@ -254,6 +291,16 @@ export const useSegmentAnalytics = () => {
         priceFrom,
         priceTo,
         sortBy,
+      })
+    },
+    [analytics]
+  )
+
+  const trackWithdrawnFunds = useCallback(
+    (channelId?: string, amount?: string) => {
+      analytics.track('Channel Funds Withdrawn', {
+        channelId,
+        amount,
       })
     },
     [analytics]
@@ -322,6 +369,9 @@ export const useSegmentAnalytics = () => {
     trackAllNftFilterUpdated,
     trackChannelCreation,
     trackChannelFollow,
+    trackClickAuthModalSignInButton,
+    trackClickAuthModalSignUpButton,
+    trackClickTopBarSignInButton,
     trackCommentAdded,
     trackDislikeAdded,
     trackFeaturedNFTNext,
@@ -341,6 +391,7 @@ export const useSegmentAnalytics = () => {
     trackVideoPlaybackResumed,
     trackVideoPlaybackStarted,
     trackVideoUpload,
+    trackWithdrawnFunds,
     trackYppOptIn,
     trackYppSignInButtonClick,
   }

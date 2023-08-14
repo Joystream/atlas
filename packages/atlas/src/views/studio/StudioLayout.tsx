@@ -123,6 +123,11 @@ const _StudioLayout = () => {
   useEffect(() => {
     const pageName = Object.entries(locationToPageName).find(([key]) => location.pathname.includes(key))?.[1]
 
+    //dashboard is tracked by the view component in order to include tabs info
+    if (pageName === 'YPP Dashboard') {
+      return
+    }
+
     // had to include this timeout to make sure the page title is updated
     const trackRequestTimeout = setTimeout(() => trackPageView(`Studio - ${pageName}`, undefined), 1000)
 

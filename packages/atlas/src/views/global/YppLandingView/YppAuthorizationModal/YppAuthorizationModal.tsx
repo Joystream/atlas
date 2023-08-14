@@ -141,7 +141,13 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
   const { extendedChannel } = useBasicChannel(referrerId || '', {
     skip: !referrerId,
   })
-  const { trackPageView, trackYppOptIn, identifyUser } = useSegmentAnalytics()
+  const {
+    trackPageView,
+    trackYppOptIn,
+    identifyUser,
+    trackClickAuthModalSignUpButton,
+    trackClickAuthModalSignInButton,
+  } = useSegmentAnalytics()
 
   const channel = extendedChannel?.channel
 
@@ -379,6 +385,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
           return {
             text: 'Create account',
             onClick: () => {
+              trackClickAuthModalSignUpButton(utmSource, utmCampaign)
               setSelectedChannelId(yppUnsyncedChannels?.[0]?.id ?? '')
               handleAuthorizeClick(yppUnsyncedChannels?.[0]?.id)
             },
@@ -495,6 +502,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
       return {
         text: 'Sign in',
         onClick: () => {
+          trackClickAuthModalSignInButton(utmSource, utmCampaign)
           setShouldContinueYppFlowAfterLogin(true)
           setYppModalOpenName(null)
           setAuthModalOpenName('logIn')
