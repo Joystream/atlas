@@ -2,9 +2,18 @@ import { memo, useCallback, useMemo, useReducer, useRef, useState } from 'react'
 import { Descendant, createEditor } from 'slate'
 import { Slate, withReact } from 'slate-react'
 
+import {
+  SvgBlockquote,
+  SvgBold,
+  SvgHeading,
+  SvgItalic,
+  SvgOrderedList,
+  SvgStrikethrough,
+  SvgUnorderedList,
+} from '@/assets/icons'
 import { useMountEffect } from '@/hooks/useMountEffect'
 
-import { CustomBorder, EditorAreaContainer, StyledEditable } from './MarkdownEditor.styles'
+import { CustomBorder, EditorAreaContainer, StyledEditable, ToolBar } from './MarkdownEditor.styles'
 import { deserialize, renderElement, serialize, withMarkdown } from './MarkdownEditor.utils'
 import { BlockFormatButton, InlineFormatButton } from './components/FormatButtons'
 
@@ -54,18 +63,29 @@ const Editor = memo(({ initialValue, initSetEditorValue: setUpdateValue, onChang
 
   return (
     <Slate editor={editor} initialValue={initialValue} onChange={onChange}>
-      <div>
-        <BlockFormatButton format="heading-1">h1</BlockFormatButton>
-        <BlockFormatButton format="heading-2">h2</BlockFormatButton>
-        <BlockFormatButton format="heading-3">h3</BlockFormatButton>
-        <BlockFormatButton format="heading-4">h4</BlockFormatButton>
-        <BlockFormatButton format="listOrdered">ol</BlockFormatButton>
-        <BlockFormatButton format="listUnordered">ul</BlockFormatButton>
-        <InlineFormatButton format="strong">b</InlineFormatButton>
-        <InlineFormatButton format="emphasis">i</InlineFormatButton>
-        <InlineFormatButton format="delete">s</InlineFormatButton>
-        <BlockFormatButton format="blockquote">{'|>'}</BlockFormatButton>
-      </div>
+      <ToolBar>
+        <BlockFormatButton format="heading-3">
+          <SvgHeading />
+        </BlockFormatButton>
+        <InlineFormatButton format="strong">
+          <SvgBold />
+        </InlineFormatButton>
+        <InlineFormatButton format="emphasis">
+          <SvgItalic />
+        </InlineFormatButton>
+        <InlineFormatButton format="delete">
+          <SvgStrikethrough />
+        </InlineFormatButton>
+        <BlockFormatButton format="listOrdered">
+          <SvgOrderedList />
+        </BlockFormatButton>
+        <BlockFormatButton format="listUnordered">
+          <SvgUnorderedList />
+        </BlockFormatButton>
+        <BlockFormatButton format="blockquote">
+          <SvgBlockquote />
+        </BlockFormatButton>
+      </ToolBar>
       <EditorAreaContainer>
         <StyledEditable inputSize="large" renderElement={renderElement} />
         <CustomBorder disabled={false} />

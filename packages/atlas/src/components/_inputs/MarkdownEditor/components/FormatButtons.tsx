@@ -1,10 +1,9 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { FC, MouseEventHandler, PropsWithChildren, useCallback } from 'react'
 import { Editor, Element, Transforms } from 'slate'
 import { useSlate } from 'slate-react'
 
-import { sizes } from '@/styles'
+import { cVar, sizes } from '@/styles'
 
 import { EditorNode } from '../MarkdownEditor.types'
 
@@ -17,15 +16,21 @@ export const InlineFormatButton: FC<InlineFormatButtonProps> = (props) => {
       const selection = editor.selection ?? undefined
       const range = selection && Editor.unhangRange(editor, selection)
 
-      if (isActive === true) {
-        Transforms.unwrapNodes(editor, {
+      if (typeof isActive === 'undefined') return
+
+      if (isActive) {
+        return Transforms.unwrapNodes(editor, {
           at: range,
           match: (node) => !Editor.isEditor(node) && node.type === format,
           split: true,
         })
-      } else if (isActive === false) {
-        Transforms.wrapNodes(editor, { type: format, children: [] }, { at: range, split: true })
       }
+
+      if (range) {
+        return Transforms.wrapNodes(editor, { type: format, children: [] }, { at: range, split: true })
+      }
+
+      Transforms.insertNodes(editor, { type: format })
     },
     [props.format]
   )
@@ -34,7 +39,7 @@ export const InlineFormatButton: FC<InlineFormatButtonProps> = (props) => {
 }
 
 type BlockFormatButtonProps = PropsWithChildren<{
-  format: 'heading-1' | 'heading-2' | 'heading-3' | 'heading-4' | 'listOrdered' | 'listUnordered' | 'blockquote'
+  format: `heading-${1 | 2 | 3 | 4 | 5 | 6}` | 'listOrdered' | 'listUnordered' | 'blockquote'
 }>
 
 export const BlockFormatButton: FC<BlockFormatButtonProps> = (props) => {
@@ -106,13 +111,9 @@ const FormatButton: FC<FormatButtonProps> = ({ format, toggle, children }) => {
 }
 
 const StyledFormatButton = styled.button<{ isActive: boolean }>`
-  background: #ccc;
-  display: inline-block;
+  background: none;
+  border: none;
+  color: ${cVar('colorCoreNeutral50')};
   height: ${sizes(8)};
   width: ${sizes(8)};
-  ${({ isActive }) =>
-    isActive &&
-    css`
-      background: #fff;
-    `}
 `
