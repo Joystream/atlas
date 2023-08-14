@@ -1,7 +1,7 @@
 import { useCallback, useRef } from 'react'
-import { useSearchParams } from 'react-router-dom'
 
 import { useSegmentAnalyticsContext } from '@/providers/segmentAnalytics/useSegmentAnalyticsContext'
+import { YppRequirementsErrorCode } from '@/views/global/YppLandingView/YppAuthorizationModal/YppAuthorizationModal.types'
 
 export type videoPlaybackParams = {
   videoId: string
@@ -14,7 +14,7 @@ export type videoPlaybackParams = {
 }
 
 type PageViewParams = {
-  referrer?: string
+  referrerChannel?: string
   tab?: string
   utmSource?: string
   isYppFlow?: boolean
@@ -47,17 +47,24 @@ type YppOptInParams = {
   utmCampaign?: string
 }
 
+type IdentifyUserParams = {
+  name: string
+  email: string
+  memberId: string
+  isYppFlow?: string
+  signInType?: string
+}
+
 type playbackEventType = 'playbackStarted' | 'playbackPaused' | 'playbackResumed' | 'playbackCompleted'
 
 export const useSegmentAnalytics = () => {
   const { analytics } = useSegmentAnalyticsContext()
 
   const playbackEventsQueue = useRef<{ type: playbackEventType; params: videoPlaybackParams }[]>([])
-  const [searchParams] = useSearchParams()
 
   const identifyUser = useCallback(
-    (email = 'no data') => {
-      analytics.identify(email, { email })
+    (params: IdentifyUserParams) => {
+      analytics.identify(params.email, params)
     },
     [analytics]
   )
@@ -324,6 +331,17 @@ export const useSegmentAnalytics = () => {
     [analytics]
   )
 
+  const trackYppReqsNotMet = useCallback(
+    (
+      errors: YppRequirementsErrorCode[],
+      utmSource: string | null | undefined,
+      utmCampaign: string | null | undefined
+    ) => {
+      analytics.track('YPP Sign Up Failed - Reqs Not Met', { errors, utmSource, utmCampaign })
+    },
+    [analytics]
+  )
+
   const trackLogout = useCallback(() => {
     analytics.reset()
   }, [analytics])
@@ -385,6 +403,7 @@ export const useSegmentAnalytics = () => {
     trackNftMint,
     trackNftSale,
     trackPageView,
+    trackYppReqsNotMet,
     trackReferralLinkGenerated,
     trackVideoPlaybackCompleted,
     trackVideoPlaybackPaused,

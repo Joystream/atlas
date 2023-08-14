@@ -45,7 +45,7 @@ const stepToPageName: Partial<Record<SignUpSteps, string>> = {
   [SignUpSteps.SignUpSeed]: 'Signup modal - seed',
   [SignUpSteps.SignUpPassword]: 'Signup modal - password',
   [SignUpSteps.SignUpEmail]: 'Signup modal - email',
-  [SignUpSteps.Creating]: 'Signup modal - creating',
+  [SignUpSteps.Creating]: 'Signup modal - creating account',
   [SignUpSteps.Success]: 'Signup modal - success',
 }
 

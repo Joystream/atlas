@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import lazy from '@loadable/component'
 import { ErrorBoundary } from '@sentry/react'
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useRef } from 'react'
 import { Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
@@ -67,7 +67,7 @@ const locationToPageName = {
   '/member/': 'Member',
   '/notifications': 'Notifications',
   '/marketplace': 'Marketplace',
-  '/ypp': 'YPP',
+  '/ypp': 'YPP landing page',
   '/ypp-dashboard': 'YPP Dashboard',
 }
 
@@ -82,6 +82,7 @@ export const ViewerLayout: FC = () => {
   const mdMatch = useMediaMatch('md')
   const searchOpen = useSearchStore((state) => state.searchOpen)
   const displayedLocation = locationState?.overlaidLocation || location
+  const afterGoogleRedirect = useRef<boolean>(false)
 
   useEffect(() => {
     if (!location.pathname.includes('studio')) {
@@ -94,13 +95,17 @@ export const ViewerLayout: FC = () => {
       if (['Channel', 'Category', 'Video'].some((page) => pageName?.includes(page))) {
         return
       }
-
-      const [query, referrer, utmSource, utmCampaign] = [
+      const [query, referrerChannel, utmSource, utmCampaign, gState, gCode] = [
         searchParams.get('query'),
         searchParams.get('referrerId'),
         searchParams.get('utm_source'),
         searchParams.get('utm_campaign'),
+        searchParams.get('state'),
+        searchParams.get('code'),
       ]
+      if (gState || gCode) {
+        afterGoogleRedirect.current = true
+      }
 
       // had to include this timeout to make sure the page title is updated
       const trackRequestTimeout = setTimeout(
@@ -108,7 +113,7 @@ export const ViewerLayout: FC = () => {
           trackPageView(pageName || 'Unknown page', {
             ...(location.pathname === absoluteRoutes.viewer.ypp()
               ? {
-                  referrer: referrer || undefined,
+                  referrer: referrerChannel || undefined,
                   utmSource: utmSource || undefined,
                   utmCampaign: utmCampaign || undefined,
                 }
