@@ -1,136 +1,60 @@
-import { last, merge, omit } from 'lodash-es'
-import { Content, Delete, Emphasis, Link, Root, Strong } from 'mdast'
-import remarkParse from 'remark-parse'
-import { Descendant, Node, Text } from 'slate'
-import { unified } from 'unified'
+import { merge, omit } from 'lodash-es'
+import type { Blockquote, Heading, List, ListItem, Paragraph, Root, RootContent, Text } from 'mdast'
+import { fromMarkdown } from 'mdast-util-from-markdown'
+import { gfmFromMarkdown, gfmToMarkdown } from 'mdast-util-gfm'
+import { toMarkdown } from 'mdast-util-to-markdown'
+import { gfm } from 'micromark-extension-gfm'
+import type { Descendant, Editor } from 'slate'
 import flatMap from 'unist-util-flatmap'
 
-import { BaseNode, EditorNode, LeafNode, MarkNode, TextNode } from './MarkdownEditor.types'
+import { BaseNode, EditorNode, ElementNode, LeafNode, MdNode, TextNode } from './MarkdownEditor.types'
 import { Element, ElementProps } from './components/Element'
-import { Leaf, LeafProps } from './components/Leaf'
 
-export const areNodesEquals = (mdNodes: BaseNode[] | undefined, slateNodes: BaseNode[] | undefined) => {
-  if (!mdNodes || !slateNodes) return false
-
-  const nonMarkMd = mdNodes.filter((node) => node.type !== 'mark')
-  const nonMarkSlate = slateNodes.filter(
-    // Filter empty paragraph on the editor obj as they are ignored by remark
-    (node) =>
-      node.type !== 'mark' && !(node.type === 'paragraph' && node.children?.every((node) => node.text?.trim() === ''))
-  )
-
-  if (nonMarkMd.length !== nonMarkSlate.length) return false
-
-  return nonMarkMd.every((mdNode, index): boolean => {
-    const slateNode = nonMarkSlate[index]
-    if (mdNode.type !== slateNode.type) return false
-    if ('text' in mdNode) return mdNode.text === slateNode.text?.trim()
-    if (!mdNode.children || !slateNode.children) return false
-    return areNodesEquals(mdNode.children, slateNode.children)
-  })
+export const withMarkdown = (editor: Editor) => {
+  editor.isInline = (node: EditorNode) => !node.isBlock
+  return editor
 }
 
 export const renderElement = (props: ElementProps) => <Element {...props} />
 
-export const renderLeaf = (props: LeafProps) => <Leaf {...props} />
-
-export const serialize = (nodes: Descendant[]): string => nodes.map((node) => Node.string(node)).join('\n\n')
+export const serialize = (nodes: Descendant[]): string => {
+  const slateTree = { type: 'root', children: nodes.map((n) => merge({}, n)) } // deep clone nodes because unist-util-flatmap mutates the tree
+  console.log(...slateTree.children.map((n) => JSON.stringify(n, null, 2)))
+  const mdTree = flatMap(slateTree as EditorNode, fromSlateToMd) as unknown as Root
+  return toMarkdown(mdTree, { extensions: [gfmToMarkdown()] })
+}
 
 export const deserialize = (markdown: string): Descendant[] => {
-  const mdTree: Root = unified().use(remarkParse).parse(markdown)
-  const slateTree = flatMap(mdTree, fromMdWithMarks(markdown)) as { children: Descendant[] }
+  const mdTree: Root = fromMarkdown(markdown, { extensions: [gfm()], mdastExtensions: [gfmFromMarkdown()] })
+  const slateTree = flatMap(mdTree, toEditorNodes) as { children: Descendant[] }
   return slateTree.children
 }
 
-const fromMdWithMarks =
-  (markdown: string) =>
-  (node: Root | Content): EditorNode[] => {
-    const editorNode = fromMdToEditorNode(node)
-
-    if (!editorNode) return []
-    if (node.type === 'text') {
-      return [editorNode]
-    }
-
-    const initialString = markdown.slice(node.position?.start.offset, node.position?.end.offset)
-
-    if ('value' in node) {
-      const contentStart = initialString.indexOf(node.value)
-      return wrapInMarks(editorNode, initialString, contentStart, contentStart + node.value.length)
-    }
-    if ('children' in node && node.children.length) {
-      const nodeStart = node.position?.start.offset ?? 0
-      const contentStart = (node.children?.[0].position?.start.offset ?? 0) - nodeStart
-      const contentEnd = (last(node.children)?.position?.end.offset ?? 0) - nodeStart
-      return wrapInMarks(editorNode, initialString, contentStart, contentEnd)
-    }
-
-    return [editorNode]
-  }
-
-const wrapInMarks = (
-  editorNode: EditorNode,
-  initialString: string,
-  contentStart: number,
-  contentEnd: number
-): EditorNode[] => {
-  const startMarkText = initialString.slice(0, contentStart)
-  const endMarkText = initialString.slice(contentEnd)
-  const startMark: MarkNode[] = !startMarkText
-    ? []
-    : [
-        {
-          type: 'mark',
-          text: startMarkText,
-          position: merge({}, editorNode.position, {
-            end: {
-              column: editorNode.position?.start.column ?? 0 + startMarkText.length,
-              offset: editorNode.position?.start.offset ?? 0 + startMarkText.length,
-            },
-          }),
-        },
-      ]
-  const endMark: MarkNode[] = !endMarkText
-    ? []
-    : [
-        {
-          type: 'mark',
-          text: endMarkText,
-          position: merge({}, editorNode.position, {
-            start: {
-              column: editorNode.position?.end.column ?? 0 - endMarkText.length,
-              offset: editorNode.position?.end.offset ?? 0 - endMarkText.length,
-            },
-          }),
-        },
-      ]
-
-  if ('children' in editorNode) {
-    const children = [...startMark, ...editorNode.children, ...endMark]
-    return [{ ...editorNode, children }]
-  }
-
-  return [...startMark, editorNode, ...endMark]
+const toEditorNodes = (node: Root | RootContent): EditorNode[] => {
+  const editorNode = fromMdToEditorNode(node)
+  return editorNode ? [omit(editorNode, 'position') as EditorNode] : []
 }
 
-const fromMdToEditorNode = (node: Root | Content): EditorNode | undefined => {
+const fromMdToEditorNode = (node: Root | RootContent): EditorNode | undefined => {
   switch (node.type) {
     // Inline literals (https://github.com/syntax-tree/mdast#literal)
     case 'text':
+      return asTextNode(node.value)
     case 'inlineCode':
-    case 'html':
-      return { ...omit(node, 'value'), text: node.value }
+      return { ...omit(node, 'value'), isBlock: false, children: [asTextNode(node.value)] }
 
     // Inline parents (https://github.com/syntax-tree/mdast#parent)
     case 'emphasis':
     case 'strong':
     case 'delete':
-    case 'link':
-      return { ...omit(node, 'children'), text: asValue(node) } as LeafNode
+    case 'link': {
+      const children = node.children.length ? node.children : asTextNode('')
+      return { ...node, isBlock: false, children } as LeafNode
+    }
 
     // Block literals (https://github.com/syntax-tree/mdast#literal)
     case 'code':
-      return { ...omit(node, 'value'), children: [fromMdToEditorNode({ ...node, type: 'text' }) as TextNode] }
+      return { ...omit(node, 'value'), isBlock: true, children: [asTextNode(node.value)] }
 
     // Block parents (https://github.com/syntax-tree/mdast#parent)
     case 'root':
@@ -138,12 +62,87 @@ const fromMdToEditorNode = (node: Root | Content): EditorNode | undefined => {
     case 'heading':
     case 'blockquote':
     case 'list':
-    case 'listItem':
-      return node.children?.length > 0 ? node : { ...node, children: [{ type: 'text', text: '' }] }
+    case 'listItem': {
+      const children: BaseNode[] = node.children.length ? (node.children as BaseNode[]) : [asTextNode('')]
+      return {
+        ...node,
+        type: asElementType(node),
+        isBlock: true,
+        isList: node.type === 'list',
+        children,
+      } as ElementNode
+    }
 
     // Not supported yet
     default:
       return
   }
 }
-const asValue = (node: Emphasis | Strong | Delete | Link) => (node.children[0] as unknown as Text).text
+
+const asTextNode = (text: string): TextNode => ({ type: 'text', children: [{ text }] })
+
+const asElementType = (node: Root | Paragraph | Heading | Blockquote | List | ListItem) => {
+  switch (node.type) {
+    case 'heading':
+      return `heading-${node.depth}` as const
+
+    case 'list':
+      return node.ordered ? 'listOrdered' : 'listUnordered'
+
+    default:
+      return node.type
+  }
+}
+
+const fromSlateToMd = (node: EditorNode | { text: string }): MdNode[] => {
+  const _node = omit(node, 'isBlock', 'isList') as EditorNode | { text: string }
+
+  if (!('type' in _node)) {
+    return [{ type: 'text', value: _node.text }]
+  }
+
+  switch (_node.type) {
+    case 'text':
+      return [..._node.children] as unknown as MdNode[]
+
+    // Inline literals (https://github.com/syntax-tree/mdast#literal)
+    case 'inlineCode':
+      return ([..._node.children] as unknown as [Text]).map(({ value }) => ({
+        ...omit(_node, 'children'),
+        value,
+      }))
+
+    // Inline parents (https://github.com/syntax-tree/mdast#parent)
+    case 'emphasis':
+    case 'strong':
+    case 'delete':
+    case 'link':
+      return [_node as MdNode]
+
+    // Block literals (https://github.com/syntax-tree/mdast#literal)
+    case 'code':
+      return ([..._node.children] as unknown as [Text]).map(({ value }) => ({
+        ...omit(_node, 'children'),
+        value,
+      }))
+
+    // Block parents (https://github.com/syntax-tree/mdast#parent)
+    case 'paragraph':
+    case 'listItem':
+    case 'blockquote':
+    case 'root':
+      return [_node as MdNode]
+
+    case 'listOrdered':
+    case 'listUnordered':
+      return [{ _node, type: 'list', ordered: _node.type === 'listOrdered' } as MdNode]
+  }
+
+  if (_node.type.startsWith('heading')) {
+    const depth = Number(_node.type.slice(8)) as Heading['depth']
+    return [{ _node, type: 'heading', depth } as MdNode]
+  }
+
+  // Not supported yet
+  return []
+}

@@ -1,49 +1,45 @@
-import {
+import type {
   Blockquote,
   Code,
-  Content,
   Delete,
   Emphasis,
-  HTML,
   Heading,
   InlineCode,
   Link,
-  List,
   ListItem,
   Literal,
   Paragraph,
   Parent,
   Root,
+  RootContent,
   Strong,
-  Text,
 } from 'mdast'
 
-export type BaseNode = { type: string; text?: string; children?: BaseNode[] }
+export type TextNode = { type: 'text'; children: [{ text: string }] }
+export type BaseNode = { type: string; children: BaseNode[] } | TextNode
 
-export type TextNode = LiteralToLeaf<Text>
-export type MarkNode = { type: 'mark'; text: string; position: Content['position'] }
-
-type LiteralToLeaf<T extends Literal> = Omit<T, 'value'> & { text: string }
-type ParentToLeaf<T extends Parent> = Omit<T, 'children'> & { text: string }
+type LiteralToLeaf<T extends Literal> = Omit<T, 'value'> & { isBlock?: false; children: BaseNode[] }
+type ParentToLeaf<T extends Parent> = Omit<T, 'children'> & { isBlock?: false; children: BaseNode[] }
 export type LeafNode =
   | TextNode
-  | MarkNode
   | LiteralToLeaf<InlineCode>
-  | LiteralToLeaf<HTML>
   | ParentToLeaf<Emphasis>
   | ParentToLeaf<Strong>
   | ParentToLeaf<Delete>
   | ParentToLeaf<Link>
 
-type LiteralToElement<T extends Literal> = Omit<T, 'value'> & { children: BaseNode[] }
-type ParentToElement<T extends Parent> = Omit<T, 'children'> & { children: BaseNode[] }
+type LiteralToElement<T extends Literal> = Omit<T, 'value'> & { isBlock: true; isList?: false; children: BaseNode[] }
+type ParentToElement<T extends Parent> = Omit<T, 'children'> & { isBlock: true; isList?: false; children: BaseNode[] }
 export type ElementNode =
   | LiteralToElement<Code>
   | ParentToElement<Root>
   | ParentToElement<Paragraph>
-  | ParentToElement<Heading>
+  | { type: `heading-${Heading['depth']}`; isBlock: true; isList?: false; children: BaseNode[] }
+  | { type: 'listOrdered' | 'listUnordered'; isBlock: true; isList: true; children: BaseNode[] }
   | ParentToElement<ListItem>
-  | ParentToElement<List>
   | ParentToElement<Blockquote>
 
 export type EditorNode = ElementNode | LeafNode
+
+type MiscAttrs = { url?: string; title?: string | null; lang?: string | null; meta?: string | null; value?: string }
+export type MdNode = { type: RootContent['type']; depth?: Heading['depth']; children?: MdNode[] } & MiscAttrs

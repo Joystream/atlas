@@ -5,7 +5,8 @@ import { Slate, withReact } from 'slate-react'
 import { useMountEffect } from '@/hooks/useMountEffect'
 
 import { CustomBorder, EditorAreaContainer, StyledEditable } from './MarkdownEditor.styles'
-import { areNodesEquals, deserialize, renderElement, renderLeaf, serialize } from './MarkdownEditor.utils'
+import { deserialize, renderElement, serialize, withMarkdown } from './MarkdownEditor.utils'
+import { BlockFormatButton, InlineFormatButton } from './components/FormatButtons'
 
 export type MarkdownEditorProps = {
   value?: string
@@ -21,16 +22,9 @@ export const MarkdownEditor = ({ value = '', onChange }: MarkdownEditorProps) =>
   const handleChange = useCallback(
     (nodes: Descendant[]) => {
       internalValue.current = serialize(nodes)
-      const newNodes = deserialize(internalValue.current)
-      // console.log(JSON.stringify(newNodes, null, 2))
-      // console.log(areNodesEquals(newNodes, nodes) ? 'same tree' : 'DIFFERENT')
-      if (!areNodesEquals(newNodes, nodes)) {
-        console.log('DIFFERENT')
-        setEditorValue?.(newNodes)
-      }
       onChange?.(internalValue.current)
     },
-    [onChange, setEditorValue]
+    [onChange]
   )
 
   if (value !== internalValue.current) {
@@ -47,7 +41,7 @@ type EditorProps = {
   initSetEditorValue: (fn: () => (nodes: Descendant[]) => void) => void
 }
 const Editor = memo(({ initialValue, initSetEditorValue: setUpdateValue, onChange }: EditorProps) => {
-  const editor = useMemo(() => withReact(createEditor()), []) // TODO withHistory
+  const editor = useMemo(() => withMarkdown(withReact(createEditor())), []) // TODO withHistory
 
   const [, rerender] = useReducer((r) => r + 1, 0)
 
@@ -60,8 +54,20 @@ const Editor = memo(({ initialValue, initSetEditorValue: setUpdateValue, onChang
 
   return (
     <Slate editor={editor} initialValue={initialValue} onChange={onChange}>
+      <div>
+        <BlockFormatButton format="heading-1">h1</BlockFormatButton>
+        <BlockFormatButton format="heading-2">h2</BlockFormatButton>
+        <BlockFormatButton format="heading-3">h3</BlockFormatButton>
+        <BlockFormatButton format="heading-4">h4</BlockFormatButton>
+        <BlockFormatButton format="listOrdered">ol</BlockFormatButton>
+        <BlockFormatButton format="listUnordered">ul</BlockFormatButton>
+        <InlineFormatButton format="strong">b</InlineFormatButton>
+        <InlineFormatButton format="emphasis">i</InlineFormatButton>
+        <InlineFormatButton format="delete">s</InlineFormatButton>
+        <BlockFormatButton format="blockquote">{'|>'}</BlockFormatButton>
+      </div>
       <EditorAreaContainer>
-        <StyledEditable inputSize="large" renderElement={renderElement} renderLeaf={renderLeaf} />
+        <StyledEditable inputSize="large" renderElement={renderElement} />
         <CustomBorder disabled={false} />
       </EditorAreaContainer>
     </Slate>
