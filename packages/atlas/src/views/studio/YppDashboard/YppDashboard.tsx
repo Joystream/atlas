@@ -4,6 +4,7 @@ import { Information } from '@/components/Information'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Tabs } from '@/components/Tabs'
 import { Text } from '@/components/Text'
+import { YppStatusPill } from '@/components/_ypp/YppStatusPill'
 import { atlasConfig } from '@/config'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -11,7 +12,15 @@ import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYpp
 import { YppDashboardReferralsTab } from '@/views/studio/YppDashboard/tabs/YppDashboardReferralsTab/YppDashboardReferralsTab'
 
 import { TIERS } from './YppDashboard.config'
-import { Divider, Header, TabsWrapper, TierCount, TierDescription, TierWrapper } from './YppDashboard.styles'
+import {
+  Divider,
+  Header,
+  HeaderContentBox,
+  TabsWrapper,
+  TierCount,
+  TierDescription,
+  TierWrapper,
+} from './YppDashboard.styles'
 import { YppDashboardMainTab, YppDashboardSettingsTab } from './tabs'
 
 const TABS = ['Dashboard', 'Referrals', 'Settings'] as const
@@ -54,27 +63,30 @@ export const YppDashboard: FC = () => {
           <Text variant={mdMatch ? 'h700' : 'h600'} as="h1">
             YouTube Partner Program
           </Text>
-          {TIERS.length && !isLoading && (
-            <TierWrapper>
-              {TIERS[currentTier].icon}
-              <TierDescription>
-                <div>
-                  <TierCount>
-                    <Text variant="h300" as="span">
-                      Tier {currentTier + 1}{' '}
+          <HeaderContentBox>
+            <YppStatusPill />
+            {TIERS.length && !isLoading && (
+              <TierWrapper>
+                {TIERS[currentTier].icon}
+                <TierDescription>
+                  <div>
+                    <TierCount>
+                      <Text variant="h300" as="span">
+                        Tier {currentTier + 1}{' '}
+                      </Text>
+                      <Text variant="t100" as="span" color="colorText">
+                        out of {TIERS.length}
+                      </Text>
+                    </TierCount>
+                    <Text variant="t100" as="p" color="colorText">
+                      {TIERS[currentTier].rules}
                     </Text>
-                    <Text variant="t100" as="span" color="colorText">
-                      out of {TIERS.length}
-                    </Text>
-                  </TierCount>
-                  <Text variant="t100" as="p" color="colorText">
-                    {TIERS[currentTier].rules}
-                  </Text>
-                </div>
-                {tiersTooltip ? <Information text={tiersTooltip} /> : null}
-              </TierDescription>
-            </TierWrapper>
-          )}
+                  </div>
+                  {tiersTooltip ? <Information text={tiersTooltip} /> : null}
+                </TierDescription>
+              </TierWrapper>
+            )}
+          </HeaderContentBox>
         </Header>
         <TabsWrapper>
           <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={setCurrentVideosTab} />
