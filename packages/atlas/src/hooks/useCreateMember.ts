@@ -127,7 +127,7 @@ export const useCreateMember = () => {
             iconType: 'error',
           })
           onError?.()
-          SentryLogger.error('Failed to upload member avatar', 'SignUpModal', error)
+          SentryLogger.error('Failed to upload member avatar', 'SignUpModal', JSON.stringify(error))
           return
         }
 

@@ -12,7 +12,7 @@ import { useStorageOperators } from '@/providers/assets/assets.provider'
 import { OperatorInfo } from '@/providers/assets/assets.types'
 import { UploadStatus } from '@/types/storage'
 import { createAssetUploadEndpoint, createChannelBagId } from '@/utils/asset'
-import { ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { ConsoleLogger, SentryLogger, UserEventsLogger } from '@/utils/logs'
 
 import { useUploadsStore } from './uploads.store'
 import { InputAssetUpload, StartFileUploadOptions } from './uploads.types'
@@ -83,6 +83,7 @@ export const useStartFileUpload = () => {
               'None of the storage operators are available at this time. Please reload the app and try again later.',
             iconType: 'error',
           })
+          UserEventsLogger.logUserError('missing-storage-operator', { id: asset.id, assetType: asset.type, bagId })
           SentryLogger.error('No storage operator available for upload', 'uploadsHooks')
           return
         }
@@ -175,13 +176,13 @@ export const useStartFileUpload = () => {
         SentryLogger.error('Failed to upload asset', 'uploadsHooks', e, {
           asset: { dataObjectId: asset.id, uploadOperator },
         })
-
         setAssetStatus({ lastStatus: 'error', progress: 0 })
 
         const axiosError = e as AxiosError
         const networkFailure =
           axiosError.isAxiosError &&
           (!axiosError.response?.status || (axiosError.response.status >= 400 && axiosError.response.status <= 500))
+        UserEventsLogger.logDistributorError({ dataObjectId: asset.id, distributorId: uploadOperator.id }, e)
         if (networkFailure) {
           markStorageOperatorFailed(uploadOperator.id)
         }
@@ -192,6 +193,17 @@ export const useStartFileUpload = () => {
         }
 
         const snackbarDescription = networkFailure ? 'Host is not responding' : 'Unexpected error occurred'
+
+        UserEventsLogger.logAssetUploadFailedEvent(
+          {
+            dataObjectId: asset.id,
+            dataObjectType: asset.type,
+            distributorId: uploadOperator.id,
+            distributorUrl: uploadOperator.endpoint,
+          },
+          e
+        )
+
         displaySnackbar({
           title: 'Failed to upload asset',
           description: snackbarDescription,

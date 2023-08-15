@@ -1,13 +1,26 @@
+// import { init as initApm } from '@elastic/apm-rum'
 import { useEffect, useState } from 'react'
 
 import { atlasConfig } from '@/config'
-import { testAssetDownload } from '@/providers/assets/assets.helpers'
+import { logDistributorPerformance, testAssetDownload } from '@/providers/assets/assets.helpers'
 import { useOperatorsContext } from '@/providers/assets/assets.provider'
-import { ConsoleLogger } from '@/utils/logs'
+import { getVideoCodec } from '@/utils/getVideoCodec'
+import { ConsoleLogger, DistributorEventEntry, SentryLogger, UserEventsLogger } from '@/utils/logs'
 import { withTimeout } from '@/utils/misc'
 
+// const apm = initApm({
+//   serviceName: 'gleev',
+//
+//   // Set custom APM Server URL (default: http://localhost:8200)
+//   serverUrl: `https://atlas-services.joystream.org/apm`,
+//
+//   // Set service version (required for sourcemap feature)
+//   serviceVersion: '',
+//   environment: 'development'
+// })
+
 export const getSingleAssetUrl = async (
-  urls: string[] | undefined | null,
+  urls: string[] | null | undefined,
   type: 'image' | 'video' | 'subtitle',
   timeout?: number
 ): Promise<string | undefined> => {
@@ -16,6 +29,12 @@ export const getSingleAssetUrl = async (
   }
 
   for (const distributionAssetUrl of urls) {
+    const eventEntry: DistributorEventEntry = {
+      dataObjectId: '1',
+      dataObjectType: 'DataObjectTypeChannelAvatar',
+      resolvedUrl: distributionAssetUrl,
+    }
+
     const assetTestPromise = testAssetDownload(distributionAssetUrl, type)
     const assetTestPromiseWithTimeout = withTimeout(
       assetTestPromise,
@@ -23,11 +42,24 @@ export const getSingleAssetUrl = async (
     )
 
     try {
+      // const transaction = apm.startTransaction('Application start', 'custom')
+      // const httpSpan = transaction?.startSpan('GET ' + distributionAssetUrl, 'external.http')
+
       await assetTestPromiseWithTimeout
 
+      // httpSpan?.end()
+      // transaction?.end()
+      logDistributorPerformance(distributionAssetUrl, eventEntry)
+
       return distributionAssetUrl
-    } catch {
-      /**/
+    } catch (err) {
+      if (err instanceof MediaError) {
+        const codec = getVideoCodec(distributionAssetUrl)
+        UserEventsLogger.logWrongCodecEvent(eventEntry, { codec })
+        SentryLogger.error('Error during asset download test, media is not supported', 'AssetsManager', err, {
+          asset: { parent, distributionAssetUrl, mediaError: err, codec },
+        })
+      }
     }
   }
 
@@ -39,7 +71,7 @@ export const getSingleAssetUrl = async (
       promises.push(assetTestPromise)
     }
 
-    Promise.race(promises)
+    Promise.any(promises)
       .then(res)
       .catch((error) => {
         ConsoleLogger.warn(`Error during fallback asset promise race`, {
