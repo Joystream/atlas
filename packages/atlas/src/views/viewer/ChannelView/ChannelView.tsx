@@ -26,6 +26,7 @@ import { useGetAssetUrl } from '@/hooks/useGetAssetUrl'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { useSubscribeAccountBalance } from '@/providers/joystream'
 import { useUser } from '@/providers/user/user.hooks'
@@ -64,6 +65,7 @@ export const ChannelView: FC = () => {
   const [tilesPerRow, setTilesPerRow] = useState(INITIAL_TILES_PER_ROW)
   const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
   const videoRows = useVideoGridRows('main')
+  const { trackPageView } = useSegmentAnalytics()
   const navigate = useNavigate()
   const [showReportDialog, setShowReportDialog] = useState(false)
   const { activeMembership, setActiveChannel } = useUser()
@@ -209,6 +211,13 @@ export const ChannelView: FC = () => {
       clearAllFilters()
     }
   }, [clearAllFilters, currentTabName, setIsFiltersOpen])
+
+  useEffect(() => {
+    if (channel?.id) {
+      trackPageView('Channel', { tab: currentTabName || undefined, channelName: channel?.title || undefined })
+    }
+  }, [channel?.id, channel?.title, currentTabName, trackPageView])
+
   const mappedChannelNftCollectors =
     channelNftCollectors?.map(({ amount, member }) => ({
       nftsAmount: amount,

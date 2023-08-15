@@ -28,7 +28,7 @@ export const CategoryView = () => {
 
   useEffect(() => {
     if (id) {
-      trackPageView(`Category ${currentCategory?.name}`)
+      trackPageView('Category', { category: currentCategory?.name })
     }
   }, [currentCategory?.name, id, trackPageView])
 

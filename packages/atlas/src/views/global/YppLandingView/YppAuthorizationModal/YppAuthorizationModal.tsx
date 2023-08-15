@@ -63,7 +63,7 @@ export type YppAuthorizationModalProps = {
 const stepToPageName = {
   'ypp-select-channel': 'YPP Select Channel modal',
   'ypp-requirements': 'YPP Requirements modal',
-  'ypp-fetching-data': 'YPP Fetching Data modal',
+  'ypp-fetching-data': 'Fetching Channel Data From Google',
   'ypp-sync-options': 'YPP Category And Referrer Modal',
   'ypp-channel-already-registered': 'YPP channel already registered modal',
   'ypp-speaking-to-backend': 'YPP processing modal',
@@ -141,7 +141,14 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
   const { extendedChannel } = useBasicChannel(referrerId || '', {
     skip: !referrerId,
   })
-  const { trackPageView, trackYppOptIn, identifyUser } = useSegmentAnalytics()
+  const {
+    trackPageView,
+    trackYppOptIn,
+    identifyUser,
+    trackYppReqsNotMet,
+    trackClickAuthModalSignUpButton,
+    trackClickAuthModalSignInButton,
+  } = useSegmentAnalytics()
 
   const channel = extendedChannel?.channel
 
@@ -291,8 +298,13 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
           })
 
           await refetchYppSyncedChannels()
-
-          identifyUser(ytResponseData?.email)
+          identifyUser({
+            name: 'Sign up',
+            memberId: memberId,
+            email: ytResponseData?.email || '',
+            isYppFlow: 'true',
+            signInType: 'password',
+          })
           trackYppOptIn({
             handle: ytResponseData?.channelHandle,
             email: ytResponseData?.email,
@@ -338,6 +350,13 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     }
   }, [channel, detailsFormMethods, referrerId])
 
+  useEffect(() => {
+    if (ytRequirementsErrors?.length) {
+      trackPageView('YPP Reqs Not Met')
+      trackYppReqsNotMet(ytRequirementsErrors, utmSource, utmCampaign)
+    }
+  }, [trackPageView, trackYppReqsNotMet, utmCampaign, utmSource, ytRequirementsErrors])
+
   const selectedChannel = useMemo(() => {
     if (!unSyncedChannels || !selectedChannelId) {
       return null
@@ -379,6 +398,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
           return {
             text: 'Create account',
             onClick: () => {
+              trackClickAuthModalSignUpButton(utmSource, utmCampaign)
               setSelectedChannelId(yppUnsyncedChannels?.[0]?.id ?? '')
               handleAuthorizeClick(yppUnsyncedChannels?.[0]?.id)
             },
@@ -480,6 +500,9 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     setSelectedChannelId,
     handleClose,
     setYppModalOpenName,
+    trackClickAuthModalSignUpButton,
+    utmSource,
+    utmCampaign,
     handleAuthorizeClick,
     handleCreateOrUpdateChannel,
   ])
@@ -495,6 +518,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
       return {
         text: 'Sign in',
         onClick: () => {
+          trackClickAuthModalSignInButton(utmSource, utmCampaign)
           setShouldContinueYppFlowAfterLogin(true)
           setYppModalOpenName(null)
           setAuthModalOpenName('logIn')
@@ -519,11 +543,14 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     }
   }, [
     isLoadingModal,
+    ytRequirementsErrors.length,
     yppModalOpenName,
     isLoggedIn,
-    ytRequirementsErrors.length,
     isSubmitting,
     handleGoBack,
+    trackClickAuthModalSignInButton,
+    utmSource,
+    utmCampaign,
     setShouldContinueYppFlowAfterLogin,
     setYppModalOpenName,
     setAuthModalOpenName,
