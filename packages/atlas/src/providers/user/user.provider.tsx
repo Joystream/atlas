@@ -30,6 +30,15 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       },
     },
     {
+      onCompleted: (data) => {
+        const activeMembership =
+          (currentUser?.membershipId &&
+            data.memberships?.find((membership) => membership.id === currentUser?.membershipId)) ||
+          null
+        if (activeMembership) {
+          setChannelId(activeMembership.channels[0].id)
+        }
+      },
       skip: !currentUser,
       onError: (error) =>
         SentryLogger.error('Failed to fetch user memberships', 'UserProvider', error, { user: currentUser ?? {} }),
@@ -68,10 +77,6 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
     (channelId
       ? activeMembership?.channels.find((channel) => channel.id === channelId)
       : activeMembership?.channels[0]) || null
-
-  useEffect(() => {
-    if (!channelId) setChannelId(activeMembership?.channels[0]?.id ?? null)
-  }, [activeMembership?.channels, channelId])
 
   const contextValue: UserContextValue = useMemo(
     () => ({

@@ -70,7 +70,12 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
           if (keypair.address === data.accountData.joystreamAccount) {
             setLoggedAddress(keypair.address)
             setCurrentUser(data.accountData)
-            identifyUser(data.accountData.email)
+            identifyUser({
+              name: 'Sign in',
+              email: data.accountData.email,
+              memberId: data.accountData.membershipId,
+              signInType: 'password',
+            })
             setApiActiveAccount('seed', mnemonic)
             setIsAuthenticating(false)
             return
@@ -84,7 +89,12 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
           const res = await signInToWallet(lastUsedWalletName, true)
           if (res?.find((walletAcc) => walletAcc.address === data.accountData.joystreamAccount)) {
             setLoggedAddress(data.accountData.joystreamAccount)
-            identifyUser(data.accountData.email)
+            identifyUser({
+              name: 'Sign in',
+              email: data.accountData.email,
+              memberId: data.accountData.membershipId,
+              signInType: 'wallet',
+            })
             setCurrentUser(data.accountData)
             setApiActiveAccount('address', data.accountData.joystreamAccount)
           }
@@ -191,7 +201,12 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
         const res = await refetch()
         setCurrentUser(res.data.accountData)
-        identifyUser(res.data.accountData.email)
+        identifyUser({
+          name: 'Sign in',
+          email: res.data.accountData.email,
+          memberId: res.data.accountData.membershipId,
+          signInType: params.type === 'external' ? 'wallet' : 'password',
+        })
 
         return response.data.accountId
       } catch (error) {

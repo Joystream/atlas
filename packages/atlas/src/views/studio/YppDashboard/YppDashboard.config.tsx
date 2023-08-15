@@ -90,6 +90,7 @@ export const REWARDS =
       steps: reward.steps,
       joyAmount: reward.baseAmount,
       usdAmount: reward.baseUsdAmount,
+      customMultiplier: reward.customMultiplier,
       ...(reward.actionButtonText
         ? {
             actionButton: {

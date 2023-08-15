@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
+import lazy from '@loadable/component'
 import { ErrorBoundary } from '@sentry/react'
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useRef } from 'react'
 import { Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
@@ -17,20 +18,26 @@ import { useSearchStore } from '@/providers/search'
 import { useUser } from '@/providers/user/user.hooks'
 import { transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
-import { YppLandingView } from '@/views/global/YppLandingView'
-import { NotificationsView } from '@/views/notifications'
 
-import { CategoryView } from './CategoryView'
-import { ChannelView } from './ChannelView'
-import { ChannelsView } from './ChannelsView'
-import { DiscoverView } from './DiscoverView'
-import { HomeView } from './HomeView'
-import { MarketplaceView } from './MarketplaceView'
-import { MemberView } from './MemberView'
-import { MembershipSettingsView } from './MembershipSettingsView'
-import { NotFoundView } from './NotFoundView'
-import { SearchView } from './SearchView'
-import { VideoView } from './VideoView'
+const YppLandingView = lazy(() =>
+  import('@/views/global/YppLandingView').then((module) => ({ default: module.YppLandingView }))
+)
+const NotificationsView = lazy(() =>
+  import('@/views/notifications').then((module) => ({ default: module.NotificationsView }))
+)
+const CategoryView = lazy(() => import('./CategoryView').then((module) => ({ default: module.CategoryView })))
+const ChannelView = lazy(() => import('./ChannelView').then((module) => ({ default: module.ChannelView })))
+const ChannelsView = lazy(() => import('./ChannelsView').then((module) => ({ default: module.ChannelsView })))
+const DiscoverView = lazy(() => import('./DiscoverView').then((module) => ({ default: module.DiscoverView })))
+const HomeView = lazy(() => import('./HomeView').then((module) => ({ default: module.HomeView })))
+const MarketplaceView = lazy(() => import('./MarketplaceView').then((module) => ({ default: module.MarketplaceView })))
+const MemberView = lazy(() => import('./MemberView').then((module) => ({ default: module.MemberView })))
+const MembershipSettingsView = lazy(() =>
+  import('./MembershipSettingsView').then((module) => ({ default: module.MembershipSettingsView }))
+)
+const NotFoundView = lazy(() => import('./NotFoundView').then((module) => ({ default: module.NotFoundView })))
+const SearchView = lazy(() => import('./SearchView').then((module) => ({ default: module.SearchView })))
+const VideoView = lazy(() => import('./VideoView').then((module) => ({ default: module.VideoView })))
 
 const viewerRoutes = [
   { path: relativeRoutes.viewer.search(), element: <SearchView /> },
@@ -60,7 +67,7 @@ const locationToPageName = {
   '/member/': 'Member',
   '/notifications': 'Notifications',
   '/marketplace': 'Marketplace',
-  '/ypp': 'YPP',
+  '/ypp': 'YPP landing page',
   '/ypp-dashboard': 'YPP Dashboard',
 }
 
@@ -75,38 +82,43 @@ export const ViewerLayout: FC = () => {
   const mdMatch = useMediaMatch('md')
   const searchOpen = useSearchStore((state) => state.searchOpen)
   const displayedLocation = locationState?.overlaidLocation || location
+  const afterGoogleRedirect = useRef<boolean>(false)
 
   useEffect(() => {
     if (!location.pathname.includes('studio')) {
       const pageName =
         location.pathname === '/'
-          ? 'Home'
+          ? 'Homepage'
           : Object.entries(locationToPageName).find(([key]) => location.pathname.includes(key))?.[1]
 
-      //category page view will be tracked by categoryView component in order to include the id
-      if (pageName === 'Category') {
+      //pages below will be tracked by the view components in order to include the additional params
+      if (['Channel', 'Category', 'Video'].some((page) => pageName?.includes(page))) {
         return
       }
-
-      const query = searchParams.get('query')
-      const tab = searchParams.get('tab')
-      const referrer = searchParams.get('referrerId')
-      const utmSource = searchParams.get('utm_source')
-
-      const buildPageName = () => {
-        if (pageName === 'Search') {
-          return `Search result page '${query}'`
-        } else return pageName || 'unknown'
+      const [query, referrerChannel, utmSource, utmCampaign, gState, gCode] = [
+        searchParams.get('query'),
+        searchParams.get('referrerId'),
+        searchParams.get('utm_source'),
+        searchParams.get('utm_campaign'),
+        searchParams.get('state'),
+        searchParams.get('code'),
+      ]
+      if (gState || gCode) {
+        afterGoogleRedirect.current = true
       }
 
       // had to include this timeout to make sure the page title is updated
       const trackRequestTimeout = setTimeout(
         () =>
-          trackPageView(buildPageName(), {
+          trackPageView(pageName || 'Unknown page', {
             ...(location.pathname === absoluteRoutes.viewer.ypp()
-              ? { referrer: referrer || undefined, utm_source: utmSource || undefined }
+              ? {
+                  referrer: referrerChannel || undefined,
+                  utmSource: utmSource || undefined,
+                  utmCampaign: utmCampaign || undefined,
+                }
               : {}),
-            ...(location.pathname === absoluteRoutes.viewer.channel() ? { tab: tab || undefined } : {}),
+            ...(location.pathname === absoluteRoutes.viewer.search() ? { searchQuery: query } : {}),
           }),
         1000
       )

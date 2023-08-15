@@ -16,6 +16,7 @@ import { Select } from '@/components/_inputs/Select'
 import { MintNftModal } from '@/components/_overlays/MintNftModal'
 import { VideoTileDraft } from '@/components/_video/VideoTileDraft'
 import { VideoTilePublisher } from '@/components/_video/VideoTilePublisher'
+import { YppStatusPill } from '@/components/_ypp/YppStatusPill'
 import { atlasConfig } from '@/config'
 import { cancelledVideoFilter } from '@/config/contentFilter'
 import { absoluteRoutes } from '@/config/routes'
@@ -31,7 +32,7 @@ import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { sizes } from '@/styles'
 import { createPlaceholderData } from '@/utils/data'
-import { SentryLogger } from '@/utils/logs'
+import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
 import { YppVideoDto } from '@/views/studio/MyVideosView/MyVideosView.types'
 
@@ -42,6 +43,7 @@ import {
   StyledPagination,
   StyledSelect,
   TabsContainer,
+  TitleBox,
 } from './MyVideos.styles'
 import { NewVideoTile } from './NewVideoTile'
 
@@ -72,7 +74,10 @@ export const MyVideosView = () => {
 
   const { isLoading: isCurrentlyUploadedVideoIdsLoading, data: yppDAta } = useQuery(
     `ypp-ba-videos-${channelId}`,
-    () => axiosInstance.get<YppVideoDto[]>(`${YOUTUBE_BACKEND_URL}/channels/${channelId}/videos`),
+    () =>
+      axiosInstance
+        .get<YppVideoDto[]>(`${YOUTUBE_BACKEND_URL}/channels/${channelId}/videos`)
+        .catch(() => ConsoleLogger.warn('Failed to fetch YPP videos from channel')),
     {
       enabled: !!channelId && !!YOUTUBE_BACKEND_URL,
       retry: 1,
@@ -332,9 +337,12 @@ export const MyVideosView = () => {
 
       <LimitedWidthContainer>
         {headTags}
-        <Text as="h1" variant="h700" margin={{ top: 12, bottom: 12 }}>
-          My videos
-        </Text>
+        <TitleBox>
+          <Text as="h1" variant="h700">
+            My videos
+          </Text>
+          {currentChannel && <YppStatusPill />}
+        </TitleBox>
         {!smMatch && sortVisibleAndUploadButtonVisible && (
           <MobileButton size="large" icon={<SvgActionAddVideo />} fullWidth {...uploadVideoButtonProps}>
             Upload video

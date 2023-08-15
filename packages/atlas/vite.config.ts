@@ -22,11 +22,34 @@ export default defineConfig(({ mode }) => {
   return {
     root: './src',
     build: {
-      sourcemap: false,
       target: ['chrome87', 'edge88', 'es2020', 'firefox78', 'safari14'],
       emptyOutDir: true,
+      sourcemap: true,
       outDir: path.resolve(__dirname, 'dist'),
       rollupOptions: {
+        output: {
+          sourcemapIgnoreList: (relativeSourcePath) => {
+            // will ignore-list all files with node_modules in their paths
+            return relativeSourcePath.includes('node_modules')
+          },
+          manualChunks: {
+            'react-lottie-player': ['@lottiefiles/react-lottie-player'],
+            'crypto-js': ['crypto-js'],
+            sentry: ['@sentry/react'],
+            'polkadot-utils': [
+              '@polkadot/util-crypto',
+              '@polkadot/types',
+              '@polkadot/keyring',
+              '@polkadot/api',
+              '@polkadot/util',
+            ],
+            joystream: ['@joystream/metadata-protobuf', '@joystream/js/content', '@joystream/types'],
+            'video-js': ['video.js'],
+            animations: [path.resolve(__dirname, 'src/assets/animations')],
+            icons: [path.resolve(__dirname, 'src/assets/icons')],
+            illustrations: [path.resolve(__dirname, 'src/assets/illustrations')],
+          },
+        },
         input: {
           main: path.resolve(__dirname, 'src/index.html'),
           embedded: path.resolve(__dirname, 'src/embedded/index.html'),
@@ -53,11 +76,6 @@ export default defineConfig(({ mode }) => {
       EmbeddedFallbackPlugin,
       OptimizePlugin,
       ViteYaml(),
-      sentryVitePlugin({
-        authToken: env.VITE_SENTRY_AUTH_TOKEN,
-        org: 'jsgenesis',
-        project: 'atlas',
-      }),
       react({
         exclude: /\.stories\.[tj]sx?$/,
       }),
@@ -81,6 +99,11 @@ export default defineConfig(({ mode }) => {
         }),
         enforce: 'post',
       },
+      sentryVitePlugin({
+        authToken: env.VITE_SENTRY_AUTH_TOKEN,
+        org: 'jsgenesis',
+        project: 'atlas',
+      }),
     ],
     resolve: {
       alias: {

@@ -194,7 +194,7 @@ export const useCreateMember = () => {
 
         if (!joystream) {
           ConsoleLogger.error('No joystream instance')
-          return
+          throw new Error('No joystream instance')
         }
         const { lockedBalance } = await joystream.getAccountBalance(address)
         const amountOfTokens = hapiBnToTokenNumber(new BN(lockedBalance))

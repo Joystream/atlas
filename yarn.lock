@@ -4323,7 +4323,7 @@ __metadata:
     react-transition-group: ^4.4.5
     retry-axios: ^3.0.0
     rimraf: ^3.0.2
-    rollup-plugin-visualizer: ^5.8.3
+    rollup-plugin-visualizer: ^5.9.2
     scroll-lock: ^2.1.5
     storybook: 7.0.7
     style-dictionary: ^3.7.1
@@ -20026,11 +20026,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup-plugin-visualizer@npm:^5.8.3":
-  version: 5.8.3
-  resolution: "rollup-plugin-visualizer@npm:5.8.3"
+"rollup-plugin-visualizer@npm:^5.9.2":
+  version: 5.9.2
+  resolution: "rollup-plugin-visualizer@npm:5.9.2"
   dependencies:
     open: ^8.4.0
+    picomatch: ^2.3.1
     source-map: ^0.7.4
     yargs: ^17.5.1
   peerDependencies:
@@ -20040,7 +20041,7 @@ __metadata:
       optional: true
   bin:
     rollup-plugin-visualizer: dist/bin/cli.js
-  checksum: 0ed4b4b49be8c38fa4820190286daf6f94446a05190a6f1932f2718cb8d7e2a1afacc9f94bf75934087ec856a634a5c9355c078d77482a5796465d15deb988c9
+  checksum: ab2adf322e3b20bffc94a8dc804f46be8840a9fcbab4f872dcc2dec205cdd7752e4d2d90cfcf00783bfb5209c5a8bb4e591984e8b61bca41fd048fb7deb0ed4e
   languageName: node
   linkType: hard
 
