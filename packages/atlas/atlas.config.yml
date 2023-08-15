@@ -75,7 +75,7 @@ features:
           - Get rewarded for every new video synced to $VITE_APP_NAME. Min length of rewarded video is 5 minutes. Sync rewards capped to 3 per week.
         baseAmount: null
         baseUsdAmount: 1
-        customMultiplier: [1, 5, 10]
+        customMultiplier: [1, 2, 5]
       - title: Refer another YouTube creator
         shortDescription: Get JOY for every new creator who signs up to YPP program using your referral link. Referrals multiplier depends on the popularity tier of the channel signed up using referral link.
         stepsDescription: Earn when another YouTube creator signs up to the program by using your your referral link.

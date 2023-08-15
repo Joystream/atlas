@@ -28,7 +28,7 @@ export const YppRewardSection: FC = () => {
   const mdMatch = useMediaMatch('md')
   const tiers = atlasConfig.features.ypp.tiersDefinition?.tiers
   const rewards = atlasConfig.features.ypp.rewards
-  const [rewardMultiplier, setRewardMultiplier] = useState<number>(tiers ? tiers[tiers.length - 1].multiplier : 1)
+  const [activeTier, setActiveTier] = useState<number>((tiers && tiers.length - 1) || 0)
   const ref = useRef<HTMLDivElement>(null)
 
   if (!rewards?.length) {
@@ -75,12 +75,13 @@ export const YppRewardSection: FC = () => {
             {tiers.map((tier, idx, tierArray) => {
               const isFirstTier = idx === 0
               const isLastTier = idx === tierArray.length - 1
+              const isActiveTier = idx === activeTier
               if (isFirstTier) {
                 return (
                   <BenefitsCardButton
-                    variant={rewardMultiplier === tier.multiplier ? 'primary' : 'tertiary'}
+                    variant={isActiveTier ? 'primary' : 'tertiary'}
                     key={tier.minimumSubscribers}
-                    onClick={() => setRewardMultiplier(tier.multiplier)}
+                    onClick={() => setActiveTier(idx)}
                   >
                     &lt;
                     <NumberFormat
@@ -97,9 +98,9 @@ export const YppRewardSection: FC = () => {
               if (isLastTier) {
                 return (
                   <BenefitsCardButton
-                    variant={rewardMultiplier === tier.multiplier ? 'primary' : 'tertiary'}
+                    variant={isActiveTier ? 'primary' : 'tertiary'}
                     key={tier.minimumSubscribers}
-                    onClick={() => setRewardMultiplier(tier.multiplier)}
+                    onClick={() => setActiveTier(idx)}
                   >
                     &gt;
                     <NumberFormat
@@ -115,9 +116,9 @@ export const YppRewardSection: FC = () => {
               }
               return (
                 <BenefitsCardButton
-                  variant={rewardMultiplier === tier.multiplier ? 'primary' : 'tertiary'}
+                  variant={isActiveTier ? 'primary' : 'tertiary'}
                   key={tier.minimumSubscribers}
-                  onClick={() => setRewardMultiplier(tier.multiplier)}
+                  onClick={() => setActiveTier(idx)}
                 >
                   <NumberFormat
                     as="span"
@@ -143,14 +144,19 @@ export const YppRewardSection: FC = () => {
         <LayoutGrid data-aos="fade-up" data-aos-delay="200" data-aos-offset="80" data-aos-easing="atlas-easing">
           <BenefitsCardsContainerGridItem colStart={{ lg: 2 }} colSpan={{ base: 12, lg: 10 }}>
             {rewards.map((reward) => {
+              const customMultiplier = reward.customMultiplier && reward.customMultiplier[activeTier]
+              const currentMultiplier = tiers ? tiers[activeTier].multiplier : 1
               const rewardAmount = reward.baseAmount
                 ? typeof reward.baseAmount === 'number'
-                  ? { type: 'number' as const, amount: reward.baseAmount * rewardMultiplier }
+                  ? {
+                      type: 'number' as const,
+                      amount: reward.baseAmount * (customMultiplier || currentMultiplier),
+                    }
                   : { type: 'range' as const, min: reward.baseAmount.min, max: reward.baseAmount.max }
                 : null
               const rewardAmountUsd = reward.baseUsdAmount
                 ? typeof reward.baseUsdAmount === 'number'
-                  ? { type: 'number' as const, amount: reward.baseUsdAmount * rewardMultiplier }
+                  ? { type: 'number' as const, amount: reward.baseUsdAmount * (customMultiplier || currentMultiplier) }
                   : { type: 'range' as const, min: reward.baseUsdAmount.min, max: reward.baseUsdAmount.max }
                 : null
               return (
