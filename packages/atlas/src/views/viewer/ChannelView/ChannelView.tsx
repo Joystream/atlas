@@ -1,4 +1,5 @@
 import { generateChannelMetaTags } from '@joystream/atlas-meta-server/src/tags'
+import BN from 'bn.js'
 import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useParams, useSearchParams } from 'react-router-dom'
@@ -115,7 +116,15 @@ export const ChannelView: FC = () => {
         search: { channelId: id, query: searchQuery },
       }),
   })
-  const { accountBalance } = useSubscribeAccountBalance(channel?.rewardAccount)
+
+  const memoizedChannelStateBloatBond = useMemo(() => {
+    return new BN(channel?.channelStateBloatBond || 0)
+  }, [channel?.channelStateBloatBond])
+
+  const { accountBalance } = useSubscribeAccountBalance(channel?.rewardAccount, {
+    channelStateBloatBond: memoizedChannelStateBloatBond,
+  })
+
   const { channelNftCollectors } = useChannelNftCollectors({ channelId: id || '' })
 
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(id, channel?.title)
