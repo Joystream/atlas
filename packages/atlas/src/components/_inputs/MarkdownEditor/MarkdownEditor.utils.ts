@@ -1,12 +1,12 @@
 import { last } from 'lodash-es'
-import { type Descendant, Editor, Element, Node, NodeEntry, Point, Range, Transforms } from 'slate'
+import { BaseEditor, type Descendant, Editor, Element, Node, NodeEntry, Point, Range, Transforms } from 'slate'
 
 export const serialize = (nodes: Descendant[]): string => nodes.map((node) => Node.string(node)).join('\n')
 
 export const deserialize = (markdown: string): Descendant[] =>
   markdown.split('\n').map((text) => ({ type: 'paragraph', children: [{ text }] }))
 
-export const withShortcuts = (editor: Editor): Editor => {
+export const withShortcuts = <E extends BaseEditor>(editor: E): E => {
   const { splitNodes } = editor
 
   editor.splitNodes = (options) => {

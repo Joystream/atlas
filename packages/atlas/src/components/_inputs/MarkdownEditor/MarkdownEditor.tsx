@@ -1,5 +1,6 @@
-import { memo, useCallback, useMemo, useReducer, useRef, useState } from 'react'
+import { KeyboardEventHandler, memo, useCallback, useMemo, useReducer, useRef, useState } from 'react'
 import { Descendant, createEditor } from 'slate'
+import { HistoryEditor, withHistory } from 'slate-history'
 import { Slate, withReact } from 'slate-react'
 
 import {
@@ -52,7 +53,7 @@ type EditorProps = {
   initSetEditorValue: (fn: () => (nodes: Descendant[]) => void) => void
 }
 const Editor = memo(({ initialValue, initSetEditorValue: setUpdateValue, onChange }: EditorProps) => {
-  const editor = useMemo(() => withReact(withShortcuts(createEditor())), []) // TODO withHistory
+  const editor = useMemo(() => withReact(withShortcuts(withHistory(createEditor()))), [])
 
   const [, rerender] = useReducer((r) => r + 1, 0)
 
@@ -62,6 +63,18 @@ const Editor = memo(({ initialValue, initSetEditorValue: setUpdateValue, onChang
       rerender()
     })
   })
+
+  const handleKeyDown: KeyboardEventHandler = useCallback(
+    (event) => {
+      if (event.ctrlKey && event.shiftKey) {
+        switch (event.key) {
+          case 'z':
+            return HistoryEditor.redo(editor)
+        }
+      }
+    },
+    [editor]
+  )
 
   return (
     <Slate editor={editor} initialValue={initialValue} onChange={onChange}>
@@ -103,7 +116,7 @@ const Editor = memo(({ initialValue, initSetEditorValue: setUpdateValue, onChang
         </FormatButton>
       </ToolBar>
 
-      <EditorAreaContainer>
+      <EditorAreaContainer onKeyDown={handleKeyDown}>
         <StyledEditable inputSize="large" />
         <CustomBorder disabled={false} />
       </EditorAreaContainer>

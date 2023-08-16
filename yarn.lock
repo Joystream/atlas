@@ -4307,6 +4307,7 @@ __metadata:
     rollup-plugin-visualizer: ^5.8.3
     scroll-lock: ^2.1.5
     slate: ^0.94.1
+    slate-history: ^0.93.0
     slate-react: ^0.98.1
     storybook: 7.0.7
     style-dictionary: ^3.7.1
@@ -20325,6 +20326,17 @@ __metadata:
   version: 3.0.0
   resolution: "slash@npm:3.0.0"
   checksum: 94a93fff615f25a999ad4b83c9d5e257a7280c90a32a7cb8b4a87996e4babf322e469c42b7f649fd5796edd8687652f3fb452a86dc97a816f01113183393f11c
+  languageName: node
+  linkType: hard
+
+"slate-history@npm:^0.93.0":
+  version: 0.93.0
+  resolution: "slate-history@npm:0.93.0"
+  dependencies:
+    is-plain-object: ^5.0.0
+  peerDependencies:
+    slate: ">=0.65.3"
+  checksum: 4ce44a9ecbccbfd3b9c023e5bc20c6e151f1064fb2a6dd42cfec72bd6f8fd29e60f533e74130bb69f4706e86802929eb6fd89eb271dda34924ab46965c36a3e2
   languageName: node
   linkType: hard
 
