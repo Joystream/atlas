@@ -5,6 +5,34 @@ export const serialize = (nodes: Descendant[]): string => nodes.map((node) => No
 export const deserialize = (markdown: string): Descendant[] =>
   markdown.split('\n').map((text) => ({ type: 'paragraph', children: [{ text }] }))
 
+export const withShortcuts = (editor: Editor): Editor => {
+  const { splitNodes } = editor
+
+  editor.splitNodes = (options) => {
+    const prevRange = editor.selection
+
+    splitNodes(options)
+
+    const prevText = prevRange && Editor.string(editor, prevRange.anchor.path)
+    const [, prefix, content] = prevText?.match(/^((?:-|\*|\+|>|[1-9]\d*\.) )(.*)/) ?? []
+
+    if (!prefix) return
+
+    if (!content) {
+      return Transforms.delete(editor, { distance: 2, unit: 'block', reverse: true })
+    }
+
+    const listNumber = prefix.match(/^[1-9]\d*/)?.map(Number)?.[0]
+    if (listNumber) {
+      return Transforms.insertText(editor, `${listNumber + 1}. `)
+    }
+
+    Transforms.insertText(editor, prefix)
+  }
+
+  return editor
+}
+
 export const toggleFormat = {
   heading: toggleBlockFormat('heading-3'),
   strong: toggleInlineFormat('strong'),
@@ -48,14 +76,14 @@ function toggleBlockFormat(format: BlockFormat) {
     if (!editor.selection) return
 
     const nodes = Array.from(Editor.nodes(editor, { at: editor.selection, match: (node) => Element.isElement(node) }))
-    const re = reByBlockFormat(format)
+    const pattern = patternByBlockFormat(format)
 
-    const isActive = nodes.every(([node]) => re.test(Node.string(node)))
+    const isActive = nodes.every(([node]) => pattern.test(Node.string(node)))
 
     if (isActive) {
       return nodes.forEach(([node, path]) => {
         const start = Editor.start(editor, path)
-        const tag = Node.string(node).match(re)?.[0] ?? ''
+        const tag = Node.string(node).match(pattern)?.[0] ?? ''
         Transforms.delete(editor, { at: start, distance: tag.length })
       })
     }
@@ -147,7 +175,7 @@ const INLINE_TAGS = {
   inlineCode: '`',
 }
 
-const reByBlockFormat = (format: BlockFormat): RegExp => {
+const patternByBlockFormat = (format: BlockFormat): RegExp => {
   switch (format) {
     case 'listUnordered':
       return /^- /

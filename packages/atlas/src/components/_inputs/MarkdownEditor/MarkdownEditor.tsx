@@ -13,7 +13,7 @@ import {
 } from '@/assets/icons'
 
 import { CustomBorder, EditorAreaContainer, StyledEditable, ToolBar } from './MarkdownEditor.styles'
-import { deserialize, serialize, toggleFormat } from './MarkdownEditor.utils'
+import { deserialize, serialize, toggleFormat, withShortcuts } from './MarkdownEditor.utils'
 import { FormatButton } from './components/FormatButtons'
 
 export type MarkdownEditorProps = {
@@ -45,7 +45,7 @@ type EditorProps = {
   onChange: (value: Descendant[]) => void
 }
 const Editor = memo(({ initialValue, onChange }: EditorProps) => {
-  const editor = useMemo(() => withReact(createEditor()), []) // TODO withHistory
+  const editor = useMemo(() => withReact(withShortcuts(createEditor())), []) // TODO withHistory
 
   return (
     <Slate editor={editor} initialValue={initialValue} onChange={onChange}>
