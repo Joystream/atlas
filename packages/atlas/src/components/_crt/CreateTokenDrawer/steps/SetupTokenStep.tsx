@@ -1,3 +1,4 @@
+import { useLayoutEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { SvgActionLock, SvgActionUnlocked } from '@/assets/icons'
@@ -11,6 +12,8 @@ import { RatioSlider } from '@/components/_inputs/Slider'
 import { useMountEffect } from '@/hooks/useMountEffect'
 
 import { CommonStepProps } from './types'
+
+import { CrtBasicInfoWidget } from '../../CrtBasicInfoWidget/CrtBasicInfoWidget'
 
 const accessOptions = [
   {
@@ -31,15 +34,18 @@ type SetupTokenStepProps = {
   onSubmit: (form: SetupStepForm) => void
 } & CommonStepProps
 
-export const SetupTokenStep = ({ setPrimaryButtonProps, onSubmit, form }: SetupTokenStepProps) => {
+export const SetupTokenStep = ({ setPrimaryButtonProps, onSubmit, form, setPreview }: SetupTokenStepProps) => {
   const {
     register,
     control,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<SetupStepForm>({
     defaultValues: form,
   })
+
+  const watchedForm = watch()
 
   useMountEffect(() => {
     setPrimaryButtonProps({
@@ -47,6 +53,16 @@ export const SetupTokenStep = ({ setPrimaryButtonProps, onSubmit, form }: SetupT
       onClick: () => handleSubmit(onSubmit)(),
     })
   })
+
+  useLayoutEffect(() => {
+    setPreview(
+      <CrtBasicInfoWidget
+        name={watchedForm.name}
+        creatorReward={watchedForm.creatorReward}
+        revenueShare={watchedForm.revenueShare}
+      />
+    )
+  }, [setPreview, watchedForm.creatorReward, watchedForm.name, watchedForm.revenueShare])
 
   return (
     <CrtFormWrapper title="Set up your token" subtitle="Enter basic token information and settings." learnMoreLink="">

@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import { ReactNode, useMemo, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
@@ -41,6 +41,7 @@ export const CreateTokenDrawer = ({ show, onClose }: CreateTokenDrawerProps) => 
     useState<NonNullable<CrtDrawerProps['actionBar']>['primaryButton']>()
   const nodeRef = useRef<HTMLDivElement>(null)
   const [isGoingBack, setIsGoingBack] = useState(false)
+  const [preview, setPreview] = useState<ReactNode>()
   const [openDialog, closeDialog] = useConfirmationModal({
     type: 'warning',
     title: 'Discard changes?',
@@ -101,6 +102,7 @@ export const CreateTokenDrawer = ({ show, onClose }: CreateTokenDrawerProps) => 
         primaryButton: primaryButtonProps ?? {},
         secondaryButton,
       }}
+      preview={preview}
     >
       <SwitchTransition mode="out-in">
         <CSSTransition
@@ -122,6 +124,7 @@ export const CreateTokenDrawer = ({ show, onClose }: CreateTokenDrawerProps) => 
                   setActiveStep(CREATE_TOKEN_STEPS.issuance)
                 }}
                 setPrimaryButtonProps={setPrimaryButtonProps}
+                setPreview={setPreview}
               />
             )}
             {activeStep === CREATE_TOKEN_STEPS.issuance && (
@@ -132,10 +135,15 @@ export const CreateTokenDrawer = ({ show, onClose }: CreateTokenDrawerProps) => 
                   setActiveStep(CREATE_TOKEN_STEPS.summary)
                 }}
                 setPrimaryButtonProps={setPrimaryButtonProps}
+                setPreview={setPreview}
               />
             )}
             {activeStep === CREATE_TOKEN_STEPS.summary && (
-              <TokenSummaryStep form={formData.current} setPrimaryButtonProps={setPrimaryButtonProps} />
+              <TokenSummaryStep
+                form={formData.current}
+                setPrimaryButtonProps={setPrimaryButtonProps}
+                setPreview={setPreview}
+              />
             )}
           </div>
         </CSSTransition>

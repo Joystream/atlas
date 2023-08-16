@@ -111,3 +111,5 @@ export const createTokenIssuanceSchema = (tokenName: string) =>
         message: 'Select vesting for your token.',
       }
     )
+
+export const generateChartData = (cliffTime: number, vestingTime: number, firstPayout: number) => {}
