@@ -18,3 +18,11 @@ export const ToolBar = styled.div`
   padding: ${sizes(2)};
   gap: ${sizes(2)};
 `
+
+export const StyledFormatButton = styled.button`
+  background: none;
+  border: none;
+  color: ${cVar('colorCoreNeutral50')};
+  height: ${sizes(8)};
+  width: ${sizes(8)};
+`

@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo, useReducer, useRef, useState } from 'react'
+import { memo, useCallback, useMemo, useRef } from 'react'
 import { Descendant, createEditor } from 'slate'
 import { Slate, withReact } from 'slate-react'
 
@@ -11,11 +11,10 @@ import {
   SvgStrikethrough,
   SvgUnorderedList,
 } from '@/assets/icons'
-import { useMountEffect } from '@/hooks/useMountEffect'
 
 import { CustomBorder, EditorAreaContainer, StyledEditable, ToolBar } from './MarkdownEditor.styles'
-import { deserialize, renderElement, serialize, withMarkdown } from './MarkdownEditor.utils'
-import { BlockFormatButton, InlineFormatButton } from './components/FormatButtons'
+import { deserialize, serialize, toggleFormat } from './MarkdownEditor.utils'
+import { FormatButton } from './components/FormatButtons'
 
 export type MarkdownEditorProps = {
   value?: string
@@ -25,8 +24,6 @@ export type MarkdownEditorProps = {
 export const MarkdownEditor = ({ value = '', onChange }: MarkdownEditorProps) => {
   const internalValue = useRef(value)
   const initialValue = useMemo(() => deserialize(internalValue.current), [])
-
-  const [setEditorValue, initSetEditorValue] = useState<(nodes: Descendant[]) => void>()
 
   const handleChange = useCallback(
     (nodes: Descendant[]) => {
@@ -38,56 +35,46 @@ export const MarkdownEditor = ({ value = '', onChange }: MarkdownEditorProps) =>
 
   if (value !== internalValue.current) {
     internalValue.current = value
-    setEditorValue?.(deserialize(internalValue.current))
   }
 
-  return <Editor initialValue={initialValue} onChange={handleChange} initSetEditorValue={initSetEditorValue} />
+  return <Editor initialValue={initialValue} onChange={handleChange} />
 }
 
 type EditorProps = {
   initialValue: Descendant[]
   onChange: (value: Descendant[]) => void
-  initSetEditorValue: (fn: () => (nodes: Descendant[]) => void) => void
 }
-const Editor = memo(({ initialValue, initSetEditorValue: setUpdateValue, onChange }: EditorProps) => {
-  const editor = useMemo(() => withMarkdown(withReact(createEditor())), []) // TODO withHistory
-
-  const [, rerender] = useReducer((r) => r + 1, 0)
-
-  useMountEffect(() => {
-    setUpdateValue(() => (nodes) => {
-      editor.children = nodes
-      rerender()
-    })
-  })
+const Editor = memo(({ initialValue, onChange }: EditorProps) => {
+  const editor = useMemo(() => withReact(createEditor()), []) // TODO withHistory
 
   return (
     <Slate editor={editor} initialValue={initialValue} onChange={onChange}>
       <ToolBar>
-        <BlockFormatButton format="heading-3">
+        <FormatButton action={toggleFormat.heading}>
           <SvgHeading />
-        </BlockFormatButton>
-        <InlineFormatButton format="strong">
+        </FormatButton>
+        <FormatButton action={toggleFormat.strong}>
           <SvgBold />
-        </InlineFormatButton>
-        <InlineFormatButton format="emphasis">
+        </FormatButton>
+        <FormatButton action={toggleFormat.emphasis}>
           <SvgItalic />
-        </InlineFormatButton>
-        <InlineFormatButton format="delete">
+        </FormatButton>
+        <FormatButton action={toggleFormat.delete}>
           <SvgStrikethrough />
-        </InlineFormatButton>
-        <BlockFormatButton format="listOrdered">
+        </FormatButton>
+        <FormatButton action={toggleFormat.listOrdered}>
           <SvgOrderedList />
-        </BlockFormatButton>
-        <BlockFormatButton format="listUnordered">
+        </FormatButton>
+        <FormatButton action={toggleFormat.listUnordered}>
           <SvgUnorderedList />
-        </BlockFormatButton>
-        <BlockFormatButton format="blockquote">
+        </FormatButton>
+        <FormatButton action={toggleFormat.blockquote}>
           <SvgBlockquote />
-        </BlockFormatButton>
+        </FormatButton>
       </ToolBar>
+
       <EditorAreaContainer>
-        <StyledEditable inputSize="large" renderElement={renderElement} />
+        <StyledEditable inputSize="large" />
         <CustomBorder disabled={false} />
       </EditorAreaContainer>
     </Slate>
