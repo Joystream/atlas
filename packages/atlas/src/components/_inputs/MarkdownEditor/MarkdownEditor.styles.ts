@@ -4,11 +4,10 @@ import { Editable } from 'slate-react'
 import { cVar, sizes } from '@/styles'
 
 import { TextAreaStyles } from '../TextArea/TextArea.styles'
-import { InputSize } from '../inputs.utils'
 
 export { CustomBorder, TextAreaContainer as EditorAreaContainer } from '../TextArea/TextArea.styles'
 
-export const StyledEditable = styled(Editable)<{ inputSize: InputSize; error?: boolean }>`
+export const StyledEditable = styled(Editable)<{ error?: boolean }>`
   ${TextAreaStyles}
 `
 

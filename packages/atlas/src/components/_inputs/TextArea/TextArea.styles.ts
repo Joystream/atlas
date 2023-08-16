@@ -42,7 +42,7 @@ export const CustomBorder = styled.div<{ disabled?: boolean }>`
   transition-property: transform, background-color, opacity;
 `
 
-export const TextAreaStyles = ({ inputSize, error }: { inputSize: InputSize; error?: boolean }) => css`
+export const TextAreaStyles = ({ inputSize = 'large', error }: { inputSize?: InputSize; error?: boolean }) => css`
   width: 100%;
   resize: vertical;
   display: block;

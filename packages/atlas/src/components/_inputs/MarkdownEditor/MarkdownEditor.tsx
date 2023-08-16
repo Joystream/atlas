@@ -21,11 +21,12 @@ import { deserialize, serialize, toggleFormat, withShortcuts } from './MarkdownE
 import { FormatButton } from './components/FormatButtons'
 
 export type MarkdownEditorProps = {
+  placeholder?: string
   value?: string
   onChange?: (value: string) => void
 }
 
-export const MarkdownEditor = ({ value = '', onChange }: MarkdownEditorProps) => {
+export const MarkdownEditor = ({ value = '', onChange, placeholder }: MarkdownEditorProps) => {
   const internalValue = useRef(value)
   const initialValue = useMemo(() => deserialize(internalValue.current), [])
 
@@ -44,15 +45,23 @@ export const MarkdownEditor = ({ value = '', onChange }: MarkdownEditorProps) =>
     setEditorValue?.(deserialize(internalValue.current))
   }
 
-  return <Editor initialValue={initialValue} onChange={handleChange} initSetEditorValue={initSetEditorValue} />
+  return (
+    <Editor
+      initialValue={initialValue}
+      placeholder={placeholder}
+      onChange={handleChange}
+      initSetEditorValue={initSetEditorValue}
+    />
+  )
 }
 
 type EditorProps = {
   initialValue: Descendant[]
+  placeholder?: string
   onChange: (value: Descendant[]) => void
   initSetEditorValue: (fn: () => (nodes: Descendant[]) => void) => void
 }
-const Editor = memo(({ initialValue, initSetEditorValue: setUpdateValue, onChange }: EditorProps) => {
+const Editor = memo(({ initialValue, placeholder, initSetEditorValue: setUpdateValue, onChange }: EditorProps) => {
   const editor = useMemo(() => withReact(withShortcuts(withHistory(createEditor()))), [])
 
   const [, rerender] = useReducer((r) => r + 1, 0)
@@ -116,8 +125,8 @@ const Editor = memo(({ initialValue, initSetEditorValue: setUpdateValue, onChang
         </FormatButton>
       </ToolBar>
 
-      <EditorAreaContainer onKeyDown={handleKeyDown}>
-        <StyledEditable inputSize="large" />
+      <EditorAreaContainer>
+        <StyledEditable placeholder={placeholder} onKeyDown={handleKeyDown} />
         <CustomBorder disabled={false} />
       </EditorAreaContainer>
     </Slate>

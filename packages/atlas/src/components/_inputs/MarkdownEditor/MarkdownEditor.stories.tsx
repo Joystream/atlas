@@ -8,6 +8,7 @@ export default {
 
   args: {
     value: '',
+    placeholder: 'Placeholder',
   },
 } as Meta
 
