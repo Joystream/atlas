@@ -1,4 +1,4 @@
-import { FC, Fragment } from 'react'
+import { FC } from 'react'
 
 import { SPECIAL_CHARACTERS } from '@/config/regex'
 
@@ -14,7 +14,7 @@ export const ResultTitle: FC<ResultTitleProps> = ({ title, query }) => {
     return null
   }
   if (!query) {
-    return <>{title}</>
+    return <span>{title}</span>
   }
 
   const filteredQuery = query.replace(SPECIAL_CHARACTERS, '\\$&').replace(/\s+/g, '|')
@@ -23,7 +23,7 @@ export const ResultTitle: FC<ResultTitleProps> = ({ title, query }) => {
   const match = title.match(regex)
 
   if (!match || !match.length) {
-    return <>{title}</>
+    return <span>{title}</span>
   }
 
   return (
@@ -32,7 +32,7 @@ export const ResultTitle: FC<ResultTitleProps> = ({ title, query }) => {
         if (match.includes(word)) {
           return <HighlightedWord key={`${word}-${idx}`}>{word} </HighlightedWord>
         }
-        return <Fragment key={`${word}-${idx}`}>{word} </Fragment>
+        return <span key={`${word}-${idx}`}>{word} </span>
       })}
     </>
   )
