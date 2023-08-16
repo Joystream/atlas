@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo, useRef } from 'react'
+import { memo, useCallback, useMemo, useReducer, useRef, useState } from 'react'
 import { Descendant, createEditor } from 'slate'
 import { Slate, withReact } from 'slate-react'
 
@@ -11,6 +11,7 @@ import {
   SvgStrikethrough,
   SvgUnorderedList,
 } from '@/assets/icons'
+import { useMountEffect } from '@/hooks/useMountEffect'
 
 import { CustomBorder, EditorAreaContainer, StyledEditable, ToolBar } from './MarkdownEditor.styles'
 import { deserialize, serialize, toggleFormat, withShortcuts } from './MarkdownEditor.utils'
@@ -25,6 +26,8 @@ export const MarkdownEditor = ({ value = '', onChange }: MarkdownEditorProps) =>
   const internalValue = useRef(value)
   const initialValue = useMemo(() => deserialize(internalValue.current), [])
 
+  const [setEditorValue, initSetEditorValue] = useState<(nodes: Descendant[]) => void>()
+
   const handleChange = useCallback(
     (nodes: Descendant[]) => {
       internalValue.current = serialize(nodes)
@@ -35,17 +38,28 @@ export const MarkdownEditor = ({ value = '', onChange }: MarkdownEditorProps) =>
 
   if (value !== internalValue.current) {
     internalValue.current = value
+    setEditorValue?.(deserialize(internalValue.current))
   }
 
-  return <Editor initialValue={initialValue} onChange={handleChange} />
+  return <Editor initialValue={initialValue} onChange={handleChange} initSetEditorValue={initSetEditorValue} />
 }
 
 type EditorProps = {
   initialValue: Descendant[]
   onChange: (value: Descendant[]) => void
+  initSetEditorValue: (fn: () => (nodes: Descendant[]) => void) => void
 }
-const Editor = memo(({ initialValue, onChange }: EditorProps) => {
+const Editor = memo(({ initialValue, initSetEditorValue: setUpdateValue, onChange }: EditorProps) => {
   const editor = useMemo(() => withReact(withShortcuts(createEditor())), []) // TODO withHistory
+
+  const [, rerender] = useReducer((r) => r + 1, 0)
+
+  useMountEffect(() => {
+    setUpdateValue(() => (nodes) => {
+      editor.children = nodes
+      rerender()
+    })
+  })
 
   return (
     <Slate editor={editor} initialValue={initialValue} onChange={onChange}>

@@ -1,3 +1,4 @@
+import { last } from 'lodash-es'
 import { type Descendant, Editor, Element, Node, NodeEntry, Point, Range, Transforms } from 'slate'
 
 export const serialize = (nodes: Descendant[]): string => nodes.map((node) => Node.string(node)).join('\n')
@@ -43,6 +44,10 @@ export const toggleFormat = {
   blockquote: toggleBlockFormat('blockquote'),
 }
 
+//
+// Inline format
+//
+
 type InlineFormat = 'emphasis' | 'strong' | 'delete' | 'inlineCode'
 function toggleInlineFormat(format: InlineFormat) {
   return (editor: Editor) => {
@@ -50,25 +55,107 @@ function toggleInlineFormat(format: InlineFormat) {
     const len = tag.length
 
     const initialSelection = editor.selection
-    const range =
-      initialSelection &&
-      (Range.isExpanded(initialSelection) ? editor.selection : currentWord(editor, initialSelection))
+    const expandedSelection = initialSelection && Range.isExpanded(initialSelection) && initialSelection
+    const range = expandedSelection || (initialSelection && currentWord(editor, initialSelection))
+    const ranges = (expandedSelection &&
+      Array.from(Editor.nodes(editor, { at: expandedSelection, match: (node) => Element.isElement(node) })).flatMap(
+        ([, path]) => {
+          const nodeRange = { anchor: Editor.start(editor, path), focus: Editor.end(editor, path) }
+          return Range.intersection(nodeRange, expandedSelection) ?? []
+        }
+      )) || [range]
 
-    if (unWrapRange(editor, tag, range)) return
+    const wasLastLineActive = last(ranges.map(formatInlineRange(editor, tag)))
+    if (!range || wasLastLineActive) return
+
+    if (expandedSelection) {
+      return Transforms.move(editor, { distance: len, edge: 'start', unit: 'offset', reverse: true })
+    }
+
+    const { path, offset } = initialSelection.anchor
+    const newPoint = { path, offset: offset + len }
+    return Transforms.select(editor, { anchor: newPoint, focus: newPoint })
+  }
+}
+
+const INLINE_TAGS = {
+  emphasis: '_',
+  strong: '**',
+  delete: '~~',
+  inlineCode: '`',
+}
+
+const currentWord = (editor: Editor, selection: Range): Range => {
+  const wordPattern = /[\dA-Za-z]/
+  const charAfter = textFromPoint(editor, selection.anchor, 1)
+  if (charAfter && wordPattern.test(charAfter)) {
+    const after = Editor.after(editor, selection, { unit: 'word' })
+    if (!after) return selection // this shouldn't happen
+    const before = Editor.before(editor, after, { unit: 'word' })
+    if (!before) return selection // this shouldn't happen
+    return { anchor: before, focus: after }
+  }
+
+  const charBefore = textFromPoint(editor, selection.anchor, -1)
+  if (charBefore && wordPattern.test(charBefore)) {
+    const before = Editor.before(editor, selection.anchor, { unit: 'word' })
+    if (!before) return selection // this shouldn't happen
+    const after = Editor.after(editor, before, { unit: 'word' })
+    if (!after) return selection // this shouldn't happen
+    return { anchor: before, focus: after }
+  }
+
+  return selection
+}
+
+const textFromPoint = (editor: Editor, anchor: Point, distance: number): string | undefined => {
+  const fn = distance > 0 ? Editor.after : Editor.before
+  const focus = fn(editor, anchor, { distance: Math.abs(distance) })
+  const range: Range | undefined = focus && { anchor, focus }
+  return range && Editor.string(editor, range)
+}
+
+const formatInlineRange =
+  (editor: Editor, tag: string) =>
+  (range?: Range | null): boolean => {
+    if (unWrapRange(editor, tag, range)) return true
 
     const [start, end] = range ? Range.edges(range) : []
     Transforms.insertText(editor, tag, { at: end })
     Transforms.insertText(editor, tag, { at: start })
-
-    if (!range || (!Range.isExpanded(initialSelection) && Range.isExpanded(range))) return
-
-    Transforms.move(editor, { distance: len, edge: 'end', unit: 'offset', reverse: true })
-
-    if (!Range.isExpanded(initialSelection)) {
-      Transforms.move(editor, { distance: len, edge: 'end', unit: 'offset', reverse: true })
-    }
+    return false
   }
+
+const unWrapRange = (editor: Editor, tag: string, range = editor.selection) => {
+  if (!range) return false
+
+  const len = tag.length
+
+  const [innerStart, innerEnd] = Range.edges(range)
+  const beforeStart = Editor.before(editor, innerStart, { distance: len }) ?? innerStart
+  const beforeEnd = Editor.after(editor, innerEnd, { distance: len }) ?? innerEnd
+  const path = innerStart.path
+  const nodeRange: Range = { anchor: Editor.start(editor, path), focus: Editor.end(editor, path) }
+  const outerRange = Range.intersection(nodeRange, { anchor: beforeStart, focus: beforeEnd })
+
+  if (!outerRange) return false
+
+  const text = Editor.string(editor, outerRange)
+  const offset1 = text.indexOf(tag)
+  const offset2 = offset1 < 0 ? -1 : text.indexOf(tag, offset1 + 1)
+  if (offset2 < 0) return false
+
+  const [start, end] = Range.edges(outerRange)
+  const point1 = Editor.after(editor, start, { distance: offset1 }) ?? start
+  const point2 = Editor.after(editor, start, { distance: offset2 }) ?? end
+  Transforms.delete(editor, { at: point2, distance: len })
+  Transforms.delete(editor, { at: point1, distance: len })
+  return true
 }
+
+//
+// Block format
+//
 
 type BlockFormat = `heading-${1 | 2 | 3 | 4 | 5 | 6}` | 'listOrdered' | 'listUnordered' | 'blockquote'
 function toggleBlockFormat(format: BlockFormat) {
@@ -119,61 +206,6 @@ const clearBlockFormats =
       Transforms.delete(editor, { at: start, distance: tag.length })
     }
   }
-
-const unWrapRange = (editor: Editor, tag: string, range = editor.selection) => {
-  if (!range) return false
-
-  const len = tag.length
-
-  const [start, end] = Range.edges(range)
-  const beforeRange: Range = { anchor: start, focus: { path: start.path, offset: start.offset - len } }
-  const beforeText = Editor.string(editor, beforeRange)
-  if (beforeText !== tag) return false
-
-  const afterRange: Range = end && { anchor: end, focus: { path: end.path, offset: end.offset + len } }
-  const afterText = Editor.string(editor, afterRange)
-  if (afterText !== tag) return false
-
-  Transforms.delete(editor, { at: afterRange })
-  Transforms.delete(editor, { at: beforeRange })
-  return true
-}
-
-const currentWord = (editor: Editor, selection: Range): Range => {
-  const charAfter = textFromPoint(editor, selection.anchor, 1)
-  if (!charAfter) return selection
-
-  if (/[A-Za-z]/.test(charAfter)) {
-    const after = Editor.after(editor, selection, { unit: 'word' })
-    if (!after) return selection // this shouldn't happen
-    const before = Editor.before(editor, after, { unit: 'word' })
-    if (!before) return selection // this shouldn't happen
-    return { anchor: before, focus: after }
-  }
-
-  const charBefore = textFromPoint(editor, selection.anchor, -1)
-  if (!charBefore || !/[A-Za-z]/.test(charBefore)) return selection
-
-  const before = Editor.before(editor, selection.anchor, { unit: 'word' })
-  if (!before) return selection // this shouldn't happen
-  const after = Editor.after(editor, before, { unit: 'word' })
-  if (!after) return selection // this shouldn't happen
-  return { anchor: before, focus: after }
-}
-
-const textFromPoint = (editor: Editor, anchor: Point, distance: number): string | undefined => {
-  const fn = distance > 0 ? Editor.after : Editor.before
-  const focus = fn(editor, anchor, { distance: Math.abs(distance) })
-  const range: Range | undefined = focus && { anchor, focus }
-  return range && Editor.string(editor, range)
-}
-
-const INLINE_TAGS = {
-  emphasis: '_',
-  strong: '**',
-  delete: '~~',
-  inlineCode: '`',
-}
 
 const patternByBlockFormat = (format: BlockFormat): RegExp => {
   switch (format) {
