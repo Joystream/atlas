@@ -22,6 +22,7 @@ export const ToolBar = styled.div`
 export const StyledFormatButton = styled.button`
   background: none;
   border: none;
+  cursor: pointer;
   color: ${cVar('colorCoreNeutral50')};
   height: ${sizes(8)};
   width: ${sizes(8)};

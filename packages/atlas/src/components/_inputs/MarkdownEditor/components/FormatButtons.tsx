@@ -1,10 +1,10 @@
-import { FC, MouseEventHandler, PropsWithChildren } from 'react'
+import { ButtonHTMLAttributes, FC, MouseEventHandler } from 'react'
 import { Editor } from 'slate'
 import { useSlate } from 'slate-react'
 
 import { StyledFormatButton } from '../MarkdownEditor.styles'
 
-type FormatButtonProps = PropsWithChildren<{ action: (editor: Editor) => void }>
+type FormatButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & { action: (editor: Editor) => void }
 
 export const FormatButton: FC<FormatButtonProps> = ({ action, ...props }) => {
   const editor = useSlate()

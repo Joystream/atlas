@@ -3,6 +3,8 @@ import { Descendant, createEditor } from 'slate'
 import { Slate, withReact } from 'slate-react'
 
 import {
+  SvgActionLinkUrl,
+  SvgActionSeparator,
   SvgBlockquote,
   SvgBold,
   SvgHeading,
@@ -64,26 +66,40 @@ const Editor = memo(({ initialValue, initSetEditorValue: setUpdateValue, onChang
   return (
     <Slate editor={editor} initialValue={initialValue} onChange={onChange}>
       <ToolBar>
-        <FormatButton action={toggleFormat.heading}>
+        <FormatButton title="Heading" action={toggleFormat.heading}>
           <SvgHeading />
         </FormatButton>
-        <FormatButton action={toggleFormat.strong}>
+
+        <FormatButton title="Bold" action={toggleFormat.strong}>
           <SvgBold />
         </FormatButton>
-        <FormatButton action={toggleFormat.emphasis}>
+
+        <FormatButton title="Italic" action={toggleFormat.emphasis}>
           <SvgItalic />
         </FormatButton>
-        <FormatButton action={toggleFormat.delete}>
+
+        <FormatButton title="Striked" action={toggleFormat.delete}>
           <SvgStrikethrough />
         </FormatButton>
-        <FormatButton action={toggleFormat.listOrdered}>
+
+        <FormatButton title="Link" action={toggleFormat.link}>
+          <SvgActionLinkUrl />
+        </FormatButton>
+
+        <FormatButton title="Numbered list" action={toggleFormat.listOrdered}>
           <SvgOrderedList />
         </FormatButton>
-        <FormatButton action={toggleFormat.listUnordered}>
+
+        <FormatButton title="Bullet list" action={toggleFormat.listUnordered}>
           <SvgUnorderedList />
         </FormatButton>
-        <FormatButton action={toggleFormat.blockquote}>
+
+        <FormatButton title="Quote" action={toggleFormat.blockquote}>
           <SvgBlockquote />
+        </FormatButton>
+
+        <FormatButton title="Separator" action={toggleFormat.thematicBreak}>
+          <SvgActionSeparator />
         </FormatButton>
       </ToolBar>
 
