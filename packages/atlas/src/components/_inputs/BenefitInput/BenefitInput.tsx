@@ -7,7 +7,7 @@ import { Input } from '@/components/_inputs/Input'
 import { TextArea } from '@/components/_inputs/TextArea'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
-type BenefitInputProps = {
+export type BenefitInputProps = {
   position: 'last' | 'first' | 'middle'
   onMoveUp: () => void
   onMoveDown: () => void
