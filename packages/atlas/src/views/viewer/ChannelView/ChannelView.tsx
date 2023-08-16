@@ -221,7 +221,7 @@ export const ChannelView: FC = () => {
   const mappedChannelNftCollectors =
     channelNftCollectors?.map(({ amount, member }) => ({
       nftsAmount: amount,
-      url: member?.metadata?.avatar?.__typename === 'AvatarUri' ? member?.metadata.avatar?.avatarUri : '',
+      urls: member?.metadata?.avatar?.__typename === 'AvatarUri' ? [member?.metadata.avatar?.avatarUri] : [],
       tooltipText: member?.handle,
       onClick: () => navigate(absoluteRoutes.viewer.member(member?.handle)),
       memberUrl: absoluteRoutes.viewer.member(member?.handle),
