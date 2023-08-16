@@ -303,8 +303,8 @@ export const YppCardsSections: FC = () => {
                 data-aos-easing="atlas-easing"
               >
                 <ContentCard
-                  pill={{ label: 'Coming early 2023' }}
-                  title="New ways to engage and get support from your audience"
+                  pill={{ label: 'Coming late 2023' }}
+                  title="Mint your own channel token"
                   subtitle="Creator tokens"
                   body="Turn viewers into evangelists by letting them hold a share in your channel when they buy your own channel token."
                 />
