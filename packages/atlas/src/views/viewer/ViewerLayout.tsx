@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
-import { FC, lazy, useEffect, useRef } from 'react'
+import { FC, Suspense, lazy, useEffect, useRef } from 'react'
 import { Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
