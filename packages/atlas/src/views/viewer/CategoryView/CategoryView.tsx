@@ -27,8 +27,14 @@ export const CategoryView = () => {
   const videoHeroVideos = useVideoHeroVideos(categoriesFeaturedVideos)
 
   useEffect(() => {
-    if (id) {
-      trackPageView(`Category ${currentCategory?.name}`)
+    //category name doesn't match page title without timeout
+    const timeout = setTimeout(() => {
+      if (id) {
+        trackPageView('Category', { category: currentCategory?.name })
+      }
+    }, 1000)
+    return () => {
+      clearTimeout(timeout)
     }
   }, [currentCategory?.name, id, trackPageView])
 

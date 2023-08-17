@@ -45,7 +45,7 @@ const stepToPageName: Partial<Record<SignUpSteps, string>> = {
   [SignUpSteps.SignUpSeed]: 'Signup modal - seed',
   [SignUpSteps.SignUpPassword]: 'Signup modal - password',
   [SignUpSteps.SignUpEmail]: 'Signup modal - email',
-  [SignUpSteps.Creating]: 'Signup modal - creating',
+  [SignUpSteps.Creating]: 'Signup modal - creating account',
   [SignUpSteps.Success]: 'Signup modal - success',
 }
 
@@ -308,7 +308,8 @@ export const SignUpModal = () => {
   }, [isSuccess, signUpFormData.current.email, signUpFormData.current.handle, trackMembershipCreation])
 
   useEffect(() => {
-    authModalOpenName === 'signUp' && trackPageView(stepToPageName[currentStep] ?? '', { isYppFlow })
+    authModalOpenName === 'signUp' &&
+      trackPageView(stepToPageName[currentStep] ?? 'Sign up - unknown page', { isYppFlow })
   }, [authModalOpenName, currentStep, isYppFlow, trackPageView])
 
   const smMatch = useMediaMatch('sm')

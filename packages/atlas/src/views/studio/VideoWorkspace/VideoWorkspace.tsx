@@ -5,8 +5,10 @@ import { BottomDrawer } from '@/components/_overlays/BottomDrawer'
 import { MintNftFirstTimeModal } from '@/components/_overlays/MintNftFirstTimeModal'
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { usePersonalDataStore } from '@/providers/personalData'
+import { useUser } from '@/providers/user/user.hooks'
 import { VideoWorkspaceFormStatus, useVideoWorkspace, useVideoWorkspaceData } from '@/providers/videoWorkspace'
 
 import { VideoForm } from './VideoForm'
@@ -26,6 +28,8 @@ export const VideoWorkspace: FC = memo(() => {
 
   const { isWorkspaceOpen, setIsWorkspaceOpen, editedVideoInfo } = useVideoWorkspace()
   const { tabData } = useVideoWorkspaceData()
+  const { trackPublishAndUploadClicked } = useSegmentAnalytics()
+  const { activeChannel } = useUser()
 
   const [openEditDialog, closeEditDialog] = useConfirmationModal({
     type: 'warning',
@@ -93,7 +97,10 @@ export const VideoWorkspace: FC = memo(() => {
         }
       : {
           disabled: formStatus?.isDisabled,
-          onClick: formStatus?.triggerFormSubmit,
+          onClick: () => {
+            !isEdit && trackPublishAndUploadClicked(activeChannel?.id)
+            return formStatus?.triggerFormSubmit
+          },
           text: formStatus?.actionBarPrimaryText,
         },
     secondaryButton:
