@@ -222,8 +222,18 @@ export const ChannelView: FC = () => {
   }, [clearAllFilters, currentTabName, setIsFiltersOpen])
 
   useEffect(() => {
-    if (channel?.id) {
-      trackPageView('Channel', { tab: currentTabName || undefined, channelName: channel?.title || undefined })
+    const timeout = setTimeout(() => {
+      if (channel?.id) {
+        trackPageView('Channel', {
+          tab: currentTabName || undefined,
+          channelId: channel?.id,
+          channelName: channel?.title || undefined,
+        })
+      }
+    }, 1000)
+
+    return () => {
+      clearTimeout(timeout)
     }
   }, [channel?.id, channel?.title, currentTabName, trackPageView])
 

@@ -60,7 +60,7 @@ const ENTRY_POINT_ROUTE = absoluteRoutes.viewer.index()
 const locationToPageName = {
   '/discover': 'Discover',
   '/category': 'Category',
-  '/search': 'Search',
+  '/search': 'Search results page',
   '/channels': 'Channels',
   '/channel': 'Channel',
   '/video': 'Video',
@@ -114,9 +114,9 @@ export const ViewerLayout: FC = () => {
           trackPageView(pageName || 'Unknown page', {
             ...(location.pathname === absoluteRoutes.viewer.ypp()
               ? {
-                  referrer: referrerChannel || undefined,
-                  utmSource: utmSource || undefined,
-                  utmCampaign: utmCampaign || undefined,
+                  referrerChannel: referrerChannel || undefined,
+                  utm_source: utmSource || undefined,
+                  utm_campaign: utmCampaign || undefined,
                 }
               : {}),
             ...(location.pathname === absoluteRoutes.viewer.search() ? { searchQuery: query } : {}),
