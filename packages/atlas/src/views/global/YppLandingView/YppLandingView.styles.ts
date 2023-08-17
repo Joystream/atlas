@@ -19,6 +19,8 @@ export const imageShadow = css`
 `
 
 export const Wrapper = styled.div`
+  margin-top: -80px;
+
   [data-aos] {
     &[data-aos][data-aos-easing='atlas-easing'] {
       transition-timing-function: cubic-bezier(0.09, 0.43, 0.3, 0.99);
