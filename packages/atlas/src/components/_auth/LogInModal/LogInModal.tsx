@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import shallow from 'zustand/shallow'
@@ -10,6 +10,7 @@ import { Input } from '@/components/_inputs/Input'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
 import { useHidePasswordInInput } from '@/hooks/useHidePasswordInInput'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useAuth } from '@/providers/auth/auth.hooks'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { LogInErrors } from '@/providers/auth/auth.types'
@@ -25,10 +26,15 @@ export const LogInModal = () => {
   const { handleLogin, refetchCurrentUser } = useAuth()
   const { displaySnackbar } = useSnackbar()
   const [hidePasswordProps] = useHidePasswordInInput()
+  const { trackPageView } = useSegmentAnalytics()
 
   const setYppModalOpenName = useYppStore((state) => state.actions.setYppModalOpenName)
 
   const shouldContinueYppFlowAfterLogin = useYppStore((store) => store.shouldContinueYppFlowAfterLogin)
+
+  useEffect(() => {
+    trackPageView('Log In')
+  }, [trackPageView])
 
   const {
     register,
