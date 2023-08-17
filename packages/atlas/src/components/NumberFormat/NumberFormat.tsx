@@ -103,7 +103,7 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
           withToken={withToken}
           ref={mergeRefs([ref, textRef])}
         >
-          <span>{displayedValue || formattedValue}</span>
+          {displayedValue ? <span>{displayedValue}</span> : <span>{formattedValue}</span>}
         </StyledText>
         {withDenomination === 'after' && (
           <Text
