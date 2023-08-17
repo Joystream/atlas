@@ -1,4 +1,4 @@
-import { FC, useMemo, useState } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 
 import { Information } from '@/components/Information'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
@@ -8,6 +8,7 @@ import { YppStatusPill } from '@/components/_ypp/YppStatusPill'
 import { atlasConfig } from '@/config'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
 import { YppDashboardReferralsTab } from '@/views/studio/YppDashboard/tabs/YppDashboardReferralsTab/YppDashboardReferralsTab'
 
@@ -30,6 +31,7 @@ export const YppDashboard: FC = () => {
   const mdMatch = useMediaMatch('md')
   const [currentVideosTab, setCurrentVideosTab] = useState(0)
   const { currentChannel, isLoading } = useGetYppSyncedChannels()
+  const { trackPageView } = useSegmentAnalytics()
 
   const subscribersCount = currentChannel?.subscribersCount || 0
   const currentTier = TIERS.reduce((prev, current, idx) => {
@@ -39,6 +41,10 @@ export const YppDashboard: FC = () => {
       return prev
     }
   }, 0)
+
+  useEffect(() => {
+    trackPageView('YPP Dashboard', { tab: TABS[currentVideosTab] })
+  }, [currentVideosTab, trackPageView])
 
   const tiersTooltip = atlasConfig.features.ypp.tiersDefinition?.tiersTooltip
 

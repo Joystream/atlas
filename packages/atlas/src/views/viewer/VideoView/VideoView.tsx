@@ -69,6 +69,7 @@ export const VideoView: FC = () => {
   const [availableTracks, setAvailableTracks] = useState<AvailableTrack[]>([])
   const { openNftPutOnSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement, cancelNftSale } =
     useNftActions()
+  const { trackPageView } = useSegmentAnalytics()
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
   const { loading, video, error } = useFullVideo(
     id ?? '',
@@ -139,6 +140,16 @@ export const VideoView: FC = () => {
 
     getSubtitles()
   }, [video?.subtitles])
+
+  useEffect(() => {
+    if (video?.id) {
+      trackPageView('Video', {
+        videoId: video.id,
+        videoTitle: video.title || undefined,
+        category: video.category?.name || undefined,
+      })
+    }
+  }, [trackPageView, video?.category?.name, video?.id, video?.title])
 
   const videoMetaTags = useMemo(() => {
     if (!video || !thumbnailUrls) return {}
