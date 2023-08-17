@@ -1,10 +1,12 @@
+import styled from '@emotion/styled'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect } from 'react'
+import { useEffect, useLayoutEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { SvgAlertsInformative24 } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
 import { Text } from '@/components/Text'
+import { LineChart } from '@/components/_charts/LineChart'
 import { IssuanceStepForm } from '@/components/_crt/CreateTokenDrawer/CreateTokenDrawer.types'
 import { CommonStepProps } from '@/components/_crt/CreateTokenDrawer/steps/types'
 import { CrtFormWrapper } from '@/components/_crt/CrtFormWrapper'
@@ -13,9 +15,17 @@ import { RadioButtonGroup } from '@/components/_inputs/RadioButtonGroup'
 import { Select } from '@/components/_inputs/Select'
 import { TokenInput } from '@/components/_inputs/TokenInput'
 import { useMountEffect } from '@/hooks/useMountEffect'
+import { cVar } from '@/styles'
 import { formatNumber } from '@/utils/number'
 
-import { assuranceOptions, cliffOptions, createTokenIssuanceSchema, vestingOptions } from './TokenIssuanceStep.utils'
+import {
+  assuranceOptions,
+  cliffOptions,
+  createTokenIssuanceSchema,
+  generateChartData,
+  getDetailsBasedOnType,
+  vestingOptions,
+} from './TokenIssuanceStep.utils'
 
 const cliffBanner = (
   <Banner
@@ -34,7 +44,7 @@ type TokenIssuanceStepProps = {
   onSubmit: (form: IssuanceStepForm) => void
 } & CommonStepProps
 
-export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit, form }: TokenIssuanceStepProps) => {
+export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit, form, setPreview }: TokenIssuanceStepProps) => {
   const {
     control,
     watch,
@@ -57,6 +67,7 @@ export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit, form }: Tok
   const creatorIssueAmount = watch('creatorIssueAmount')
   const customVesting = watch('vesting')
   const customCliff = watch('cliff')
+  const firstPayout = watch('firstPayout')
 
   useEffect(() => {
     if (assuranceType !== 'custom') {
@@ -148,6 +159,52 @@ export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit, form }: Tok
     }
   }
 
+  useLayoutEffect(() => {
+    console.log(
+      'a',
+      generateChartData(Number(customCliff ?? 0), Number(customVesting ?? 0), firstPayout ? firstPayout : 0)
+    )
+    setPreview(
+      <PreviewContainer>
+        <LineChart
+          yScale={{
+            type: 'linear',
+            min: 0,
+            max: 'auto',
+            stacked: false,
+            reverse: false,
+          }}
+          axisLeft={{
+            tickSize: 5,
+            tickPadding: 5,
+            tickValues: [0, 25, 50, 75, 100],
+            format: (tick) => `${tick}%`,
+          }}
+          axisBottom={{
+            tickValues: 5,
+            tickSize: 10,
+            tickPadding: 10,
+          }}
+          gridYValues={[0, 25, 50, 75, 100]}
+          data={[
+            {
+              id: 1,
+              color: cVar('colorTextPrimary'),
+              data:
+                assuranceType === 'custom'
+                  ? generateChartData(
+                      Number(customCliff ?? 0),
+                      Number(customVesting ?? 0),
+                      firstPayout ? firstPayout : 0
+                    )
+                  : generateChartData(...getDetailsBasedOnType(assuranceType)),
+            },
+          ]}
+        />
+      </PreviewContainer>
+    )
+  }, [assuranceType, customCliff, customVesting, firstPayout, setPreview])
+
   return (
     <CrtFormWrapper
       title="Token issuance"
@@ -192,3 +249,8 @@ export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit, form }: Tok
     </CrtFormWrapper>
   )
 }
+
+const PreviewContainer = styled.div`
+  height: 300px;
+  margin-top: 100px;
+`
