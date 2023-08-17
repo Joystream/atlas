@@ -9,6 +9,7 @@ export default {
   args: {
     value: '',
     placeholder: 'Placeholder',
+    maxLength: 30,
   },
 } as Meta
 

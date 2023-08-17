@@ -1,4 +1,4 @@
-import { KeyboardEventHandler, memo, useCallback, useMemo, useReducer, useRef, useState } from 'react'
+import { KeyboardEventHandler, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Descendant, createEditor } from 'slate'
 import { HistoryEditor, withHistory } from 'slate-history'
 import { Slate, withReact } from 'slate-react'
@@ -16,42 +16,69 @@ import {
 } from '@/assets/icons'
 import { useMountEffect } from '@/hooks/useMountEffect'
 
-import { CustomBorder, EditorAreaContainer, StyledEditable, ToolBar } from './MarkdownEditor.styles'
-import { deserialize, serialize, toggleFormat, withShortcuts } from './MarkdownEditor.utils'
+import {
+  CharacterCount,
+  CustomBorder,
+  EditorAreaContainer,
+  EditorWrapper,
+  StyledEditable,
+  ToolBar,
+} from './MarkdownEditor.styles'
+import { deserialize, serialize, setContent, toggleFormat, withShortcuts } from './MarkdownEditor.utils'
 import { FormatButton } from './components/FormatButtons'
+
+type SetEditorValue = (nodes: Descendant[], diff?: number) => void
 
 export type MarkdownEditorProps = {
   placeholder?: string
+  maxLength?: number
   value?: string
   onChange?: (value: string) => void
 }
 
-export const MarkdownEditor = ({ value = '', onChange, placeholder }: MarkdownEditorProps) => {
+export const MarkdownEditor = ({ value = '', onChange, placeholder, maxLength: maxLength }: MarkdownEditorProps) => {
   const internalValue = useRef(value)
   const initialValue = useMemo(() => deserialize(internalValue.current), [])
+  const [length, setLength] = useState(value.length)
 
-  const [setEditorValue, initSetEditorValue] = useState<(nodes: Descendant[]) => void>()
+  const [setEditorValue, initSetEditorValue] = useState<SetEditorValue>()
 
   const handleChange = useCallback(
     (nodes: Descendant[]) => {
-      internalValue.current = serialize(nodes)
+      const newValue = serialize(nodes)
+
+      if (maxLength && newValue.length > maxLength) {
+        const diff = newValue.length - internalValue.current.length
+        return setEditorValue?.(deserialize(internalValue.current), diff)
+      }
+
+      internalValue.current = newValue
+      setLength(internalValue.current.length)
       onChange?.(internalValue.current)
     },
-    [onChange]
+    [onChange, maxLength, setEditorValue]
   )
 
-  if (value !== internalValue.current) {
-    internalValue.current = value
-    setEditorValue?.(deserialize(internalValue.current))
-  }
+  useEffect(() => {
+    if (value !== internalValue.current) {
+      internalValue.current = value
+      setEditorValue?.(deserialize(internalValue.current))
+    }
+  }, [value, setEditorValue])
 
   return (
-    <Editor
-      initialValue={initialValue}
-      placeholder={placeholder}
-      onChange={handleChange}
-      initSetEditorValue={initSetEditorValue}
-    />
+    <EditorWrapper>
+      <Editor
+        initialValue={initialValue}
+        placeholder={placeholder}
+        onChange={handleChange}
+        initSetEditorValue={initSetEditorValue}
+      />
+      <CharacterCount>
+        {length}
+        {!!maxLength && ` / ${maxLength}`}
+      </CharacterCount>
+    </EditorWrapper>
   )
 }
 
@@ -59,18 +86,13 @@ type EditorProps = {
   initialValue: Descendant[]
   placeholder?: string
   onChange: (value: Descendant[]) => void
-  initSetEditorValue: (fn: () => (nodes: Descendant[]) => void) => void
+  initSetEditorValue: (fn: () => SetEditorValue) => void
 }
 const Editor = memo(({ initialValue, placeholder, initSetEditorValue: setUpdateValue, onChange }: EditorProps) => {
   const editor = useMemo(() => withReact(withShortcuts(withHistory(createEditor()))), [])
 
-  const [, rerender] = useReducer((r) => r + 1, 0)
-
   useMountEffect(() => {
-    setUpdateValue(() => (nodes) => {
-      editor.children = nodes
-      rerender()
-    })
+    setUpdateValue(() => (nodes, diff) => setContent(editor, nodes, diff))
   })
 
   const handleKeyDown: KeyboardEventHandler = useCallback(

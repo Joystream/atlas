@@ -34,6 +34,42 @@ export const withShortcuts = <E extends BaseEditor>(editor: E): E => {
   return editor
 }
 
+export const setContent = (editor: Editor, nodes: Descendant[], diff = 0): void => {
+  const initialSelection = editor.selection
+  ;[...editor.children].forEach((node) => editor.apply({ type: 'remove_node', path: [0], node }))
+  nodes.forEach((node, i) => editor.apply({ type: 'insert_node', path: [i], node: node }))
+
+  if (!initialSelection) return
+
+  const { path, offset } = initialSelection.anchor
+  const potentialPoint: Point = {
+    path: [Math.min(path[0], nodes.length - 1), path[1]],
+    offset: Math.max(0, offset - diff),
+  }
+  resetSelection(editor, potentialPoint)
+}
+
+const resetSelection = (editor: Editor, point: Point) => {
+  const isSelectionSet = editor.children.some((_, index) => {
+    const path = [index]
+    const range = Editor.range(editor, ...Editor.edges(editor, path))
+
+    if (Range.includes(range, point)) {
+      Transforms.select(editor, Editor.range(editor, point))
+      return true
+    }
+
+    if (Range.includes(range, point.path)) {
+      Transforms.select(editor, Editor.range(editor, range.focus))
+      return true
+    }
+  })
+
+  if (!isSelectionSet) {
+    Transforms.select(editor, Editor.range(editor, Editor.end(editor, [0])))
+  }
+}
+
 export const toggleFormat = {
   heading: toggleBlockFormat('heading-3'),
   strong: toggleInlineFormat('strong'),
