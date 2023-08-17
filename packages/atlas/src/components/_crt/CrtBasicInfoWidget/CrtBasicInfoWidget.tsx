@@ -15,9 +15,10 @@ type CrtBasicInfoWidgetProps = {
 
 export const CrtBasicInfoWidget = ({ creatorReward, revenueShare, totalRevenue, name }: CrtBasicInfoWidgetProps) => {
   const smMatch = useMediaMatch('sm')
+
   return (
     <WidgetTile
-      title={`$${name ?? 'ABC'}`}
+      title={`$${name || 'ABC'}`}
       titleVariant="h700"
       customNode={
         <DetailsBox>

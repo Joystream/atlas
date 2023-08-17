@@ -20,6 +20,9 @@ export const Container = styled.div`
 `
 
 export const PreviewContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   background-color: #000;
   height: 100%;
