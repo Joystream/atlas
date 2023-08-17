@@ -22,7 +22,6 @@ import { YppFooter } from './YppFooter'
 import { YppHero } from './YppHero'
 import { Wrapper } from './YppLandingView.styles'
 import { YppRewardSection } from './YppRewardSection'
-import { YppThreeStepsSection } from './YppThreeStepsSection'
 import { useGetYppSyncedChannels } from './useGetYppSyncedChannels'
 
 const SINGUP_DAILY_QUOTA = 500 // 2% of the total daily quota
@@ -151,7 +150,6 @@ export const YppLandingView: FC = () => {
           selectedChannelTitle={selectedChannelTitle}
         />
         <YppRewardSection />
-        <YppThreeStepsSection onSignUpClick={handleYppSignUpClick} yppStatus={getYppAtlasStatus()} />
         <YppCardsSections />
         <YppFooter onSignUpClick={handleYppSignUpClick} />
       </ParallaxProvider>
