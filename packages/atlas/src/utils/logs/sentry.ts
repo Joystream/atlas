@@ -31,6 +31,7 @@ class _SentryLogger {
         'ResizeObserver loop limit exceeded',
         'ResizeObserver loop completed with undelivered notifications',
       ],
+      normalizeDepth: 6,
       // This sets the sample rate to be 0%, so we'll only use manually recorded replays
       replaysSessionSampleRate: 0,
       replaysOnErrorSampleRate: 0,
@@ -42,7 +43,7 @@ class _SentryLogger {
         return event
       },
     })
-    this.replay = new Sentry.Replay({ sessionSampleRate: 0, errorSampleRate: 0 })
+    this.replay = new Sentry.Replay()
     this.initialized = true
   }
 

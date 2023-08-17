@@ -11,6 +11,7 @@ import { FormField } from '@/components/_inputs/FormField'
 import { TokenInput } from '@/components/_inputs/TokenInput'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { useFee, useJoystream, useTokenPrice } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
@@ -55,6 +56,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
     setValue,
     formState: { errors },
   } = useForm<{ amount: number | null }>()
+  const { trackWithdrawnFunds } = useSegmentAnalytics()
   const { fetchPaymentsData } = useChannelPaymentsHistory(channelId || '')
   const { convertHapiToUSD } = useTokenPrice()
   const amountBn = tokenNumberToHapiBn(watch('amount') || 0)
@@ -93,6 +95,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
           ),
         onTxSync: async () => {
           fetchPaymentsData()
+          trackWithdrawnFunds(channelId, formatNumber(data.amount || 0))
           onExitClick()
         },
       })

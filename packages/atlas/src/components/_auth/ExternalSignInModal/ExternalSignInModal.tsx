@@ -64,7 +64,8 @@ export const ExternalSignInModal: FC = () => {
   }, [currentStep])
 
   useEffect(() => {
-    authModalOpenName === 'externalLogIn' && trackPageView(stepToPageName[currentStep] ?? '')
+    authModalOpenName === 'externalLogIn' &&
+      trackPageView(stepToPageName[currentStep] ?? 'External login - unknown page')
   }, [authModalOpenName, currentStep, trackPageView])
 
   const renderStep = () => {

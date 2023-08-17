@@ -12,6 +12,7 @@ import yt576 from '@/assets/images/ypp-hero/yt-576.webp'
 import yt864 from '@/assets/images/ypp-hero/yt-864.webp'
 import yt1152 from '@/assets/images/ypp-hero/yt-1152.webp'
 import yt2304 from '@/assets/images/ypp-hero/yt-2304.webp'
+import { AppLogo } from '@/components/AppLogo'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
@@ -76,6 +77,17 @@ export const YppHero: FC<YppHeroProps> = ({
       <StyledLimitedWidthContainer centerText>
         <LayoutGrid as="header">
           <GridItem colSpan={{ base: 12, sm: 8, lg: 6 }} colStart={{ sm: 3, lg: 4 }}>
+            <LogosContainer>
+              <AppLogo
+                variant="full"
+                height={32}
+                width={undefined}
+                data-aos="fade-up"
+                data-aos-delay="150"
+                data-aos-offset="120"
+                data-aos-easing="atlas-easing"
+              />
+            </LogosContainer>
             <Text
               as="h1"
               variant={mdMatch ? 'h800' : 'h600'}

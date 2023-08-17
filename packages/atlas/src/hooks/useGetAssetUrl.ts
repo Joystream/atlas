@@ -39,7 +39,7 @@ export const getSingleAssetUrl = async (
       promises.push(assetTestPromise)
     }
 
-    Promise.race(promises)
+    Promise.any(promises)
       .then(res)
       .catch((error) => {
         ConsoleLogger.warn(`Error during fallback asset promise race`, {
