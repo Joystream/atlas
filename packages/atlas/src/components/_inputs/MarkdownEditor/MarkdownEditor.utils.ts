@@ -36,8 +36,8 @@ export const withShortcuts = <E extends BaseEditor>(editor: E): E => {
 
 export const setContent = (editor: Editor, nodes: Descendant[], diff = 0): void => {
   const initialSelection = editor.selection
-  ;[...editor.children].forEach((node) => editor.apply({ type: 'remove_node', path: [0], node }))
-  nodes.forEach((node, i) => editor.apply({ type: 'insert_node', path: [i], node: node }))
+  editor.children.forEach((node) => editor.apply({ type: 'remove_node', path: [0], node }))
+  nodes.forEach((node, index) => editor.apply({ type: 'insert_node', path: [index], node: node }))
 
   if (!initialSelection) return
 
@@ -93,12 +93,10 @@ function toggleInlineFormat(format: InlineFormat) {
     const expandedSelection = initialSelection && Range.isExpanded(initialSelection) && initialSelection
     const range = expandedSelection || (initialSelection && currentWord(editor, initialSelection))
     const ranges = (expandedSelection &&
-      Array.from(Editor.nodes(editor, { at: expandedSelection, match: (node) => Element.isElement(node) })).flatMap(
-        ([, path]) => {
-          const nodeRange = { anchor: Editor.start(editor, path), focus: Editor.end(editor, path) }
-          return Range.intersection(nodeRange, expandedSelection) ?? []
-        }
-      )) || [range]
+      editor.children.flatMap((_, index) => {
+        const nodeRange = Editor.range(editor, ...Editor.edges(editor, [index, 0]))
+        return Range.intersection(nodeRange, expandedSelection) ?? []
+      })) || [range]
 
     const wasLastLineActive = last(ranges.map(formatInlineRange(editor, format)))
     if (!range || wasLastLineActive) return
@@ -178,7 +176,7 @@ const unWrapRange = (editor: Editor, format: InlineFormat, range = editor.select
   const beforeStart = Editor.before(editor, innerStart, { distance: lenStart }) ?? innerStart
   const beforeEnd = Editor.after(editor, innerEnd, { distance: lenEnd }) ?? innerEnd
   const path = innerStart.path
-  const nodeRange: Range = { anchor: Editor.start(editor, path), focus: Editor.end(editor, path) }
+  const nodeRange = Editor.range(editor, ...Editor.edges(editor, path))
   const outerRange = Range.intersection(nodeRange, { anchor: beforeStart, focus: beforeEnd })
 
   if (!outerRange) return false
