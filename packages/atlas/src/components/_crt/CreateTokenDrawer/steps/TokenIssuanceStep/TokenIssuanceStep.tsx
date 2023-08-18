@@ -1,4 +1,3 @@
-import styled from '@emotion/styled'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useLayoutEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -17,15 +16,18 @@ import { TokenInput } from '@/components/_inputs/TokenInput'
 import { useMountEffect } from '@/hooks/useMountEffect'
 import { cVar } from '@/styles'
 import { formatNumber } from '@/utils/number'
+import { formatDate } from '@/utils/time'
 
 import {
   assuranceOptions,
   cliffOptions,
   createTokenIssuanceSchema,
   generateChartData,
-  getDetailsBasedOnType,
+  getDataBasedOnType,
   vestingOptions,
 } from './TokenIssuanceStep.utils'
+
+import { PreviewContainer, TooltipBox } from '../styles'
 
 const cliffBanner = (
   <Banner
@@ -160,13 +162,29 @@ export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit, form, setPr
   }
 
   useLayoutEffect(() => {
-    console.log(
-      'a',
-      generateChartData(Number(customCliff ?? 0), Number(customVesting ?? 0), firstPayout ? firstPayout : 0)
-    )
     setPreview(
       <PreviewContainer>
+        <Text variant="h100" as="h1" color="colorTextMuted">
+          How your tokens will unlock over time
+        </Text>
         <LineChart
+          enablePointLabel
+          tooltip={(point) => {
+            const currentDate = new Date()
+            const timeInMonths = point.data.x === 'Now' ? 0 : +(point.data.x as string).split('M')[0]
+            return (
+              <TooltipBox>
+                <Text variant="t300" as="p">
+                  {formatNumber(((creatorIssueAmount ?? 0) * (point.data.y as number)) / 100)} ${form.name}
+                </Text>
+                <Text variant="t100" as="p" color="colorTextMuted">
+                  {point.data.x !== 'Now'
+                    ? formatDate(new Date(currentDate.setMonth(currentDate.getMonth() + timeInMonths)))
+                    : 'Now'}
+                </Text>
+              </TooltipBox>
+            )
+          }}
           yScale={{
             type: 'linear',
             min: 0,
@@ -180,11 +198,6 @@ export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit, form, setPr
             tickValues: [0, 25, 50, 75, 100],
             format: (tick) => `${tick}%`,
           }}
-          axisBottom={{
-            tickValues: 5,
-            tickSize: 10,
-            tickPadding: 10,
-          }}
           gridYValues={[0, 25, 50, 75, 100]}
           data={[
             {
@@ -197,13 +210,13 @@ export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit, form, setPr
                       Number(customVesting ?? 0),
                       firstPayout ? firstPayout : 0
                     )
-                  : generateChartData(...getDetailsBasedOnType(assuranceType)),
+                  : getDataBasedOnType(assuranceType),
             },
           ]}
         />
       </PreviewContainer>
     )
-  }, [assuranceType, customCliff, customVesting, firstPayout, setPreview])
+  }, [assuranceType, creatorIssueAmount, customCliff, customVesting, firstPayout, form.name, setPreview])
 
   return (
     <CrtFormWrapper
@@ -249,8 +262,3 @@ export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit, form, setPr
     </CrtFormWrapper>
   )
 }
-
-const PreviewContainer = styled.div`
-  height: 300px;
-  margin-top: 100px;
-`

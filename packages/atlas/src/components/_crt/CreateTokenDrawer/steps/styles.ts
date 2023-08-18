@@ -29,3 +29,21 @@ export const BottomPlaceholder = styled.div`
   padding: ${sizes(4)};
   opacity: 0.5;
 `
+
+export const PreviewContainer = styled.div`
+  height: 300px;
+  margin: 100px 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  h1 {
+    padding: 0 60px;
+  }
+`
+
+export const TooltipBox = styled.div`
+  text-align: center;
+  padding: ${sizes(1)};
+  border-radius: ${cVar('radiusSmall')};
+`

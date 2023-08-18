@@ -114,11 +114,28 @@ export const createTokenIssuanceSchema = (tokenName: string) =>
     )
 
 export const generateChartData = (cliffTime: number, vestingTime: number, firstPayout = 0) => {
-  const data: Datum[] = []
-  for (let i = 0; i <= cliffTime; i++) {
+  if (!cliffTime && !vestingTime) {
+    return [
+      {
+        x: '',
+        y: '100%',
+      },
+      {
+        x: 'Now',
+        y: '100%',
+      },
+    ]
+  }
+  const data: Datum[] = [
+    {
+      x: 'Now',
+      y: '0%',
+    },
+  ]
+  for (let i = 1; i <= cliffTime; i++) {
     if (!cliffTime) break
     data.push({
-      x: i === 0 ? 'Now' : `${i}M`,
+      x: `${i}M`,
       y: '0%',
     })
   }
@@ -148,13 +165,50 @@ export const generateChartData = (cliffTime: number, vestingTime: number, firstP
   return data
 }
 
-export const getDetailsBasedOnType = (type: 'secure' | 'safe' | 'risky'): [number, number, number] => {
+export const getDataBasedOnType = (type: 'secure' | 'safe' | 'risky'): Datum[] => {
   switch (type) {
     case 'secure':
-      return [6, 12, 50]
+      return [
+        {
+          x: 'Now',
+          y: '0',
+        },
+        {
+          x: '6M',
+          y: '0',
+        },
+
+        {
+          x: '6M',
+          y: '50%',
+        },
+
+        {
+          x: '18M',
+          y: '100%',
+        },
+      ]
     case 'safe':
-      return [0, 6, 50]
+      return [
+        {
+          x: 'Now',
+          y: '50%',
+        },
+        {
+          x: '6M',
+          y: '100%',
+        },
+      ]
     case 'risky':
-      return [0, 0, 100]
+      return [
+        {
+          x: '',
+          y: '100%',
+        },
+        {
+          x: 'Now',
+          y: '100%',
+        },
+      ]
   }
 }
