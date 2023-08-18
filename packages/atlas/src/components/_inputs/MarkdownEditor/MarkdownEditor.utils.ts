@@ -101,6 +101,13 @@ function toggleInlineFormat(format: InlineFormat) {
     const wasLastLineActive = last(ranges.map(formatInlineRange(editor, format)))
     if (!range || wasLastLineActive) return
 
+    if (format === 'link' && Range.isExpanded(range)) {
+      const end = Range.end(range)
+      const newStart = Editor.after(editor, end, { distance: 3 }) ?? end
+      const newEnd = Editor.after(editor, end, { distance: 6 }) ?? newStart
+      return Transforms.select(editor, Editor.range(editor, newStart, newEnd))
+    }
+
     const tag = INLINE_TAGS[format]
     const lenStart = tag[0].length
     const lenEnd = tag[1].length
@@ -116,7 +123,7 @@ function toggleInlineFormat(format: InlineFormat) {
 }
 
 const INLINE_TAGS: Record<InlineFormat, [string, string]> = {
-  link: ['[', ']()'],
+  link: ['[', '](url)'],
   emphasis: ['_', '_'],
   strong: ['**', '**'],
   delete: ['~~', '~~'],
