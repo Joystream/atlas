@@ -100,7 +100,21 @@ const Editor = memo(({ initialValue, placeholder, initSetEditorValue: setUpdateV
       if (event.ctrlKey && event.shiftKey) {
         switch (event.key) {
           case 'z':
+            event.preventDefault()
             return HistoryEditor.redo(editor)
+        }
+      }
+      if (event.ctrlKey) {
+        switch (event.key) {
+          case 'b':
+            event.preventDefault()
+            return toggleFormat.strong(editor)
+          case 'i':
+            event.preventDefault()
+            return toggleFormat.emphasis(editor)
+          case 'k':
+            event.preventDefault()
+            return toggleFormat.link(editor)
         }
       }
     },
@@ -114,11 +128,11 @@ const Editor = memo(({ initialValue, placeholder, initSetEditorValue: setUpdateV
           <SvgHeading />
         </FormatButton>
 
-        <FormatButton title="Bold" action={toggleFormat.strong}>
+        <FormatButton title="Bold, <Ctrl+b>" action={toggleFormat.strong}>
           <SvgBold />
         </FormatButton>
 
-        <FormatButton title="Italic" action={toggleFormat.emphasis}>
+        <FormatButton title="Italic, <Ctrl+i>" action={toggleFormat.emphasis}>
           <SvgItalic />
         </FormatButton>
 
@@ -126,7 +140,7 @@ const Editor = memo(({ initialValue, placeholder, initSetEditorValue: setUpdateV
           <SvgStrikethrough />
         </FormatButton>
 
-        <FormatButton title="Link" action={toggleFormat.link}>
+        <FormatButton title="Link, <Ctrl+k>" action={toggleFormat.link}>
           <SvgActionLinkUrl />
         </FormatButton>
 
