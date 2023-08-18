@@ -126,19 +126,21 @@ export const generateChartData = (cliffTime: number, vestingTime: number, firstP
       },
     ]
   }
-  const data: Datum[] = [
-    {
-      x: 'Now',
-      y: '0%',
-    },
-  ]
+  const data: Datum[] = []
   for (let i = 1; i <= cliffTime; i++) {
     if (!cliffTime) break
+    if (!data.length) {
+      data.push({
+        x: 'Now',
+        y: '0%',
+      })
+    }
     data.push({
       x: `${i}M`,
       y: '0%',
     })
   }
+
   if (firstPayout || !vestingTime) {
     const lastDatum = data[data.length - 1]
     if (lastDatum) {
@@ -156,59 +158,27 @@ export const generateChartData = (cliffTime: number, vestingTime: number, firstP
   for (let i = cliffTime + 1; i <= cliffTime + vestingTime; i++) {
     const partToVest = 100 - firstPayout
     const vestingPerTick = partToVest / vestingTime
-
+    if (!data.length) {
+      data.push({
+        x: 'Now',
+        y: '0%',
+      })
+    }
     data.push({
       x: `${i}M`,
-      y: `${Math.round(vestingPerTick * (i - cliffTime) + firstPayout)}%`,
+      y: `${vestingPerTick * (i - cliffTime) + firstPayout}%`,
     })
   }
   return data
 }
 
-export const getDataBasedOnType = (type: 'secure' | 'safe' | 'risky'): Datum[] => {
+export const getDataBasedOnType = (type: 'secure' | 'safe' | 'risky'): [number, number, number] => {
   switch (type) {
     case 'secure':
-      return [
-        {
-          x: 'Now',
-          y: '0',
-        },
-        {
-          x: '6M',
-          y: '0',
-        },
-
-        {
-          x: '6M',
-          y: '50%',
-        },
-
-        {
-          x: '18M',
-          y: '100%',
-        },
-      ]
+      return [6, 12, 50]
     case 'safe':
-      return [
-        {
-          x: 'Now',
-          y: '50%',
-        },
-        {
-          x: '6M',
-          y: '100%',
-        },
-      ]
+      return [0, 6, 50]
     case 'risky':
-      return [
-        {
-          x: '',
-          y: '100%',
-        },
-        {
-          x: 'Now',
-          y: '100%',
-        },
-      ]
+      return [0, 0, 0]
   }
 }

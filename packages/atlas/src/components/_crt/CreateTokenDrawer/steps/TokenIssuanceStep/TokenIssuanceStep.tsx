@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useLayoutEffect } from 'react'
+import { flushSync } from 'react-dom'
 import { Controller, useForm } from 'react-hook-form'
 
 import { SvgAlertsInformative24 } from '@/assets/icons'
@@ -46,7 +47,13 @@ type TokenIssuanceStepProps = {
   onSubmit: (form: IssuanceStepForm) => void
 } & CommonStepProps
 
-export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit, form, setPreview }: TokenIssuanceStepProps) => {
+export const TokenIssuanceStep = ({
+  setPrimaryButtonProps,
+  onSubmit,
+  form,
+  setPreview,
+  scrollFormDown,
+}: TokenIssuanceStepProps) => {
   const {
     control,
     watch,
@@ -78,6 +85,10 @@ export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit, form, setPr
       setValue('firstPayout', undefined)
     }
   }, [assuranceType, setValue])
+
+  useLayoutEffect(() => {
+    scrollFormDown()
+  }, [customVesting, scrollFormDown])
 
   const getAssuranceDetails = () => {
     switch (assuranceType) {
@@ -162,6 +173,10 @@ export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit, form, setPr
   }
 
   useLayoutEffect(() => {
+    const data =
+      assuranceType === 'custom'
+        ? generateChartData(Number(customCliff ?? 0), Number(customVesting ?? 0), firstPayout ? firstPayout : 0)
+        : generateChartData(...getDataBasedOnType(assuranceType))
     setPreview(
       <PreviewContainer>
         <Text variant="h100" as="h1" color="colorTextMuted">
@@ -203,14 +218,7 @@ export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit, form, setPr
             {
               id: 1,
               color: cVar('colorTextPrimary'),
-              data:
-                assuranceType === 'custom'
-                  ? generateChartData(
-                      Number(customCliff ?? 0),
-                      Number(customVesting ?? 0),
-                      firstPayout ? firstPayout : 0
-                    )
-                  : getDataBasedOnType(assuranceType),
+              data,
             },
           ]}
         />
@@ -255,7 +263,18 @@ export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit, form, setPr
         <Controller
           name="assuranceType"
           control={control}
-          render={({ field }) => <RadioButtonGroup {...field} options={assuranceOptions} />}
+          render={({ field }) => (
+            <RadioButtonGroup
+              {...field}
+              onChange={(val) => {
+                flushSync(() => {
+                  field.onChange(val)
+                })
+                scrollFormDown()
+              }}
+              options={assuranceOptions}
+            />
+          )}
         />
       </FormField>
       {getAssuranceDetails()}
