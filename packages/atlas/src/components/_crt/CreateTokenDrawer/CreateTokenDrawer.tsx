@@ -42,6 +42,7 @@ export const CreateTokenDrawer = ({ show, onClose }: CreateTokenDrawerProps) => 
   const nodeRef = useRef<HTMLDivElement>(null)
   const [isGoingBack, setIsGoingBack] = useState(false)
   const [preview, setPreview] = useState<ReactNode>()
+  const formRef = useRef<HTMLDivElement>(null)
   const [openDialog, closeDialog] = useConfirmationModal({
     type: 'warning',
     title: 'Discard changes?',
@@ -60,6 +61,12 @@ export const CreateTokenDrawer = ({ show, onClose }: CreateTokenDrawerProps) => 
       onClick: () => closeDialog(),
     },
   })
+
+  const scrollFormDown = () => {
+    if (formRef.current) {
+      formRef.current.scrollTo({ top: formRef.current.scrollHeight, behavior: 'smooth' })
+    }
+  }
 
   const secondaryButton = useMemo(() => {
     switch (activeStep) {
@@ -91,6 +98,13 @@ export const CreateTokenDrawer = ({ show, onClose }: CreateTokenDrawerProps) => 
     }
   }, [activeStep, onClose, openDialog])
 
+  const commonProps = {
+    setPrimaryButtonProps,
+    setPreview,
+    scrollFormDown,
+    form: formData.current,
+  }
+
   return (
     <CrtDrawer
       steps={steps}
@@ -103,6 +117,7 @@ export const CreateTokenDrawer = ({ show, onClose }: CreateTokenDrawerProps) => 
         secondaryButton,
       }}
       preview={preview}
+      formWrapperRef={formRef}
     >
       <SwitchTransition mode="out-in">
         <CSSTransition
@@ -118,33 +133,23 @@ export const CreateTokenDrawer = ({ show, onClose }: CreateTokenDrawerProps) => 
           <div ref={nodeRef}>
             {activeStep === CREATE_TOKEN_STEPS.setup && (
               <SetupTokenStep
-                form={formData.current}
+                {...commonProps}
                 onSubmit={(data) => {
                   formData.current = { ...formData.current, ...data }
                   setActiveStep(CREATE_TOKEN_STEPS.issuance)
                 }}
-                setPrimaryButtonProps={setPrimaryButtonProps}
-                setPreview={setPreview}
               />
             )}
             {activeStep === CREATE_TOKEN_STEPS.issuance && (
               <TokenIssuanceStep
-                form={formData.current}
+                {...commonProps}
                 onSubmit={(data) => {
                   formData.current = { ...formData.current, ...data }
                   setActiveStep(CREATE_TOKEN_STEPS.summary)
                 }}
-                setPrimaryButtonProps={setPrimaryButtonProps}
-                setPreview={setPreview}
               />
             )}
-            {activeStep === CREATE_TOKEN_STEPS.summary && (
-              <TokenSummaryStep
-                form={formData.current}
-                setPrimaryButtonProps={setPrimaryButtonProps}
-                setPreview={setPreview}
-              />
-            )}
+            {activeStep === CREATE_TOKEN_STEPS.summary && <TokenSummaryStep {...commonProps} />}
           </div>
         </CSSTransition>
       </SwitchTransition>

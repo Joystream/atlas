@@ -8,4 +8,5 @@ export type CommonStepProps = {
   setPrimaryButtonProps: (props: NonNullable<CrtDrawerProps['actionBar']>['primaryButton']) => void
   setPreview: (preview: ReactNode) => void
   form: CreateTokenForm
+  scrollFormDown: () => void
 }
