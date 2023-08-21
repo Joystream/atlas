@@ -99,7 +99,7 @@ export const VideoWorkspace: FC = memo(() => {
           disabled: formStatus?.isDisabled,
           onClick: () => {
             !isEdit && trackPublishAndUploadClicked(activeChannel?.id)
-            return formStatus?.triggerFormSubmit
+            formStatus?.triggerFormSubmit()
           },
           text: formStatus?.actionBarPrimaryText,
         },
