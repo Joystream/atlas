@@ -14,16 +14,10 @@ import {
   SvgStrikethrough,
   SvgUnorderedList,
 } from '@/assets/icons'
+import { Text } from '@/components/Text'
 import { useMountEffect } from '@/hooks/useMountEffect'
 
-import {
-  CharacterCount,
-  CustomBorder,
-  EditorAreaContainer,
-  EditorWrapper,
-  StyledEditable,
-  ToolBar,
-} from './MarkdownEditor.styles'
+import { CustomBorder, EditorAreaContainer, EditorWrapper, StyledEditable, ToolBar } from './MarkdownEditor.styles'
 import { deserialize, serialize, setContent, toggleFormat, withShortcuts } from './MarkdownEditor.utils'
 import { FormatButton } from './components/FormatButtons'
 
@@ -74,10 +68,10 @@ export const MarkdownEditor = ({ value = '', onChange, placeholder, maxLength: m
         onChange={handleChange}
         initSetEditorValue={initSetEditorValue}
       />
-      <CharacterCount>
+      <Text as="span" variant="t100" color="colorTextMuted">
         {length}
         {!!maxLength && ` / ${maxLength}`}
-      </CharacterCount>
+      </Text>
     </EditorWrapper>
   )
 }
