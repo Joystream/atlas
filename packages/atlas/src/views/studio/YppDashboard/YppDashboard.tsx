@@ -9,6 +9,7 @@ import { atlasConfig } from '@/config'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
+import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
 import { YppDashboardReferralsTab } from '@/views/studio/YppDashboard/tabs/YppDashboardReferralsTab/YppDashboardReferralsTab'
 
@@ -32,6 +33,7 @@ export const YppDashboard: FC = () => {
   const [currentVideosTab, setCurrentVideosTab] = useState(0)
   const { currentChannel, isLoading } = useGetYppSyncedChannels()
   const { trackPageView } = useSegmentAnalytics()
+  const { processingAssets, uploads } = useUploadsStore()
 
   const subscribersCount = currentChannel?.subscribersCount || 0
   const currentTier = TIERS.reduce((prev, current, idx) => {
@@ -43,8 +45,14 @@ export const YppDashboard: FC = () => {
   }, 0)
 
   useEffect(() => {
+    // if user avatar is currently processing membership will be refetched when it's uploaded,
+    // which will trigger page view event
+    const avatarId = uploads.find((upload) => upload.type === 'avatar')?.id
+    if (avatarId && processingAssets.some((asset) => asset.id === avatarId)) {
+      return
+    }
     trackPageView('YPP Dashboard', { tab: TABS[currentVideosTab] })
-  }, [currentVideosTab, trackPageView])
+  }, [currentVideosTab, processingAssets, trackPageView, uploads])
 
   const tiersTooltip = atlasConfig.features.ypp.tiersDefinition?.tiersTooltip
 

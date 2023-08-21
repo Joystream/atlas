@@ -93,7 +93,7 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
             ref={denominationRef}
           >
             ({formattedDenominatedValue !== '<$0.01' ? <span>$</span> : null}
-            {formattedDenominatedValue}){' '}
+            <span>{formattedDenominatedValue}</span>){' '}
           </Text>
         )}
         <StyledText
@@ -115,7 +115,7 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
           >
             {' '}
             ({formattedDenominatedValue !== '<$0.01' ? <span>$</span> : null}
-            {formattedDenominatedValue}){' '}
+            <span>{formattedDenominatedValue}</span>){' '}
           </Text>
         )}
       </ContentContainer>
@@ -143,7 +143,7 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
                 ref={denominationRef}
               >
                 {formattedDenominatedValue !== '<$0.01' ? <span>$</span> : null}
-                {formattedDenominatedValue}
+                <span>{formattedDenominatedValue}</span>
               </Denomination>
             )}
           </Container>

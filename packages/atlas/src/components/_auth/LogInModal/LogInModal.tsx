@@ -108,10 +108,10 @@ export const LogInModal = () => {
         <AuthenticationModalStepTemplate
           title="Sign in"
           subtitle={
-            <>
+            <span>
               Use your {atlasConfig.general.appName} account.{' '}
               <TextButton onClick={() => setAuthModalOpenName('signUp')}>Create account</TextButton>
-            </>
+            </span>
           }
           hasNavigatedBack
         >
