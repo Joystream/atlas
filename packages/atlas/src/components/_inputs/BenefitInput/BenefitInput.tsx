@@ -2,7 +2,12 @@ import { ChangeEvent } from 'react'
 
 import { SvgActionChevronB, SvgActionChevronT } from '@/assets/icons'
 import { Button } from '@/components/_buttons/Button'
-import { Container, FlexBox, StyledSvgActionTrash } from '@/components/_inputs/BenefitInput/BenefitInput.styles'
+import {
+  Container,
+  EmojiPlaceholder,
+  FlexBox,
+  StyledSvgActionTrash,
+} from '@/components/_inputs/BenefitInput/BenefitInput.styles'
 import { Input } from '@/components/_inputs/Input'
 import { TextArea } from '@/components/_inputs/TextArea'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -32,7 +37,7 @@ export const BenefitInput = ({
   return (
     <Container>
       <FlexBox>
-        <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'gray' }} />
+        <EmojiPlaceholder />
       </FlexBox>
       <FlexBox dir="column">
         <Input placeholder="Add benefit title" value={title} onChange={onTitleChange} />

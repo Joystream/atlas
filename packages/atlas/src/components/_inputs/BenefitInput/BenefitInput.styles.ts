@@ -42,3 +42,10 @@ export const StyledSvgActionTrash = styled(SvgActionTrash)`
     fill: ${cVar('colorTextError')};
   }
 `
+
+export const EmojiPlaceholder = styled.div`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: gray;
+`
