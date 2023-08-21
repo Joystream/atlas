@@ -11,6 +11,7 @@ export type videoPlaybackParams = {
   totalLength: number
   fullScreen: boolean
   quality: string
+  isNft?: boolean
 }
 
 type PageViewParams = {
@@ -25,6 +26,7 @@ type PageViewParams = {
 type VideoPageViewParams = {
   videoId?: string
   videoTitle?: string
+  isNft?: boolean
   category?: string
 }
 
