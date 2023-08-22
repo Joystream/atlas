@@ -2,7 +2,7 @@
 import express from 'express'
 
 import { OrionClient } from './api'
-import { APP_URL, PORT } from './config'
+import { APP_AUTH_URL, APP_URL, PORT } from './config'
 import {
   generateChannelMetaTags,
   generateChannelSchemaTagsHtml,
@@ -10,7 +10,13 @@ import {
   generateVideoMetaTags,
   generateVideoSchemaTagsHtml,
 } from './tags'
-import { applyMetaTagsToHtml, applySchemaTagsToHtml, fetchHtmlAndAppData, generateAssetUrl } from './utils'
+import {
+  applyMetaTagsToHtml,
+  applySchemaTagsToHtml,
+  fetchAuthCookie,
+  fetchHtmlAndAppData,
+  generateAssetUrl,
+} from './utils'
 
 const app = express()
 let orionClient: OrionClient
@@ -108,9 +114,14 @@ const init = async () => {
   const [html, appData] = await fetchHtmlAndAppData(APP_URL)
   console.log('App data fetched')
   console.log(JSON.stringify(appData, null, 2))
-
+  console.log('Obtaining auth cookie...')
+  const authCookie = (await fetchAuthCookie(APP_AUTH_URL)) || ''
+  console.log(authCookie)
+  if (!authCookie) {
+    console.log('Cookie is empty, something went wrong')
+  }
   console.log('Initializing Orion client...')
-  orionClient = new OrionClient(appData.orionUrl)
+  orionClient = new OrionClient(appData.orionUrl, authCookie)
   await orionClient.testConnection()
   console.log('Orion client initialized')
 
