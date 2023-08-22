@@ -11,17 +11,23 @@ export const StyledBottomDrawer = styled(BottomDrawer)`
 
 export const Container = styled.div`
   display: grid;
-  height: 100%;
+  overflow: auto;
 
   ${media.md} {
+    height: 100%;
     grid-template-columns: 1fr 1fr;
   }
 `
 
 export const PreviewContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   background-color: #000;
   height: 100%;
+  overflow: hidden;
+
   ${media.md} {
     grid-column: 1;
     grid-row: 1;
