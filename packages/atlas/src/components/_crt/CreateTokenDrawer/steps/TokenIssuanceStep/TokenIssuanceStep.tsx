@@ -1,10 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect } from 'react'
+import { useEffect, useLayoutEffect } from 'react'
+import { flushSync } from 'react-dom'
 import { Controller, useForm } from 'react-hook-form'
 
 import { SvgAlertsInformative24 } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
 import { Text } from '@/components/Text'
+import { LineChart } from '@/components/_charts/LineChart'
 import { IssuanceStepForm } from '@/components/_crt/CreateTokenDrawer/CreateTokenDrawer.types'
 import { CommonStepProps } from '@/components/_crt/CreateTokenDrawer/steps/types'
 import { CrtFormWrapper } from '@/components/_crt/CrtFormWrapper'
@@ -13,9 +15,20 @@ import { RadioButtonGroup } from '@/components/_inputs/RadioButtonGroup'
 import { Select } from '@/components/_inputs/Select'
 import { TokenInput } from '@/components/_inputs/TokenInput'
 import { useMountEffect } from '@/hooks/useMountEffect'
+import { cVar } from '@/styles'
 import { formatNumber } from '@/utils/number'
+import { formatDate } from '@/utils/time'
 
-import { assuranceOptions, cliffOptions, createTokenIssuanceSchema, vestingOptions } from './TokenIssuanceStep.utils'
+import {
+  assuranceOptions,
+  cliffOptions,
+  createTokenIssuanceSchema,
+  generateChartData,
+  getDataBasedOnType,
+  vestingOptions,
+} from './TokenIssuanceStep.utils'
+
+import { PreviewContainer, TooltipBox } from '../styles'
 
 const cliffBanner = (
   <Banner
@@ -34,7 +47,13 @@ type TokenIssuanceStepProps = {
   onSubmit: (form: IssuanceStepForm) => void
 } & CommonStepProps
 
-export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit, form }: TokenIssuanceStepProps) => {
+export const TokenIssuanceStep = ({
+  setPrimaryButtonProps,
+  onSubmit,
+  form,
+  setPreview,
+  scrollFormDown,
+}: TokenIssuanceStepProps) => {
   const {
     control,
     watch,
@@ -57,6 +76,7 @@ export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit, form }: Tok
   const creatorIssueAmount = watch('creatorIssueAmount')
   const customVesting = watch('vesting')
   const customCliff = watch('cliff')
+  const firstPayout = watch('firstPayout')
 
   useEffect(() => {
     if (assuranceType !== 'custom') {
@@ -65,6 +85,10 @@ export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit, form }: Tok
       setValue('firstPayout', undefined)
     }
   }, [assuranceType, setValue])
+
+  useLayoutEffect(() => {
+    scrollFormDown()
+  }, [customVesting, scrollFormDown])
 
   const getAssuranceDetails = () => {
     switch (assuranceType) {
@@ -148,6 +172,60 @@ export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit, form }: Tok
     }
   }
 
+  useLayoutEffect(() => {
+    const data =
+      assuranceType === 'custom'
+        ? generateChartData(Number(customCliff ?? 0), Number(customVesting ?? 0), firstPayout ? firstPayout : 0)
+        : generateChartData(...getDataBasedOnType(assuranceType))
+    setPreview(
+      <PreviewContainer>
+        <Text variant="h100" as="h1" color="colorTextMuted">
+          How your tokens will unlock over time
+        </Text>
+        <LineChart
+          enablePointLabel
+          tooltip={(point) => {
+            const currentDate = new Date()
+            const timeInMonths = point.data.x === 'Now' ? 0 : +(point.data.x as string).split('M')[0]
+            return (
+              <TooltipBox>
+                <Text variant="t300" as="p">
+                  {formatNumber(((creatorIssueAmount ?? 0) * (point.data.y as number)) / 100)} ${form.name}
+                </Text>
+                <Text variant="t100" as="p" color="colorTextMuted">
+                  {point.data.x !== 'Now'
+                    ? formatDate(new Date(currentDate.setMonth(currentDate.getMonth() + timeInMonths)))
+                    : 'Now'}
+                </Text>
+              </TooltipBox>
+            )
+          }}
+          yScale={{
+            type: 'linear',
+            min: 0,
+            max: 'auto',
+            stacked: false,
+            reverse: false,
+          }}
+          axisLeft={{
+            tickSize: 5,
+            tickPadding: 5,
+            tickValues: [0, 25, 50, 75, 100],
+            format: (tick) => `${tick}%`,
+          }}
+          gridYValues={[0, 25, 50, 75, 100]}
+          data={[
+            {
+              id: 1,
+              color: cVar('colorTextPrimary'),
+              data,
+            },
+          ]}
+        />
+      </PreviewContainer>
+    )
+  }, [assuranceType, creatorIssueAmount, customCliff, customVesting, firstPayout, form.name, setPreview])
+
   return (
     <CrtFormWrapper
       title="Token issuance"
@@ -185,7 +263,18 @@ export const TokenIssuanceStep = ({ setPrimaryButtonProps, onSubmit, form }: Tok
         <Controller
           name="assuranceType"
           control={control}
-          render={({ field }) => <RadioButtonGroup {...field} options={assuranceOptions} />}
+          render={({ field }) => (
+            <RadioButtonGroup
+              {...field}
+              onChange={(val) => {
+                flushSync(() => {
+                  field.onChange(val)
+                })
+                scrollFormDown()
+              }}
+              options={assuranceOptions}
+            />
+          )}
         />
       </FormField>
       {getAssuranceDetails()}

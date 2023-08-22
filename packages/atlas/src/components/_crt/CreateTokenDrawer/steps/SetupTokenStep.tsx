@@ -1,8 +1,14 @@
+import { useLayoutEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { SvgActionLock, SvgActionUnlocked } from '@/assets/icons'
 import { Text } from '@/components/Text'
 import { SetupStepForm } from '@/components/_crt/CreateTokenDrawer/CreateTokenDrawer.types'
+import {
+  BottomPlaceholder,
+  LeftPlaceholder,
+  WidgetPreviewContainer,
+} from '@/components/_crt/CreateTokenDrawer/steps/styles'
 import { CrtFormWrapper } from '@/components/_crt/CrtFormWrapper'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
@@ -11,6 +17,8 @@ import { RatioSlider } from '@/components/_inputs/Slider'
 import { useMountEffect } from '@/hooks/useMountEffect'
 
 import { CommonStepProps } from './types'
+
+import { CrtBasicInfoWidget } from '../../CrtBasicInfoWidget/CrtBasicInfoWidget'
 
 const accessOptions = [
   {
@@ -31,15 +39,18 @@ type SetupTokenStepProps = {
   onSubmit: (form: SetupStepForm) => void
 } & CommonStepProps
 
-export const SetupTokenStep = ({ setPrimaryButtonProps, onSubmit, form }: SetupTokenStepProps) => {
+export const SetupTokenStep = ({ setPrimaryButtonProps, onSubmit, form, setPreview }: SetupTokenStepProps) => {
   const {
     register,
     control,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<SetupStepForm>({
     defaultValues: form,
   })
+
+  const watchedForm = watch()
 
   useMountEffect(() => {
     setPrimaryButtonProps({
@@ -47,6 +58,31 @@ export const SetupTokenStep = ({ setPrimaryButtonProps, onSubmit, form }: SetupT
       onClick: () => handleSubmit(onSubmit)(),
     })
   })
+
+  useLayoutEffect(() => {
+    setPreview(
+      <WidgetPreviewContainer>
+        <LeftPlaceholder />
+        <CrtBasicInfoWidget
+          name={watchedForm.name}
+          creatorReward={watchedForm.creatorReward}
+          revenueShare={watchedForm.revenueShare}
+        />
+        <BottomPlaceholder>
+          <svg xmlns="http://www.w3.org/2000/svg" width="371" height="163" viewBox="0 0 371 163" fill="none">
+            <path
+              d="M0 41C0 34.3726 5.37258 29 12 29C18.6274 29 24 34.3726 24 41C24 47.6274 18.6274 53 12 53C5.37258 53 0 47.6274 0 41Z"
+              fill="#181C20"
+            />
+            <path d="M0 0H91V16H0V0Z" fill="#181C20" />
+            <path d="M0 69H49V85H0V69Z" fill="#181C20" />
+            <path d="M36 25H147V57H36V25Z" fill="#181C20" />
+            <path d="M0 109H371V163H0V109Z" fill="#14171B" />
+          </svg>
+        </BottomPlaceholder>
+      </WidgetPreviewContainer>
+    )
+  }, [setPreview, watchedForm.creatorReward, watchedForm.name, watchedForm.revenueShare])
 
   return (
     <CrtFormWrapper title="Set up your token" subtitle="Enter basic token information and settings." learnMoreLink="">

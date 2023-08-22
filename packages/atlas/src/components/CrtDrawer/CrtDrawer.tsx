@@ -1,4 +1,4 @@
-import { Fragment, ReactNode } from 'react'
+import { Fragment, MutableRefObject, ReactNode } from 'react'
 
 import { SvgActionChevronR } from '@/assets/icons'
 import { BottomDrawerProps } from '@/components/_overlays/BottomDrawer'
@@ -19,13 +19,14 @@ export type CrtDrawerProps<T = string> = {
   preview?: ReactNode
   steps: T[]
   activeStep: number
+  formWrapperRef?: MutableRefObject<HTMLDivElement | null>
 } & BottomDrawerProps
-export const CrtDrawer = ({ children, preview, steps, activeStep, ...drawerProps }: CrtDrawerProps) => {
+export const CrtDrawer = ({ children, preview, steps, activeStep, formWrapperRef, ...drawerProps }: CrtDrawerProps) => {
   const smMatch = useMediaMatch('sm')
   return (
     <StyledBottomDrawer {...drawerProps}>
       <Container>
-        <FormContainer>
+        <FormContainer ref={formWrapperRef}>
           <StepWrapper>
             <StepContainer>
               {steps.map((step, idx) => (
