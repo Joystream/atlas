@@ -109,11 +109,14 @@ export const useRecentlyPaidChannels = (): { channels: YPPPaidChannels[] | undef
 
     return (
       paymentMap &&
-      Array.from(paymentMap.values()).sort((a, b) => {
-        if (a.amount.gt(b.amount)) return -1
-        if (a.amount.lt(b.amount)) return 1
-        return 0
-      })
+      Array.from(paymentMap.values())
+        .sort((a, b) => {
+          if (a.amount.gt(b.amount)) return -1
+          if (a.amount.lt(b.amount)) return 1
+          return 0
+        })
+        .slice(0, 50)
+        .reverse()
     )
   }, [data])
 
