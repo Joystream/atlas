@@ -35,6 +35,7 @@ type VideoContextMenuData = {
   topBid?: BN
   onWithdrawBid?: () => void
   hasBids?: boolean
+  isOwner?: boolean
 }
 export const useVideoContextMenu = ({
   videoHref,
@@ -51,6 +52,7 @@ export const useVideoContextMenu = ({
   topBid,
   onWithdrawBid,
   hasBids,
+  isOwner,
 }: VideoContextMenuData): ListItemProps[] => {
   const { copyToClipboard } = useClipboard()
 
@@ -199,7 +201,11 @@ export const useVideoContextMenu = ({
               ]
             : []),
         ]
-      : [...(publisher ? [{ nodeStart: <SvgActionMint />, onClick: onMintNftClick, label: 'Mint NFT' }] : [])]),
+      : [
+          ...(isOwner || publisher
+            ? [{ nodeStart: <SvgActionMint />, onClick: onMintNftClick, label: 'Mint NFT' }]
+            : []),
+        ]),
   ]
 
   if (publisher) {
