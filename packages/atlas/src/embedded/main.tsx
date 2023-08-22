@@ -9,7 +9,7 @@ import { App } from './App'
 const initApp = async () => {
   if (BUILD_ENV === 'production') {
     SentryLogger.initialize(atlasConfig.analytics.sentry?.dsn)
-    UserEventsLogger.initialize()
+    UserEventsLogger.initialize(atlasConfig.analytics.assetLogs?.url)
   }
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
