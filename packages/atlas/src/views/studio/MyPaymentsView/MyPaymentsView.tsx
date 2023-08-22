@@ -17,21 +17,21 @@ export const MyPaymentsView = () => {
     state.dismissedMessages.some((message) => message.id === PAYOUTS_WELCOME_MESSAGE)
   )
   const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
-  const [openPayoutsWelcomeModal, closePayoutsWelcomeModal] = useConfirmationModal({
-    noIcon: true,
-    children: <PayoutsWelcomeDialogContent />,
-    primaryButton: {
-      text: 'Continue',
-      onClick: () => {
-        updateDismissedMessages(PAYOUTS_WELCOME_MESSAGE)
-        closePayoutsWelcomeModal()
-      },
-    },
-  })
+  const [openPayoutsWelcomeModal, closePayoutsWelcomeModal] = useConfirmationModal()
 
   useMountEffect(() => {
     if (!isDismissedMessage) {
-      openPayoutsWelcomeModal()
+      openPayoutsWelcomeModal({
+        noIcon: true,
+        children: <PayoutsWelcomeDialogContent />,
+        primaryButton: {
+          text: 'Continue',
+          onClick: () => {
+            updateDismissedMessages(PAYOUTS_WELCOME_MESSAGE)
+            closePayoutsWelcomeModal()
+          },
+        },
+      })
     }
   })
 

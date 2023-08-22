@@ -52,7 +52,7 @@ export const RatioSlider = forwardRef<HTMLInputElement, RatioSliderProps>(
             <circle className="cutout-mask" cx={valuePercent} cy={sizes(3)} r={sizes(3)} />
           </mask>
 
-          <g className="rail" mask={`url(#cutout-mask-${id})`}>
+          <g className="rail" mask={`url(#cutout-mask-${internalId})`}>
             <line className="rail-left" x1="0%" x2={valuePercent} y1={sizes(3)} y2={sizes(3)} />
             <line className="rail-rigth" x1={valuePercent} x2="100%" y1={sizes(3)} y2={sizes(3)} />
 
