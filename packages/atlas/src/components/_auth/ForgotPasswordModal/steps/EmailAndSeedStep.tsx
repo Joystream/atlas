@@ -26,6 +26,7 @@ export const EmailAndSeedStep = () => {
           error={formState.errors.EmailAndSeedStep?.mnemonic?.message}
         >
           <TextArea
+            data-ls-disabled
             rows={2}
             placeholder="Wallet seed"
             {...register(`${ForgotPasswordStep.EmailAndSeedStep}.mnemonic`)}

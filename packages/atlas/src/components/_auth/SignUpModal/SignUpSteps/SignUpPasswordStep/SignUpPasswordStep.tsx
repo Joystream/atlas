@@ -74,6 +74,7 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
         <StyledSignUpForm>
           <FormField label="Password" error={errors.password?.message}>
             <Input
+              data-ls-disabled
               placeholder="Password"
               {...register('password')}
               {...hidePasswordProps}
@@ -87,6 +88,7 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
           </FormField>
           <FormField label="Repeat Password" error={errors.confirmPassword?.message}>
             <Input
+              data-ls-disabled
               placeholder="Repeat password"
               {...register('confirmPassword')}
               {...hideConfirmPasswordProps}
