@@ -17,14 +17,10 @@ import {
 
 type CrtPreviewViewProps = {
   mode: 'edit' | 'preview'
-  videoTrailerComponent?: ReactElement
-  benefitsComponent?: ReactElement
-  aboutComponent?: ReactElement
+  tokenDetails?: ReactElement
 }
 export const CrtPreviewLayout = ({
-  videoTrailerComponent = <Placeholder height={400}>Video trailer</Placeholder>,
-  benefitsComponent = <Placeholder height={400}>Benefits</Placeholder>,
-  aboutComponent = <Placeholder height={400}>About</Placeholder>,
+  tokenDetails = <Placeholder height={1000}>Token details</Placeholder>,
   mode,
 }: CrtPreviewViewProps) => {
   const lgMatch = useMediaMatch('lg')
@@ -44,11 +40,7 @@ export const CrtPreviewLayout = ({
           </HeaderButton>
         )}
       </HeaderContainer>
-      <FirstColumn>
-        {videoTrailerComponent}
-        {benefitsComponent}
-        {aboutComponent}
-      </FirstColumn>
+      <FirstColumn>{tokenDetails}</FirstColumn>
       <SecondColumn>
         {/* these components are the same for each mode */}
         <Placeholder height={192}>Token details</Placeholder>
