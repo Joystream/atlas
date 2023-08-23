@@ -5,7 +5,7 @@ import { BuySaleTokenTerms } from '@/components/_crt/BuySaleTokenModal/steps/Buy
 import { DialogProps } from '@/components/_overlays/Dialog'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 
-type BuySaleTokenModalProps = {
+export type BuySaleTokenModalProps = {
   tokenId: string
   onClose: () => void
 }

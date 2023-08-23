@@ -139,6 +139,7 @@ export const BuySaleTokenTerms = ({
                   data: chartData,
                 },
               ]}
+              enableCrosshair={false}
             />
           </ChartBox>
 
