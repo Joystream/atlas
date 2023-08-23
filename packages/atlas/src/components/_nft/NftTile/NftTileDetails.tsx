@@ -1,4 +1,4 @@
-import { BN } from 'bn.js'
+import BN from 'bn.js'
 import { FC, ReactElement, ReactNode, memo, useEffect, useId, useMemo, useRef, useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
