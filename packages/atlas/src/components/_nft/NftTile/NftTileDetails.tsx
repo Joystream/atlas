@@ -1,3 +1,4 @@
+import { BN } from 'bn.js'
 import { FC, ReactElement, ReactNode, memo, useEffect, useId, useMemo, useRef, useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
@@ -256,7 +257,7 @@ type DetailsContentProps = {
   caption: string
   icon?: ReactNode
   avoidIconStyling?: boolean
-  content: number | string | ReactElement | ReactElement[]
+  content: number | BN | string | ReactElement | ReactElement[]
   secondary?: boolean
   tileSize: TileSize | undefined
   withDenomination?: boolean
@@ -288,7 +289,7 @@ export const DetailsContent: FC<DetailsContentProps> = memo(
             <Text as="span" variant={getSize().content} color={secondary ? 'colorText' : undefined}>
               {content}
             </Text>
-          ) : typeof content === 'number' ? (
+          ) : BN.isBN(content) || typeof content === 'number' ? (
             <NumberFormat
               as="span"
               icon={icon}
