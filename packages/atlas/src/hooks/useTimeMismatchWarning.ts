@@ -28,10 +28,12 @@ export const useTimeMismatchWarning = () => {
               description: `Set your system time to automatic matching your actual timezone to prevent errors with transactions.`,
               iconType: 'warning',
             })
-            SentryLogger.error(
-              `Time mismatch detected. Server time: ${serverTime}, client time: ${clientTime}`,
-              'UseTimeMismatchWarning'
-            )
+            SentryLogger.error(`Time mismatch detected`, 'UseTimeMismatchWarning', ``, {
+              details: {
+                serverTime,
+                clientTime,
+              },
+            })
           }
         })
         .catch(() => {
