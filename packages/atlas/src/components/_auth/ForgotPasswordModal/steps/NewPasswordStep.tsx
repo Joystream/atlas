@@ -22,6 +22,7 @@ export const NewPasswordStep = () => {
       <GapContainer>
         <FormField label="New password" error={formState.errors.NewPasswordStep?.password?.message}>
           <Input
+            data-ls-disabled
             placeholder="Password"
             {...register(`${ForgotPasswordStep.NewPasswordStep}.password`)}
             {...hidePasswordProps}
@@ -29,6 +30,7 @@ export const NewPasswordStep = () => {
         </FormField>
         <FormField label="Repeat password" error={formState.errors.NewPasswordStep?.confirmPassword?.message}>
           <Input
+            data-ls-disabled
             placeholder="Confirm password"
             {...register(`${ForgotPasswordStep.NewPasswordStep}.confirmPassword`)}
             {...hideConfirmPasswordProps}

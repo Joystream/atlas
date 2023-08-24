@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.7.0] - 2023-08-24
+
+### Added
+
+- Added minting NFT to video context menu
+- Added auth cookie for `atlas-meta-server` requests
+
+### Changed
+
+- Limited rendered channels amount for channel carousel
+- Sensitive fields are obfuscated for analytics
+- Changed error handling for sentry
+
+### Fixed
+
+- Fixed errors in signup flow
+- Minor bugfixes
+
 ## [4.6.1] - 2023-08-21
 
 ### Changed
