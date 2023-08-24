@@ -1,4 +1,4 @@
-import { ApolloError } from '@apollo/client'
+import { isApolloError } from '@apollo/client'
 import * as Sentry from '@sentry/react'
 import { Replay, Severity, SeverityLevel } from '@sentry/react'
 
@@ -36,9 +36,8 @@ class _SentryLogger {
       replaysSessionSampleRate: 0,
       replaysOnErrorSampleRate: 0,
       beforeSend: (event, hint) => {
-        if ('message' in (hint.originalException as ApolloError)) {
-          const error = hint.originalException as ApolloError
-          return error.message.includes('code 400') ? null : event
+        if (isApolloError(hint.originalException as Error)) {
+          return event.exception?.values?.some((exception) => !exception.mechanism?.handled) ? event : null
         }
         return event
       },
