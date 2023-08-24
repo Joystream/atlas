@@ -129,6 +129,7 @@ export const LogInModal = () => {
             </FormField>
             <FormField label="Password" error={errors.password?.message}>
               <Input
+                data-ls-disabled
                 {...register('password')}
                 placeholder="Password"
                 {...hidePasswordProps}

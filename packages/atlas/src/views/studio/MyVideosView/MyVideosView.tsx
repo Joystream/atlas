@@ -13,6 +13,7 @@ import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
 import { Select } from '@/components/_inputs/Select'
+import { MintNftFirstTimeModal } from '@/components/_overlays/MintNftFirstTimeModal'
 import { MintNftModal } from '@/components/_overlays/MintNftModal'
 import { VideoTileDraft } from '@/components/_video/VideoTileDraft'
 import { VideoTilePublisher } from '@/components/_video/VideoTilePublisher'
@@ -27,6 +28,7 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { chanelUnseenDraftsSelector, channelDraftsSelector, useDraftStore } from '@/providers/drafts'
 import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
+import { usePersonalDataStore } from '@/providers/personalData'
 import { useSnackbar } from '@/providers/snackbars'
 import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
@@ -55,6 +57,7 @@ const INITIAL_FIRST = 50
 const OPEN_TAB_SNACKBAR = 'OPEN_TAB_SNACKBAR'
 const REMOVE_DRAFT_SNACKBAR = 'REMOVE_DRAFT_SNACKBAR'
 const SNACKBAR_TIMEOUT = 5000
+const MINTING_CONFIRMATION_ID = 'minting-confirmation'
 
 const YOUTUBE_BACKEND_URL = atlasConfig.features.ypp.youtubeSyncApiUrl
 
@@ -71,6 +74,13 @@ export const MyVideosView = () => {
   const smMatch = useMediaMatch('sm')
   const mdMatch = useMediaMatch('md')
   const { setNftToMint } = useNftActions()
+  const [shouldHideMintModal, setShouldHideMintModal] = useState(false)
+  const [showMintModal, setShowMintModal] = useState(currentChannel?.yppStatus === 'Verified')
+
+  const mintConfirmationDismissed = usePersonalDataStore((state) =>
+    state.dismissedMessages.some((message) => message.id === MINTING_CONFIRMATION_ID)
+  )
+  const updateMintConfirmationDismiss = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
 
   const { isLoading: isCurrentlyUploadedVideoIdsLoading, data: yppDAta } = useQuery(
     `ypp-ba-videos-${channelId}`,
@@ -333,6 +343,17 @@ export const MyVideosView = () => {
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: tab === 'Drafts' ? unseenDrafts.length : 0 }))
   return (
     <>
+      <MintNftFirstTimeModal
+        shouldHideNextTime={shouldHideMintModal}
+        onShouldHideNextTime={setShouldHideMintModal}
+        show={showMintModal && currentChannel?.yppStatus === 'Verified' && !mintConfirmationDismissed}
+        onClose={() => {
+          if (shouldHideMintModal) {
+            updateMintConfirmationDismiss(MINTING_CONFIRMATION_ID, true)
+          }
+          setShowMintModal(false)
+        }}
+      />
       <MintNftModal />
 
       <LimitedWidthContainer>
