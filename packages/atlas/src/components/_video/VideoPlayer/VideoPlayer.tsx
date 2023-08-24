@@ -166,7 +166,6 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
   const [autoplayEventFired, setAutoplayEventFired] = useState(!(typeof autoplay === 'boolean'))
   const [playerState, setPlayerState] = useState<PlayerState>('loading')
   const [isLoaded, setIsLoaded] = useState(false)
-  console.log(playerState, 'wtf')
   const [needsManualPlay, setNeedsManualPlay] = useState(!autoplay)
   const mdMatch = useMediaMatch('md')
   const xsMatch = useMediaMatch('xs')
