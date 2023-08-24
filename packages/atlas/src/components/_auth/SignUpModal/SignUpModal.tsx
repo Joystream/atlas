@@ -6,7 +6,7 @@ import shallow from 'zustand/shallow'
 import { Button } from '@/components/_buttons/Button'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
 import { DialogModal } from '@/components/_overlays/DialogModal'
-import { AccountFormData, MemberFormData, RegisterError, useCreateMember } from '@/hooks/useCreateMember'
+import { AccountFormData, FaucetError, MemberFormData, RegisterError, useCreateMember } from '@/hooks/useCreateMember'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useUniqueMemberHandle } from '@/hooks/useUniqueMemberHandle'
@@ -59,6 +59,7 @@ export const SignUpModal = () => {
   const memberRef = useRef<string | null>(null)
   const syncState = useRef<'synced' | 'tried' | null>(null)
   const accountCreationTries = useRef(0)
+  const memberCreationTime = useRef<number | null>(null)
   const ytResponseData = useYppStore((state) => state.ytResponseData)
   const setYppModalOpenName = useYppStore((state) => state.actions.setYppModalOpenName)
   const setYtResponseData = useYppStore((state) => state.actions.setYtResponseData)
@@ -123,12 +124,19 @@ export const SignUpModal = () => {
         }
         if (error === RegisterError.MembershipNotFound) {
           if (accountCreationTries.current > 5) {
-            setAuthModalOpenName(undefined)
+            const secondsBetweenRequests = memberCreationTime.current
+              ? (performance.now() - memberCreationTime.current) / 1_000
+              : null
+
+            SentryLogger.error('Failed to create an account - missing membership', 'SignUpModal', error, {
+              performance: { secondsBetweenRequests },
+            })
             displaySnackbar({
               title: 'Something went wrong',
               description: 'We could not find your membership. Please contact support.',
               iconType: 'error',
             })
+            setAuthModalOpenName(undefined)
             return
           }
           setTimeout(() => {
@@ -235,8 +243,12 @@ export const SignUpModal = () => {
             authorizationCode: ytResponseData?.authorizationCode,
             userId: ytResponseData?.userId,
           },
-          onError: () => {
-            goToStep(SignUpSteps.CreateMember)
+          onError: (error) => {
+            if (error === FaucetError.MemberAlreadyCreatedForGoogleAccount) {
+              setAuthModalOpenName(undefined)
+            } else {
+              goToStep(SignUpSteps.CreateMember)
+            }
           },
         },
         () => {
@@ -250,6 +262,7 @@ export const SignUpModal = () => {
 
       if (newMemberId) {
         memberRef.current = newMemberId
+        memberCreationTime.current = performance.now()
       }
 
       // in case of block sync logic failure assume member is synced after 10s
@@ -262,13 +275,12 @@ export const SignUpModal = () => {
       }, 15_000)
     },
     [
-      signUpFormData,
       ytResponseData,
       goToNextStep,
       createNewMember,
       generateUniqueMemberHandleBasedOnInput,
+      setAuthModalOpenName,
       goToStep,
-      syncState,
       handlePasswordStepSubmit,
     ]
   )
