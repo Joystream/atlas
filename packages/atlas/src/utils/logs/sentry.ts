@@ -1,4 +1,4 @@
-import { isApolloError } from '@apollo/client'
+import { ApolloError, isApolloError } from '@apollo/client'
 import * as Sentry from '@sentry/react'
 import { Replay, Severity, SeverityLevel } from '@sentry/react'
 
@@ -37,7 +37,11 @@ class _SentryLogger {
       replaysOnErrorSampleRate: 0,
       beforeSend: (event, hint) => {
         if (isApolloError(hint.originalException as Error)) {
-          return event.exception?.values?.some((exception) => !exception.mechanism?.handled) ? event : null
+          // json.stringify should we replace for a code check as soon as Orion releases patch
+          return event.exception?.values?.some((exception) => !exception.mechanism?.handled) &&
+            !JSON.stringify((hint.originalException as ApolloError).networkError).includes('Unauthorized')
+            ? event
+            : null
         }
         return event
       },
