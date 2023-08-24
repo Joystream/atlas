@@ -11,6 +11,7 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useUniqueMemberHandle } from '@/hooks/useUniqueMemberHandle'
 import { useAuthStore } from '@/providers/auth/auth.store'
+import { useSnackbar } from '@/providers/snackbars'
 import { useYppStore } from '@/providers/ypp/ypp.store'
 import { media } from '@/styles'
 import { createId } from '@/utils/createId'
@@ -57,9 +58,11 @@ export const SignUpModal = () => {
   const [amountOfTokens, setAmountofTokens] = useState<number>()
   const memberRef = useRef<string | null>(null)
   const syncState = useRef<'synced' | 'tried' | null>(null)
+  const accountCreationTries = useRef(0)
   const ytResponseData = useYppStore((state) => state.ytResponseData)
   const setYppModalOpenName = useYppStore((state) => state.actions.setYppModalOpenName)
   const setYtResponseData = useYppStore((state) => state.actions.setYtResponseData)
+  const { displaySnackbar } = useSnackbar()
 
   const { generateUniqueMemberHandleBasedOnInput } = useUniqueMemberHandle()
 
@@ -119,7 +122,17 @@ export const SignUpModal = () => {
           return
         }
         if (error === RegisterError.MembershipNotFound) {
+          if (accountCreationTries.current > 5) {
+            setAuthModalOpenName(undefined)
+            displaySnackbar({
+              title: 'Something went wrong',
+              description: 'We could not find your membership. Please contact support.',
+              iconType: 'error',
+            })
+            return
+          }
           setTimeout(() => {
+            accountCreationTries.current++
             handleOrionAccountCreation()
           }, 10_000)
           return
@@ -144,6 +157,7 @@ export const SignUpModal = () => {
     })
   }, [
     createNewOrionAccount,
+    displaySnackbar,
     goToNextStep,
     goToStep,
     setAuthModalOpenName,
