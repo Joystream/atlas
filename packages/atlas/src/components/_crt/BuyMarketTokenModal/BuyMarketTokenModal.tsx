@@ -56,11 +56,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose }: BuySaleTokenModalProps
         />
       )}
       {activeStep === BUY_SALE_TOKEN_STEPS.conditions && (
-        <BuyMarketTokenConditions
-          {...commonProps}
-          onSubmit={() => setActiveStep(BUY_SALE_TOKEN_STEPS.conditions)}
-          tokenId={tokenId}
-        />
+        <BuyMarketTokenConditions {...commonProps} onSubmit={() => setActiveStep(BUY_SALE_TOKEN_STEPS.conditions)} />
       )}
     </DialogModal>
   )
