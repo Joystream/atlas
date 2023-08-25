@@ -46,6 +46,7 @@ export const BuySaleTokenModal = ({ tokenId, onClose }: BuySaleTokenModalProps) 
       onExitClick={onClose}
       primaryButton={primaryButtonProps}
       secondaryButton={secondaryButton}
+      noContentPadding={activeStep === BUY_SALE_TOKEN_STEPS.terms}
     >
       {activeStep === BUY_SALE_TOKEN_STEPS.form && (
         <BuySaleTokenForm

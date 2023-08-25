@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { FlexBox } from '@/components/FlexBox/FlexBox'
 import { Information } from '@/components/Information'
@@ -9,8 +9,8 @@ import { LineChart } from '@/components/_charts/LineChart'
 import { CommonProps } from '@/components/_crt/BuySaleTokenModal/steps/types'
 import { generateChartData } from '@/components/_crt/CreateTokenDrawer/steps/TokenIssuanceStep/TokenIssuanceStep.utils'
 import { TooltipBox } from '@/components/_crt/CreateTokenDrawer/steps/styles'
-import { useMountEffect } from '@/hooks/useMountEffect'
-import { cVar, media } from '@/styles'
+import { Checkbox } from '@/components/_inputs/Checkbox'
+import { cVar, media, sizes } from '@/styles'
 import { formatNumber } from '@/utils/number'
 import { formatDate } from '@/utils/time'
 
@@ -37,6 +37,8 @@ export const BuySaleTokenTerms = ({
   tokenAmount,
 }: BuySaleTokenTermsProps) => {
   const { title, cliffTime, vestingTime, firstPayout } = getTokenDetails(tokenId)
+  const [isChecked, setIsChecked] = useState(false)
+  const [checkboxError, setCheckboxError] = useState('')
 
   const details = useMemo(() => {
     const currentDate = new Date()
@@ -81,20 +83,26 @@ export const BuySaleTokenTerms = ({
     ]
   }, [cliffTime, firstPayout, tokenAmount, vestingTime])
 
-  useMountEffect(() => {
+  useEffect(() => {
     setPrimaryButtonProps({
       text: 'Buy tokens',
-      onClick: onSubmit,
+      onClick: () => {
+        if (isChecked) {
+          onSubmit()
+        } else {
+          setCheckboxError('Terms & Conditions have to be accepted to continue')
+        }
+      },
     })
-  })
+  }, [isChecked, onSubmit, setPrimaryButtonProps])
 
   const chartData = useMemo(() => {
     return generateChartData(cliffTime, vestingTime, firstPayout)
   }, [cliffTime, firstPayout, vestingTime])
 
   return (
-    <>
-      <FlexBox flow="column" gap={6}>
+    <Container>
+      <FlexBox flow="column" gap={0}>
         <Text variant="h400" as="h4">
           Holders terms
         </Text>
@@ -163,7 +171,19 @@ export const BuySaleTokenTerms = ({
           </FlexBox>
         </FlexBox>
       </FlexBox>
-    </>
+      <CheckboxWrapper isAccepted={isChecked}>
+        <Checkbox
+          onChange={(val) => {
+            setIsChecked(val)
+            setCheckboxError('')
+          }}
+          caption={checkboxError}
+          error={!!checkboxError}
+          value={isChecked}
+          label="I have saved my wallet seed phrase safely"
+        />
+      </CheckboxWrapper>
+    </Container>
   )
 }
 
@@ -175,4 +195,30 @@ const ChartBox = styled.div`
   ${media.sm} {
     width: calc(100% + 125px);
   }
+`
+
+export const CheckboxWrapper = styled.div<{ isAccepted: boolean }>`
+  position: fixed;
+  bottom: 80px;
+  left: 0;
+  right: 1px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background-color: ${({ isAccepted }) => (isAccepted ? cVar('colorBackground') : cVar('colorBackgroundElevated'))};
+  padding: ${sizes(4)} var(--local-size-dialog-padding);
+
+  ${media.sm} {
+    bottom: 87px;
+  }
+`
+
+const Container = styled.div`
+  display: flex;
+  max-height: calc(100% - 55px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: var(--local-size-dialog-padding);
+  padding-bottom: 0;
+  margin-bottom: 55px;
 `
