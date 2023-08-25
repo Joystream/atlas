@@ -2,6 +2,8 @@ import { FC, ReactElement, ReactNode, memo, useEffect, useId, useMemo, useRef, u
 import useResizeObserver from 'use-resize-observer'
 
 import { SvgActionMore, SvgActionNotForSale } from '@/assets/icons'
+import { FlexBox } from '@/components/FlexBox'
+import { Information } from '@/components/Information'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { ListItemProps } from '@/components/ListItem'
 import { NumberFormat } from '@/components/NumberFormat'
@@ -260,9 +262,10 @@ type DetailsContentProps = {
   secondary?: boolean
   tileSize: TileSize | undefined
   withDenomination?: boolean
+  tooltipText?: string
 }
 export const DetailsContent: FC<DetailsContentProps> = memo(
-  ({ tileSize, caption, icon, content, secondary, avoidIconStyling, withDenomination }) => {
+  ({ tileSize, caption, icon, content, secondary, avoidIconStyling, withDenomination, tooltipText }) => {
     const getSize = () => {
       switch (tileSize) {
         case 'small':
@@ -279,9 +282,12 @@ export const DetailsContent: FC<DetailsContentProps> = memo(
 
     return (
       <div>
-        <Text as="span" variant={getSize().title} color="colorText">
-          {caption}
-        </Text>
+        <FlexBox alignItems="center">
+          <Text as="span" variant={getSize().title} color="colorText">
+            {caption}
+          </Text>
+          {tooltipText && <Information text={tooltipText} />}
+        </FlexBox>
         <DetailsContentWrapper avoidIconStyling={avoidIconStyling} secondary={secondary}>
           {typeof content === 'string' && icon}{' '}
           {typeof content === 'string' ? (
