@@ -1,10 +1,9 @@
 import styled from '@emotion/styled'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { FlexBox } from '@/components/FlexBox/FlexBox'
 import { Text } from '@/components/Text'
 import { Checkbox } from '@/components/_inputs/Checkbox'
-import { useMountEffect } from '@/hooks/useMountEffect'
 import { cVar, media, sizes } from '@/styles'
 
 import { CommonProps } from './types'
@@ -36,7 +35,7 @@ export const BuyMarketTokenConditions = ({ setPrimaryButtonProps, onSubmit }: Bu
   const [isChecked, setIsChecked] = useState(false)
   const [checkboxError, setCheckboxError] = useState('')
 
-  useMountEffect(() => {
+  useEffect(() => {
     setPrimaryButtonProps({
       text: 'Buy token',
       onClick: () => {
@@ -47,7 +46,7 @@ export const BuyMarketTokenConditions = ({ setPrimaryButtonProps, onSubmit }: Bu
         }
       },
     })
-  })
+  }, [isChecked, onSubmit, setPrimaryButtonProps])
 
   return (
     <Container>
