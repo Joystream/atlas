@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router'
 import { ContentTypeDialog } from '@/components/_overlays/ContentTypeDialog'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { createId } from '@/utils/createId'
 
 import { ContextValue, VideoWorkspace } from './types'
@@ -29,6 +30,7 @@ export const VideoWorkspaceProvider: FC<PropsWithChildren> = ({ children }) => {
   const setEditedVideo = useCallback((video?: VideoWorkspace) => {
     setEditedVideoInfo(!video ? generateVideo() : video)
   }, [])
+  const { trackUploadVideoClicked } = useSegmentAnalytics()
   const navigate = useNavigate()
 
   const { activeChannel } = useUser()
@@ -45,11 +47,12 @@ export const VideoWorkspaceProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const handleOpenVideoWorkspace = useCallback(() => {
     if (!isContentTypeInfoDismissed) {
+      trackUploadVideoClicked(activeChannel?.id)
       setIsContentDialogOpen(true)
       return
     }
     setEditedVideo()
-  }, [isContentTypeInfoDismissed, setEditedVideo])
+  }, [activeChannel?.id, isContentTypeInfoDismissed, setEditedVideo, trackUploadVideoClicked])
 
   const value = useMemo(
     () => ({

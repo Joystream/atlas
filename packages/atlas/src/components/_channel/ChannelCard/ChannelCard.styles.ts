@@ -13,14 +13,14 @@ export const ChannelCardArticle = styled.article<{ activeDisabled?: boolean }>`
   min-width: 160px;
 
   :hover {
-    ${() => ChannelCardAnchor} {
+    > a {
       transform: translate(-${sizes(2)}, -${sizes(2)});
       box-shadow: ${sizes(2)} ${sizes(2)} 0 ${cVar('colorCoreBlue500')};
     }
   }
 
   :active {
-    ${() => ChannelCardAnchor} {
+    > a {
       ${({ activeDisabled }) =>
         !activeDisabled &&
         css`

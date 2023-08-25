@@ -23,6 +23,7 @@ import {
   entropyToMnemonic,
   getArtifactId,
   getArtifacts,
+  getAuthEpoch,
   handleAnonymousAuth,
   logoutRequest,
 } from './auth.helpers'
@@ -69,7 +70,12 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
           if (keypair.address === data.accountData.joystreamAccount) {
             setLoggedAddress(keypair.address)
             setCurrentUser(data.accountData)
-            identifyUser(data.accountData.email)
+            identifyUser({
+              name: 'Sign in',
+              email: data.accountData.email,
+              memberId: data.accountData.membershipId,
+              signInType: 'password',
+            })
             setApiActiveAccount('seed', mnemonic)
             setIsAuthenticating(false)
             return
@@ -83,7 +89,12 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
           const res = await signInToWallet(lastUsedWalletName, true)
           if (res?.find((walletAcc) => walletAcc.address === data.accountData.joystreamAccount)) {
             setLoggedAddress(data.accountData.joystreamAccount)
-            identifyUser(data.accountData.email)
+            identifyUser({
+              name: 'Sign in',
+              email: data.accountData.email,
+              memberId: data.accountData.membershipId,
+              signInType: 'wallet',
+            })
             setCurrentUser(data.accountData)
             setApiActiveAccount('address', data.accountData.joystreamAccount)
           }
@@ -129,11 +140,11 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     async (params, retryCount = 0) => {
       setIsAuthenticating(true)
       await cryptoWaitReady()
-      const time = Date.now() - 30_000
+      const timestamp = (await getAuthEpoch()) - 30_000
       const payload = {
         joystreamAccountId: '',
         gatewayName: atlasConfig.general.appName,
-        timestamp: time,
+        timestamp,
         action: 'login',
       }
       let signatureOverPayload = null
@@ -190,7 +201,12 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
         const res = await refetch()
         setCurrentUser(res.data.accountData)
-        identifyUser(res.data.accountData.email)
+        identifyUser({
+          name: 'Sign in',
+          email: res.data.accountData.email,
+          memberId: res.data.accountData.membershipId,
+          signInType: params.type === 'external' ? 'wallet' : 'password',
+        })
 
         return response.data.accountId
       } catch (error) {

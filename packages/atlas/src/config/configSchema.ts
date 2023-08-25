@@ -36,6 +36,8 @@ export const configSchema = z.object({
   }),
   features: z.object({
     ypp: z.object({
+      suspensionReasonsLink: z.string().nullable(),
+      yppDelayThreshold: z.number().nullable(),
       googleConsoleClientId: z.string().nullable(),
       youtubeSyncApiUrl: z.string().nullable(),
       suspendedSupportLink: z.string().nullable(),
@@ -45,6 +47,8 @@ export const configSchema = z.object({
       landingPageOgDescription: z.string().nullable(),
       landingPageOgImgPath: z.string().nullable(),
       enrollmentReward: z.number().nullable(),
+      enrollmentUsdReward: z.number().nullable(),
+      referralBaseReward: z.number().nullable(),
       tiersDefinition: z
         .object({
           tiersTooltip: z.string().nullable(),
@@ -80,6 +84,7 @@ export const configSchema = z.object({
                 }),
               ])
               .nullable(),
+            customMultiplier: z.array(z.number()).optional(),
             actionButtonText: z.string().optional(),
             actionButtonAction: z
               .string()

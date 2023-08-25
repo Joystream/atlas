@@ -151,6 +151,7 @@ export const ChangePasswordDialog: FC<ChangePasswordDialogProps> = ({ onClose, s
             error={verifyPasswordForm.formState.errors.oldPassword?.message}
           >
             <Input
+              data-ls-disabled
               placeholder="Password"
               {...verifyPasswordForm.register('oldPassword', {
                 validate: {
@@ -165,6 +166,7 @@ export const ChangePasswordDialog: FC<ChangePasswordDialogProps> = ({ onClose, s
           <Wrapper>
             <FormField label="New password" error={changePasswordForm.formState.errors.password?.message}>
               <Input
+                data-ls-disabled
                 placeholder="New password"
                 {...changePasswordForm.register('password')}
                 {...hidePasswordProps}
@@ -173,6 +175,7 @@ export const ChangePasswordDialog: FC<ChangePasswordDialogProps> = ({ onClose, s
             </FormField>
             <FormField label="Repeat Password" error={changePasswordForm.formState.errors.confirmPassword?.message}>
               <Input
+                data-ls-disabled
                 placeholder="Repeat password"
                 {...changePasswordForm.register('confirmPassword')}
                 {...hideConfirmPasswordProps}

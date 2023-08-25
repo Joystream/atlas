@@ -44,3 +44,12 @@ export const StyledSelect = styled(Select)`
     width: 250px;
   }
 ` as typeof Select
+
+export const TitleBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin: ${sizes(12)} 0;
+  gap: ${sizes(6)};
+`

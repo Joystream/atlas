@@ -5,8 +5,8 @@ import { getSdk } from './__generated__/sdk'
 export class OrionClient {
   private sdk: ReturnType<typeof getSdk>
 
-  constructor(graphqlUrl: string) {
-    const client = new GraphQLClient(graphqlUrl)
+  constructor(graphqlUrl: string, sessionCookie: string) {
+    const client = new GraphQLClient(graphqlUrl, { headers: { Cookie: sessionCookie } })
     this.sdk = getSdk(client)
   }
 

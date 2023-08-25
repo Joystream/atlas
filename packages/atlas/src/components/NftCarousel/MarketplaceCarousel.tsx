@@ -48,7 +48,7 @@ export const MarketplaceCarousel = ({ carouselProps, isLoading, ...rest }: Marke
   const handlePrevSlide = useCallback(
     (slideIndex: string, nft?: GetFeaturedNftsVideosQuery['ownedNfts'][number]) => {
       trackNFTCarouselPrev(slideIndex, nft?.id)
-      glider?.slideNext()
+      glider?.slidePrev()
     },
     [glider, trackNFTCarouselPrev]
   )
