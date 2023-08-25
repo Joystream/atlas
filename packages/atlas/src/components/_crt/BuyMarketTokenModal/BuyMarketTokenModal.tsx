@@ -8,7 +8,7 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { BuyMarketTokenConditions } from './steps/BuyMarketTokenConditions'
 import { BuySaleTokenForm } from './steps/BuyMarketTokenForm'
 
-type BuySaleTokenModalProps = {
+export type BuySaleTokenModalProps = {
   tokenId: string
   onClose: () => void
 }

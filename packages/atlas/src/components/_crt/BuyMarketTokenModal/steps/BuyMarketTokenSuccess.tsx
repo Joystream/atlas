@@ -2,7 +2,6 @@ import { FC } from 'react'
 
 import confettiAnimation from '@/assets/animations/confetti.json'
 import { AppKV } from '@/components/AppKV'
-import { Avatar } from '@/components/Avatar'
 import { LottiePlayer } from '@/components/LottiePlayer'
 import { Text } from '@/components/Text'
 import {
@@ -21,12 +20,7 @@ type SignUpSuccessStepProps = {
   onClose: () => void
 } & CommonProps
 
-export const BuyMarketTokenSuccess: FC<SignUpSuccessStepProps> = ({
-  tokenName,
-  coinImageUrl,
-  setPrimaryButtonProps,
-  onClose,
-}) => {
+export const BuyMarketTokenSuccess: FC<SignUpSuccessStepProps> = ({ tokenName, setPrimaryButtonProps, onClose }) => {
   const smMatch = useMediaMatch('sm')
 
   useMountEffect(() => {
@@ -38,7 +32,7 @@ export const BuyMarketTokenSuccess: FC<SignUpSuccessStepProps> = ({
   return (
     <>
       <IllustrationWrapper>
-        <AppKV customNode={<Avatar size={136} assetUrls={coinImageUrl ? [coinImageUrl] : []} />} />
+        <AppKV />
         {!smMatch && (
           <LottieContainer>
             <LottiePlayer
