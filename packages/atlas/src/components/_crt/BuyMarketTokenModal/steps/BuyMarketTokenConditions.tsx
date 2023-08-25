@@ -103,7 +103,10 @@ export const CheckboxWrapper = styled.div<{ isAccepted: boolean }>`
 
 const Container = styled.div`
   display: flex;
-  flex-direction: column;
-  margin-bottom: 35px;
-  height: 100%;
+  max-height: calc(100% - 55px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: var(--local-size-dialog-padding);
+  padding-bottom: 0;
+  margin-bottom: 55px;
 `
