@@ -5,10 +5,10 @@ import { formatDurationShort } from '@/utils/time'
 
 export const DIFF_THRESHOLD = 3600
 
-export const useTimer = (date?: Date) => {
+export const useTimer = (date?: Date | number) => {
   const [timeLeft, setTimeLeft] = useState<string | null>(null)
   const [type, setType] = useState<'countdown' | 'date'>()
-  const dateTime = date?.getTime()
+  const dateTime = typeof date === 'number' ? date : date?.getTime()
   useLayoutEffect(() => {
     if (date) {
       const timeDiffInSeconds = differenceInSeconds(date, new Date())
