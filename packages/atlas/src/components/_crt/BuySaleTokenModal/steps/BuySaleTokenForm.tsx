@@ -32,7 +32,7 @@ export const BuySaleTokenForm = ({ tokenId, setPrimaryButtonProps, onSubmit }: B
   const { pricePerUnit, tokensOnSale, userBalance, title } = getTokenDetails(tokenId)
 
   const [tokens, setTokens] = useState<number | null>(null)
-  const tokenInUsd = (tokens ?? 0) * pricePerUnit * currentJoyRate
+  const tokenInUsd = (tokens || 0) * pricePerUnit * currentJoyRate
   const smMatch = useMediaMatch('sm')
 
   const details = useMemo(
@@ -56,6 +56,7 @@ export const BuySaleTokenForm = ({ tokenId, setPrimaryButtonProps, onSubmit }: B
         content: (
           <NumberFormat
             value={tokens || 0}
+            format={(tokens || 0) > 1_000_000 ? 'short' : 'full'}
             as="p"
             variant="t200"
             withDenomination="before"
