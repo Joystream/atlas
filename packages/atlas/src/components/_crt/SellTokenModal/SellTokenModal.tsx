@@ -36,11 +36,12 @@ export const SellTokenModal = ({ tokenId, onClose }: SellTokenModalProps) => {
         content: (
           <NumberFormat
             value={tokens || 0}
+            format={(tokens || 0) > 1_000_000 ? 'short' : 'full'}
             as="p"
             variant="t200"
             withDenomination="before"
             withToken
-            customTicker="$JBC"
+            customTicker={`$${title}`}
           />
         ),
         tooltipText: 'Lorem ipsum',
@@ -56,11 +57,11 @@ export const SellTokenModal = ({ tokenId, onClose }: SellTokenModalProps) => {
         tooltipText: 'Lorem ipsum',
       },
     ],
-    [tokens, tokensOnSale]
+    [title, tokens, tokensOnSale]
   )
   return (
     <DialogModal
-      title="Sell $JBC"
+      title={`Sell $${title}`}
       show
       onExitClick={onClose}
       primaryButton={{
