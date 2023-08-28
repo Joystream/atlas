@@ -106,7 +106,7 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
           ref={mergeRefs([ref, textRef])}
         >
           {displayedValue ? <span>{displayedValue}</span> : <span>{formattedValue}</span>}
-            {withToken ? ` ${customTicker}` ?? ` ${atlasConfig.joystream.tokenTicker}` : null}
+            {withToken ? (customTicker ? ` ${customTicker}` : ` ${atlasConfig.joystream.tokenTicker}`) : null}
         </StyledText>
         {withDenomination === 'after' && (
           <Text
