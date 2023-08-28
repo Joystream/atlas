@@ -6,7 +6,7 @@ export default {
   title: 'crt/CrtStatusWidget',
   component: _CrtStatusWidget,
   args: {
-    ticker: '$JBC',
+    name: 'CRT',
     creationDate: new Date(),
     supply: 20_000_000,
     marketCap: 2_222_000,

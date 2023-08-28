@@ -20,7 +20,7 @@ import {
 
 type Amount = NumberFormatProps['value']
 export type CrtStatusWidgetProps = {
-  ticker: string
+  name: string
   creationDate: Date
   supply: Amount
   marketCap: Amount
@@ -30,7 +30,7 @@ export type CrtStatusWidgetProps = {
 }
 
 export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({
-  ticker,
+  name,
   creationDate,
   supply,
   marketCap,
@@ -40,6 +40,8 @@ export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({
 }) => {
   const [isExpanded, expand] = useState(true)
   const smMatch = useMediaMatch('sm')
+
+  const ticker = `$${name}`
 
   return (
     <Widget
