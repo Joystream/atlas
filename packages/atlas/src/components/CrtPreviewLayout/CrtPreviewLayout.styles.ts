@@ -10,7 +10,7 @@ export const Wrapper = styled(LimitedWidthContainer)`
   margin-top: ${sizes(8)};
 
   ${media.md} {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 2fr 1fr;
     column-gap: ${sizes(6)};
   }
 `
