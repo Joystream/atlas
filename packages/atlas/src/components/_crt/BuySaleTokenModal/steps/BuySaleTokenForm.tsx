@@ -10,6 +10,7 @@ import { CommonProps } from '@/components/_crt/BuySaleTokenModal/steps/types'
 import { FormField } from '@/components/_inputs/FormField'
 import { TokenInput } from '@/components/_inputs/TokenInput'
 import { DetailsContent } from '@/components/_nft/NftTile'
+import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMountEffect } from '@/hooks/useMountEffect'
 
@@ -25,9 +26,13 @@ type BuySaleTokenFormProps = {
   onSubmit: () => void
 } & CommonProps
 
+const currentJoyRate = 0.15
+
 export const BuySaleTokenForm = ({ tokenId, setPrimaryButtonProps, onSubmit }: BuySaleTokenFormProps) => {
+  const { pricePerUnit, tokensOnSale, userBalance, title } = getTokenDetails(tokenId)
+
   const [tokens, setTokens] = useState<number | null>(null)
-  const { pricePerUnit, tokensOnSale, userBalance } = getTokenDetails(tokenId)
+  const tokenInUsd = (tokens ?? 0) * pricePerUnit * currentJoyRate
   const smMatch = useMediaMatch('sm')
 
   const details = useMemo(
@@ -41,7 +46,7 @@ export const BuySaleTokenForm = ({ tokenId, setPrimaryButtonProps, onSubmit }: B
             variant="t200"
             withDenomination="before"
             withToken
-            customTicker="$JBC"
+            customTicker={`$${title}`}
           />
         ),
         tooltipText: 'Lorem ipsum',
@@ -55,7 +60,7 @@ export const BuySaleTokenForm = ({ tokenId, setPrimaryButtonProps, onSubmit }: B
             variant="t200"
             withDenomination="before"
             withToken
-            customTicker="$JBC"
+            customTicker={`$${title}`}
           />
         ),
         tooltipText: 'Lorem ipsum',
@@ -71,7 +76,7 @@ export const BuySaleTokenForm = ({ tokenId, setPrimaryButtonProps, onSubmit }: B
         tooltipText: 'Lorem ipsum',
       },
     ],
-    [tokens, tokensOnSale]
+    [title, tokens, tokensOnSale]
   )
 
   useMountEffect(() => {
@@ -96,7 +101,7 @@ export const BuySaleTokenForm = ({ tokenId, setPrimaryButtonProps, onSubmit }: B
           <DetailsContent
             avoidIconStyling
             tileSize={smMatch ? 'big' : 'bigSmall'}
-            caption="YOUR JOY BALANCE"
+            caption={`YOUR ${atlasConfig.joystream.tokenTicker} BALANCE`}
             content={userBalance}
             icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
             withDenomination
@@ -110,9 +115,9 @@ export const BuySaleTokenForm = ({ tokenId, setPrimaryButtonProps, onSubmit }: B
             nodeEnd={
               <FlexBox gap={2} alignItems="baseline">
                 <Text variant="t300" as="p" color="colorTextMuted">
-                  $0.00
+                  ${tokenInUsd}
                 </Text>
-                <TextButton>Max</TextButton>
+                <TextButton onClick={() => setTokens(Math.floor(userBalance / pricePerUnit))}>Max</TextButton>
               </FlexBox>
             }
           />

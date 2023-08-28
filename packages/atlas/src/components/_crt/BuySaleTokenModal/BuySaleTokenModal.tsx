@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 
 import { BuySaleTokenForm } from '@/components/_crt/BuySaleTokenModal/steps/BuySaleTokenForm'
 import { BuySaleTokenSuccess } from '@/components/_crt/BuySaleTokenModal/steps/BuySaleTokenSuccess'
-import { BuySaleTokenTerms } from '@/components/_crt/BuySaleTokenModal/steps/BuySaleTokenTerms'
+import { BuySaleTokenTerms, getTokenDetails } from '@/components/_crt/BuySaleTokenModal/steps/BuySaleTokenTerms'
 import { DialogProps } from '@/components/_overlays/Dialog'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -19,6 +19,9 @@ enum BUY_SALE_TOKEN_STEPS {
 }
 
 export const BuySaleTokenModal = ({ tokenId, onClose }: BuySaleTokenModalProps) => {
+  const { title } = getTokenDetails(tokenId)
+  const userTokenAmount = 1000
+
   const [activeStep, setActiveStep] = useState(BUY_SALE_TOKEN_STEPS.form)
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogProps['primaryButton']>()
   const smMatch = useMediaMatch('sm')
@@ -47,7 +50,7 @@ export const BuySaleTokenModal = ({ tokenId, onClose }: BuySaleTokenModalProps) 
 
   return (
     <DialogModal
-      title={activeStep !== BUY_SALE_TOKEN_STEPS.success ? 'Buy $JBC' : undefined}
+      title={activeStep !== BUY_SALE_TOKEN_STEPS.success ? `Buy $${title}` : undefined}
       onExitClick={activeStep !== BUY_SALE_TOKEN_STEPS.success ? onClose : undefined}
       dividers={activeStep === BUY_SALE_TOKEN_STEPS.terms}
       show
@@ -68,7 +71,7 @@ export const BuySaleTokenModal = ({ tokenId, onClose }: BuySaleTokenModalProps) 
           {...commonProps}
           onSubmit={() => setActiveStep(BUY_SALE_TOKEN_STEPS.success)}
           tokenId={tokenId}
-          tokenAmount={1000}
+          tokenAmount={userTokenAmount}
         />
       )}
       {activeStep === BUY_SALE_TOKEN_STEPS.success && (

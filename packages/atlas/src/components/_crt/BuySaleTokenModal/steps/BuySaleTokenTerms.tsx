@@ -14,7 +14,7 @@ import { cVar, media, sizes } from '@/styles'
 import { formatNumber } from '@/utils/number'
 import { formatDate } from '@/utils/time'
 
-const getTokenDetails = (_: string) => ({
+export const getTokenDetails = (_: string) => ({
   title: 'JBC',
   pricePerUnit: 1000,
   tokensOnSale: 67773,
@@ -62,7 +62,7 @@ export const BuySaleTokenTerms = ({
             variant="t200"
             withDenomination="before"
             withToken
-            customTicker="$JBC"
+            customTicker={`$${title}`}
           />
         ),
         date: new Date(new Date(currentDate.setMonth(currentDate.getMonth() + cliffTime))),
@@ -81,7 +81,7 @@ export const BuySaleTokenTerms = ({
         tooltipText: 'Lorem ipsum',
       },
     ]
-  }, [cliffTime, firstPayout, tokenAmount, vestingTime])
+  }, [cliffTime, firstPayout, title, tokenAmount, vestingTime])
 
   useEffect(() => {
     setPrimaryButtonProps({
