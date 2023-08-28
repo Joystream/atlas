@@ -23,6 +23,7 @@ type VideoOverlayProps = {
   playRandomVideoOnEnded?: boolean
   isMinimized?: boolean
   currentVideoCreatedAt?: Date
+  hideEndOverlay?: boolean
 }
 
 export const VideoOverlay: FC<VideoOverlayProps> = ({
@@ -36,6 +37,7 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
   isMinimized,
   playRandomVideoOnEnded = true,
   currentVideoCreatedAt,
+  hideEndOverlay = false,
 }) => {
   const [randomNextVideo, setRandomNextVideo] = useState<BasicVideoFieldsFragment | null>(null)
   const commonFiltersFactory = (where?: VideoWhereInput) => ({
@@ -80,7 +82,7 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
         <div>
           {playerState === 'pending' && <InactiveOverlay />}
           {playerState === 'loading' && <LoadingOverlay />}
-          {!isMinimized && playerState === 'ended' && (
+          {!hideEndOverlay && !isMinimized && playerState === 'ended' && (
             <EndingOverlay
               isFullScreen={isFullScreen}
               isEnded={true}
