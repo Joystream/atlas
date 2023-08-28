@@ -90,6 +90,7 @@ export type VideoPlayerProps = {
   availableTextTracks?: AvailableTrack[]
   isMinimized?: boolean
   onMinimizedExit?: () => void
+  hideEndOverlay?: boolean
 } & VideoJsConfig
 
 declare global {
@@ -124,6 +125,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     isMinimized,
     onMinimizedExit,
     onError,
+    hideEndOverlay,
     ...videoJsConfig
   },
   externalRef
@@ -932,6 +934,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
           currentThumbnailUrls={videoJsConfig.posterUrls}
           playRandomVideoOnEnded={!isEmbedded}
           isMinimized={isMinimized}
+          hideEndOverlay={hideEndOverlay}
         />
         {showControlsIndicator && <ControlsIndicator player={player} isLoading={playerState === 'loading'} />}
         {isEmbedded && !isSharingOverlayOpen && (
