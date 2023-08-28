@@ -103,7 +103,7 @@ export const useCreateMember = () => {
 
   const createNewMember = useCallback(
     async (params: CreateNewMemberParams<FaucetError>, onBlockSync?: () => void) => {
-      const { data, onError } = params
+      const { data, onError, onStart } = params
       let fileUrl
       const keypair = keyring.addFromMnemonic(data.mnemonic)
       const address = keypair.address
@@ -125,6 +125,7 @@ export const useCreateMember = () => {
           : {}),
       }
       try {
+        onStart?.()
         const response = await faucetMutation(body)
         onBlockSync && addBlockAction({ callback: onBlockSync, targetBlock: response.data.block })
 
