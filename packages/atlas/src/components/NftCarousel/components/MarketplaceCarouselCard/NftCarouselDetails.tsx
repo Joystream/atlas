@@ -1,5 +1,5 @@
 import BN from 'bn.js'
-import { useLayoutEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
 
@@ -25,6 +25,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useDebounceValue } from '@/hooks/useDebounceValue'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useTimer } from '@/hooks/useTimer/useTimer'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { transitions } from '@/styles'
@@ -40,7 +41,6 @@ export const NftCarouselDetails = ({
 }) => {
   const smMatch = useMediaMatch('sm')
   const navigate = useNavigate()
-  const [timeLeft, setTimeLeft] = useState<string | null>(null)
   const [isPaused, setIsPaused] = useState(!active)
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
   const nftStatus = getNftStatus(nft, nft?.video)
@@ -56,6 +56,10 @@ export const NftCarouselDetails = ({
     nftStatus?.status === 'auction' &&
     nftStatus.auctionPlannedEndBlock &&
     convertBlockToMsTimestamp(nftStatus.auctionPlannedEndBlock)
+  const [timeLeft, timeLeftType] = useTimer(
+    plannedEndDateBlockTimestamp ? new Date(plannedEndDateBlockTimestamp) : undefined
+  )
+
   const isLoading = !thumbnailUrls || !mediaUrls
   const name = nft.owner.__typename === 'NftOwnerChannel' ? nft.video.channel.title : nft.owner.member.handle
   const owner = useMemo(
@@ -122,34 +126,6 @@ export const NftCarouselDetails = ({
     ],
     [nftDetails.creator?.assetUrl, nftDetails.creator?.name, nftDetails.creator?.onClick, owner]
   )
-
-  useLayoutEffect(() => {
-    if (plannedEndDateBlockTimestamp) {
-      const auctionPlannedEndDate = new Date(plannedEndDateBlockTimestamp)
-
-      const interval = setInterval(() => {
-        const timeDiffInSeconds = (auctionPlannedEndDate?.getTime() - new Date().getTime()) / 1000
-        if (timeDiffInSeconds < 0) {
-          clearInterval(interval)
-          setTimeLeft(null)
-          return
-        }
-
-        const hours = Math.floor(timeDiffInSeconds / (60 * 60))
-        const minutes = Math.floor((timeDiffInSeconds / 60) % 60)
-        const seconds = Math.floor(timeDiffInSeconds % 60)
-        setTimeLeft(
-          `${hours ? `${String(hours).padStart(2, '0')}:` : ''}${
-            minutes ? `${String(minutes).padStart(2, '0')}:` : ''
-          }${String(seconds).padStart(2, '0')}`
-        )
-      }, 1000)
-
-      return () => {
-        clearInterval(interval)
-      }
-    }
-  }, [plannedEndDateBlockTimestamp])
 
   if (isLoading) {
     return (
@@ -231,26 +207,30 @@ export const NftCarouselDetails = ({
                 />
               )}
 
-              {timeLeft && (
-                <DetailsContent
-                  tileSize={smMatch ? 'big' : 'bigSmall'}
-                  caption="AUCTION ENDS IN"
-                  content={timeLeft.split(':').map((tick, i) => {
-                    return (
-                      <>
-                        {i !== 0 ? (
-                          <Text as="span" color="colorText" variant={smMatch ? 'h500' : 'h400'}>
-                            :
-                          </Text>
-                        ) : null}
-                        <Text as="span" variant={smMatch ? 'h500' : 'h400'}>
-                          {tick}
-                        </Text>
-                      </>
-                    )
-                  })}
-                />
-              )}
+                {timeLeft && (
+                    <DetailsContent
+                        tileSize={smMatch ? 'big' : 'bigSmall'}
+                        caption="AUCTION ENDS IN"
+                        content={
+                            timeLeftType === 'countdown'
+                                ? timeLeft.split(':').map((tick, i) => {
+                                    return (
+                                        <span key={`timer-${i}`}>
+                                {i !== 0 ? (
+                                    <Text as="span" color="colorText" variant={smMatch ? 'h500' : 'h400'}>
+                                        :
+                                    </Text>
+                                ) : null}
+                                            <Text as="span" variant={smMatch ? 'h500' : 'h400'}>
+                                  {tick}
+                                </Text>
+                              </span>
+                                    )
+                                })
+                                : timeLeft
+                        }
+                    />
+                )}
             </StatsContainer>
           </DetailsContainer>
         </InformationContainer>
