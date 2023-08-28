@@ -6,7 +6,7 @@ import { DialogModal } from '@/components/_overlays/DialogModal'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { BuyMarketTokenConditions } from './steps/BuyMarketTokenConditions'
-import { BuySaleTokenForm } from './steps/BuyMarketTokenForm'
+import { BuySaleTokenForm, getTokenDetails } from './steps/BuyMarketTokenForm'
 
 export type BuySaleTokenModalProps = {
   tokenId: string
@@ -20,6 +20,7 @@ enum BUY_MARKET_TOKEN_STEPS {
 }
 
 export const BuyMarketTokenModal = ({ tokenId, onClose }: BuySaleTokenModalProps) => {
+  const { title } = getTokenDetails(tokenId)
   const [activeStep, setActiveStep] = useState(BUY_MARKET_TOKEN_STEPS.form)
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogProps['primaryButton']>()
   const smMatch = useMediaMatch('sm')
@@ -50,7 +51,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose }: BuySaleTokenModalProps
 
   return (
     <DialogModal
-      title={activeStep !== BUY_MARKET_TOKEN_STEPS.success ? 'Buy $JBC' : undefined}
+      title={activeStep !== BUY_MARKET_TOKEN_STEPS.success ? `Buy $${title}` : undefined}
       dividers={activeStep === BUY_MARKET_TOKEN_STEPS.conditions}
       onExitClick={activeStep !== BUY_MARKET_TOKEN_STEPS.success ? onClose : undefined}
       show
