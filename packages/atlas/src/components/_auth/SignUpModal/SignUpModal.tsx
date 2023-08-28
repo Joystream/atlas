@@ -57,9 +57,8 @@ export const SignUpModal = () => {
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogButtonProps>({ text: 'Continue' })
   const [amountOfTokens, setAmountofTokens] = useState<number>()
   const memberRef = useRef<string | null>(null)
-  const syncState = useRef<'synced' | 'tried' | null>(null)
+  const accountCreationInitiatior = useRef<'sync' | 'timeout' | null>(null)
   const accountCreationTries = useRef(0)
-  const memberCreationTime = useRef<number | null>(null)
   const ytResponseData = useYppStore((state) => state.ytResponseData)
   const setYppModalOpenName = useYppStore((state) => state.actions.setYppModalOpenName)
   const setYtResponseData = useYppStore((state) => state.actions.setYtResponseData)
@@ -111,7 +110,7 @@ export const SignUpModal = () => {
 
   const handleOrionAccountCreation = useCallback(() => {
     if (!memberRef.current) {
-      throw new Error('MemberID ref is empty, do a check before calling handleOrionAccountCreation function')
+      return
     }
 
     return createNewOrionAccount({
@@ -124,13 +123,7 @@ export const SignUpModal = () => {
         }
         if (error === RegisterError.MembershipNotFound) {
           if (accountCreationTries.current > 5) {
-            const secondsBetweenRequests = memberCreationTime.current
-              ? (performance.now() - memberCreationTime.current) / 1_000
-              : null
-
-            SentryLogger.error('Failed to create an account - missing membership', 'SignUpModal', error, {
-              performance: { secondsBetweenRequests },
-            })
+            SentryLogger.error('Failed to create an account - missing membership', 'SignUpModal', error)
             displaySnackbar({
               title: 'Something went wrong',
               description: 'We could not find your membership. Please contact support.',
@@ -149,7 +142,6 @@ export const SignUpModal = () => {
       },
       onStart: () => {
         goToStep(SignUpSteps.Creating)
-        syncState.current = null
       },
       onSuccess: ({ amountOfTokens }) => {
         // if this is ypp flow, overwrite ytResponseData.email
@@ -190,14 +182,48 @@ export const SignUpModal = () => {
   const handlePasswordStepSubmit = useCallback(
     async (password: string) => {
       signUpFormData.current = { ...signUpFormData.current, password }
-      if (memberRef.current && syncState.current === 'synced') {
-        handleOrionAccountCreation()
-        return
-      }
-      syncState.current = 'tried'
-      goToNextStep()
+      const memberId = await createNewMember(
+        {
+          data: {
+            ...signUpFormData.current,
+            authorizationCode: ytResponseData?.authorizationCode,
+            userId: ytResponseData?.userId,
+          },
+          onStart: () => {
+            goToStep(SignUpSteps.Creating)
+          },
+          onError: (error) => {
+            if (error === FaucetError.MemberAlreadyCreatedForGoogleAccount) {
+              setAuthModalOpenName(undefined)
+            } else {
+              goToStep(SignUpSteps.CreateMember)
+            }
+          },
+        },
+        () => {
+          if (accountCreationInitiatior.current === null) {
+            accountCreationInitiatior.current = 'sync'
+            handleOrionAccountCreation()
+          }
+        }
+      )
+      memberRef.current = memberId ?? null
+      // in case of block sync logic failure assume member is synced after 15s
+      setTimeout(() => {
+        if (accountCreationInitiatior.current === null) {
+          accountCreationInitiatior.current = 'timeout'
+          handleOrionAccountCreation()
+        }
+      }, 15_000)
     },
-    [goToNextStep, handleOrionAccountCreation]
+    [
+      createNewMember,
+      goToStep,
+      handleOrionAccountCreation,
+      setAuthModalOpenName,
+      ytResponseData?.authorizationCode,
+      ytResponseData?.userId,
+    ]
   )
 
   const handleCreateMemberOnSeedStepSubmit = useCallback(
@@ -229,60 +255,9 @@ export const SignUpModal = () => {
         ...memberData,
       }
 
-      // don't create another member if user already created a member and click back on the password step
-      if (memberRef.current) {
-        goToNextStep()
-        return
-      }
       goToNextStep()
-      const newMemberId = await createNewMember(
-        {
-          data: {
-            ...signUpFormData.current,
-            ...memberData,
-            authorizationCode: ytResponseData?.authorizationCode,
-            userId: ytResponseData?.userId,
-          },
-          onError: (error) => {
-            if (error === FaucetError.MemberAlreadyCreatedForGoogleAccount) {
-              setAuthModalOpenName(undefined)
-            } else {
-              goToStep(SignUpSteps.CreateMember)
-            }
-          },
-        },
-        () => {
-          if (syncState.current === 'tried') {
-            syncState.current = 'synced'
-            handlePasswordStepSubmit(signUpFormData.current.password)
-          }
-          syncState.current = 'synced'
-        }
-      )
-
-      if (newMemberId) {
-        memberRef.current = newMemberId
-        memberCreationTime.current = performance.now()
-      }
-
-      // in case of block sync logic failure assume member is synced after 10s
-      setTimeout(() => {
-        if (syncState.current === 'tried') {
-          syncState.current = 'synced'
-          handlePasswordStepSubmit(signUpFormData.current.password)
-        }
-        syncState.current = 'synced'
-      }, 15_000)
     },
-    [
-      ytResponseData,
-      goToNextStep,
-      createNewMember,
-      generateUniqueMemberHandleBasedOnInput,
-      setAuthModalOpenName,
-      goToStep,
-      handlePasswordStepSubmit,
-    ]
+    [ytResponseData, goToNextStep, generateUniqueMemberHandleBasedOnInput]
   )
 
   const handleMemberStepSubmit = useCallback(
