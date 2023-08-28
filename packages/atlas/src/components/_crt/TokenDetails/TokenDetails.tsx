@@ -1,3 +1,5 @@
+import styled from '@emotion/styled'
+
 import { useFullVideo } from '@/api/hooks/video'
 import { FlexBox } from '@/components/FlexBox'
 import { MarkdownPreview } from '@/components/MarkdownPreview'
@@ -36,13 +38,13 @@ export const TokenDetails = ({ about, videoId, benefits }: TokenDetailsProps) =>
   )
   return (
     <FlexBox gap={12} flow="column">
-      <div style={{ position: 'relative', width: '100%', aspectRatio: '16/9' }}>
+      <VideoBox>
         {!loading && video ? (
           <VideoPlayer videoId={videoId} hideEndOverlay isMinimized={false} videoUrls={video?.media?.resolvedUrls} />
         ) : (
           <PlayerSkeletonLoader />
         )}
-      </div>
+      </VideoBox>
       {benefits && (
         <FlexBox gap={6} flow="column">
           <Text variant="h500" as="h5">
@@ -74,3 +76,9 @@ export const TokenDetails = ({ about, videoId, benefits }: TokenDetailsProps) =>
     </FlexBox>
   )
 }
+
+const VideoBox = styled.div`
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+`
