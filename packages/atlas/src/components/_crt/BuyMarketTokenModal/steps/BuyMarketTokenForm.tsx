@@ -32,7 +32,7 @@ const currentJoyRate = 0.15
 export const BuySaleTokenForm = ({ tokenId, setPrimaryButtonProps, onSubmit }: BuySaleTokenFormProps) => {
   const [tokens, setTokens] = useState<number | null>(null)
   const { pricePerUnit, tokensOnSale, userBalance, title } = getTokenDetails(tokenId)
-  const tokenInUsd = (tokens ?? 0) * pricePerUnit * currentJoyRate
+  const tokenInUsd = (tokens || 0) * pricePerUnit * currentJoyRate
 
   const smMatch = useMediaMatch('sm')
 
@@ -44,6 +44,7 @@ export const BuySaleTokenForm = ({ tokenId, setPrimaryButtonProps, onSubmit }: B
           <NumberFormat
             value={tokens || 0}
             as="p"
+            format={(tokens || 0) > 1_000_000 ? 'short' : 'full'}
             variant="t200"
             withDenomination="before"
             withToken
