@@ -12,6 +12,7 @@ import { DetailsContent } from '@/components/_nft/NftTile'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMountEffect } from '@/hooks/useMountEffect'
+import { useJoystream } from '@/providers/joystream'
 
 import { CommonProps } from './types'
 
@@ -27,12 +28,11 @@ type BuySaleTokenFormProps = {
   onSubmit: () => void
 } & CommonProps
 
-const currentJoyRate = 0.15
-
 export const BuySaleTokenForm = ({ tokenId, setPrimaryButtonProps, onSubmit }: BuySaleTokenFormProps) => {
   const [tokens, setTokens] = useState<number | null>(null)
   const { pricePerUnit, tokensOnSale, userBalance, title } = getTokenDetails(tokenId)
-  const tokenInUsd = (tokens || 0) * pricePerUnit * currentJoyRate
+  const { tokenPrice } = useJoystream()
+  const tokenInUsd = (tokens || 0) * pricePerUnit * (tokenPrice ?? 0)
 
   const smMatch = useMediaMatch('sm')
 
@@ -84,6 +84,7 @@ export const BuySaleTokenForm = ({ tokenId, setPrimaryButtonProps, onSubmit }: B
             caption="PRICE PER UNIT"
             content={pricePerUnit}
             icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
+            tooltipText="Lorem ipsum"
             withDenomination
           />
           <DetailsContent
@@ -92,6 +93,7 @@ export const BuySaleTokenForm = ({ tokenId, setPrimaryButtonProps, onSubmit }: B
             caption={`YOUR ${atlasConfig.joystream.tokenTicker} BALANCE`}
             content={userBalance}
             icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
+            tooltipText="Lorem ipsum"
             withDenomination
           />
         </FlexBox>
@@ -103,7 +105,7 @@ export const BuySaleTokenForm = ({ tokenId, setPrimaryButtonProps, onSubmit }: B
             nodeEnd={
               <FlexBox gap={2} alignItems="baseline">
                 <Text variant="t300" as="p" color="colorTextMuted">
-                  ${tokenInUsd}
+                  ${tokenInUsd.toFixed(2)}
                 </Text>
                 <TextButton onClick={() => setTokens(Math.floor(userBalance / pricePerUnit))}>Max</TextButton>
               </FlexBox>

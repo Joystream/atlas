@@ -71,7 +71,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose }: BuySaleTokenModalProps
         <BuyMarketTokenConditions {...commonProps} onSubmit={onSubmitConditions} />
       )}
       {activeStep === BUY_MARKET_TOKEN_STEPS.success && (
-        <BuyMarketTokenSuccess {...commonProps} onClose={onClose} tokenName="JBC" />
+        <BuyMarketTokenSuccess {...commonProps} onClose={onClose} tokenName={title} />
       )}
     </DialogModal>
   )
