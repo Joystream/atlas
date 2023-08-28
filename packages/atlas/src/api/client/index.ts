@@ -1,10 +1,12 @@
 import { ApolloClient, ApolloLink, FetchResult, HttpLink, Observable, split } from '@apollo/client'
+import { onError } from '@apollo/client/link/error'
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { createClient } from 'graphql-ws'
 
 import { ORION_GRAPHQL_URL, QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL } from '@/config/env'
 import { useUserLocationStore } from '@/providers/userLocation'
+import { ConsoleLogger } from '@/utils/logs'
 
 import { cache } from './cache'
 
@@ -23,6 +25,21 @@ const delayLink = new ApolloLink((operation, forward) => {
   })
 })
 
+const errorLink = onError(({ graphQLErrors, networkError, forward, operation }) => {
+  if (graphQLErrors) {
+    graphQLErrors.forEach(({ message, locations, path }) =>
+      ConsoleLogger.warn(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`)
+    )
+  }
+
+  if (networkError) {
+    ConsoleLogger.warn(`[Network error]: ${networkError}`)
+    return Observable.of(operation)
+  }
+
+  forward(operation)
+})
+
 export const createApolloClient = () => {
   const subscriptionLink = new GraphQLWsLink(
     createClient({
@@ -31,7 +48,11 @@ export const createApolloClient = () => {
     })
   )
 
-  const orionLink = ApolloLink.from([delayLink, new HttpLink({ uri: ORION_GRAPHQL_URL, credentials: 'include' })])
+  const orionLink = ApolloLink.from([
+    delayLink,
+    errorLink,
+    new HttpLink({ uri: ORION_GRAPHQL_URL, credentials: 'include' }),
+  ])
 
   const operationSplitLink = split(
     ({ query, setContext }) => {
