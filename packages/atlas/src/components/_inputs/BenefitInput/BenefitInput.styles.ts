@@ -32,11 +32,6 @@ export const Container = styled.div`
   }
 `
 
-export const FlexBox = styled.div<{ dir?: 'column' | 'row' }>`
-  display: flex;
-  flex-direction: ${(props) => props.dir ?? 'row'};
-  gap: ${sizes(2)};
-`
 export const StyledSvgActionTrash = styled(SvgActionTrash)`
   path {
     fill: ${cVar('colorTextError')};
