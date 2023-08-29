@@ -24,6 +24,7 @@ export type NumberFormatProps = {
   isNegative?: boolean
   icon?: ReactNode
   withDenomination?: boolean | 'horizontal' | 'vertical' | 'before' | 'after'
+  denominationMultiplier?: number
   denominationAlign?: 'left' | 'right'
   customTicker?: string
 } & Omit<TextProps, 'children' | 'variant'>
@@ -42,6 +43,7 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
       isNegative,
       color,
       withDenomination: _withDenomination,
+      denominationMultiplier,
       denominationAlign = 'left',
       icon,
       customTicker,
@@ -52,7 +54,9 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
     const withDenomination = atlasConfig.joystream.tokenPriceFeedUrl ? _withDenomination : undefined
     const { convertTokensToUSD } = useTokenPrice()
     const internalValue = BN.isBN(value) ? hapiBnToTokenNumber(value) : value
-    const fiatValue = convertTokensToUSD(internalValue)
+    const fiatValue = convertTokensToUSD(
+      denominationMultiplier ? denominationMultiplier * internalValue : internalValue
+    )
     const textRef = useRef<HTMLHeadingElement>(null)
     const denominationRef = useRef<HTMLHeadingElement>(null)
     const bnValue = new BN(value)
@@ -78,7 +82,7 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
           .replaceAll(',', ' ')
         break
     }
-
+    console.log(formattedDenominatedValue, 'fmD')
     const hasDecimals = internalValue - Math.floor(internalValue) !== 0
     const hasTooltip =
       withTooltip &&
