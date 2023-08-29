@@ -121,7 +121,7 @@ export const ChannelView: FC = () => {
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(id, channel?.title)
   const [currentTab, setCurrentTab] = useState<typeof TABS[number]>(TABS[0])
 
-  const { url: avatarPhotoUrl } = useGetAssetUrl(channel?.avatarPhoto?.resolvedUrls, 'image')
+  const { url: avatarPhotoUrl } = useGetAssetUrl(channel?.avatarPhoto?.resolvedUrls, 'avatar')
 
   const [sortNftsBy, setSortNftsBy] = useState<OwnedNftOrderByInput>(OwnedNftOrderByInput.CreatedAtDesc)
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)

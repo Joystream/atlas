@@ -45,7 +45,7 @@ type UserLogEvent = {
 }
 
 export type DistributorEventEntry = {
-  dataObjectId?: string
+  dataObjectId?: string | null
   dataObjectType?: DataObjectType['__typename'] | AssetType
   resolvedUrl?: string
 } & DistributorEventDetails

@@ -1,6 +1,7 @@
 import { axiosInstance } from '@/api/axios'
 import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { BUILD_ENV } from '@/config/env'
+import { AssetType } from '@/providers/uploads/uploads.types'
 import { ConsoleLogger, DistributorEventEntry, DistributorEventMetric, UserEventsLogger } from '@/utils/logs'
 import { wait } from '@/utils/misc'
 
@@ -16,8 +17,9 @@ export const getMemberAvatar = (member?: BasicMembershipFieldsFragment | null) =
   return { urls: null, isLoadingAsset: avatar !== null }
 }
 
-export const testAssetDownload = (url: string, type: 'image' | 'video' | 'subtitle'): Promise<string> => {
+export const testAssetDownload = (url: string, type: AssetType | null): Promise<string> => {
   return new Promise((_resolve, _reject) => {
+    const isImageType = type && ['thumbnail', 'avatar', 'cover'].includes(type)
     let img: HTMLImageElement | null = null
     let video: HTMLVideoElement | null = null
 
@@ -51,7 +53,7 @@ export const testAssetDownload = (url: string, type: 'image' | 'video' | 'subtit
       _reject(err)
     }
 
-    if (type === 'image') {
+    if (isImageType) {
       img = new Image()
       img.addEventListener('load', (e) => {
         e.preventDefault()
@@ -73,7 +75,7 @@ export const testAssetDownload = (url: string, type: 'image' | 'video' | 'subtit
         }
       })
       video.src = url
-    } else if (type === 'subtitle') {
+    } else if (type === 'subtitles') {
       fetch(url, { method: 'HEAD', mode: 'cors', cache: 'no-store' })
         .then((response) => {
           if (!response.ok) {

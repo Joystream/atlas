@@ -35,10 +35,13 @@ export const Result: FC<ResultProps> = ({
   loading,
 }) => {
   const title = video ? video.title : channel?.title
-  const { url: channelAvatar, isLoading: isLoadingAvatar } = useGetAssetUrl(channel?.avatarPhoto?.resolvedUrls, 'image')
+  const { url: channelAvatar, isLoading: isLoadingAvatar } = useGetAssetUrl(
+    channel?.avatarPhoto?.resolvedUrls,
+    'avatar'
+  )
   const { url: videoThumbnail, isLoading: isLoadingThumbnail } = useGetAssetUrl(
     video?.thumbnailPhoto?.resolvedUrls,
-    'image'
+    'thumbnail'
   )
   const to = useMemo(() => {
     if (video) {

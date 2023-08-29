@@ -1,27 +1,17 @@
-// import { init as initApm } from '@elastic/apm-rum'
 import { useEffect, useState } from 'react'
 
 import { atlasConfig } from '@/config'
 import { logDistributorPerformance, testAssetDownload } from '@/providers/assets/assets.helpers'
 import { useOperatorsContext } from '@/providers/assets/assets.provider'
+import { AssetType } from '@/providers/uploads/uploads.types'
 import { getVideoCodec } from '@/utils/getVideoCodec'
 import { ConsoleLogger, DistributorEventEntry, SentryLogger, UserEventsLogger } from '@/utils/logs'
 import { withTimeout } from '@/utils/misc'
 
-// const apm = initApm({
-//   serviceName: 'gleev',
-//
-//   // Set custom APM Server URL (default: http://localhost:8200)
-//   serverUrl: `https://atlas-services.joystream.org/apm`,
-//
-//   // Set service version (required for sourcemap feature)
-//   serviceVersion: '',
-//   environment: 'development'
-// })
-
 export const getSingleAssetUrl = async (
   urls: string[] | null | undefined,
-  type: 'image' | 'video' | 'subtitle',
+  id: string | null | undefined,
+  type: AssetType | null,
   timeout?: number
 ): Promise<string | undefined> => {
   if (!urls || !urls.length) {
@@ -30,8 +20,8 @@ export const getSingleAssetUrl = async (
 
   for (const distributionAssetUrl of urls) {
     const eventEntry: DistributorEventEntry = {
-      dataObjectId: '1',
-      dataObjectType: 'DataObjectTypeChannelAvatar',
+      dataObjectId: id,
+      dataObjectType: type || undefined,
       resolvedUrl: distributionAssetUrl,
     }
 
@@ -42,13 +32,8 @@ export const getSingleAssetUrl = async (
     )
 
     try {
-      // const transaction = apm.startTransaction('Application start', 'custom')
-      // const httpSpan = transaction?.startSpan('GET ' + distributionAssetUrl, 'external.http')
-
       await assetTestPromiseWithTimeout
 
-      // httpSpan?.end()
-      // transaction?.end()
       logDistributorPerformance(distributionAssetUrl, eventEntry)
 
       return distributionAssetUrl
@@ -82,10 +67,11 @@ export const getSingleAssetUrl = async (
   })
 }
 
-export const useGetAssetUrl = (urls: string[] | undefined | null, type: 'image' | 'video' | 'subtitle') => {
+export const useGetAssetUrl = (urls: string[] | undefined | null, type: AssetType | null) => {
   const [url, setUrl] = useState<string | undefined>(undefined)
   const [isLoading, setIsLoading] = useState(true)
   const { userBenchmarkTime } = useOperatorsContext()
+  const id = url?.split('/').pop()
   useEffect(() => {
     if (!urls || (url && urls.includes(url)) || (!url && !urls.length)) {
       setIsLoading(false)
@@ -94,7 +80,7 @@ export const useGetAssetUrl = (urls: string[] | undefined | null, type: 'image' 
     const init = async () => {
       setUrl(undefined)
       setIsLoading(true)
-      const resolvedUrl = await getSingleAssetUrl(urls, type, userBenchmarkTime ?? undefined)
+      const resolvedUrl = await getSingleAssetUrl(urls, id, type, userBenchmarkTime ?? undefined)
       setIsLoading(false)
       if (resolvedUrl) {
         setUrl(resolvedUrl)
@@ -106,7 +92,7 @@ export const useGetAssetUrl = (urls: string[] | undefined | null, type: 'image' 
     return () => {
       setIsLoading(false)
     }
-  }, [type, url, urls, userBenchmarkTime])
+  }, [id, type, url, urls, userBenchmarkTime])
 
   return { url, isLoading }
 }

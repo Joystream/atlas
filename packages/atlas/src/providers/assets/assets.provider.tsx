@@ -172,7 +172,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
         const previousTimeout = userBenchmarkTime ?? atlasConfig.storage.assetResponseTimeout
         if (msDuration > previousTimeout || msDuration < previousTimeout / 2) {
           const newTime = (msDuration + previousTimeout) * 0.75
-          if (newTime > 2_000) {
+          if (newTime > 20_000) {
             SentryLogger.message('User benchmark time is too high', 'OperatorsContextProvider', 'warning', {
               event: { 'userBenchmarkTime': newTime },
             })
