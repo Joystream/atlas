@@ -10,7 +10,7 @@ import {
 
 const defaultOptions = {} as const
 export type GetNotificationsConnectionQueryVariables = Types.Exact<{
-  memberId: Types.Scalars['String']
+  accountId: Types.Scalars['String']
   first: Types.Scalars['Int']
   after?: Types.InputMaybe<Types.Scalars['String']>
 }>
@@ -3424,8 +3424,13 @@ export type GetNftActivitiesQuery = {
 }
 
 export const GetNotificationsConnectionDocument = gql`
-  query GetNotificationsConnection($memberId: String!, $first: Int!, $after: String) {
-    notificationsConnection(first: $first, after: $after, orderBy: event_timestamp_DESC) {
+  query GetNotificationsConnection($accountId: String!, $first: Int!, $after: String) {
+    notificationsConnection(
+      first: $first
+      after: $after
+      orderBy: event_timestamp_DESC
+      where: { account: { id_eq: $accountId } }
+    ) {
       pageInfo {
         hasNextPage
         endCursor
@@ -3556,7 +3561,7 @@ export const GetNotificationsConnectionDocument = gql`
  * @example
  * const { data, loading, error } = useGetNotificationsConnectionQuery({
  *   variables: {
- *      memberId: // value for 'memberId'
+ *      accountId: // value for 'accountId'
  *      first: // value for 'first'
  *      after: // value for 'after'
  *   },
