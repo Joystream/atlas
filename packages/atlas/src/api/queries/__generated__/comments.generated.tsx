@@ -281,12 +281,14 @@ export type GetCommentEditsQuery = {
       | { __typename?: 'BidMadeCompletingAuctionEventData' }
       | { __typename?: 'BuyNowCanceledEventData' }
       | { __typename?: 'BuyNowPriceUpdatedEventData' }
+      | { __typename?: 'ChannelCreatedEventData' }
       | { __typename?: 'ChannelFundsWithdrawnEventData' }
       | { __typename?: 'ChannelPaymentMadeEventData' }
       | { __typename?: 'ChannelPayoutsUpdatedEventData' }
       | { __typename?: 'ChannelRewardClaimedAndWithdrawnEventData' }
       | { __typename?: 'ChannelRewardClaimedEventData' }
       | { __typename?: 'CommentCreatedEventData'; text: string }
+      | { __typename?: 'CommentReactionEventData' }
       | { __typename?: 'CommentTextUpdatedEventData'; newText: string }
       | { __typename?: 'EnglishAuctionSettledEventData' }
       | { __typename?: 'EnglishAuctionStartedEventData' }
@@ -294,9 +296,12 @@ export type GetCommentEditsQuery = {
       | { __typename?: 'MetaprotocolTransactionStatusEventData' }
       | { __typename?: 'NftBoughtEventData' }
       | { __typename?: 'NftIssuedEventData' }
+      | { __typename?: 'NftOfferedEventData' }
       | { __typename?: 'NftSellOrderMadeEventData' }
       | { __typename?: 'OpenAuctionBidAcceptedEventData' }
       | { __typename?: 'OpenAuctionStartedEventData' }
+      | { __typename?: 'VideoCreatedEventData' }
+      | { __typename?: 'VideoReactionEventData' }
   }>
 }
 
