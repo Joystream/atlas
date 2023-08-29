@@ -82,7 +82,6 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
           .replaceAll(',', ' ')
         break
     }
-    console.log(formattedDenominatedValue, 'fmD')
     const hasDecimals = internalValue - Math.floor(internalValue) !== 0
     const hasTooltip =
       withTooltip &&
