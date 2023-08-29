@@ -54,7 +54,7 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
     (value: string) => ({
       where: {
         channel: {
-          title_startsWith: value,
+          title_containsInsensitive: value,
           ownerMember: {
             id_not_eq: memberId,
           },
