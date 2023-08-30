@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useRef, useState } from 'react'
 
 import { Information } from '@/components/Information'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
@@ -9,14 +9,7 @@ import { DetailsContent } from '@/components/_nft/NftTile'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { formatDate } from '@/utils/time'
 
-import {
-  DetailsBox,
-  ExpandableContainer,
-  LabelText,
-  StatisticsContainer,
-  SupplyLine,
-  Widget,
-} from './CrtStatusWidget.styles'
+import { Drawer, LabelText, StatisticsContainer, SupplyLine, ToggleContainer, Widget } from './CrtStatusWidget.styles'
 
 type Amount = NumberFormatProps['value']
 export type CrtStatusWidgetProps = {
@@ -38,6 +31,7 @@ export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({
   revenueShare,
   transactionVolume,
 }) => {
+  const drawer = useRef<HTMLDivElement>(null)
   const [isExpanded, expand] = useState(true)
   const smMatch = useMediaMatch('sm')
 
@@ -61,7 +55,7 @@ export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({
           </SupplyLine>
 
           <StatisticsContainer>
-            <ExpandableContainer onClick={() => expand(!isExpanded)}>
+            <ToggleContainer onClick={() => expand(!isExpanded)}>
               <Text as="h3" variant="h500">
                 Statistics
               </Text>
@@ -69,50 +63,48 @@ export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({
               <Text as="p" variant="t100">
                 Token creation date, Revenue, Volume, Vesting
               </Text>
-            </ExpandableContainer>
+            </ToggleContainer>
 
-            {isExpanded && (
-              <DetailsBox>
-                <DetailsContent
-                  avoidIconStyling
-                  tileSize={smMatch ? 'big' : 'bigSmall'}
-                  caption="Token creation date"
-                  content={formatDate(creationDate)}
-                />
-                <DetailsContent
-                  avoidIconStyling
-                  tileSize={smMatch ? 'big' : 'bigSmall'}
-                  caption="Market cap"
-                  content={marketCap}
-                  icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
-                  withDenomination
-                />
-                <DetailsContent
-                  avoidIconStyling
-                  tileSize={smMatch ? 'big' : 'bigSmall'}
-                  caption="Total revenue"
-                  content={revenue}
-                  icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
-                  withDenomination
-                />
-                <DetailsContent
-                  avoidIconStyling
-                  tileSize={smMatch ? 'big' : 'bigSmall'}
-                  caption="Total revenue Shares"
-                  content={revenueShare}
-                  icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
-                  withDenomination
-                />
-                <DetailsContent
-                  avoidIconStyling
-                  tileSize={smMatch ? 'big' : 'bigSmall'}
-                  caption="Total Transaction volume"
-                  content={transactionVolume}
-                  icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
-                  withDenomination
-                />
-              </DetailsBox>
-            )}
+            <Drawer ref={drawer} maxHeight={drawer.current?.scrollHeight} isExpanded={isExpanded}>
+              <DetailsContent
+                avoidIconStyling
+                tileSize={smMatch ? 'big' : 'bigSmall'}
+                caption="Token creation date"
+                content={formatDate(creationDate)}
+              />
+              <DetailsContent
+                avoidIconStyling
+                tileSize={smMatch ? 'big' : 'bigSmall'}
+                caption="Market cap"
+                content={marketCap}
+                icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
+                withDenomination
+              />
+              <DetailsContent
+                avoidIconStyling
+                tileSize={smMatch ? 'big' : 'bigSmall'}
+                caption="Total revenue"
+                content={revenue}
+                icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
+                withDenomination
+              />
+              <DetailsContent
+                avoidIconStyling
+                tileSize={smMatch ? 'big' : 'bigSmall'}
+                caption="Total revenue Shares"
+                content={revenueShare}
+                icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
+                withDenomination
+              />
+              <DetailsContent
+                avoidIconStyling
+                tileSize={smMatch ? 'big' : 'bigSmall'}
+                caption="Total Transaction volume"
+                content={transactionVolume}
+                icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
+                withDenomination
+              />
+            </Drawer>
           </StatisticsContainer>
         </>
       }

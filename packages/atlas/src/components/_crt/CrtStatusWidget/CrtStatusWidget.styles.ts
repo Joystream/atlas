@@ -2,15 +2,23 @@ import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
-import { cVar, sizes } from '@/styles'
+import { cVar, sizes, transitions } from '@/styles'
 
-export const DetailsBox = styled.div`
+export const Drawer = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${sizes(6)};
-  margin-top: ${sizes(6)};
+
+  > :first-child {
+    margin-top: ${sizes(6)};
+  }
+
+  overflow-y: hidden;
+  transition: max-height ${transitions.timings.loading} ${transitions.easing};
+  max-height: ${(props: { maxHeight?: number; isExpanded: boolean }) =>
+    props.isExpanded ? `${props.maxHeight}px` : 0};
 `
-export const ExpandableContainer = styled.div`
+export const ToggleContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: center;
