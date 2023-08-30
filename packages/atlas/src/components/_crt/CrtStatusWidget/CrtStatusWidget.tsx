@@ -60,8 +60,8 @@ export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({
             <Information />
           </SupplyLine>
 
-          <StatisticsContainer onClick={() => expand(!isExpanded)}>
-            <ExpandableContainer>
+          <StatisticsContainer>
+            <ExpandableContainer onClick={() => expand(!isExpanded)}>
               <Text as="h3" variant="h500">
                 Statistics
               </Text>
