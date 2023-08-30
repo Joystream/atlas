@@ -7,6 +7,7 @@ import { createApolloClient } from '@/api'
 import { HoldersWidget, HoldersWidgetProps } from '@/components/_crt/HoldersWidget/HoldersWidget'
 import { OperatorsContextProvider } from '@/providers/assets/assets.provider'
 import { JoystreamProvider } from '@/providers/joystream/joystream.provider'
+import { OverlayManagerProvider } from '@/providers/overlayManager'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,11 +27,13 @@ export default {
         <MemoryRouter>
           <QueryClientProvider client={queryClient}>
             <ApolloProvider client={apolloClient}>
-              <OperatorsContextProvider>
-                <JoystreamProvider>
-                  <Story />
-                </JoystreamProvider>
-              </OperatorsContextProvider>
+              <OverlayManagerProvider>
+                <OperatorsContextProvider>
+                  <JoystreamProvider>
+                    <Story />
+                  </JoystreamProvider>
+                </OperatorsContextProvider>
+              </OverlayManagerProvider>
             </ApolloProvider>
           </QueryClientProvider>
         </MemoryRouter>

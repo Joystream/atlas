@@ -25,9 +25,10 @@ type CrtHolder = {
 export type CrtHoldersTableProps = {
   data: CrtHolder[]
   isLoading: boolean
+  className?: string
 }
 
-export const CrtHoldersTable = ({ isLoading, data }: CrtHoldersTableProps) => {
+export const CrtHoldersTable = ({ isLoading, data, className }: CrtHoldersTableProps) => {
   const mappedData = useMemo(
     () =>
       data.map((row) => ({
@@ -55,7 +56,7 @@ export const CrtHoldersTable = ({ isLoading, data }: CrtHoldersTableProps) => {
     return null
   }
 
-  return <StyledTable columns={COLUMNS} data={mappedData} />
+  return <StyledTable columns={COLUMNS} data={mappedData} className={className} />
 }
 
 const MemberRow = ({ memberId }: { memberId: string }) => {
