@@ -18,6 +18,16 @@ const Template: StoryFn<Omit<NumberFormatProps, 'ref'>> = (args) => (
   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '12px', padding: '200px' }}>
     <NumberFormat {...args} value={tokenNumberToHapiBn(args.value as number)} withToken />
     <NumberFormat {...args} value={args.value as number} withToken={false} />
+    <NumberFormat {...args} format="full" value={args.value as number} withToken withDenomination customTicker="$JBC" />
+    <NumberFormat
+      {...args}
+      format="full"
+      value={args.value as number}
+      withToken
+      withDenomination
+      customTicker="$JBC"
+      denominationMultiplier={10}
+    />
   </div>
 )
 
