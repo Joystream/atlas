@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react'
 
 import { atlasConfig } from '@/config'
-import { testAssetDownload } from '@/providers/assets/assets.helpers'
+import { logDistributorPerformance, testAssetDownload } from '@/providers/assets/assets.helpers'
 import { useOperatorsContext } from '@/providers/assets/assets.provider'
-import { ConsoleLogger } from '@/utils/logs'
+import { AssetType } from '@/providers/uploads/uploads.types'
+import { getVideoCodec } from '@/utils/getVideoCodec'
+import { ConsoleLogger, DistributorEventEntry, SentryLogger, UserEventsLogger } from '@/utils/logs'
 import { withTimeout } from '@/utils/misc'
 
 export const getSingleAssetUrl = async (
-  urls: string[] | undefined | null,
-  type: 'image' | 'video' | 'subtitle',
+  urls: string[] | null | undefined,
+  id: string | null | undefined,
+  type: AssetType | null,
   timeout?: number
 ): Promise<string | undefined> => {
   if (!urls || !urls.length) {
@@ -16,6 +19,12 @@ export const getSingleAssetUrl = async (
   }
 
   for (const distributionAssetUrl of urls) {
+    const eventEntry: DistributorEventEntry = {
+      dataObjectId: id,
+      dataObjectType: type || undefined,
+      resolvedUrl: distributionAssetUrl,
+    }
+
     const assetTestPromise = testAssetDownload(distributionAssetUrl, type)
     const assetTestPromiseWithTimeout = withTimeout(
       assetTestPromise,
@@ -25,9 +34,17 @@ export const getSingleAssetUrl = async (
     try {
       await assetTestPromiseWithTimeout
 
+      logDistributorPerformance(distributionAssetUrl, eventEntry)
+
       return distributionAssetUrl
-    } catch {
-      /**/
+    } catch (err) {
+      if (err instanceof MediaError) {
+        const codec = getVideoCodec(distributionAssetUrl)
+        UserEventsLogger.logWrongCodecEvent(eventEntry, { codec })
+        SentryLogger.error('Error during asset download test, media is not supported', 'AssetsManager', err, {
+          asset: { parent, distributionAssetUrl, mediaError: err, codec },
+        })
+      }
     }
   }
 
@@ -50,10 +67,11 @@ export const getSingleAssetUrl = async (
   })
 }
 
-export const useGetAssetUrl = (urls: string[] | undefined | null, type: 'image' | 'video' | 'subtitle') => {
+export const useGetAssetUrl = (urls: string[] | undefined | null, type: AssetType | null) => {
   const [url, setUrl] = useState<string | undefined>(undefined)
   const [isLoading, setIsLoading] = useState(true)
   const { userBenchmarkTime } = useOperatorsContext()
+  const id = url?.split('/').pop()
   useEffect(() => {
     if (!urls || (url && urls.includes(url)) || (!url && !urls.length)) {
       setIsLoading(false)
@@ -62,7 +80,7 @@ export const useGetAssetUrl = (urls: string[] | undefined | null, type: 'image' 
     const init = async () => {
       setUrl(undefined)
       setIsLoading(true)
-      const resolvedUrl = await getSingleAssetUrl(urls, type, userBenchmarkTime ?? undefined)
+      const resolvedUrl = await getSingleAssetUrl(urls, id, type, userBenchmarkTime ?? undefined)
       setIsLoading(false)
       if (resolvedUrl) {
         setUrl(resolvedUrl)
@@ -74,7 +92,7 @@ export const useGetAssetUrl = (urls: string[] | undefined | null, type: 'image' 
     return () => {
       setIsLoading(false)
     }
-  }, [type, url, urls, userBenchmarkTime])
+  }, [id, type, url, urls, userBenchmarkTime])
 
   return { url, isLoading }
 }

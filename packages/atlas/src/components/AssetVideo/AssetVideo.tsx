@@ -10,7 +10,7 @@ export type AssetVideoProps = {
 export const AssetVideo = forwardRef<HTMLVideoElement, AssetVideoProps>(
   ({ resolvedVideoUrls, resolvedPosterUrls, ...props }: AssetVideoProps, ref) => {
     const { url: videoSrc } = useGetAssetUrl(resolvedVideoUrls, 'video')
-    const { url: posterSrc } = useGetAssetUrl(resolvedPosterUrls, 'image')
+    const { url: posterSrc } = useGetAssetUrl(resolvedPosterUrls, 'cover')
 
     return <video {...props} ref={ref} src={videoSrc} poster={posterSrc} />
   }

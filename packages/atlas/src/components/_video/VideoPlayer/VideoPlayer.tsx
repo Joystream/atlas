@@ -23,7 +23,7 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSegmentAnalytics, videoPlaybackParams } from '@/hooks/useSegmentAnalytics'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { isMobile } from '@/utils/browser'
-import { ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { ConsoleLogger, SentryLogger, UserEventsLogger } from '@/utils/logs'
 import { formatDurationShort } from '@/utils/time'
 
 import { ControlsIndicator } from './ControlsIndicator'
@@ -160,6 +160,8 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
   const [isFullScreen, setIsFullScreen] = useState(false)
   const [isPiPEnabled, setIsPiPEnabled] = useState(false)
   const [isSettingsPopoverOpened, setIsSettingsPopoverOpened] = useState(false)
+  const [waitingStateCount, setWaitingStateCount] = useState(0)
+  const [slowNetworkEventSent, setSlowNetworkEventSent] = useState(false)
 
   const [autoplayEventFired, setAutoplayEventFired] = useState(!(typeof autoplay === 'boolean'))
   const [playerState, setPlayerState] = useState<PlayerState>('loading')
@@ -224,6 +226,9 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
         if (error.name === 'NotAllowedError') {
           ConsoleLogger.warn('Video playback failed', error)
         } else {
+          UserEventsLogger.logUserError('playback-has-crashed', {
+            video: { id: videoId, urls: videoJsConfig.videoUrls },
+          })
           SentryLogger.error('Video playback failed', 'VideoPlayer', error, {
             video: { id: videoId, urls: videoJsConfig.videoUrls },
           })
@@ -343,6 +348,18 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     }
     const handler = (event: Event) => {
       if (event.type === 'waiting' || event.type === 'seeking') {
+        if (event.type === 'waiting') {
+          setWaitingStateCount((prev) => prev + 1)
+          if (waitingStateCount > 3 && !slowNetworkEventSent) {
+            UserEventsLogger.logPlaybackIsSlowEvent({
+              ...videoPlaybackData,
+              dataObjectId: video?.media?.id ?? '',
+              dataObjectType: 'video',
+              resolvedUrl: player.src() ?? '',
+            })
+            setSlowNetworkEventSent(true)
+          }
+        }
         setPlayerState('loading')
       }
       if (event.type === 'canplay' || event.type === 'seeked') {
@@ -353,7 +370,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     return () => {
       player.off(['waiting', 'canplay', 'seeking', 'seeked'], handler)
     }
-  }, [player, playerState])
+  }, [player, playerState, slowNetworkEventSent, video?.media?.id, videoPlaybackData, waitingStateCount])
 
   useEffect(() => {
     if (!player) {

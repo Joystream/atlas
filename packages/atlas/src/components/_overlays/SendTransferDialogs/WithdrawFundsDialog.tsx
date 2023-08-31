@@ -15,6 +15,7 @@ import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { useFee, useJoystream, useTokenPrice } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
+import { UserEventsLogger } from '@/utils/logs'
 import { formatNumber } from '@/utils/number'
 import { useChannelPaymentsHistory } from '@/views/studio/MyPaymentsView/PaymentsTransactions/PaymentTransactions.hooks'
 
@@ -95,6 +96,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
           ),
         onTxSync: async () => {
           fetchPaymentsData()
+          UserEventsLogger.logFundsWithdrawal(channelId, formatNumber(data.amount || 0))
           trackWithdrawnFunds(channelId, formatNumber(data.amount || 0))
           onExitClick()
         },

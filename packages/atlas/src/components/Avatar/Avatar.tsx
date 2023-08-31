@@ -123,6 +123,7 @@ export const Avatar: FC<AvatarProps> = ({
             onError={onError}
             isLoading={loading}
             imagePlaceholder={<SilhouetteAvatar />}
+            type="avatar"
           />
         ))}
       {children && (loading ? <StyledSkeletonLoader rounded /> : <ChildrenWrapper>{children}</ChildrenWrapper>)}

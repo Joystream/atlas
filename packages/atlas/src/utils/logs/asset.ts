@@ -1,7 +1,9 @@
-import { debounce } from 'lodash-es'
+import { throttle } from 'lodash-es'
 
 import { axiosInstance } from '@/api/axios'
 import { DataObjectType } from '@/api/queries/__generated__/baseTypes.generated'
+import { NftIssuanceInputMetadata } from '@/joystream-lib/types'
+import { AssetType } from '@/providers/uploads/uploads.types'
 
 import { ConsoleLogger } from './console'
 import { SentryLogger } from './sentry'
@@ -11,28 +13,48 @@ type DistributorEventDetails = {
   distributorUrl?: string | null
 }
 
-type StorageProviderEventDetails = {
-  storageProviderId: string
-  storageProviderUrl?: string | null
+export type DistributorEventMetric = {
+  initialResponseTime?: number
+  fullResponseTime?: number
+  downloadSpeed?: number
 }
 
-type StorageEvent = {
+type UserPerformanceEvent = UserLogEvent
+
+type ErrorEvent = UserErrorEvent | DistributorErrorEvent
+
+type UserErrorEvent = {
+  error?: string
+  details?: {
+    [key: string]: unknown
+  }
+} & UserLogEvent
+
+type DistributorErrorEvent = {
+  error?: string
+  details?: {
+    [key: string]: unknown
+  }
+} & DistributorEventEntry
+
+type UserLogEvent = {
   type: string
+  userDevice?: string
+  user?: Record<string, unknown>
   [x: string]: unknown
-} & (DistributorEventDetails | StorageProviderEventDetails)
+}
 
 export type DistributorEventEntry = {
-  dataObjectId: string
-  dataObjectType: DataObjectType['__typename']
-  resolvedUrl: string
+  dataObjectId?: string | null
+  dataObjectType?: DataObjectType['__typename'] | AssetType
+  resolvedUrl?: string
 } & DistributorEventDetails
 
-export type DataObjectResponseMetric = {
-  initialResponseTime: number
-  fullResponseTime?: number
+type CodecInfo = {
+  codec?: string
 }
 
-class _AssetLogger {
+class _UserEventsLogger {
   private logUrl = ''
   private user?: Record<string, unknown>
 
@@ -49,63 +71,171 @@ class _AssetLogger {
     this.user = user
   }
 
-  get isEnabled() {
-    return !!this.logUrl
-  }
+  private pendingPerformanceEvents: UserPerformanceEvent[] = []
+  private pendingErrorEvents: ErrorEvent[] = []
 
-  private pendingEvents: StorageEvent[] = []
+  private sendPerformanceEvents = throttle(async () => {
+    if (!this.pendingPerformanceEvents.length) return
 
-  private sendEvents = debounce(async () => {
-    if (!this.pendingEvents.length) return
-    if (!this.logUrl) return
-
-    ConsoleLogger.debug(`Sending ${this.pendingEvents.length} asset events`)
+    ConsoleLogger.debug(`Sending ${this.pendingPerformanceEvents.length} performance events`)
 
     const payload = {
-      events: this.pendingEvents,
+      events: this.pendingPerformanceEvents,
     }
-    this.pendingEvents = []
+    this.pendingPerformanceEvents = []
 
     try {
       await axiosInstance.post(this.logUrl, payload)
     } catch (e) {
-      SentryLogger.error('Failed to send asset events', 'AssetLogger', e, { request: { url: this.logUrl } })
+      SentryLogger.error('Failed to send performance events', 'UserEventsLogger', e)
     }
-  }, 2000)
+  }, 60 * 1000)
 
-  private addEvent(event: StorageEvent) {
+  private sendErrorEvents = throttle(async () => {
+    if (!this.pendingErrorEvents.length) return
+
+    ConsoleLogger.debug(`Sending ${this.pendingErrorEvents.length} error events`)
+
+    const payload = {
+      events: this.pendingErrorEvents,
+    }
+    this.pendingErrorEvents = []
+
+    try {
+      await axiosInstance.post(this.logUrl, payload)
+    } catch (e) {
+      SentryLogger.error('Failed to send asset events', 'UserEventsLogger', e)
+    }
+  }, 5 * 1000)
+
+  private addPerformanceEvent(event: UserPerformanceEvent | UserLogEvent) {
     const eventWithUser = {
       ...event,
       user: this.user,
     }
-    this.pendingEvents.push(eventWithUser)
-    this.sendEvents()
+    this.pendingPerformanceEvents.push(eventWithUser)
+    this.sendPerformanceEvents()
+  }
+  private addErrorEvent(event: ErrorEvent) {
+    const eventWithUser = {
+      ...event,
+      user: this.user,
+    }
+    this.pendingErrorEvents.push(eventWithUser)
+    this.sendErrorEvents()
   }
 
-  logDistributorResponseTime(entry: DistributorEventEntry, metric: DataObjectResponseMetric) {
-    const event: StorageEvent = {
+  logDistributorResponseTime(entry: DistributorEventEntry, metric: DistributorEventMetric) {
+    const event: UserPerformanceEvent = {
       type: 'distributor-response-time',
       ...entry,
       ...metric,
     }
-    this.addEvent(event)
+    this.addPerformanceEvent(event)
   }
 
-  logDistributorError(entry: DistributorEventEntry) {
-    const event: StorageEvent = {
+  logDistributorError(entry: DistributorEventEntry, error: Error) {
+    const event: UserLogEvent = {
       type: 'distributor-response-error',
       ...entry,
+      error: error.message,
     }
-    this.addEvent(event)
+    this.addErrorEvent(event)
   }
 
   logDistributorResponseTimeout(entry: DistributorEventEntry) {
-    const event: StorageEvent = {
+    const event: UserPerformanceEvent = {
       type: 'distributor-response-timeout',
       ...entry,
     }
-    this.addEvent(event)
+    this.addPerformanceEvent(event)
+  }
+
+  logDistributorBlacklistedEvent(entry: DistributorEventEntry) {
+    const event: UserLogEvent = {
+      type: 'distributor-blacklisted',
+      ...entry,
+    }
+    this.addErrorEvent(event)
+  }
+
+  logPlaybackIsSlowEvent(entry: DistributorEventEntry) {
+    const event: UserPerformanceEvent = {
+      type: 'playback-is-slow',
+      ...entry,
+    }
+    this.addPerformanceEvent(event)
+  }
+
+  logWrongCodecEvent(entry: DistributorEventEntry, info: CodecInfo) {
+    const event: UserLogEvent = {
+      type: 'playback-wrong-codec',
+      ...entry,
+      ...info,
+    }
+    this.addErrorEvent(event)
+  }
+
+  logAssetUploadFailedEvent(entry: DistributorEventEntry, error: Error) {
+    const event: UserLogEvent = {
+      type: 'asset-upload-failed',
+      ...entry,
+      error: error.message,
+    }
+    this.addErrorEvent(event)
+  }
+
+  logMissingOperatorsForBag(storageBagId: string) {
+    const event: UserLogEvent = {
+      type: 'missing-operators-for-bag',
+      storageBagId,
+    }
+    this.addErrorEvent(event)
+  }
+
+  logNftMintingFailedEvent(nft?: NftIssuanceInputMetadata, error?: Error) {
+    const event: UserLogEvent = {
+      type: 'nft-minting-failed',
+      details: {
+        nft,
+      },
+      error: error?.message,
+    }
+    this.addErrorEvent(event)
+  }
+
+  logFundsWithdrawal(channelId: string, amount: string) {
+    const event: UserLogEvent = {
+      type: 'funds-withdrawal',
+      channelId,
+      amount,
+    }
+    this.addPerformanceEvent(event)
+  }
+
+  logUserBenchmarkTime(time: number) {
+    const event: UserLogEvent = {
+      type: 'user-statistics-benchmark-time',
+      time,
+    }
+    this.addPerformanceEvent(event)
+  }
+
+  logUserError(type: string, error: Record<string, unknown>) {
+    const event: UserLogEvent = {
+      type,
+      ...error,
+    }
+    this.addErrorEvent(event)
+  }
+
+  logUserEvent(type: string, details: Record<string, unknown>) {
+    const event: UserLogEvent = {
+      type,
+      ...details,
+    }
+    this.addPerformanceEvent(event)
   }
 }
 
-export const AssetLogger = new _AssetLogger()
+export const UserEventsLogger = new _UserEventsLogger()
