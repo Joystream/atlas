@@ -1,3 +1,4 @@
+import { Datum } from '@nivo/line'
 import { z } from 'zod'
 
 export const assuranceOptions = [
@@ -111,3 +112,73 @@ export const createTokenIssuanceSchema = (tokenName: string) =>
         message: 'Select vesting for your token.',
       }
     )
+
+export const generateChartData = (cliffTime: number, vestingTime: number, firstPayout = 0) => {
+  if (!cliffTime && !vestingTime) {
+    return [
+      {
+        x: '',
+        y: '100%',
+      },
+      {
+        x: 'Now',
+        y: '100%',
+      },
+    ]
+  }
+  const data: Datum[] = []
+  for (let i = 1; i <= cliffTime; i++) {
+    if (!cliffTime) break
+    if (!data.length) {
+      data.push({
+        x: 'Now',
+        y: '0%',
+      })
+    }
+    data.push({
+      x: `${i}M`,
+      y: '0%',
+    })
+  }
+
+  if (firstPayout || !vestingTime) {
+    const lastDatum = data[data.length - 1]
+    if (lastDatum) {
+      data.push({
+        x: lastDatum.x,
+        y: `${vestingTime ? firstPayout : 100}%`,
+      })
+    } else {
+      data.push({
+        x: 'Now',
+        y: `${vestingTime ? firstPayout : 100}%`,
+      })
+    }
+  }
+  for (let i = cliffTime + 1; i <= cliffTime + vestingTime; i++) {
+    const partToVest = 100 - firstPayout
+    const vestingPerTick = partToVest / vestingTime
+    if (!data.length) {
+      data.push({
+        x: 'Now',
+        y: '0%',
+      })
+    }
+    data.push({
+      x: `${i}M`,
+      y: `${vestingPerTick * (i - cliffTime) + firstPayout}%`,
+    })
+  }
+  return data
+}
+
+export const getDataBasedOnType = (type: 'secure' | 'safe' | 'risky'): [number, number, number] => {
+  switch (type) {
+    case 'secure':
+      return [6, 12, 50]
+    case 'safe':
+      return [0, 6, 50]
+    case 'risky':
+      return [0, 0, 0]
+  }
+}

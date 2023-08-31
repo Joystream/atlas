@@ -21,6 +21,7 @@ export const FlexBox = styled.div<FlexBoxProps>`
     justify-content: ${props.justifyContent ?? 'start'};
     width: ${props.width ?? '100%'};
   `}
+
   ${(props) =>
     props.equalChildren
       ? css`

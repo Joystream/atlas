@@ -4,17 +4,15 @@ import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { useMemberships } from '@/api/hooks/membership'
 import { SvgJoystreamLogoShort } from '@/assets/logos'
 import { Avatar } from '@/components/Avatar'
+import { DateTimeBlock } from '@/components/DateTimeBlock'
 import { Table, TableProps } from '@/components/Table'
 import { Text } from '@/components/Text'
 import { TextButton } from '@/components/_buttons/Button'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { absoluteRoutes } from '@/config/routes'
-import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { SentryLogger } from '@/utils/logs'
 import { shortenString } from '@/utils/misc'
-import { formatNumber } from '@/utils/number'
-import { formatDateTime } from '@/utils/time'
 
 import {
   DialogText,
@@ -54,7 +52,7 @@ export const TablePaymentsHistory: FC<TablePaymentsHistoryProps> = ({ data, isLo
   const mappedData: TableProps['data'] = useMemo(
     () =>
       data.map((data) => ({
-        date: <Date date={data.date} />,
+        date: <DateTimeBlock date={data.date} />,
         type: <Type type={data.type} />,
         amount: <TokenAmount tokenAmount={data.amount} />,
         sender: <Sender sender={data.sender} />,
@@ -143,20 +141,6 @@ const Sender = ({ sender }: { sender: PaymentHistory['sender'] }) => {
   } else {
     return <SenderItem nodeStart={<Avatar />} label={shortenString(sender, 6, 4)} isInteractive={false} />
   }
-}
-
-const Date = ({ date }: { date: Date }) => {
-  const { convertMsTimestampToBlock } = useBlockTimeEstimation()
-  return (
-    <>
-      <Text as="p" variant="t200-strong">
-        {formatDateTime(date)}
-      </Text>
-      <Text as="p" variant="t100" margin={{ top: 1 }} color="colorText">
-        {formatNumber(convertMsTimestampToBlock(date.getTime()) || 0)} block
-      </Text>
-    </>
-  )
 }
 
 const Type = ({ type }: { type: PaymentType }) => {
