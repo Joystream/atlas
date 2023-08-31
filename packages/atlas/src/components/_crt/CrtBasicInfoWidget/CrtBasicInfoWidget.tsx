@@ -1,6 +1,7 @@
-import { ReactElement, ReactNode } from 'react'
+import { ReactElement, ReactNode, useRef } from 'react'
 
 import { FlexBox } from '@/components/FlexBox'
+import { Tooltip } from '@/components/Tooltip'
 import { WidgetTile } from '@/components/WidgetTile'
 import { DetailsContent } from '@/components/_nft/NftTile'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -10,20 +11,22 @@ export type CrtBasicInfoWidgetProps = {
   details: {
     caption: string
     content: number | string | ReactElement | ReactElement[]
-    icon: ReactNode
+    icon?: ReactNode
     tooltipText?: string
   }[]
 }
 
 export const CrtBasicInfoWidget = ({ name, details }: CrtBasicInfoWidgetProps) => {
+  const titleRef = useRef<HTMLSpanElement | null>(null)
   const smMatch = useMediaMatch('sm')
   return (
     <WidgetTile
-      title={`$${name ?? 'ABC'}`}
+      title={<span ref={titleRef}>${name ?? 'ABC'}</span>}
       titleVariant="h700"
       titleColor="colorTextStrong"
       customNode={
         <FlexBox gap={5}>
+          <Tooltip reference={titleRef} text="Token name" placement="top-start" />
           {details.map((detail, idx) => (
             <DetailsContent
               {...detail}

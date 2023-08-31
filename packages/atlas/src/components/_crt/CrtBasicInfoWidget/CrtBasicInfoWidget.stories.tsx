@@ -31,7 +31,6 @@ Default.args = {
     {
       caption: 'REV. SHARE',
       content: '80%',
-      icon: <JoyTokenIcon size={16} variant="silver" />,
       tooltipText: 'Lorem ipsum',
     },
     {

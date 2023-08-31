@@ -14,7 +14,7 @@ import { Information } from '../Information'
 
 export type WidgetTileProps = {
   loading?: boolean
-  title: string | number
+  title: string | number | JSX.Element
   button?: { text: string } & Omit<ButtonProps, 'children'>
   text?: string | number
   customNode?: ReactNode
