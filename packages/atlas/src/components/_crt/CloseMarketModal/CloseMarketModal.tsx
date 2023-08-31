@@ -40,7 +40,7 @@ export const CloseMarketModal = ({ tokenId }: CloseMarketModalProps) => {
       <FlexBox flow="column" gap={6}>
         <FlexBox flow="column" gap={2}>
           <Text variant="t200" as="p" color="colorText">
-            To close market you or any other member need to sell enough of $JBC tokens to the market to balance the
+            To close market you or any other member need to sell enough of ${title} tokens to the market to balance the
             amount of tokens minted with this market.
           </Text>
           <TextButton icon={<SvgActionPlay />} iconPlacement="left">
