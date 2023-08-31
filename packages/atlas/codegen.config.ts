@@ -1,8 +1,13 @@
 import { CodegenConfig } from '@graphql-codegen/cli'
+import * as assert from 'assert'
 
 import { customSchemaLoader } from './scripts/customSchemaLoader'
 
-const schemaUrl = 'https://orion.gleev.xyz/graphql'
+const NODE_ENV = process.env.NODE_ENV?.toUpperCase() ?? 'PRODUCTION'
+const schemaUrl = process.env[`VITE_${NODE_ENV}_ORION_URL`]
+const authUrl = process.env[`VITE_${NODE_ENV}_ORION_AUTH_URL`]
+assert(schemaUrl)
+assert(authUrl)
 
 const config: CodegenConfig = {
   overwrite: true,
@@ -13,7 +18,7 @@ const config: CodegenConfig = {
       [schemaUrl]: {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        loader: customSchemaLoader,
+        loader: customSchemaLoader(schemaUrl, `${authUrl}/anonymous-auth`),
       },
     },
   ],

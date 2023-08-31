@@ -15,12 +15,14 @@ export const NotificationsManager: FC = () => {
             return fetchMoreResult
           }
 
-          if (
-            prev.notificationsConnection.edges[0]?.node.event.id !==
-            fetchMoreResult.notificationsConnection.edges[0]?.node.event.id
-          ) {
+          const prevFirstEvent = prev.notificationsConnection.edges.find(({ node }) => node.event)?.node.event
+          if (!prevFirstEvent) {
+            return fetchMoreResult
+          }
+
+          if (prevFirstEvent.id !== fetchMoreResult.notificationsConnection.edges[0]?.node.event?.id) {
             const numberOfNewNotifications = fetchMoreResult.notificationsConnection.edges.findIndex(
-              (node) => node.node.event.id === prev.notificationsConnection.edges[0]?.node.event.id
+              ({ node }) => node.event?.id === prevFirstEvent?.id
             )
             return {
               ...prev,

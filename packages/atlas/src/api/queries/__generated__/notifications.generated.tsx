@@ -10,7 +10,7 @@ import {
 
 const defaultOptions = {} as const
 export type GetNotificationsConnectionQueryVariables = Types.Exact<{
-  memberId: Types.Scalars['String']
+  accountId: Types.Scalars['String']
   first: Types.Scalars['Int']
   after?: Types.InputMaybe<Types.Scalars['String']>
 }>
@@ -26,7 +26,7 @@ export type GetNotificationsConnectionQuery = {
       cursor: string
       node: {
         __typename?: 'Notification'
-        event: {
+        event?: {
           __typename?: 'Event'
           id: string
           timestamp: Date
@@ -356,6 +356,7 @@ export type GetNotificationsConnectionQuery = {
               }
             | { __typename?: 'BuyNowCanceledEventData' }
             | { __typename?: 'BuyNowPriceUpdatedEventData' }
+            | { __typename?: 'ChannelCreatedEventData' }
             | { __typename?: 'ChannelFundsWithdrawnEventData' }
             | { __typename?: 'ChannelPaymentMadeEventData' }
             | { __typename?: 'ChannelPayoutsUpdatedEventData' }
@@ -403,6 +404,7 @@ export type GetNotificationsConnectionQuery = {
                   }
                 }
               }
+            | { __typename?: 'CommentReactionEventData' }
             | { __typename?: 'CommentTextUpdatedEventData' }
             | {
                 __typename?: 'EnglishAuctionSettledEventData'
@@ -612,6 +614,7 @@ export type GetNotificationsConnectionQuery = {
                 }
               }
             | { __typename?: 'NftIssuedEventData' }
+            | { __typename?: 'NftOfferedEventData' }
             | { __typename?: 'NftSellOrderMadeEventData' }
             | {
                 __typename?: 'OpenAuctionBidAcceptedEventData'
@@ -756,7 +759,9 @@ export type GetNotificationsConnectionQuery = {
                     }
               }
             | { __typename?: 'OpenAuctionStartedEventData' }
-        }
+            | { __typename?: 'VideoCreatedEventData' }
+            | { __typename?: 'VideoReactionEventData' }
+        } | null
       }
     }>
   }
@@ -1205,12 +1210,14 @@ export type GetNftHistoryQuery = {
                   }
                 }
           }
+        | { __typename?: 'ChannelCreatedEventData' }
         | { __typename?: 'ChannelFundsWithdrawnEventData' }
         | { __typename?: 'ChannelPaymentMadeEventData' }
         | { __typename?: 'ChannelPayoutsUpdatedEventData' }
         | { __typename?: 'ChannelRewardClaimedAndWithdrawnEventData' }
         | { __typename?: 'ChannelRewardClaimedEventData' }
         | { __typename?: 'CommentCreatedEventData' }
+        | { __typename?: 'CommentReactionEventData' }
         | { __typename?: 'CommentTextUpdatedEventData' }
         | {
             __typename?: 'EnglishAuctionSettledEventData'
@@ -1524,6 +1531,7 @@ export type GetNftHistoryQuery = {
                   }
                 }
           }
+        | { __typename?: 'NftOfferedEventData' }
         | {
             __typename?: 'NftSellOrderMadeEventData'
             price: string
@@ -1799,6 +1807,8 @@ export type GetNftHistoryQuery = {
                   }
                 }
           }
+        | { __typename?: 'VideoCreatedEventData' }
+        | { __typename?: 'VideoReactionEventData' }
     }
   }>
 }
@@ -2543,12 +2553,14 @@ export type GetNftActivitiesQuery = {
                       }
                     }
               }
+            | { __typename?: 'ChannelCreatedEventData' }
             | { __typename?: 'ChannelFundsWithdrawnEventData' }
             | { __typename?: 'ChannelPaymentMadeEventData' }
             | { __typename?: 'ChannelPayoutsUpdatedEventData' }
             | { __typename?: 'ChannelRewardClaimedAndWithdrawnEventData' }
             | { __typename?: 'ChannelRewardClaimedEventData' }
             | { __typename?: 'CommentCreatedEventData' }
+            | { __typename?: 'CommentReactionEventData' }
             | { __typename?: 'CommentTextUpdatedEventData' }
             | {
                 __typename?: 'EnglishAuctionSettledEventData'
@@ -3046,6 +3058,7 @@ export type GetNftActivitiesQuery = {
                       }
                     }
               }
+            | { __typename?: 'NftOfferedEventData' }
             | {
                 __typename?: 'NftSellOrderMadeEventData'
                 price: string
@@ -3402,6 +3415,8 @@ export type GetNftActivitiesQuery = {
                       }
                     }
               }
+            | { __typename?: 'VideoCreatedEventData' }
+            | { __typename?: 'VideoReactionEventData' }
         }
       }
     }>
@@ -3409,12 +3424,12 @@ export type GetNftActivitiesQuery = {
 }
 
 export const GetNotificationsConnectionDocument = gql`
-  query GetNotificationsConnection($memberId: String!, $first: Int!, $after: String) {
+  query GetNotificationsConnection($accountId: String!, $first: Int!, $after: String) {
     notificationsConnection(
       first: $first
       after: $after
       orderBy: event_timestamp_DESC
-      where: { member: { id_eq: $memberId } }
+      where: { account: { id_eq: $accountId } }
     ) {
       pageInfo {
         hasNextPage
@@ -3546,7 +3561,7 @@ export const GetNotificationsConnectionDocument = gql`
  * @example
  * const { data, loading, error } = useGetNotificationsConnectionQuery({
  *   variables: {
- *      memberId: // value for 'memberId'
+ *      accountId: // value for 'accountId'
  *      first: // value for 'first'
  *      after: // value for 'after'
  *   },
