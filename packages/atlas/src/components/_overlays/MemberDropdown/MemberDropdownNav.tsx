@@ -206,6 +206,14 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                   nodeEnd: hasAtLeastOneChannel && <SvgActionChevronR />,
                   onClick: () => (hasAtLeastOneChannel ? onSwitchToList(type) : onAddNewChannel?.()),
                 },
+                {
+                  asButton: true,
+                  label: 'Portfolio',
+                  nodeStart: (
+                    <IconWrapper icon={hasAtLeastOneChannel ? <SvgActionChannel /> : <SvgActionAddChannel />} />
+                  ),
+                  to: absoluteRoutes.viewer.portfolio(),
+                },
               ]}
             />
           ) : (
@@ -256,7 +264,7 @@ type ListItemOptionsProps = {
   publisher?: boolean
   hasAtLeastOneChannel?: boolean
   closeDropdown?: () => void
-  listItems: [ListItemProps, ListItemProps] | [ListItemProps]
+  listItems: ListItemProps[]
 }
 const ListItemOptions: FC<ListItemOptionsProps> = ({ publisher, closeDropdown, listItems, hasAtLeastOneChannel }) => {
   return (
