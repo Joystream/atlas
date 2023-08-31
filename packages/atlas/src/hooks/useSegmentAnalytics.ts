@@ -11,22 +11,27 @@ export type videoPlaybackParams = {
   totalLength: number
   fullScreen: boolean
   quality: string
+  isNft?: boolean
 }
 
 type PageViewParams = {
   referrerChannel?: string
   tab?: string
-  utmSource?: string
+  utm_source?: string
+  utm_campaign?: string
   isYppFlow?: boolean
 } & VideoPageViewParams &
   ChannelPageViewParams
 
 type VideoPageViewParams = {
   videoId?: string
+  videoTitle?: string
+  isNft?: boolean
   category?: string
 }
 
 type ChannelPageViewParams = {
+  channelId?: string
   channelName?: string
 }
 
@@ -331,6 +336,20 @@ export const useSegmentAnalytics = () => {
     [analytics]
   )
 
+  const trackUploadVideoClicked = useCallback(
+    (channelId: string | null | undefined) => {
+      analytics.track('Studio - Upload Video Clicked', { channelId })
+    },
+    [analytics]
+  )
+
+  const trackPublishAndUploadClicked = useCallback(
+    (channelId: string | null | undefined) => {
+      analytics.track('Video - Publish and Upload Clicked', { channelId })
+    },
+    [analytics]
+  )
+
   const trackYppReqsNotMet = useCallback(
     (
       errors: YppRequirementsErrorCode[],
@@ -403,8 +422,9 @@ export const useSegmentAnalytics = () => {
     trackNftMint,
     trackNftSale,
     trackPageView,
-    trackYppReqsNotMet,
+    trackPublishAndUploadClicked,
     trackReferralLinkGenerated,
+    trackUploadVideoClicked,
     trackVideoPlaybackCompleted,
     trackVideoPlaybackPaused,
     trackVideoPlaybackResumed,
@@ -412,6 +432,7 @@ export const useSegmentAnalytics = () => {
     trackVideoUpload,
     trackWithdrawnFunds,
     trackYppOptIn,
+    trackYppReqsNotMet,
     trackYppSignInButtonClick,
   }
 }

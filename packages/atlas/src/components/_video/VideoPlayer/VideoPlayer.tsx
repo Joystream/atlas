@@ -191,6 +191,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
       totalLength: video?.duration ?? -1,
       fullScreen: isFullScreen,
       quality: video?.mediaMetadata?.pixelHeight?.toString() ?? '1',
+      isNft: !!video?.nft?.id,
     }),
     [
       videoId,
@@ -199,6 +200,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
       video?.category?.name,
       video?.duration,
       video?.mediaMetadata?.pixelHeight,
+      video?.nft?.id,
       isFullScreen,
     ]
   )

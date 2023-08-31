@@ -56,6 +56,17 @@ export const applySchemaTagsToHtml = (html: HTMLElement, schemaTags: string) => 
   head?.insertAdjacentHTML('beforeend', schemaTags)
 }
 
+export const fetchAuthCookie = async (authUrl: string) => {
+  const response = await fetch(authUrl, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+  return response.headers.get('set-cookie')
+}
+
 export const fetchHtmlAndAppData = async (url: string): Promise<[HTMLElement, AppData]> => {
   // fetch and parse html
   const response = await fetch(url)

@@ -16,7 +16,7 @@ export const SignUpCreatingMemberStep: FC<SignUpStepsCommonProps> = ({ setPrimar
   return (
     <AuthenticationModalStepTemplate
       title="Creating membership..."
-      subtitle="Please wait while your membership is being created. Our faucet server will create it for you so you don't need to worry about any fees. This should take about 15 seconds."
+      subtitle="Please wait while your membership is being created. Our faucet server will create it for you so you don't need to worry about any fees. This may take up to 1 minute on a slow network."
       loader
       hasNavigatedBack={hasNavigatedBack}
     />

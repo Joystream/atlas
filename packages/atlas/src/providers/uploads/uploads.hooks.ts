@@ -19,7 +19,7 @@ import { InputAssetUpload, StartFileUploadOptions } from './uploads.types'
 
 import { useSnackbar } from '../snackbars'
 
-const MAX_BUCKET_RETRY = 1
+const MAX_BUCKET_RETRY = 3
 const RETRIES_COUNT = 3
 const RETRY_DELAY = 1000
 const UPLOADING_SNACKBAR_TIMEOUT = 8000

@@ -1,11 +1,12 @@
 import styled from '@emotion/styled'
-import lazy from '@loadable/component'
 import { ErrorBoundary } from '@sentry/react'
-import { FC, useEffect, useRef } from 'react'
+import { FC, Suspense, lazy, useEffect, useRef } from 'react'
 import { Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { ViewErrorBoundary } from '@/components/ViewErrorFallback'
+import { Spinner } from '@/components/_loaders/Spinner'
+import { LoadingStudioContainer } from '@/components/_loaders/StudioLoading'
 import { BottomNav } from '@/components/_navigation/BottomNav'
 import { PrivateRoute } from '@/components/_navigation/PrivateRoute'
 import { SidenavViewer } from '@/components/_navigation/SidenavViewer'
@@ -59,7 +60,7 @@ const ENTRY_POINT_ROUTE = absoluteRoutes.viewer.index()
 const locationToPageName = {
   '/discover': 'Discover',
   '/category': 'Category',
-  '/search': 'Search',
+  '/search': 'Search results page',
   '/channels': 'Channels',
   '/channel': 'Channel',
   '/video': 'Video',
@@ -113,9 +114,9 @@ export const ViewerLayout: FC = () => {
           trackPageView(pageName || 'Unknown page', {
             ...(location.pathname === absoluteRoutes.viewer.ypp()
               ? {
-                  referrer: referrerChannel || undefined,
-                  utmSource: utmSource || undefined,
-                  utmCampaign: utmCampaign || undefined,
+                  referrerChannel: referrerChannel || undefined,
+                  utm_source: utmSource || undefined,
+                  utm_campaign: utmCampaign || undefined,
                 }
               : {}),
             ...(location.pathname === absoluteRoutes.viewer.search() ? { searchQuery: query } : {}),
@@ -146,28 +147,40 @@ export const ViewerLayout: FC = () => {
               classNames={transitions.names.fadeAndSlide}
               key={displayedLocation.pathname}
             >
-              <Routes location={displayedLocation}>
-                {viewerRoutes.map((route) => (
-                  <Route key={route.path} {...route} />
-                ))}
-                <Route
-                  path={relativeRoutes.viewer.memberSettings()}
-                  element={
-                    <PrivateRoute
-                      isAuth={isLoggedIn}
-                      element={<MembershipSettingsView />}
-                      redirectTo={ENTRY_POINT_ROUTE}
-                    />
-                  }
-                />
-                <Route
-                  path={absoluteRoutes.viewer.notifications()}
-                  element={
-                    <PrivateRoute isAuth={isLoggedIn} element={<NotificationsView />} redirectTo={ENTRY_POINT_ROUTE} />
-                  }
-                />
-                <Route path="*" element={<NotFoundView />} />
-              </Routes>
+              <Suspense
+                fallback={
+                  <LoadingStudioContainer>
+                    <Spinner size="large" />
+                  </LoadingStudioContainer>
+                }
+              >
+                <Routes location={displayedLocation}>
+                  {viewerRoutes.map((route) => (
+                    <Route key={route.path} {...route} />
+                  ))}
+                  <Route
+                    path={relativeRoutes.viewer.memberSettings()}
+                    element={
+                      <PrivateRoute
+                        isAuth={isLoggedIn}
+                        element={<MembershipSettingsView />}
+                        redirectTo={ENTRY_POINT_ROUTE}
+                      />
+                    }
+                  />
+                  <Route
+                    path={absoluteRoutes.viewer.notifications()}
+                    element={
+                      <PrivateRoute
+                        isAuth={isLoggedIn}
+                        element={<NotificationsView />}
+                        redirectTo={ENTRY_POINT_ROUTE}
+                      />
+                    }
+                  />
+                  <Route path="*" element={<NotFoundView />} />
+                </Routes>
+              </Suspense>
             </CSSTransition>
           </SwitchTransition>
         </ErrorBoundary>

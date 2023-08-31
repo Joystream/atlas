@@ -92,8 +92,8 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
             variant={variant}
             ref={denominationRef}
           >
-            ({formattedDenominatedValue !== '<$0.01' ? '$' : ''}
-            {formattedDenominatedValue}){' '}
+            ({formattedDenominatedValue !== '<$0.01' ? <span>$</span> : null}
+            <span>{formattedDenominatedValue}</span>){' '}
           </Text>
         )}
         <StyledText
@@ -103,7 +103,7 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
           withToken={withToken}
           ref={mergeRefs([ref, textRef])}
         >
-          {displayedValue || formattedValue}
+          {displayedValue ? <span>{displayedValue}</span> : <span>{formattedValue}</span>}
         </StyledText>
         {withDenomination === 'after' && (
           <Text
@@ -114,8 +114,8 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
             ref={denominationRef}
           >
             {' '}
-            ({formattedDenominatedValue !== '<$0.01' ? '$' : ''}
-            {formattedDenominatedValue}){' '}
+            ({formattedDenominatedValue !== '<$0.01' ? <span>$</span> : null}
+            <span>{formattedDenominatedValue}</span>){' '}
           </Text>
         )}
       </ContentContainer>
@@ -142,8 +142,8 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
                 variant="t100"
                 ref={denominationRef}
               >
-                {formattedDenominatedValue !== '<$0.01' ? '$' : ''}
-                {formattedDenominatedValue}
+                {formattedDenominatedValue !== '<$0.01' ? <span>$</span> : null}
+                <span>{formattedDenominatedValue}</span>
               </Denomination>
             )}
           </Container>

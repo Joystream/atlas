@@ -1,4 +1,5 @@
 import { generateChannelMetaTags } from '@joystream/atlas-meta-server/src/tags'
+import BN from 'bn.js'
 import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useParams, useSearchParams } from 'react-router-dom'
@@ -115,7 +116,15 @@ export const ChannelView: FC = () => {
         search: { channelId: id, query: searchQuery },
       }),
   })
-  const { accountBalance } = useSubscribeAccountBalance(channel?.rewardAccount)
+
+  const memoizedChannelStateBloatBond = useMemo(() => {
+    return new BN(channel?.channelStateBloatBond || 0)
+  }, [channel?.channelStateBloatBond])
+
+  const { accountBalance } = useSubscribeAccountBalance(channel?.rewardAccount, {
+    channelStateBloatBond: memoizedChannelStateBloatBond,
+  })
+
   const { channelNftCollectors } = useChannelNftCollectors({ channelId: id || '' })
 
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(id, channel?.title)
@@ -213,15 +222,25 @@ export const ChannelView: FC = () => {
   }, [clearAllFilters, currentTabName, setIsFiltersOpen])
 
   useEffect(() => {
-    if (channel?.id) {
-      trackPageView('Channel', { tab: currentTabName || undefined, channelName: channel?.title || undefined })
+    const timeout = setTimeout(() => {
+      if (channel?.id) {
+        trackPageView('Channel', {
+          tab: currentTabName || undefined,
+          channelId: channel?.id,
+          channelName: channel?.title || undefined,
+        })
+      }
+    }, 1000)
+
+    return () => {
+      clearTimeout(timeout)
     }
   }, [channel?.id, channel?.title, currentTabName, trackPageView])
 
   const mappedChannelNftCollectors =
     channelNftCollectors?.map(({ amount, member }) => ({
       nftsAmount: amount,
-      url: member?.metadata?.avatar?.__typename === 'AvatarUri' ? member?.metadata.avatar?.avatarUri : '',
+      urls: member?.metadata?.avatar?.__typename === 'AvatarUri' ? [member?.metadata.avatar?.avatarUri] : [],
       tooltipText: member?.handle,
       onClick: () => navigate(absoluteRoutes.viewer.member(member?.handle)),
       memberUrl: absoluteRoutes.viewer.member(member?.handle),

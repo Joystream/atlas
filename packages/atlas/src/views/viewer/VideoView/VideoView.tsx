@@ -145,10 +145,12 @@ export const VideoView: FC = () => {
     if (video?.id) {
       trackPageView('Video', {
         videoId: video.id,
+        videoTitle: video.title || undefined,
+        isNft: !!video.nft?.id,
         category: video.category?.name || undefined,
       })
     }
-  }, [trackPageView, video?.category?.name, video?.id])
+  }, [trackPageView, video?.category?.name, video?.id, video?.nft?.id, video?.title])
 
   const videoMetaTags = useMemo(() => {
     if (!video || !thumbnailUrls) return {}

@@ -13,7 +13,7 @@ export const GoogleButton = ({ label, ...rest }: GoogleButtonProps) => {
       <IconContainer>
         <SvgGoogleSmallLogo />
       </IconContainer>
-      <span>Sign in with Google</span>
+      <span>Sign up with Google</span>
     </StyledButton>
   )
 }
