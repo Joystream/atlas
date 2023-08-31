@@ -89,13 +89,9 @@ const MemberRow = ({ memberId }: { memberId: string }) => {
 }
 
 export const StyledTable = styled(Table)`
-  th:nth-child(n + 3),
-  th:nth-child(n + 2) {
+  th:nth-child(n + 2),
+  th:nth-child(n + 3) {
     justify-content: end;
-  }
-
-  th:nth-child(n + 3),
-  th:nth-child(n + 2) {
     align-items: end;
 
     > div {
