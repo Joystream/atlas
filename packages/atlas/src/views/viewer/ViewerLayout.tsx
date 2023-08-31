@@ -29,6 +29,7 @@ import { MarketplaceView } from './MarketplaceView'
 import { MemberView } from './MemberView'
 import { MembershipSettingsView } from './MembershipSettingsView'
 import { NotFoundView } from './NotFoundView'
+import { Portfolio } from './Portfolio'
 import { SearchView } from './SearchView'
 import { VideoView } from './VideoView'
 
@@ -41,6 +42,7 @@ const viewerRoutes = [
   { path: relativeRoutes.viewer.channel(), element: <ChannelView /> },
   { path: relativeRoutes.viewer.category(), element: <CategoryView /> },
   { path: relativeRoutes.viewer.member(), element: <MemberView /> },
+  { path: relativeRoutes.viewer.portfolio(), element: <Portfolio /> },
   { path: relativeRoutes.viewer.marketplace(), element: <MarketplaceView /> },
   ...(atlasConfig.features.ypp.googleConsoleClientId
     ? [{ path: relativeRoutes.viewer.ypp(), element: <YppLandingView /> }]
