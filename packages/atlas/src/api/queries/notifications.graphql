@@ -1,9 +1,9 @@
-query GetNotificationsConnection($memberId: String!, $first: Int!, $after: String) {
+query GetNotificationsConnection($accountId: String!, $first: Int!, $after: String) {
   notificationsConnection(
     first: $first
     after: $after
     orderBy: event_timestamp_DESC
-    where: { member: { id_eq: $memberId } }
+    where: { account: { id_eq: $accountId } }
   ) {
     pageInfo {
       hasNextPage

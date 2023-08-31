@@ -473,6 +473,7 @@ export type GetPayloadDataByCommitmentQuery = {
       | { __typename?: 'BidMadeCompletingAuctionEventData' }
       | { __typename?: 'BuyNowCanceledEventData' }
       | { __typename?: 'BuyNowPriceUpdatedEventData' }
+      | { __typename?: 'ChannelCreatedEventData' }
       | { __typename?: 'ChannelFundsWithdrawnEventData' }
       | { __typename?: 'ChannelPaymentMadeEventData' }
       | {
@@ -499,6 +500,7 @@ export type GetPayloadDataByCommitmentQuery = {
       | { __typename?: 'ChannelRewardClaimedAndWithdrawnEventData' }
       | { __typename?: 'ChannelRewardClaimedEventData' }
       | { __typename?: 'CommentCreatedEventData' }
+      | { __typename?: 'CommentReactionEventData' }
       | { __typename?: 'CommentTextUpdatedEventData' }
       | { __typename?: 'EnglishAuctionSettledEventData' }
       | { __typename?: 'EnglishAuctionStartedEventData' }
@@ -506,9 +508,12 @@ export type GetPayloadDataByCommitmentQuery = {
       | { __typename?: 'MetaprotocolTransactionStatusEventData' }
       | { __typename?: 'NftBoughtEventData' }
       | { __typename?: 'NftIssuedEventData' }
+      | { __typename?: 'NftOfferedEventData' }
       | { __typename?: 'NftSellOrderMadeEventData' }
       | { __typename?: 'OpenAuctionBidAcceptedEventData' }
       | { __typename?: 'OpenAuctionStartedEventData' }
+      | { __typename?: 'VideoCreatedEventData' }
+      | { __typename?: 'VideoReactionEventData' }
   }>
 }
 
@@ -543,6 +548,7 @@ export type GetChannelPaymentEventsQuery = {
         }
       | { __typename: 'BuyNowCanceledEventData' }
       | { __typename: 'BuyNowPriceUpdatedEventData' }
+      | { __typename: 'ChannelCreatedEventData' }
       | {
           __typename: 'ChannelFundsWithdrawnEventData'
           amount: string
@@ -561,6 +567,7 @@ export type GetChannelPaymentEventsQuery = {
       | { __typename: 'ChannelRewardClaimedAndWithdrawnEventData' }
       | { __typename: 'ChannelRewardClaimedEventData'; amount: string }
       | { __typename: 'CommentCreatedEventData' }
+      | { __typename: 'CommentReactionEventData' }
       | { __typename: 'CommentTextUpdatedEventData' }
       | {
           __typename: 'EnglishAuctionSettledEventData'
@@ -591,6 +598,7 @@ export type GetChannelPaymentEventsQuery = {
           previousNftOwner: { __typename: 'NftOwnerChannel' } | { __typename: 'NftOwnerMember' }
         }
       | { __typename: 'NftIssuedEventData' }
+      | { __typename: 'NftOfferedEventData' }
       | { __typename: 'NftSellOrderMadeEventData' }
       | {
           __typename: 'OpenAuctionBidAcceptedEventData'
@@ -607,6 +615,8 @@ export type GetChannelPaymentEventsQuery = {
           previousNftOwner: { __typename: 'NftOwnerChannel' } | { __typename: 'NftOwnerMember' }
         }
       | { __typename: 'OpenAuctionStartedEventData' }
+      | { __typename: 'VideoCreatedEventData' }
+      | { __typename: 'VideoReactionEventData' }
   }>
 }
 
@@ -625,6 +635,7 @@ export type GetChannelsPaymentEventsQuery = {
       | { __typename?: 'BidMadeCompletingAuctionEventData' }
       | { __typename?: 'BuyNowCanceledEventData' }
       | { __typename?: 'BuyNowPriceUpdatedEventData' }
+      | { __typename?: 'ChannelCreatedEventData' }
       | { __typename?: 'ChannelFundsWithdrawnEventData' }
       | {
           __typename?: 'ChannelPaymentMadeEventData'
@@ -640,6 +651,7 @@ export type GetChannelsPaymentEventsQuery = {
       | { __typename?: 'ChannelRewardClaimedAndWithdrawnEventData' }
       | { __typename?: 'ChannelRewardClaimedEventData' }
       | { __typename?: 'CommentCreatedEventData' }
+      | { __typename?: 'CommentReactionEventData' }
       | { __typename?: 'CommentTextUpdatedEventData' }
       | { __typename?: 'EnglishAuctionSettledEventData' }
       | { __typename?: 'EnglishAuctionStartedEventData' }
@@ -647,9 +659,12 @@ export type GetChannelsPaymentEventsQuery = {
       | { __typename?: 'MetaprotocolTransactionStatusEventData' }
       | { __typename?: 'NftBoughtEventData' }
       | { __typename?: 'NftIssuedEventData' }
+      | { __typename?: 'NftOfferedEventData' }
       | { __typename?: 'NftSellOrderMadeEventData' }
       | { __typename?: 'OpenAuctionBidAcceptedEventData' }
       | { __typename?: 'OpenAuctionStartedEventData' }
+      | { __typename?: 'VideoCreatedEventData' }
+      | { __typename?: 'VideoReactionEventData' }
   }>
 }
 

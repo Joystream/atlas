@@ -30,6 +30,8 @@ class _SentryLogger {
       ignoreErrors: [
         'ResizeObserver loop limit exceeded',
         'ResizeObserver loop completed with undelivered notifications',
+        'Unauthorized',
+        'Failed to fetch',
       ],
       normalizeDepth: 6,
       // This sets the sample rate to be 0%, so we'll only use manually recorded replays
@@ -42,6 +44,10 @@ class _SentryLogger {
             !JSON.stringify((hint.originalException as ApolloError).networkError).includes('Unauthorized')
             ? event
             : null
+        }
+
+        if ((hint.originalException as Error).name === 'ServerError') {
+          return event.exception?.values?.some((exception) => !exception.mechanism?.handled) ? event : null
         }
         return event
       },

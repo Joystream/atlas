@@ -1,9 +1,9 @@
 import axios from 'axios'
 import { buildClientSchema, getIntrospectionQuery } from 'graphql'
 
-async function fetchAuthCookie() {
+async function fetchAuthCookie(authUrl: string) {
   const response = await axios.post(
-    `https://auth.gleev.xyz/api/v1/anonymous-auth`,
+    authUrl,
     {},
     {
       method: 'POST',
@@ -17,30 +17,34 @@ async function fetchAuthCookie() {
   return response.headers['set-cookie']
 }
 
-export async function customSchemaLoader() {
-  const authCookie = await fetchAuthCookie()
-  const introspectionQuery = getIntrospectionQuery()
+export function customSchemaLoader(schemaUrl: string, authUrl: string) {
+  return async () => {
+    const authCookie = await fetchAuthCookie(authUrl)
+    const introspectionQuery = getIntrospectionQuery()
 
-  if (!authCookie) {
-    throw new Error('Authorization cookie is missing.')
-  }
+    if (!authCookie) {
+      throw new Error('Authorization cookie is missing.')
+    }
 
-  const schemaResponse = await axios
-    .post<any>(
-      'https://orion.gleev.xyz/graphql',
-      {
-        query: introspectionQuery,
-      },
-      {
-        method: 'post',
-        withCredentials: true,
-        headers: {
-          Cookie: authCookie.join('; '),
-          'Content-Type': 'application/json',
+    const schemaResponse = await axios
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .post<any>(
+        schemaUrl,
+        {
+          query: introspectionQuery,
         },
-      }
-    )
-    .catch((error) => console.log(error.response.data))
-  const schema = buildClientSchema(schemaResponse && schemaResponse.data.data)
-  return schema
+        {
+          method: 'post',
+          withCredentials: true,
+          headers: {
+            Cookie: authCookie.join('; '),
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+      // eslint-disable-next-line no-console
+      .catch((error) => console.log(error.response.data))
+    const schema = buildClientSchema(schemaResponse && schemaResponse.data.data)
+    return schema
+  }
 }
