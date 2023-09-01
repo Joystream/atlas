@@ -48,7 +48,7 @@ export const YppRewardSection: FC = () => {
               data-aos-offset="80"
               data-aos-easing="atlas-easing"
             >
-              Get rewarded for performing simple tasks
+              Rewards overview
             </Text>
             <Text
               variant="t300"
@@ -60,7 +60,8 @@ export const YppRewardSection: FC = () => {
               data-aos-offset="40"
               data-aos-easing="atlas-easing"
             >
-              Simple tasks, guaranteed payouts. The more popular your channel is, the higher the rewards.
+              Guaranteed payouts for sign up, referrals and quality content. The more subscribers on your YouTube
+              channel, the higher are the rewards to reap!
             </Text>
           </HeaderGridItem>
         </CenteredLayoutGrid>
@@ -91,7 +92,6 @@ export const YppRewardSection: FC = () => {
                       variant="h300"
                       value={tierArray[idx + 1].minimumSubscribers}
                     />{' '}
-                    subscribers
                   </BenefitsCardButton>
                 )
               }
@@ -110,7 +110,6 @@ export const YppRewardSection: FC = () => {
                       variant="h300"
                       value={tier.minimumSubscribers}
                     />{' '}
-                    subscribers
                   </BenefitsCardButton>
                 )
               }
@@ -135,7 +134,6 @@ export const YppRewardSection: FC = () => {
                     variant="h300"
                     value={tierArray[idx + 1].minimumSubscribers}
                   />{' '}
-                  subscribers
                 </BenefitsCardButton>
               )
             })}
@@ -150,15 +148,26 @@ export const YppRewardSection: FC = () => {
                 ? typeof reward.baseAmount === 'number'
                   ? {
                       type: 'number' as const,
-                      amount: reward.baseAmount * (customMultiplier || currentMultiplier),
+                      amount:
+                        reward.baseAmount === 0
+                          ? customMultiplier || currentMultiplier
+                          : reward.baseAmount * (customMultiplier || currentMultiplier),
                     }
                   : { type: 'range' as const, min: reward.baseAmount.min, max: reward.baseAmount.max }
                 : null
-              const rewardAmountUsd = reward.baseUsdAmount
-                ? typeof reward.baseUsdAmount === 'number'
-                  ? { type: 'number' as const, amount: reward.baseUsdAmount * (customMultiplier || currentMultiplier) }
+              const rewardAmountUsd =
+                reward.baseUsdAmount === null
+                  ? null
+                  : typeof reward.baseUsdAmount === 'number'
+                  ? {
+                      type: 'number' as const,
+                      amount:
+                        reward.baseUsdAmount === 0
+                          ? customMultiplier || 0
+                          : reward.baseUsdAmount * (customMultiplier || currentMultiplier),
+                    }
                   : { type: 'range' as const, min: reward.baseUsdAmount.min, max: reward.baseUsdAmount.max }
-                : null
+
               return (
                 <BenefitCard
                   key={reward.title}
