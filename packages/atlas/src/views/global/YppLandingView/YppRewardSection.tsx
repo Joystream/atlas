@@ -92,7 +92,6 @@ export const YppRewardSection: FC = () => {
                       variant="h300"
                       value={tierArray[idx + 1].minimumSubscribers}
                     />{' '}
-                    subscribers
                   </BenefitsCardButton>
                 )
               }
@@ -111,7 +110,6 @@ export const YppRewardSection: FC = () => {
                       variant="h300"
                       value={tier.minimumSubscribers}
                     />{' '}
-                    subscribers
                   </BenefitsCardButton>
                 )
               }
