@@ -26,6 +26,7 @@ export const Portfolio = () => {
         </Text>
         <DetailsContent
           caption="PORTFOLIO TOTAL VALUE"
+          tooltipText="Lorem ipsum"
           content={2300}
           withDenomination
           tileSize="big"
