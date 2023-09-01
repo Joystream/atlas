@@ -48,7 +48,7 @@ export const YppRewardSection: FC = () => {
               data-aos-offset="80"
               data-aos-easing="atlas-easing"
             >
-              Get rewarded for performing simple tasks
+              Rewards overview
             </Text>
             <Text
               variant="t300"
@@ -60,7 +60,8 @@ export const YppRewardSection: FC = () => {
               data-aos-offset="40"
               data-aos-easing="atlas-easing"
             >
-              Simple tasks, guaranteed payouts. The more popular your channel is, the higher the rewards.
+              Guaranteed payouts for sign up, referrals and quality content. The more subscribers on your YouTube
+              channel, the higher are the rewards to reap!
             </Text>
           </HeaderGridItem>
         </CenteredLayoutGrid>
@@ -135,7 +136,6 @@ export const YppRewardSection: FC = () => {
                     variant="h300"
                     value={tierArray[idx + 1].minimumSubscribers}
                   />{' '}
-                  subscribers
                 </BenefitsCardButton>
               )
             })}
