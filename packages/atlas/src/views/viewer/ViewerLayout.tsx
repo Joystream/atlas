@@ -43,7 +43,6 @@ const VideoView = lazy(() => import('./VideoView').then((module) => ({ default: 
 const viewerRoutes = [
   { path: relativeRoutes.viewer.search(), element: <SearchView /> },
   { path: relativeRoutes.viewer.index(), element: <HomeView /> },
-  { path: relativeRoutes.viewer.discover(), element: <DiscoverView /> },
   { path: relativeRoutes.viewer.video(), element: <VideoView /> },
   { path: relativeRoutes.viewer.channels(), element: <ChannelsView /> },
   { path: relativeRoutes.viewer.channel(), element: <ChannelView /> },

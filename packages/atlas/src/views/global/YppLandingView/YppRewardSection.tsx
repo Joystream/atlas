@@ -150,15 +150,26 @@ export const YppRewardSection: FC = () => {
                 ? typeof reward.baseAmount === 'number'
                   ? {
                       type: 'number' as const,
-                      amount: reward.baseAmount * (customMultiplier || currentMultiplier),
+                      amount:
+                        reward.baseAmount === 0
+                          ? customMultiplier || currentMultiplier
+                          : reward.baseAmount * (customMultiplier || currentMultiplier),
                     }
                   : { type: 'range' as const, min: reward.baseAmount.min, max: reward.baseAmount.max }
                 : null
-              const rewardAmountUsd = reward.baseUsdAmount
-                ? typeof reward.baseUsdAmount === 'number'
-                  ? { type: 'number' as const, amount: reward.baseUsdAmount * (customMultiplier || currentMultiplier) }
+              const rewardAmountUsd =
+                reward.baseUsdAmount === null
+                  ? null
+                  : typeof reward.baseUsdAmount === 'number'
+                  ? {
+                      type: 'number' as const,
+                      amount:
+                        reward.baseUsdAmount === 0
+                          ? customMultiplier || 0
+                          : reward.baseUsdAmount * (customMultiplier || currentMultiplier),
+                    }
                   : { type: 'range' as const, min: reward.baseUsdAmount.min, max: reward.baseUsdAmount.max }
-                : null
+
               return (
                 <BenefitCard
                   key={reward.title}
