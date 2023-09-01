@@ -20,27 +20,18 @@ export const BenefitsCardsButtonsGroup = styled.div`
     display: none;
   }
 
+  gap: ${sizes(2)};
+
   ${media.sm} {
     grid-template-columns: repeat(2, 1fr);
-    ${BenefitsCardButton}:not(:nth-child(2n)) {
-      margin-right: ${sizes(2)};
-    }
   }
 
   ${media.md} {
     grid-template-columns: repeat(3, 1fr);
-
-    ${BenefitsCardButton}:not(:nth-child(3n)) {
-      margin-right: ${sizes(2)};
-    }
   }
 
   ${media.lg} {
-    grid-template-columns: repeat(auto-fill, 1fr);
-    grid-auto-flow: column;
-    ${BenefitsCardButton}:not(:last-child) {
-      margin-right: ${sizes(2)};
-    }
+    grid-template-columns: repeat(6, 1fr);
   }
 `
 
