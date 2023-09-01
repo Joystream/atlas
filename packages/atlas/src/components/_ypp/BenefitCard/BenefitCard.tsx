@@ -34,7 +34,7 @@ type JoyAmountNumber = {
 type DollarAmountRange = {
   type: 'range'
   max: number
-  min: number
+  min: number | null
 }
 type DollarAmountNumber = {
   type: 'number'
@@ -90,7 +90,7 @@ export const BenefitCard: FC<BenefitCardProps> = ({
               margin={{ right: dollarAmount && !isFullVariant && !smMatch ? 2 : 0 }}
             />
           )}
-          {!!dollarAmount && dollarAmount.type === 'range' && (
+          {!!dollarAmount && dollarAmount.type === 'range' && dollarAmount.min && (
             <>
               <NumberFormat
                 as="p"
@@ -101,6 +101,20 @@ export const BenefitCard: FC<BenefitCardProps> = ({
               />
               <Text as="span" variant={smMatch ? 'h600' : 'h500'} color="colorText" margin={{ right: 1 }}>
                 -
+              </Text>
+              <NumberFormat
+                as="p"
+                format="dollar"
+                variant={!smMatch ? 'h500' : 'h600'}
+                value={dollarAmount.max}
+                margin={{ right: dollarAmount && !isFullVariant && !smMatch ? 2 : 0 }}
+              />
+            </>
+          )}
+          {!!dollarAmount && dollarAmount.type === 'range' && !dollarAmount.min && (
+            <>
+              <Text as="span" variant={smMatch ? 'h600' : 'h500'} color="colorText" margin={{ right: 1 }}>
+                up to
               </Text>
               <NumberFormat
                 as="p"

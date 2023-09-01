@@ -33,7 +33,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useMountEffect } from '@/hooks/useMountEffect'
 import { getFastestImageUrl } from '@/providers/assets/assets.helpers'
 import { UserCoordinates, useUserLocationStore } from '@/providers/userLocation'
-import { ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { ConsoleLogger, SentryLogger, UserEventsLogger } from '@/utils/logs'
 
 import { OperatorInfo } from './assets.types'
 
@@ -155,7 +155,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
     const initBenchmark = async () => {
       const { data } = await getBasicVideo({
         variables: {
-          limit: 1,
+          limit: 20,
           where: {
             thumbnailPhoto: {
               isAccepted_eq: true,
@@ -163,7 +163,11 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
           },
         },
       })
-      const thumbnail = data?.videos[0].thumbnailPhoto
+
+      const thumbnail = data?.videos
+        ? data?.videos[Math.floor(Math.random() * data.videos.length)].thumbnailPhoto
+        : undefined
+
       if (thumbnail) {
         const promiseRace = getFastestImageUrl(thumbnail.resolvedUrls)
         const startTime = performance.now()
@@ -171,12 +175,19 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
         const msDuration = performance.now() - startTime
         const previousTimeout = userBenchmarkTime ?? atlasConfig.storage.assetResponseTimeout
         if (msDuration > previousTimeout || msDuration < previousTimeout / 2) {
+          const newTime = (msDuration + previousTimeout) * 0.75
+          if (newTime > 20_000) {
+            SentryLogger.message('User benchmark time is too high', 'OperatorsContextProvider', 'warning', {
+              event: { 'userBenchmarkTime': newTime },
+            })
+          }
+          UserEventsLogger.logUserBenchmarkTime(newTime)
           setUserBenchmarkTime((msDuration + previousTimeout) * 0.75)
         }
       }
     }
     initBenchmark()
-    const id = setInterval(initBenchmark, 30 * 1_000)
+    const id = setInterval(initBenchmark, 5 * 60 * 1_000)
     return () => {
       clearInterval(id)
     }
@@ -226,6 +237,7 @@ export const useStorageOperators = () => {
         }
         const workingBagOperators = bagOperators.filter((operator) => !failedStorageOperatorIds.includes(operator.id))
         if (!workingBagOperators || !workingBagOperators.length) {
+          UserEventsLogger.logMissingOperatorsForBag(storageBagId)
           ConsoleLogger.warn('Missing storage operators for storage bag', { storageBagId })
           return null
         }
@@ -278,6 +290,7 @@ export const useStorageOperators = () => {
 
   const markStorageOperatorFailed = useCallback(
     (operatorId: string) => {
+      UserEventsLogger.logDistributorBlacklistedEvent({ distributorId: operatorId })
       setFailedStorageOperatorIds((state) => [...state, operatorId])
     },
     [setFailedStorageOperatorIds]

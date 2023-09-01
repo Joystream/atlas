@@ -135,7 +135,8 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
                     size="large"
                     highlight={highlightedIndex === index}
                     nodeStart={
-                      item.nodeStart || (item.thumbnailUrls && <StyledThumbnail resolvedUrls={item.thumbnailUrls} />)
+                      item.nodeStart ||
+                      (item.thumbnailUrls && <StyledThumbnail resolvedUrls={item.thumbnailUrls} type="thumbnail" />)
                     }
                     isSeparator={item.isSeparator}
                   />

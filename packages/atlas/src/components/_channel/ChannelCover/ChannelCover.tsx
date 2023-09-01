@@ -48,6 +48,7 @@ export const ChannelCover: FC<ChannelCoverProps> = ({
         <Media>
           <CoverImage
             resolvedUrls={assetUrls}
+            type="cover"
             imagePlaceholder={
               hasCoverUploadFailed ? (
                 <FailedUploadContainer>

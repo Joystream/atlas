@@ -6,7 +6,7 @@ import { Banner } from '@/components/Banner'
 import { atlasConfig } from '@/config'
 import { pluralizeNoun } from '@/utils/misc'
 
-import { CategoriesText, ListItem, Paragraph, StyledList, TickWrapper } from './YppAuthorizationRequirementsStep.styles'
+import { ListItem, Paragraph, StyledList, TickWrapper } from './YppAuthorizationRequirementsStep.styles'
 import { useGetYppChannelRequirements } from './useGetYppChannelRequirements'
 
 import { YppAuthorizationErrorCode, YppRequirementsErrorCode } from '../../YppAuthorizationModal.types'
@@ -35,17 +35,6 @@ export const YppAuthorizationRequirementsStep: FC<YppAuthorizationRequirementsSt
   return (
     <>
       <StyledList>
-        {atlasConfig.general.appContentFocus && (
-          <SingleRequirement fulfilled important>
-            <span>
-              The main topic of your videos is {atlasConfig.general.appContentFocus}
-              <CategoriesText variant="t100" as="span" color="colorTextMuted">
-                {atlasConfig.general.appName} video categories:{' '}
-                {atlasConfig.content.categories.map((category) => category.name).join(', ')}
-              </CategoriesText>
-            </span>
-          </SingleRequirement>
-        )}
         <SingleRequirement
           fulfilled={checkRequirmentError(YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_CREATION_DATE)}
         >

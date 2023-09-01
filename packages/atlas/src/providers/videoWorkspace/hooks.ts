@@ -46,7 +46,7 @@ export const useVideoWorkspaceData = (id?: string) => {
     }
   )
   const videoUrl = useGetAssetUrl(video?.media?.resolvedUrls, 'video')
-  const thumbnailUrl = useGetAssetUrl(video?.thumbnailPhoto?.resolvedUrls, 'image')
+  const thumbnailUrl = useGetAssetUrl(video?.thumbnailPhoto?.resolvedUrls, 'thumbnail')
 
   const hasAnyAvailableSubtitles = video?.subtitles?.some((s) => !!s.asset?.isAccepted)
 

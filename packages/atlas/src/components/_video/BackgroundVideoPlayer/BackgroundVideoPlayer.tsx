@@ -142,7 +142,7 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
             classNames={transitions.names.fade}
             timeout={300}
           >
-            <VideoPoster resolvedUrls={poster} alt="" />
+            <VideoPoster resolvedUrls={poster} type="cover" alt="" />
           </CSSTransition>
         )}
       </StyledLink>

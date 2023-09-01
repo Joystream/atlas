@@ -1,5 +1,6 @@
 import { FC, useCallback, useEffect, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
+import shallow from 'zustand/shallow'
 
 import {
   GetExtendedBasicChannelsDocument,
@@ -36,13 +37,12 @@ const categoriesSelectItems: SelectItem[] =
 export const YppAuthorizationDetailsFormStep: FC = () => {
   const [foundChannel, setFoundChannel] = useState<FullChannelFieldsFragment | null>()
   const { memberId } = useUser()
+  const { referrerId } = useYppStore((store) => store, shallow)
   const {
     control,
     formState: { errors },
     setValue,
   } = useFormContext<DetailsFormData>()
-
-  const referrerId = useYppStore((state) => state.referrerId)
 
   useEffect(() => {
     if (referrerId) {
@@ -54,7 +54,7 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
     (value: string) => ({
       where: {
         channel: {
-          title_startsWith: value,
+          title_containsInsensitive: value,
           ownerMember: {
             id_not_eq: memberId,
           },
