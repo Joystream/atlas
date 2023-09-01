@@ -72,7 +72,7 @@ features:
         baseAmount: null # Base amount that will be multiplied by tier multiplier
         baseUsdAmount: 5
       - title: Sync videos from your YouTube channel
-        shortDescription: Opt in to auto-sync feature upon sign up and all YouTube content will get uploaded to $VITE_APP_NAME automatically. Get paid for every new video synced to your $VITE_APP_NAME channel.
+        shortDescription: As long as you stay subscribed to auto sync feature, your YouTube content will get uploaded to $VITE_APP_NAME automatically. Get paid for every new video synced after sign up. Subject to terms and conditions of the program.
         stepsDescription: Publishing your existing and new content with $VITE_APP_NAME is the fastest way to earn more JOY tokens.
         steps:
           - Make sure the auto-sync feature enabled.
