@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.8.0] - 2023-09-01
+
+### Added
+
+- New Tiers for YPP
+
+### Changed
+
+- Removed app focus messages
+- Membership and Orion account are now created simultaneously
+- Increased interval of asset testing
+
+### Fixed
+
+- Fixed handling of Apollo errors
+
 ## [4.7.0] - 2023-08-24
 
 ### Added

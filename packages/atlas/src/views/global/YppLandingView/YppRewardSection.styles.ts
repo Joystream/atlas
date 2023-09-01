@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { GridItem } from '@/components/LayoutGrid'
 import { Button } from '@/components/_buttons/Button'
-import { cVar, sizes } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 import { Anchor } from '@/views/global/YppLandingView/YppAuthorizationModal/YppAuthorizationModal.styles'
 
 export const BenefitsCardButton = styled(Button)`
@@ -11,6 +11,7 @@ export const BenefitsCardButton = styled(Button)`
 
 export const BenefitsCardsButtonsGroup = styled.div`
   text-align: center;
+  display: grid;
   overflow-x: auto;
   white-space: nowrap;
   margin: ${sizes(16)} 0 ${sizes(8)} 0;
@@ -19,14 +20,24 @@ export const BenefitsCardsButtonsGroup = styled.div`
     display: none;
   }
 
-  ${BenefitsCardButton}:not(:last-child) {
-    margin-right: ${sizes(2)};
+  gap: ${sizes(2)};
+
+  ${media.sm} {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  ${media.md} {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  ${media.lg} {
+    grid-template-columns: repeat(6, 1fr);
   }
 `
 
 export const BenefitsCardsContainerGridItem = styled(GridItem)`
   display: grid;
-  gap: ${sizes(4)};
+  gap: ${sizes(2)};
 `
 
 export const ColorAnchor = styled(Anchor)`

@@ -4,7 +4,6 @@ import {
   SvgActionAddChannel,
   SvgActionMember,
   SvgActionNewTab,
-  SvgSidebarExplore,
   SvgSidebarHome,
   SvgSidebarMarketplace,
   SvgSidebarYpp,
@@ -35,12 +34,6 @@ export const viewerNavItems = [
     expandedName: 'Marketplace',
     name: 'Market',
     to: absoluteRoutes.viewer.marketplace(),
-    bottomNav: true,
-  },
-  {
-    icon: <SvgSidebarExplore />,
-    name: 'Discover',
-    to: absoluteRoutes.viewer.discover(),
     bottomNav: true,
   },
   ...(atlasConfig.features.ypp.googleConsoleClientId

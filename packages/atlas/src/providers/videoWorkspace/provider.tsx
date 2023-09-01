@@ -1,7 +1,5 @@
 import { FC, PropsWithChildren, createContext, useCallback, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router'
 
-import { ContentTypeDialog } from '@/components/_overlays/ContentTypeDialog'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
@@ -31,7 +29,6 @@ export const VideoWorkspaceProvider: FC<PropsWithChildren> = ({ children }) => {
     setEditedVideoInfo(!video ? generateVideo() : video)
   }, [])
   const { trackUploadVideoClicked } = useSegmentAnalytics()
-  const navigate = useNavigate()
 
   const { activeChannel } = useUser()
 
@@ -41,14 +38,10 @@ export const VideoWorkspaceProvider: FC<PropsWithChildren> = ({ children }) => {
         (activeChannel?.totalVideosCreated && activeChannel?.totalVideosCreated > 0)
       : true
   )
-  const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
-
-  const [isContentTypeDialogOpen, setIsContentDialogOpen] = useState(false)
 
   const handleOpenVideoWorkspace = useCallback(() => {
     if (!isContentTypeInfoDismissed) {
       trackUploadVideoClicked(activeChannel?.id)
-      setIsContentDialogOpen(true)
       return
     }
     setEditedVideo()
@@ -68,18 +61,5 @@ export const VideoWorkspaceProvider: FC<PropsWithChildren> = ({ children }) => {
     [editedVideoInfo, setEditedVideo, isWorkspaceOpen, isContentTypeInfoDismissed, handleOpenVideoWorkspace]
   )
 
-  return (
-    <VideoWorkspaceContext.Provider value={value}>
-      <ContentTypeDialog
-        isOpen={isContentTypeDialogOpen}
-        onClose={() => setIsContentDialogOpen(false)}
-        onSubmit={() => {
-          updateDismissedMessages(CONTENT_TYPE_INFO)
-          setIsContentDialogOpen(false)
-          navigate(absoluteRoutes.studio.videoWorkspace())
-        }}
-      />
-      {children}
-    </VideoWorkspaceContext.Provider>
-  )
+  return <VideoWorkspaceContext.Provider value={value}>{children}</VideoWorkspaceContext.Provider>
 }
