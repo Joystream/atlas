@@ -29,7 +29,6 @@ const NotificationsView = lazy(() =>
 const CategoryView = lazy(() => import('./CategoryView').then((module) => ({ default: module.CategoryView })))
 const ChannelView = lazy(() => import('./ChannelView').then((module) => ({ default: module.ChannelView })))
 const ChannelsView = lazy(() => import('./ChannelsView').then((module) => ({ default: module.ChannelsView })))
-const DiscoverView = lazy(() => import('./DiscoverView').then((module) => ({ default: module.DiscoverView })))
 const HomeView = lazy(() => import('./HomeView').then((module) => ({ default: module.HomeView })))
 const MarketplaceView = lazy(() => import('./MarketplaceView').then((module) => ({ default: module.MarketplaceView })))
 const MemberView = lazy(() => import('./MemberView').then((module) => ({ default: module.MemberView })))
