@@ -19,7 +19,7 @@ import { useSnackbar } from '@/providers/snackbars'
 import { useTransactionManagerStore } from '@/providers/transactions/transactions.store'
 import { useYppStore } from '@/providers/ypp/ypp.store'
 import { UploadAvatarServiceError, uploadAvatarImage } from '@/utils/image'
-import { ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { ConsoleLogger, SentryLogger, UserEventsLogger } from '@/utils/logs'
 
 export type MemberFormData = {
   handle: string
@@ -137,6 +137,7 @@ export const useCreateMember = () => {
             iconType: 'error',
           })
           onError?.(FaucetError.UploadAvatarServiceError)
+          UserEventsLogger.logUserError('failed-avatar-upload', { message: error.message })
           SentryLogger.error('Failed to upload member avatar', 'SignUpModal', error)
           return
         }

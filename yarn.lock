@@ -2702,6 +2702,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@elastic/apm-rum-core@npm:^5.17.0":
+  version: 5.17.0
+  resolution: "@elastic/apm-rum-core@npm:5.17.0"
+  dependencies:
+    error-stack-parser: ^1.3.5
+    opentracing: ^0.14.3
+    promise-polyfill: ^8.1.3
+  checksum: 963d3aab9ef2bd61d57e88cdb42d607298571e3add55ecce5c9e395fe61668a6616227ae51ad3e9c48fe049130a73a691c3e9d5551565b11858c816bc66a6f1b
+  languageName: node
+  linkType: hard
+
+"@elastic/apm-rum@npm:^5.12.0":
+  version: 5.12.0
+  resolution: "@elastic/apm-rum@npm:5.12.0"
+  dependencies:
+    "@elastic/apm-rum-core": ^5.17.0
+  checksum: b1f0b8bc9b77d9bd0a2cb2993d94f741e878823d8e67a2428858bba6774a69c5ae0480e70d8b9d0816119078491eaa3d0f64c824d617fa49b7e637d81df0503d
+  languageName: node
+  linkType: hard
+
 "@emotion/babel-plugin@npm:^11.10.5":
   version: 11.10.5
   resolution: "@emotion/babel-plugin@npm:11.10.5"
@@ -4221,6 +4241,7 @@ __metadata:
   resolution: "@joystream/atlas@workspace:packages/atlas"
   dependencies:
     "@apollo/client": ^3.7.2
+    "@elastic/apm-rum": ^5.12.0
     "@emotion/babel-plugin": ^11.10.5
     "@emotion/react": ^11.10.5
     "@emotion/styled": ^11.10.5
@@ -4296,6 +4317,7 @@ __metadata:
     localforage: ^1.10.0
     lodash-es: ^4.17.21
     madge: ^5.0.1
+    mp4box: ^0.5.2
     multihashes: ^4.0.3
     postcss-syntax: ^0.36.2
     rc-slider: ^10.1.0
@@ -12710,6 +12732,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"error-stack-parser@npm:^1.3.5":
+  version: 1.3.6
+  resolution: "error-stack-parser@npm:1.3.6"
+  dependencies:
+    stackframe: ^0.3.1
+  checksum: 0bfbb5e234a8b23091c34f796697f4e7b4f805ca90bdc8b57d144f79051b834c8590917f5167a8f49c0f90206c8fb986bf5b28fe3ea8efa201f09caf3f0a7af2
+  languageName: node
+  linkType: hard
+
 "es-abstract@npm:^1.19.0, es-abstract@npm:^1.19.5":
   version: 1.20.1
   resolution: "es-abstract@npm:1.20.1"
@@ -17460,6 +17491,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mp4box@npm:^0.5.2":
+  version: 0.5.2
+  resolution: "mp4box@npm:0.5.2"
+  checksum: 93e6d9c69fa77e402927586e30932aee40d495ab832e9710cc8911a9bf2422b76f1b38e6a6520af41c1a199021ef908e6200c127cb4af1a86ddf3d4431725e90
+  languageName: node
+  linkType: hard
+
 "mpd-parser@npm:0.21.1":
   version: 0.21.1
   resolution: "mpd-parser@npm:0.21.1"
@@ -18097,6 +18135,13 @@ __metadata:
     is-docker: ^2.1.1
     is-wsl: ^2.2.0
   checksum: e9545bec64cdbf30a0c35c1bdc310344adf8428a117f7d8df3c0af0a0a24c513b304916a6d9b11db0190ff7225c2d578885080b761ed46a3d5f6f1eebb98b63c
+  languageName: node
+  linkType: hard
+
+"opentracing@npm:^0.14.3":
+  version: 0.14.7
+  resolution: "opentracing@npm:0.14.7"
+  checksum: 5f7e44439062d056a2a72ac89eff463c9cf5659a2aea230ff7f5a226c5e960c195ce04ec2e2cc590140bbb9c5d2be11a5a50a23484cbe2d0e132af4309d4c904
   languageName: node
   linkType: hard
 
@@ -18753,6 +18798,13 @@ __metadata:
   version: 1.0.1
   resolution: "promise-inflight@npm:1.0.1"
   checksum: 22749483091d2c594261517f4f80e05226d4d5ecc1fc917e1886929da56e22b5718b7f2a75f3807e7a7d471bc3be2907fe92e6e8f373ddf5c64bae35b5af3981
+  languageName: node
+  linkType: hard
+
+"promise-polyfill@npm:^8.1.3":
+  version: 8.3.0
+  resolution: "promise-polyfill@npm:8.3.0"
+  checksum: 206373802076c77def0805758d0a8ece64120dfa6603f092404a1004211f8f2f67f33cadbc35953fc2a8ed0b0d38c774e88bdf01e20ce7a920723a60df84b7a5
   languageName: node
   linkType: hard
 
@@ -20711,6 +20763,13 @@ __metadata:
   version: 0.1.8
   resolution: "stable@npm:0.1.8"
   checksum: 2ff482bb100285d16dd75cd8f7c60ab652570e8952c0bfa91828a2b5f646a0ff533f14596ea4eabd48bb7f4aeea408dce8f8515812b975d958a4cc4fa6b9dfeb
+  languageName: node
+  linkType: hard
+
+"stackframe@npm:^0.3.1":
+  version: 0.3.1
+  resolution: "stackframe@npm:0.3.1"
+  checksum: 510123ec2d9a02dba8153091f0b0c760141ae4ec4be9512e74b83333e39a762380f13d9afcb469fd9ce978bc07fb5181d6f28970a18ae4070bf21d1e4caa4698
   languageName: node
   linkType: hard
 

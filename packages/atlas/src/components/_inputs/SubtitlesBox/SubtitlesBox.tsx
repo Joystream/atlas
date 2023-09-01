@@ -46,7 +46,7 @@ export const SubtitlesBox: FC<SubtitleBoxProps> = ({
   const { mutateAsync: subtitlesFetch } = useMutation('subtitles-fetch', (url: string) =>
     axiosInstance.get(url, { responseType: 'blob' })
   )
-  const { url } = useGetAssetUrl(asset?.resolvedUrls, 'subtitle')
+  const { url } = useGetAssetUrl(asset?.resolvedUrls, 'subtitles')
 
   const handleDownload = async (url = '') => {
     try {

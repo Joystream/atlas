@@ -1,7 +1,7 @@
 {
   "name": "@joystream/atlas",
   "description": "UI for consuming Joystream - a user governed video platform",
-  "version": "4.7.0",
+  "version": "4.8.0",
   "license": "GPL-3.0",
   "scripts": {
     "start": "vite",
@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.2",
+    "@elastic/apm-rum": "^5.12.0",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@hcaptcha/react-hcaptcha": "^1.4.4",
@@ -68,6 +69,7 @@
     "immer": "^9.0.16",
     "localforage": "^1.10.0",
     "lodash-es": "^4.17.21",
+    "mp4box": "^0.5.2",
     "multihashes": "^4.0.3",
     "postcss-syntax": "^0.36.2",
     "rc-slider": "^10.1.0",
