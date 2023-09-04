@@ -43,7 +43,7 @@ export const HoldersWidget = ({ tokenId }: HoldersWidgetProps) => {
         <Text variant="h500" as="span">
           Holders{' '}
           <Text variant="h500" as="span" color="colorText">
-            (20)
+            ({holders.length})
           </Text>
         </Text>
         <TextButton icon={<SvgActionChevronR />} iconPlacement="right" onClick={() => setShowModal(true)}>
