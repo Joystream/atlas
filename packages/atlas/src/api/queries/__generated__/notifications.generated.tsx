@@ -767,9 +767,9 @@ export type GetNotificationsConnectionQuery = {
   }
 }
 
-export type MembershipNotificationPreferencesQueryVariables = Types.Exact<{ [key: string]: never }>
+export type GetMembershipNotificationPreferencesQueryVariables = Types.Exact<{ [key: string]: never }>
 
-export type MembershipNotificationPreferencesQuery = {
+export type GetMembershipNotificationPreferencesQuery = {
   __typename?: 'Query'
   accountData: {
     __typename?: 'AccountData'
@@ -809,9 +809,9 @@ export type MembershipNotificationPreferencesQuery = {
   }
 }
 
-export type ChannelNotificationPreferencesQueryVariables = Types.Exact<{ [key: string]: never }>
+export type GetChannelNotificationPreferencesQueryVariables = Types.Exact<{ [key: string]: never }>
 
-export type ChannelNotificationPreferencesQuery = {
+export type GetChannelNotificationPreferencesQuery = {
   __typename?: 'Query'
   accountData: {
     __typename?: 'AccountData'
@@ -3735,8 +3735,8 @@ export type GetNotificationsConnectionQueryResult = Apollo.QueryResult<
   GetNotificationsConnectionQuery,
   GetNotificationsConnectionQueryVariables
 >
-export const MembershipNotificationPreferencesDocument = gql`
-  query membershipNotificationPreferences {
+export const GetMembershipNotificationPreferencesDocument = gql`
+  query GetMembershipNotificationPreferences {
     accountData {
       notificationPreferences {
         channelCreated {
@@ -3801,56 +3801,56 @@ export const MembershipNotificationPreferencesDocument = gql`
 `
 
 /**
- * __useMembershipNotificationPreferencesQuery__
+ * __useGetMembershipNotificationPreferencesQuery__
  *
- * To run a query within a React component, call `useMembershipNotificationPreferencesQuery` and pass it any options that fit your needs.
- * When your component renders, `useMembershipNotificationPreferencesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetMembershipNotificationPreferencesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMembershipNotificationPreferencesQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useMembershipNotificationPreferencesQuery({
+ * const { data, loading, error } = useGetMembershipNotificationPreferencesQuery({
  *   variables: {
  *   },
  * });
  */
-export function useMembershipNotificationPreferencesQuery(
+export function useGetMembershipNotificationPreferencesQuery(
   baseOptions?: Apollo.QueryHookOptions<
-    MembershipNotificationPreferencesQuery,
-    MembershipNotificationPreferencesQueryVariables
+    GetMembershipNotificationPreferencesQuery,
+    GetMembershipNotificationPreferencesQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<MembershipNotificationPreferencesQuery, MembershipNotificationPreferencesQueryVariables>(
-    MembershipNotificationPreferencesDocument,
+  return Apollo.useQuery<GetMembershipNotificationPreferencesQuery, GetMembershipNotificationPreferencesQueryVariables>(
+    GetMembershipNotificationPreferencesDocument,
     options
   )
 }
-export function useMembershipNotificationPreferencesLazyQuery(
+export function useGetMembershipNotificationPreferencesLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    MembershipNotificationPreferencesQuery,
-    MembershipNotificationPreferencesQueryVariables
+    GetMembershipNotificationPreferencesQuery,
+    GetMembershipNotificationPreferencesQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<MembershipNotificationPreferencesQuery, MembershipNotificationPreferencesQueryVariables>(
-    MembershipNotificationPreferencesDocument,
-    options
-  )
+  return Apollo.useLazyQuery<
+    GetMembershipNotificationPreferencesQuery,
+    GetMembershipNotificationPreferencesQueryVariables
+  >(GetMembershipNotificationPreferencesDocument, options)
 }
-export type MembershipNotificationPreferencesQueryHookResult = ReturnType<
-  typeof useMembershipNotificationPreferencesQuery
+export type GetMembershipNotificationPreferencesQueryHookResult = ReturnType<
+  typeof useGetMembershipNotificationPreferencesQuery
 >
-export type MembershipNotificationPreferencesLazyQueryHookResult = ReturnType<
-  typeof useMembershipNotificationPreferencesLazyQuery
+export type GetMembershipNotificationPreferencesLazyQueryHookResult = ReturnType<
+  typeof useGetMembershipNotificationPreferencesLazyQuery
 >
-export type MembershipNotificationPreferencesQueryResult = Apollo.QueryResult<
-  MembershipNotificationPreferencesQuery,
-  MembershipNotificationPreferencesQueryVariables
+export type GetMembershipNotificationPreferencesQueryResult = Apollo.QueryResult<
+  GetMembershipNotificationPreferencesQuery,
+  GetMembershipNotificationPreferencesQueryVariables
 >
-export const ChannelNotificationPreferencesDocument = gql`
-  query channelNotificationPreferences {
+export const GetChannelNotificationPreferencesDocument = gql`
+  query GetChannelNotificationPreferences {
     accountData {
       notificationPreferences {
         bidMadeOnNft {
@@ -3927,51 +3927,53 @@ export const ChannelNotificationPreferencesDocument = gql`
 `
 
 /**
- * __useChannelNotificationPreferencesQuery__
+ * __useGetChannelNotificationPreferencesQuery__
  *
- * To run a query within a React component, call `useChannelNotificationPreferencesQuery` and pass it any options that fit your needs.
- * When your component renders, `useChannelNotificationPreferencesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetChannelNotificationPreferencesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetChannelNotificationPreferencesQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useChannelNotificationPreferencesQuery({
+ * const { data, loading, error } = useGetChannelNotificationPreferencesQuery({
  *   variables: {
  *   },
  * });
  */
-export function useChannelNotificationPreferencesQuery(
+export function useGetChannelNotificationPreferencesQuery(
   baseOptions?: Apollo.QueryHookOptions<
-    ChannelNotificationPreferencesQuery,
-    ChannelNotificationPreferencesQueryVariables
+    GetChannelNotificationPreferencesQuery,
+    GetChannelNotificationPreferencesQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<ChannelNotificationPreferencesQuery, ChannelNotificationPreferencesQueryVariables>(
-    ChannelNotificationPreferencesDocument,
+  return Apollo.useQuery<GetChannelNotificationPreferencesQuery, GetChannelNotificationPreferencesQueryVariables>(
+    GetChannelNotificationPreferencesDocument,
     options
   )
 }
-export function useChannelNotificationPreferencesLazyQuery(
+export function useGetChannelNotificationPreferencesLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    ChannelNotificationPreferencesQuery,
-    ChannelNotificationPreferencesQueryVariables
+    GetChannelNotificationPreferencesQuery,
+    GetChannelNotificationPreferencesQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<ChannelNotificationPreferencesQuery, ChannelNotificationPreferencesQueryVariables>(
-    ChannelNotificationPreferencesDocument,
+  return Apollo.useLazyQuery<GetChannelNotificationPreferencesQuery, GetChannelNotificationPreferencesQueryVariables>(
+    GetChannelNotificationPreferencesDocument,
     options
   )
 }
-export type ChannelNotificationPreferencesQueryHookResult = ReturnType<typeof useChannelNotificationPreferencesQuery>
-export type ChannelNotificationPreferencesLazyQueryHookResult = ReturnType<
-  typeof useChannelNotificationPreferencesLazyQuery
+export type GetChannelNotificationPreferencesQueryHookResult = ReturnType<
+  typeof useGetChannelNotificationPreferencesQuery
 >
-export type ChannelNotificationPreferencesQueryResult = Apollo.QueryResult<
-  ChannelNotificationPreferencesQuery,
-  ChannelNotificationPreferencesQueryVariables
+export type GetChannelNotificationPreferencesLazyQueryHookResult = ReturnType<
+  typeof useGetChannelNotificationPreferencesLazyQuery
+>
+export type GetChannelNotificationPreferencesQueryResult = Apollo.QueryResult<
+  GetChannelNotificationPreferencesQuery,
+  GetChannelNotificationPreferencesQueryVariables
 >
 export const SetMembershipNotificationPreferencesDocument = gql`
   mutation SetMembershipNotificationPreferences($notificationPreferences: AccountNotificationPreferencesInput!) {

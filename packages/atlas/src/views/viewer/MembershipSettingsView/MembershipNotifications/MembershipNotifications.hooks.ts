@@ -2,13 +2,13 @@ import { mapValues, omit, pick } from 'lodash-es'
 import { useCallback, useMemo } from 'react'
 
 import {
-  useMembershipNotificationPreferencesQuery,
+  useGetMembershipNotificationPreferencesQuery,
   useSetMembershipNotificationPreferencesMutation,
 } from '@/api/queries/__generated__/notifications.generated'
 import { NotificationsState } from '@/components/NotificationsTable'
 
 export const useMemberSettingsData = () => {
-  const { refetch, data: queryData, loading: isLoading } = useMembershipNotificationPreferencesQuery()
+  const { refetch, data: queryData, loading: isLoading } = useGetMembershipNotificationPreferencesQuery()
   const [mutate, { data: mutationData, loading: isSubmitting }] = useSetMembershipNotificationPreferencesMutation()
 
   const data = useMemo(() => {
