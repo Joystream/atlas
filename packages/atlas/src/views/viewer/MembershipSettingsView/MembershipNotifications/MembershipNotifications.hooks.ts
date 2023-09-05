@@ -1,31 +1,16 @@
-import { useEffect, useState } from 'react'
+import { omit } from 'lodash-es'
+import { useMemo } from 'react'
 
-import { NotificationsState } from '@/components/NotificationsTable'
+import { useMembershipNotificationPreferencesQuery } from '@/api/queries/__generated__/notifications.generated'
 
 export const useMemberSettingsData = () => {
-  const [data, setData] = useState<NotificationsState | undefined>()
+  const { data, loading } = useMembershipNotificationPreferencesQuery()
 
-  useEffect(() => {
-    // TODO: Fetch data from Orion
-    new Promise((r) => setTimeout(r, 1000)).then(() =>
-      setData({
-        channelCreatedNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        replyToCommentNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        reactionToCommentNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        videoPostedNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        newNftOnAuctionNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        newNftOnSaleNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        higherBidThanYoursMadeNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        auctionExpiredNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        auctionWonNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        auctionLostNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        openAuctionBidCanBeWithdrawnNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        fundsFromCouncilReceivedNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        fundsToExternalWalletSentNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        fundsFromWgReceivedNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-      })
-    )
-  }, [])
+  const notificationData = useMemo(() => {
+    if (data?.accountData.notificationPreferences) {
+      return omit(data.accountData.notificationPreferences, '__typename')
+    }
+  }, [data])
 
-  return { isLoading: !data, data }
+  return { isLoading: loading, data: notificationData }
 }
