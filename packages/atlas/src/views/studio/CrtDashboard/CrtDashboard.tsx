@@ -8,6 +8,7 @@ import { Tabs } from '@/components/Tabs'
 import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
 import { Button, TextButton } from '@/components/_buttons/Button'
+import { HoldersTable } from '@/components/_crt/HoldersTable/HoldersTable'
 import {
   BigWidgetContainer,
   HeaderContainer,
@@ -50,95 +51,115 @@ export const CrtDashboard = () => {
           <Button icon={<SvgActionSell />}>Start sale or market</Button>
         </TabsContainer>
 
-        <NoGlobalPaddingWrapper>
-          <ProgressWidgetPlaceholer>Progress Widget Placeholer</ProgressWidgetPlaceholer>
-        </NoGlobalPaddingWrapper>
+        {currentTab === 1 && (
+          <HoldersTable
+            data={[
+              {
+                memberId: '1',
+                transferable: 1000,
+                allocation: 100,
+                total: 1000,
+                vested: 0,
+              },
+            ]}
+            isLoading={true}
+            currentMemberId="1"
+          />
+        )}
 
-        <WidgetContainer>
-          <WidgetTile
-            title="Transferable"
-            customNode={
-              <NumberFormat
-                value={new BN(9999999)}
-                as="span"
-                icon={<StyledSvgJoyTokenMonochrome24 />}
-                withDenomination
-                withToken
-                customTicker="$JBC"
-                variant="h400"
+        {currentTab === 0 && (
+          <>
+            <NoGlobalPaddingWrapper>
+              <ProgressWidgetPlaceholer>Progress Widget Placeholer</ProgressWidgetPlaceholer>
+            </NoGlobalPaddingWrapper>
+
+            <WidgetContainer>
+              <WidgetTile
+                title="Transferable"
+                customNode={
+                  <NumberFormat
+                    value={new BN(9999999)}
+                    as="span"
+                    icon={<StyledSvgJoyTokenMonochrome24 />}
+                    withDenomination
+                    withToken
+                    customTicker="$JBC"
+                    variant="h400"
+                  />
+                }
               />
-            }
-          />
-          <WidgetTile
-            title="Locked"
-            tooltip={{
-              text: 'It is locked value',
-            }}
-            customNode={
-              <NumberFormat
-                value={new BN(9999999)}
-                as="span"
-                icon={<StyledSvgJoyTokenMonochrome24 />}
-                withDenomination
-                withToken
-                customTicker="$JBC"
-                variant="h400"
+              <WidgetTile
+                title="Locked"
+                tooltip={{
+                  text: 'It is locked value',
+                }}
+                customNode={
+                  <NumberFormat
+                    value={new BN(9999999)}
+                    as="span"
+                    icon={<StyledSvgJoyTokenMonochrome24 />}
+                    withDenomination
+                    withToken
+                    customTicker="$JBC"
+                    variant="h400"
+                  />
+                }
               />
-            }
-          />
-          <WidgetTile
-            title="Total rev."
-            tooltip={{
-              text: 'It is locked value',
-            }}
-            customNode={
-              <NumberFormat
-                value={new BN(9999999)}
-                as="span"
-                icon={<StyledSvgJoyTokenMonochrome24 />}
-                withDenomination
-                withToken
-                customTicker="$JBC"
-                variant="h400"
+              <WidgetTile
+                title="Total rev."
+                tooltip={{
+                  text: 'It is locked value',
+                }}
+                customNode={
+                  <NumberFormat
+                    value={new BN(9999999)}
+                    as="span"
+                    icon={<StyledSvgJoyTokenMonochrome24 />}
+                    withDenomination
+                    withToken
+                    customTicker="$JBC"
+                    variant="h400"
+                  />
+                }
               />
-            }
-          />
-          <WidgetTile
-            title="Patronage"
-            tooltip={{
-              text: 'It is locked value',
-            }}
-            customNode={
-              <Text variant="h400" as="h4">
-                10%
-              </Text>
-            }
-          />
-        </WidgetContainer>
-        <BigWidgetContainer>
-          <WidgetTile
-            title="Token holders"
-            titleColor="colorTextStrong"
-            titleVariant="h500"
-            customTopRightNode={
-              <TextButton iconPlacement="right" icon={<SvgActionChevronR />}>
-                Show holders
-              </TextButton>
-            }
-            customNode={<HoldersPlaceholders />}
-          />
-          <WidgetTile
-            title="Revenue share with holders"
-            titleColor="colorTextStrong"
-            titleVariant="h500"
-            customTopRightNode={
-              <TextButton iconPlacement="right" icon={<SvgActionChevronR />}>
-                Show revenue shares
-              </TextButton>
-            }
-            customNode={<HoldersPlaceholders />}
-          />
-        </BigWidgetContainer>
+              <WidgetTile
+                title="Patronage"
+                tooltip={{
+                  text: 'It is locked value',
+                }}
+                customNode={
+                  <Text variant="h400" as="h4">
+                    10%
+                  </Text>
+                }
+              />
+            </WidgetContainer>
+            <BigWidgetContainer>
+              <WidgetTile
+                title="Token holders"
+                titleColor="colorTextStrong"
+                titleVariant="h500"
+                customTopRightNode={
+                  <TextButton iconPlacement="right" icon={<SvgActionChevronR />}>
+                    Show holders
+                  </TextButton>
+                }
+                customNode={<HoldersPlaceholders />}
+              />
+              <WidgetTile
+                title="Revenue share with holders"
+                titleColor="colorTextStrong"
+                titleVariant="h500"
+                customTopRightNode={
+                  <TextButton iconPlacement="right" icon={<SvgActionChevronR />}>
+                    Show revenue shares
+                  </TextButton>
+                }
+                customNode={<HoldersPlaceholders />}
+              />
+            </BigWidgetContainer>
+          </>
+        )}
       </MainContainer>
     </LimitedWidthContainer>
   )
