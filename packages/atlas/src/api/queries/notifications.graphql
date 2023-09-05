@@ -262,6 +262,67 @@ query channelNotificationPreferences {
   }
 }
 
+mutation SetMembershipNotificationPreferences($notificationPreferences: AccountNotificationPreferencesInput!) {
+  setAccountNotificationPreferences(notificationPreferences: $notificationPreferences) {
+    channelCreated {
+      emailEnabled
+      inAppEnabled
+    }
+    replyToComment {
+      emailEnabled
+      inAppEnabled
+    }
+    reactionToComment {
+      emailEnabled
+      inAppEnabled
+    }
+    videoPosted {
+      emailEnabled
+      inAppEnabled
+    }
+    newNftOnAuction {
+      emailEnabled
+      inAppEnabled
+    }
+    newNftOnSale {
+      emailEnabled
+      inAppEnabled
+    }
+    higherBidThanYoursMade {
+      emailEnabled
+      inAppEnabled
+    }
+    timedAuctionExpired {
+      emailEnabled
+      inAppEnabled
+    }
+    auctionWon {
+      emailEnabled
+      inAppEnabled
+    }
+    auctionLost {
+      emailEnabled
+      inAppEnabled
+    }
+    openAuctionBidCanBeWithdrawn {
+      emailEnabled
+      inAppEnabled
+    }
+    fundsFromCouncilReceived {
+      emailEnabled
+      inAppEnabled
+    }
+    fundsToExternalWalletSent {
+      emailEnabled
+      inAppEnabled
+    }
+    fundsFromWgReceived {
+      emailEnabled
+      inAppEnabled
+    }
+  }
+}
+
 query GetNftHistory($nftId: String!) {
   nftHistoryEntries(orderBy: event_timestamp_DESC, where: { nft: { id_eq: $nftId } }) {
     event {

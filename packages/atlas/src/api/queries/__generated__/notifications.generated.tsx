@@ -870,6 +870,47 @@ export type ChannelNotificationPreferencesQuery = {
   }
 }
 
+export type SetMembershipNotificationPreferencesMutationVariables = Types.Exact<{
+  notificationPreferences: Types.AccountNotificationPreferencesInput
+}>
+
+export type SetMembershipNotificationPreferencesMutation = {
+  __typename?: 'Mutation'
+  setAccountNotificationPreferences: {
+    __typename?: 'AccountNotificationPreferencesOutput'
+    channelCreated: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    replyToComment: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    reactionToComment: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    videoPosted: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    newNftOnAuction: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    newNftOnSale: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    higherBidThanYoursMade: {
+      __typename?: 'NotificationPreferenceOutput'
+      emailEnabled: boolean
+      inAppEnabled: boolean
+    }
+    timedAuctionExpired: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    auctionWon: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    auctionLost: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    openAuctionBidCanBeWithdrawn: {
+      __typename?: 'NotificationPreferenceOutput'
+      emailEnabled: boolean
+      inAppEnabled: boolean
+    }
+    fundsFromCouncilReceived: {
+      __typename?: 'NotificationPreferenceOutput'
+      emailEnabled: boolean
+      inAppEnabled: boolean
+    }
+    fundsToExternalWalletSent: {
+      __typename?: 'NotificationPreferenceOutput'
+      emailEnabled: boolean
+      inAppEnabled: boolean
+    }
+    fundsFromWgReceived: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+  }
+}
+
 export type GetNftHistoryQueryVariables = Types.Exact<{
   nftId: Types.Scalars['String']
 }>
@@ -3931,6 +3972,111 @@ export type ChannelNotificationPreferencesLazyQueryHookResult = ReturnType<
 export type ChannelNotificationPreferencesQueryResult = Apollo.QueryResult<
   ChannelNotificationPreferencesQuery,
   ChannelNotificationPreferencesQueryVariables
+>
+export const SetMembershipNotificationPreferencesDocument = gql`
+  mutation SetMembershipNotificationPreferences($notificationPreferences: AccountNotificationPreferencesInput!) {
+    setAccountNotificationPreferences(notificationPreferences: $notificationPreferences) {
+      channelCreated {
+        emailEnabled
+        inAppEnabled
+      }
+      replyToComment {
+        emailEnabled
+        inAppEnabled
+      }
+      reactionToComment {
+        emailEnabled
+        inAppEnabled
+      }
+      videoPosted {
+        emailEnabled
+        inAppEnabled
+      }
+      newNftOnAuction {
+        emailEnabled
+        inAppEnabled
+      }
+      newNftOnSale {
+        emailEnabled
+        inAppEnabled
+      }
+      higherBidThanYoursMade {
+        emailEnabled
+        inAppEnabled
+      }
+      timedAuctionExpired {
+        emailEnabled
+        inAppEnabled
+      }
+      auctionWon {
+        emailEnabled
+        inAppEnabled
+      }
+      auctionLost {
+        emailEnabled
+        inAppEnabled
+      }
+      openAuctionBidCanBeWithdrawn {
+        emailEnabled
+        inAppEnabled
+      }
+      fundsFromCouncilReceived {
+        emailEnabled
+        inAppEnabled
+      }
+      fundsToExternalWalletSent {
+        emailEnabled
+        inAppEnabled
+      }
+      fundsFromWgReceived {
+        emailEnabled
+        inAppEnabled
+      }
+    }
+  }
+`
+export type SetMembershipNotificationPreferencesMutationFn = Apollo.MutationFunction<
+  SetMembershipNotificationPreferencesMutation,
+  SetMembershipNotificationPreferencesMutationVariables
+>
+
+/**
+ * __useSetMembershipNotificationPreferencesMutation__
+ *
+ * To run a mutation, you first call `useSetMembershipNotificationPreferencesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetMembershipNotificationPreferencesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setMembershipNotificationPreferencesMutation, { data, loading, error }] = useSetMembershipNotificationPreferencesMutation({
+ *   variables: {
+ *      notificationPreferences: // value for 'notificationPreferences'
+ *   },
+ * });
+ */
+export function useSetMembershipNotificationPreferencesMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    SetMembershipNotificationPreferencesMutation,
+    SetMembershipNotificationPreferencesMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    SetMembershipNotificationPreferencesMutation,
+    SetMembershipNotificationPreferencesMutationVariables
+  >(SetMembershipNotificationPreferencesDocument, options)
+}
+export type SetMembershipNotificationPreferencesMutationHookResult = ReturnType<
+  typeof useSetMembershipNotificationPreferencesMutation
+>
+export type SetMembershipNotificationPreferencesMutationResult =
+  Apollo.MutationResult<SetMembershipNotificationPreferencesMutation>
+export type SetMembershipNotificationPreferencesMutationOptions = Apollo.BaseMutationOptions<
+  SetMembershipNotificationPreferencesMutation,
+  SetMembershipNotificationPreferencesMutationVariables
 >
 export const GetNftHistoryDocument = gql`
   query GetNftHistory($nftId: String!) {
