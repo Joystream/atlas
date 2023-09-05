@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import useResizeObserver from 'use-resize-observer'
 
@@ -10,7 +10,7 @@ import { StyledActionBar, Wrapper } from './MembershipNotifications.styles'
 import { TABLE_STRUCTURE } from './MembershipNotifications.utils'
 
 export const MembershipNotifications = () => {
-  const { data, isLoading } = useMemberSettingsData()
+  const { data, isLoading, isSubmitting, submit } = useMemberSettingsData()
 
   const form = useForm<NotificationsState>()
   const {
@@ -18,19 +18,11 @@ export const MembershipNotifications = () => {
     formState: { isDirty },
   } = form
 
-  const [isSubmitting, setIsSubmitting] = useState(false)
-
   useEffect(() => reset(data), [reset, data])
 
   const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
 
-  const handleEditMember = form.handleSubmit(async (data) => {
-    setIsSubmitting(true)
-    // TODO: Send data to Orion
-    await new Promise((r) => setTimeout(r, 2000))
-    reset(data) // Reset with new data
-    setIsSubmitting(false)
-  })
+  const handleEditMember = form.handleSubmit(submit)
 
   const isBusy = isLoading || isSubmitting
 
