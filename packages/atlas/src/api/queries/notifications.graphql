@@ -124,6 +124,144 @@ query GetNotificationsConnection($accountId: String!, $first: Int!, $after: Stri
   }
 }
 
+query membershipNotificationPreferences {
+  accountData {
+    notificationPreferences {
+      channelCreated {
+        emailEnabled
+        inAppEnabled
+      }
+      replyToComment {
+        emailEnabled
+        inAppEnabled
+      }
+      reactionToComment {
+        emailEnabled
+        inAppEnabled
+      }
+      videoPosted {
+        emailEnabled
+        inAppEnabled
+      }
+      newNftOnAuction {
+        emailEnabled
+        inAppEnabled
+      }
+      newNftOnSale {
+        emailEnabled
+        inAppEnabled
+      }
+      higherBidThanYoursMade {
+        emailEnabled
+        inAppEnabled
+      }
+      timedAuctionExpired {
+        emailEnabled
+        inAppEnabled
+      }
+      auctionWon {
+        emailEnabled
+        inAppEnabled
+      }
+      auctionLost {
+        emailEnabled
+        inAppEnabled
+      }
+      openAuctionBidCanBeWithdrawn {
+        emailEnabled
+        inAppEnabled
+      }
+      fundsFromCouncilReceived {
+        emailEnabled
+        inAppEnabled
+      }
+      fundsToExternalWalletSent {
+        emailEnabled
+        inAppEnabled
+      }
+      fundsFromWgReceived {
+        emailEnabled
+        inAppEnabled
+      }
+    }
+  }
+}
+
+query channelNotificationPreferences {
+  accountData {
+    notificationPreferences {
+      bidMadeOnNft {
+        emailEnabled
+        inAppEnabled
+      }
+      channelExcludedFromApp {
+        emailEnabled
+        inAppEnabled
+      }
+      channelFundsWithdrawn {
+        emailEnabled
+        inAppEnabled
+      }
+      channelPaymentReceived {
+        emailEnabled
+        inAppEnabled
+      }
+      channelReceivedFundsFromWg {
+        emailEnabled
+        inAppEnabled
+      }
+      newChannelFollower {
+        emailEnabled
+        inAppEnabled
+      }
+      newPayoutUpdatedByCouncil {
+        emailEnabled
+        inAppEnabled
+      }
+      nftBought {
+        emailEnabled
+        inAppEnabled
+      }
+      nftFeaturedOnMarketPlace {
+        emailEnabled
+        inAppEnabled
+      }
+      royaltyReceived {
+        emailEnabled
+        inAppEnabled
+      }
+      videoCommentCreated {
+        emailEnabled
+        inAppEnabled
+      }
+      videoDisliked {
+        emailEnabled
+        inAppEnabled
+      }
+      videoExcludedFromApp {
+        emailEnabled
+        inAppEnabled
+      }
+      videoFeaturedAsHero {
+        emailEnabled
+        inAppEnabled
+      }
+      videoFeaturedOnCategoryPage {
+        emailEnabled
+        inAppEnabled
+      }
+      videoLiked {
+        emailEnabled
+        inAppEnabled
+      }
+      yppChannelVerified {
+        emailEnabled
+        inAppEnabled
+      }
+    }
+  }
+}
+
 query GetNftHistory($nftId: String!) {
   nftHistoryEntries(orderBy: event_timestamp_DESC, where: { nft: { id_eq: $nftId } }) {
     event {

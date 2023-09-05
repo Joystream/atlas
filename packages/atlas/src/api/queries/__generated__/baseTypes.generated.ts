@@ -55,7 +55,7 @@ export type AccountData = {
   isEmailConfirmed: Scalars['Boolean']
   joystreamAccount: Scalars['String']
   membershipId: Scalars['String']
-  notificationPreferences: AccountNotificationPreferencesOutput
+  notificationPreferences?: Maybe<AccountNotificationPreferencesOutput>
 }
 
 export type AccountEdge = {
@@ -101,7 +101,6 @@ export type AccountNotificationPreferences = {
 }
 
 export type AccountNotificationPreferencesInput = {
-  auctionExpired?: InputMaybe<NotificationPreferenceGql>
   auctionLost?: InputMaybe<NotificationPreferenceGql>
   auctionWon?: InputMaybe<NotificationPreferenceGql>
   bidMadeOnNft?: InputMaybe<NotificationPreferenceGql>
@@ -124,6 +123,7 @@ export type AccountNotificationPreferencesInput = {
   reactionToComment?: InputMaybe<NotificationPreferenceGql>
   replyToComment?: InputMaybe<NotificationPreferenceGql>
   royaltyReceived?: InputMaybe<NotificationPreferenceGql>
+  timedAuctionExpired?: InputMaybe<NotificationPreferenceGql>
   videoCommentCreated?: InputMaybe<NotificationPreferenceGql>
   videoDisliked?: InputMaybe<NotificationPreferenceGql>
   videoExcludedFromApp?: InputMaybe<NotificationPreferenceGql>
@@ -137,7 +137,6 @@ export type AccountNotificationPreferencesInput = {
 
 export type AccountNotificationPreferencesOutput = {
   __typename?: 'AccountNotificationPreferencesOutput'
-  auctionExpired: NotificationPreferenceOutput
   auctionLost: NotificationPreferenceOutput
   auctionWon: NotificationPreferenceOutput
   bidMadeOnNft: NotificationPreferenceOutput
@@ -160,6 +159,7 @@ export type AccountNotificationPreferencesOutput = {
   reactionToComment: NotificationPreferenceOutput
   replyToComment: NotificationPreferenceOutput
   royaltyReceived: NotificationPreferenceOutput
+  timedAuctionExpired: NotificationPreferenceOutput
   videoCommentCreated: NotificationPreferenceOutput
   videoDisliked: NotificationPreferenceOutput
   videoExcludedFromApp: NotificationPreferenceOutput
@@ -167,8 +167,8 @@ export type AccountNotificationPreferencesOutput = {
   videoFeaturedOnCategoryPage: NotificationPreferenceOutput
   videoLiked: NotificationPreferenceOutput
   videoPosted: NotificationPreferenceOutput
+  yppChannelSuspended: NotificationPreferenceOutput
   yppChannelVerified: NotificationPreferenceOutput
-  yppSignupSuccessful: NotificationPreferenceOutput
 }
 
 export type AccountNotificationPreferencesResult = {
