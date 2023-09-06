@@ -103,7 +103,10 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
             ? typeof reward.joyAmount === 'number'
               ? {
                   type: 'number' as const,
-                  amount: reward.joyAmount * (customMultiplier ? customMultiplier[currentTier] : multiplier),
+                  amount:
+                    reward.joyAmount === 0
+                      ? customMultiplier || multiplier
+                      : reward.joyAmount * (customMultiplier?.[currentTier] || multiplier),
                 }
               : { type: 'range' as const, min: reward.joyAmount.min, max: reward.joyAmount.max }
             : null
@@ -111,7 +114,10 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
             ? typeof reward.usdAmount === 'number'
               ? {
                   type: 'number' as const,
-                  amount: reward.usdAmount * (customMultiplier ? customMultiplier[currentTier] : multiplier),
+                  amount:
+                    reward.usdAmount === 0
+                      ? customMultiplier || 0
+                      : reward.usdAmount * (customMultiplier?.[currentTier] || multiplier),
                 }
               : { type: 'range' as const, min: reward.usdAmount.min, max: reward.usdAmount.max }
             : null
