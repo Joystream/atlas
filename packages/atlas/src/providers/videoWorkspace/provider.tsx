@@ -1,13 +1,11 @@
 import { FC, PropsWithChildren, createContext, useCallback, useMemo, useState } from 'react'
 
-import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { createId } from '@/utils/createId'
 
 import { ContextValue, VideoWorkspace } from './types'
 
-import { usePersonalDataStore } from '../personalData'
 import { useUser } from '../user/user.hooks'
 
 export const VideoWorkspaceContext = createContext<ContextValue | undefined>(undefined)
@@ -20,8 +18,6 @@ const generateVideo = () => ({
   mintNft: false,
 })
 
-const CONTENT_TYPE_INFO = 'content-type'
-
 export const VideoWorkspaceProvider: FC<PropsWithChildren> = ({ children }) => {
   const [editedVideoInfo, setEditedVideoInfo] = useState<VideoWorkspace>(generateVideo())
   const [isWorkspaceOpen, setIsWorkspaceOpen] = useState(false)
@@ -32,20 +28,10 @@ export const VideoWorkspaceProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const { activeChannel } = useUser()
 
-  const isContentTypeInfoDismissed = usePersonalDataStore((state) =>
-    atlasConfig.general.appContentFocus
-      ? state.dismissedMessages.some((message) => message.id === CONTENT_TYPE_INFO) ||
-        (activeChannel?.totalVideosCreated && activeChannel?.totalVideosCreated > 0)
-      : true
-  )
-
   const handleOpenVideoWorkspace = useCallback(() => {
-    if (!isContentTypeInfoDismissed) {
-      trackUploadVideoClicked(activeChannel?.id)
-      return
-    }
+    trackUploadVideoClicked(activeChannel?.id)
     setEditedVideo()
-  }, [activeChannel?.id, isContentTypeInfoDismissed, setEditedVideo, trackUploadVideoClicked])
+  }, [activeChannel?.id, setEditedVideo, trackUploadVideoClicked])
 
   const value = useMemo(
     () => ({
@@ -54,11 +40,11 @@ export const VideoWorkspaceProvider: FC<PropsWithChildren> = ({ children }) => {
       isWorkspaceOpen,
       setIsWorkspaceOpen,
       uploadVideoButtonProps: {
-        to: isContentTypeInfoDismissed ? absoluteRoutes.studio.videoWorkspace() : undefined,
+        to: absoluteRoutes.studio.videoWorkspace(),
         onClick: handleOpenVideoWorkspace,
       },
     }),
-    [editedVideoInfo, setEditedVideo, isWorkspaceOpen, isContentTypeInfoDismissed, handleOpenVideoWorkspace]
+    [editedVideoInfo, setEditedVideo, isWorkspaceOpen, handleOpenVideoWorkspace]
   )
 
   return <VideoWorkspaceContext.Provider value={value}>{children}</VideoWorkspaceContext.Provider>
