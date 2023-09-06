@@ -1,35 +1,35 @@
-import { useEffect, useState } from 'react'
+import { mapValues, omit, pick } from 'lodash-es'
+import { useCallback, useMemo } from 'react'
 
+import {
+  useGetChannelNotificationPreferencesQuery,
+  useSetChannelNotificationPreferencesMutation,
+} from '@/api/queries/__generated__/notifications.generated'
 import { NotificationsState } from '@/components/NotificationsTable'
 
 export const useMemberSettingsData = () => {
-  const [data, setData] = useState<NotificationsState | undefined>()
+  const { refetch, data: queryData, loading: isLoading } = useGetChannelNotificationPreferencesQuery()
+  const [mutate, { data: mutationData, loading: isSubmitting }] = useSetChannelNotificationPreferencesMutation()
 
-  useEffect(() => {
-    // TODO: Fetch data from Orion
-    new Promise((r) => setTimeout(r, 1000)).then(() =>
-      setData({
-        channelExcludedFromAppNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        videoExcludedFromAppNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        videoFeaturedAsHeroNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        videoFeaturedOnCategoryPageNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        nftFeaturedOnMarketPlace: { inAppEnabled: true, emailEnabled: true },
-        newChannelFollowerNotificationPreferences: { inAppEnabled: true, emailEnabled: true },
-        videoCommentCreatedNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        videoLikedNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        videoDislikedNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        yppSignupSuccessfulNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        yppChannelVerifiedNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        nftBoughtNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        bidMadeOnNftNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        royaltyReceivedNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        channelPaymentReceivedNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        channelReceivedFundsFromWgNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        newPayoutUpdatedByCouncilNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        channelFundsWithdrawnNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-      })
-    )
-  }, [])
+  const data = useMemo(() => {
+    if (mutationData?.setAccountNotificationPreferences) {
+      return omit(mutationData?.setAccountNotificationPreferences, '__typename')
+    }
+    if (queryData?.accountData.notificationPreferences) {
+      return mapValues(omit(queryData.accountData.notificationPreferences, '__typename'), (pref) =>
+        pick(pref, 'emailEnabled', 'inAppEnabled')
+      )
+    }
+  }, [queryData, mutationData])
 
-  return { isLoading: !data, data }
+  const submit = useCallback(
+    async (notificationPreferences: NotificationsState) => {
+      const res = await mutate({ variables: { notificationPreferences } })
+      refetch() // Invalidate the cache by refetching
+      return res
+    },
+    [mutate, refetch]
+  )
+
+  return { isLoading, isSubmitting, data, submit }
 }

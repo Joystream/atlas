@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useState } from 'react'
+import { RefObject, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { ActionBar } from '@/components/ActionBar'
@@ -11,7 +11,7 @@ import { TABLE_STRUCTURE } from './StudioChannelNotificationsTab.utils'
 import { useMemberSettingsData } from './StudioChannelNotificationsTabStudio.hooks'
 
 export const StudioChannelNotificationsTab = ({ actionBarPortal }: { actionBarPortal: RefObject<HTMLDivElement> }) => {
-  const { data, isLoading } = useMemberSettingsData()
+  const { data, isLoading, isSubmitting, submit } = useMemberSettingsData()
 
   const form = useForm<NotificationsState>()
   const {
@@ -19,17 +19,9 @@ export const StudioChannelNotificationsTab = ({ actionBarPortal }: { actionBarPo
     formState: { isDirty },
   } = form
 
-  const [isSubmitting, setIsSubmitting] = useState(false)
-
   useEffect(() => reset(data), [reset, data])
 
-  const handleEditNotifications = form.handleSubmit(async (data) => {
-    setIsSubmitting(true)
-    // TODO: Send data to Orion
-    await new Promise((r) => setTimeout(r, 2000))
-    reset(data) // Reset with new data
-    setIsSubmitting(false)
-  })
+  const handleEditNotifications = form.handleSubmit(submit)
 
   return (
     <>
