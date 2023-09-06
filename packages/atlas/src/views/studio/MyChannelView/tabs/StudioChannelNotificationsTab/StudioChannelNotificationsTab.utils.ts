@@ -18,10 +18,10 @@ export const TABLE_STRUCTURE = [
         label: 'Your video is featured as category hero video',
         name: 'videoFeaturedAsHero',
       },
-      {
-        label: 'Your video is excluded from the app',
-        name: 'videoExcludedFromApp',
-      },
+      // {
+      //   label: 'Your video is excluded from the app',
+      //   name: 'videoExcludedFromApp',
+      // },
     ],
   },
   {

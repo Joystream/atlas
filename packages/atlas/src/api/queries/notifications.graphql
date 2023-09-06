@@ -206,10 +206,10 @@ query GetChannelNotificationPreferences {
         emailEnabled
         inAppEnabled
       }
-      videoExcludedFromApp {
-        emailEnabled
-        inAppEnabled
-      }
+      # videoExcludedFromApp {
+      #   emailEnabled
+      #   inAppEnabled
+      # }
       newChannelFollower {
         emailEnabled
         inAppEnabled
@@ -341,10 +341,10 @@ mutation SetChannelNotificationPreferences($notificationPreferences: AccountNoti
       emailEnabled
       inAppEnabled
     }
-    videoExcludedFromApp {
-      emailEnabled
-      inAppEnabled
-    }
+    # videoExcludedFromApp {
+    #   emailEnabled
+    #   inAppEnabled
+    # }
     newChannelFollower {
       emailEnabled
       inAppEnabled
