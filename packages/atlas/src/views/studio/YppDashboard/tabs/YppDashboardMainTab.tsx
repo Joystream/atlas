@@ -12,6 +12,7 @@ import { useClipboard } from '@/hooks/useClipboard'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useUser } from '@/providers/user/user.hooks'
 import { configYppIconMapper } from '@/views/global/YppLandingView/YppFooter'
+import { calculateReward } from '@/views/global/YppLandingView/YppRewardSection'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
 
 import { RewardsWrapper, StyledBanner, StyledSvgAlertsInformative24, WidgetsWrapper } from './YppDashboardTabs.styles'
@@ -98,23 +99,9 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
       )}
       <RewardsWrapper>
         {REWARDS?.map((reward) => {
-          const customMultiplier = reward.customMultiplier
-          const rewardAmount = reward.joyAmount
-            ? typeof reward.joyAmount === 'number'
-              ? {
-                  type: 'number' as const,
-                  amount: reward.joyAmount * (customMultiplier ? customMultiplier[currentTier] : multiplier),
-                }
-              : { type: 'range' as const, min: reward.joyAmount.min, max: reward.joyAmount.max }
-            : null
-          const rewardAmountUsd = reward.usdAmount
-            ? typeof reward.usdAmount === 'number'
-              ? {
-                  type: 'number' as const,
-                  amount: reward.usdAmount * (customMultiplier ? customMultiplier[currentTier] : multiplier),
-                }
-              : { type: 'range' as const, min: reward.usdAmount.min, max: reward.usdAmount.max }
-            : null
+          const customMultiplier = reward.customMultiplier?.[currentTier]
+          const rewardAmount = calculateReward(reward.joyAmount, customMultiplier || multiplier, currentTier)
+          const rewardAmountUsd = calculateReward(reward.usdAmount, customMultiplier || multiplier, currentTier)
           return (
             <BenefitCard
               key={reward.title}
