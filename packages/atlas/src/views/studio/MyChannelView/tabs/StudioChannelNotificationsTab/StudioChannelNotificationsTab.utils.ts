@@ -4,15 +4,11 @@ export const TABLE_STRUCTURE = [
     rows: [
       {
         label: 'Your channel is excluded from the app',
-        name: 'channelExcludedFromAppNotificationEnabled',
-      },
-      {
-        label: 'Your video is excluded from the app',
-        name: 'videoExcludedFromAppNotificationEnabled',
+        name: 'channelExcludedFromApp',
       },
       {
         label: 'Your video is featured on category page',
-        name: 'videoFeaturedOnCategoryPageNotificationEnabled',
+        name: 'videoFeaturedOnCategoryPage',
       },
       {
         label: 'Your NFT is featured on marketplace',
@@ -20,7 +16,11 @@ export const TABLE_STRUCTURE = [
       },
       {
         label: 'Your video is featured as category hero video',
-        name: 'videoFeaturedAsHeroNotificationEnabled',
+        name: 'videoFeaturedAsHero',
+      },
+      {
+        label: 'Your video is excluded from the app',
+        name: 'videoExcludedFromApp',
       },
     ],
   },
@@ -29,32 +29,32 @@ export const TABLE_STRUCTURE = [
     rows: [
       {
         label: 'Someone followed your channel',
-        name: 'newChannelFollowerNotificationPreferences',
+        name: 'newChannelFollower',
       },
       {
         label: 'Someone posted a comment on your video',
-        name: 'videoCommentCreatedNotificationEnabled',
+        name: 'videoCommentCreated',
       },
       {
         label: 'Someone liked your video',
-        name: 'videoLikedNotificationEnabled',
+        name: 'videoLiked',
       },
       {
         label: 'Someone disliked your video',
-        name: 'videoDislikedNotificationEnabled',
+        name: 'videoDisliked',
       },
     ],
   },
   {
     title: 'Youtube partnership program',
     rows: [
-      {
-        label: 'Your channel was successfully signed up to participate in the program',
-        name: 'yppSignupSuccessfulNotificationEnabled',
-      },
+      // {
+      //   label: 'Your channel was successfully signed up to participate in the program',
+      //   name: 'yppSignupSuccessful',
+      // },
       {
         label: 'Your channel was verified',
-        name: 'yppChannelVerifiedNotificationEnabled',
+        name: 'yppChannelVerified',
       },
       // {
       //   label: 'Your channel was suspended in the program participation',
@@ -67,11 +67,11 @@ export const TABLE_STRUCTURE = [
     rows: [
       {
         label: 'Someone purchased your NFT',
-        name: 'nftBoughtNotificationEnabled',
+        name: 'nftBought',
       },
       {
         label: 'Someone placed a bid on your NFT',
-        name: 'bidMadeOnNftNotificationEnabled',
+        name: 'bidMadeOnNft',
       },
       // {
       //   label: 'Your timed auction expired',
@@ -82,7 +82,7 @@ export const TABLE_STRUCTURE = [
       // },
       {
         label: 'You received NFT royalties',
-        name: 'royaltyReceivedNotificationEnabled',
+        name: 'royaltyReceived',
       },
     ],
   },
@@ -91,19 +91,19 @@ export const TABLE_STRUCTURE = [
     rows: [
       {
         label: 'You received direct payment',
-        name: 'channelPaymentReceivedNotificationEnabled',
+        name: 'channelPaymentReceived',
       },
       {
         label: 'You received funds from working group',
-        name: 'channelReceivedFundsFromWgNotificationEnabled',
+        name: 'channelReceivedFundsFromWg',
       },
       {
         label: 'New council payout is ready to be claimed',
-        name: 'newPayoutUpdatedByCouncilNotificationEnabled',
+        name: 'newPayoutUpdatedByCouncil',
       },
       {
         label: 'You transferred funds from channel wallet to member wallet',
-        name: 'channelFundsWithdrawnNotificationEnabled',
+        name: 'channelFundsWithdrawn',
       },
     ],
   },

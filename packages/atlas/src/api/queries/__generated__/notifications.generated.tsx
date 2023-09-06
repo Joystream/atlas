@@ -817,17 +817,30 @@ export type GetChannelNotificationPreferencesQuery = {
     __typename?: 'AccountData'
     notificationPreferences?: {
       __typename?: 'AccountNotificationPreferencesOutput'
-      bidMadeOnNft: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
       channelExcludedFromApp: {
         __typename?: 'NotificationPreferenceOutput'
         emailEnabled: boolean
         inAppEnabled: boolean
       }
-      channelFundsWithdrawn: {
+      videoFeaturedOnCategoryPage: {
         __typename?: 'NotificationPreferenceOutput'
         emailEnabled: boolean
         inAppEnabled: boolean
       }
+      nftFeaturedOnMarketPlace: {
+        __typename?: 'NotificationPreferenceOutput'
+        emailEnabled: boolean
+        inAppEnabled: boolean
+      }
+      videoFeaturedAsHero: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+      newChannelFollower: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+      videoCommentCreated: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+      videoLiked: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+      videoDisliked: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+      yppChannelVerified: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+      nftBought: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+      bidMadeOnNft: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+      royaltyReceived: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
       channelPaymentReceived: {
         __typename?: 'NotificationPreferenceOutput'
         emailEnabled: boolean
@@ -838,34 +851,16 @@ export type GetChannelNotificationPreferencesQuery = {
         emailEnabled: boolean
         inAppEnabled: boolean
       }
-      newChannelFollower: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
       newPayoutUpdatedByCouncil: {
         __typename?: 'NotificationPreferenceOutput'
         emailEnabled: boolean
         inAppEnabled: boolean
       }
-      nftBought: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-      nftFeaturedOnMarketPlace: {
+      channelFundsWithdrawn: {
         __typename?: 'NotificationPreferenceOutput'
         emailEnabled: boolean
         inAppEnabled: boolean
       }
-      royaltyReceived: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-      videoCommentCreated: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-      videoDisliked: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-      videoExcludedFromApp: {
-        __typename?: 'NotificationPreferenceOutput'
-        emailEnabled: boolean
-        inAppEnabled: boolean
-      }
-      videoFeaturedAsHero: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-      videoFeaturedOnCategoryPage: {
-        __typename?: 'NotificationPreferenceOutput'
-        emailEnabled: boolean
-        inAppEnabled: boolean
-      }
-      videoLiked: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-      yppChannelVerified: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
     } | null
   }
 }
@@ -908,6 +903,57 @@ export type SetMembershipNotificationPreferencesMutation = {
       inAppEnabled: boolean
     }
     fundsFromWgReceived: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+  }
+}
+
+export type SetChannelNotificationPreferencesMutationVariables = Types.Exact<{
+  notificationPreferences: Types.AccountNotificationPreferencesInput
+}>
+
+export type SetChannelNotificationPreferencesMutation = {
+  __typename?: 'Mutation'
+  setAccountNotificationPreferences: {
+    __typename?: 'AccountNotificationPreferencesOutput'
+    channelExcludedFromApp: {
+      __typename?: 'NotificationPreferenceOutput'
+      emailEnabled: boolean
+      inAppEnabled: boolean
+    }
+    videoFeaturedOnCategoryPage: {
+      __typename?: 'NotificationPreferenceOutput'
+      emailEnabled: boolean
+      inAppEnabled: boolean
+    }
+    nftFeaturedOnMarketPlace: {
+      __typename?: 'NotificationPreferenceOutput'
+      emailEnabled: boolean
+      inAppEnabled: boolean
+    }
+    videoFeaturedAsHero: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    newChannelFollower: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    videoCommentCreated: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    videoLiked: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    videoDisliked: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    yppChannelVerified: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    nftBought: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    bidMadeOnNft: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    royaltyReceived: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    channelPaymentReceived: {
+      __typename?: 'NotificationPreferenceOutput'
+      emailEnabled: boolean
+      inAppEnabled: boolean
+    }
+    channelReceivedFundsFromWg: {
+      __typename?: 'NotificationPreferenceOutput'
+      emailEnabled: boolean
+      inAppEnabled: boolean
+    }
+    newPayoutUpdatedByCouncil: {
+      __typename?: 'NotificationPreferenceOutput'
+      emailEnabled: boolean
+      inAppEnabled: boolean
+    }
+    channelFundsWithdrawn: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
   }
 }
 
@@ -3853,15 +3899,51 @@ export const GetChannelNotificationPreferencesDocument = gql`
   query GetChannelNotificationPreferences {
     accountData {
       notificationPreferences {
-        bidMadeOnNft {
-          emailEnabled
-          inAppEnabled
-        }
         channelExcludedFromApp {
           emailEnabled
           inAppEnabled
         }
-        channelFundsWithdrawn {
+        videoFeaturedOnCategoryPage {
+          emailEnabled
+          inAppEnabled
+        }
+        nftFeaturedOnMarketPlace {
+          emailEnabled
+          inAppEnabled
+        }
+        videoFeaturedAsHero {
+          emailEnabled
+          inAppEnabled
+        }
+        newChannelFollower {
+          emailEnabled
+          inAppEnabled
+        }
+        videoCommentCreated {
+          emailEnabled
+          inAppEnabled
+        }
+        videoLiked {
+          emailEnabled
+          inAppEnabled
+        }
+        videoDisliked {
+          emailEnabled
+          inAppEnabled
+        }
+        yppChannelVerified {
+          emailEnabled
+          inAppEnabled
+        }
+        nftBought {
+          emailEnabled
+          inAppEnabled
+        }
+        bidMadeOnNft {
+          emailEnabled
+          inAppEnabled
+        }
+        royaltyReceived {
           emailEnabled
           inAppEnabled
         }
@@ -3873,51 +3955,11 @@ export const GetChannelNotificationPreferencesDocument = gql`
           emailEnabled
           inAppEnabled
         }
-        newChannelFollower {
-          emailEnabled
-          inAppEnabled
-        }
         newPayoutUpdatedByCouncil {
           emailEnabled
           inAppEnabled
         }
-        nftBought {
-          emailEnabled
-          inAppEnabled
-        }
-        nftFeaturedOnMarketPlace {
-          emailEnabled
-          inAppEnabled
-        }
-        royaltyReceived {
-          emailEnabled
-          inAppEnabled
-        }
-        videoCommentCreated {
-          emailEnabled
-          inAppEnabled
-        }
-        videoDisliked {
-          emailEnabled
-          inAppEnabled
-        }
-        videoExcludedFromApp {
-          emailEnabled
-          inAppEnabled
-        }
-        videoFeaturedAsHero {
-          emailEnabled
-          inAppEnabled
-        }
-        videoFeaturedOnCategoryPage {
-          emailEnabled
-          inAppEnabled
-        }
-        videoLiked {
-          emailEnabled
-          inAppEnabled
-        }
-        yppChannelVerified {
+        channelFundsWithdrawn {
           emailEnabled
           inAppEnabled
         }
@@ -4079,6 +4121,119 @@ export type SetMembershipNotificationPreferencesMutationResult =
 export type SetMembershipNotificationPreferencesMutationOptions = Apollo.BaseMutationOptions<
   SetMembershipNotificationPreferencesMutation,
   SetMembershipNotificationPreferencesMutationVariables
+>
+export const SetChannelNotificationPreferencesDocument = gql`
+  mutation SetChannelNotificationPreferences($notificationPreferences: AccountNotificationPreferencesInput!) {
+    setAccountNotificationPreferences(notificationPreferences: $notificationPreferences) {
+      channelExcludedFromApp {
+        emailEnabled
+        inAppEnabled
+      }
+      videoFeaturedOnCategoryPage {
+        emailEnabled
+        inAppEnabled
+      }
+      nftFeaturedOnMarketPlace {
+        emailEnabled
+        inAppEnabled
+      }
+      videoFeaturedAsHero {
+        emailEnabled
+        inAppEnabled
+      }
+      newChannelFollower {
+        emailEnabled
+        inAppEnabled
+      }
+      videoCommentCreated {
+        emailEnabled
+        inAppEnabled
+      }
+      videoLiked {
+        emailEnabled
+        inAppEnabled
+      }
+      videoDisliked {
+        emailEnabled
+        inAppEnabled
+      }
+      yppChannelVerified {
+        emailEnabled
+        inAppEnabled
+      }
+      nftBought {
+        emailEnabled
+        inAppEnabled
+      }
+      bidMadeOnNft {
+        emailEnabled
+        inAppEnabled
+      }
+      royaltyReceived {
+        emailEnabled
+        inAppEnabled
+      }
+      channelPaymentReceived {
+        emailEnabled
+        inAppEnabled
+      }
+      channelReceivedFundsFromWg {
+        emailEnabled
+        inAppEnabled
+      }
+      newPayoutUpdatedByCouncil {
+        emailEnabled
+        inAppEnabled
+      }
+      channelFundsWithdrawn {
+        emailEnabled
+        inAppEnabled
+      }
+    }
+  }
+`
+export type SetChannelNotificationPreferencesMutationFn = Apollo.MutationFunction<
+  SetChannelNotificationPreferencesMutation,
+  SetChannelNotificationPreferencesMutationVariables
+>
+
+/**
+ * __useSetChannelNotificationPreferencesMutation__
+ *
+ * To run a mutation, you first call `useSetChannelNotificationPreferencesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetChannelNotificationPreferencesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setChannelNotificationPreferencesMutation, { data, loading, error }] = useSetChannelNotificationPreferencesMutation({
+ *   variables: {
+ *      notificationPreferences: // value for 'notificationPreferences'
+ *   },
+ * });
+ */
+export function useSetChannelNotificationPreferencesMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    SetChannelNotificationPreferencesMutation,
+    SetChannelNotificationPreferencesMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    SetChannelNotificationPreferencesMutation,
+    SetChannelNotificationPreferencesMutationVariables
+  >(SetChannelNotificationPreferencesDocument, options)
+}
+export type SetChannelNotificationPreferencesMutationHookResult = ReturnType<
+  typeof useSetChannelNotificationPreferencesMutation
+>
+export type SetChannelNotificationPreferencesMutationResult =
+  Apollo.MutationResult<SetChannelNotificationPreferencesMutation>
+export type SetChannelNotificationPreferencesMutationOptions = Apollo.BaseMutationOptions<
+  SetChannelNotificationPreferencesMutation,
+  SetChannelNotificationPreferencesMutationVariables
 >
 export const GetNftHistoryDocument = gql`
   query GetNftHistory($nftId: String!) {
