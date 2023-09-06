@@ -63,6 +63,7 @@ export const SignUpModal = () => {
   const setYppModalOpenName = useYppStore((state) => state.actions.setYppModalOpenName)
   const setYtResponseData = useYppStore((state) => state.actions.setYtResponseData)
   const { displaySnackbar } = useSnackbar()
+  const ytEmailIsValid = Boolean(ytResponseData?.email && !ytResponseData.email.includes('@plus.google.com'))
 
   const { generateUniqueMemberHandleBasedOnInput } = useUniqueMemberHandle()
 
@@ -379,7 +380,7 @@ export const SignUpModal = () => {
           isOverflowing={overflow || !smMatch}
           isEmailAlreadyTakenError={emailAlreadyTakenError}
           onEmailSubmit={handleEmailStepSubmit}
-          email={signUpFormData.current.email || (ytResponseData?.email ?? '')}
+          email={signUpFormData.current.email || (ytEmailIsValid ? (ytResponseData?.email as string) : '')}
           confirmedTerms={signUpFormData.current.confirmedTerms}
         />
       )}
