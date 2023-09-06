@@ -56,7 +56,13 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       const { data } = await lazyCurrentAccountQuery()
       if (!data) {
         handleAnonymousAuth(anonymousUserId).then((userId) => {
-          client.refetchQueries({ include: 'active' })
+          client.refetchQueries({
+            include: 'active',
+            onQueryUpdated: (observableQuery) => {
+              // don't refetch GetBasicVideos query, as it's a duplicate of GetBasicVideosLightweight
+              return observableQuery.queryName !== 'GetBasicVideos'
+            },
+          })
           setAnonymousUserId(userId ?? null)
         })
         setIsAuthenticating(false)

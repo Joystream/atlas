@@ -2,7 +2,11 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import { BasicVideoFieldsFragmentDoc, FullVideoFieldsFragmentDoc } from './fragments.generated'
+import {
+  BasicVideoActivityFieldsFragmentDoc,
+  BasicVideoFieldsFragmentDoc,
+  FullVideoFieldsFragmentDoc,
+} from './fragments.generated'
 
 const defaultOptions = {} as const
 export type GetFullVideoQueryVariables = Types.Exact<{
@@ -463,6 +467,334 @@ export type GetBasicVideosConnectionQuery = {
   videosConnection: {
     __typename?: 'VideosConnection'
     totalCount: number
+    edges: Array<{
+      __typename?: 'VideoEdge'
+      cursor: string
+      node: {
+        __typename?: 'Video'
+        id: string
+        title?: string | null
+        viewsNum: number
+        createdAt: Date
+        duration?: number | null
+        reactionsCount: number
+        commentsCount: number
+        channel: {
+          __typename?: 'Channel'
+          id: string
+          title?: string | null
+          description?: string | null
+          createdAt: Date
+          followsNum: number
+          rewardAccount: string
+          channelStateBloatBond: string
+          avatarPhoto?: {
+            __typename?: 'StorageDataObject'
+            id: string
+            resolvedUrls: Array<string>
+            createdAt: Date
+            size: string
+            isAccepted: boolean
+            ipfsHash: string
+            storageBag: { __typename?: 'StorageBag'; id: string }
+            type?:
+              | { __typename: 'DataObjectTypeChannelAvatar' }
+              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+              | { __typename: 'DataObjectTypeVideoMedia' }
+              | { __typename: 'DataObjectTypeVideoSubtitle' }
+              | { __typename: 'DataObjectTypeVideoThumbnail' }
+              | null
+          } | null
+        }
+        thumbnailPhoto?: {
+          __typename?: 'StorageDataObject'
+          id: string
+          resolvedUrls: Array<string>
+          createdAt: Date
+          size: string
+          isAccepted: boolean
+          ipfsHash: string
+          storageBag: { __typename?: 'StorageBag'; id: string }
+          type?:
+            | { __typename: 'DataObjectTypeChannelAvatar' }
+            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+            | { __typename: 'DataObjectTypeVideoMedia' }
+            | { __typename: 'DataObjectTypeVideoSubtitle' }
+            | { __typename: 'DataObjectTypeVideoThumbnail' }
+            | null
+        } | null
+        nft?: {
+          __typename?: 'OwnedNft'
+          id: string
+          createdAt: Date
+          creatorRoyalty?: number | null
+          lastSaleDate?: Date | null
+          lastSalePrice?: string | null
+          owner:
+            | {
+                __typename: 'NftOwnerChannel'
+                channel: {
+                  __typename?: 'Channel'
+                  id: string
+                  title?: string | null
+                  description?: string | null
+                  createdAt: Date
+                  followsNum: number
+                  rewardAccount: string
+                  channelStateBloatBond: string
+                  ownerMember?: {
+                    __typename?: 'Membership'
+                    id: string
+                    handle: string
+                    metadata?: {
+                      __typename?: 'MemberMetadata'
+                      about?: string | null
+                      avatar?:
+                        | {
+                            __typename?: 'AvatarObject'
+                            avatarObject: {
+                              __typename?: 'StorageDataObject'
+                              id: string
+                              resolvedUrls: Array<string>
+                              createdAt: Date
+                              size: string
+                              isAccepted: boolean
+                              ipfsHash: string
+                              storageBag: { __typename?: 'StorageBag'; id: string }
+                              type?:
+                                | { __typename: 'DataObjectTypeChannelAvatar' }
+                                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+                                | { __typename: 'DataObjectTypeVideoMedia' }
+                                | { __typename: 'DataObjectTypeVideoSubtitle' }
+                                | { __typename: 'DataObjectTypeVideoThumbnail' }
+                                | null
+                            }
+                          }
+                        | { __typename?: 'AvatarUri'; avatarUri: string }
+                        | null
+                    } | null
+                  } | null
+                  avatarPhoto?: {
+                    __typename?: 'StorageDataObject'
+                    id: string
+                    resolvedUrls: Array<string>
+                    createdAt: Date
+                    size: string
+                    isAccepted: boolean
+                    ipfsHash: string
+                    storageBag: { __typename?: 'StorageBag'; id: string }
+                    type?:
+                      | { __typename: 'DataObjectTypeChannelAvatar' }
+                      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                      | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+                      | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoSubtitle' }
+                      | { __typename: 'DataObjectTypeVideoThumbnail' }
+                      | null
+                  } | null
+                }
+              }
+            | {
+                __typename: 'NftOwnerMember'
+                member: {
+                  __typename?: 'Membership'
+                  id: string
+                  handle: string
+                  metadata?: {
+                    __typename?: 'MemberMetadata'
+                    about?: string | null
+                    avatar?:
+                      | {
+                          __typename?: 'AvatarObject'
+                          avatarObject: {
+                            __typename?: 'StorageDataObject'
+                            id: string
+                            resolvedUrls: Array<string>
+                            createdAt: Date
+                            size: string
+                            isAccepted: boolean
+                            ipfsHash: string
+                            storageBag: { __typename?: 'StorageBag'; id: string }
+                            type?:
+                              | { __typename: 'DataObjectTypeChannelAvatar' }
+                              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                              | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+                              | { __typename: 'DataObjectTypeVideoMedia' }
+                              | { __typename: 'DataObjectTypeVideoSubtitle' }
+                              | { __typename: 'DataObjectTypeVideoThumbnail' }
+                              | null
+                          }
+                        }
+                      | { __typename?: 'AvatarUri'; avatarUri: string }
+                      | null
+                  } | null
+                }
+              }
+          transactionalStatus?:
+            | {
+                __typename: 'TransactionalStatusAuction'
+                auction: {
+                  __typename?: 'Auction'
+                  id: string
+                  isCompleted: boolean
+                  buyNowPrice?: string | null
+                  startingPrice: string
+                  startsAtBlock: number
+                  endedAtBlock?: number | null
+                  auctionType:
+                    | {
+                        __typename: 'AuctionTypeEnglish'
+                        duration: number
+                        extensionPeriod: number
+                        minimalBidStep: string
+                        plannedEndAtBlock: number
+                      }
+                    | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
+                  topBid?: {
+                    __typename?: 'Bid'
+                    amount: string
+                    createdAt: Date
+                    isCanceled: boolean
+                    createdInBlock: number
+                    id: string
+                    bidder: {
+                      __typename?: 'Membership'
+                      id: string
+                      handle: string
+                      metadata?: {
+                        __typename?: 'MemberMetadata'
+                        about?: string | null
+                        avatar?:
+                          | {
+                              __typename?: 'AvatarObject'
+                              avatarObject: {
+                                __typename?: 'StorageDataObject'
+                                id: string
+                                resolvedUrls: Array<string>
+                                createdAt: Date
+                                size: string
+                                isAccepted: boolean
+                                ipfsHash: string
+                                storageBag: { __typename?: 'StorageBag'; id: string }
+                                type?:
+                                  | { __typename: 'DataObjectTypeChannelAvatar' }
+                                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+                                  | { __typename: 'DataObjectTypeVideoMedia' }
+                                  | { __typename: 'DataObjectTypeVideoSubtitle' }
+                                  | { __typename: 'DataObjectTypeVideoThumbnail' }
+                                  | null
+                              }
+                            }
+                          | { __typename?: 'AvatarUri'; avatarUri: string }
+                          | null
+                      } | null
+                    }
+                  } | null
+                  bids: Array<{
+                    __typename?: 'Bid'
+                    amount: string
+                    createdAt: Date
+                    isCanceled: boolean
+                    createdInBlock: number
+                    id: string
+                    bidder: {
+                      __typename?: 'Membership'
+                      id: string
+                      handle: string
+                      metadata?: {
+                        __typename?: 'MemberMetadata'
+                        about?: string | null
+                        avatar?:
+                          | {
+                              __typename?: 'AvatarObject'
+                              avatarObject: {
+                                __typename?: 'StorageDataObject'
+                                id: string
+                                resolvedUrls: Array<string>
+                                createdAt: Date
+                                size: string
+                                isAccepted: boolean
+                                ipfsHash: string
+                                storageBag: { __typename?: 'StorageBag'; id: string }
+                                type?:
+                                  | { __typename: 'DataObjectTypeChannelAvatar' }
+                                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+                                  | { __typename: 'DataObjectTypeVideoMedia' }
+                                  | { __typename: 'DataObjectTypeVideoSubtitle' }
+                                  | { __typename: 'DataObjectTypeVideoThumbnail' }
+                                  | null
+                              }
+                            }
+                          | { __typename?: 'AvatarUri'; avatarUri: string }
+                          | null
+                      } | null
+                    }
+                  }>
+                  whitelistedMembers: Array<{
+                    __typename?: 'AuctionWhitelistedMember'
+                    member: {
+                      __typename?: 'Membership'
+                      id: string
+                      handle: string
+                      metadata?: {
+                        __typename?: 'MemberMetadata'
+                        about?: string | null
+                        avatar?:
+                          | {
+                              __typename?: 'AvatarObject'
+                              avatarObject: {
+                                __typename?: 'StorageDataObject'
+                                id: string
+                                resolvedUrls: Array<string>
+                                createdAt: Date
+                                size: string
+                                isAccepted: boolean
+                                ipfsHash: string
+                                storageBag: { __typename?: 'StorageBag'; id: string }
+                                type?:
+                                  | { __typename: 'DataObjectTypeChannelAvatar' }
+                                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+                                  | { __typename: 'DataObjectTypeVideoMedia' }
+                                  | { __typename: 'DataObjectTypeVideoSubtitle' }
+                                  | { __typename: 'DataObjectTypeVideoThumbnail' }
+                                  | null
+                              }
+                            }
+                          | { __typename?: 'AvatarUri'; avatarUri: string }
+                          | null
+                      } | null
+                    }
+                  }>
+                }
+              }
+            | { __typename: 'TransactionalStatusBuyNow'; price: string }
+            | { __typename: 'TransactionalStatusIdle' }
+            | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
+            | null
+        } | null
+      }
+    }>
+    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor: string }
+  }
+}
+
+export type GetBasicVideosConnectionLightweightQueryVariables = Types.Exact<{
+  first?: Types.InputMaybe<Types.Scalars['Int']>
+  after?: Types.InputMaybe<Types.Scalars['String']>
+  orderBy?: Types.InputMaybe<Array<Types.VideoOrderByInput> | Types.VideoOrderByInput>
+  where?: Types.InputMaybe<Types.VideoWhereInput>
+}>
+
+export type GetBasicVideosConnectionLightweightQuery = {
+  __typename?: 'Query'
+  videosConnection: {
+    __typename?: 'VideosConnection'
     edges: Array<{
       __typename?: 'VideoEdge'
       cursor: string
@@ -1558,6 +1890,40 @@ export type GetBasicVideosQuery = {
   }>
 }
 
+export type GetBasicVideoActivityQueryVariables = Types.Exact<{
+  offset?: Types.InputMaybe<Types.Scalars['Int']>
+  limit?: Types.InputMaybe<Types.Scalars['Int']>
+  where?: Types.InputMaybe<Types.VideoWhereInput>
+  orderBy?: Types.InputMaybe<Array<Types.VideoOrderByInput> | Types.VideoOrderByInput>
+}>
+
+export type GetBasicVideoActivityQuery = {
+  __typename?: 'Query'
+  videos: Array<{
+    __typename?: 'Video'
+    id: string
+    title?: string | null
+    thumbnailPhoto?: {
+      __typename?: 'StorageDataObject'
+      id: string
+      resolvedUrls: Array<string>
+      createdAt: Date
+      size: string
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type?:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoSubtitle' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+        | null
+    } | null
+  }>
+}
+
 export type GetFullVideosQueryVariables = Types.Exact<{
   offset?: Types.InputMaybe<Types.Scalars['Int']>
   limit?: Types.InputMaybe<Types.Scalars['Int']>
@@ -2473,6 +2839,82 @@ export type GetBasicVideosConnectionQueryResult = Apollo.QueryResult<
   GetBasicVideosConnectionQuery,
   GetBasicVideosConnectionQueryVariables
 >
+export const GetBasicVideosConnectionLightweightDocument = gql`
+  query GetBasicVideosConnectionLightweight(
+    $first: Int
+    $after: String
+    $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
+    $where: VideoWhereInput
+  ) {
+    videosConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
+      edges {
+        cursor
+        node {
+          ...BasicVideoFields
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+    }
+  }
+  ${BasicVideoFieldsFragmentDoc}
+`
+
+/**
+ * __useGetBasicVideosConnectionLightweightQuery__
+ *
+ * To run a query within a React component, call `useGetBasicVideosConnectionLightweightQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBasicVideosConnectionLightweightQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBasicVideosConnectionLightweightQuery({
+ *   variables: {
+ *      first: // value for 'first'
+ *      after: // value for 'after'
+ *      orderBy: // value for 'orderBy'
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetBasicVideosConnectionLightweightQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetBasicVideosConnectionLightweightQuery,
+    GetBasicVideosConnectionLightweightQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetBasicVideosConnectionLightweightQuery, GetBasicVideosConnectionLightweightQueryVariables>(
+    GetBasicVideosConnectionLightweightDocument,
+    options
+  )
+}
+export function useGetBasicVideosConnectionLightweightLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetBasicVideosConnectionLightweightQuery,
+    GetBasicVideosConnectionLightweightQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    GetBasicVideosConnectionLightweightQuery,
+    GetBasicVideosConnectionLightweightQueryVariables
+  >(GetBasicVideosConnectionLightweightDocument, options)
+}
+export type GetBasicVideosConnectionLightweightQueryHookResult = ReturnType<
+  typeof useGetBasicVideosConnectionLightweightQuery
+>
+export type GetBasicVideosConnectionLightweightLazyQueryHookResult = ReturnType<
+  typeof useGetBasicVideosConnectionLightweightLazyQuery
+>
+export type GetBasicVideosConnectionLightweightQueryResult = Apollo.QueryResult<
+  GetBasicVideosConnectionLightweightQuery,
+  GetBasicVideosConnectionLightweightQueryVariables
+>
 export const GetFullVideosConnectionDocument = gql`
   query GetFullVideosConnection(
     $first: Int
@@ -2588,6 +3030,63 @@ export function useGetBasicVideosLazyQuery(
 export type GetBasicVideosQueryHookResult = ReturnType<typeof useGetBasicVideosQuery>
 export type GetBasicVideosLazyQueryHookResult = ReturnType<typeof useGetBasicVideosLazyQuery>
 export type GetBasicVideosQueryResult = Apollo.QueryResult<GetBasicVideosQuery, GetBasicVideosQueryVariables>
+export const GetBasicVideoActivityDocument = gql`
+  query GetBasicVideoActivity(
+    $offset: Int
+    $limit: Int
+    $where: VideoWhereInput
+    $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
+  ) {
+    videos(offset: $offset, limit: $limit, where: $where, orderBy: $orderBy) {
+      ...BasicVideoActivityFields
+    }
+  }
+  ${BasicVideoActivityFieldsFragmentDoc}
+`
+
+/**
+ * __useGetBasicVideoActivityQuery__
+ *
+ * To run a query within a React component, call `useGetBasicVideoActivityQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBasicVideoActivityQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBasicVideoActivityQuery({
+ *   variables: {
+ *      offset: // value for 'offset'
+ *      limit: // value for 'limit'
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useGetBasicVideoActivityQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetBasicVideoActivityQuery, GetBasicVideoActivityQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetBasicVideoActivityQuery, GetBasicVideoActivityQueryVariables>(
+    GetBasicVideoActivityDocument,
+    options
+  )
+}
+export function useGetBasicVideoActivityLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetBasicVideoActivityQuery, GetBasicVideoActivityQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetBasicVideoActivityQuery, GetBasicVideoActivityQueryVariables>(
+    GetBasicVideoActivityDocument,
+    options
+  )
+}
+export type GetBasicVideoActivityQueryHookResult = ReturnType<typeof useGetBasicVideoActivityQuery>
+export type GetBasicVideoActivityLazyQueryHookResult = ReturnType<typeof useGetBasicVideoActivityLazyQuery>
+export type GetBasicVideoActivityQueryResult = Apollo.QueryResult<
+  GetBasicVideoActivityQuery,
+  GetBasicVideoActivityQueryVariables
+>
 export const GetFullVideosDocument = gql`
   query GetFullVideos(
     $offset: Int

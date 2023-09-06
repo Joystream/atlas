@@ -26,7 +26,7 @@ import {
   GetStorageBucketsWithBagsQuery,
   GetStorageBucketsWithBagsQueryVariables,
 } from '@/api/queries/__generated__/storage.generated'
-import { useGetBasicVideosLazyQuery } from '@/api/queries/__generated__/videos.generated'
+import { useGetBasicVideoActivityLazyQuery } from '@/api/queries/__generated__/videos.generated'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
@@ -54,7 +54,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
   const [storageOperatorsError, setStorageOperatorsError] = useState<unknown>(null)
   const [failedStorageOperatorIds, setFailedStorageOperatorIds] = useState<string[]>([])
   const [userBenchmarkTime, setUserBenchmarkTime] = useState<number | null>(null)
-  const [getBasicVideo] = useGetBasicVideosLazyQuery()
+  const [getBasicVideoActivity] = useGetBasicVideoActivityLazyQuery()
   const {
     coordinates,
     expiry,
@@ -153,7 +153,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
 
   useMountEffect(() => {
     const initBenchmark = async () => {
-      const { data } = await getBasicVideo({
+      const { data } = await getBasicVideoActivity({
         variables: {
           limit: 20,
           where: {

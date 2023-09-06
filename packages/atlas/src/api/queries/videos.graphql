@@ -30,6 +30,26 @@ query GetBasicVideosConnection(
   }
 }
 
+query GetBasicVideosConnectionLightweight(
+  $first: Int
+  $after: String
+  $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
+  $where: VideoWhereInput
+) {
+  videosConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
+    edges {
+      cursor
+      node {
+        ...BasicVideoFields
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+
 # No changes
 query GetFullVideosConnection(
   $first: Int
@@ -61,6 +81,17 @@ query GetBasicVideos(
 ) {
   videos(offset: $offset, limit: $limit, where: $where, orderBy: $orderBy) {
     ...BasicVideoFields
+  }
+}
+
+query GetBasicVideoActivity(
+  $offset: Int
+  $limit: Int
+  $where: VideoWhereInput
+  $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
+) {
+  videos(offset: $offset, limit: $limit, where: $where, orderBy: $orderBy) {
+    ...BasicVideoActivityFields
   }
 }
 
