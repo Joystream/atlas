@@ -69,6 +69,7 @@ export const configSchema = z.object({
             baseAmount: z
               .union([
                 z.number(),
+                z.array(z.number()),
                 z.object({
                   min: z.number(),
                   max: z.number(),
@@ -78,6 +79,7 @@ export const configSchema = z.object({
             baseUsdAmount: z
               .union([
                 z.number(),
+                z.array(z.number()),
                 z.object({
                   min: z.number().nullable(),
                   max: z.number(),
