@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { FC } from 'react'
 
 import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
-import { GetBasicVideosConnectionDocument } from '@/api/queries/__generated__/videos.generated'
+import { GetBasicVideosConnectionLightweightDocument } from '@/api/queries/__generated__/videos.generated'
 import { Section } from '@/components/Section/Section'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
@@ -15,7 +15,7 @@ import { InfiniteLoadingOffsets } from '@/utils/loading.contants'
 export const HomeView: FC = () => {
   const headTags = useHeadTags()
   const { columns, fetchMore, pageInfo, tiles } = useInfiniteVideoGrid({
-    query: GetBasicVideosConnectionDocument,
+    query: GetBasicVideosConnectionLightweightDocument,
     variables: {
       where: publicVideoFilter,
       orderBy: VideoOrderByInput.VideoRelevanceDesc,
