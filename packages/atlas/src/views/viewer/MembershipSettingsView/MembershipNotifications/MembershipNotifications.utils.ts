@@ -4,7 +4,7 @@ export const TABLE_STRUCTURE = [
     rows: [
       {
         label: 'New channel created',
-        name: 'channelCreatedNotificationEnabled',
+        name: 'channelCreated',
       },
     ],
   },
@@ -13,11 +13,11 @@ export const TABLE_STRUCTURE = [
     rows: [
       {
         label: 'Someone replied to your comment',
-        name: 'replyToCommentNotificationEnabled',
+        name: 'replyToComment',
       },
       {
         label: 'Someone reacted to your comment',
-        name: 'reactionToCommentNotificationEnabled',
+        name: 'reactionToComment',
       },
     ],
   },
@@ -26,15 +26,15 @@ export const TABLE_STRUCTURE = [
     rows: [
       {
         label: 'Posted a new video',
-        name: 'videoPostedNotificationEnabled',
+        name: 'videoPosted',
       },
       {
         label: 'Put a new NFT on auction',
-        name: 'newNftOnAuctionNotificationEnabled',
+        name: 'newNftOnAuction',
       },
       {
         label: 'Put a new NFT on sale',
-        name: 'newNftOnSaleNotificationEnabled',
+        name: 'newNftOnSale',
       },
     ],
   },
@@ -43,23 +43,23 @@ export const TABLE_STRUCTURE = [
     rows: [
       {
         label: 'Someone placed higher bid than you',
-        name: 'higherBidThanYoursMadeNotificationEnabled',
+        name: 'higherBidThanYoursMade',
       },
       {
         label: 'Auction you participated in expired',
-        name: 'auctionExpiredNotificationEnabled',
+        name: 'timedAuctionExpired',
       },
       {
         label: 'You won the auction',
-        name: 'auctionWonNotificationEnabled',
+        name: 'auctionWon',
       },
       {
         label: 'You lost the auction',
-        name: 'auctionLostNotificationEnabled',
+        name: 'auctionLost',
       },
       {
         label: 'Your bid withdrawal is enabled',
-        name: 'openAuctionBidCanBeWithdrawnNotificationEnabled',
+        name: 'openAuctionBidCanBeWithdrawn',
       },
     ],
   },
@@ -68,15 +68,15 @@ export const TABLE_STRUCTURE = [
     rows: [
       {
         label: 'You receive funds from council',
-        name: 'fundsFromCouncilReceivedNotificationEnabled',
+        name: 'fundsFromCouncilReceived',
       },
       {
         label: 'You send funds to external wallet',
-        name: 'fundsToExternalWalletSentNotificationEnabled',
+        name: 'fundsToExternalWalletSent',
       },
       {
         label: 'You receive funds from working group',
-        name: 'fundsFromWgReceivedNotificationEnabled',
+        name: 'fundsFromWgReceived',
       },
     ],
   },

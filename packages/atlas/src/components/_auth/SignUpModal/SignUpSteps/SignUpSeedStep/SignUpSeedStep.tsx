@@ -74,7 +74,7 @@ export const SignUpSeedStep: FC<SignUpSeedStepProps> = ({
     >
       <StyledSignUpForm>
         <FormField label="Password recovery seed">
-          <StyledTextArea {...register('mnemonic')} disabled />
+          <StyledTextArea data-ls-disabled {...register('mnemonic')} disabled />
         </FormField>
         <StyledTextButton
           variant="secondary"

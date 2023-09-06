@@ -1,4 +1,4 @@
-import { FC, Fragment, useEffect, useMemo, useState } from 'react'
+import { FC, Fragment, useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, UseFormReturn, useWatch } from 'react-hook-form'
 
 import { SvgActionComputer, SvgActionRead } from '@/assets/icons'
@@ -76,31 +76,33 @@ const SubscribeToAllRow: FC<NotificationsTableComponentProps> = ({ sections, for
   const { getValues, setValue } = form
 
   useEffect(() => {
-    if (typeof allInApp === 'undefined' && typeof allEmail === 'undefined') return
-
-    const values = getValues()
-    if (typeof allInApp !== 'undefined') {
-      names.forEach((name) => {
-        if (values[name].inAppEnabled !== allInApp) setValue(`${name}.inAppEnabled`, allInApp, { shouldDirty: true })
-      })
-    }
-    if (typeof allEmail !== 'undefined') {
-      names.forEach((name) => {
-        if (values[name].emailEnabled !== allEmail) setValue(`${name}.emailEnabled`, allEmail, { shouldDirty: true })
-      })
-    }
-  }, [allInApp, allEmail, names, getValues, setValue])
-
-  useEffect(() => {
-    setAllInApp(
+    const newAllInApp =
       names.every((name) => values[name]?.inAppEnabled) ||
-        (names.some((name) => values[name]?.inAppEnabled) ? undefined : false)
-    )
-    setAllEmail(
+      (names.some((name) => values[name]?.inAppEnabled) ? undefined : false)
+    if (newAllInApp !== allInApp) setAllInApp(newAllInApp)
+
+    const newAllEmail =
       names.every((name) => values[name]?.emailEnabled) ||
-        (names.some((name) => values[name]?.emailEnabled) ? undefined : false)
-    )
+      (names.some((name) => values[name]?.emailEnabled) ? undefined : false)
+    if (newAllEmail !== allEmail) setAllEmail(newAllEmail)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values, names])
+
+  const handleChange = useCallback(
+    (key: keyof NotificationsState[string], setCurrent: (value: boolean) => void) => (isChecked: boolean) => {
+      setCurrent(isChecked)
+
+      const values = getValues()
+      names.forEach((name) => {
+        if (values[name][key] !== isChecked) setValue(`${name}.${key}`, isChecked, { shouldDirty: true })
+      })
+    },
+    [names, getValues, setValue]
+  )
+
+  const handleAllInAppChange = useMemo(() => handleChange('inAppEnabled', setAllInApp), [handleChange])
+  const handleAllEmailChange = useMemo(() => handleChange('emailEnabled', setAllEmail), [handleChange])
 
   return (
     <tr>
@@ -110,7 +112,7 @@ const SubscribeToAllRow: FC<NotificationsTableComponentProps> = ({ sections, for
         <Checkbox
           value={allInApp ?? true}
           indeterminate={typeof allInApp === 'undefined'}
-          onChange={setAllInApp}
+          onChange={handleAllInAppChange}
           disabled={disabled}
         />
       </td>
@@ -119,7 +121,7 @@ const SubscribeToAllRow: FC<NotificationsTableComponentProps> = ({ sections, for
         <Checkbox
           value={allEmail ?? true}
           indeterminate={typeof allEmail === 'undefined'}
-          onChange={setAllEmail}
+          onChange={handleAllEmailChange}
           disabled={disabled}
         />
       </td>

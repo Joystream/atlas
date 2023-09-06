@@ -1,7 +1,7 @@
 import { FC } from 'react'
 
 import { useNft } from '@/api/hooks/nfts'
-import confetti from '@/assets/animations/confetti.json'
+import { confettiAnimation } from '@/assets/animations'
 import { GridItem } from '@/components/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
@@ -68,7 +68,7 @@ export const NftSettlementBottomDrawer: FC = () => {
   const { fullFee: fee } = useFee('settleEnglishAuctionTx', currentNftId ? [currentNftId] : undefined)
   return (
     <BottomDrawer isOpen={isOpen} onClose={closeNftAction}>
-      <StyledLottie play={isOpen} data={confetti} />
+      <StyledLottie play={isOpen} data={confettiAnimation} />
       <StyledLimitedContainer>
         <StyledLayoutGrid>
           <GridItem rowStart={{ base: 2, sm: 1 }} colSpan={{ base: 12, sm: 6, md: 5, lg: 4 }} colStart={{ lg: 3 }}>

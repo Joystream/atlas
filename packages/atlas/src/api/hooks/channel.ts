@@ -1,6 +1,8 @@
 import { MutationHookOptions, QueryHookOptions } from '@apollo/client'
+import { BN_ZERO } from '@polkadot/util'
+import BN from 'bn.js'
 import { shuffle } from 'lodash-es'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import {
   FollowChannelMutation,
@@ -17,6 +19,7 @@ import {
   UnfollowChannelMutation,
   useFollowChannelMutation,
   useGetChannelNftCollectorsQuery,
+  useGetChannelsPaymentEventsQuery,
   useGetDiscoverChannelsQuery,
   useGetExtendedBasicChannelsQuery,
   useGetExtendedFullChannelsQuery,
@@ -79,6 +82,45 @@ export const useBasicChannels = (
     extendedChannels: data?.extendedChannels,
     ...rest,
   }
+}
+
+type PayeeChannel = {
+  id: string
+  title?: string | null
+  avatarPhoto?: { resolvedUrls: string[] } | null
+}
+export type YPPPaidChannels = { channel: PayeeChannel; amount: BN }
+export const useRecentlyPaidChannels = (): { channels: YPPPaidChannels[] | undefined; loading: boolean } => {
+  const { data, loading } = useGetChannelsPaymentEventsQuery({ variables: { limit: 2000 } })
+
+  const channels = useMemo<YPPPaidChannels[] | undefined>(() => {
+    type PaymentMap = Map<string, YPPPaidChannels>
+    const paymentMap = data?.events.reduce<PaymentMap>((channels, { data }) => {
+      if (data.__typename !== 'ChannelPaymentMadeEventData' || !data.payeeChannel) return channels
+
+      const exisitng = channels.get(data.payeeChannel.id)
+      const channel = exisitng?.channel ?? data.payeeChannel
+      const amount = new BN(data.amount).add(exisitng?.amount ?? BN_ZERO)
+
+      channels.set(data.payeeChannel.id, { channel, amount })
+
+      return channels
+    }, new Map())
+
+    return (
+      paymentMap &&
+      Array.from(paymentMap.values())
+        .sort((a, b) => {
+          if (a.amount.gt(b.amount)) return -1
+          if (a.amount.lt(b.amount)) return 1
+          return 0
+        })
+        .slice(0, 50)
+        .reverse()
+    )
+  }, [data])
+
+  return { channels, loading }
 }
 
 export const useFollowChannel = (opts?: MutationHookOptions<FollowChannelMutation>) => {

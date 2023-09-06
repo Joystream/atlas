@@ -22,21 +22,27 @@ import { ViewerLayout } from './views/viewer/ViewerLayout'
 history.scrollRestoration = 'manual'
 const ROUTING_ANIMATION_OFFSET = 100
 
-const LoadableStudioLayout = loadable(() => import('./views/studio/StudioLayout'), {
-  fallback: (
-    <>
-      <TopbarBase
-        fullLogoNode={<AppLogo variant="studio" height={32} width={undefined} />}
-        logoLinkUrl={absoluteRoutes.studio.index()}
-      />
-      <StudioLoading />
-    </>
-  ),
-})
+const LoadableStudioLayout = loadable(
+  () => import('./views/studio/StudioLayout').then((module) => ({ default: module.StudioLayout })),
+  {
+    fallback: (
+      <>
+        <TopbarBase
+          fullLogoNode={<AppLogo variant="studio" height={32} width={undefined} />}
+          logoLinkUrl={absoluteRoutes.studio.index()}
+        />
+        <StudioLoading />
+      </>
+    ),
+  }
+)
 
-const LoadablePlaygroundLayout = loadable(() => import('./views/playground/PlaygroundLayout'), {
-  fallback: <h1>Loading Playground...</h1>,
-})
+const LoadablePlaygroundLayout = loadable(
+  () => import('./views/playground/PlaygroundLayout').then((module) => ({ default: module.PlaygroundLayout })),
+  {
+    fallback: <h1>Loading Playground...</h1>,
+  }
+)
 
 export const MainLayout: FC = () => {
   useTimeMismatchWarning()

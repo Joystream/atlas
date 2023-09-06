@@ -40,33 +40,42 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
           icon={<SvgAlertsError24 />}
           description={
             <Text variant="t200" as="span" color="colorCoreNeutral200">
-              To learn more about the reason behind the suspension, please reach out on the{' '}
-              <Button variant="primary" _textOnly to={atlasConfig.features.ypp.suspendedSupportLink ?? ''}>
-                {atlasConfig.features.ypp.suspendedLinkText ?? '#ypp-support channel on our Discord server'}{' '}
+              You will not be rewarded while this channel is suspended. Your channel did not pass the verification due
+              to{' '}
+              <Button variant="primary" _textOnly to={atlasConfig.features.ypp.suspensionReasonsLink ?? ''}>
+                one of these reasons
               </Button>
-              . You will not be rewarded while this channel is suspended.{' '}
+              . If you have questions, we are happy to help in our{' '}
+              <Button variant="primary" _textOnly to={atlasConfig.features.ypp.suspendedSupportLink ?? ''}>
+                {atlasConfig.features.ypp.suspendedLinkText ?? 'Discord support channel'}{' '}
+              </Button>
+              .
             </Text>
           }
         />
       )}
-      <StyledBanner
-        title="When rewards are paid out?"
-        icon={<SvgAlertsInformative24 />}
-        description={
-          <>
-            Payouts are made on a weekly basis, every Friday, for the previous calendar week. Your first payment will
-            involve the reward for the sign up of{' '}
-            <NumberFormat
-              value={(atlasConfig.features.ypp.enrollmentReward ?? 0) * multiplier}
-              format="short"
-              as="span"
-              withToken
-            />{' '}
-            after your channel is verified.
-          </>
-        }
-        dismissibleId="ypp-first-reward-information"
-      />
+      {currentChannel?.yppStatus === 'Unverified' && (
+        <StyledBanner
+          title="Channel Verification Pending"
+          icon={<SvgAlertsInformative24 />}
+          description={
+            <Text variant="t200" as="span" color="colorCoreNeutral200">
+              Your channel needs to get verified before content syncing starts. It normally takes 12-48 hours for
+              channels to get verified.
+              <br />
+              Once verified, you will qualify for the rewards. Payouts are made on a weekly basis, every Friday, for the
+              previous calendar week. Your first payment will involve the reward for the sign up of{' '}
+              <NumberFormat
+                value={(atlasConfig.features.ypp.enrollmentUsdReward ?? 0) * multiplier}
+                format="dollar"
+                as="span"
+                withTooltip={false}
+              />{' '}
+              USD paid out in ${atlasConfig.joystream.tokenTicker} tokens based on the market rate.
+            </Text>
+          }
+        />
+      )}
       {atlasConfig.features.ypp.widgets && (
         <WidgetsWrapper>
           {atlasConfig.features.ypp.widgets.map((widget) => (
@@ -89,14 +98,21 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
       )}
       <RewardsWrapper>
         {REWARDS?.map((reward) => {
+          const customMultiplier = reward.customMultiplier
           const rewardAmount = reward.joyAmount
             ? typeof reward.joyAmount === 'number'
-              ? { type: 'number' as const, amount: reward.joyAmount * multiplier }
+              ? {
+                  type: 'number' as const,
+                  amount: reward.joyAmount * (customMultiplier ? customMultiplier[currentTier] : multiplier),
+                }
               : { type: 'range' as const, min: reward.joyAmount.min, max: reward.joyAmount.max }
             : null
           const rewardAmountUsd = reward.usdAmount
             ? typeof reward.usdAmount === 'number'
-              ? { type: 'number' as const, amount: reward.usdAmount * multiplier }
+              ? {
+                  type: 'number' as const,
+                  amount: reward.usdAmount * (customMultiplier ? customMultiplier[currentTier] : multiplier),
+                }
               : { type: 'range' as const, min: reward.usdAmount.min, max: reward.usdAmount.max }
             : null
           return (

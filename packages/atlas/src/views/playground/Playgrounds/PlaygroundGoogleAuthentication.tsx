@@ -31,7 +31,7 @@ export const PlaygroundGoogleAuthentication: FC = () => {
 
   return (
     <>
-      <Button onClick={oauthSignIn}>Sign in with Google</Button>
+      <Button onClick={oauthSignIn}>Sign up with Google</Button>
       {code && (
         <>
           <Text as="h2" variant="h400" margin={{ top: 4 }}>

@@ -17,14 +17,14 @@ import { NftNotificationRecord, NotificationRecord } from './notifications.types
 export const useNotifications = (
   opts?: QueryHookOptions<GetNotificationsConnectionQuery, GetNotificationsConnectionQueryVariables>
 ) => {
-  const { memberId } = useUser()
-  const { notifications: rawNotifications, ...rest } = useRawNotifications(memberId, opts)
+  const { accountId, memberId } = useUser()
+  const { notifications: rawNotifications, ...rest } = useRawNotifications(accountId ?? '', opts)
   const {
     readNotificationsIdsMap,
     lastSeenNotificationBlock,
     actions: { markNotificationsAsRead, markNotificationsAsUnread, setLastSeenNotificationBlock },
   } = useNotificationStore()
-  const parsedNotifications = rawNotifications.map((n) => parseNotification(n, memberId))
+  const parsedNotifications = rawNotifications.map(({ node }) => node.event && parseNotification(node.event, memberId))
   const notifications = parsedNotifications.filter((n): n is NotificationRecord => !!n)
   const notificationsWithReadState = notifications.map((n) => ({ ...n, read: !!readNotificationsIdsMap[n.id] }))
 
@@ -44,20 +44,22 @@ export const useNotifications = (
   }
 }
 
-const getVideoDataFromEvent = ({
-  node: notification,
-}: GetNotificationsConnectionQuery['notificationsConnection']['edges'][number]) => {
-  switch (notification.event.data.__typename) {
+type NotificationEvent = NonNullable<
+  GetNotificationsConnectionQuery['notificationsConnection']['edges'][number]['node']['event']
+>
+
+const getVideoDataFromEvent = (notificationEvent: NotificationEvent) => {
+  switch (notificationEvent?.data.__typename) {
     case 'AuctionBidMadeEventData':
-      return notification.event.data.bid.nft.video
+      return notificationEvent.data.bid.nft.video
     case 'BidMadeCompletingAuctionEventData':
     case 'EnglishAuctionSettledEventData':
     case 'OpenAuctionBidAcceptedEventData':
-      return notification.event.data.winningBid.nft.video
+      return notificationEvent.data.winningBid.nft.video
     case 'CommentCreatedEventData':
-      return notification.event.data.comment.video
+      return notificationEvent.data.comment.video
     case 'NftBoughtEventData':
-      return notification.event.data.nft.video
+      return notificationEvent.data.nft.video
 
     default:
       return undefined
@@ -65,45 +67,44 @@ const getVideoDataFromEvent = ({
 }
 
 const parseNotification = (
-  result: GetNotificationsConnectionQuery['notificationsConnection']['edges'][number],
+  notificationEvent: NotificationEvent,
   memberId: string | null
 ): NotificationRecord | null => {
-  const notification = result.node
-  const video = getVideoDataFromEvent(result)
+  const video = getVideoDataFromEvent(notificationEvent)
   const commonFields: NftNotificationRecord = {
-    id: notification.event.id,
-    date: convertDateFormat(notification.event.timestamp),
-    block: notification.event.inBlock,
+    id: notificationEvent.id,
+    date: convertDateFormat(notificationEvent.timestamp),
+    block: notificationEvent.inBlock,
     video: {
       id: video?.id || '',
       title: video?.title || '',
     },
   }
 
-  if (notification.event.data.__typename === 'AuctionBidMadeEventData') {
+  if (notificationEvent.data.__typename === 'AuctionBidMadeEventData') {
     return {
-      type: notification.event.data.bid.previousTopBid?.bidder.id === memberId ? 'got-outbid' : 'bid-made',
+      type: notificationEvent.data.bid.previousTopBid?.bidder.id === memberId ? 'got-outbid' : 'bid-made',
       ...commonFields,
-      member: notification.event.data.bid.bidder as BasicMembershipFieldsFragment,
-      bidAmount: new BN(notification.event.data.bid.amount),
+      member: notificationEvent.data.bid.bidder as BasicMembershipFieldsFragment,
+      bidAmount: new BN(notificationEvent.data.bid.amount),
     }
-  } else if (notification.event.data.__typename === 'NftBoughtEventData') {
+  } else if (notificationEvent.data.__typename === 'NftBoughtEventData') {
     return {
       type: 'bought',
       ...commonFields,
-      member: notification.event.data.buyer as BasicMembershipFieldsFragment,
-      price: new BN(notification.event.data.price),
+      member: notificationEvent.data.buyer as BasicMembershipFieldsFragment,
+      price: new BN(notificationEvent.data.price),
     }
-  } else if (notification.event.data.__typename === 'BidMadeCompletingAuctionEventData') {
-    if (notification.event.data.winningBid.bidder.id !== memberId) {
+  } else if (notificationEvent.data.__typename === 'BidMadeCompletingAuctionEventData') {
+    if (notificationEvent.data.winningBid.bidder.id !== memberId) {
       // member is the owner, somebody bought their NFT
       return {
         type: 'bought',
         ...commonFields,
-        member: notification.event.data.winningBid.bidder as BasicMembershipFieldsFragment,
-        price: new BN(notification.event.data.winningBid.amount),
+        member: notificationEvent.data.winningBid.bidder as BasicMembershipFieldsFragment,
+        price: new BN(notificationEvent.data.winningBid.amount),
       }
-    } else if (notification.event.data.winningBid.bidder.id === memberId) {
+    } else if (notificationEvent.data.winningBid.bidder.id === memberId) {
       // member is the winner, skip the notification
       return null
     } else {
@@ -113,17 +114,17 @@ const parseNotification = (
         ...commonFields,
       }
     }
-  } else if (notification.event.data.__typename === 'OpenAuctionBidAcceptedEventData') {
-    if (notification.event.data.winningBid?.bidder.id === memberId) {
+  } else if (notificationEvent.data.__typename === 'OpenAuctionBidAcceptedEventData') {
+    if (notificationEvent.data.winningBid?.bidder.id === memberId) {
       // member is the previous owner, he accepted a bid
       return {
         type: 'bid-accepted',
         ...commonFields,
         member:
-          (notification.event.data.previousNftOwner.__typename === 'NftOwnerChannel'
-            ? notification.event.data.previousNftOwner.channel.ownerMember
-            : notification.event.data.previousNftOwner.member) || null,
-        bidAmount: new BN(notification.event.data.winningBid?.amount || 0),
+          (notificationEvent.data.previousNftOwner.__typename === 'NftOwnerChannel'
+            ? notificationEvent.data.previousNftOwner.channel.ownerMember
+            : notificationEvent.data.previousNftOwner.member) || null,
+        bidAmount: new BN(notificationEvent.data.winningBid?.amount || 0),
       }
     } else {
       // member is not the winner, the participated in the auction
@@ -132,14 +133,14 @@ const parseNotification = (
         ...commonFields,
       }
     }
-  } else if (notification.event.data.__typename === 'EnglishAuctionSettledEventData') {
-    if (notification.event.data.winningBid.bidder?.id !== memberId) {
+  } else if (notificationEvent.data.__typename === 'EnglishAuctionSettledEventData') {
+    if (notificationEvent.data.winningBid.bidder?.id !== memberId) {
       // member is the owner, their auction got settled
       return {
         type: 'auction-settled-owner',
         ...commonFields,
       }
-    } else if (notification.event.data.winningBid.bidder.id === memberId) {
+    } else if (notificationEvent.data.winningBid.bidder.id === memberId) {
       // member is the winner, auction they won got settled
       return {
         type: 'auction-settled-winner',
@@ -153,23 +154,23 @@ const parseNotification = (
       }
     }
   } else if (
-    notification.event.data.__typename === 'CommentCreatedEventData' &&
-    !notification.event.data.comment.parentComment
+    notificationEvent.data.__typename === 'CommentCreatedEventData' &&
+    !notificationEvent.data.comment.parentComment
   ) {
     return {
       type: 'video-commented',
-      member: notification.event.data.comment.author as BasicMembershipFieldsFragment,
-      commentId: notification.event.data.comment.id,
+      member: notificationEvent.data.comment.author as BasicMembershipFieldsFragment,
+      commentId: notificationEvent.data.comment.id,
       ...commonFields,
     }
   } else if (
-    notification.event.data.__typename === 'CommentCreatedEventData' &&
-    notification.event.data.comment.parentComment
+    notificationEvent.data.__typename === 'CommentCreatedEventData' &&
+    notificationEvent.data.comment.parentComment
   ) {
     return {
       type: 'comment-reply',
-      member: notification.event.data.comment.author as BasicMembershipFieldsFragment,
-      commentId: notification.event.data.comment.id,
+      member: notificationEvent.data.comment.author as BasicMembershipFieldsFragment,
+      commentId: notificationEvent.data.comment.id,
       ...commonFields,
     }
   } else {

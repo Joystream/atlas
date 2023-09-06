@@ -1,6 +1,7 @@
 import { useCallback, useRef } from 'react'
 
 import { useSegmentAnalyticsContext } from '@/providers/segmentAnalytics/useSegmentAnalyticsContext'
+import { YppRequirementsErrorCode } from '@/views/global/YppLandingView/YppAuthorizationModal/YppAuthorizationModal.types'
 
 export type videoPlaybackParams = {
   videoId: string
@@ -10,13 +11,28 @@ export type videoPlaybackParams = {
   totalLength: number
   fullScreen: boolean
   quality: string
+  isNft?: boolean
 }
 
 type PageViewParams = {
-  referrer?: string
+  referrerChannel?: string
   tab?: string
   utm_source?: string
+  utm_campaign?: string
   isYppFlow?: boolean
+} & VideoPageViewParams &
+  ChannelPageViewParams
+
+type VideoPageViewParams = {
+  videoId?: string
+  videoTitle?: string
+  isNft?: boolean
+  category?: string
+}
+
+type ChannelPageViewParams = {
+  channelId?: string
+  channelName?: string
 }
 
 type AllNftFilters = {
@@ -24,6 +40,24 @@ type AllNftFilters = {
   priceTo?: number
   status?: string
   sortBy?: string
+}
+
+type YppOptInParams = {
+  handle?: string
+  email?: string
+  category?: string
+  subscribersCount?: string
+  referrerId?: string
+  utmSource?: string
+  utmCampaign?: string
+}
+
+type IdentifyUserParams = {
+  name: string
+  email: string
+  memberId: string
+  isYppFlow?: string
+  signInType?: string
 }
 
 type playbackEventType = 'playbackStarted' | 'playbackPaused' | 'playbackResumed' | 'playbackCompleted'
@@ -34,8 +68,8 @@ export const useSegmentAnalytics = () => {
   const playbackEventsQueue = useRef<{ type: playbackEventType; params: videoPlaybackParams }[]>([])
 
   const identifyUser = useCallback(
-    (email = 'no data') => {
-      analytics.identify(email, { email })
+    (params: IdentifyUserParams) => {
+      analytics.identify(params.email, params)
     },
     [analytics]
   )
@@ -48,21 +82,15 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackYppOptIn = useCallback(
-    (
-      handle = 'no data',
-      email = 'no data',
-      category = 'no data',
-      subscribersCount: string,
-      referrerId = 'no data',
-      utmSource = 'no data'
-    ) => {
+    ({ handle, email, category, subscribersCount, referrerId, utmSource, utmCampaign }: YppOptInParams) => {
       analytics.track('YPP Sign Up Completed', {
         handle,
         email,
         category,
         subscribersCount,
         referrerId,
-        utmSource,
+        utm_source: utmSource,
+        utm_campaign: utmCampaign,
       })
     },
     [analytics]
@@ -155,6 +183,27 @@ export const useSegmentAnalytics = () => {
     [analytics]
   )
 
+  const trackClickTopBarSignInButton = useCallback(
+    (utmSource?: string | null, utmCampaign?: string | null) => {
+      analytics.track('Top Nav Sign In Clicked', { utm_source: utmSource, utm_campaign: utmCampaign })
+    },
+    [analytics]
+  )
+
+  const trackClickAuthModalSignInButton = useCallback(
+    (utmSource?: string | null, utmCampaign?: string | null) => {
+      analytics.track('YPP Reqs Modal - Sign In Clicked', { utm_source: utmSource, utm_campaign: utmCampaign })
+    },
+    [analytics]
+  )
+
+  const trackClickAuthModalSignUpButton = useCallback(
+    (utmSource?: string | null, utmCampaign?: string | null) => {
+      analytics.track('YPP Reqs Modal - Create Account Clicked', { utm_source: utmSource, utm_campaign: utmCampaign })
+    },
+    [analytics]
+  )
+
   const trackCommentAdded = useCallback(
     (commentBody: string, videoId: string) => {
       analytics.track('Comment added', {
@@ -195,8 +244,16 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackYppSignInButtonClick = useCallback(
-    (referrer: string | null | undefined, utmSource: string | null | undefined) => {
-      analytics.track('YPP Landing Sign In w Google Clicked', { referrer, utmSource })
+    (
+      referrer: string | null | undefined,
+      utmSource: string | null | undefined,
+      utmCampaign: string | null | undefined
+    ) => {
+      analytics.track('YPP Landing Sign In w Google Clicked', {
+        referrer,
+        utm_source: utmSource,
+        utm_campaign: utmCampaign,
+      })
     },
     [analytics]
   )
@@ -251,11 +308,55 @@ export const useSegmentAnalytics = () => {
     [analytics]
   )
 
+  const trackWithdrawnFunds = useCallback(
+    (channelId?: string, amount?: string) => {
+      analytics.track('Channel Funds Withdrawn', {
+        channelId,
+        amount,
+      })
+    },
+    [analytics]
+  )
+
   const trackReferralLinkGenerated = useCallback(
     (channelId: string | null | undefined) => {
       analytics.track('Referral link generated', {
         channelId,
       })
+    },
+    [analytics]
+  )
+
+  const trackLivesessionRecording = useCallback(
+    (url: string | null | undefined) => {
+      analytics.track('Livesession recording', {
+        url,
+      })
+    },
+    [analytics]
+  )
+
+  const trackUploadVideoClicked = useCallback(
+    (channelId: string | null | undefined) => {
+      analytics.track('Studio - Upload Video Clicked', { channelId })
+    },
+    [analytics]
+  )
+
+  const trackPublishAndUploadClicked = useCallback(
+    (channelId: string | null | undefined) => {
+      analytics.track('Video - Publish and Upload Clicked', { channelId })
+    },
+    [analytics]
+  )
+
+  const trackYppReqsNotMet = useCallback(
+    (
+      errors: YppRequirementsErrorCode[],
+      utmSource: string | null | undefined,
+      utmCampaign: string | null | undefined
+    ) => {
+      analytics.track('YPP Sign Up Failed - Reqs Not Met', { errors, utmSource, utmCampaign })
     },
     [analytics]
   )
@@ -305,11 +406,15 @@ export const useSegmentAnalytics = () => {
     trackAllNftFilterUpdated,
     trackChannelCreation,
     trackChannelFollow,
+    trackClickAuthModalSignInButton,
+    trackClickAuthModalSignUpButton,
+    trackClickTopBarSignInButton,
     trackCommentAdded,
     trackDislikeAdded,
     trackFeaturedNFTNext,
     trackFeaturedNFTPrev,
     trackLikeAdded,
+    trackLivesessionRecording,
     trackLogout,
     trackMembershipCreation,
     trackNFTCarouselNext,
@@ -317,13 +422,17 @@ export const useSegmentAnalytics = () => {
     trackNftMint,
     trackNftSale,
     trackPageView,
+    trackPublishAndUploadClicked,
     trackReferralLinkGenerated,
+    trackUploadVideoClicked,
     trackVideoPlaybackCompleted,
     trackVideoPlaybackPaused,
     trackVideoPlaybackResumed,
     trackVideoPlaybackStarted,
     trackVideoUpload,
+    trackWithdrawnFunds,
     trackYppOptIn,
+    trackYppReqsNotMet,
     trackYppSignInButtonClick,
   }
 }

@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, MouseEvent } from 'react'
 import { useNavigate } from 'react-router'
 
 import { getNftStatus } from '@/api/hooks/nfts'
@@ -11,6 +11,7 @@ import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useVideoContextMenu } from '@/hooks/useVideoContextMenu'
 import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
 import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
+import { useUser } from '@/providers/user/user.hooks'
 import { SentryLogger } from '@/utils/logs'
 import { formatDurationShort } from '@/utils/time'
 
@@ -31,10 +32,13 @@ export const VideoTileViewer: FC<VideoTileViewerProps> = ({ id, onClick, details
     skip: !id,
     onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTile', error, { video: { id } }),
   })
+  const { setNftToMint } = useNftActions()
+
   const nftStatus = getNftStatus(video?.nft, video)
   const nftState = useNftState(video?.nft)
   const { avatarPhotoUrls, isLoadingAvatar, isLoadingThumbnail, thumbnailPhotoUrls, videoHref } =
     useVideoTileSharedLogic(video)
+  const { setActiveChannel, activeMembership } = useUser()
 
   const handleWithdrawBid = () => {
     if (!video?.id || !nftState.userBidAmount || !nftState.userBidCreatedAt) {
@@ -50,8 +54,20 @@ export const VideoTileViewer: FC<VideoTileViewerProps> = ({ id, onClick, details
     video?.nft?.transactionalStatus?.__typename === 'TransactionalStatusAuction' &&
     video.nft.transactionalStatus.auction
   const isAuction = nftStatus?.status === 'auction'
+
+  const onMintNftClick = (e?: MouseEvent<Element>) => {
+    e?.stopPropagation()
+    e?.preventDefault()
+    if (video) {
+      setNftToMint(video.id)
+      setActiveChannel(video.channel.id)
+      navigate(absoluteRoutes.studio.videos())
+    }
+  }
+
   const contextMenuItems = useVideoContextMenu({
     publisher: false,
+    isOwner: activeMembership?.channels.some((channel) => channel.id === video?.channel.id),
     nftState,
     hasNft: !!video?.nft,
     nftActions,
@@ -61,6 +77,7 @@ export const VideoTileViewer: FC<VideoTileViewerProps> = ({ id, onClick, details
     topBid: isAuction ? nftStatus.topBidAmount : undefined,
     startingPrice: isAuction ? nftStatus.startingPrice : undefined,
     onWithdrawBid: handleWithdrawBid,
+    onMintNftClick,
     hasBids:
       !!auction && !!auction.topBid?.bidder && !!(auction && !auction.topBid?.isCanceled && auction.topBid.amount),
   })

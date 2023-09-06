@@ -12,7 +12,8 @@ import { atlasConfig } from '@/config'
 import { ORION_AUTH_URL } from '@/config/env'
 import { keyring } from '@/joystream-lib/lib'
 import { getWalletsList } from '@/providers/wallet/wallet.helpers'
-import { SentryLogger } from '@/utils/logs'
+import { ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { withTimeout } from '@/utils/misc'
 
 import { AuthModals, LogInErrors, OrionAccountError, RegisterParams, RegisterPayload } from './auth.types'
 
@@ -103,7 +104,7 @@ export const decodeSessionEncodedSeedToMnemonic = async (encodedSeed: string) =>
     return _entropyToMnemonic(Buffer.from(decryptedSeed.slice(2, decryptedSeed.length), 'hex'))
   } catch (e) {
     if (isAxiosError(e) && e.response?.data.message === 'isAxiosError') {
-      logoutRequest()
+      logoutRequest().catch((error) => ConsoleLogger.warn('Failed to logout on decoding error', error))
     }
     return null
   }
@@ -166,12 +167,12 @@ export const prepareEncryptionArtifacts = async (email: string, password: string
 export const registerAccount = async (params: RegisterParams) => {
   try {
     await cryptoWaitReady()
-
+    const timestamp = (await getAuthEpoch()) - 30_000
     const registerPayload: RegisterPayload = {
       gatewayName: 'Gleev',
       memberId: params.memberId,
       joystreamAccountId: '',
-      timestamp: Date.now() - 30_000,
+      timestamp,
       action: 'createAccount',
       email: params.email,
     }
@@ -237,11 +238,11 @@ export const changePassword = async ({
   try {
     const keypair = keyring.addFromMnemonic(mnemonic)
     const newArtifacts = await prepareEncryptionArtifacts(email, newPassword, mnemonic)
-
+    const timestamp = (await getAuthEpoch()) - 30_000
     const changePasswordPayload = {
       joystreamAccountId,
       gatewayName: atlasConfig.general.appName,
-      timestamp: Date.now() - 30_000,
+      timestamp,
       action: 'changeAccount',
       gatewayAccountId,
       newArtifacts,
@@ -268,6 +269,24 @@ export const getMnemonicFromeEmailAndPassword = async (email: string, password: 
   if (!data?.decryptedEntropy) {
     throw Error("Couldn't fetch artifacts")
   }
-  const mnemonic = entropyToMnemonic(data?.decryptedEntropy)
-  return mnemonic
+  return entropyToMnemonic(data?.decryptedEntropy)
+}
+
+export const getAuthEpoch = async () => {
+  let epoch: number
+  try {
+    const res = await withTimeout(axiosInstance.get('https://worldtimeapi.org/api/ip'), 5_000)
+    if (res.data?.unixtime) {
+      epoch = res.data.unixtime * 1000
+    } else {
+      epoch = Date.now()
+    }
+  } catch (error) {
+    epoch = Date.now()
+    SentryLogger.error('Error fetching auth epoch time', 'getAuthEpoch', {
+      error,
+    })
+  }
+
+  return epoch
 }

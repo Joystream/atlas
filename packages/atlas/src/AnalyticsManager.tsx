@@ -4,11 +4,13 @@ import ReactGA from 'react-ga4'
 
 import { atlasConfig } from '@/config'
 import { BUILD_ENV } from '@/config/env'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { usePersonalDataStore } from '@/providers/personalData'
 
 export const AnalyticsManager: FC = () => {
   const cookiesAccepted = usePersonalDataStore((state) => state.cookiesAccepted)
   const analyticsEnabled = BUILD_ENV === 'production' && cookiesAccepted
+  const { trackLivesessionRecording } = useSegmentAnalytics()
 
   const initUsersnap = useCallback(() => {
     if (!atlasConfig.analytics.usersnap?.id) return
@@ -35,7 +37,17 @@ export const AnalyticsManager: FC = () => {
         : {}),
     })
     ls.newPageView()
-  }, [])
+    if (atlasConfig.analytics.segment?.id) {
+      // had to disable eslint here because of an error in livesession sdk typings
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      ls.getSessionURL((url: string | undefined, isNew: boolean) => {
+        if (isNew) {
+          trackLivesessionRecording(url)
+        }
+      })
+    }
+  }, [trackLivesessionRecording])
 
   const initGA = useCallback(() => {
     if (!atlasConfig.analytics.GA?.id) return

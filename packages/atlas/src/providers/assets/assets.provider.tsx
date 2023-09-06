@@ -46,7 +46,7 @@ type OperatorsContextValue = {
   fetchStorageOperators: () => Promise<BagOperatorsMapping>
   userBenchmarkTime: number | null
 }
-const OperatorsContext = createContext<OperatorsContextValue | undefined>(undefined)
+export const OperatorsContext = createContext<OperatorsContextValue | undefined>(undefined)
 OperatorsContext.displayName = 'OperatorsContext'
 
 export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) => {
@@ -155,7 +155,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
     const initBenchmark = async () => {
       const { data } = await getBasicVideo({
         variables: {
-          limit: 1,
+          limit: 20,
           where: {
             thumbnailPhoto: {
               isAccepted_eq: true,
@@ -163,7 +163,11 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
           },
         },
       })
-      const thumbnail = data?.videos[0].thumbnailPhoto
+
+      const thumbnail = data?.videos
+        ? data?.videos[Math.floor(Math.random() * data.videos.length)].thumbnailPhoto
+        : undefined
+
       if (thumbnail) {
         const promiseRace = getFastestImageUrl(thumbnail.resolvedUrls)
         const startTime = performance.now()
@@ -176,7 +180,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
       }
     }
     initBenchmark()
-    const id = setInterval(initBenchmark, 30 * 1_000)
+    const id = setInterval(initBenchmark, 5 * 60 * 1_000)
     return () => {
       clearInterval(id)
     }

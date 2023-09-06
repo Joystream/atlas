@@ -1,31 +1,35 @@
-import { useEffect, useState } from 'react'
+import { mapValues, omit, pick } from 'lodash-es'
+import { useCallback, useMemo } from 'react'
 
+import {
+  useGetMembershipNotificationPreferencesQuery,
+  useSetMembershipNotificationPreferencesMutation,
+} from '@/api/queries/__generated__/notifications.generated'
 import { NotificationsState } from '@/components/NotificationsTable'
 
 export const useMemberSettingsData = () => {
-  const [data, setData] = useState<NotificationsState | undefined>()
+  const { refetch, data: queryData, loading: isLoading } = useGetMembershipNotificationPreferencesQuery()
+  const [mutate, { data: mutationData, loading: isSubmitting }] = useSetMembershipNotificationPreferencesMutation()
 
-  useEffect(() => {
-    // TODO: Fetch data from Orion
-    new Promise((r) => setTimeout(r, 1000)).then(() =>
-      setData({
-        channelCreatedNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        replyToCommentNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        reactionToCommentNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        videoPostedNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        newNftOnAuctionNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        newNftOnSaleNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        higherBidThanYoursMadeNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        auctionExpiredNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        auctionWonNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        auctionLostNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        openAuctionBidCanBeWithdrawnNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        fundsFromCouncilReceivedNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        fundsToExternalWalletSentNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-        fundsFromWgReceivedNotificationEnabled: { inAppEnabled: true, emailEnabled: true },
-      })
-    )
-  }, [])
+  const data = useMemo(() => {
+    if (mutationData?.setAccountNotificationPreferences) {
+      return omit(mutationData?.setAccountNotificationPreferences, '__typename')
+    }
+    if (queryData?.accountData.notificationPreferences) {
+      return mapValues(omit(queryData.accountData.notificationPreferences, '__typename'), (pref) =>
+        pick(pref, 'emailEnabled', 'inAppEnabled')
+      )
+    }
+  }, [queryData, mutationData])
 
-  return { isLoading: !data, data }
+  const submit = useCallback(
+    async (notificationPreferences: NotificationsState) => {
+      const res = await mutate({ variables: { notificationPreferences } })
+      refetch() // Invalidate the cache by refetching
+      return res
+    },
+    [mutate, refetch]
+  )
+
+  return { isLoading, isSubmitting, data, submit }
 }

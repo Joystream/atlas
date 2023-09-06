@@ -63,7 +63,7 @@ export type YppAuthorizationModalProps = {
 const stepToPageName = {
   'ypp-select-channel': 'YPP Select Channel modal',
   'ypp-requirements': 'YPP Requirements modal',
-  'ypp-fetching-data': 'YPP Fetching Data modal',
+  'ypp-fetching-data': 'Fetching Channel Data From Google',
   'ypp-sync-options': 'YPP Category And Referrer Modal',
   'ypp-channel-already-registered': 'YPP channel already registered modal',
   'ypp-speaking-to-backend': 'YPP processing modal',
@@ -76,7 +76,6 @@ const DEFAULT_LANGUAGE = atlasConfig.derived.popularLanguagesSelectValues[0].val
 export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSyncedChannels }) => {
   const { memberId, refetchUserMemberships, setActiveChannel, channelId, isLoggedIn } = useUser()
   const [searchParams] = useSearchParams()
-  const [utmSource, setUtmSource] = useState<string | null>(null)
   const navigate = useNavigate()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const createdChannelId = useRef<string | null>(null)
@@ -98,7 +97,9 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
   const {
     referrerId,
     ytResponseData,
-    actions: { setYtResponseData },
+    utmSource,
+    utmCampaign,
+    actions: { setYtResponseData, setUtmSource, setUtmCampaign },
   } = useYppStore((store) => store, shallow)
   const setReferrerId = useYppStore((store) => store.actions.setReferrerId)
   const setShouldContinueYppFlowAfterLogin = useYppStore((store) => store.actions.setShouldContinueYppFlowAfterLogin)
@@ -140,7 +141,14 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
   const { extendedChannel } = useBasicChannel(referrerId || '', {
     skip: !referrerId,
   })
-  const { trackPageView, trackYppOptIn, identifyUser } = useSegmentAnalytics()
+  const {
+    trackPageView,
+    trackYppOptIn,
+    identifyUser,
+    trackYppReqsNotMet,
+    trackClickAuthModalSignUpButton,
+    trackClickAuthModalSignInButton,
+  } = useSegmentAnalytics()
 
   const channel = extendedChannel?.channel
 
@@ -155,7 +163,10 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     if (searchParams.get('utm_source')) {
       setUtmSource(searchParams.get('utm_source'))
     }
-  }, [searchParams])
+    if (searchParams.get('utm_campaign')) {
+      setUtmCampaign(searchParams.get('utm_campaign'))
+    }
+  }, [searchParams, setUtmCampaign, setUtmSource])
 
   useEffect(() => {
     contentRef.current?.scrollTo({ top: 0 })
@@ -287,27 +298,31 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
           })
 
           await refetchYppSyncedChannels()
-
-          identifyUser(ytResponseData?.email)
-          trackYppOptIn(
-            ytResponseData?.channelHandle,
-            ytResponseData?.email,
-            data.videoCategoryId ? displayCategoriesLookup[data.videoCategoryId]?.name : undefined,
-            channelCreationResponse.data.channel.subscribersCount,
-            data.referrerChannelId,
-            utmSource || undefined
-          )
+          identifyUser({
+            name: 'Sign up',
+            memberId: memberId,
+            email: ytResponseData?.email || '',
+            isYppFlow: 'true',
+            signInType: 'password',
+          })
+          trackYppOptIn({
+            handle: ytResponseData?.channelHandle,
+            email: ytResponseData?.email,
+            category: data.videoCategoryId ? displayCategoriesLookup[data.videoCategoryId]?.name : undefined,
+            subscribersCount: channelCreationResponse.data.channel.subscribersCount,
+            referrerId: data.referrerChannelId,
+            utmSource: utmSource || undefined,
+            utmCampaign: utmCampaign || undefined,
+          })
           setReferrerId(null)
           setYtResponseData(null)
 
           navigate(absoluteRoutes.studio.ypp())
           displaySnackbar({
-            title: 'YouTube Synch Enabled',
+            title: 'Sign up successful!',
             description:
-              'We started importing your YouTube videos. Allow up to 30 minutes for the YouTube videos to start showing in your channel.',
-            actionText: 'Go to My videos',
-            onActionClick: () => navigate(absoluteRoutes.studio.videos()),
-            iconType: 'info',
+              'We will start importing your YouTube videos once your channel is verified. Please allow 30 to 60 minutes after verification for your videos to start showing on the My videos page.',
+            iconType: 'success',
           })
         },
       })
@@ -334,6 +349,13 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
       detailsFormMethods.setValue('referrerChannelTitle', channel.title)
     }
   }, [channel, detailsFormMethods, referrerId])
+
+  useEffect(() => {
+    if (ytRequirementsErrors?.length) {
+      trackPageView('YPP Reqs Not Met')
+      trackYppReqsNotMet(ytRequirementsErrors, utmSource, utmCampaign)
+    }
+  }, [trackPageView, trackYppReqsNotMet, utmCampaign, utmSource, ytRequirementsErrors])
 
   const selectedChannel = useMemo(() => {
     if (!unSyncedChannels || !selectedChannelId) {
@@ -376,6 +398,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
           return {
             text: 'Create account',
             onClick: () => {
+              trackClickAuthModalSignUpButton(utmSource, utmCampaign)
               setSelectedChannelId(yppUnsyncedChannels?.[0]?.id ?? '')
               handleAuthorizeClick(yppUnsyncedChannels?.[0]?.id)
             },
@@ -436,7 +459,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
           headerIcon: <Loader variant="medium" />,
           title: 'Speaking with backend...',
           description:
-            'Please wait while the server is processing the request. It may take up to 15 seconds a slow network.',
+            'Please wait while the server is processing the request. It may take up to 15 seconds on a slow network.',
           primaryButton: {
             text: 'Waiting...',
             disabled: true,
@@ -477,6 +500,9 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     setSelectedChannelId,
     handleClose,
     setYppModalOpenName,
+    trackClickAuthModalSignUpButton,
+    utmSource,
+    utmCampaign,
     handleAuthorizeClick,
     handleCreateOrUpdateChannel,
   ])
@@ -492,6 +518,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
       return {
         text: 'Sign in',
         onClick: () => {
+          trackClickAuthModalSignInButton(utmSource, utmCampaign)
           setShouldContinueYppFlowAfterLogin(true)
           setYppModalOpenName(null)
           setAuthModalOpenName('logIn')
@@ -516,11 +543,14 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     }
   }, [
     isLoadingModal,
+    ytRequirementsErrors.length,
     yppModalOpenName,
     isLoggedIn,
-    ytRequirementsErrors.length,
     isSubmitting,
     handleGoBack,
+    trackClickAuthModalSignInButton,
+    utmSource,
+    utmCampaign,
     setShouldContinueYppFlowAfterLogin,
     setYppModalOpenName,
     setAuthModalOpenName,
