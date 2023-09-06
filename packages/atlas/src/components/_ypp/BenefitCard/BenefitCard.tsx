@@ -24,7 +24,7 @@ import {
 type JoyAmountRange = {
   type: 'range'
   max: BN | number
-  min: BN | number
+  min: BN | number | null
 }
 type JoyAmountNumber = {
   type: 'number'
@@ -150,7 +150,7 @@ export const BenefitCard: FC<BenefitCardProps> = ({
                   value={joyAmount.amount}
                 />
               )}
-              {joyAmount.type === 'range' && (
+              {joyAmount.type === 'range' && joyAmount.min && (
                 <>
                   <NumberFormat
                     as="span"

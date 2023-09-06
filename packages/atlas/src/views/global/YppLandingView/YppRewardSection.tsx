@@ -24,6 +24,28 @@ import {
   RewardsSubtitleWrapper,
 } from './YppRewardSection.styles'
 
+export const calculateReward = (
+  amount: number | number[] | { min: number | null; max: number } | null,
+  multiplier: number | number[],
+  tier: number
+) => {
+  if (amount === null) {
+    return null
+  } else if (typeof amount === 'number') {
+    return {
+      type: 'number' as const,
+      amount: amount * (typeof multiplier === 'number' ? multiplier : multiplier[tier]),
+    }
+  } else if (Array.isArray(amount)) {
+    return {
+      type: 'number' as const,
+      amount: amount[tier],
+    }
+  } else {
+    return { type: 'range' as const, min: amount.min, max: amount.max }
+  }
+}
+
 export const YppRewardSection: FC = () => {
   const mdMatch = useMediaMatch('md')
   const tiers = atlasConfig.features.ypp.tiersDefinition?.tiers
@@ -144,29 +166,12 @@ export const YppRewardSection: FC = () => {
             {rewards.map((reward) => {
               const customMultiplier = reward.customMultiplier && reward.customMultiplier[activeTier]
               const currentMultiplier = tiers ? tiers[activeTier].multiplier : 1
-              const rewardAmount = reward.baseAmount
-                ? typeof reward.baseAmount === 'number'
-                  ? {
-                      type: 'number' as const,
-                      amount:
-                        reward.baseAmount === 0
-                          ? customMultiplier || currentMultiplier
-                          : reward.baseAmount * (customMultiplier || currentMultiplier),
-                    }
-                  : { type: 'range' as const, min: reward.baseAmount.min, max: reward.baseAmount.max }
-                : null
-              const rewardAmountUsd =
-                reward.baseUsdAmount === null
-                  ? null
-                  : typeof reward.baseUsdAmount === 'number'
-                  ? {
-                      type: 'number' as const,
-                      amount:
-                        reward.baseUsdAmount === 0
-                          ? customMultiplier || 0
-                          : reward.baseUsdAmount * (customMultiplier || currentMultiplier),
-                    }
-                  : { type: 'range' as const, min: reward.baseUsdAmount.min, max: reward.baseUsdAmount.max }
+              const rewardAmount = calculateReward(reward.baseAmount, customMultiplier || currentMultiplier, activeTier)
+              const rewardAmountUsd = calculateReward(
+                reward.baseUsdAmount,
+                customMultiplier || currentMultiplier,
+                activeTier
+              )
 
               return (
                 <BenefitCard
