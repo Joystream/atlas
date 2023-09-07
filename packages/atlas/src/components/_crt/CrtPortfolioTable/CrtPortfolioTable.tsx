@@ -28,7 +28,9 @@ const COLUMNS: TableProps['columns'] = [
 ]
 
 export type PortfolioToken = {
-  tokenId: string
+  tokenTitle: string
+  tokenName: string
+  isVerified: boolean
   status: 'market' | 'sale' | 'idle'
   vested: number
   total: number
@@ -43,7 +45,7 @@ export type CrtPortfolioTableProps = {
 export const CrtPortfolioTable = ({ data }: CrtPortfolioTableProps) => {
   const mappingData = useMemo(() => {
     return data.map((row) => ({
-      token: <TokenInfo tokenId={row.tokenId} />,
+      token: <TokenInfo {...row} />,
       status: <Status status={row.status} />,
       transferable: (
         <RightAlignedCell>
@@ -67,26 +69,23 @@ export const CrtPortfolioTable = ({ data }: CrtPortfolioTableProps) => {
   return <StyledTable columns={COLUMNS} data={mappingData} />
 }
 
-const getTokenInfo = (_: string) => ({
-  title: 'JBC',
-  fullTitle: 'Joyblocks',
-  verified: true,
-})
-
-const TokenInfo = ({ tokenId }: { tokenId: string }) => {
-  const { fullTitle, title, verified } = getTokenInfo(tokenId)
+const TokenInfo = ({
+  tokenTitle,
+  tokenName,
+  isVerified,
+}: Pick<PortfolioToken, 'tokenName' | 'tokenTitle' | 'isVerified'>) => {
   return (
     <FlexBox alignItems="center" gap={2}>
       <Avatar />
       <FlexBox flow="column" gap={0}>
         <Text variant="h200" as="h1">
-          ${title}
+          ${tokenTitle}
         </Text>
         <FlexBox alignItems="center" gap={1}>
           <Text variant="t100" as="span" color="colorText">
-            {fullTitle}
+            {tokenName}
           </Text>
-          {verified && <SvgActionVerified />}
+          {isVerified && <SvgActionVerified />}
         </FlexBox>
       </FlexBox>
     </FlexBox>

@@ -16,7 +16,7 @@ const mappedTabs = TABS.map((tab) => ({
   name: tab,
 }))
 
-export const Portfolio = () => {
+export const PortfolioView = () => {
   const [tab, setTab] = useState(0)
   return (
     <LimitedWidthContainer>
@@ -39,7 +39,9 @@ export const Portfolio = () => {
           <CrtPortfolioTable
             data={[
               {
-                tokenId: '1',
+                tokenTitle: 'JBC',
+                tokenName: 'Joyblocks',
+                isVerified: true,
                 status: 'idle',
                 transferable: 10,
                 vested: 30,
