@@ -105,8 +105,7 @@ const HandleContainer = styled(FlexBox)`
 `
 
 export const StyledTable = styled(Table)`
-  th:nth-child(n + 2),
-  th:nth-child(n + 3) {
+  th:nth-child(n + 2) {
     justify-content: end;
     align-items: end;
 
