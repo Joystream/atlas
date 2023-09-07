@@ -55,6 +55,7 @@ import {
   RawMetadataProcessorFn,
   SendExtrinsicResult,
   StringifiedNumber,
+  TokenId,
   TxMethodName,
   VideoExtrinsicResult,
   VideoId,
@@ -974,5 +975,21 @@ export class JoystreamLibExtrinsics {
   ) => {
     const tx = await this.reactToVideoCommentTx(memberId, commentId, reactionId)
     return this.sendMetaprotocolExtrinsic(tx, cb)
+  }
+
+  purchaseTokenOnSaleTx = async (tokenId: TokenId, memberId: MemberId, amount: StringifiedNumber) => {
+    return this.api.tx.projectToken.purchaseTokensOnSale(parseInt(tokenId), parseInt(memberId), amount)
+  }
+
+  purchaseTokenOnSale: PublicExtrinsic<typeof this.purchaseTokenOnSaleTx, ExtrinsicResult> = async (
+    tokenId,
+    memberId,
+    amount,
+    cb
+  ) => {
+    const tx = await this.purchaseTokenOnSaleTx(tokenId, memberId, amount)
+    const { block } = await this.sendExtrinsic(tx, cb)
+
+    return { block }
   }
 }
