@@ -10,6 +10,7 @@ export type TextBaseProps = {
   clampAfterLine?: number
   margin?: MarginProps
   align?: AlignProps
+  truncate?: boolean
 }
 
 type MarginProps =
@@ -47,13 +48,20 @@ const clampStyles = ({ clampAfterLine }: TextBaseProps) => css`
   overflow: hidden;
 `
 
-const baseStyles = ({ color = 'colorTextStrong', clampAfterLine, margin, align }: TextBaseProps) => css`
+const truncateStyles = css`
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`
+
+const baseStyles = ({ color = 'colorTextStrong', clampAfterLine, margin, align, truncate }: TextBaseProps) => css`
   color: ${color === 'inherit' ? color : cVar(color)};
   white-space: pre-wrap;
 
   ${clampAfterLine && clampStyles({ clampAfterLine })}
   ${marginStyles({ margin })}
   ${alignStyles({ align })}
+  ${truncate && truncateStyles}
 `
 
 export const styledVariants = {

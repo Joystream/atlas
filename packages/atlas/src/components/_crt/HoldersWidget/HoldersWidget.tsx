@@ -14,31 +14,40 @@ export type HoldersWidgetProps = {
 }
 
 const getTokenHolders = (_: string) => {
-  return [
-    {
-      memberId: '1',
-      vested: 10000,
-      total: 11000,
-    },
-    {
-      memberId: '1',
-      vested: 1000,
-      total: 1000,
-    },
-    {
-      memberId: '1',
-      vested: 100,
-      total: 110,
-    },
-  ]
+  return {
+    holders: [
+      {
+        memberId: '1',
+        vested: 10000,
+        total: 11000,
+      },
+      {
+        memberId: '2',
+        vested: 1000,
+        total: 1000,
+      },
+      {
+        memberId: '3',
+        vested: 100,
+        total: 110,
+      },
+    ],
+    ownerId: '1',
+  }
 }
 
 export const HoldersWidget = ({ tokenId }: HoldersWidgetProps) => {
   const [showModal, setShowModal] = useState(false)
-  const holders = getTokenHolders(tokenId)
+  const { holders, ownerId } = getTokenHolders(tokenId)
   return (
     <Box>
-      <CrtHoldersTableModal data={holders} isLoading={false} show={showModal} onExitClick={() => setShowModal(false)} />
+      <CrtHoldersTableModal
+        data={holders}
+        ownerId={ownerId}
+        isLoading={false}
+        show={showModal}
+        onExitClick={() => setShowModal(false)}
+      />
       <FlexBox alignItems="center" justifyContent="space-between">
         <Text variant="h500" as="span">
           Holders{' '}
@@ -50,7 +59,7 @@ export const HoldersWidget = ({ tokenId }: HoldersWidgetProps) => {
           Show all holders
         </TextButton>
       </FlexBox>
-      <CrtHoldersTable data={holders} isLoading={false} />
+      <CrtHoldersTable data={holders} ownerId={ownerId} isLoading={false} />
     </Box>
   )
 }

@@ -11,9 +11,9 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 
 const COLUMNS: TableProps['columns'] = [
-  { Header: 'Member', accessor: 'member' },
-  { Header: 'Total', accessor: 'total' },
-  { Header: 'Vested', accessor: 'vested' },
+  { Header: 'Member', accessor: 'member', width: 2 },
+  { Header: 'Total', accessor: 'total', width: 1 },
+  { Header: 'Vested', accessor: 'vested', width: 1 },
 ]
 
 type CrtHolder = {
@@ -26,18 +26,19 @@ export type CrtHoldersTableProps = {
   data: CrtHolder[]
   isLoading: boolean
   className?: string
+  ownerId?: string
 }
 
-export const CrtHoldersTable = ({ isLoading, data, className }: CrtHoldersTableProps) => {
+export const CrtHoldersTable = ({ isLoading, data, className, ownerId }: CrtHoldersTableProps) => {
   const mappedData = useMemo(
     () =>
       data.map((row) => ({
-        member: <MemberRow memberId={row.memberId} />,
+        member: <MemberRow memberId={row.memberId} isOwner={row.memberId === ownerId} />,
         total: (
           <RightAlignedCell>
             <FlexBox alignItems="center" gap={1}>
               <NumberFormat format="short" value={row.vested} as="p" variant="t200-strong" />
-              <Text variant="t200-strong" as="p" color="colorText">
+              <Text variant="t200" as="p" color="colorText">
                 (20%)
               </Text>
             </FlexBox>
@@ -49,7 +50,7 @@ export const CrtHoldersTable = ({ isLoading, data, className }: CrtHoldersTableP
           </RightAlignedCell>
         ),
       })),
-    [data]
+    [data, ownerId]
   )
 
   if (isLoading) {
@@ -59,7 +60,7 @@ export const CrtHoldersTable = ({ isLoading, data, className }: CrtHoldersTableP
   return <StyledTable columns={COLUMNS} data={mappedData} className={className} />
 }
 
-const MemberRow = ({ memberId }: { memberId: string }) => {
+const MemberRow = ({ memberId, isOwner }: { memberId: string; isOwner: boolean }) => {
   const { loading, memberships } = useMemberships({
     where: {
       id_eq: memberId,
@@ -81,12 +82,27 @@ const MemberRow = ({ memberId }: { memberId: string }) => {
   return (
     <FlexBox alignItems="center" gap={2}>
       <Avatar loading={isLoadingAsset} assetUrls={urls} />
-      <Text variant="t200-strong" as="p" color="colorText">
-        {member?.handle ?? 'Unknown'}
-      </Text>
+      <HandleContainer flow="column" gap={0}>
+        <Text variant="t200-strong" as="p" color="colorText" truncate>
+          {member?.handle ?? 'Unknown'}
+        </Text>
+        {isOwner && (
+          <Text variant="t100" as="p" color="colorTextMuted">
+            Creator
+          </Text>
+        )}
+      </HandleContainer>
     </FlexBox>
   )
 }
+
+const HandleContainer = styled(FlexBox)`
+  overflow: hidden;
+
+  > * {
+    width: 100%;
+  }
+`
 
 export const StyledTable = styled(Table)`
   th:nth-child(n + 2),
