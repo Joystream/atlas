@@ -767,6 +767,150 @@ export type GetNotificationsConnectionQuery = {
   }
 }
 
+export type GetMembershipNotificationPreferencesQueryVariables = Types.Exact<{ [key: string]: never }>
+
+export type GetMembershipNotificationPreferencesQuery = {
+  __typename?: 'Query'
+  accountData: {
+    __typename?: 'AccountData'
+    notificationPreferences?: {
+      __typename?: 'AccountNotificationPreferencesOutput'
+      channelCreated: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+      replyToComment: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+      reactionToComment: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+      videoPosted: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+      newNftOnAuction: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+      newNftOnSale: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+      higherBidThanYoursMade: {
+        __typename?: 'NotificationPreferenceOutput'
+        emailEnabled: boolean
+        inAppEnabled: boolean
+      }
+      timedAuctionExpired: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+      auctionWon: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+      auctionLost: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+      openAuctionBidCanBeWithdrawn: {
+        __typename?: 'NotificationPreferenceOutput'
+        emailEnabled: boolean
+        inAppEnabled: boolean
+      }
+      fundsFromCouncilReceived: {
+        __typename?: 'NotificationPreferenceOutput'
+        emailEnabled: boolean
+        inAppEnabled: boolean
+      }
+      fundsToExternalWalletSent: {
+        __typename?: 'NotificationPreferenceOutput'
+        emailEnabled: boolean
+        inAppEnabled: boolean
+      }
+      fundsFromWgReceived: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    } | null
+  }
+}
+
+export type GetChannelNotificationPreferencesQueryVariables = Types.Exact<{ [key: string]: never }>
+
+export type GetChannelNotificationPreferencesQuery = {
+  __typename?: 'Query'
+  accountData: {
+    __typename?: 'AccountData'
+    notificationPreferences?: {
+      __typename?: 'AccountNotificationPreferencesOutput'
+      bidMadeOnNft: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+      channelExcludedFromApp: {
+        __typename?: 'NotificationPreferenceOutput'
+        emailEnabled: boolean
+        inAppEnabled: boolean
+      }
+      channelFundsWithdrawn: {
+        __typename?: 'NotificationPreferenceOutput'
+        emailEnabled: boolean
+        inAppEnabled: boolean
+      }
+      channelPaymentReceived: {
+        __typename?: 'NotificationPreferenceOutput'
+        emailEnabled: boolean
+        inAppEnabled: boolean
+      }
+      channelReceivedFundsFromWg: {
+        __typename?: 'NotificationPreferenceOutput'
+        emailEnabled: boolean
+        inAppEnabled: boolean
+      }
+      newChannelFollower: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+      newPayoutUpdatedByCouncil: {
+        __typename?: 'NotificationPreferenceOutput'
+        emailEnabled: boolean
+        inAppEnabled: boolean
+      }
+      nftBought: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+      nftFeaturedOnMarketPlace: {
+        __typename?: 'NotificationPreferenceOutput'
+        emailEnabled: boolean
+        inAppEnabled: boolean
+      }
+      royaltyReceived: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+      videoCommentCreated: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+      videoDisliked: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+      videoExcludedFromApp: {
+        __typename?: 'NotificationPreferenceOutput'
+        emailEnabled: boolean
+        inAppEnabled: boolean
+      }
+      videoFeaturedAsHero: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+      videoFeaturedOnCategoryPage: {
+        __typename?: 'NotificationPreferenceOutput'
+        emailEnabled: boolean
+        inAppEnabled: boolean
+      }
+      videoLiked: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+      yppChannelVerified: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    } | null
+  }
+}
+
+export type SetMembershipNotificationPreferencesMutationVariables = Types.Exact<{
+  notificationPreferences: Types.AccountNotificationPreferencesInput
+}>
+
+export type SetMembershipNotificationPreferencesMutation = {
+  __typename?: 'Mutation'
+  setAccountNotificationPreferences: {
+    __typename?: 'AccountNotificationPreferencesOutput'
+    channelCreated: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    replyToComment: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    reactionToComment: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    videoPosted: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    newNftOnAuction: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    newNftOnSale: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    higherBidThanYoursMade: {
+      __typename?: 'NotificationPreferenceOutput'
+      emailEnabled: boolean
+      inAppEnabled: boolean
+    }
+    timedAuctionExpired: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    auctionWon: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    auctionLost: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    openAuctionBidCanBeWithdrawn: {
+      __typename?: 'NotificationPreferenceOutput'
+      emailEnabled: boolean
+      inAppEnabled: boolean
+    }
+    fundsFromCouncilReceived: {
+      __typename?: 'NotificationPreferenceOutput'
+      emailEnabled: boolean
+      inAppEnabled: boolean
+    }
+    fundsToExternalWalletSent: {
+      __typename?: 'NotificationPreferenceOutput'
+      emailEnabled: boolean
+      inAppEnabled: boolean
+    }
+    fundsFromWgReceived: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+  }
+}
+
 export type GetNftHistoryQueryVariables = Types.Exact<{
   nftId: Types.Scalars['String']
 }>
@@ -3590,6 +3734,351 @@ export type GetNotificationsConnectionLazyQueryHookResult = ReturnType<typeof us
 export type GetNotificationsConnectionQueryResult = Apollo.QueryResult<
   GetNotificationsConnectionQuery,
   GetNotificationsConnectionQueryVariables
+>
+export const GetMembershipNotificationPreferencesDocument = gql`
+  query GetMembershipNotificationPreferences {
+    accountData {
+      notificationPreferences {
+        channelCreated {
+          emailEnabled
+          inAppEnabled
+        }
+        replyToComment {
+          emailEnabled
+          inAppEnabled
+        }
+        reactionToComment {
+          emailEnabled
+          inAppEnabled
+        }
+        videoPosted {
+          emailEnabled
+          inAppEnabled
+        }
+        newNftOnAuction {
+          emailEnabled
+          inAppEnabled
+        }
+        newNftOnSale {
+          emailEnabled
+          inAppEnabled
+        }
+        higherBidThanYoursMade {
+          emailEnabled
+          inAppEnabled
+        }
+        timedAuctionExpired {
+          emailEnabled
+          inAppEnabled
+        }
+        auctionWon {
+          emailEnabled
+          inAppEnabled
+        }
+        auctionLost {
+          emailEnabled
+          inAppEnabled
+        }
+        openAuctionBidCanBeWithdrawn {
+          emailEnabled
+          inAppEnabled
+        }
+        fundsFromCouncilReceived {
+          emailEnabled
+          inAppEnabled
+        }
+        fundsToExternalWalletSent {
+          emailEnabled
+          inAppEnabled
+        }
+        fundsFromWgReceived {
+          emailEnabled
+          inAppEnabled
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useGetMembershipNotificationPreferencesQuery__
+ *
+ * To run a query within a React component, call `useGetMembershipNotificationPreferencesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMembershipNotificationPreferencesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMembershipNotificationPreferencesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetMembershipNotificationPreferencesQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetMembershipNotificationPreferencesQuery,
+    GetMembershipNotificationPreferencesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetMembershipNotificationPreferencesQuery, GetMembershipNotificationPreferencesQueryVariables>(
+    GetMembershipNotificationPreferencesDocument,
+    options
+  )
+}
+export function useGetMembershipNotificationPreferencesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetMembershipNotificationPreferencesQuery,
+    GetMembershipNotificationPreferencesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    GetMembershipNotificationPreferencesQuery,
+    GetMembershipNotificationPreferencesQueryVariables
+  >(GetMembershipNotificationPreferencesDocument, options)
+}
+export type GetMembershipNotificationPreferencesQueryHookResult = ReturnType<
+  typeof useGetMembershipNotificationPreferencesQuery
+>
+export type GetMembershipNotificationPreferencesLazyQueryHookResult = ReturnType<
+  typeof useGetMembershipNotificationPreferencesLazyQuery
+>
+export type GetMembershipNotificationPreferencesQueryResult = Apollo.QueryResult<
+  GetMembershipNotificationPreferencesQuery,
+  GetMembershipNotificationPreferencesQueryVariables
+>
+export const GetChannelNotificationPreferencesDocument = gql`
+  query GetChannelNotificationPreferences {
+    accountData {
+      notificationPreferences {
+        bidMadeOnNft {
+          emailEnabled
+          inAppEnabled
+        }
+        channelExcludedFromApp {
+          emailEnabled
+          inAppEnabled
+        }
+        channelFundsWithdrawn {
+          emailEnabled
+          inAppEnabled
+        }
+        channelPaymentReceived {
+          emailEnabled
+          inAppEnabled
+        }
+        channelReceivedFundsFromWg {
+          emailEnabled
+          inAppEnabled
+        }
+        newChannelFollower {
+          emailEnabled
+          inAppEnabled
+        }
+        newPayoutUpdatedByCouncil {
+          emailEnabled
+          inAppEnabled
+        }
+        nftBought {
+          emailEnabled
+          inAppEnabled
+        }
+        nftFeaturedOnMarketPlace {
+          emailEnabled
+          inAppEnabled
+        }
+        royaltyReceived {
+          emailEnabled
+          inAppEnabled
+        }
+        videoCommentCreated {
+          emailEnabled
+          inAppEnabled
+        }
+        videoDisliked {
+          emailEnabled
+          inAppEnabled
+        }
+        videoExcludedFromApp {
+          emailEnabled
+          inAppEnabled
+        }
+        videoFeaturedAsHero {
+          emailEnabled
+          inAppEnabled
+        }
+        videoFeaturedOnCategoryPage {
+          emailEnabled
+          inAppEnabled
+        }
+        videoLiked {
+          emailEnabled
+          inAppEnabled
+        }
+        yppChannelVerified {
+          emailEnabled
+          inAppEnabled
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useGetChannelNotificationPreferencesQuery__
+ *
+ * To run a query within a React component, call `useGetChannelNotificationPreferencesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetChannelNotificationPreferencesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetChannelNotificationPreferencesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetChannelNotificationPreferencesQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetChannelNotificationPreferencesQuery,
+    GetChannelNotificationPreferencesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetChannelNotificationPreferencesQuery, GetChannelNotificationPreferencesQueryVariables>(
+    GetChannelNotificationPreferencesDocument,
+    options
+  )
+}
+export function useGetChannelNotificationPreferencesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetChannelNotificationPreferencesQuery,
+    GetChannelNotificationPreferencesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetChannelNotificationPreferencesQuery, GetChannelNotificationPreferencesQueryVariables>(
+    GetChannelNotificationPreferencesDocument,
+    options
+  )
+}
+export type GetChannelNotificationPreferencesQueryHookResult = ReturnType<
+  typeof useGetChannelNotificationPreferencesQuery
+>
+export type GetChannelNotificationPreferencesLazyQueryHookResult = ReturnType<
+  typeof useGetChannelNotificationPreferencesLazyQuery
+>
+export type GetChannelNotificationPreferencesQueryResult = Apollo.QueryResult<
+  GetChannelNotificationPreferencesQuery,
+  GetChannelNotificationPreferencesQueryVariables
+>
+export const SetMembershipNotificationPreferencesDocument = gql`
+  mutation SetMembershipNotificationPreferences($notificationPreferences: AccountNotificationPreferencesInput!) {
+    setAccountNotificationPreferences(notificationPreferences: $notificationPreferences) {
+      channelCreated {
+        emailEnabled
+        inAppEnabled
+      }
+      replyToComment {
+        emailEnabled
+        inAppEnabled
+      }
+      reactionToComment {
+        emailEnabled
+        inAppEnabled
+      }
+      videoPosted {
+        emailEnabled
+        inAppEnabled
+      }
+      newNftOnAuction {
+        emailEnabled
+        inAppEnabled
+      }
+      newNftOnSale {
+        emailEnabled
+        inAppEnabled
+      }
+      higherBidThanYoursMade {
+        emailEnabled
+        inAppEnabled
+      }
+      timedAuctionExpired {
+        emailEnabled
+        inAppEnabled
+      }
+      auctionWon {
+        emailEnabled
+        inAppEnabled
+      }
+      auctionLost {
+        emailEnabled
+        inAppEnabled
+      }
+      openAuctionBidCanBeWithdrawn {
+        emailEnabled
+        inAppEnabled
+      }
+      fundsFromCouncilReceived {
+        emailEnabled
+        inAppEnabled
+      }
+      fundsToExternalWalletSent {
+        emailEnabled
+        inAppEnabled
+      }
+      fundsFromWgReceived {
+        emailEnabled
+        inAppEnabled
+      }
+    }
+  }
+`
+export type SetMembershipNotificationPreferencesMutationFn = Apollo.MutationFunction<
+  SetMembershipNotificationPreferencesMutation,
+  SetMembershipNotificationPreferencesMutationVariables
+>
+
+/**
+ * __useSetMembershipNotificationPreferencesMutation__
+ *
+ * To run a mutation, you first call `useSetMembershipNotificationPreferencesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetMembershipNotificationPreferencesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setMembershipNotificationPreferencesMutation, { data, loading, error }] = useSetMembershipNotificationPreferencesMutation({
+ *   variables: {
+ *      notificationPreferences: // value for 'notificationPreferences'
+ *   },
+ * });
+ */
+export function useSetMembershipNotificationPreferencesMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    SetMembershipNotificationPreferencesMutation,
+    SetMembershipNotificationPreferencesMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    SetMembershipNotificationPreferencesMutation,
+    SetMembershipNotificationPreferencesMutationVariables
+  >(SetMembershipNotificationPreferencesDocument, options)
+}
+export type SetMembershipNotificationPreferencesMutationHookResult = ReturnType<
+  typeof useSetMembershipNotificationPreferencesMutation
+>
+export type SetMembershipNotificationPreferencesMutationResult =
+  Apollo.MutationResult<SetMembershipNotificationPreferencesMutation>
+export type SetMembershipNotificationPreferencesMutationOptions = Apollo.BaseMutationOptions<
+  SetMembershipNotificationPreferencesMutation,
+  SetMembershipNotificationPreferencesMutationVariables
 >
 export const GetNftHistoryDocument = gql`
   query GetNftHistory($nftId: String!) {
