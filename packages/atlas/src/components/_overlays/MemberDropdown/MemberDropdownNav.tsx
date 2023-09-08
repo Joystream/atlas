@@ -11,6 +11,7 @@ import {
   SvgActionChevronR,
   SvgActionLogOut,
   SvgActionMember,
+  SvgActionMoney,
   SvgActionNewTab,
   SvgActionPlay,
   SvgActionShow,
@@ -223,6 +224,12 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                       ),
                       nodeEnd: hasAtLeastOneChannel && <SvgActionChevronR />,
                       onClick: () => (hasAtLeastOneChannel ? onSwitchToList(type) : onAddNewChannel?.()),
+                    },
+                    {
+                      asButton: true,
+                      label: 'Portfolio',
+                      nodeStart: <IconWrapper icon={<SvgActionMoney />} />,
+                      to: absoluteRoutes.viewer.portfolio(),
                     },
                   ]
                 : [
