@@ -34,7 +34,7 @@ export const YppReferralTable = ({ isLoading, data }: YppReferralTableProps) => 
   const mappedData: TableProps['data'] = useMemo(
     () =>
       data.map((entry) => ({
-        date: <Date date={entry.date} />,
+        date: <RegDate date={entry.date} />,
         channel: <Channel channel={entry.channel} />,
         tier: <Tier tier={entry.tier} />,
         status: <Status status={entry.status} />,
@@ -45,7 +45,7 @@ export const YppReferralTable = ({ isLoading, data }: YppReferralTableProps) => 
   return <Table title="Channels you referred" columns={COLUMNS} data={isLoading ? tableLoadingData : mappedData} />
 }
 
-const Date = ({ date }: { date: Date }) => {
+const RegDate = ({ date }: { date: Date }) => {
   const { convertMsTimestampToBlock } = useBlockTimeEstimation()
   return (
     <>
