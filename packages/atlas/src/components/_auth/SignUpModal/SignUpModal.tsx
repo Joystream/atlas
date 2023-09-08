@@ -63,7 +63,7 @@ export const SignUpModal = () => {
   const setYppModalOpenName = useYppStore((state) => state.actions.setYppModalOpenName)
   const setYtResponseData = useYppStore((state) => state.actions.setYtResponseData)
   const { displaySnackbar } = useSnackbar()
-  const ytEmailIsValid = Boolean(ytResponseData?.email && !ytResponseData.email.includes('@plus.google.com'))
+  const ytEmailIsValid = Boolean(ytResponseData?.email && !ytResponseData.email.includes('@pages.plusgoogle.com'))
 
   const { generateUniqueMemberHandleBasedOnInput } = useUniqueMemberHandle()
 
