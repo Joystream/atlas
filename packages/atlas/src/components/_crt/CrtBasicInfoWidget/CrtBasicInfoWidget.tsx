@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode, useRef } from 'react'
+import { ReactElement, ReactNode, useState } from 'react'
 
 import { FlexBox } from '@/components/FlexBox'
 import { Color } from '@/components/Text/Text.styles'
@@ -19,11 +19,11 @@ export type CrtBasicInfoWidgetProps = {
 }
 
 export const CrtBasicInfoWidget = ({ name, details, titleColor }: CrtBasicInfoWidgetProps) => {
-  const titleRef = useRef<HTMLSpanElement | null>(null)
+  const [titleRef, setTitleRef] = useState<HTMLSpanElement | null>(null)
   const smMatch = useMediaMatch('sm')
   return (
     <WidgetTile
-      title={<span ref={titleRef}>${name ?? 'ABC'}</span>}
+      title={<span ref={setTitleRef}>${name ?? 'ABC'}</span>}
       titleVariant="h700"
       titleColor={titleColor ?? 'colorTextStrong'}
       customNode={
