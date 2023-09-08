@@ -48,7 +48,7 @@ features:
     suspendedLinkText: '#ypp-support channel on our Discord server'
     youtubeCollaboratorMemberId: '$VITE_YOUTUBE_COLLABORATOR_MEMBER_ID'
     enrollmentReward: 5000 # Amount for successful enrollment in YPP in joystream.tokenTicker units.
-    enrollmentUsdReward: 20 # Amount for successful enrollment in YPP in USD.
+    enrollmentUsdReward: 5 # Amount for successful enrollment in YPP in USD.
     referralBaseReward: 2.5 # Self-explanatory, it should match `baseUsdAmount.min` value in last `rewards` entry
     tiersDefinition: # Tiers for YouTube partner program rewards. You can provide maximum three tiers. Each tier should has own multiplier.
       tiers:
