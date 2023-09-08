@@ -1,73 +1,50 @@
-import { SvgTierIcon1, SvgTierIcon2, SvgTierIcon3 } from '@/assets/icons'
+import { SvgTierIcon1, SvgTierIcon2, SvgTierIcon3, SvgTierIcon4, SvgTierIcon5, SvgTierIcon6 } from '@/assets/icons'
 import { NumberFormat } from '@/components/NumberFormat'
 import { atlasConfig } from '@/config'
 
 const configTiers = atlasConfig.features.ypp.tiersDefinition?.tiers
 
+const tiersIcons = [
+  <SvgTierIcon1 key="1" />,
+  <SvgTierIcon2 key="2" />,
+  <SvgTierIcon3 key="3" />,
+  <SvgTierIcon4 key="4" />,
+  <SvgTierIcon5 key="5" />,
+  <SvgTierIcon6 key="6" />,
+]
+
 export const TIERS = configTiers
-  ? [
-      {
-        rules: (
-          <>
-            {'<'}
-            <NumberFormat
-              as="span"
-              variant="t100"
-              color="colorText"
-              format="short"
-              value={configTiers?.[1].minimumSubscribers || 0}
-            />{' '}
-            subscribers
-          </>
-        ),
-        icon: <SvgTierIcon1 />,
-        subscribers: configTiers?.[0].minimumSubscribers,
-        multiplier: configTiers?.[0].multiplier,
-      },
-      {
-        rules: (
-          <>
-            <NumberFormat
-              as="span"
-              variant="t100"
-              color="colorText"
-              format="short"
-              value={configTiers?.[1].minimumSubscribers || 0}
-            />
-            -
-            <NumberFormat
-              as="span"
-              variant="t100"
-              color="colorText"
-              format="short"
-              value={configTiers?.[2].minimumSubscribers || 0}
-            />{' '}
-            subscribers
-          </>
-        ),
-        icon: <SvgTierIcon2 />,
-        subscribers: configTiers?.[1].minimumSubscribers,
-        multiplier: configTiers?.[1].multiplier,
-      },
-      {
-        rules: (
-          <>
-            {'> '}
-            <NumberFormat
-              as="span"
-              variant="t100"
-              color="colorText"
-              format="short"
-              value={configTiers?.[2].minimumSubscribers || 0}
-            />{' '}
-            subscribers
-          </>
-        ),
-        icon: <SvgTierIcon3 />,
-        subscribers: configTiers?.[2].minimumSubscribers - 1,
-        multiplier: configTiers?.[2].multiplier,
-      },
-    ]
+  ? configTiers.map((tier, index) => ({
+      rules: (
+        <div>
+          {index === 0 && '< '}
+          {index === configTiers.length - 1 && '> '}
+          <NumberFormat
+            as="span"
+            variant="t100"
+            color="colorText"
+            format="short"
+            value={tier.minimumSubscribers || 0}
+          />
+          {index !== 0 && index !== configTiers.length - 1 && (
+            <>
+              {' '}
+              -{' '}
+              <NumberFormat
+                as="span"
+                variant="t100"
+                color="colorText"
+                format="short"
+                value={configTiers[index + 1].minimumSubscribers}
+              />
+            </>
+          )}
+        </div>
+      ),
+      icon: tiersIcons[index],
+      subscribers: tier.minimumSubscribers,
+      multiplier: tier.multiplier,
+    }))
   : []
 
 const configRewards = atlasConfig.features.ypp.rewards
