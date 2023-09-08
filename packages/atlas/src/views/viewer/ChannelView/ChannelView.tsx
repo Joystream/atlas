@@ -365,10 +365,6 @@ export const ChannelView: FC = () => {
                       onClick: () => setShowReportDialog(true),
                       label: 'Report channel',
                       nodeStart: <SvgActionFlag />,
-                      protected: {
-                        title: 'You want to report this channel?',
-                        description: 'Sign in to report harmful content',
-                      },
                     },
                   ]}
                   trigger={<Button icon={<SvgActionMore />} variant="tertiary" size="large" />}
