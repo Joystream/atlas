@@ -378,10 +378,6 @@ export const VideoView: FC = () => {
                   onClick: () => setShowReportDialog(true),
                   label: 'Report video',
                   nodeStart: <SvgActionFlag />,
-                  protected: {
-                    title: 'You want to report this video?',
-                    description: 'Sign in to report harmful content',
-                  },
                 },
               ]}
               trigger={<Button icon={<SvgActionMore />} variant="tertiary" size="medium" />}
