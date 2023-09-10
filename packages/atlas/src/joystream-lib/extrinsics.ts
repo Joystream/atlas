@@ -10,6 +10,7 @@ import { createType } from '@joystream/types'
 import { ApiPromise as PolkadotApi } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
 import BN from 'bn.js'
+import { parseInt } from 'lodash-es'
 import Long from 'long'
 
 import { SentryLogger } from '@/utils/logs'
@@ -992,4 +993,86 @@ export class JoystreamLibExtrinsics {
 
     return { block }
   }
+
+  dustAccountTx = async (tokenId: TokenId, memberId: MemberId) => {
+    return this.api.tx.projectToken.dustAccount(parseInt(tokenId), parseInt(memberId))
+  }
+
+  dustAccount: PublicExtrinsic<typeof this.dustAccountTx, ExtrinsicResult> = async (tokenId, memberId, cb) => {
+    const tx = await this.dustAccountTx(tokenId, memberId)
+    const { block } = await this.sendExtrinsic(tx, cb)
+    return { block }
+  }
+
+  exitRevenueSplitTx = async (tokenId: TokenId, memberId: MemberId) => {
+    return this.api.tx.projectToken.exitRevenueSplit(parseInt(tokenId), parseInt(memberId))
+  }
+
+  exitRevenueSplit: PublicExtrinsic<typeof this.exitRevenueSplitTx, ExtrinsicResult> = async (
+    tokenId,
+    memberId,
+    cb
+  ) => {
+    const tx = await this.exitRevenueSplitTx(tokenId, memberId)
+    const { block } = await this.sendExtrinsic(tx, cb)
+    return { block }
+  }
+
+  participateInSplitTx = async (tokenId: TokenId, memberId: MemberId, amount: StringifiedNumber) => {
+    return this.api.tx.projectToken.participateInSplit(parseInt(tokenId), parseInt(memberId), amount)
+  }
+
+  participateInSplit: PublicExtrinsic<typeof this.participateInSplitTx, ExtrinsicResult> = async (
+    tokenId,
+    memberId,
+    amount,
+    cb
+  ) => {
+    const tx = await this.participateInSplitTx(tokenId, memberId, amount)
+    const { block } = await this.sendExtrinsic(tx, cb)
+
+    return { block }
+  }
+
+  issueRevenueSplitTx = async (
+    memberId: MemberId,
+    channelId: ChannelId,
+    start: StringifiedNumber,
+    duration: number
+  ) => {
+    const member = createType('PalletContentPermissionsContentActor', { Member: parseInt(memberId) })
+    return this.api.tx.content.issueRevenueSplit(member, parseInt(channelId), start, duration)
+  }
+
+  issueRevenueSplit: PublicExtrinsic<typeof this.issueRevenueSplitTx, ExtrinsicResult> = async (
+    memberId,
+    channelId,
+    start,
+    duration,
+    cb
+  ) => {
+    const tx = await this.issueRevenueSplitTx(memberId, channelId, start, duration)
+    const { block } = await this.sendExtrinsic(tx, cb)
+    return { block }
+  }
+  issueCreatorTokenTx = async (
+    memberId: MemberId,
+    channelId: ChannelId,
+    symbol: string,
+    patronageRate: StringifiedNumber,
+    revenueSplitRate: StringifiedNumber,
+    type:
+      | 'permissionless'
+      | {
+          commitment: string
+          payload?: {
+            expectedDataSizeFee: StringifiedNumber
+            expectedDataObjectStateBloatBond: StringifiedNumber
+            objectCreationParams: {
+              size_: StringifiedNumber
+              ipfsContent: string
+            }
+          }
+        }
+  ) => {}
 }
