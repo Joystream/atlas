@@ -1055,6 +1055,38 @@ export class JoystreamLibExtrinsics {
     const { block } = await this.sendExtrinsic(tx, cb)
     return { block }
   }
+
+  finalizeRevenueSplitTx = async (memberId: MemberId, channelId: ChannelId) => {
+    const member = createType('PalletContentPermissionsContentActor', { Member: parseInt(memberId) })
+    return this.api.tx.content.finalizeRevenueSplit(member, parseInt(channelId))
+  }
+
+  finalizeRevenueSplit: PublicExtrinsic<typeof this.finalizeRevenueSplitTx, ExtrinsicResult> = async (
+    memberId,
+    channelId,
+    cb
+  ) => {
+    const tx = await this.finalizeRevenueSplitTx(memberId, channelId)
+    const { block } = await this.sendExtrinsic(tx, cb)
+
+    return { block }
+  }
+
+  deissueCreatorTokenTx = async (memberId: MemberId, channelId: ChannelId) => {
+    const member = createType('PalletContentPermissionsContentActor', { Member: parseInt(memberId) })
+    return this.api.tx.content.deissueCreatorToken(member, parseInt(channelId))
+  }
+
+  deissueCreatorToken: PublicExtrinsic<typeof this.deissueCreatorTokenTx, ExtrinsicResult> = async (
+    memberId,
+    channelId,
+    cb
+  ) => {
+    const tx = await this.deissueCreatorTokenTx(memberId, channelId)
+    const { block } = await this.sendExtrinsic(tx, cb)
+    return { block }
+  }
+
   issueCreatorTokenTx = async (
     memberId: MemberId,
     channelId: ChannelId,
