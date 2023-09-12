@@ -9,759 +9,137 @@ import {
 } from './fragments.generated'
 
 const defaultOptions = {} as const
-export type GetNotificationsConnectionQueryVariables = Types.Exact<{
+export type GetMembershipNotificationsConnectionQueryVariables = Types.Exact<{
   accountId: Types.Scalars['String']
   first: Types.Scalars['Int']
   after?: Types.InputMaybe<Types.Scalars['String']>
 }>
 
-export type GetNotificationsConnectionQuery = {
+export type GetMembershipNotificationsConnectionQuery = {
   __typename?: 'Query'
-  notificationsConnection: {
-    __typename?: 'NotificationsConnection'
+  notificationInAppDeliveriesConnection: {
+    __typename?: 'NotificationInAppDeliveriesConnection'
     totalCount: number
     pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor: string }
     edges: Array<{
-      __typename?: 'NotificationEdge'
+      __typename?: 'NotificationInAppDeliveryEdge'
       cursor: string
       node: {
-        __typename?: 'Notification'
-        event?: {
-          __typename?: 'Event'
+        __typename?: 'NotificationInAppDelivery'
+        notification: {
+          __typename?: 'Notification'
           id: string
-          timestamp: Date
-          inBlock: number
-          data:
-            | { __typename?: 'AuctionBidCanceledEventData' }
+          createdAt: Date
+          status: { __typename: 'Read' } | { __typename: 'Unread' }
+          notificationType:
+            | { __typename?: 'BidMadeCompletingAuction' }
+            | { __typename: 'ChannelCreated'; channelId: string; channelTitle: string }
+            | { __typename?: 'ChannelExcluded' }
+            | { __typename?: 'ChannelFundsWithdrawn' }
+            | { __typename?: 'ChannelSuspended' }
+            | { __typename?: 'ChannelVerified' }
+            | { __typename?: 'CommentPostedToVideo' }
+            | { __typename: 'CommentReply'; memberHandle: string; videoId: string; videoTitle: string }
+            | { __typename?: 'CreatorReceivesAuctionBid' }
+            | { __typename?: 'DirectChannelPaymentByMember' }
+            | { __typename: 'EnglishAuctionLost'; videoId: string; videoTitle: string }
+            | { __typename?: 'EnglishAuctionSettled' }
+            | { __typename: 'EnglishAuctionWon'; videoId: string; videoTitle: string }
+            | { __typename: 'HigherBidPlaced'; newBidderHandle: string; videoId: string; videoTitle: string }
+            | { __typename: 'NewAuction'; channelTitle: string; videoId: string; videoTitle: string }
+            | { __typename?: 'NewAuctionBid' }
+            | { __typename?: 'NewChannelFollower' }
+            | { __typename: 'NewNftOnSale'; channelTitle: string; videoId: string; videoTitle: string }
+            | { __typename?: 'NftFeaturedOnMarketPlace' }
+            | { __typename?: 'NftOffered' }
+            | { __typename?: 'NftPurchased' }
+            | { __typename?: 'NftRoyaltyPaid' }
+            | { __typename: 'OpenAuctionLost'; videoTitle: string; videoId: string }
+            | { __typename: 'OpenAuctionWon'; videoId: string; videoTitle: string }
+            | { __typename: 'ReactionToComment'; memberHandle: string; videoId: string; videoTitle: string }
+            | { __typename?: 'VideoDisliked' }
+            | { __typename?: 'VideoExcluded' }
+            | { __typename?: 'VideoFeaturedAsCategoryHero' }
+            | { __typename?: 'VideoFeaturedOnCategoryPage' }
+            | { __typename?: 'VideoLiked' }
+            | { __typename: 'VideoPosted'; channelTitle: string; videoId: string; videoTitle: string }
+        }
+      }
+    }>
+  }
+}
+
+export type GetChannelNotificationsConnectionQueryVariables = Types.Exact<{
+  accountId: Types.Scalars['String']
+  first: Types.Scalars['Int']
+  after?: Types.InputMaybe<Types.Scalars['String']>
+}>
+
+export type GetChannelNotificationsConnectionQuery = {
+  __typename?: 'Query'
+  notificationInAppDeliveriesConnection: {
+    __typename?: 'NotificationInAppDeliveriesConnection'
+    totalCount: number
+    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor: string }
+    edges: Array<{
+      __typename?: 'NotificationInAppDeliveryEdge'
+      cursor: string
+      node: {
+        __typename?: 'NotificationInAppDelivery'
+        notification: {
+          __typename?: 'Notification'
+          id: string
+          createdAt: Date
+          status: { __typename: 'Read' } | { __typename: 'Unread' }
+          notificationType:
+            | { __typename?: 'BidMadeCompletingAuction' }
+            | { __typename?: 'ChannelCreated' }
+            | { __typename: 'ChannelExcluded' }
+            | { __typename: 'ChannelFundsWithdrawn'; amount: string }
+            | { __typename: 'ChannelSuspended' }
+            | { __typename: 'ChannelVerified' }
+            | { __typename: 'CommentPostedToVideo'; memberHandle: string; videoId: string; videoTitle: string }
+            | { __typename?: 'CommentReply' }
             | {
-                __typename?: 'AuctionBidMadeEventData'
-                bid: {
-                  __typename?: 'Bid'
-                  amount: string
-                  bidder: {
-                    __typename?: 'Membership'
-                    id: string
-                    handle: string
-                    metadata?: {
-                      __typename?: 'MemberMetadata'
-                      about?: string | null
-                      avatar?:
-                        | {
-                            __typename?: 'AvatarObject'
-                            avatarObject: {
-                              __typename?: 'StorageDataObject'
-                              id: string
-                              resolvedUrls: Array<string>
-                              createdAt: Date
-                              size: string
-                              isAccepted: boolean
-                              ipfsHash: string
-                              storageBag: { __typename?: 'StorageBag'; id: string }
-                              type?:
-                                | { __typename: 'DataObjectTypeChannelAvatar' }
-                                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                                | { __typename: 'DataObjectTypeVideoMedia' }
-                                | { __typename: 'DataObjectTypeVideoSubtitle' }
-                                | { __typename: 'DataObjectTypeVideoThumbnail' }
-                                | null
-                            }
-                          }
-                        | { __typename?: 'AvatarUri'; avatarUri: string }
-                        | null
-                    } | null
-                  }
-                  previousTopBid?: {
-                    __typename?: 'Bid'
-                    bidder: {
-                      __typename?: 'Membership'
-                      id: string
-                      handle: string
-                      metadata?: {
-                        __typename?: 'MemberMetadata'
-                        about?: string | null
-                        avatar?:
-                          | {
-                              __typename?: 'AvatarObject'
-                              avatarObject: {
-                                __typename?: 'StorageDataObject'
-                                id: string
-                                resolvedUrls: Array<string>
-                                createdAt: Date
-                                size: string
-                                isAccepted: boolean
-                                ipfsHash: string
-                                storageBag: { __typename?: 'StorageBag'; id: string }
-                                type?:
-                                  | { __typename: 'DataObjectTypeChannelAvatar' }
-                                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                                  | { __typename: 'DataObjectTypeVideoMedia' }
-                                  | { __typename: 'DataObjectTypeVideoSubtitle' }
-                                  | { __typename: 'DataObjectTypeVideoThumbnail' }
-                                  | null
-                              }
-                            }
-                          | { __typename?: 'AvatarUri'; avatarUri: string }
-                          | null
-                      } | null
-                    }
-                  } | null
-                  nft: {
-                    __typename?: 'OwnedNft'
-                    video: {
-                      __typename?: 'Video'
-                      id: string
-                      title?: string | null
-                      thumbnailPhoto?: {
-                        __typename?: 'StorageDataObject'
-                        id: string
-                        resolvedUrls: Array<string>
-                        createdAt: Date
-                        size: string
-                        isAccepted: boolean
-                        ipfsHash: string
-                        storageBag: { __typename?: 'StorageBag'; id: string }
-                        type?:
-                          | { __typename: 'DataObjectTypeChannelAvatar' }
-                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                          | { __typename: 'DataObjectTypeVideoMedia' }
-                          | { __typename: 'DataObjectTypeVideoSubtitle' }
-                          | { __typename: 'DataObjectTypeVideoThumbnail' }
-                          | null
-                      } | null
-                    }
-                  }
-                }
-                nftOwner:
-                  | {
-                      __typename: 'NftOwnerChannel'
-                      channel: {
-                        __typename?: 'Channel'
-                        ownerMember?: {
-                          __typename?: 'Membership'
-                          id: string
-                          handle: string
-                          metadata?: {
-                            __typename?: 'MemberMetadata'
-                            about?: string | null
-                            avatar?:
-                              | {
-                                  __typename?: 'AvatarObject'
-                                  avatarObject: {
-                                    __typename?: 'StorageDataObject'
-                                    id: string
-                                    resolvedUrls: Array<string>
-                                    createdAt: Date
-                                    size: string
-                                    isAccepted: boolean
-                                    ipfsHash: string
-                                    storageBag: { __typename?: 'StorageBag'; id: string }
-                                    type?:
-                                      | { __typename: 'DataObjectTypeChannelAvatar' }
-                                      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                                      | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                                      | { __typename: 'DataObjectTypeVideoMedia' }
-                                      | { __typename: 'DataObjectTypeVideoSubtitle' }
-                                      | { __typename: 'DataObjectTypeVideoThumbnail' }
-                                      | null
-                                  }
-                                }
-                              | { __typename?: 'AvatarUri'; avatarUri: string }
-                              | null
-                          } | null
-                        } | null
-                      }
-                    }
-                  | {
-                      __typename: 'NftOwnerMember'
-                      member: {
-                        __typename?: 'Membership'
-                        id: string
-                        handle: string
-                        metadata?: {
-                          __typename?: 'MemberMetadata'
-                          about?: string | null
-                          avatar?:
-                            | {
-                                __typename?: 'AvatarObject'
-                                avatarObject: {
-                                  __typename?: 'StorageDataObject'
-                                  id: string
-                                  resolvedUrls: Array<string>
-                                  createdAt: Date
-                                  size: string
-                                  isAccepted: boolean
-                                  ipfsHash: string
-                                  storageBag: { __typename?: 'StorageBag'; id: string }
-                                  type?:
-                                    | { __typename: 'DataObjectTypeChannelAvatar' }
-                                    | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                                    | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                                    | { __typename: 'DataObjectTypeVideoMedia' }
-                                    | { __typename: 'DataObjectTypeVideoSubtitle' }
-                                    | { __typename: 'DataObjectTypeVideoThumbnail' }
-                                    | null
-                                }
-                              }
-                            | { __typename?: 'AvatarUri'; avatarUri: string }
-                            | null
-                        } | null
-                      }
-                    }
+                __typename: 'CreatorReceivesAuctionBid'
+                amount: string
+                bidderHandle: string
+                videoId: string
+                videoTitle: string
               }
-            | { __typename?: 'AuctionCanceledEventData' }
+            | { __typename: 'DirectChannelPaymentByMember'; amount: string; payerHandle: string }
+            | { __typename?: 'EnglishAuctionLost' }
+            | { __typename: 'EnglishAuctionSettled'; price: string; videoId: string; videoTitle: string }
+            | { __typename?: 'EnglishAuctionWon' }
+            | { __typename?: 'HigherBidPlaced' }
+            | { __typename?: 'NewAuction' }
+            | { __typename?: 'NewAuctionBid' }
+            | { __typename: 'NewChannelFollower'; followerHandle: string }
+            | { __typename?: 'NewNftOnSale' }
+            | { __typename: 'NftFeaturedOnMarketPlace'; videoId: string; videoTitle: string }
+            | { __typename?: 'NftOffered' }
+            | { __typename: 'NftPurchased'; buyerHandle: string; price: string; videoTitle: string; videoId: string }
+            | { __typename: 'NftRoyaltyPaid'; amount: string; videoId: string; videoTitle: string }
+            | { __typename?: 'OpenAuctionLost' }
+            | { __typename?: 'OpenAuctionWon' }
+            | { __typename?: 'ReactionToComment' }
+            | { __typename: 'VideoDisliked'; videoId: string; videoTitle: string }
+            | { __typename: 'VideoExcluded'; videoTitle: string }
             | {
-                __typename?: 'BidMadeCompletingAuctionEventData'
-                winningBid: {
-                  __typename?: 'Bid'
-                  amount: string
-                  bidder: {
-                    __typename?: 'Membership'
-                    id: string
-                    handle: string
-                    metadata?: {
-                      __typename?: 'MemberMetadata'
-                      about?: string | null
-                      avatar?:
-                        | {
-                            __typename?: 'AvatarObject'
-                            avatarObject: {
-                              __typename?: 'StorageDataObject'
-                              id: string
-                              resolvedUrls: Array<string>
-                              createdAt: Date
-                              size: string
-                              isAccepted: boolean
-                              ipfsHash: string
-                              storageBag: { __typename?: 'StorageBag'; id: string }
-                              type?:
-                                | { __typename: 'DataObjectTypeChannelAvatar' }
-                                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                                | { __typename: 'DataObjectTypeVideoMedia' }
-                                | { __typename: 'DataObjectTypeVideoSubtitle' }
-                                | { __typename: 'DataObjectTypeVideoThumbnail' }
-                                | null
-                            }
-                          }
-                        | { __typename?: 'AvatarUri'; avatarUri: string }
-                        | null
-                    } | null
-                  }
-                  nft: {
-                    __typename?: 'OwnedNft'
-                    video: {
-                      __typename?: 'Video'
-                      id: string
-                      title?: string | null
-                      thumbnailPhoto?: {
-                        __typename?: 'StorageDataObject'
-                        id: string
-                        resolvedUrls: Array<string>
-                        createdAt: Date
-                        size: string
-                        isAccepted: boolean
-                        ipfsHash: string
-                        storageBag: { __typename?: 'StorageBag'; id: string }
-                        type?:
-                          | { __typename: 'DataObjectTypeChannelAvatar' }
-                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                          | { __typename: 'DataObjectTypeVideoMedia' }
-                          | { __typename: 'DataObjectTypeVideoSubtitle' }
-                          | { __typename: 'DataObjectTypeVideoThumbnail' }
-                          | null
-                      } | null
-                    }
-                  }
-                }
-                previousNftOwner:
-                  | {
-                      __typename: 'NftOwnerChannel'
-                      channel: {
-                        __typename?: 'Channel'
-                        ownerMember?: {
-                          __typename?: 'Membership'
-                          id: string
-                          handle: string
-                          metadata?: {
-                            __typename?: 'MemberMetadata'
-                            about?: string | null
-                            avatar?:
-                              | {
-                                  __typename?: 'AvatarObject'
-                                  avatarObject: {
-                                    __typename?: 'StorageDataObject'
-                                    id: string
-                                    resolvedUrls: Array<string>
-                                    createdAt: Date
-                                    size: string
-                                    isAccepted: boolean
-                                    ipfsHash: string
-                                    storageBag: { __typename?: 'StorageBag'; id: string }
-                                    type?:
-                                      | { __typename: 'DataObjectTypeChannelAvatar' }
-                                      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                                      | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                                      | { __typename: 'DataObjectTypeVideoMedia' }
-                                      | { __typename: 'DataObjectTypeVideoSubtitle' }
-                                      | { __typename: 'DataObjectTypeVideoThumbnail' }
-                                      | null
-                                  }
-                                }
-                              | { __typename?: 'AvatarUri'; avatarUri: string }
-                              | null
-                          } | null
-                        } | null
-                      }
-                    }
-                  | {
-                      __typename: 'NftOwnerMember'
-                      member: {
-                        __typename?: 'Membership'
-                        id: string
-                        handle: string
-                        metadata?: {
-                          __typename?: 'MemberMetadata'
-                          about?: string | null
-                          avatar?:
-                            | {
-                                __typename?: 'AvatarObject'
-                                avatarObject: {
-                                  __typename?: 'StorageDataObject'
-                                  id: string
-                                  resolvedUrls: Array<string>
-                                  createdAt: Date
-                                  size: string
-                                  isAccepted: boolean
-                                  ipfsHash: string
-                                  storageBag: { __typename?: 'StorageBag'; id: string }
-                                  type?:
-                                    | { __typename: 'DataObjectTypeChannelAvatar' }
-                                    | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                                    | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                                    | { __typename: 'DataObjectTypeVideoMedia' }
-                                    | { __typename: 'DataObjectTypeVideoSubtitle' }
-                                    | { __typename: 'DataObjectTypeVideoThumbnail' }
-                                    | null
-                                }
-                              }
-                            | { __typename?: 'AvatarUri'; avatarUri: string }
-                            | null
-                        } | null
-                      }
-                    }
+                __typename: 'VideoFeaturedAsCategoryHero'
+                categoryId: string
+                categoryName: string
+                videoTitle: string
               }
-            | { __typename?: 'BuyNowCanceledEventData' }
-            | { __typename?: 'BuyNowPriceUpdatedEventData' }
-            | { __typename?: 'ChannelCreatedEventData' }
-            | { __typename?: 'ChannelFundsWithdrawnEventData' }
-            | { __typename?: 'ChannelPaymentMadeEventData' }
-            | { __typename?: 'ChannelPayoutsUpdatedEventData' }
-            | { __typename?: 'ChannelRewardClaimedAndWithdrawnEventData' }
-            | { __typename?: 'ChannelRewardClaimedEventData' }
             | {
-                __typename?: 'CommentCreatedEventData'
-                comment: {
-                  __typename?: 'Comment'
-                  id: string
-                  video: { __typename?: 'Video'; id: string; title?: string | null }
-                  parentComment?: { __typename?: 'Comment'; id: string } | null
-                  author: {
-                    __typename?: 'Membership'
-                    id: string
-                    handle: string
-                    metadata?: {
-                      __typename?: 'MemberMetadata'
-                      about?: string | null
-                      avatar?:
-                        | {
-                            __typename?: 'AvatarObject'
-                            avatarObject: {
-                              __typename?: 'StorageDataObject'
-                              id: string
-                              resolvedUrls: Array<string>
-                              createdAt: Date
-                              size: string
-                              isAccepted: boolean
-                              ipfsHash: string
-                              storageBag: { __typename?: 'StorageBag'; id: string }
-                              type?:
-                                | { __typename: 'DataObjectTypeChannelAvatar' }
-                                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                                | { __typename: 'DataObjectTypeVideoMedia' }
-                                | { __typename: 'DataObjectTypeVideoSubtitle' }
-                                | { __typename: 'DataObjectTypeVideoThumbnail' }
-                                | null
-                            }
-                          }
-                        | { __typename?: 'AvatarUri'; avatarUri: string }
-                        | null
-                    } | null
-                  }
-                }
+                __typename: 'VideoFeaturedOnCategoryPage'
+                categoryId: string
+                categoryName: string
+                videoTitle: string
               }
-            | { __typename?: 'CommentReactionEventData' }
-            | { __typename?: 'CommentTextUpdatedEventData' }
-            | {
-                __typename?: 'EnglishAuctionSettledEventData'
-                winningBid: {
-                  __typename?: 'Bid'
-                  bidder: {
-                    __typename?: 'Membership'
-                    id: string
-                    handle: string
-                    metadata?: {
-                      __typename?: 'MemberMetadata'
-                      about?: string | null
-                      avatar?:
-                        | {
-                            __typename?: 'AvatarObject'
-                            avatarObject: {
-                              __typename?: 'StorageDataObject'
-                              id: string
-                              resolvedUrls: Array<string>
-                              createdAt: Date
-                              size: string
-                              isAccepted: boolean
-                              ipfsHash: string
-                              storageBag: { __typename?: 'StorageBag'; id: string }
-                              type?:
-                                | { __typename: 'DataObjectTypeChannelAvatar' }
-                                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                                | { __typename: 'DataObjectTypeVideoMedia' }
-                                | { __typename: 'DataObjectTypeVideoSubtitle' }
-                                | { __typename: 'DataObjectTypeVideoThumbnail' }
-                                | null
-                            }
-                          }
-                        | { __typename?: 'AvatarUri'; avatarUri: string }
-                        | null
-                    } | null
-                  }
-                  nft: {
-                    __typename?: 'OwnedNft'
-                    video: {
-                      __typename?: 'Video'
-                      id: string
-                      title?: string | null
-                      thumbnailPhoto?: {
-                        __typename?: 'StorageDataObject'
-                        id: string
-                        resolvedUrls: Array<string>
-                        createdAt: Date
-                        size: string
-                        isAccepted: boolean
-                        ipfsHash: string
-                        storageBag: { __typename?: 'StorageBag'; id: string }
-                        type?:
-                          | { __typename: 'DataObjectTypeChannelAvatar' }
-                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                          | { __typename: 'DataObjectTypeVideoMedia' }
-                          | { __typename: 'DataObjectTypeVideoSubtitle' }
-                          | { __typename: 'DataObjectTypeVideoThumbnail' }
-                          | null
-                      } | null
-                    }
-                  }
-                }
-                previousNftOwner:
-                  | {
-                      __typename: 'NftOwnerChannel'
-                      channel: {
-                        __typename?: 'Channel'
-                        ownerMember?: {
-                          __typename?: 'Membership'
-                          id: string
-                          handle: string
-                          metadata?: {
-                            __typename?: 'MemberMetadata'
-                            about?: string | null
-                            avatar?:
-                              | {
-                                  __typename?: 'AvatarObject'
-                                  avatarObject: {
-                                    __typename?: 'StorageDataObject'
-                                    id: string
-                                    resolvedUrls: Array<string>
-                                    createdAt: Date
-                                    size: string
-                                    isAccepted: boolean
-                                    ipfsHash: string
-                                    storageBag: { __typename?: 'StorageBag'; id: string }
-                                    type?:
-                                      | { __typename: 'DataObjectTypeChannelAvatar' }
-                                      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                                      | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                                      | { __typename: 'DataObjectTypeVideoMedia' }
-                                      | { __typename: 'DataObjectTypeVideoSubtitle' }
-                                      | { __typename: 'DataObjectTypeVideoThumbnail' }
-                                      | null
-                                  }
-                                }
-                              | { __typename?: 'AvatarUri'; avatarUri: string }
-                              | null
-                          } | null
-                        } | null
-                      }
-                    }
-                  | {
-                      __typename: 'NftOwnerMember'
-                      member: {
-                        __typename?: 'Membership'
-                        id: string
-                        handle: string
-                        metadata?: {
-                          __typename?: 'MemberMetadata'
-                          about?: string | null
-                          avatar?:
-                            | {
-                                __typename?: 'AvatarObject'
-                                avatarObject: {
-                                  __typename?: 'StorageDataObject'
-                                  id: string
-                                  resolvedUrls: Array<string>
-                                  createdAt: Date
-                                  size: string
-                                  isAccepted: boolean
-                                  ipfsHash: string
-                                  storageBag: { __typename?: 'StorageBag'; id: string }
-                                  type?:
-                                    | { __typename: 'DataObjectTypeChannelAvatar' }
-                                    | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                                    | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                                    | { __typename: 'DataObjectTypeVideoMedia' }
-                                    | { __typename: 'DataObjectTypeVideoSubtitle' }
-                                    | { __typename: 'DataObjectTypeVideoThumbnail' }
-                                    | null
-                                }
-                              }
-                            | { __typename?: 'AvatarUri'; avatarUri: string }
-                            | null
-                        } | null
-                      }
-                    }
-              }
-            | { __typename?: 'EnglishAuctionStartedEventData' }
-            | { __typename?: 'MemberBannedFromChannelEventData' }
-            | { __typename?: 'MetaprotocolTransactionStatusEventData' }
-            | {
-                __typename?: 'NftBoughtEventData'
-                price: string
-                buyer: {
-                  __typename?: 'Membership'
-                  id: string
-                  handle: string
-                  metadata?: {
-                    __typename?: 'MemberMetadata'
-                    about?: string | null
-                    avatar?:
-                      | {
-                          __typename?: 'AvatarObject'
-                          avatarObject: {
-                            __typename?: 'StorageDataObject'
-                            id: string
-                            resolvedUrls: Array<string>
-                            createdAt: Date
-                            size: string
-                            isAccepted: boolean
-                            ipfsHash: string
-                            storageBag: { __typename?: 'StorageBag'; id: string }
-                            type?:
-                              | { __typename: 'DataObjectTypeChannelAvatar' }
-                              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                              | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                              | { __typename: 'DataObjectTypeVideoMedia' }
-                              | { __typename: 'DataObjectTypeVideoSubtitle' }
-                              | { __typename: 'DataObjectTypeVideoThumbnail' }
-                              | null
-                          }
-                        }
-                      | { __typename?: 'AvatarUri'; avatarUri: string }
-                      | null
-                  } | null
-                }
-                nft: {
-                  __typename?: 'OwnedNft'
-                  video: {
-                    __typename?: 'Video'
-                    id: string
-                    title?: string | null
-                    thumbnailPhoto?: {
-                      __typename?: 'StorageDataObject'
-                      id: string
-                      resolvedUrls: Array<string>
-                      createdAt: Date
-                      size: string
-                      isAccepted: boolean
-                      ipfsHash: string
-                      storageBag: { __typename?: 'StorageBag'; id: string }
-                      type?:
-                        | { __typename: 'DataObjectTypeChannelAvatar' }
-                        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                        | { __typename: 'DataObjectTypeVideoMedia' }
-                        | { __typename: 'DataObjectTypeVideoSubtitle' }
-                        | { __typename: 'DataObjectTypeVideoThumbnail' }
-                        | null
-                    } | null
-                  }
-                }
-              }
-            | { __typename?: 'NftIssuedEventData' }
-            | { __typename?: 'NftOfferedEventData' }
-            | { __typename?: 'NftSellOrderMadeEventData' }
-            | {
-                __typename?: 'OpenAuctionBidAcceptedEventData'
-                winningBid: {
-                  __typename?: 'Bid'
-                  amount: string
-                  bidder: {
-                    __typename?: 'Membership'
-                    id: string
-                    handle: string
-                    metadata?: {
-                      __typename?: 'MemberMetadata'
-                      about?: string | null
-                      avatar?:
-                        | {
-                            __typename?: 'AvatarObject'
-                            avatarObject: {
-                              __typename?: 'StorageDataObject'
-                              id: string
-                              resolvedUrls: Array<string>
-                              createdAt: Date
-                              size: string
-                              isAccepted: boolean
-                              ipfsHash: string
-                              storageBag: { __typename?: 'StorageBag'; id: string }
-                              type?:
-                                | { __typename: 'DataObjectTypeChannelAvatar' }
-                                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                                | { __typename: 'DataObjectTypeVideoMedia' }
-                                | { __typename: 'DataObjectTypeVideoSubtitle' }
-                                | { __typename: 'DataObjectTypeVideoThumbnail' }
-                                | null
-                            }
-                          }
-                        | { __typename?: 'AvatarUri'; avatarUri: string }
-                        | null
-                    } | null
-                  }
-                  nft: {
-                    __typename?: 'OwnedNft'
-                    video: {
-                      __typename?: 'Video'
-                      id: string
-                      title?: string | null
-                      thumbnailPhoto?: {
-                        __typename?: 'StorageDataObject'
-                        id: string
-                        resolvedUrls: Array<string>
-                        createdAt: Date
-                        size: string
-                        isAccepted: boolean
-                        ipfsHash: string
-                        storageBag: { __typename?: 'StorageBag'; id: string }
-                        type?:
-                          | { __typename: 'DataObjectTypeChannelAvatar' }
-                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                          | { __typename: 'DataObjectTypeVideoMedia' }
-                          | { __typename: 'DataObjectTypeVideoSubtitle' }
-                          | { __typename: 'DataObjectTypeVideoThumbnail' }
-                          | null
-                      } | null
-                    }
-                  }
-                }
-                previousNftOwner:
-                  | {
-                      __typename: 'NftOwnerChannel'
-                      channel: {
-                        __typename?: 'Channel'
-                        ownerMember?: {
-                          __typename?: 'Membership'
-                          id: string
-                          handle: string
-                          metadata?: {
-                            __typename?: 'MemberMetadata'
-                            about?: string | null
-                            avatar?:
-                              | {
-                                  __typename?: 'AvatarObject'
-                                  avatarObject: {
-                                    __typename?: 'StorageDataObject'
-                                    id: string
-                                    resolvedUrls: Array<string>
-                                    createdAt: Date
-                                    size: string
-                                    isAccepted: boolean
-                                    ipfsHash: string
-                                    storageBag: { __typename?: 'StorageBag'; id: string }
-                                    type?:
-                                      | { __typename: 'DataObjectTypeChannelAvatar' }
-                                      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                                      | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                                      | { __typename: 'DataObjectTypeVideoMedia' }
-                                      | { __typename: 'DataObjectTypeVideoSubtitle' }
-                                      | { __typename: 'DataObjectTypeVideoThumbnail' }
-                                      | null
-                                  }
-                                }
-                              | { __typename?: 'AvatarUri'; avatarUri: string }
-                              | null
-                          } | null
-                        } | null
-                      }
-                    }
-                  | {
-                      __typename: 'NftOwnerMember'
-                      member: {
-                        __typename?: 'Membership'
-                        id: string
-                        handle: string
-                        metadata?: {
-                          __typename?: 'MemberMetadata'
-                          about?: string | null
-                          avatar?:
-                            | {
-                                __typename?: 'AvatarObject'
-                                avatarObject: {
-                                  __typename?: 'StorageDataObject'
-                                  id: string
-                                  resolvedUrls: Array<string>
-                                  createdAt: Date
-                                  size: string
-                                  isAccepted: boolean
-                                  ipfsHash: string
-                                  storageBag: { __typename?: 'StorageBag'; id: string }
-                                  type?:
-                                    | { __typename: 'DataObjectTypeChannelAvatar' }
-                                    | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                                    | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                                    | { __typename: 'DataObjectTypeVideoMedia' }
-                                    | { __typename: 'DataObjectTypeVideoSubtitle' }
-                                    | { __typename: 'DataObjectTypeVideoThumbnail' }
-                                    | null
-                                }
-                              }
-                            | { __typename?: 'AvatarUri'; avatarUri: string }
-                            | null
-                        } | null
-                      }
-                    }
-              }
-            | { __typename?: 'OpenAuctionStartedEventData' }
-            | { __typename?: 'VideoCreatedEventData' }
-            | { __typename?: 'VideoReactionEventData' }
-        } | null
+            | { __typename: 'VideoLiked'; videoId: string; videoTitle: string }
+            | { __typename?: 'VideoPosted' }
+        }
       }
     }>
   }
@@ -3613,13 +2991,13 @@ export type GetNftActivitiesQuery = {
   }
 }
 
-export const GetNotificationsConnectionDocument = gql`
-  query GetNotificationsConnection($accountId: String!, $first: Int!, $after: String) {
-    notificationsConnection(
+export const GetMembershipNotificationsConnectionDocument = gql`
+  query GetMembershipNotificationsConnection($accountId: String!, $first: Int!, $after: String) {
+    notificationInAppDeliveriesConnection(
       first: $first
       after: $after
-      orderBy: event_timestamp_DESC
-      where: { account: { id_eq: $accountId } }
+      orderBy: notification_createdAt_DESC
+      where: { notification: { account: { id_eq: $accountId } } }
     ) {
       pageInfo {
         hasNextPage
@@ -3629,104 +3007,73 @@ export const GetNotificationsConnectionDocument = gql`
       edges {
         cursor
         node {
-          event {
+          notification {
             id
-            timestamp
-            inBlock
-            data {
-              ... on AuctionBidMadeEventData {
-                bid {
-                  amount
-                  bidder {
-                    ...BasicMembershipFields
-                  }
-                  previousTopBid {
-                    bidder {
-                      ...BasicMembershipFields
-                    }
-                  }
-                  nft {
-                    video {
-                      ...BasicVideoActivityFields
-                    }
-                  }
-                }
-                nftOwner {
-                  ...BasicNftOwnerFields
-                }
+            createdAt
+            status {
+              __typename
+            }
+            notificationType {
+              ... on ChannelCreated {
+                __typename
+                channelId
+                channelTitle
               }
-              ... on NftBoughtEventData {
-                buyer {
-                  ...BasicMembershipFields
-                }
-                price
-                nft {
-                  video {
-                    ...BasicVideoActivityFields
-                  }
-                }
+              ... on CommentReply {
+                __typename
+                memberHandle
+                videoId
+                videoTitle
               }
-              ... on BidMadeCompletingAuctionEventData {
-                winningBid {
-                  bidder {
-                    ...BasicMembershipFields
-                  }
-                  amount
-                  nft {
-                    video {
-                      ...BasicVideoActivityFields
-                    }
-                  }
-                }
-                previousNftOwner {
-                  ...BasicNftOwnerFields
-                }
+              ... on ReactionToComment {
+                __typename
+                memberHandle
+                videoId
+                videoTitle
               }
-              ... on OpenAuctionBidAcceptedEventData {
-                winningBid {
-                  amount
-                  bidder {
-                    ...BasicMembershipFields
-                  }
-                  nft {
-                    video {
-                      ...BasicVideoActivityFields
-                    }
-                  }
-                }
-                previousNftOwner {
-                  ...BasicNftOwnerFields
-                }
+              ... on VideoPosted {
+                __typename
+                channelTitle
+                videoId
+                videoTitle
               }
-              ... on EnglishAuctionSettledEventData {
-                winningBid {
-                  bidder {
-                    ...BasicMembershipFields
-                  }
-                  nft {
-                    video {
-                      ...BasicVideoActivityFields
-                    }
-                  }
-                }
-                previousNftOwner {
-                  ...BasicNftOwnerFields
-                }
+              ... on NewAuction {
+                __typename
+                channelTitle
+                videoId
+                videoTitle
               }
-              ... on CommentCreatedEventData {
-                comment {
-                  id
-                  video {
-                    id
-                    title
-                  }
-                  parentComment {
-                    id
-                  }
-                  author {
-                    ...BasicMembershipFields
-                  }
-                }
+              ... on NewNftOnSale {
+                __typename
+                channelTitle
+                videoId
+                videoTitle
+              }
+              ... on HigherBidPlaced {
+                __typename
+                newBidderHandle
+                videoId
+                videoTitle
+              }
+              ... on EnglishAuctionWon {
+                __typename
+                videoId
+                videoTitle
+              }
+              ... on EnglishAuctionLost {
+                __typename
+                videoId
+                videoTitle
+              }
+              ... on OpenAuctionWon {
+                __typename
+                videoId
+                videoTitle
+              }
+              ... on OpenAuctionLost {
+                __typename
+                videoTitle
+                videoId
               }
             }
           }
@@ -3734,22 +3081,19 @@ export const GetNotificationsConnectionDocument = gql`
       }
     }
   }
-  ${BasicMembershipFieldsFragmentDoc}
-  ${BasicVideoActivityFieldsFragmentDoc}
-  ${BasicNftOwnerFieldsFragmentDoc}
 `
 
 /**
- * __useGetNotificationsConnectionQuery__
+ * __useGetMembershipNotificationsConnectionQuery__
  *
- * To run a query within a React component, call `useGetNotificationsConnectionQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetNotificationsConnectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetMembershipNotificationsConnectionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMembershipNotificationsConnectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetNotificationsConnectionQuery({
+ * const { data, loading, error } = useGetMembershipNotificationsConnectionQuery({
  *   variables: {
  *      accountId: // value for 'accountId'
  *      first: // value for 'first'
@@ -3757,29 +3101,207 @@ export const GetNotificationsConnectionDocument = gql`
  *   },
  * });
  */
-export function useGetNotificationsConnectionQuery(
-  baseOptions: Apollo.QueryHookOptions<GetNotificationsConnectionQuery, GetNotificationsConnectionQueryVariables>
+export function useGetMembershipNotificationsConnectionQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetMembershipNotificationsConnectionQuery,
+    GetMembershipNotificationsConnectionQueryVariables
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetNotificationsConnectionQuery, GetNotificationsConnectionQueryVariables>(
-    GetNotificationsConnectionDocument,
+  return Apollo.useQuery<GetMembershipNotificationsConnectionQuery, GetMembershipNotificationsConnectionQueryVariables>(
+    GetMembershipNotificationsConnectionDocument,
     options
   )
 }
-export function useGetNotificationsConnectionLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetNotificationsConnectionQuery, GetNotificationsConnectionQueryVariables>
+export function useGetMembershipNotificationsConnectionLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetMembershipNotificationsConnectionQuery,
+    GetMembershipNotificationsConnectionQueryVariables
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetNotificationsConnectionQuery, GetNotificationsConnectionQueryVariables>(
-    GetNotificationsConnectionDocument,
+  return Apollo.useLazyQuery<
+    GetMembershipNotificationsConnectionQuery,
+    GetMembershipNotificationsConnectionQueryVariables
+  >(GetMembershipNotificationsConnectionDocument, options)
+}
+export type GetMembershipNotificationsConnectionQueryHookResult = ReturnType<
+  typeof useGetMembershipNotificationsConnectionQuery
+>
+export type GetMembershipNotificationsConnectionLazyQueryHookResult = ReturnType<
+  typeof useGetMembershipNotificationsConnectionLazyQuery
+>
+export type GetMembershipNotificationsConnectionQueryResult = Apollo.QueryResult<
+  GetMembershipNotificationsConnectionQuery,
+  GetMembershipNotificationsConnectionQueryVariables
+>
+export const GetChannelNotificationsConnectionDocument = gql`
+  query GetChannelNotificationsConnection($accountId: String!, $first: Int!, $after: String) {
+    notificationInAppDeliveriesConnection(
+      first: $first
+      after: $after
+      orderBy: notification_createdAt_DESC
+      where: { notification: { account: { id_eq: $accountId } } }
+    ) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      totalCount
+      edges {
+        cursor
+        node {
+          notification {
+            id
+            createdAt
+            status {
+              __typename
+            }
+            notificationType {
+              ... on ChannelExcluded {
+                __typename
+              }
+              ... on VideoFeaturedOnCategoryPage {
+                __typename
+                categoryId
+                categoryName
+                videoTitle
+              }
+              ... on NftFeaturedOnMarketPlace {
+                __typename
+                videoId
+                videoTitle
+              }
+              ... on VideoFeaturedAsCategoryHero {
+                __typename
+                categoryId
+                categoryName
+                videoTitle
+              }
+              ... on VideoExcluded {
+                __typename
+                videoTitle
+              }
+              ... on NewChannelFollower {
+                __typename
+                followerHandle
+              }
+              ... on CommentPostedToVideo {
+                __typename
+                memberHandle
+                videoId
+                videoTitle
+              }
+              ... on VideoLiked {
+                __typename
+                videoId
+                videoTitle
+              }
+              ... on VideoDisliked {
+                __typename
+                videoId
+                videoTitle
+              }
+              ... on ChannelVerified {
+                __typename
+              }
+              ... on ChannelSuspended {
+                __typename
+              }
+              ... on NftPurchased {
+                __typename
+                buyerHandle
+                price
+                videoTitle
+                videoId
+              }
+              ... on CreatorReceivesAuctionBid {
+                __typename
+                amount
+                bidderHandle
+                videoId
+                videoTitle
+              }
+              ... on NftRoyaltyPaid {
+                __typename
+                amount
+                videoId
+                videoTitle
+              }
+              ... on EnglishAuctionSettled {
+                __typename
+                price
+                videoId
+                videoTitle
+              }
+              ... on DirectChannelPaymentByMember {
+                __typename
+                amount
+                payerHandle
+              }
+              ... on ChannelFundsWithdrawn {
+                __typename
+                amount
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useGetChannelNotificationsConnectionQuery__
+ *
+ * To run a query within a React component, call `useGetChannelNotificationsConnectionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetChannelNotificationsConnectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetChannelNotificationsConnectionQuery({
+ *   variables: {
+ *      accountId: // value for 'accountId'
+ *      first: // value for 'first'
+ *      after: // value for 'after'
+ *   },
+ * });
+ */
+export function useGetChannelNotificationsConnectionQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetChannelNotificationsConnectionQuery,
+    GetChannelNotificationsConnectionQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetChannelNotificationsConnectionQuery, GetChannelNotificationsConnectionQueryVariables>(
+    GetChannelNotificationsConnectionDocument,
     options
   )
 }
-export type GetNotificationsConnectionQueryHookResult = ReturnType<typeof useGetNotificationsConnectionQuery>
-export type GetNotificationsConnectionLazyQueryHookResult = ReturnType<typeof useGetNotificationsConnectionLazyQuery>
-export type GetNotificationsConnectionQueryResult = Apollo.QueryResult<
-  GetNotificationsConnectionQuery,
-  GetNotificationsConnectionQueryVariables
+export function useGetChannelNotificationsConnectionLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetChannelNotificationsConnectionQuery,
+    GetChannelNotificationsConnectionQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetChannelNotificationsConnectionQuery, GetChannelNotificationsConnectionQueryVariables>(
+    GetChannelNotificationsConnectionDocument,
+    options
+  )
+}
+export type GetChannelNotificationsConnectionQueryHookResult = ReturnType<
+  typeof useGetChannelNotificationsConnectionQuery
+>
+export type GetChannelNotificationsConnectionLazyQueryHookResult = ReturnType<
+  typeof useGetChannelNotificationsConnectionLazyQuery
+>
+export type GetChannelNotificationsConnectionQueryResult = Apollo.QueryResult<
+  GetChannelNotificationsConnectionQuery,
+  GetChannelNotificationsConnectionQueryVariables
 >
 export const GetMembershipNotificationPreferencesDocument = gql`
   query GetMembershipNotificationPreferences {

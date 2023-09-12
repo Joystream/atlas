@@ -1,9 +1,9 @@
-query GetNotificationsConnection($accountId: String!, $first: Int!, $after: String) {
-  notificationsConnection(
+query GetMembershipNotificationsConnection($accountId: String!, $first: Int!, $after: String) {
+  notificationInAppDeliveriesConnection(
     first: $first
     after: $after
-    orderBy: event_timestamp_DESC
-    where: { account: { id_eq: $accountId } }
+    orderBy: notification_createdAt_DESC
+    where: { notification: { account: { id_eq: $accountId } } }
   ) {
     pageInfo {
       hasNextPage
@@ -13,109 +13,187 @@ query GetNotificationsConnection($accountId: String!, $first: Int!, $after: Stri
     edges {
       cursor
       node {
-        event {
+        notification {
           id
-          timestamp
-          inBlock
-          data {
-            ... on AuctionBidMadeEventData {
-              bid {
-                amount
-                bidder {
-                  ...BasicMembershipFields
-                }
-                previousTopBid {
-                  bidder {
-                    ...BasicMembershipFields
-                  }
-                }
-                nft {
-                  video {
-                    ...BasicVideoActivityFields
-                  }
-                }
-              }
-              nftOwner {
-                ...BasicNftOwnerFields
-              }
+          createdAt
+          status {
+            __typename
+          }
+          notificationType {
+            ... on ChannelCreated {
+              __typename
+              channelId
+              channelTitle
             }
+            ... on CommentReply {
+              __typename
+              memberHandle
+              videoId
+              videoTitle
+            }
+            ... on ReactionToComment {
+              __typename
+              memberHandle
+              videoId
+              videoTitle
+            }
+            ... on VideoPosted {
+              __typename
+              channelTitle
+              videoId
+              videoTitle
+            }
+            ... on NewAuction {
+              __typename
+              channelTitle
+              videoId
+              videoTitle
+            }
+            ... on NewNftOnSale {
+              __typename
+              channelTitle
+              videoId
+              videoTitle
+            }
+            ... on HigherBidPlaced {
+              __typename
+              newBidderHandle
+              videoId
+              videoTitle
+            }
+            ... on EnglishAuctionWon {
+              __typename
+              videoId
+              videoTitle
+            }
+            ... on EnglishAuctionLost {
+              __typename
+              videoId
+              videoTitle
+            }
+            ... on OpenAuctionWon {
+              __typename
+              videoId
+              videoTitle
+            }
+            ... on OpenAuctionLost {
+              __typename
+              videoTitle
+              videoId
+            }
+          }
+        }
+      }
+    }
+  }
+}
 
-            ... on NftBoughtEventData {
-              buyer {
-                ...BasicMembershipFields
-              }
+query GetChannelNotificationsConnection($accountId: String!, $first: Int!, $after: String) {
+  notificationInAppDeliveriesConnection(
+    first: $first
+    after: $after
+    orderBy: notification_createdAt_DESC
+    where: { notification: { account: { id_eq: $accountId } } }
+  ) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    totalCount
+    edges {
+      cursor
+      node {
+        notification {
+          id
+          createdAt
+          status {
+            __typename
+          }
+          notificationType {
+            ... on ChannelExcluded {
+              __typename
+            }
+            ... on VideoFeaturedOnCategoryPage {
+              __typename
+              categoryId
+              categoryName
+              videoTitle
+            }
+            ... on NftFeaturedOnMarketPlace {
+              __typename
+              videoId
+              videoTitle
+            }
+            ... on VideoFeaturedAsCategoryHero {
+              __typename
+              categoryId
+              categoryName
+              videoTitle
+            }
+            ... on VideoExcluded {
+              __typename
+              videoTitle
+            }
+            ... on NewChannelFollower {
+              __typename
+              followerHandle
+            }
+            ... on CommentPostedToVideo {
+              __typename
+              memberHandle
+              videoId
+              videoTitle
+            }
+            ... on VideoLiked {
+              __typename
+              videoId
+              videoTitle
+            }
+            ... on VideoDisliked {
+              __typename
+              videoId
+              videoTitle
+            }
+            ... on ChannelVerified {
+              __typename
+            }
+            ... on ChannelSuspended {
+              __typename
+            }
+            ... on NftPurchased {
+              __typename
+              buyerHandle
               price
-              nft {
-                video {
-                  ...BasicVideoActivityFields
-                }
-              }
+              videoTitle
+              videoId
             }
-
-            ... on BidMadeCompletingAuctionEventData {
-              winningBid {
-                bidder {
-                  ...BasicMembershipFields
-                }
-                amount
-                nft {
-                  video {
-                    ...BasicVideoActivityFields
-                  }
-                }
-              }
-              previousNftOwner {
-                ...BasicNftOwnerFields
-              }
+            ... on CreatorReceivesAuctionBid {
+              __typename
+              amount
+              bidderHandle
+              videoId
+              videoTitle
             }
-
-            ... on OpenAuctionBidAcceptedEventData {
-              winningBid {
-                amount
-                bidder {
-                  ...BasicMembershipFields
-                }
-                nft {
-                  video {
-                    ...BasicVideoActivityFields
-                  }
-                }
-              }
-              previousNftOwner {
-                ...BasicNftOwnerFields
-              }
+            ... on NftRoyaltyPaid {
+              __typename
+              amount
+              videoId
+              videoTitle
             }
-
-            ... on EnglishAuctionSettledEventData {
-              winningBid {
-                bidder {
-                  ...BasicMembershipFields
-                }
-                nft {
-                  video {
-                    ...BasicVideoActivityFields
-                  }
-                }
-              }
-              previousNftOwner {
-                ...BasicNftOwnerFields
-              }
+            ... on EnglishAuctionSettled {
+              __typename
+              price
+              videoId
+              videoTitle
             }
-
-            ... on CommentCreatedEventData {
-              comment {
-                id
-                video {
-                  id
-                  title
-                }
-                parentComment {
-                  id
-                }
-                author {
-                  ...BasicMembershipFields
-                }
-              }
+            ... on DirectChannelPaymentByMember {
+              __typename
+              amount
+              payerHandle
+            }
+            ... on ChannelFundsWithdrawn {
+              __typename
+              amount
             }
           }
         }
