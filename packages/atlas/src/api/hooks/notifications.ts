@@ -5,28 +5,39 @@ import {
   GetNftActivitiesCountQueryVariables,
   GetNftActivitiesQuery,
   GetNftActivitiesQueryVariables,
-  GetNotificationsConnectionQuery,
-  GetNotificationsConnectionQueryVariables,
+  useGetChannelNotificationsConnectionQuery,
+  useGetMembershipNotificationsConnectionQuery,
   useGetNftActivitiesCountQuery,
   useGetNftActivitiesQuery,
-  useGetNotificationsConnectionQuery,
+  useMarkNotificationsAsReadMutation,
 } from '@/api/queries/__generated__/notifications.generated'
+import { UseNotificationsOptions } from '@/providers/notifications/notifications.hooks'
 
 import { NftActivityOrderByInput } from '../queries/__generated__/baseTypes.generated'
 
-export const useRawNotifications = (
-  accountId: string,
-  opts?: QueryHookOptions<GetNotificationsConnectionQuery, GetNotificationsConnectionQueryVariables>
-) => {
-  const { data, ...rest } = useGetNotificationsConnectionQuery({
+export const useRawNotifications = (accountId: string, options?: UseNotificationsOptions) => {
+  const { type = 'membership', ...opts } = options ?? {}
+
+  const membershipNotifications = useGetMembershipNotificationsConnectionQuery({
     variables: { first: 10, accountId },
-    skip: !accountId,
+    skip: !accountId || type !== 'membership',
     ...opts,
   })
+  const channelNotifications = useGetChannelNotificationsConnectionQuery({
+    variables: { first: 10, accountId },
+    skip: !accountId || type !== 'channel',
+    ...opts,
+  })
+
+  const [markNotificationsAsReadMutation] = useMarkNotificationsAsReadMutation()
+
+  const { data, ...rest } = membershipNotifications ?? channelNotifications
+
   return {
-    notifications: data?.notificationsConnection.edges || [],
-    totalCount: data?.notificationsConnection.totalCount,
-    pageInfo: data?.notificationsConnection.pageInfo,
+    notifications: data?.notificationInAppDeliveriesConnection.edges || [],
+    totalCount: data?.notificationInAppDeliveriesConnection.totalCount,
+    pageInfo: data?.notificationInAppDeliveriesConnection.pageInfo,
+    markNotificationsAsReadMutation,
     ...rest,
   }
 }

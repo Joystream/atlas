@@ -1,33 +1,47 @@
 import { QueryHookOptions } from '@apollo/client'
 import BN from 'bn.js'
+import { useState } from 'react'
 
 import { useRawNotifications } from '@/api/hooks/notifications'
-import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import {
-  GetNotificationsConnectionQuery,
-  GetNotificationsConnectionQueryVariables,
+  GetChannelNotificationsConnectionQuery,
+  GetMembershipNotificationsConnectionQuery,
 } from '@/api/queries/__generated__/notifications.generated'
 import { useUser } from '@/providers/user/user.hooks'
-import { ConsoleLogger } from '@/utils/logs'
-import { convertDateFormat } from '@/utils/time'
 
 import { useNotificationStore } from './notifications.store'
-import { NftNotificationRecord, NotificationRecord } from './notifications.types'
+import { NotificationData, NotificationRecord } from './notifications.types'
+
+export type UseNotificationsOptions = Pick<QueryHookOptions, 'notifyOnNetworkStatusChange'> & {
+  type?: 'membership' | 'channel'
+}
 
 export type UseNotifications = ReturnType<typeof useNotifications>
-export const useNotifications = (
-  opts?: QueryHookOptions<GetNotificationsConnectionQuery, GetNotificationsConnectionQueryVariables>
-) => {
-  const { accountId, memberId } = useUser()
-  const { notifications: rawNotifications, ...rest } = useRawNotifications(accountId ?? '', opts)
+export const useNotifications = (opts?: UseNotificationsOptions) => {
+  const { accountId } = useUser()
   const {
-    readNotificationsIdsMap,
+    notifications: rawNotifications,
+    markNotificationsAsReadMutation,
+    refetch,
+    ...rest
+  } = useRawNotifications(accountId ?? '', opts)
+
+  const {
     lastSeenNotificationBlock,
-    actions: { markNotificationsAsRead, markNotificationsAsUnread, setLastSeenNotificationBlock },
+    actions: { setLastSeenNotificationBlock },
   } = useNotificationStore()
-  const parsedNotifications = rawNotifications.map(({ node }) => node.event && parseNotification(node.event, memberId))
-  const notifications = parsedNotifications.filter((n): n is NotificationRecord => !!n)
-  const notificationsWithReadState = notifications.map((n) => ({ ...n, read: !!readNotificationsIdsMap[n.id] }))
+
+  const [optimisticRead, setOptimisticRead] = useState<string[]>([])
+  const notifications = rawNotifications.map(({ node }): NotificationRecord => {
+    const { id, createdAt, status, notificationType } = node.notification
+    return {
+      id,
+      date: createdAt,
+      block: createdAt.getTime(), // TODO rename this field since it's not block anymore
+      read: status.__typename === 'Read' || optimisticRead.includes(id),
+      ...parseNotificationType(notificationType as NotificationType),
+    }
+  })
 
   // those are different from unread notifications!
   const lastSeenNotificationIndex = notifications.findIndex(
@@ -35,147 +49,65 @@ export const useNotifications = (
   )
   const unseenNotificationsCounts = lastSeenNotificationIndex === -1 ? notifications.length : lastSeenNotificationIndex
 
+  const markNotificationsAsRead = async (notifications: NotificationRecord[]) => {
+    const notificationIds = notifications.map(({ id }) => id)
+    setOptimisticRead(notificationIds)
+    const { errors } = await markNotificationsAsReadMutation({ variables: { notificationIds } })
+    if (errors) {
+      return setOptimisticRead([])
+    }
+    await refetch()
+    setOptimisticRead([])
+  }
+
   return {
-    notifications: notificationsWithReadState,
+    notifications,
     unseenNotificationsCounts,
     setLastSeenNotificationBlock,
     markNotificationsAsRead,
-    markNotificationsAsUnread,
+    markNotificationsAsUnread: (_: NotificationRecord) => undefined, // TODO remove
     ...rest,
   }
 }
 
-type NotificationEvent = NonNullable<
-  GetNotificationsConnectionQuery['notificationsConnection']['edges'][number]['node']['event']
+type QueriedTypes<T extends { __typename?: string }> = T extends { __typename: infer U }
+  ? U extends string
+    ? T
+    : never
+  : never
+
+type NotificationType = QueriedTypes<
+  | GetMembershipNotificationsConnectionQuery['notificationInAppDeliveriesConnection']['edges'][number]['node']['notification']['notificationType']
+  | GetChannelNotificationsConnectionQuery['notificationInAppDeliveriesConnection']['edges'][number]['node']['notification']['notificationType']
 >
 
-const getVideoDataFromEvent = (notificationEvent: NotificationEvent) => {
-  switch (notificationEvent?.data.__typename) {
-    case 'AuctionBidMadeEventData':
-      return notificationEvent.data.bid.nft.video
-    case 'BidMadeCompletingAuctionEventData':
-    case 'EnglishAuctionSettledEventData':
-    case 'OpenAuctionBidAcceptedEventData':
-      return notificationEvent.data.winningBid.nft.video
-    case 'CommentCreatedEventData':
-      return notificationEvent.data.comment.video
-    case 'NftBoughtEventData':
-      return notificationEvent.data.nft.video
+const parseNotificationType = (notificationType: NotificationType): NotificationData => {
+  switch (notificationType.__typename) {
+    case 'ChannelFundsWithdrawn':
+    case 'CreatorReceivesAuctionBid':
+    case 'DirectChannelPaymentByMember':
+    case 'NftRoyaltyPaid':
+      return toNotificationData(notificationType, { 'amount': new BN(notificationType.amount) })
+
+    case 'EnglishAuctionSettled':
+    case 'NftPurchased':
+      return toNotificationData(notificationType, { price: new BN(notificationType.price) })
 
     default:
-      return undefined
+      return toNotificationData(notificationType, {})
   }
 }
 
-const parseNotification = (
-  notificationEvent: NotificationEvent,
-  memberId: string | null
-): NotificationRecord | null => {
-  const video = getVideoDataFromEvent(notificationEvent)
-  const commonFields: NftNotificationRecord = {
-    id: notificationEvent.id,
-    date: convertDateFormat(notificationEvent.timestamp),
-    block: notificationEvent.inBlock,
-    video: {
-      id: video?.id || '',
-      title: video?.title || '',
-    },
-  }
+type ToNotificationData<T, K extends keyof T> = T extends { __typename: infer U }
+  ? Omit<T, '__typename' | K> extends infer V
+    ? { type: U } & { [k in K]: BN } & V
+    : never
+  : never
 
-  if (notificationEvent.data.__typename === 'AuctionBidMadeEventData') {
-    return {
-      type: notificationEvent.data.bid.previousTopBid?.bidder.id === memberId ? 'got-outbid' : 'bid-made',
-      ...commonFields,
-      member: notificationEvent.data.bid.bidder as BasicMembershipFieldsFragment,
-      bidAmount: new BN(notificationEvent.data.bid.amount),
-    }
-  } else if (notificationEvent.data.__typename === 'NftBoughtEventData') {
-    return {
-      type: 'bought',
-      ...commonFields,
-      member: notificationEvent.data.buyer as BasicMembershipFieldsFragment,
-      price: new BN(notificationEvent.data.price),
-    }
-  } else if (notificationEvent.data.__typename === 'BidMadeCompletingAuctionEventData') {
-    if (notificationEvent.data.winningBid.bidder.id !== memberId) {
-      // member is the owner, somebody bought their NFT
-      return {
-        type: 'bought',
-        ...commonFields,
-        member: notificationEvent.data.winningBid.bidder as BasicMembershipFieldsFragment,
-        price: new BN(notificationEvent.data.winningBid.amount),
-      }
-    } else if (notificationEvent.data.winningBid.bidder.id === memberId) {
-      // member is the winner, skip the notification
-      return null
-    } else {
-      // member is not the owner and not the winner, they participated in the auction
-      return {
-        type: 'auction-ended',
-        ...commonFields,
-      }
-    }
-  } else if (notificationEvent.data.__typename === 'OpenAuctionBidAcceptedEventData') {
-    if (notificationEvent.data.winningBid?.bidder.id === memberId) {
-      // member is the previous owner, he accepted a bid
-      return {
-        type: 'bid-accepted',
-        ...commonFields,
-        member:
-          (notificationEvent.data.previousNftOwner.__typename === 'NftOwnerChannel'
-            ? notificationEvent.data.previousNftOwner.channel.ownerMember
-            : notificationEvent.data.previousNftOwner.member) || null,
-        bidAmount: new BN(notificationEvent.data.winningBid?.amount || 0),
-      }
-    } else {
-      // member is not the winner, the participated in the auction
-      return {
-        type: 'auction-ended',
-        ...commonFields,
-      }
-    }
-  } else if (notificationEvent.data.__typename === 'EnglishAuctionSettledEventData') {
-    if (notificationEvent.data.winningBid.bidder?.id !== memberId) {
-      // member is the owner, their auction got settled
-      return {
-        type: 'auction-settled-owner',
-        ...commonFields,
-      }
-    } else if (notificationEvent.data.winningBid.bidder.id === memberId) {
-      // member is the winner, auction they won got settled
-      return {
-        type: 'auction-settled-winner',
-        ...commonFields,
-      }
-    } else {
-      // member is not the owner and not the winner, they participated in the auction
-      return {
-        type: 'auction-ended',
-        ...commonFields,
-      }
-    }
-  } else if (
-    notificationEvent.data.__typename === 'CommentCreatedEventData' &&
-    !notificationEvent.data.comment.parentComment
-  ) {
-    return {
-      type: 'video-commented',
-      member: notificationEvent.data.comment.author as BasicMembershipFieldsFragment,
-      commentId: notificationEvent.data.comment.id,
-      ...commonFields,
-    }
-  } else if (
-    notificationEvent.data.__typename === 'CommentCreatedEventData' &&
-    notificationEvent.data.comment.parentComment
-  ) {
-    return {
-      type: 'comment-reply',
-      member: notificationEvent.data.comment.author as BasicMembershipFieldsFragment,
-      commentId: notificationEvent.data.comment.id,
-      ...commonFields,
-    }
-  } else {
-    ConsoleLogger.error('Unknown event type for notifications')
-    return null
-  }
+const toNotificationData = <T extends { __typename: string }, K extends Exclude<keyof T, '__typename'> | never>(
+  notificationType: T,
+  data: { [k in K]: BN }
+) => {
+  const { __typename, ...rest } = notificationType
+  return { type: __typename as T['__typename'], ...rest, ...data } as unknown as ToNotificationData<T, K>
 }
