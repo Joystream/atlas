@@ -202,6 +202,12 @@ query GetChannelNotificationsConnection($accountId: String!, $first: Int!, $afte
   }
 }
 
+mutation MarkNotificationsAsRead($notificationIds: [String!]!) {
+  markNotificationsAsRead(notificationIds: $notificationIds) {
+    notificationsReadIds
+  }
+}
+
 query GetMembershipNotificationPreferences {
   accountData {
     notificationPreferences {
