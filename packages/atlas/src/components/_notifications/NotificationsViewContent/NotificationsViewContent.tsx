@@ -39,7 +39,6 @@ type NotificationsViewContentProps = {
 export const NotificationsViewContent = ({
   unreadNumber,
   markNotificationsAsRead,
-  markNotificationsAsUnread,
   notifications,
   loading,
   pageInfo,
@@ -111,8 +110,7 @@ export const NotificationsViewContent = ({
                     <StyledNotificationTile
                       key={`notification-${notification.id}-${idx}`}
                       notification={notification}
-                      onMarkAsRead={() => markNotificationsAsRead(notification)}
-                      onMarkAsUnread={() => markNotificationsAsUnread(notification)}
+                      onMarkAsRead={() => markNotificationsAsRead([notification])}
                     />
                   ) : (
                     <StyledNotificationLoader key={idx} />

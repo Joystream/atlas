@@ -65,7 +65,6 @@ export const useNotifications = (opts?: UseNotificationsOptions) => {
     unseenNotificationsCounts,
     setLastSeenNotificationBlock,
     markNotificationsAsRead,
-    markNotificationsAsUnread: (_: NotificationRecord) => undefined, // TODO remove
     ...rest,
   }
 }
