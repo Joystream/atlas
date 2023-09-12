@@ -30,7 +30,14 @@ import { formatDateAgo } from '@/utils/time'
 import { NoActorNotificationAvatar } from './NoActorNotificationAvatar'
 import { IconContainer, IconWrapper, StyledLink, StyledListItem } from './NotificationTile.styles'
 
-const getNotificationText = (notification: NotificationRecord, channelTitle?: string): ReactNode => {
+// TODO make all fields required
+type NotificationUX = {
+  icon?: ReactNode
+  link?: string
+  avatar?: { type: 'current-channel' | 'current-membership' | 'channel' | 'membership'; value: string }
+  text: ReactNode
+}
+const getNotificationUX = (notification: NotificationRecord, channelTitle?: string): NotificationUX => {
   switch (notification.type) {
     //
     // Member notifications events
@@ -38,85 +45,130 @@ const getNotificationText = (notification: NotificationRecord, channelTitle?: st
 
     // Generic
     case 'ChannelCreated':
-      return <>New channel created: “{notification.channelTitle}“</>
+      return {
+        avatar: { type: 'channel', value: notification.channelId },
+        text: <>New channel created: “{notification.channelTitle}“</>,
+      }
 
     // Engagement
     case 'CommentReply':
-      return (
-        <>
-          {notification.memberHandle} replied to your commend under video: “{notification.videoTitle}”
-        </>
-      )
+      return {
+        avatar: { type: 'membership', value: notification.memberHandle },
+        text: (
+          <>
+            {notification.memberHandle} replied to your commend under video: “{notification.videoTitle}”
+          </>
+        ),
+      }
     case 'ReactionToComment':
-      return (
-        <>
-          {notification.memberHandle} reacted to your commend on the video: “{notification.videoTitle}”
-        </>
-      )
+      return {
+        avatar: { type: 'membership', value: notification.memberHandle },
+        text: (
+          <>
+            {notification.memberHandle} reacted to your commend on the video: “{notification.videoTitle}”
+          </>
+        ),
+      }
 
     // Followed channels
     case 'VideoPosted':
-      return (
-        <>
-          {notification.channelTitle} posted a new video: “{notification.videoTitle}”
-        </>
-      )
+      return {
+        // avatar: { type: 'channel', value: notification.channelId }, // AVATAR MISSING
+        text: (
+          <>
+            {notification.channelTitle} posted a new video: “{notification.videoTitle}”
+          </>
+        ),
+      }
     case 'NewNftOnSale':
-      return (
-        <>
-          {notification.channelTitle} started the sale of NFT: “{notification.videoTitle}”
-        </>
-      )
+      return {
+        // avatar: { type: 'channel', value: notification.channelId }, // AVATAR MISSING
+        text: (
+          <>
+            {notification.channelTitle} started the sale of NFT: “{notification.videoTitle}”
+          </>
+        ),
+      }
     case 'NewAuction':
-      return (
-        <>
-          {notification.channelTitle} started an auction for NFT: “{notification.videoTitle}”
-        </>
-      )
+      return {
+        // avatar: { type: 'channel', value: notification.channelId }, // AVATAR MISSING
+        text: (
+          <>
+            {notification.channelTitle} started an auction for NFT: “{notification.videoTitle}”
+          </>
+        ),
+      }
 
     // NFT
     case 'HigherBidPlaced':
-      return (
-        <>
-          {notification.newBidderHandle} placed a higher bid in the auction for NFT: “{notification.videoTitle}”
-        </>
-      )
+      return {
+        avatar: { type: 'membership', value: notification.newBidderHandle },
+        text: (
+          <>
+            {notification.newBidderHandle} placed a higher bid in the auction for NFT: “{notification.videoTitle}”
+          </>
+        ),
+      }
     case 'EnglishAuctionWon':
-      return <>You won a timed auction for NFT: “{notification.videoTitle}”</>
+      return {
+        avatar: { type: 'current-membership', value: '' },
+        text: <>You won a timed auction for NFT: “{notification.videoTitle}”</>,
+      }
     case 'EnglishAuctionLost':
-      return <>You lost a timed auction for NFT: “{notification.videoTitle}”</>
+      return {
+        avatar: { type: 'current-membership', value: '' },
+        text: <>You lost a timed auction for NFT: “{notification.videoTitle}”</>,
+      }
     case 'OpenAuctionWon':
-      return <>You won an open auction for NFT: “{notification.videoTitle}”</>
+      return {
+        avatar: { type: 'current-membership', value: '' },
+        text: <>You won an open auction for NFT: “{notification.videoTitle}”</>,
+      }
     case 'OpenAuctionLost':
-      return <>You lost an open auction for NFT: “{notification.videoTitle}”</>
-    // case 'NFT bid becomes withdrawable (for bidder)':
-    //   return <>Your bid is withdrawable for NFT: “{notification.videoTitle}”</>
+      return {
+        avatar: { type: 'current-membership', value: '' },
+        text: <>You lost an open auction for NFT: “{notification.videoTitle}”</>,
+      }
+    // case 'NFT bid becomes withdrawable (for bidder)': // MISSING
+    //   return {
+    //     avatar: { type: 'current-membership', value: '' },
+    //     text: <>Your bid is withdrawable for NFT: “{notification.videoTitle}”</>,
+    //   }
 
     // Payouts
-    // case 'Funds received':
-    //   return (
-    //     <>
-    //       You have received{' '}
-    //       <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" /> for
-    //       your channel “{notification.channelTitle}” from Council Payout proposal
-    //     </>
-    //   )
-    // case 'Funds sent':
-    //   return (
-    //     <>
-    //       You transferred{' '}
-    //       <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" /> from
-    //       you member wallet to external wallet: {notification.walletaddress}
-    //     </>
-    //   )
-    // case 'Member received transfer from DAO WG':
-    //   return (
-    //     <>
-    //       You have received{' '}
-    //       <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" /> from
-    //       “{notification.group}” working group
-    //     </>
-    //   )
+    // case 'Funds received': // MISSING
+    //   return {
+    //     avatar: { type: 'channel', value: notification.channelId },
+    //     text: (
+    //       <>
+    //         You have received{' '}
+    //         <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" />{' '}
+    //         for your channel “{notification.channelTitle}” from Council Payout proposal
+    //       </>
+    //     ),
+    //   }
+    // case 'Funds sent': // MISSING
+    //   return {
+    //     avatar: { type: 'channel', value: notification.channelId },
+    //     text: (
+    //       <>
+    //         You transferred{' '}
+    //         <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" />{' '}
+    //         from you member wallet to external wallet: {notification.walletaddress}
+    //       </>
+    //     ),
+    //   }
+    // case 'Member received transfer from DAO WG': // MISSING
+    //   return {
+    //     avatar: { type: 'channel', value: notification.channelId },
+    //     text: (
+    //       <>
+    //         You have received{' '}
+    //         <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" />{' '}
+    //         from “{notification.group}” working group
+    //       </>
+    //     ),
+    //   }
 
     //
     // Channel notifications events
@@ -124,117 +176,180 @@ const getNotificationText = (notification: NotificationRecord, channelTitle?: st
 
     // Content moderation and featuring
     case 'ChannelExcluded':
-      return <>Your channel “{channelTitle}” is excluded from App</>
+      return {
+        avatar: { type: 'current-channel', value: '' },
+        text: <>Your channel “{channelTitle}” is excluded from App</>,
+      }
     case 'VideoExcluded':
-      return <>Your video is excluded from App: “{notification.videoTitle}”</>
+      return {
+        avatar: { type: 'current-channel', value: '' },
+        text: <>Your video is excluded from App: “{notification.videoTitle}”</>,
+      }
     case 'VideoFeaturedOnCategoryPage':
-      return (
-        <>
-          Your video was featured on the “{notification.categoryName}” category page: “{notification.videoTitle}”
-        </>
-      )
+      return {
+        avatar: { type: 'current-channel', value: '' },
+        text: (
+          <>
+            Your video was featured on the “{notification.categoryName}” category page: “{notification.videoTitle}”
+          </>
+        ),
+      }
     case 'NftFeaturedOnMarketPlace':
-      return <>Your NFT was featured in the marketplace featured section: “{notification.videoTitle}”</>
+      return {
+        avatar: { type: 'current-channel', value: '' },
+        text: <>Your NFT was featured in the marketplace featured section: “{notification.videoTitle}”</>,
+      }
     case 'VideoFeaturedAsCategoryHero':
-      return (
-        <>
-          “{notification.categoryName}” category page featured your video as the category hero video: “How can Web3 use
-          AI?”
-        </>
-      )
+      return {
+        avatar: { type: 'current-channel', value: '' },
+        text: (
+          <>
+            “{notification.categoryName}” category page featured your video as the category hero video: “How can Web3
+            use AI?”
+          </>
+        ),
+      }
 
     // Engagement
     case 'NewChannelFollower':
-      return <>{notification.followerHandle} followed your channel</>
+      return {
+        avatar: { type: 'membership', value: notification.followerHandle },
+        text: <>{notification.followerHandle} followed your channel</>,
+      }
     case 'CommentPostedToVideo':
-      return (
-        <>
-          {notification.memberHandle} left a comment on your video: “{notification.videoTitle}”
-        </>
-      )
+      return {
+        avatar: { type: 'membership', value: notification.memberHandle },
+        text: (
+          <>
+            {notification.memberHandle} left a comment on your video: “{notification.videoTitle}”
+          </>
+        ),
+      }
     case 'VideoLiked':
-      return (
-        <>
-          {/*notification.memberHandle*/ 'Someone'} liked your video: “{notification.videoTitle}”
-        </>
-      )
+      return {
+        // avatar: { type: 'membership', value: notification.memberHandle }, // AVATAR MISSING
+        text: (
+          <>
+            {/*notification.memberHandle*/ 'Someone'} liked your video: “{notification.videoTitle}”
+          </>
+        ),
+      }
     case 'VideoDisliked':
-      return (
-        <>
-          {/*notification.memberHandle*/ 'Someone'} disliked your video: “{notification.videoTitle}”
-        </>
-      )
+      return {
+        // avatar: { type: 'membership', value: notification.memberHandle }, // AVATAR MISSING
+        text: (
+          <>
+            {/*notification.memberHandle*/ 'Someone'} disliked your video: “{notification.videoTitle}”
+          </>
+        ),
+      }
 
     // Youtube Partnership Program
-    // case 'YPP sign up successful':
-    //   return <>Your channel was successfully signed up for Youtube Partnership Program</>
-    // case 'Someone signed up using your referral link':
-    //   return <>{notification.memberHandle} signed up for YPP using your referral link</>
+    // case 'YPP sign up successful': // MISSING
+    //   return {
+    //     avatar: { type: 'current-channel', value: '' },
+    //     text: <>Your channel was successfully signed up for Youtube Partnership Program</>,
+    //   }
+    // case 'Someone signed up using your referral link': // MISSING
+    //   return {
+    //     avatar: { type: 'membership', value: notification.memberHandle },
+    //     text: <>{notification.memberHandle} signed up for YPP using your referral link</>,
+    //   }
     case 'ChannelVerified':
-      return <>Your channel got verified in our Youtube Partnership Program</>
+      return {
+        avatar: { type: 'current-channel', value: '' },
+        text: <>Your channel got verified in our Youtube Partnership Program</>,
+      }
     case 'ChannelSuspended':
-      return <>Your channel got suspended in our Youtube Partnership Program</>
+      return {
+        avatar: { type: 'current-channel', value: '' },
+        text: <>Your channel got suspended in our Youtube Partnership Program</>,
+      }
 
     // NFTs Auctions
     case 'NftPurchased':
-      return (
-        <>
-          {notification.buyerHandle} purchased for{' '}
-          <NumberFormat as="span" value={notification.price} format="short" withToken withDenomination="before" /> your
-          NFT: “{notification.videoTitle}”
-        </>
-      )
+      return {
+        avatar: { type: 'membership', value: notification.buyerHandle },
+        text: (
+          <>
+            {notification.buyerHandle} purchased for{' '}
+            <NumberFormat as="span" value={notification.price} format="short" withToken withDenomination="before" />{' '}
+            your NFT: “{notification.videoTitle}”
+          </>
+        ),
+      }
     case 'NftRoyaltyPaid':
-      return (
-        <>
-          You received{' '}
-          <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" />{' '}
-          royalties from your NFT: “{notification.videoTitle}”
-        </>
-      )
+      return {
+        avatar: { type: 'current-channel', value: '' },
+        text: (
+          <>
+            You received{' '}
+            <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" />{' '}
+            royalties from your NFT: “{notification.videoTitle}”
+          </>
+        ),
+      }
     case 'CreatorReceivesAuctionBid':
-      return (
-        <>
-          {notification.bidderHandle} placed a bid of{' '}
-          <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" /> for
-          your NFT: “{notification.videoTitle}”
-        </>
-      )
+      return {
+        avatar: { type: 'membership', value: notification.bidderHandle },
+        text: (
+          <>
+            {notification.bidderHandle} placed a bid of{' '}
+            <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" />{' '}
+            for your NFT: “{notification.videoTitle}”
+          </>
+        ),
+      }
     case 'EnglishAuctionSettled':
-      return <>Timed auction expired on your NFT: “{notification.videoTitle}”</>
+      return {
+        avatar: { type: 'current-channel', value: '' },
+        text: <>Timed auction expired on your NFT: “{notification.videoTitle}”</>,
+      }
 
     // Payouts
     case 'DirectChannelPaymentByMember':
-      return (
-        <>
-          {notification.payerHandle} transferred{' '}
-          <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" /> to
-          your channel
-        </>
-      )
-    // case 'Channel received transfer from WG':
-    //   return (
-    //     <>
-    //       You have received{' '}
-    //       <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" /> from
-    //       “marketing” working group
-    //     </>
-    //   )
-    // case 'New payout is claimable from Council Payout proposal':
-    //   return (
-    //     <>
-    //       You have{' '}
-    //       <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" /> to
-    //       claim from Council Payout proposal
-    //     </>
-    //   )
+      return {
+        avatar: { type: 'membership', value: notification.payerHandle },
+        text: (
+          <>
+            {notification.payerHandle} transferred{' '}
+            <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" /> to
+            your channel
+          </>
+        ),
+      }
+    // case 'Channel received transfer from WG': // MISSING
+    //   return {
+    //     avatar: { type: 'current-channel', value: '' },
+    //     text: (
+    //       <>
+    //         You have received{' '}
+    //         <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" />{' '}
+    //         from “marketing” working group
+    //       </>
+    //     ),
+    //   }
+    // case 'New payout is claimable from Council Payout proposal': // MISSING
+    //   return {
+    //     avatar: { type: 'current-channel', value: '' },
+    //     text: (
+    //       <>
+    //         You have{' '}
+    //         <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" /> to
+    //         claim from Council Payout proposal
+    //       </>
+    //     ),
+    //   }
     case 'ChannelFundsWithdrawn':
-      return (
-        <>
-          <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" />{' '}
-          transferred from your channel to your membership account
-        </>
-      )
+      return {
+        avatar: { type: 'current-membership', value: '' },
+        text: (
+          <>
+            <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" />{' '}
+            transferred from your channel to your membership account
+          </>
+        ),
+      }
   }
 }
 
@@ -254,6 +369,7 @@ export const NotificationTile: FC<NotificationProps> = ({
   onMarkAsRead,
 }) => {
   const { activeChannel } = useUser()
+  const { icon, link, avatar, text } = getNotificationUX(notification, activeChannel?.title ?? undefined)
   const { date, member, read } = notification
   const { urls: avatarUrls } = getMemberAvatar(member)
   const ref = useRef<HTMLButtonElement>(null)
@@ -305,7 +421,7 @@ export const NotificationTile: FC<NotificationProps> = ({
                 </Text>
               )}
               <Text as="span" variant="t100">
-                {getNotificationText(notification, activeChannel?.title ?? undefined)}
+                {text}
               </Text>
             </>
           ) : (
