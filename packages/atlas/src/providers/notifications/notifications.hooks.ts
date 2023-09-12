@@ -1,30 +1,31 @@
 import { QueryHookOptions } from '@apollo/client'
 import BN from 'bn.js'
 import { useState } from 'react'
+import { useLocation } from 'react-router'
 
 import { useRawNotifications } from '@/api/hooks/notifications'
 import {
   GetChannelNotificationsConnectionQuery,
   GetMembershipNotificationsConnectionQuery,
 } from '@/api/queries/__generated__/notifications.generated'
+import { absoluteRoutes } from '@/config/routes'
 import { useUser } from '@/providers/user/user.hooks'
 
 import { useNotificationStore } from './notifications.store'
 import { NotificationData, NotificationRecord } from './notifications.types'
 
-export type UseNotificationsOptions = Pick<QueryHookOptions, 'notifyOnNetworkStatusChange'> & {
-  type?: 'membership' | 'channel'
-}
-
 export type UseNotifications = ReturnType<typeof useNotifications>
-export const useNotifications = (opts?: UseNotificationsOptions) => {
+export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkStatusChange'>) => {
+  const { pathname } = useLocation()
+  const isStudio = pathname.search(absoluteRoutes.studio.index()) !== -1
   const { accountId } = useUser()
+
   const {
     notifications: rawNotifications,
     markNotificationsAsReadMutation,
     refetch,
     ...rest
-  } = useRawNotifications(accountId ?? '', opts)
+  } = useRawNotifications(accountId ?? '', isStudio ? 'channel' : 'membership', opts)
 
   const {
     lastSeenNotificationBlock,

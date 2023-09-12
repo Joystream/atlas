@@ -11,13 +11,14 @@ import {
   useGetNftActivitiesQuery,
   useMarkNotificationsAsReadMutation,
 } from '@/api/queries/__generated__/notifications.generated'
-import { UseNotificationsOptions } from '@/providers/notifications/notifications.hooks'
 
 import { NftActivityOrderByInput } from '../queries/__generated__/baseTypes.generated'
 
-export const useRawNotifications = (accountId: string, options?: UseNotificationsOptions) => {
-  const { type = 'membership', ...opts } = options ?? {}
-
+export const useRawNotifications = (
+  accountId: string,
+  type: 'membership' | 'channel',
+  opts?: Pick<QueryHookOptions, 'notifyOnNetworkStatusChange'>
+) => {
   const membershipNotifications = useGetMembershipNotificationsConnectionQuery({
     variables: { first: 10, accountId },
     skip: !accountId || type !== 'membership',
