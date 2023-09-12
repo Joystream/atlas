@@ -1,13 +1,13 @@
 import { ReactElement } from 'react'
 
-import { SvgJoyTokenMonochrome16 } from '@/assets/icons'
+import { SvgActionCalendar, SvgJoyTokenMonochrome16 } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
 import { FlexBox } from '@/components/FlexBox'
+import { Information } from '@/components/Information'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { InfoBox, Wrapper } from '@/components/_crt/RevenueShareWidget/RevenueShareWidget.styles'
-import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { formatDateTime } from '@/utils/time'
 
 export type RevenueShareWidgetProps = {
@@ -15,7 +15,8 @@ export type RevenueShareWidgetProps = {
   userShare: number
   userTokens: number
   shareEndDate: Date
-  onClaim: () => void
+  onClaim?: () => void
+  isActive: boolean
 }
 export const RevenueShareWidget = ({
   userShare,
@@ -23,10 +24,10 @@ export const RevenueShareWidget = ({
   tokenName,
   onClaim,
   shareEndDate,
+  isActive,
 }: RevenueShareWidgetProps) => {
-  const smMatch = useMediaMatch('sm')
   return (
-    <Wrapper gap={2} alignItems="center">
+    <Wrapper isActive={isActive} gap={2} alignItems="center">
       <InfoBox>
         <Detail title="TOKEN NAME">
           <FlexBox>
@@ -57,9 +58,19 @@ export const RevenueShareWidget = ({
           </Text>
         </Detail>
       </InfoBox>
-      <Button fullWidth onClick={onClaim}>
-        Claim your share
-      </Button>
+      {isActive ? (
+        <Button fullWidth onClick={onClaim}>
+          Claim your share
+        </Button>
+      ) : (
+        <FlexBox alignItems="center">
+          <SvgActionCalendar />
+          <Text variant="t200-strong" as="p">
+            Upcoming
+          </Text>
+          <Information text="lorem ipsum" />
+        </FlexBox>
+      )}
     </Wrapper>
   )
 }

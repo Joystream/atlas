@@ -3,12 +3,12 @@ import styled from '@emotion/styled'
 import { FlexBox } from '@/components/FlexBox'
 import { cVar, media, sizes } from '@/styles'
 
-export const Wrapper = styled(FlexBox)`
+export const Wrapper = styled(FlexBox)<{ isActive: boolean }>`
   display: grid;
   grid-template-columns: 1fr;
   width: 100%;
   background-color: ${cVar('colorBackground')};
-  box-shadow: -4px 0 0 0 ${cVar('colorBorderPrimary')};
+  box-shadow: ${(props) => (props.isActive ? `-4px 0 0 0 ${cVar('colorBorderPrimary')}` : 'none')};
   gap: ${sizes(4)};
   padding: ${sizes(6)};
   ${media.sm} {

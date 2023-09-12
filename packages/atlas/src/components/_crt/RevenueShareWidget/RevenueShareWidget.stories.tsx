@@ -11,7 +11,18 @@ export default {
     userTokens: 150,
     shareEndDate: new Date(),
     onClaim: () => undefined,
+    isActive: false,
   },
 } as Meta<RevenueShareWidgetProps>
 
-export const Default: StoryFn<RevenueShareWidgetProps> = (args) => <RevenueShareWidget {...args} />
+const Template: StoryFn<RevenueShareWidgetProps> = (args) => <RevenueShareWidget {...args} />
+
+export const Active = Template.bind({})
+Active.args = {
+  isActive: true,
+}
+
+export const Inactive = Template.bind({})
+Inactive.args = {
+  isActive: false,
+}
