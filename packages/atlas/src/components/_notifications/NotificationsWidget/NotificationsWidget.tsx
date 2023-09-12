@@ -159,9 +159,9 @@ export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ type, ...res
                           first: 10,
                         },
                         updateQuery: (prev, { fetchMoreResult }) => {
-                          fetchMoreResult.notificationsConnection.edges = [
-                            ...(prev.notificationsConnection?.edges ?? []),
-                            ...fetchMoreResult.notificationsConnection.edges,
+                          fetchMoreResult.notificationInAppDeliveriesConnection.edges = [
+                            ...(prev.notificationInAppDeliveriesConnection?.edges ?? []),
+                            ...fetchMoreResult.notificationInAppDeliveriesConnection.edges,
                           ]
                           return fetchMoreResult
                         },

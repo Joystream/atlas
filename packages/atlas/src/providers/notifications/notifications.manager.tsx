@@ -15,28 +15,26 @@ export const NotificationsManager: FC = () => {
             return fetchMoreResult
           }
 
-          const prevFirstEvent = prev.notificationsConnection.edges.find(({ node }) => node.event)?.node.event
-          if (!prevFirstEvent) {
+          const prevNotifs = prev.notificationInAppDeliveriesConnection.edges
+          const nextNotifs = fetchMoreResult.notificationInAppDeliveriesConnection.edges
+
+          const prevFirstNotif = prevNotifs[0]?.node.notification
+          if (!prevFirstNotif) {
             return fetchMoreResult
           }
 
-          if (prevFirstEvent.id !== fetchMoreResult.notificationsConnection.edges[0]?.node.event?.id) {
-            const numberOfNewNotifications = fetchMoreResult.notificationsConnection.edges.findIndex(
-              ({ node }) => node.event?.id === prevFirstEvent?.id
-            )
-            return {
-              ...prev,
-              notificationsConnection: {
-                ...prev.notificationsConnection,
-                edges: [
-                  ...fetchMoreResult.notificationsConnection.edges.slice(0, numberOfNewNotifications),
-                  ...prev.notificationsConnection.edges,
-                ],
-              },
-            }
+          if (prevFirstNotif.id === nextNotifs[0]?.node.notification.id) {
+            return prev
           }
 
-          return prev
+          const indexMatch = nextNotifs.findIndex(({ node }) => node.notification.id === prevFirstNotif.id)
+          const numberOfNewNotifications = indexMatch === -1 ? nextNotifs.length : indexMatch
+          const edges = [...nextNotifs.slice(0, numberOfNewNotifications), ...prevNotifs]
+
+          return {
+            ...prev,
+            notificationsConnection: { ...prev.notificationInAppDeliveriesConnection, edges },
+          }
         },
       })
     }, atlasConfig.features.notifications.pollingInterval)
