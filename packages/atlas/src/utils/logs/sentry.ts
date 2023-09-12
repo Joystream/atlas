@@ -1,3 +1,4 @@
+import { ApolloError, isApolloError } from '@apollo/client'
 import * as Sentry from '@sentry/react'
 import { Replay, Severity, SeverityLevel } from '@sentry/react'
 
@@ -29,12 +30,29 @@ class _SentryLogger {
       ignoreErrors: [
         'ResizeObserver loop limit exceeded',
         'ResizeObserver loop completed with undelivered notifications',
+        'Unauthorized',
+        'Failed to fetch',
       ],
+      normalizeDepth: 6,
       // This sets the sample rate to be 0%, so we'll only use manually recorded replays
       replaysSessionSampleRate: 0,
       replaysOnErrorSampleRate: 0,
+      beforeSend: (event, hint) => {
+        if (isApolloError(hint.originalException as Error)) {
+          // json.stringify should we replace for a code check as soon as Orion releases patch
+          return event.exception?.values?.some((exception) => !exception.mechanism?.handled) &&
+            !JSON.stringify((hint.originalException as ApolloError).networkError).includes('Unauthorized')
+            ? event
+            : null
+        }
+
+        if ((hint.originalException as Error).name === 'ServerError') {
+          return event.exception?.values?.some((exception) => !exception.mechanism?.handled) ? event : null
+        }
+        return event
+      },
     })
-    this.replay = new Sentry.Replay({ sessionSampleRate: 0, errorSampleRate: 0 })
+    this.replay = new Sentry.Replay()
     this.initialized = true
   }
 

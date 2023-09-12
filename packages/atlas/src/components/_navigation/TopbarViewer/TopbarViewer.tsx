@@ -1,5 +1,5 @@
 import { ChangeEvent, FC, MouseEvent, useCallback, useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useSearchParams } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import shallow from 'zustand/shallow'
 
@@ -12,6 +12,7 @@ import { NotificationsWidget } from '@/components/_notifications/NotificationsWi
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
 import { useAuth } from '@/providers/auth/auth.hooks'
@@ -35,6 +36,9 @@ import {
 export const TopbarViewer: FC = () => {
   const { activeMembership, isLoggedIn, membershipsLoading } = useUser()
   const { isAuthenticating } = useAuth()
+  const [searchParams] = useSearchParams()
+  const [utmSource, utmCampaign] = [searchParams.get('utm_source'), searchParams.get('utm_campaign')]
+  const { trackClickTopBarSignInButton } = useSegmentAnalytics()
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
 
   const { urls: memberAvatarUrls, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(activeMembership)
@@ -99,6 +103,11 @@ export const TopbarViewer: FC = () => {
   const topbarButtonLoading = isAuthenticating || membershipsLoading
   // todo: add logic after orion is done
   const unseenChannelNotifications = 2
+
+  if (pathname === absoluteRoutes.viewer.ypp()) {
+    return null
+  }
+
   return (
     <>
       <StyledTopbarBase
@@ -159,7 +168,10 @@ export const TopbarViewer: FC = () => {
                         icon={<SvgActionMember />}
                         iconPlacement="left"
                         size="medium"
-                        onClick={() => setAuthModalOpenName(getCorrectLoginModal())}
+                        onClick={() => {
+                          trackClickTopBarSignInButton(utmSource, utmCampaign)
+                          setAuthModalOpenName(getCorrectLoginModal())
+                        }}
                       >
                         Sign in
                       </Button>

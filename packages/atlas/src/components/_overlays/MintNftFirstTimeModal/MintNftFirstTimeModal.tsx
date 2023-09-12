@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import { SvgOtherVideoTile } from '@/assets/illustrations'
+import { SvgMintNftVideoTile } from '@/assets/illustrations'
 import { Text } from '@/components/Text'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { Dialog } from '@/components/_overlays/Dialog'
@@ -24,7 +24,7 @@ export const MintNftFirstTimeModal: FC<MintNftFirstTimeModalProps> = ({
   return (
     <StyledModal show={show}>
       <IllustrationWrapper>
-        <SvgOtherVideoTile />
+        <SvgMintNftVideoTile />
       </IllustrationWrapper>
       <Dialog
         title="Mint your video as NFT"

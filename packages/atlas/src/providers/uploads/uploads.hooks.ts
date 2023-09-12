@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosProgressEvent, AxiosRequestConfig } from 'axios'
+import { AxiosError, AxiosProgressEvent, AxiosRequestConfig } from 'axios'
 import { debounce } from 'lodash-es'
 import { useCallback, useRef } from 'react'
 import { useMutation } from 'react-query'
@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router'
 import * as rax from 'retry-axios'
 import { RetryConfig } from 'retry-axios'
 
+import { axiosInstance } from '@/api/axios'
 import { absoluteRoutes } from '@/config/routes'
 import { useStorageOperators } from '@/providers/assets/assets.provider'
 import { OperatorInfo } from '@/providers/assets/assets.types'
@@ -18,6 +19,7 @@ import { InputAssetUpload, StartFileUploadOptions } from './uploads.types'
 
 import { useSnackbar } from '../snackbars'
 
+const MAX_BUCKET_RETRY = 3
 const RETRIES_COUNT = 3
 const RETRY_DELAY = 1000
 const UPLOADING_SNACKBAR_TIMEOUT = 8000
@@ -33,7 +35,7 @@ export const useStartFileUpload = () => {
   const { displaySnackbar } = useSnackbar()
   const { getClosestStorageOperatorForBag, markStorageOperatorFailed } = useStorageOperators()
   const { mutateAsync: uploadMutation } = useMutation('upload-assets', (params: MutationParams) =>
-    axios.post(params.url, params.data, params.config)
+    axiosInstance.post(params.url, params.data, params.config)
   )
 
   const { addAssetFile, addAssetToUploads, setUploadStatus, addProcessingAsset } = useUploadsStore(
@@ -182,6 +184,11 @@ export const useStartFileUpload = () => {
           (!axiosError.response?.status || (axiosError.response.status >= 400 && axiosError.response.status <= 500))
         if (networkFailure) {
           markStorageOperatorFailed(uploadOperator.id)
+        }
+
+        const retry = opts?.retry ?? 0
+        if (networkFailure && retry < MAX_BUCKET_RETRY) {
+          return startFileUpload(file, asset, { ...opts, retry: retry + 1 })
         }
 
         const snackbarDescription = networkFailure ? 'Host is not responding' : 'Unexpected error occurred'

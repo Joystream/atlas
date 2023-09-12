@@ -298,12 +298,11 @@ export type FollowChannelMutationVariables = Types.Exact<{
 
 export type FollowChannelMutation = {
   __typename?: 'Mutation'
-  followChannel: { __typename?: 'ChannelFollowResult'; channelId: string; follows: number; cancelToken: string }
+  followChannel: { __typename?: 'ChannelFollowResult'; channelId: string; follows: number; added: boolean }
 }
 
 export type UnfollowChannelMutationVariables = Types.Exact<{
   channelId: Types.Scalars['String']
-  token: Types.Scalars['String']
 }>
 
 export type UnfollowChannelMutation = {
@@ -474,6 +473,7 @@ export type GetPayloadDataByCommitmentQuery = {
       | { __typename?: 'BidMadeCompletingAuctionEventData' }
       | { __typename?: 'BuyNowCanceledEventData' }
       | { __typename?: 'BuyNowPriceUpdatedEventData' }
+      | { __typename?: 'ChannelCreatedEventData' }
       | { __typename?: 'ChannelFundsWithdrawnEventData' }
       | { __typename?: 'ChannelPaymentMadeEventData' }
       | {
@@ -500,6 +500,7 @@ export type GetPayloadDataByCommitmentQuery = {
       | { __typename?: 'ChannelRewardClaimedAndWithdrawnEventData' }
       | { __typename?: 'ChannelRewardClaimedEventData' }
       | { __typename?: 'CommentCreatedEventData' }
+      | { __typename?: 'CommentReactionEventData' }
       | { __typename?: 'CommentTextUpdatedEventData' }
       | { __typename?: 'EnglishAuctionSettledEventData' }
       | { __typename?: 'EnglishAuctionStartedEventData' }
@@ -507,9 +508,12 @@ export type GetPayloadDataByCommitmentQuery = {
       | { __typename?: 'MetaprotocolTransactionStatusEventData' }
       | { __typename?: 'NftBoughtEventData' }
       | { __typename?: 'NftIssuedEventData' }
+      | { __typename?: 'NftOfferedEventData' }
       | { __typename?: 'NftSellOrderMadeEventData' }
       | { __typename?: 'OpenAuctionBidAcceptedEventData' }
       | { __typename?: 'OpenAuctionStartedEventData' }
+      | { __typename?: 'VideoCreatedEventData' }
+      | { __typename?: 'VideoReactionEventData' }
   }>
 }
 
@@ -544,6 +548,7 @@ export type GetChannelPaymentEventsQuery = {
         }
       | { __typename: 'BuyNowCanceledEventData' }
       | { __typename: 'BuyNowPriceUpdatedEventData' }
+      | { __typename: 'ChannelCreatedEventData' }
       | {
           __typename: 'ChannelFundsWithdrawnEventData'
           amount: string
@@ -562,6 +567,7 @@ export type GetChannelPaymentEventsQuery = {
       | { __typename: 'ChannelRewardClaimedAndWithdrawnEventData' }
       | { __typename: 'ChannelRewardClaimedEventData'; amount: string }
       | { __typename: 'CommentCreatedEventData' }
+      | { __typename: 'CommentReactionEventData' }
       | { __typename: 'CommentTextUpdatedEventData' }
       | {
           __typename: 'EnglishAuctionSettledEventData'
@@ -592,6 +598,7 @@ export type GetChannelPaymentEventsQuery = {
           previousNftOwner: { __typename: 'NftOwnerChannel' } | { __typename: 'NftOwnerMember' }
         }
       | { __typename: 'NftIssuedEventData' }
+      | { __typename: 'NftOfferedEventData' }
       | { __typename: 'NftSellOrderMadeEventData' }
       | {
           __typename: 'OpenAuctionBidAcceptedEventData'
@@ -608,6 +615,56 @@ export type GetChannelPaymentEventsQuery = {
           previousNftOwner: { __typename: 'NftOwnerChannel' } | { __typename: 'NftOwnerMember' }
         }
       | { __typename: 'OpenAuctionStartedEventData' }
+      | { __typename: 'VideoCreatedEventData' }
+      | { __typename: 'VideoReactionEventData' }
+  }>
+}
+
+export type GetChannelsPaymentEventsQueryVariables = Types.Exact<{
+  limit?: Types.InputMaybe<Types.Scalars['Int']>
+}>
+
+export type GetChannelsPaymentEventsQuery = {
+  __typename?: 'Query'
+  events: Array<{
+    __typename?: 'Event'
+    data:
+      | { __typename?: 'AuctionBidCanceledEventData' }
+      | { __typename?: 'AuctionBidMadeEventData' }
+      | { __typename?: 'AuctionCanceledEventData' }
+      | { __typename?: 'BidMadeCompletingAuctionEventData' }
+      | { __typename?: 'BuyNowCanceledEventData' }
+      | { __typename?: 'BuyNowPriceUpdatedEventData' }
+      | { __typename?: 'ChannelCreatedEventData' }
+      | { __typename?: 'ChannelFundsWithdrawnEventData' }
+      | {
+          __typename?: 'ChannelPaymentMadeEventData'
+          amount: string
+          payeeChannel?: {
+            __typename?: 'Channel'
+            id: string
+            title?: string | null
+            avatarPhoto?: { __typename?: 'StorageDataObject'; resolvedUrls: Array<string>; isAccepted: boolean } | null
+          } | null
+        }
+      | { __typename?: 'ChannelPayoutsUpdatedEventData' }
+      | { __typename?: 'ChannelRewardClaimedAndWithdrawnEventData' }
+      | { __typename?: 'ChannelRewardClaimedEventData' }
+      | { __typename?: 'CommentCreatedEventData' }
+      | { __typename?: 'CommentReactionEventData' }
+      | { __typename?: 'CommentTextUpdatedEventData' }
+      | { __typename?: 'EnglishAuctionSettledEventData' }
+      | { __typename?: 'EnglishAuctionStartedEventData' }
+      | { __typename?: 'MemberBannedFromChannelEventData' }
+      | { __typename?: 'MetaprotocolTransactionStatusEventData' }
+      | { __typename?: 'NftBoughtEventData' }
+      | { __typename?: 'NftIssuedEventData' }
+      | { __typename?: 'NftOfferedEventData' }
+      | { __typename?: 'NftSellOrderMadeEventData' }
+      | { __typename?: 'OpenAuctionBidAcceptedEventData' }
+      | { __typename?: 'OpenAuctionStartedEventData' }
+      | { __typename?: 'VideoCreatedEventData' }
+      | { __typename?: 'VideoReactionEventData' }
   }>
 }
 
@@ -941,7 +998,7 @@ export const FollowChannelDocument = gql`
     followChannel(channelId: $channelId) {
       channelId
       follows
-      cancelToken
+      added
     }
   }
 `
@@ -977,8 +1034,8 @@ export type FollowChannelMutationOptions = Apollo.BaseMutationOptions<
   FollowChannelMutationVariables
 >
 export const UnfollowChannelDocument = gql`
-  mutation UnfollowChannel($channelId: String!, $token: String!) {
-    unfollowChannel(channelId: $channelId, token: $token) {
+  mutation UnfollowChannel($channelId: String!) {
+    unfollowChannel(channelId: $channelId) {
       channelId
       follows
     }
@@ -1003,7 +1060,6 @@ export type UnfollowChannelMutationFn = Apollo.MutationFunction<
  * const [unfollowChannelMutation, { data, loading, error }] = useUnfollowChannelMutation({
  *   variables: {
  *      channelId: // value for 'channelId'
- *      token: // value for 'token'
  *   },
  * });
  */
@@ -1525,6 +1581,66 @@ export type GetChannelPaymentEventsLazyQueryHookResult = ReturnType<typeof useGe
 export type GetChannelPaymentEventsQueryResult = Apollo.QueryResult<
   GetChannelPaymentEventsQuery,
   GetChannelPaymentEventsQueryVariables
+>
+export const GetChannelsPaymentEventsDocument = gql`
+  query GetChannelsPaymentEvents($limit: Int = 500) {
+    events(where: { data: { isTypeOf_eq: "ChannelPaymentMadeEventData" } }, orderBy: inBlock_DESC, limit: $limit) {
+      data {
+        ... on ChannelPaymentMadeEventData {
+          amount
+          payeeChannel {
+            id
+            title
+            avatarPhoto {
+              resolvedUrls
+              isAccepted
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useGetChannelsPaymentEventsQuery__
+ *
+ * To run a query within a React component, call `useGetChannelsPaymentEventsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetChannelsPaymentEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetChannelsPaymentEventsQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useGetChannelsPaymentEventsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetChannelsPaymentEventsQuery, GetChannelsPaymentEventsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetChannelsPaymentEventsQuery, GetChannelsPaymentEventsQueryVariables>(
+    GetChannelsPaymentEventsDocument,
+    options
+  )
+}
+export function useGetChannelsPaymentEventsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetChannelsPaymentEventsQuery, GetChannelsPaymentEventsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetChannelsPaymentEventsQuery, GetChannelsPaymentEventsQueryVariables>(
+    GetChannelsPaymentEventsDocument,
+    options
+  )
+}
+export type GetChannelsPaymentEventsQueryHookResult = ReturnType<typeof useGetChannelsPaymentEventsQuery>
+export type GetChannelsPaymentEventsLazyQueryHookResult = ReturnType<typeof useGetChannelsPaymentEventsLazyQuery>
+export type GetChannelsPaymentEventsQueryResult = Apollo.QueryResult<
+  GetChannelsPaymentEventsQuery,
+  GetChannelsPaymentEventsQueryVariables
 >
 export const GetTopSellingChannelsFromThreePeriodsDocument = gql`
   query GetTopSellingChannelsFromThreePeriods($limit: Int!, $where: ExtendedChannelWhereInput) {

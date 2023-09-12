@@ -1,8 +1,8 @@
-import axios from 'axios'
 import { useEffect, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 
+import { axiosInstance } from '@/api/axios'
 import { useFullVideosConnection } from '@/api/hooks/videosConnection'
 import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { SvgActionAddVideo, SvgActionUpload, SvgAlertsInformative24 } from '@/assets/icons'
@@ -13,9 +13,11 @@ import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
 import { Select } from '@/components/_inputs/Select'
+import { MintNftFirstTimeModal } from '@/components/_overlays/MintNftFirstTimeModal'
 import { MintNftModal } from '@/components/_overlays/MintNftModal'
 import { VideoTileDraft } from '@/components/_video/VideoTileDraft'
 import { VideoTilePublisher } from '@/components/_video/VideoTilePublisher'
+import { YppStatusPill } from '@/components/_ypp/YppStatusPill'
 import { atlasConfig } from '@/config'
 import { cancelledVideoFilter } from '@/config/contentFilter'
 import { absoluteRoutes } from '@/config/routes'
@@ -26,12 +28,13 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { chanelUnseenDraftsSelector, channelDraftsSelector, useDraftStore } from '@/providers/drafts'
 import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
+import { usePersonalDataStore } from '@/providers/personalData'
 import { useSnackbar } from '@/providers/snackbars'
 import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { sizes } from '@/styles'
 import { createPlaceholderData } from '@/utils/data'
-import { SentryLogger } from '@/utils/logs'
+import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
 import { YppVideoDto } from '@/views/studio/MyVideosView/MyVideosView.types'
 
@@ -42,6 +45,7 @@ import {
   StyledPagination,
   StyledSelect,
   TabsContainer,
+  TitleBox,
 } from './MyVideos.styles'
 import { NewVideoTile } from './NewVideoTile'
 
@@ -53,6 +57,7 @@ const INITIAL_FIRST = 50
 const OPEN_TAB_SNACKBAR = 'OPEN_TAB_SNACKBAR'
 const REMOVE_DRAFT_SNACKBAR = 'REMOVE_DRAFT_SNACKBAR'
 const SNACKBAR_TIMEOUT = 5000
+const MINTING_CONFIRMATION_ID = 'minting-confirmation'
 
 const YOUTUBE_BACKEND_URL = atlasConfig.features.ypp.youtubeSyncApiUrl
 
@@ -69,10 +74,20 @@ export const MyVideosView = () => {
   const smMatch = useMediaMatch('sm')
   const mdMatch = useMediaMatch('md')
   const { setNftToMint } = useNftActions()
+  const [shouldHideMintModal, setShouldHideMintModal] = useState(false)
+  const [showMintModal, setShowMintModal] = useState(currentChannel?.yppStatus === 'Verified')
+
+  const mintConfirmationDismissed = usePersonalDataStore((state) =>
+    state.dismissedMessages.some((message) => message.id === MINTING_CONFIRMATION_ID)
+  )
+  const updateMintConfirmationDismiss = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
 
   const { isLoading: isCurrentlyUploadedVideoIdsLoading, data: yppDAta } = useQuery(
     `ypp-ba-videos-${channelId}`,
-    () => axios.get<YppVideoDto[]>(`${YOUTUBE_BACKEND_URL}/channels/${channelId}/videos`),
+    () =>
+      axiosInstance
+        .get<YppVideoDto[]>(`${YOUTUBE_BACKEND_URL}/channels/${channelId}/videos`)
+        .catch(() => ConsoleLogger.warn('Failed to fetch YPP videos from channel')),
     {
       enabled: !!channelId && !!YOUTUBE_BACKEND_URL,
       retry: 1,
@@ -328,13 +343,27 @@ export const MyVideosView = () => {
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: tab === 'Drafts' ? unseenDrafts.length : 0 }))
   return (
     <>
+      <MintNftFirstTimeModal
+        shouldHideNextTime={shouldHideMintModal}
+        onShouldHideNextTime={setShouldHideMintModal}
+        show={showMintModal && currentChannel?.yppStatus === 'Verified' && !mintConfirmationDismissed}
+        onClose={() => {
+          if (shouldHideMintModal) {
+            updateMintConfirmationDismiss(MINTING_CONFIRMATION_ID, true)
+          }
+          setShowMintModal(false)
+        }}
+      />
       <MintNftModal />
 
       <LimitedWidthContainer>
         {headTags}
-        <Text as="h1" variant="h700" margin={{ top: 12, bottom: 12 }}>
-          My videos
-        </Text>
+        <TitleBox>
+          <Text as="h1" variant="h700">
+            My videos
+          </Text>
+          {currentChannel && <YppStatusPill />}
+        </TitleBox>
         {!smMatch && sortVisibleAndUploadButtonVisible && (
           <MobileButton size="large" icon={<SvgActionAddVideo />} fullWidth {...uploadVideoButtonProps}>
             Upload video

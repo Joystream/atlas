@@ -1,4 +1,4 @@
-import { FC, SyntheticEvent, VideoHTMLAttributes, useEffect, useRef, useState } from 'react'
+import { FC, SyntheticEvent, VideoHTMLAttributes, useCallback, useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { SvgActionPause, SvgActionPlay, SvgActionSoundOff, SvgActionSoundOn } from '@/assets/icons'
@@ -39,6 +39,7 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
   const [isPosterVisible, setIsPosterVisible] = useState(true)
   const [isPlaying, setIsPlaying] = useState(autoPlay)
   const [isMuted, setIsMuted] = useState(true)
+  const [canPlay, setCanPlay] = useState(false)
 
   const initialRender = useRef(true)
   useEffect(() => {
@@ -50,27 +51,34 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
     }
   }, [autoPlay, playing])
 
-  const playVideo = () => {
-    videoRef.current?.play().then(() => {
-      setIsPlaying(true)
-      setIsPosterVisible(false)
-    })
-  }
+  const playVideo = useCallback(() => {
+    if (videoRef.current && canPlay) {
+      videoRef.current
+        .play()
+        .then(() => {
+          setIsPlaying(true)
+          setIsPosterVisible(false)
+        })
+        .catch((error) => {
+          ConsoleLogger.error('Failed to play video', error)
+        })
+    }
+  }, [canPlay])
 
-  const pauseVideo = () => {
-    if (videoRef.current) {
+  const pauseVideo = useCallback(() => {
+    if (videoRef.current && canPlay) {
       videoRef.current.pause()
       setIsPlaying(false)
       if (videoRef.current?.currentTime && videoRef.current.currentTime < 1) {
         setIsPosterVisible(true)
       }
     }
-  }
+  }, [canPlay])
 
   useEffect(() => {
     // show poster again when src changes
     setIsPosterVisible(true)
-    if (!videoRef.current || playing === undefined) {
+    if (!videoRef.current || playing === undefined || !canPlay) {
       return
     }
     if (playing) {
@@ -78,7 +86,7 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
     } else {
       pauseVideo()
     }
-  }, [handleActions, playing, src])
+  }, [canPlay, handleActions, pauseVideo, playVideo, playing, src])
 
   const handlePlay = (e: SyntheticEvent<HTMLVideoElement, Event>) => {
     setIsPlaying(true)
@@ -118,6 +126,10 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
           ref={videoRef}
           onEnded={handleEnded}
           onPlay={handlePlay}
+          onCanPlay={(event) => {
+            setCanPlay(true)
+            props.onCanPlay?.(event)
+          }}
           resolvedPosterUrls={poster}
           {...props}
           muted={handleActions ? isMuted : props.muted}

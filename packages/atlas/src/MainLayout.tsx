@@ -6,6 +6,7 @@ import { StudioLoading } from '@/components/_loaders/StudioLoading'
 import { CookiePopover } from '@/components/_overlays/CookiePopover'
 import { atlasConfig } from '@/config'
 import { BASE_PATHS, absoluteRoutes } from '@/config/routes'
+import { useTimeMismatchWarning } from '@/hooks/useTimeMismatchWarning'
 import { transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
 import { isBrowserOutdated } from '@/utils/browser'
@@ -21,23 +22,30 @@ import { ViewerLayout } from './views/viewer/ViewerLayout'
 history.scrollRestoration = 'manual'
 const ROUTING_ANIMATION_OFFSET = 100
 
-const LoadableStudioLayout = loadable(() => import('./views/studio/StudioLayout'), {
-  fallback: (
-    <>
-      <TopbarBase
-        fullLogoNode={<AppLogo variant="studio" height={32} width={undefined} />}
-        logoLinkUrl={absoluteRoutes.studio.index()}
-      />
-      <StudioLoading />
-    </>
-  ),
-})
+const LoadableStudioLayout = loadable(
+  () => import('./views/studio/StudioLayout').then((module) => ({ default: module.StudioLayout })),
+  {
+    fallback: (
+      <>
+        <TopbarBase
+          fullLogoNode={<AppLogo variant="studio" height={32} width={undefined} />}
+          logoLinkUrl={absoluteRoutes.studio.index()}
+        />
+        <StudioLoading />
+      </>
+    ),
+  }
+)
 
-const LoadablePlaygroundLayout = loadable(() => import('./views/playground/PlaygroundLayout'), {
-  fallback: <h1>Loading Playground...</h1>,
-})
+const LoadablePlaygroundLayout = loadable(
+  () => import('./views/playground/PlaygroundLayout').then((module) => ({ default: module.PlaygroundLayout })),
+  {
+    fallback: <h1>Loading Playground...</h1>,
+  }
+)
 
 export const MainLayout: FC = () => {
+  useTimeMismatchWarning()
   const scrollPosition = useRef<number>(0)
   const location = useLocation()
 

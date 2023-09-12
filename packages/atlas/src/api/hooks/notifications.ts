@@ -15,15 +15,12 @@ import {
 import { NftActivityOrderByInput } from '../queries/__generated__/baseTypes.generated'
 
 export const useRawNotifications = (
-  memberId: string | null,
+  accountId: string,
   opts?: QueryHookOptions<GetNotificationsConnectionQuery, GetNotificationsConnectionQueryVariables>
 ) => {
   const { data, ...rest } = useGetNotificationsConnectionQuery({
-    variables: {
-      first: 10,
-      memberId: memberId || '',
-    },
-    skip: !memberId,
+    variables: { first: 10, accountId },
+    skip: !accountId,
     ...opts,
   })
   return {

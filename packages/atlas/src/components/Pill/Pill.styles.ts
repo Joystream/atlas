@@ -57,6 +57,10 @@ const variantStyles = ({ variant }: PillProps) => {
       return css`
         background-color: ${cVar('colorBackgroundError')};
       `
+    case 'success':
+      return css`
+        background-color: ${cVar('colorBackgroundSuccessMuted')};
+      `
     default:
       return css`
         background-color: ${cVar('colorBackgroundStrong')};

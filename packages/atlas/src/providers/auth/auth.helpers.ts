@@ -2,16 +2,18 @@ import { ScryptOpts, scrypt } from '@noble/hashes/scrypt'
 import { KeyringPair } from '@polkadot/keyring/types'
 import { hexToU8a, u8aToHex } from '@polkadot/util'
 import { mnemonicToEntropy as _mnemonicToEntropy, cryptoWaitReady } from '@polkadot/util-crypto'
-import axios, { isAxiosError } from 'axios'
+import { isAxiosError } from 'axios'
 import { entropyToMnemonic as _entropyToMnemonic } from 'bip39'
 import { Buffer } from 'buffer'
 import { AES, enc, lib, mode } from 'crypto-js'
 
+import { axiosInstance } from '@/api/axios'
 import { atlasConfig } from '@/config'
 import { ORION_AUTH_URL } from '@/config/env'
 import { keyring } from '@/joystream-lib/lib'
 import { getWalletsList } from '@/providers/wallet/wallet.helpers'
-import { SentryLogger } from '@/utils/logs'
+import { ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { withTimeout } from '@/utils/misc'
 
 import { AuthModals, LogInErrors, OrionAccountError, RegisterParams, RegisterPayload } from './auth.types'
 
@@ -21,7 +23,7 @@ export const getArtifactId = async (email: string, password: string) => {
 
 export const handleAnonymousAuth = async (userId?: string | null) => {
   try {
-    const response = await axios.post<{
+    const response = await axiosInstance.post<{
       success: boolean
       userId: string
     }>(
@@ -45,7 +47,7 @@ export const handleAnonymousAuth = async (userId?: string | null) => {
 
 export const getArtifacts = async (id: string, email: string, password: string) => {
   try {
-    const res = await axios.get<{ cipherIv: string; encryptedSeed: string }>(
+    const res = await axiosInstance.get<{ cipherIv: string; encryptedSeed: string }>(
       `${ORION_AUTH_URL}/artifacts?id=${id}&email=${encodeURIComponent(email)}`
     )
     const { cipherIv, encryptedSeed: encryptedEntropy } = res.data
@@ -91,7 +93,7 @@ export function aes256CbcDecrypt(encryptedData: string, key: Buffer, iv: Buffer)
 
 export const decodeSessionEncodedSeedToMnemonic = async (encodedSeed: string) => {
   try {
-    const { data } = await axios.get(`${ORION_AUTH_URL}/session-artifacts`, { withCredentials: true })
+    const { data } = await axiosInstance.get(`${ORION_AUTH_URL}/session-artifacts`, { withCredentials: true })
 
     if (!(data.cipherKey || data.cipherIv)) {
       return null
@@ -102,7 +104,7 @@ export const decodeSessionEncodedSeedToMnemonic = async (encodedSeed: string) =>
     return _entropyToMnemonic(Buffer.from(decryptedSeed.slice(2, decryptedSeed.length), 'hex'))
   } catch (e) {
     if (isAxiosError(e) && e.response?.data.message === 'isAxiosError') {
-      logoutRequest()
+      logoutRequest().catch((error) => ConsoleLogger.warn('Failed to logout on decoding error', error))
     }
     return null
   }
@@ -117,7 +119,7 @@ export const loginRequest = (
     action: 'login'
   }
 ) =>
-  axios.post<{ accountId: string }>(
+  axiosInstance.post<{ accountId: string }>(
     `${ORION_AUTH_URL}/login`,
     {
       signature,
@@ -131,7 +133,7 @@ export const loginRequest = (
     }
   )
 
-export const logoutRequest = () => axios.post(`${ORION_AUTH_URL}/logout`, {}, { withCredentials: true })
+export const logoutRequest = () => axiosInstance.post(`${ORION_AUTH_URL}/logout`, {}, { withCredentials: true })
 
 export const getCorrectLoginModal = (): AuthModals => {
   const hasAtleastOneWallet = getWalletsList().some((wallet) => wallet.installed)
@@ -165,12 +167,12 @@ export const prepareEncryptionArtifacts = async (email: string, password: string
 export const registerAccount = async (params: RegisterParams) => {
   try {
     await cryptoWaitReady()
-
+    const timestamp = (await getAuthEpoch()) - 30_000
     const registerPayload: RegisterPayload = {
       gatewayName: 'Gleev',
       memberId: params.memberId,
       joystreamAccountId: '',
-      timestamp: Date.now() - 30_000,
+      timestamp,
       action: 'createAccount',
       email: params.email,
     }
@@ -191,7 +193,7 @@ export const registerAccount = async (params: RegisterParams) => {
       registerPayload.email = params.email
       registerSignature = await params.signature(JSON.stringify(registerPayload))
     }
-    await axios.post(
+    await axiosInstance.post(
       `${ORION_AUTH_URL}/account`,
       {
         payload: registerPayload,
@@ -236,11 +238,11 @@ export const changePassword = async ({
   try {
     const keypair = keyring.addFromMnemonic(mnemonic)
     const newArtifacts = await prepareEncryptionArtifacts(email, newPassword, mnemonic)
-
+    const timestamp = (await getAuthEpoch()) - 30_000
     const changePasswordPayload = {
       joystreamAccountId,
       gatewayName: atlasConfig.general.appName,
-      timestamp: Date.now() - 30_000,
+      timestamp,
       action: 'changeAccount',
       gatewayAccountId,
       newArtifacts,
@@ -248,7 +250,7 @@ export const changePassword = async ({
 
     const signatureOverPayload = u8aToHex(keypair.sign(JSON.stringify(changePasswordPayload)))
 
-    return axios.post(
+    return axiosInstance.post(
       `${ORION_AUTH_URL}/change-account`,
       {
         signature: signatureOverPayload,
@@ -267,6 +269,24 @@ export const getMnemonicFromeEmailAndPassword = async (email: string, password: 
   if (!data?.decryptedEntropy) {
     throw Error("Couldn't fetch artifacts")
   }
-  const mnemonic = entropyToMnemonic(data?.decryptedEntropy)
-  return mnemonic
+  return entropyToMnemonic(data?.decryptedEntropy)
+}
+
+export const getAuthEpoch = async () => {
+  let epoch: number
+  try {
+    const res = await withTimeout(axiosInstance.get('https://worldtimeapi.org/api/ip'), 5_000)
+    if (res.data?.unixtime) {
+      epoch = res.data.unixtime * 1000
+    } else {
+      epoch = Date.now()
+    }
+  } catch (error) {
+    epoch = Date.now()
+    SentryLogger.error('Error fetching auth epoch time', 'getAuthEpoch', {
+      error,
+    })
+  }
+
+  return epoch
 }
