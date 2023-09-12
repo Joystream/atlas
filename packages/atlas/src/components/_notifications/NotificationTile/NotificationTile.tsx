@@ -24,51 +24,217 @@ import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { absoluteRoutes } from '@/config/routes'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { NotificationRecord } from '@/providers/notifications/notifications.types'
+import { useUser } from '@/providers/user/user.hooks'
 import { formatDateAgo } from '@/utils/time'
 
 import { NoActorNotificationAvatar } from './NoActorNotificationAvatar'
 import { IconContainer, IconWrapper, StyledLink, StyledListItem } from './NotificationTile.styles'
 
-const getNotificationText = (notification: NotificationRecord): ReactNode => {
+const getNotificationText = (notification: NotificationRecord, channelTitle?: string): ReactNode => {
   switch (notification.type) {
-    case 'bid-made':
+    //
+    // Member notifications events
+    //
+
+    // Generic
+    case 'ChannelCreated':
+      return <>New channel created: “{notification.channelTitle}“</>
+
+    // Engagement
+    case 'CommentReply':
       return (
         <>
-          bid on your NFT for{' '}
-          <NumberFormat as="span" value={notification.bidAmount} format="short" withToken withDenomination="before" />
+          {notification.memberHandle} replied to your commend under video: “{notification.videoTitle}”
         </>
       )
-    case 'got-outbid':
+    case 'ReactionToComment':
       return (
         <>
-          outbid you at{' '}
-          <NumberFormat as="span" value={notification.bidAmount} format="short" withToken withDenomination="before" />
+          {notification.memberHandle} reacted to your commend on the video: “{notification.videoTitle}”
         </>
       )
-    case 'bought':
+
+    // Followed channels
+    case 'VideoPosted':
       return (
         <>
-          purchased your NFT for{' '}
-          <NumberFormat as="span" value={notification.price} format="short" withToken withDenomination="before" />
+          {notification.channelTitle} posted a new video: “{notification.videoTitle}”
         </>
       )
-    case 'bid-accepted':
+    case 'NewNftOnSale':
       return (
         <>
-          has accepted your bid of{' '}
-          <NumberFormat as="span" value={notification.bidAmount} format="short" withToken withDenomination="before" />
+          {notification.channelTitle} started the sale of NFT: “{notification.videoTitle}”
         </>
       )
-    case 'auction-settled-owner':
-      return 'Your auction has been settled'
-    case 'auction-settled-winner':
-      return 'Auction you have won has been settled'
-    case 'auction-ended':
-      return 'Auction you participated in has ended'
-    case 'video-commented':
-      return `commented on your video`
-    case 'comment-reply':
-      return `replied to your comment`
+    case 'NewAuction':
+      return (
+        <>
+          {notification.channelTitle} started an auction for NFT: “{notification.videoTitle}”
+        </>
+      )
+
+    // NFT
+    case 'HigherBidPlaced':
+      return (
+        <>
+          {notification.newBidderHandle} placed a higher bid in the auction for NFT: “{notification.videoTitle}”
+        </>
+      )
+    case 'EnglishAuctionWon':
+      return <>You won a timed auction for NFT: “{notification.videoTitle}”</>
+    case 'EnglishAuctionLost':
+      return <>You lost a timed auction for NFT: “{notification.videoTitle}”</>
+    case 'OpenAuctionWon':
+      return <>You won an open auction for NFT: “{notification.videoTitle}”</>
+    case 'OpenAuctionLost':
+      return <>You lost an open auction for NFT: “{notification.videoTitle}”</>
+    // case 'NFT bid becomes withdrawable (for bidder)':
+    //   return <>Your bid is withdrawable for NFT: “{notification.videoTitle}”</>
+
+    // Payouts
+    // case 'Funds received':
+    //   return (
+    //     <>
+    //       You have received{' '}
+    //       <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" /> for
+    //       your channel “{notification.channelTitle}” from Council Payout proposal
+    //     </>
+    //   )
+    // case 'Funds sent':
+    //   return (
+    //     <>
+    //       You transferred{' '}
+    //       <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" /> from
+    //       you member wallet to external wallet: {notification.walletaddress}
+    //     </>
+    //   )
+    // case 'Member received transfer from DAO WG':
+    //   return (
+    //     <>
+    //       You have received{' '}
+    //       <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" /> from
+    //       “{notification.group}” working group
+    //     </>
+    //   )
+
+    //
+    // Channel notifications events
+    //
+
+    // Content moderation and featuring
+    case 'ChannelExcluded':
+      return <>Your channel “{channelTitle}” is excluded from App</>
+    case 'VideoExcluded':
+      return <>Your video is excluded from App: “{notification.videoTitle}”</>
+    case 'VideoFeaturedOnCategoryPage':
+      return (
+        <>
+          Your video was featured on the “{notification.categoryName}” category page: “{notification.videoTitle}”
+        </>
+      )
+    case 'NftFeaturedOnMarketPlace':
+      return <>Your NFT was featured in the marketplace featured section: “{notification.videoTitle}”</>
+    case 'VideoFeaturedAsCategoryHero':
+      return (
+        <>
+          “{notification.categoryName}” category page featured your video as the category hero video: “How can Web3 use
+          AI?”
+        </>
+      )
+
+    // Engagement
+    case 'NewChannelFollower':
+      return <>{notification.followerHandle} followed your channel</>
+    case 'CommentPostedToVideo':
+      return (
+        <>
+          {notification.memberHandle} left a comment on your video: “{notification.videoTitle}”
+        </>
+      )
+    case 'VideoLiked':
+      return (
+        <>
+          {/*notification.memberHandle*/ 'Someone'} liked your video: “{notification.videoTitle}”
+        </>
+      )
+    case 'VideoDisliked':
+      return (
+        <>
+          {/*notification.memberHandle*/ 'Someone'} disliked your video: “{notification.videoTitle}”
+        </>
+      )
+
+    // Youtube Partnership Program
+    // case 'YPP sign up successful':
+    //   return <>Your channel was successfully signed up for Youtube Partnership Program</>
+    // case 'Someone signed up using your referral link':
+    //   return <>{notification.memberHandle} signed up for YPP using your referral link</>
+    case 'ChannelVerified':
+      return <>Your channel got verified in our Youtube Partnership Program</>
+    case 'ChannelSuspended':
+      return <>Your channel got suspended in our Youtube Partnership Program</>
+
+    // NFTs Auctions
+    case 'NftPurchased':
+      return (
+        <>
+          {notification.buyerHandle} purchased for{' '}
+          <NumberFormat as="span" value={notification.price} format="short" withToken withDenomination="before" /> your
+          NFT: “{notification.videoTitle}”
+        </>
+      )
+    case 'NftRoyaltyPaid':
+      return (
+        <>
+          You received{' '}
+          <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" />{' '}
+          royalties from your NFT: “{notification.videoTitle}”
+        </>
+      )
+    case 'CreatorReceivesAuctionBid':
+      return (
+        <>
+          {notification.bidderHandle} placed a bid of{' '}
+          <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" /> for
+          your NFT: “{notification.videoTitle}”
+        </>
+      )
+    case 'EnglishAuctionSettled':
+      return <>Timed auction expired on your NFT: “{notification.videoTitle}”</>
+
+    // Payouts
+    case 'DirectChannelPaymentByMember':
+      return (
+        <>
+          {notification.payerHandle} transferred{' '}
+          <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" /> to
+          your channel
+        </>
+      )
+    // case 'Channel received transfer from WG':
+    //   return (
+    //     <>
+    //       You have received{' '}
+    //       <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" /> from
+    //       “marketing” working group
+    //     </>
+    //   )
+    // case 'New payout is claimable from Council Payout proposal':
+    //   return (
+    //     <>
+    //       You have{' '}
+    //       <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" /> to
+    //       claim from Council Payout proposal
+    //     </>
+    //   )
+    case 'ChannelFundsWithdrawn':
+      return (
+        <>
+          <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" />{' '}
+          transferred from your channel to your membership account
+        </>
+      )
   }
 }
 
@@ -87,6 +253,7 @@ export const NotificationTile: FC<NotificationProps> = ({
   className,
   onMarkAsRead,
 }) => {
+  const { activeChannel } = useUser()
   const { date, member, read } = notification
   const { urls: avatarUrls } = getMemberAvatar(member)
   const ref = useRef<HTMLButtonElement>(null)
@@ -138,7 +305,7 @@ export const NotificationTile: FC<NotificationProps> = ({
                 </Text>
               )}
               <Text as="span" variant="t100">
-                {getNotificationText(notification)}
+                {getNotificationText(notification, activeChannel?.title ?? undefined)}
               </Text>
             </>
           ) : (
