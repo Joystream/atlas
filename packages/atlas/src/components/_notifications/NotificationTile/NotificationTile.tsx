@@ -21,7 +21,7 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { KebabMenuButtonIcon } from '@/components/_nft/NftTile/NftTileDetails.styles'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
-import { absoluteRoutes } from '@/config/routes'
+import { relativeRoutes } from '@/config/routes'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { NotificationRecord } from '@/providers/notifications/notifications.types'
 import { useUser } from '@/providers/user/user.hooks'
@@ -30,10 +30,11 @@ import { formatDateAgo } from '@/utils/time'
 import { NoActorNotificationAvatar } from './NoActorNotificationAvatar'
 import { IconContainer, IconWrapper, StyledLink, StyledListItem } from './NotificationTile.styles'
 
+// TODO move this in a NotificationTile.utils.ts file
 // TODO make all fields required
 type NotificationUX = {
-  icon?: ReactNode
-  link?: string
+  icon: NotificationIconType
+  action: { link?: string; onClick?: () => void }
   avatar?: { type: 'current-channel' | 'current-membership' | 'channel' | 'membership'; value: string }
   text: ReactNode
 }
@@ -46,6 +47,8 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     // Generic
     case 'ChannelCreated':
       return {
+        icon: 'bell',
+        action: { link: relativeRoutes.viewer.channel(notification.channelId) },
         avatar: { type: 'channel', value: notification.channelId },
         text: <>New channel created: “{notification.channelTitle}“</>,
       }
@@ -53,6 +56,8 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     // Engagement
     case 'CommentReply':
       return {
+        icon: 'follow',
+        action: { link: relativeRoutes.viewer.video(notification.videoId) }, // REPLY ID MISSING
         avatar: { type: 'membership', value: notification.memberHandle },
         text: (
           <>
@@ -62,6 +67,8 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
       }
     case 'ReactionToComment':
       return {
+        icon: 'reaction',
+        action: { link: relativeRoutes.viewer.video(notification.videoId) }, // COMMENT ID MISSING
         avatar: { type: 'membership', value: notification.memberHandle },
         text: (
           <>
@@ -73,6 +80,8 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     // Followed channels
     case 'VideoPosted':
       return {
+        icon: 'video',
+        action: { link: relativeRoutes.viewer.video(notification.videoId) },
         // avatar: { type: 'channel', value: notification.channelId }, // AVATAR MISSING
         text: (
           <>
@@ -82,6 +91,8 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
       }
     case 'NewNftOnSale':
       return {
+        icon: 'nft',
+        action: { link: relativeRoutes.viewer.video(notification.videoId) }, // TODO with NFT widget opened
         // avatar: { type: 'channel', value: notification.channelId }, // AVATAR MISSING
         text: (
           <>
@@ -91,6 +102,8 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
       }
     case 'NewAuction':
       return {
+        icon: 'nft',
+        action: { link: relativeRoutes.viewer.video(notification.videoId) }, // TODO with NFT widget opened
         // avatar: { type: 'channel', value: notification.channelId }, // AVATAR MISSING
         text: (
           <>
@@ -102,6 +115,8 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     // NFT
     case 'HigherBidPlaced':
       return {
+        icon: 'nft-alt',
+        action: { link: relativeRoutes.viewer.video(notification.videoId) }, // TODO with NFT widget opened
         avatar: { type: 'membership', value: notification.newBidderHandle },
         text: (
           <>
@@ -111,26 +126,36 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
       }
     case 'EnglishAuctionWon':
       return {
+        icon: 'nft',
+        action: { link: relativeRoutes.viewer.video(notification.videoId) }, // TODO with NFT widget opened
         avatar: { type: 'current-membership', value: '' },
         text: <>You won a timed auction for NFT: “{notification.videoTitle}”</>,
       }
     case 'EnglishAuctionLost':
       return {
+        icon: 'nft-alt',
+        action: { link: relativeRoutes.viewer.video(notification.videoId) }, // TODO with NFT widget opened
         avatar: { type: 'current-membership', value: '' },
         text: <>You lost a timed auction for NFT: “{notification.videoTitle}”</>,
       }
     case 'OpenAuctionWon':
       return {
+        icon: 'nft',
+        action: { link: relativeRoutes.viewer.video(notification.videoId) }, // TODO with NFT widget opened
         avatar: { type: 'current-membership', value: '' },
         text: <>You won an open auction for NFT: “{notification.videoTitle}”</>,
       }
     case 'OpenAuctionLost':
       return {
+        icon: 'nft-alt',
+        action: { link: relativeRoutes.viewer.video(notification.videoId) }, // TODO with NFT widget opened
         avatar: { type: 'current-membership', value: '' },
         text: <>You lost an open auction for NFT: “{notification.videoTitle}”</>,
       }
     // case 'NFT bid becomes withdrawable (for bidder)': // MISSING
     //   return {
+    //     icon: 'nft',
+    //     link: relativeRoutes.viewer.video(notification.videoId), // TODO with NFT widget opened
     //     avatar: { type: 'current-membership', value: '' },
     //     text: <>Your bid is withdrawable for NFT: “{notification.videoTitle}”</>,
     //   }
@@ -138,6 +163,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     // Payouts
     // case 'Funds received': // MISSING
     //   return {
+    //    icon: 'payout',
     //     avatar: { type: 'channel', value: notification.channelId },
     //     text: (
     //       <>
@@ -149,6 +175,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     //   }
     // case 'Funds sent': // MISSING
     //   return {
+    //     icon: 'payout',
     //     avatar: { type: 'channel', value: notification.channelId },
     //     text: (
     //       <>
@@ -160,6 +187,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     //   }
     // case 'Member received transfer from DAO WG': // MISSING
     //   return {
+    //     icon: 'payout',
     //     avatar: { type: 'channel', value: notification.channelId },
     //     text: (
     //       <>
@@ -177,16 +205,22 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     // Content moderation and featuring
     case 'ChannelExcluded':
       return {
+        icon: 'warning',
+        action: { link: relativeRoutes.legal.termsOfService() },
         avatar: { type: 'current-channel', value: '' },
         text: <>Your channel “{channelTitle}” is excluded from App</>,
       }
     case 'VideoExcluded':
       return {
+        icon: 'warning',
+        action: { link: relativeRoutes.legal.termsOfService() },
         avatar: { type: 'current-channel', value: '' },
         text: <>Your video is excluded from App: “{notification.videoTitle}”</>,
       }
     case 'VideoFeaturedOnCategoryPage':
       return {
+        icon: 'bell',
+        action: { link: relativeRoutes.viewer.category(notification.categoryId) },
         avatar: { type: 'current-channel', value: '' },
         text: (
           <>
@@ -196,16 +230,20 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
       }
     case 'NftFeaturedOnMarketPlace':
       return {
+        icon: 'bell',
+        action: { link: relativeRoutes.viewer.marketplace() },
         avatar: { type: 'current-channel', value: '' },
         text: <>Your NFT was featured in the marketplace featured section: “{notification.videoTitle}”</>,
       }
     case 'VideoFeaturedAsCategoryHero':
       return {
+        icon: 'bell',
+        action: { link: relativeRoutes.viewer.category(notification.categoryId) },
         avatar: { type: 'current-channel', value: '' },
         text: (
           <>
-            “{notification.categoryName}” category page featured your video as the category hero video: “How can Web3
-            use AI?”
+            “{notification.categoryName}” category page featured your video as the category hero video: “
+            {notification.videoTitle}”
           </>
         ),
       }
@@ -213,11 +251,15 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     // Engagement
     case 'NewChannelFollower':
       return {
+        icon: 'follow',
+        action: { link: relativeRoutes.viewer.member(notification.followerHandle) },
         avatar: { type: 'membership', value: notification.followerHandle },
         text: <>{notification.followerHandle} followed your channel</>,
       }
     case 'CommentPostedToVideo':
       return {
+        icon: 'follow',
+        action: { link: relativeRoutes.viewer.video(notification.videoId) }, // TODO with NFT widget opened
         avatar: { type: 'membership', value: notification.memberHandle },
         text: (
           <>
@@ -227,6 +269,8 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
       }
     case 'VideoLiked':
       return {
+        icon: 'like',
+        action: { link: relativeRoutes.viewer.video(notification.videoId) },
         // avatar: { type: 'membership', value: notification.memberHandle }, // AVATAR MISSING
         text: (
           <>
@@ -236,6 +280,8 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
       }
     case 'VideoDisliked':
       return {
+        icon: 'dislike',
+        action: { link: relativeRoutes.viewer.video(notification.videoId) },
         // avatar: { type: 'membership', value: notification.memberHandle }, // AVATAR MISSING
         text: (
           <>
@@ -247,21 +293,29 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     // Youtube Partnership Program
     // case 'YPP sign up successful': // MISSING
     //   return {
+    //     icon: 'bell',
+    //     link: relativeRoutes.viewer.yppDashboard(),
     //     avatar: { type: 'current-channel', value: '' },
     //     text: <>Your channel was successfully signed up for Youtube Partnership Program</>,
     //   }
     // case 'Someone signed up using your referral link': // MISSING
     //   return {
+    //     icon: 'bell',
+    //     link: relativeRoutes.viewer.yppDashboard(), // TODO with referral tab open
     //     avatar: { type: 'membership', value: notification.memberHandle },
     //     text: <>{notification.memberHandle} signed up for YPP using your referral link</>,
     //   }
     case 'ChannelVerified':
       return {
+        icon: 'bell',
+        action: { link: relativeRoutes.viewer.yppDashboard() },
         avatar: { type: 'current-channel', value: '' },
         text: <>Your channel got verified in our Youtube Partnership Program</>,
       }
     case 'ChannelSuspended':
       return {
+        icon: 'warning',
+        action: { link: relativeRoutes.viewer.yppDashboard() },
         avatar: { type: 'current-channel', value: '' },
         text: <>Your channel got suspended in our Youtube Partnership Program</>,
       }
@@ -269,6 +323,8 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     // NFTs Auctions
     case 'NftPurchased':
       return {
+        icon: 'nft',
+        action: { link: relativeRoutes.viewer.video(notification.videoId) }, // TODO with NFT widget opened
         avatar: { type: 'membership', value: notification.buyerHandle },
         text: (
           <>
@@ -280,6 +336,8 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
       }
     case 'NftRoyaltyPaid':
       return {
+        icon: 'nft',
+        action: { link: relativeRoutes.viewer.video(notification.videoId) }, // TODO with NFT widget opened
         avatar: { type: 'current-channel', value: '' },
         text: (
           <>
@@ -291,6 +349,8 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
       }
     case 'CreatorReceivesAuctionBid':
       return {
+        icon: 'nft',
+        action: { link: relativeRoutes.viewer.video(notification.videoId) }, // TODO with NFT widget opened
         avatar: { type: 'membership', value: notification.bidderHandle },
         text: (
           <>
@@ -302,6 +362,8 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
       }
     case 'EnglishAuctionSettled':
       return {
+        icon: 'nft',
+        action: { link: relativeRoutes.viewer.video(notification.videoId) }, // TODO with NFT widget opened
         avatar: { type: 'current-channel', value: '' },
         text: <>Timed auction expired on your NFT: “{notification.videoTitle}”</>,
       }
@@ -309,6 +371,8 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     // Payouts
     case 'DirectChannelPaymentByMember':
       return {
+        icon: 'payout',
+        action: { link: relativeRoutes.viewer.member(notification.payerHandle) },
         avatar: { type: 'membership', value: notification.payerHandle },
         text: (
           <>
@@ -320,6 +384,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
       }
     // case 'Channel received transfer from WG': // MISSING
     //   return {
+    //     icon: 'payout',
     //     avatar: { type: 'current-channel', value: '' },
     //     text: (
     //       <>
@@ -342,6 +407,8 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     //   }
     case 'ChannelFundsWithdrawn':
       return {
+        icon: 'payout',
+        action: { onClick: () => undefined }, // TODO implement "open channel dropdown"
         avatar: { type: 'current-membership', value: '' },
         text: (
           <>
@@ -369,7 +436,10 @@ export const NotificationTile: FC<NotificationProps> = ({
   onMarkAsRead,
 }) => {
   const { activeChannel } = useUser()
-  const { icon, link, avatar, text } = getNotificationUX(notification, activeChannel?.title ?? undefined)
+  const { icon, action, avatar, text } = useMemo(
+    () => getNotificationUX(notification, activeChannel?.title ?? undefined),
+    [notification, activeChannel]
+  )
   const { date, member, read } = notification
   const { urls: avatarUrls } = getMemberAvatar(member)
   const ref = useRef<HTMLButtonElement>(null)
@@ -388,14 +458,11 @@ export const NotificationTile: FC<NotificationProps> = ({
 
   return (
     <StyledLink
-      to={absoluteRoutes.viewer.video(notification.video.id, {
-        ...(notification.type === 'video-commented' || notification.type === 'comment-reply'
-          ? { commentId: notification.commentId }
-          : {}),
-      })}
+      to={action.link ?? ''}
       onClick={() => {
         onClick?.()
         onMarkAsRead?.()
+        action.onClick?.()
       }}
       onPointerLeave={() => contextMenuInstanceRef.current?.hide()}
     >
@@ -404,13 +471,7 @@ export const NotificationTile: FC<NotificationProps> = ({
         read={read}
         variant="compact"
         className={className}
-        nodeStart={
-          member ? (
-            <NotifactionIcon avatarUrls={avatarUrls ?? []} iconType={getNotificationIcon(notification)} />
-          ) : (
-            <NoActorNotificationAvatar size="small" />
-          )
-        }
+        nodeStart={<NotifactionIcon avatarUrls={avatarUrls} iconType={icon} />}
         caption={!loading ? formattedDate : <SkeletonLoader width="50%" height={19} />}
         label={
           !loading ? (
@@ -460,10 +521,20 @@ export const NotificationTile: FC<NotificationProps> = ({
   )
 }
 
-type NotificationIconType = 'like' | 'dislike' | 'follow' | 'warning' | 'bell' | 'nft' | 'payout' | 'reaction' | 'video'
+type NotificationIconType =
+  | 'like'
+  | 'dislike'
+  | 'follow'
+  | 'warning'
+  | 'bell'
+  | 'nft'
+  | 'nft-alt'
+  | 'payout'
+  | 'reaction'
+  | 'video'
 
 type NotifactionIconProps = {
-  avatarUrls: string[]
+  avatarUrls?: string[]
   iconType: NotificationIconType
 }
 
@@ -474,33 +545,17 @@ const notificationIconMapper: Record<NotificationIconType, [ReactElement, 'red' 
   reaction: [<SvgActionPlaceholder key={1} />, 'blue'],
   like: [<SvgActionLikeOutline key={1} />, 'blue'],
   nft: [<SvgActionNft key={1} />, 'green'],
+  'nft-alt': [<SvgActionNft key={1} />, 'red'],
   payout: [<SvgActionRevenueShare key={1} />, 'green'],
   warning: [<SvgActionInformative key={1} />, 'gray'],
   video: [<SvgActionAddVideo key={1} />, 'blue'],
 }
 
-const getNotificationIcon = (notification: NotificationRecord): NotificationIconType => {
-  switch (notification.type) {
-    case 'bought':
-    case 'bid-accepted':
-    case 'got-outbid':
-    case 'auction-settled-winner':
-    case 'auction-ended':
-    case 'auction-settled-owner':
-    case 'bid-made':
-      return 'nft'
-    case 'video-commented':
-    case 'comment-reply':
-      return 'reaction'
-    default:
-      return 'bell'
-  }
-}
 export const NotifactionIcon = ({ iconType, avatarUrls }: NotifactionIconProps) => {
   const [icon, color] = notificationIconMapper[iconType]
   return (
     <IconWrapper>
-      <Avatar size={40} assetUrls={avatarUrls} />
+      {avatarUrls ? <Avatar size={40} assetUrls={avatarUrls} /> : <NoActorNotificationAvatar size="small" />}
       <IconContainer className="notification-icon-container" color={color}>
         {icon}
       </IconContainer>
