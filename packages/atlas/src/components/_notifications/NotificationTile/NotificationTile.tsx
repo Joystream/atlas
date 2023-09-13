@@ -8,14 +8,17 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { KebabMenuButtonIcon } from '@/components/_nft/NftTile/NftTileDetails.styles'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
-import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { NotificationRecord } from '@/providers/notifications/notifications.types'
-import { useUser } from '@/providers/user/user.hooks'
 import { formatDateAgo } from '@/utils/time'
 
 import { NoActorNotificationAvatar } from './NoActorNotificationAvatar'
 import { IconContainer, IconWrapper, StyledLink, StyledListItem } from './NotificationTile.styles'
-import { NotificationIconType, getNotificationUX, notificationIconMapper } from './NotificationTile.utils'
+import {
+  NotificationIconType,
+  notificationIconMapper,
+  useNotificationAvatar,
+  useNotificationUX,
+} from './NotificationTile.utils'
 
 export type NotificationProps = {
   notification: NotificationRecord
@@ -32,13 +35,9 @@ export const NotificationTile: FC<NotificationProps> = ({
   className,
   onMarkAsRead,
 }) => {
-  const { activeChannel } = useUser()
-  const { icon, action, avatar, text } = useMemo(
-    () => getNotificationUX(notification, activeChannel?.title ?? undefined),
-    [notification, activeChannel]
-  )
-  const { date, member, read } = notification
-  const { urls: avatarUrls } = getMemberAvatar(member)
+  const { icon, action, avatar, text } = useNotificationUX(notification)
+  const { date, read } = notification
+  const { avatarUrls } = useNotificationAvatar(avatar)
   const ref = useRef<HTMLButtonElement>(null)
   const contextMenuInstanceRef = useRef<PopoverImperativeHandle>(null)
   const formattedDate = useMemo(() => {
@@ -72,16 +71,9 @@ export const NotificationTile: FC<NotificationProps> = ({
         caption={!loading ? formattedDate : <SkeletonLoader width="50%" height={19} />}
         label={
           !loading ? (
-            <>
-              {member && (
-                <Text as="span" variant="t100">
-                  {`${member.handle} `}
-                </Text>
-              )}
-              <Text as="span" variant="t100">
-                {text}
-              </Text>
-            </>
+            <Text as="span" variant="t100">
+              {text}
+            </Text>
           ) : (
             <SkeletonLoader width="40%" height={20} bottomSpace={2} />
           )

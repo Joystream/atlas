@@ -4,7 +4,7 @@ import { BUILD_ENV } from '@/config/env'
 import { AssetLogger, ConsoleLogger, DataObjectResponseMetric, DistributorEventEntry } from '@/utils/logs'
 import { wait } from '@/utils/misc'
 
-export const getMemberAvatar = (member?: BasicMembershipFieldsFragment | null) => {
+export const getMemberAvatar = (member?: Pick<BasicMembershipFieldsFragment, 'metadata'> | null) => {
   const avatar = member?.metadata?.avatar
 
   if (avatar?.__typename === 'AvatarUri') {

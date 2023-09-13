@@ -8,6 +8,23 @@ query GetMemberships($where: MembershipWhereInput!) {
   }
 }
 
+query GetMembershipsAvatar($where: MembershipWhereInput!, $limit: Int) {
+  memberships(where: $where, limit: $limit) {
+    metadata {
+      avatar {
+        ... on AvatarObject {
+          avatarObject {
+            ...StorageDataObjectFields
+          }
+        }
+        ... on AvatarUri {
+          avatarUri
+        }
+      }
+    }
+  }
+}
+
 query GetChannelCount($where: ChannelWhereInput) {
   channelsConnection(where: $where, orderBy: [createdAt_ASC]) {
     totalCount
