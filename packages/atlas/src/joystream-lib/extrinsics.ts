@@ -979,7 +979,11 @@ export class JoystreamLibExtrinsics {
   }
 
   purchaseTokenOnSaleTx = async (tokenId: TokenId, memberId: MemberId, amount: StringifiedNumber) => {
-    return this.api.tx.projectToken.purchaseTokensOnSale(parseInt(tokenId), parseInt(memberId), amount)
+    return this.api.tx.projectToken.purchaseTokensOnSale(
+      parseInt(tokenId),
+      parseInt(memberId),
+      createType('u128', new BN(amount))
+    )
   }
 
   purchaseTokenOnSale: PublicExtrinsic<typeof this.purchaseTokenOnSaleTx, ExtrinsicResult> = async (
@@ -1019,7 +1023,11 @@ export class JoystreamLibExtrinsics {
   }
 
   participateInSplitTx = async (tokenId: TokenId, memberId: MemberId, amount: StringifiedNumber) => {
-    return this.api.tx.projectToken.participateInSplit(parseInt(tokenId), parseInt(memberId), amount)
+    return this.api.tx.projectToken.participateInSplit(
+      parseInt(tokenId),
+      parseInt(memberId),
+      createType('u128', new BN(amount))
+    )
   }
 
   participateInSplit: PublicExtrinsic<typeof this.participateInSplitTx, ExtrinsicResult> = async (
@@ -1041,7 +1049,12 @@ export class JoystreamLibExtrinsics {
     duration: number
   ) => {
     const member = createType('PalletContentPermissionsContentActor', { Member: parseInt(memberId) })
-    return this.api.tx.content.issueRevenueSplit(member, parseInt(channelId), start, duration)
+    return this.api.tx.content.issueRevenueSplit(
+      member,
+      parseInt(channelId),
+      createType('Option<u32>', new BN(start)),
+      createType('u32', duration)
+    )
   }
 
   issueRevenueSplit: PublicExtrinsic<typeof this.issueRevenueSplitTx, ExtrinsicResult> = async (
@@ -1091,20 +1104,54 @@ export class JoystreamLibExtrinsics {
     memberId: MemberId,
     channelId: ChannelId,
     symbol: string,
-    patronageRate: StringifiedNumber,
-    revenueSplitRate: StringifiedNumber,
-    type:
-      | 'permissionless'
-      | {
-          commitment: string
-          payload?: {
-            expectedDataSizeFee: StringifiedNumber
-            expectedDataObjectStateBloatBond: StringifiedNumber
-            objectCreationParams: {
-              size_: StringifiedNumber
-              ipfsContent: string
-            }
-          }
-        }
-  ) => {}
+    patronageRate: number,
+    initialCreatorAllocation: {
+      amount: StringifiedNumber
+      vestingDuration: number
+      blocksBeforeCliff: number
+      cliffAmountPercentage: number
+    },
+    revenueSplitRate: number
+  ) => {
+    const member = createType('PalletContentPermissionsContentActor', { Member: parseInt(memberId) })
+    const params = createType('PalletProjectTokenTokenIssuanceParameters', {
+      initialAllocation: createType('BTreeMap<u64, PalletProjectTokenTokenAllocation>', {
+        [parseInt(memberId)]: createType('PalletProjectTokenTokenAllocation', {
+          amount: createType('u128', new BN(initialCreatorAllocation.amount)),
+          vestingScheduleParams: createType('Option<PalletProjectTokenVestingScheduleParams>', {
+            blocksBeforeCliff: createType('u32', new BN(initialCreatorAllocation.blocksBeforeCliff)),
+            linearVestingDuration: createType('u32', new BN(initialCreatorAllocation.vestingDuration)),
+            cliffAmountPercentage: initialCreatorAllocation.cliffAmountPercentage,
+          }),
+        }),
+      }),
+      symbol,
+      patronageRate,
+      revenueSplitRate,
+      transferPolicy: createType('PalletProjectTokenTransferPolicyParams', { Permissionless: null }),
+    })
+    return this.api.tx.content.issueCreatorToken(member, parseInt(channelId), params)
+  }
+
+  issueCreatorToken: PublicExtrinsic<typeof this.issueCreatorTokenTx, ExtrinsicResult> = async (
+    memberId,
+    channelId,
+    symbol,
+    patronageRate,
+    initialCreatorAllocation,
+    revenueSplitRate,
+    cb
+  ) => {
+    const tx = await this.issueCreatorTokenTx(
+      memberId,
+      channelId,
+      symbol,
+      patronageRate,
+      initialCreatorAllocation,
+      revenueSplitRate
+    )
+    const { block } = await this.sendExtrinsic(tx, cb)
+
+    return { block }
+  }
 }
