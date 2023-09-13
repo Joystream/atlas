@@ -10,7 +10,6 @@ import { createType } from '@joystream/types'
 import { ApiPromise as PolkadotApi } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
 import BN from 'bn.js'
-import { parseInt } from 'lodash-es'
 import Long from 'long'
 
 import { SentryLogger } from '@/utils/logs'
