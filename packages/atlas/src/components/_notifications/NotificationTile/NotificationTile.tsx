@@ -12,14 +12,14 @@ import { NotificationRecord } from '@/providers/notifications/notifications.type
 import { formatDateAgo } from '@/utils/time'
 
 import { NoActorNotificationAvatar } from './NoActorNotificationAvatar'
-import { IconContainer, IconWrapper, StyledLink, StyledListItem } from './NotificationTile.styles'
 import {
   NotificationIconType,
   notificationIconMapper,
   useNotificationAction,
   useNotificationAvatar,
   useNotificationUX,
-} from './NotificationTile.utils'
+} from './NotificationTile.hooks'
+import { IconContainer, IconWrapper, StyledLink, StyledListItem } from './NotificationTile.styles'
 
 export type NotificationProps = {
   notification: NotificationRecord
