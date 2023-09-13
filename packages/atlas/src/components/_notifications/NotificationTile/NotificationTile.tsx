@@ -16,6 +16,7 @@ import { IconContainer, IconWrapper, StyledLink, StyledListItem } from './Notifi
 import {
   NotificationIconType,
   notificationIconMapper,
+  useNotificationAction,
   useNotificationAvatar,
   useNotificationUX,
 } from './NotificationTile.utils'
@@ -37,6 +38,7 @@ export const NotificationTile: FC<NotificationProps> = ({
 }) => {
   const { icon, action, avatar, text } = useNotificationUX(notification)
   const { date, read } = notification
+  const { link = '', clickAction } = useNotificationAction(action)
   const { avatarUrls } = useNotificationAvatar(avatar)
   const ref = useRef<HTMLButtonElement>(null)
   const contextMenuInstanceRef = useRef<PopoverImperativeHandle>(null)
@@ -54,11 +56,11 @@ export const NotificationTile: FC<NotificationProps> = ({
 
   return (
     <StyledLink
-      to={action.link ?? ''}
+      to={link}
       onClick={() => {
         onClick?.()
         onMarkAsRead?.()
-        action.onClick?.()
+        clickAction?.()
       }}
       onPointerLeave={() => contextMenuInstanceRef.current?.hide()}
     >
