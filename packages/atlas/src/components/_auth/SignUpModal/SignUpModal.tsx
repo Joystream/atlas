@@ -66,7 +66,6 @@ export const SignUpModal = () => {
   const setYtResponseData = useYppStore((state) => state.actions.setYtResponseData)
   const { anonymousUserId } = useAuthStore()
   const { displaySnackbar } = useSnackbar()
-  const ytEmailIsValid = Boolean(ytResponseData?.email && !ytResponseData.email.includes('@pages.plusgoogle.com'))
 
   const { generateUniqueMemberHandleBasedOnInput } = useUniqueMemberHandle()
 
@@ -399,7 +398,7 @@ export const SignUpModal = () => {
           isOverflowing={overflow || !smMatch}
           isEmailAlreadyTakenError={emailAlreadyTakenError}
           onEmailSubmit={handleEmailStepSubmit}
-          email={signUpFormData.current.email || (ytEmailIsValid ? (ytResponseData?.email as string) : '')}
+          email={signUpFormData.current.email}
           confirmedTerms={signUpFormData.current.confirmedTerms}
         />
       )}

@@ -46,10 +46,6 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
               <Button variant="primary" _textOnly to={atlasConfig.features.ypp.suspensionReasonsLink ?? ''}>
                 one of these reasons
               </Button>
-              . If you have questions, we are happy to help in our{' '}
-              <Button variant="primary" _textOnly to={atlasConfig.features.ypp.suspendedSupportLink ?? ''}>
-                {atlasConfig.features.ypp.suspendedLinkText ?? 'Discord support channel'}{' '}
-              </Button>
               .
             </Text>
           }
