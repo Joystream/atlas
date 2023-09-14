@@ -109,7 +109,7 @@ export type GetMembershipsAvatarQuery = {
       __typename?: 'MemberMetadata'
       avatar?:
         | {
-            __typename?: 'AvatarObject'
+            __typename: 'AvatarObject'
             avatarObject: {
               __typename?: 'StorageDataObject'
               id: string
@@ -129,7 +129,7 @@ export type GetMembershipsAvatarQuery = {
                 | null
             }
           }
-        | { __typename?: 'AvatarUri'; avatarUri: string }
+        | { __typename: 'AvatarUri'; avatarUri: string }
         | null
     } | null
   }>
@@ -189,6 +189,7 @@ export const GetMembershipsAvatarDocument = gql`
     memberships(where: $where, limit: $limit) {
       metadata {
         avatar {
+          __typename
           ... on AvatarObject {
             avatarObject {
               ...StorageDataObjectFields

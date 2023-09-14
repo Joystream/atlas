@@ -2,6 +2,8 @@ import styled from '@emotion/styled'
 import { useRef } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
+import { OperatorsContext } from '@/providers/assets/assets.provider'
+import { JoystreamContext } from '@/providers/joystream/joystream.provider'
 import { GlobalStyles } from '@/styles'
 
 const Wrapper = styled.div`
@@ -26,8 +28,19 @@ const StylesWrapperDecorator = (styleFn) => {
     </Wrapper>
   )
 }
+const OperatorsContextDecorator = (Story) => (
+  <OperatorsContext.Provider value={{}}>
+    <Story />
+  </OperatorsContext.Provider>
+)
 
-export const decorators = [StylesWrapperDecorator]
+const TokenPriceDecorator = (Story) => (
+  <JoystreamContext.Provider value={{ tokenPrice: 0.5 }}>
+    <Story />
+  </JoystreamContext.Provider>
+)
+
+export const decorators = [OperatorsContextDecorator, TokenPriceDecorator, StylesWrapperDecorator]
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },

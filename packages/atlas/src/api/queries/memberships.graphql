@@ -12,6 +12,7 @@ query GetMembershipsAvatar($where: MembershipWhereInput!, $limit: Int) {
   memberships(where: $where, limit: $limit) {
     metadata {
       avatar {
+        __typename
         ... on AvatarObject {
           avatarObject {
             ...StorageDataObjectFields

@@ -9,7 +9,7 @@ import { UserContextValue } from './user.types'
 
 import { useAuth } from '../auth/auth.hooks'
 
-const UserContext = createContext<undefined | UserContextValue>(undefined)
+export const UserContext = createContext<undefined | UserContextValue>(undefined)
 UserContext.displayName = 'UserContext'
 
 export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
