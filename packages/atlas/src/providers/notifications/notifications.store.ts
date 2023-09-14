@@ -2,22 +2,22 @@ import { createStore } from '@/utils/store'
 
 export type NotificationsStoreState = {
   // block number of lastly seen (not read) notification
-  lastSeenNotificationBlock: number
+  lastSeenNotificationDate: number
 }
 
 export type NotificationsStoreActions = {
-  setLastSeenNotificationBlock: (block: number) => void
+  setLastSeenNotificationDate: (date: Date) => void
 }
 
 export const useNotificationStore = createStore<NotificationsStoreState, NotificationsStoreActions>(
   {
     state: {
-      lastSeenNotificationBlock: 0,
+      lastSeenNotificationDate: 0,
     },
     actionsFactory: (set) => ({
-      setLastSeenNotificationBlock: (block) => {
+      setLastSeenNotificationDate: (date) => {
         set((state) => {
-          state.lastSeenNotificationBlock = block
+          state.lastSeenNotificationDate = date.getTime()
         })
       },
     }),
@@ -25,7 +25,7 @@ export const useNotificationStore = createStore<NotificationsStoreState, Notific
   {
     persist: {
       key: 'notifications',
-      whitelist: ['lastSeenNotificationBlock'],
+      whitelist: ['lastSeenNotificationDate'],
       version: 0,
       migrate: (state) => {
         return {

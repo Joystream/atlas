@@ -30,7 +30,7 @@ type NotificationsWidgetProps = {
 
 export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ type, ...rest }) => {
   const popoverRef = useRef<PopoverImperativeHandle>()
-  const { notifications, markNotificationsAsRead, setLastSeenNotificationBlock, pageInfo, fetchMore, loading } =
+  const { notifications, markNotificationsAsRead, setLastSeenNotificationDate, pageInfo, fetchMore, loading } =
     useNotifications()
   const smMatch = useMediaMatch('sm')
   const firstNotification = notifications[0]
@@ -43,8 +43,8 @@ export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ type, ...res
   // set last seen notification block to first notification to manage the badge for notification button
   useEffect(() => {
     if (!firstNotification || !isOpen) return
-    setLastSeenNotificationBlock(firstNotification.block)
-  }, [firstNotification, isOpen, setLastSeenNotificationBlock])
+    setLastSeenNotificationDate(firstNotification.date)
+  }, [firstNotification, isOpen, setLastSeenNotificationDate])
 
   const handleShow = () => {
     rest.onShow?.()

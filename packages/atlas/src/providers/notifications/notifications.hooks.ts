@@ -25,20 +25,18 @@ export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkS
   } = useRawNotifications(accountId ?? '', isStudio ? 'ChannelRecipient' : 'MemberRecipient', opts)
 
   const {
-    lastSeenNotificationBlock,
-    actions: { setLastSeenNotificationBlock },
+    lastSeenNotificationDate,
+    actions: { setLastSeenNotificationDate },
   } = useNotificationStore()
 
   const [optimisticRead, setOptimisticRead] = useState<string[]>([])
   const notifications = rawNotifications.flatMap(({ node }): NotificationRecord | [] => {
     const { id, createdAt, status, notificationType } = node.notification
-    const date = new Date(createdAt)
     const specificData = parseNotificationType(notificationType as NotificationType)
     return specificData
       ? {
           id,
-          date: date,
-          block: date.getTime(), // TODO rename this field since it's not block anymore
+          date: new Date(createdAt),
           read: status.__typename === 'Read' || optimisticRead.includes(id),
           ...specificData,
         }
@@ -47,7 +45,7 @@ export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkS
 
   // those are different from unread notifications!
   const lastSeenNotificationIndex = notifications.findIndex(
-    (notification) => notification.block <= lastSeenNotificationBlock
+    (notification) => notification.date.getTime() <= lastSeenNotificationDate
   )
   const unseenNotificationsCounts = lastSeenNotificationIndex === -1 ? notifications.length : lastSeenNotificationIndex
 
@@ -65,7 +63,7 @@ export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkS
   return {
     notifications,
     unseenNotificationsCounts,
-    setLastSeenNotificationBlock,
+    setLastSeenNotificationDate,
     markNotificationsAsRead,
     ...rest,
   }

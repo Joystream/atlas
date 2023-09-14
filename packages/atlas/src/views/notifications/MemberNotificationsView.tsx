@@ -11,13 +11,13 @@ export const MemberNotificationsView = () => {
     notifyOnNetworkStatusChange: true,
   })
 
-  const { notifications, setLastSeenNotificationBlock } = useNotificationsParams
+  const { notifications, setLastSeenNotificationDate } = useNotificationsParams
   const firstNotification = notifications[0]
   // set last seen notification block to first notification to manage the badge for notification button
   useEffect(() => {
     if (!firstNotification) return
-    setLastSeenNotificationBlock(firstNotification.block)
-  }, [firstNotification, setLastSeenNotificationBlock])
+    setLastSeenNotificationDate(firstNotification.date)
+  }, [firstNotification, setLastSeenNotificationDate])
 
   const unreadNumber = notifications.filter((notification) => !notification.read).length
 

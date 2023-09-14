@@ -59,7 +59,6 @@ const Template: StoryFn<any> = (args) => {
     id: 'id',
     type: args.type,
     date: new Date(Date.now() - 10000000),
-    block: 10000,
     read: args.read,
     amount: args.amount,
     price: args.amount,

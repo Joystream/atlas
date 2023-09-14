@@ -1,6 +1,6 @@
 import BN from 'bn.js'
 
-export type NotificationRecord = { id: string; date: Date; block: number; read: boolean } & NotificationData
+export type NotificationRecord = { id: string; date: Date; read: boolean } & NotificationData
 export type NotificationData =
   | { type: 'ChannelCreated'; channelId: string; channelTitle: string }
   | { type: 'CommentReply'; memberHandle: string; videoId: string; videoTitle: string }
