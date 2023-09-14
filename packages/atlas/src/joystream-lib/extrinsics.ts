@@ -55,6 +55,7 @@ import {
   RawMetadataProcessorFn,
   SendExtrinsicResult,
   StringifiedNumber,
+  TokenId,
   TxMethodName,
   VideoExtrinsicResult,
   VideoId,
@@ -974,5 +975,182 @@ export class JoystreamLibExtrinsics {
   ) => {
     const tx = await this.reactToVideoCommentTx(memberId, commentId, reactionId)
     return this.sendMetaprotocolExtrinsic(tx, cb)
+  }
+
+  purchaseTokenOnSaleTx = async (tokenId: TokenId, memberId: MemberId, amount: StringifiedNumber) => {
+    return this.api.tx.projectToken.purchaseTokensOnSale(
+      parseInt(tokenId),
+      parseInt(memberId),
+      createType('u128', new BN(amount))
+    )
+  }
+
+  purchaseTokenOnSale: PublicExtrinsic<typeof this.purchaseTokenOnSaleTx, ExtrinsicResult> = async (
+    tokenId,
+    memberId,
+    amount,
+    cb
+  ) => {
+    const tx = await this.purchaseTokenOnSaleTx(tokenId, memberId, amount)
+    const { block } = await this.sendExtrinsic(tx, cb)
+
+    return { block }
+  }
+
+  dustAccountTx = async (tokenId: TokenId, memberId: MemberId) => {
+    return this.api.tx.projectToken.dustAccount(parseInt(tokenId), parseInt(memberId))
+  }
+
+  dustAccount: PublicExtrinsic<typeof this.dustAccountTx, ExtrinsicResult> = async (tokenId, memberId, cb) => {
+    const tx = await this.dustAccountTx(tokenId, memberId)
+    const { block } = await this.sendExtrinsic(tx, cb)
+    return { block }
+  }
+
+  exitRevenueSplitTx = async (tokenId: TokenId, memberId: MemberId) => {
+    return this.api.tx.projectToken.exitRevenueSplit(parseInt(tokenId), parseInt(memberId))
+  }
+
+  exitRevenueSplit: PublicExtrinsic<typeof this.exitRevenueSplitTx, ExtrinsicResult> = async (
+    tokenId,
+    memberId,
+    cb
+  ) => {
+    const tx = await this.exitRevenueSplitTx(tokenId, memberId)
+    const { block } = await this.sendExtrinsic(tx, cb)
+    return { block }
+  }
+
+  participateInSplitTx = async (tokenId: TokenId, memberId: MemberId, amount: StringifiedNumber) => {
+    return this.api.tx.projectToken.participateInSplit(
+      parseInt(tokenId),
+      parseInt(memberId),
+      createType('u128', new BN(amount))
+    )
+  }
+
+  participateInSplit: PublicExtrinsic<typeof this.participateInSplitTx, ExtrinsicResult> = async (
+    tokenId,
+    memberId,
+    amount,
+    cb
+  ) => {
+    const tx = await this.participateInSplitTx(tokenId, memberId, amount)
+    const { block } = await this.sendExtrinsic(tx, cb)
+
+    return { block }
+  }
+
+  issueRevenueSplitTx = async (
+    memberId: MemberId,
+    channelId: ChannelId,
+    start: StringifiedNumber,
+    duration: number
+  ) => {
+    const member = createType('PalletContentPermissionsContentActor', { Member: parseInt(memberId) })
+    return this.api.tx.content.issueRevenueSplit(
+      member,
+      parseInt(channelId),
+      createType('Option<u32>', new BN(start)),
+      createType('u32', duration)
+    )
+  }
+
+  issueRevenueSplit: PublicExtrinsic<typeof this.issueRevenueSplitTx, ExtrinsicResult> = async (
+    memberId,
+    channelId,
+    start,
+    duration,
+    cb
+  ) => {
+    const tx = await this.issueRevenueSplitTx(memberId, channelId, start, duration)
+    const { block } = await this.sendExtrinsic(tx, cb)
+    return { block }
+  }
+
+  finalizeRevenueSplitTx = async (memberId: MemberId, channelId: ChannelId) => {
+    const member = createType('PalletContentPermissionsContentActor', { Member: parseInt(memberId) })
+    return this.api.tx.content.finalizeRevenueSplit(member, parseInt(channelId))
+  }
+
+  finalizeRevenueSplit: PublicExtrinsic<typeof this.finalizeRevenueSplitTx, ExtrinsicResult> = async (
+    memberId,
+    channelId,
+    cb
+  ) => {
+    const tx = await this.finalizeRevenueSplitTx(memberId, channelId)
+    const { block } = await this.sendExtrinsic(tx, cb)
+
+    return { block }
+  }
+
+  deissueCreatorTokenTx = async (memberId: MemberId, channelId: ChannelId) => {
+    const member = createType('PalletContentPermissionsContentActor', { Member: parseInt(memberId) })
+    return this.api.tx.content.deissueCreatorToken(member, parseInt(channelId))
+  }
+
+  deissueCreatorToken: PublicExtrinsic<typeof this.deissueCreatorTokenTx, ExtrinsicResult> = async (
+    memberId,
+    channelId,
+    cb
+  ) => {
+    const tx = await this.deissueCreatorTokenTx(memberId, channelId)
+    const { block } = await this.sendExtrinsic(tx, cb)
+    return { block }
+  }
+
+  issueCreatorTokenTx = async (
+    memberId: MemberId,
+    channelId: ChannelId,
+    symbol: string,
+    patronageRate: number,
+    initialCreatorAllocation: {
+      amount: StringifiedNumber
+      vestingDuration: number
+      blocksBeforeCliff: number
+      cliffAmountPercentage: number
+    },
+    revenueSplitRate: number
+  ) => {
+    const member = createType('PalletContentPermissionsContentActor', { Member: parseInt(memberId) })
+    const params = createType('PalletProjectTokenTokenIssuanceParameters', {
+      initialAllocation: createType('BTreeMap<u64, PalletProjectTokenTokenAllocation>', {
+        [parseInt(memberId)]: createType('PalletProjectTokenTokenAllocation', {
+          amount: createType('u128', new BN(initialCreatorAllocation.amount)),
+          vestingScheduleParams: createType('Option<PalletProjectTokenVestingScheduleParams>', {
+            blocksBeforeCliff: createType('u32', new BN(initialCreatorAllocation.blocksBeforeCliff)),
+            linearVestingDuration: createType('u32', new BN(initialCreatorAllocation.vestingDuration)),
+            cliffAmountPercentage: initialCreatorAllocation.cliffAmountPercentage,
+          }),
+        }),
+      }),
+      symbol,
+      patronageRate,
+      revenueSplitRate,
+      transferPolicy: createType('PalletProjectTokenTransferPolicyParams', { Permissionless: null }),
+    })
+    return this.api.tx.content.issueCreatorToken(member, parseInt(channelId), params)
+  }
+
+  issueCreatorToken: PublicExtrinsic<typeof this.issueCreatorTokenTx, ExtrinsicResult> = async (
+    memberId,
+    channelId,
+    symbol,
+    patronageRate,
+    initialCreatorAllocation,
+    revenueSplitRate,
+    cb
+  ) => {
+    const tx = await this.issueCreatorTokenTx(
+      memberId,
+      channelId,
+      symbol,
+      patronageRate,
+      initialCreatorAllocation,
+      revenueSplitRate
+    )
+    const { block } = await this.sendExtrinsic(tx, cb)
+
+    return { block }
   }
 }
