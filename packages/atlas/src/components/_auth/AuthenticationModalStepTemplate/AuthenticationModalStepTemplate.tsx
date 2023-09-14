@@ -17,7 +17,6 @@ import {
 type AuthenticationModalStepTemplateProps = PropsWithChildren<{
   title: string
   subtitle?: ReactNode
-  subtitleIcon?: ReactNode
   loader?: boolean
   hasNavigatedBack: boolean
   darkBackground?: boolean
@@ -29,7 +28,6 @@ type AuthenticationModalStepTemplateProps = PropsWithChildren<{
 export const AuthenticationModalStepTemplate: FC<AuthenticationModalStepTemplateProps> = ({
   title,
   subtitle,
-  subtitleIcon,
   children,
   loader,
   hasNavigatedBack,
@@ -59,12 +57,9 @@ export const AuthenticationModalStepTemplate: FC<AuthenticationModalStepTemplate
             </Text>
           </HeaderContainer>
           {subtitle && (
-            <>
-              {subtitleIcon}
-              <Text variant="t200" as="span" color="colorText">
-                {subtitle}
-              </Text>
-            </>
+            <Text variant="t200" as="span" color="colorText">
+              {subtitle}
+            </Text>
           )}
           {children && <ContentContainer>{children}</ContentContainer>}
         </AnimatedContainer>
