@@ -70,6 +70,7 @@ export enum RegisterError {
   EmailAlreadyExists = 'EmailAlreadyExists',
   UnknownError = 'UnknownError',
   MembershipNotFound = 'MembershipNotFound',
+  SessionRequired = 'SessionRequired',
 }
 
 type SignUpParams<T, E> = {
@@ -241,8 +242,12 @@ export const useCreateMember = () => {
                 'To create new membership you need to use an email that is not connected to already existing account.',
             })
             onError?.(RegisterError.EmailAlreadyExists)
+            return
           } else if (errorMessage.startsWith('Membership not found by id')) {
             onError?.(RegisterError.MembershipNotFound)
+            return
+          } else if (errorMessage.startsWith("cookie 'session_id' required")) {
+            onError?.(RegisterError.SessionRequired)
             return
           } else {
             displaySnackbar({

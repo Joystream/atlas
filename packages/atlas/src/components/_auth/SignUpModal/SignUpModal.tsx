@@ -11,6 +11,7 @@ import { AccountFormData, FaucetError, MemberFormData, RegisterError, useCreateM
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useUniqueMemberHandle } from '@/hooks/useUniqueMemberHandle'
+import { handleAnonymousAuth } from '@/providers/auth/auth.helpers'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useSnackbar } from '@/providers/snackbars'
 import { useYppStore } from '@/providers/ypp/ypp.store'
@@ -59,11 +60,12 @@ export const SignUpModal = () => {
   const [amountOfTokens, setAmountofTokens] = useState<number>()
   const memberRef = useRef<string | null>(null)
   const memberPollingTries = useRef(0)
+  const haveTriedCreateSession = useRef(false)
   const ytResponseData = useYppStore((state) => state.ytResponseData)
   const setYppModalOpenName = useYppStore((state) => state.actions.setYppModalOpenName)
   const setYtResponseData = useYppStore((state) => state.actions.setYtResponseData)
+  const { anonymousUserId } = useAuthStore()
   const { displaySnackbar } = useSnackbar()
-  const ytEmailIsValid = Boolean(ytResponseData?.email && !ytResponseData.email.includes('@pages.plusgoogle.com'))
 
   const { generateUniqueMemberHandleBasedOnInput } = useUniqueMemberHandle()
 
@@ -131,6 +133,21 @@ export const SignUpModal = () => {
           })
           setAuthModalOpenName(undefined)
         }
+        if (error === RegisterError.SessionRequired) {
+          if (!haveTriedCreateSession.current) {
+            haveTriedCreateSession.current = true
+            handleAnonymousAuth(anonymousUserId).then(() => {
+              handleOrionAccountCreation()
+            })
+          } else {
+            displaySnackbar({
+              title: 'Something went wrong',
+              description: 'We could not create or find session. Please contact support.',
+              iconType: 'error',
+            })
+            setAuthModalOpenName(undefined)
+          }
+        }
       },
       onStart: () => {
         goToStep(SignUpSteps.Creating)
@@ -148,6 +165,7 @@ export const SignUpModal = () => {
       },
     })
   }, [
+    anonymousUserId,
     createNewOrionAccount,
     displaySnackbar,
     goToNextStep,
@@ -380,7 +398,7 @@ export const SignUpModal = () => {
           isOverflowing={overflow || !smMatch}
           isEmailAlreadyTakenError={emailAlreadyTakenError}
           onEmailSubmit={handleEmailStepSubmit}
-          email={signUpFormData.current.email || (ytEmailIsValid ? (ytResponseData?.email as string) : '')}
+          email={signUpFormData.current.email}
           confirmedTerms={signUpFormData.current.confirmedTerms}
         />
       )}
