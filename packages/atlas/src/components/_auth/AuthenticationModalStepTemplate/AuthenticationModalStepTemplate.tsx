@@ -61,7 +61,7 @@ export const AuthenticationModalStepTemplate: FC<AuthenticationModalStepTemplate
           {subtitle && (
             <>
               {subtitleIcon}
-              <Text style={{ whiteSpace: 'pre-line' }} variant="t200" as="span" color="colorText">
+              <Text variant="t200" as="span" color="colorText">
                 {subtitle}
               </Text>
             </>
