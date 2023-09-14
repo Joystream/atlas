@@ -103,7 +103,9 @@ export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ type, ...res
                     {
                       label: `${isMemberType ? 'Member' : 'Channel'} notification settings`,
                       nodeStart: <SvgActionSettings />,
-                      onClick: () => markNotificationsAsRead(notifications),
+                      to: isMemberType
+                        ? absoluteRoutes.viewer.memberSettings({ tab: 'Notifications' })
+                        : absoluteRoutes.studio.myChannel({ tab: 'Notifications' }),
                     },
                   ]}
                   trigger={null}

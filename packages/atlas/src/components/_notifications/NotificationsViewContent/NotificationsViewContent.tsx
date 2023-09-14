@@ -80,6 +80,9 @@ export const NotificationsViewContent = ({
               {
                 label: `${isMemberType ? 'Member' : 'Channel'} notification setting`,
                 nodeStart: <SvgActionSettings />,
+                to: isMemberType
+                  ? absoluteRoutes.viewer.memberSettings({ tab: 'Notifications' })
+                  : absoluteRoutes.studio.myChannel({ tab: 'Notifications' }),
               },
               {
                 label: `${isMemberType ? 'Channel' : 'Member'} notification center`,

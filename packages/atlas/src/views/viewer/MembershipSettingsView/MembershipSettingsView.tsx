@@ -27,6 +27,7 @@ export const MembershipSettingsView: FC = () => {
     if (initialRender.current) {
       const tabIndex = TABS.findIndex((t) => t === currentTabName)
       if (tabIndex === -1) setSearchParams({ tab: TABS[0] }, { replace: true })
+      setCurrentTab(tabIndex)
       initialRender.current = false
     }
   }, [currentTabName, setSearchParams])
