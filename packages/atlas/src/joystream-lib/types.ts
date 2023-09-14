@@ -13,6 +13,7 @@ export type MemberId = string
 export type ChannelId = string
 export type VideoId = string
 export type CategoryId = string
+export type TokenId = string
 
 export type AccountBalanceInfo = {
   // transferable balance account
