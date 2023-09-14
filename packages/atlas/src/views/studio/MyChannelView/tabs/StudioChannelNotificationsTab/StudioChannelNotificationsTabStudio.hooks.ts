@@ -7,7 +7,7 @@ import {
 } from '@/api/queries/__generated__/notifications.generated'
 import { NotificationsState } from '@/components/NotificationsTable'
 
-export const useMemberSettingsData = () => {
+export const useChannelSettingsData = () => {
   const { refetch, data: queryData, loading: isLoading } = useGetChannelNotificationPreferencesQuery()
   const [mutate, { data: mutationData, loading: isSubmitting }] = useSetChannelNotificationPreferencesMutation()
 
