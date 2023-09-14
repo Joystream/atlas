@@ -48,7 +48,7 @@ type NotificationAvatarType = 'active-channel' | 'active-membership' | 'channel'
 
 export const useNotificationAvatar = (
   avatar: NotificationUX['avatar']
-): { avatarUrls?: string[]; isLoading: boolean } => {
+): { avatarUrls: string[]; isLoading: boolean } => {
   const { activeChannel, activeMembership } = useUser()
 
   const memberHandle = avatar?.type === 'membership' ? avatar.params?.[0] : undefined
@@ -66,20 +66,17 @@ export const useNotificationAvatar = (
   const channel = avatar?.type === 'active-channel' ? activeChannel : channelData?.channelById
 
   switch (avatar?.type) {
-    case undefined:
-      return { isLoading: false }
-
     case 'active-membership':
     case 'membership':
-      return { avatarUrls: getMemberAvatar(member).urls ?? undefined, isLoading: isMemberLoading }
+      return { avatarUrls: getMemberAvatar(member).urls ?? [], isLoading: isMemberLoading }
 
     case 'active-channel':
     case 'channel':
-      if (!channel?.avatarPhoto?.isAccepted === false) {
-        return { isLoading: false }
-      }
-      return { avatarUrls: channel?.avatarPhoto?.resolvedUrls, isLoading: isChannelLoading }
+      if (!channel?.avatarPhoto?.isAccepted === false) break
+      return { avatarUrls: channel?.avatarPhoto?.resolvedUrls ?? [], isLoading: isChannelLoading }
   }
+
+  return { avatarUrls: [], isLoading: false }
 }
 
 type ActionType =

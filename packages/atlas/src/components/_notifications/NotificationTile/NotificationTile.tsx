@@ -11,7 +11,6 @@ import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { NotificationRecord } from '@/providers/notifications/notifications.types'
 import { formatDateAgo } from '@/utils/time'
 
-import { NoActorNotificationAvatar } from './NoActorNotificationAvatar'
 import {
   NotificationIconType,
   notificationIconMapper,
@@ -115,7 +114,7 @@ export const NotificationTile: FC<NotificationProps> = ({
 }
 
 type NotifactionIconProps = {
-  avatarUrls?: string[]
+  avatarUrls: string[]
   iconType: NotificationIconType
 }
 
@@ -123,7 +122,7 @@ export const NotifactionIcon = ({ iconType, avatarUrls }: NotifactionIconProps) 
   const [icon, color] = notificationIconMapper[iconType]
   return (
     <IconWrapper>
-      {avatarUrls ? <Avatar size={40} assetUrls={avatarUrls} /> : <NoActorNotificationAvatar size="regular" />}
+      <Avatar size={40} assetUrls={avatarUrls} />
       <IconContainer className="notification-icon-container" color={color}>
         {icon}
       </IconContainer>
