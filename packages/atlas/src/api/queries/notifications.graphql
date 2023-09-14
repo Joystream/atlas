@@ -190,15 +190,55 @@ query GetMembershipNotificationPreferences {
 query GetChannelNotificationPreferences {
   accountData {
     notificationPreferences {
-      bidMadeOnNft {
-        emailEnabled
-        inAppEnabled
-      }
       channelExcludedFromApp {
         emailEnabled
         inAppEnabled
       }
-      channelFundsWithdrawn {
+      videoFeaturedOnCategoryPage {
+        emailEnabled
+        inAppEnabled
+      }
+      nftFeaturedOnMarketPlace {
+        emailEnabled
+        inAppEnabled
+      }
+      videoFeaturedAsHero {
+        emailEnabled
+        inAppEnabled
+      }
+      # videoExcludedFromApp {
+      #   emailEnabled
+      #   inAppEnabled
+      # }
+      newChannelFollower {
+        emailEnabled
+        inAppEnabled
+      }
+      videoCommentCreated {
+        emailEnabled
+        inAppEnabled
+      }
+      videoLiked {
+        emailEnabled
+        inAppEnabled
+      }
+      videoDisliked {
+        emailEnabled
+        inAppEnabled
+      }
+      yppChannelVerified {
+        emailEnabled
+        inAppEnabled
+      }
+      nftBought {
+        emailEnabled
+        inAppEnabled
+      }
+      bidMadeOnNft {
+        emailEnabled
+        inAppEnabled
+      }
+      royaltyReceived {
         emailEnabled
         inAppEnabled
       }
@@ -210,51 +250,11 @@ query GetChannelNotificationPreferences {
         emailEnabled
         inAppEnabled
       }
-      newChannelFollower {
-        emailEnabled
-        inAppEnabled
-      }
       newPayoutUpdatedByCouncil {
         emailEnabled
         inAppEnabled
       }
-      nftBought {
-        emailEnabled
-        inAppEnabled
-      }
-      nftFeaturedOnMarketPlace {
-        emailEnabled
-        inAppEnabled
-      }
-      royaltyReceived {
-        emailEnabled
-        inAppEnabled
-      }
-      videoCommentCreated {
-        emailEnabled
-        inAppEnabled
-      }
-      videoDisliked {
-        emailEnabled
-        inAppEnabled
-      }
-      videoExcludedFromApp {
-        emailEnabled
-        inAppEnabled
-      }
-      videoFeaturedAsHero {
-        emailEnabled
-        inAppEnabled
-      }
-      videoFeaturedOnCategoryPage {
-        emailEnabled
-        inAppEnabled
-      }
-      videoLiked {
-        emailEnabled
-        inAppEnabled
-      }
-      yppChannelVerified {
+      channelFundsWithdrawn {
         emailEnabled
         inAppEnabled
       }
@@ -317,6 +317,79 @@ mutation SetMembershipNotificationPreferences($notificationPreferences: AccountN
       inAppEnabled
     }
     fundsFromWgReceived {
+      emailEnabled
+      inAppEnabled
+    }
+  }
+}
+
+mutation SetChannelNotificationPreferences($notificationPreferences: AccountNotificationPreferencesInput!) {
+  setAccountNotificationPreferences(notificationPreferences: $notificationPreferences) {
+    channelExcludedFromApp {
+      emailEnabled
+      inAppEnabled
+    }
+    videoFeaturedOnCategoryPage {
+      emailEnabled
+      inAppEnabled
+    }
+    nftFeaturedOnMarketPlace {
+      emailEnabled
+      inAppEnabled
+    }
+    videoFeaturedAsHero {
+      emailEnabled
+      inAppEnabled
+    }
+    # videoExcludedFromApp {
+    #   emailEnabled
+    #   inAppEnabled
+    # }
+    newChannelFollower {
+      emailEnabled
+      inAppEnabled
+    }
+    videoCommentCreated {
+      emailEnabled
+      inAppEnabled
+    }
+    videoLiked {
+      emailEnabled
+      inAppEnabled
+    }
+    videoDisliked {
+      emailEnabled
+      inAppEnabled
+    }
+    yppChannelVerified {
+      emailEnabled
+      inAppEnabled
+    }
+    nftBought {
+      emailEnabled
+      inAppEnabled
+    }
+    bidMadeOnNft {
+      emailEnabled
+      inAppEnabled
+    }
+    royaltyReceived {
+      emailEnabled
+      inAppEnabled
+    }
+    channelPaymentReceived {
+      emailEnabled
+      inAppEnabled
+    }
+    channelReceivedFundsFromWg {
+      emailEnabled
+      inAppEnabled
+    }
+    newPayoutUpdatedByCouncil {
+      emailEnabled
+      inAppEnabled
+    }
+    channelFundsWithdrawn {
       emailEnabled
       inAppEnabled
     }
