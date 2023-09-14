@@ -9,13 +9,14 @@ import {
 } from './fragments.generated'
 
 const defaultOptions = {} as const
-export type GetMembershipNotificationsConnectionQueryVariables = Types.Exact<{
+export type GetNotificationsConnectionQueryVariables = Types.Exact<{
   accountId: Types.Scalars['String']
+  type: Types.Scalars['String']
   first: Types.Scalars['Int']
   after?: Types.InputMaybe<Types.Scalars['String']>
 }>
 
-export type GetMembershipNotificationsConnectionQuery = {
+export type GetNotificationsConnectionQuery = {
   __typename?: 'Query'
   notificationInAppDeliveriesConnection: {
     __typename?: 'NotificationInAppDeliveriesConnection'
@@ -32,74 +33,14 @@ export type GetMembershipNotificationsConnectionQuery = {
           createdAt: Date
           status: { __typename: 'Read' } | { __typename: 'Unread' }
           notificationType:
-            | { __typename?: 'BidMadeCompletingAuction' }
+            | { __typename: 'BidMadeCompletingAuction' }
             | { __typename: 'ChannelCreated'; channelId: string; channelTitle: string }
-            | { __typename?: 'ChannelExcluded' }
-            | { __typename?: 'ChannelFundsWithdrawn' }
-            | { __typename?: 'ChannelSuspended' }
-            | { __typename?: 'ChannelVerified' }
-            | { __typename?: 'CommentPostedToVideo' }
-            | { __typename: 'CommentReply'; memberHandle: string; videoId: string; videoTitle: string }
-            | { __typename?: 'CreatorReceivesAuctionBid' }
-            | { __typename?: 'DirectChannelPaymentByMember' }
-            | { __typename: 'EnglishAuctionLost'; videoId: string; videoTitle: string }
-            | { __typename?: 'EnglishAuctionSettled' }
-            | { __typename: 'EnglishAuctionWon'; videoId: string; videoTitle: string }
-            | { __typename: 'HigherBidPlaced'; newBidderHandle: string; videoId: string; videoTitle: string }
-            | { __typename: 'NewAuction'; channelTitle: string; videoId: string; videoTitle: string }
-            | { __typename?: 'NewAuctionBid' }
-            | { __typename?: 'NewChannelFollower' }
-            | { __typename: 'NewNftOnSale'; channelTitle: string; videoId: string; videoTitle: string }
-            | { __typename?: 'NftFeaturedOnMarketPlace' }
-            | { __typename?: 'NftOffered' }
-            | { __typename?: 'NftPurchased' }
-            | { __typename?: 'NftRoyaltyPaid' }
-            | { __typename: 'OpenAuctionLost'; videoTitle: string; videoId: string }
-            | { __typename: 'OpenAuctionWon'; videoId: string; videoTitle: string }
-            | { __typename: 'ReactionToComment'; memberHandle: string; videoId: string; videoTitle: string }
-            | { __typename?: 'VideoDisliked' }
-            | { __typename?: 'VideoExcluded' }
-            | { __typename?: 'VideoFeaturedAsCategoryHero' }
-            | { __typename?: 'VideoFeaturedOnCategoryPage' }
-            | { __typename?: 'VideoLiked' }
-            | { __typename: 'VideoPosted'; channelTitle: string; videoId: string; videoTitle: string }
-        }
-      }
-    }>
-  }
-}
-
-export type GetChannelNotificationsConnectionQueryVariables = Types.Exact<{
-  accountId: Types.Scalars['String']
-  first: Types.Scalars['Int']
-  after?: Types.InputMaybe<Types.Scalars['String']>
-}>
-
-export type GetChannelNotificationsConnectionQuery = {
-  __typename?: 'Query'
-  notificationInAppDeliveriesConnection: {
-    __typename?: 'NotificationInAppDeliveriesConnection'
-    totalCount: number
-    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor: string }
-    edges: Array<{
-      __typename?: 'NotificationInAppDeliveryEdge'
-      cursor: string
-      node: {
-        __typename?: 'NotificationInAppDelivery'
-        notification: {
-          __typename?: 'Notification'
-          id: string
-          createdAt: Date
-          status: { __typename: 'Read' } | { __typename: 'Unread' }
-          notificationType:
-            | { __typename?: 'BidMadeCompletingAuction' }
-            | { __typename?: 'ChannelCreated' }
             | { __typename: 'ChannelExcluded' }
             | { __typename: 'ChannelFundsWithdrawn'; amount: string }
             | { __typename: 'ChannelSuspended' }
             | { __typename: 'ChannelVerified' }
             | { __typename: 'CommentPostedToVideo'; memberHandle: string; videoId: string; videoTitle: string }
-            | { __typename?: 'CommentReply' }
+            | { __typename: 'CommentReply'; memberHandle: string; videoId: string; videoTitle: string }
             | {
                 __typename: 'CreatorReceivesAuctionBid'
                 amount: string
@@ -108,21 +49,21 @@ export type GetChannelNotificationsConnectionQuery = {
                 videoTitle: string
               }
             | { __typename: 'DirectChannelPaymentByMember'; amount: string; payerHandle: string }
-            | { __typename?: 'EnglishAuctionLost' }
+            | { __typename: 'EnglishAuctionLost'; videoId: string; videoTitle: string }
             | { __typename: 'EnglishAuctionSettled'; price: string; videoId: string; videoTitle: string }
-            | { __typename?: 'EnglishAuctionWon' }
-            | { __typename?: 'HigherBidPlaced' }
-            | { __typename?: 'NewAuction' }
-            | { __typename?: 'NewAuctionBid' }
+            | { __typename: 'EnglishAuctionWon'; videoId: string; videoTitle: string }
+            | { __typename: 'HigherBidPlaced'; newBidderHandle: string; videoId: string; videoTitle: string }
+            | { __typename: 'NewAuction'; channelTitle: string; videoId: string; videoTitle: string }
+            | { __typename: 'NewAuctionBid' }
             | { __typename: 'NewChannelFollower'; followerHandle: string }
-            | { __typename?: 'NewNftOnSale' }
+            | { __typename: 'NewNftOnSale'; channelTitle: string; videoId: string; videoTitle: string }
             | { __typename: 'NftFeaturedOnMarketPlace'; videoId: string; videoTitle: string }
-            | { __typename?: 'NftOffered' }
+            | { __typename: 'NftOffered' }
             | { __typename: 'NftPurchased'; buyerHandle: string; price: string; videoTitle: string; videoId: string }
             | { __typename: 'NftRoyaltyPaid'; amount: string; videoId: string; videoTitle: string }
-            | { __typename?: 'OpenAuctionLost' }
-            | { __typename?: 'OpenAuctionWon' }
-            | { __typename?: 'ReactionToComment' }
+            | { __typename: 'OpenAuctionLost'; videoTitle: string; videoId: string }
+            | { __typename: 'OpenAuctionWon'; videoId: string; videoTitle: string }
+            | { __typename: 'ReactionToComment'; memberHandle: string; videoId: string; videoTitle: string }
             | { __typename: 'VideoDisliked'; videoId: string; videoTitle: string }
             | { __typename: 'VideoExcluded'; videoTitle: string }
             | {
@@ -138,7 +79,7 @@ export type GetChannelNotificationsConnectionQuery = {
                 videoTitle: string
               }
             | { __typename: 'VideoLiked'; videoId: string; videoTitle: string }
-            | { __typename?: 'VideoPosted' }
+            | { __typename: 'VideoPosted'; channelTitle: string; videoId: string; videoTitle: string }
         }
       }
     }>
@@ -3000,13 +2941,18 @@ export type GetNftActivitiesQuery = {
   }
 }
 
-export const GetMembershipNotificationsConnectionDocument = gql`
-  query GetMembershipNotificationsConnection($accountId: String!, $first: Int!, $after: String) {
+export const GetNotificationsConnectionDocument = gql`
+  query GetNotificationsConnection($accountId: String!, $type: String!, $first: Int!, $after: String) {
     notificationInAppDeliveriesConnection(
       first: $first
       after: $after
       orderBy: notification_createdAt_DESC
-      where: { notification: { account: { joystreamAccount_eq: $accountId } } }
+      where: {
+        notification: {
+          account: { joystreamAccount_eq: $accountId }
+          notificationType: { recipient: { isTypeOf_eq: $type } }
+        }
+      }
     ) {
       pageInfo {
         hasNextPage
@@ -3023,191 +2969,90 @@ export const GetMembershipNotificationsConnectionDocument = gql`
               __typename
             }
             notificationType {
+              __typename
               ... on ChannelCreated {
-                __typename
                 channelId
                 channelTitle
               }
               ... on CommentReply {
-                __typename
                 memberHandle
                 videoId
                 videoTitle
               }
               ... on ReactionToComment {
-                __typename
                 memberHandle
                 videoId
                 videoTitle
               }
               ... on VideoPosted {
-                __typename
                 channelTitle
                 videoId
                 videoTitle
               }
               ... on NewAuction {
-                __typename
                 channelTitle
                 videoId
                 videoTitle
               }
               ... on NewNftOnSale {
-                __typename
                 channelTitle
                 videoId
                 videoTitle
               }
               ... on HigherBidPlaced {
-                __typename
                 newBidderHandle
                 videoId
                 videoTitle
               }
               ... on EnglishAuctionWon {
-                __typename
                 videoId
                 videoTitle
               }
               ... on EnglishAuctionLost {
-                __typename
                 videoId
                 videoTitle
               }
               ... on OpenAuctionWon {
-                __typename
                 videoId
                 videoTitle
               }
               ... on OpenAuctionLost {
-                __typename
                 videoTitle
                 videoId
               }
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
-/**
- * __useGetMembershipNotificationsConnectionQuery__
- *
- * To run a query within a React component, call `useGetMembershipNotificationsConnectionQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetMembershipNotificationsConnectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetMembershipNotificationsConnectionQuery({
- *   variables: {
- *      accountId: // value for 'accountId'
- *      first: // value for 'first'
- *      after: // value for 'after'
- *   },
- * });
- */
-export function useGetMembershipNotificationsConnectionQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetMembershipNotificationsConnectionQuery,
-    GetMembershipNotificationsConnectionQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetMembershipNotificationsConnectionQuery, GetMembershipNotificationsConnectionQueryVariables>(
-    GetMembershipNotificationsConnectionDocument,
-    options
-  )
-}
-export function useGetMembershipNotificationsConnectionLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetMembershipNotificationsConnectionQuery,
-    GetMembershipNotificationsConnectionQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<
-    GetMembershipNotificationsConnectionQuery,
-    GetMembershipNotificationsConnectionQueryVariables
-  >(GetMembershipNotificationsConnectionDocument, options)
-}
-export type GetMembershipNotificationsConnectionQueryHookResult = ReturnType<
-  typeof useGetMembershipNotificationsConnectionQuery
->
-export type GetMembershipNotificationsConnectionLazyQueryHookResult = ReturnType<
-  typeof useGetMembershipNotificationsConnectionLazyQuery
->
-export type GetMembershipNotificationsConnectionQueryResult = Apollo.QueryResult<
-  GetMembershipNotificationsConnectionQuery,
-  GetMembershipNotificationsConnectionQueryVariables
->
-export const GetChannelNotificationsConnectionDocument = gql`
-  query GetChannelNotificationsConnection($accountId: String!, $first: Int!, $after: String) {
-    notificationInAppDeliveriesConnection(
-      first: $first
-      after: $after
-      orderBy: notification_createdAt_DESC
-      where: { notification: { account: { joystreamAccount_eq: $accountId } } }
-    ) {
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
-      totalCount
-      edges {
-        cursor
-        node {
-          notification {
-            id
-            createdAt
-            status {
-              __typename
-            }
-            notificationType {
               ... on ChannelExcluded {
                 __typename
               }
               ... on VideoFeaturedOnCategoryPage {
-                __typename
                 categoryId
                 categoryName
                 videoTitle
               }
               ... on NftFeaturedOnMarketPlace {
-                __typename
                 videoId
                 videoTitle
               }
               ... on VideoFeaturedAsCategoryHero {
-                __typename
                 categoryId
                 categoryName
                 videoTitle
               }
               ... on VideoExcluded {
-                __typename
                 videoTitle
               }
               ... on NewChannelFollower {
-                __typename
                 followerHandle
               }
               ... on CommentPostedToVideo {
-                __typename
                 memberHandle
                 videoId
                 videoTitle
               }
               ... on VideoLiked {
-                __typename
                 videoId
                 videoTitle
               }
               ... on VideoDisliked {
-                __typename
                 videoId
                 videoTitle
               }
@@ -3218,38 +3063,32 @@ export const GetChannelNotificationsConnectionDocument = gql`
                 __typename
               }
               ... on NftPurchased {
-                __typename
                 buyerHandle
                 price
                 videoTitle
                 videoId
               }
               ... on CreatorReceivesAuctionBid {
-                __typename
                 amount
                 bidderHandle
                 videoId
                 videoTitle
               }
               ... on NftRoyaltyPaid {
-                __typename
                 amount
                 videoId
                 videoTitle
               }
               ... on EnglishAuctionSettled {
-                __typename
                 price
                 videoId
                 videoTitle
               }
               ... on DirectChannelPaymentByMember {
-                __typename
                 amount
                 payerHandle
               }
               ... on ChannelFundsWithdrawn {
-                __typename
                 amount
               }
             }
@@ -3261,56 +3100,47 @@ export const GetChannelNotificationsConnectionDocument = gql`
 `
 
 /**
- * __useGetChannelNotificationsConnectionQuery__
+ * __useGetNotificationsConnectionQuery__
  *
- * To run a query within a React component, call `useGetChannelNotificationsConnectionQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetChannelNotificationsConnectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetNotificationsConnectionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetNotificationsConnectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetChannelNotificationsConnectionQuery({
+ * const { data, loading, error } = useGetNotificationsConnectionQuery({
  *   variables: {
  *      accountId: // value for 'accountId'
+ *      type: // value for 'type'
  *      first: // value for 'first'
  *      after: // value for 'after'
  *   },
  * });
  */
-export function useGetChannelNotificationsConnectionQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetChannelNotificationsConnectionQuery,
-    GetChannelNotificationsConnectionQueryVariables
-  >
+export function useGetNotificationsConnectionQuery(
+  baseOptions: Apollo.QueryHookOptions<GetNotificationsConnectionQuery, GetNotificationsConnectionQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetChannelNotificationsConnectionQuery, GetChannelNotificationsConnectionQueryVariables>(
-    GetChannelNotificationsConnectionDocument,
+  return Apollo.useQuery<GetNotificationsConnectionQuery, GetNotificationsConnectionQueryVariables>(
+    GetNotificationsConnectionDocument,
     options
   )
 }
-export function useGetChannelNotificationsConnectionLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetChannelNotificationsConnectionQuery,
-    GetChannelNotificationsConnectionQueryVariables
-  >
+export function useGetNotificationsConnectionLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetNotificationsConnectionQuery, GetNotificationsConnectionQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetChannelNotificationsConnectionQuery, GetChannelNotificationsConnectionQueryVariables>(
-    GetChannelNotificationsConnectionDocument,
+  return Apollo.useLazyQuery<GetNotificationsConnectionQuery, GetNotificationsConnectionQueryVariables>(
+    GetNotificationsConnectionDocument,
     options
   )
 }
-export type GetChannelNotificationsConnectionQueryHookResult = ReturnType<
-  typeof useGetChannelNotificationsConnectionQuery
->
-export type GetChannelNotificationsConnectionLazyQueryHookResult = ReturnType<
-  typeof useGetChannelNotificationsConnectionLazyQuery
->
-export type GetChannelNotificationsConnectionQueryResult = Apollo.QueryResult<
-  GetChannelNotificationsConnectionQuery,
-  GetChannelNotificationsConnectionQueryVariables
+export type GetNotificationsConnectionQueryHookResult = ReturnType<typeof useGetNotificationsConnectionQuery>
+export type GetNotificationsConnectionLazyQueryHookResult = ReturnType<typeof useGetNotificationsConnectionLazyQuery>
+export type GetNotificationsConnectionQueryResult = Apollo.QueryResult<
+  GetNotificationsConnectionQuery,
+  GetNotificationsConnectionQueryVariables
 >
 export const MarkNotificationsAsReadDocument = gql`
   mutation MarkNotificationsAsRead($notificationIds: [String!]!) {

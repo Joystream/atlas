@@ -4,10 +4,7 @@ import { useState } from 'react'
 import { useLocation } from 'react-router'
 
 import { useRawNotifications } from '@/api/hooks/notifications'
-import {
-  GetChannelNotificationsConnectionQuery,
-  GetMembershipNotificationsConnectionQuery,
-} from '@/api/queries/__generated__/notifications.generated'
+import { GetNotificationsConnectionQuery } from '@/api/queries/__generated__/notifications.generated'
 import { absoluteRoutes } from '@/config/routes'
 import { useUser } from '@/providers/user/user.hooks'
 
@@ -25,7 +22,7 @@ export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkS
     markNotificationsAsReadMutation,
     refetch,
     ...rest
-  } = useRawNotifications(accountId ?? '', isStudio ? 'channel' : 'membership', opts)
+  } = useRawNotifications(accountId ?? '', isStudio ? 'ChannelRecipient' : 'MemberRecipient', opts)
 
   const {
     lastSeenNotificationBlock,
@@ -33,16 +30,19 @@ export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkS
   } = useNotificationStore()
 
   const [optimisticRead, setOptimisticRead] = useState<string[]>([])
-  const notifications = rawNotifications.map(({ node }): NotificationRecord => {
+  const notifications = rawNotifications.flatMap(({ node }): NotificationRecord | [] => {
     const { id, createdAt, status, notificationType } = node.notification
     const date = new Date(createdAt)
-    return {
-      id,
-      date: date,
-      block: date.getTime(), // TODO rename this field since it's not block anymore
-      read: status.__typename === 'Read' || optimisticRead.includes(id),
-      ...parseNotificationType(notificationType as NotificationType),
-    }
+    const specificData = parseNotificationType(notificationType as NotificationType)
+    return specificData
+      ? {
+          id,
+          date: date,
+          block: date.getTime(), // TODO rename this field since it's not block anymore
+          read: status.__typename === 'Read' || optimisticRead.includes(id),
+          ...specificData,
+        }
+      : []
   })
 
   // those are different from unread notifications!
@@ -71,30 +71,43 @@ export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkS
   }
 }
 
-type QueriedTypes<T extends { __typename?: string }> = T extends { __typename: infer U }
-  ? U extends string
-    ? T
-    : never
-  : never
+type NotificationType =
+  GetNotificationsConnectionQuery['notificationInAppDeliveriesConnection']['edges'][number]['node']['notification']['notificationType']
 
-type NotificationType = QueriedTypes<
-  | GetMembershipNotificationsConnectionQuery['notificationInAppDeliveriesConnection']['edges'][number]['node']['notification']['notificationType']
-  | GetChannelNotificationsConnectionQuery['notificationInAppDeliveriesConnection']['edges'][number]['node']['notification']['notificationType']
->
-
-const parseNotificationType = (notificationType: NotificationType): NotificationData => {
+const parseNotificationType = (notificationType: NotificationType): NotificationData | undefined => {
   switch (notificationType.__typename) {
     case 'ChannelFundsWithdrawn':
     case 'CreatorReceivesAuctionBid':
     case 'DirectChannelPaymentByMember':
     case 'NftRoyaltyPaid':
-      return toNotificationData(notificationType, { 'amount': new BN(notificationType.amount) })
+      return toNotificationData(notificationType, { amount: new BN(notificationType.amount) })
 
     case 'EnglishAuctionSettled':
     case 'NftPurchased':
       return toNotificationData(notificationType, { price: new BN(notificationType.price) })
 
-    default:
+    case 'ChannelCreated':
+    case 'CommentReply':
+    case 'ReactionToComment':
+    case 'VideoPosted':
+    case 'NewNftOnSale':
+    case 'NewAuction':
+    case 'HigherBidPlaced':
+    case 'EnglishAuctionWon':
+    case 'EnglishAuctionLost':
+    case 'OpenAuctionWon':
+    case 'OpenAuctionLost':
+    case 'ChannelExcluded':
+    case 'VideoExcluded':
+    case 'VideoFeaturedOnCategoryPage':
+    case 'NftFeaturedOnMarketPlace':
+    case 'VideoFeaturedAsCategoryHero':
+    case 'NewChannelFollower':
+    case 'CommentPostedToVideo':
+    case 'VideoLiked':
+    case 'VideoDisliked':
+    case 'ChannelVerified':
+    case 'ChannelSuspended':
       return toNotificationData(notificationType, {})
   }
 }

@@ -1,9 +1,14 @@
-query GetMembershipNotificationsConnection($accountId: String!, $first: Int!, $after: String) {
+query GetNotificationsConnection($accountId: String!, $type: String!, $first: Int!, $after: String) {
   notificationInAppDeliveriesConnection(
     first: $first
     after: $after
     orderBy: notification_createdAt_DESC
-    where: { notification: { account: { joystreamAccount_eq: $accountId } } }
+    where: {
+      notification: {
+        account: { joystreamAccount_eq: $accountId }
+        notificationType: { recipient: { isTypeOf_eq: $type } }
+      }
+    }
   ) {
     pageInfo {
       hasNextPage
@@ -20,137 +25,98 @@ query GetMembershipNotificationsConnection($accountId: String!, $first: Int!, $a
             __typename
           }
           notificationType {
+            __typename
+
+            #
+            # Members
+            #
             ... on ChannelCreated {
-              __typename
               channelId
               channelTitle
             }
             ... on CommentReply {
-              __typename
               memberHandle
               videoId
               videoTitle
             }
             ... on ReactionToComment {
-              __typename
               memberHandle
               videoId
               videoTitle
             }
             ... on VideoPosted {
-              __typename
               channelTitle
               videoId
               videoTitle
             }
             ... on NewAuction {
-              __typename
               channelTitle
               videoId
               videoTitle
             }
             ... on NewNftOnSale {
-              __typename
               channelTitle
               videoId
               videoTitle
             }
             ... on HigherBidPlaced {
-              __typename
               newBidderHandle
               videoId
               videoTitle
             }
             ... on EnglishAuctionWon {
-              __typename
               videoId
               videoTitle
             }
             ... on EnglishAuctionLost {
-              __typename
               videoId
               videoTitle
             }
             ... on OpenAuctionWon {
-              __typename
               videoId
               videoTitle
             }
             ... on OpenAuctionLost {
-              __typename
               videoTitle
               videoId
             }
-          }
-        }
-      }
-    }
-  }
-}
 
-query GetChannelNotificationsConnection($accountId: String!, $first: Int!, $after: String) {
-  notificationInAppDeliveriesConnection(
-    first: $first
-    after: $after
-    orderBy: notification_createdAt_DESC
-    where: { notification: { account: { joystreamAccount_eq: $accountId } } }
-  ) {
-    pageInfo {
-      hasNextPage
-      endCursor
-    }
-    totalCount
-    edges {
-      cursor
-      node {
-        notification {
-          id
-          createdAt
-          status {
-            __typename
-          }
-          notificationType {
+            #
+            # Channels
+            #
             ... on ChannelExcluded {
               __typename
             }
             ... on VideoFeaturedOnCategoryPage {
-              __typename
               categoryId
               categoryName
               videoTitle
             }
             ... on NftFeaturedOnMarketPlace {
-              __typename
               videoId
               videoTitle
             }
             ... on VideoFeaturedAsCategoryHero {
-              __typename
               categoryId
               categoryName
               videoTitle
             }
             ... on VideoExcluded {
-              __typename
               videoTitle
             }
             ... on NewChannelFollower {
-              __typename
               followerHandle
             }
             ... on CommentPostedToVideo {
-              __typename
               memberHandle
               videoId
               videoTitle
             }
             ... on VideoLiked {
-              __typename
               videoId
               videoTitle
             }
             ... on VideoDisliked {
-              __typename
               videoId
               videoTitle
             }
@@ -161,38 +127,32 @@ query GetChannelNotificationsConnection($accountId: String!, $first: Int!, $afte
               __typename
             }
             ... on NftPurchased {
-              __typename
               buyerHandle
               price
               videoTitle
               videoId
             }
             ... on CreatorReceivesAuctionBid {
-              __typename
               amount
               bidderHandle
               videoId
               videoTitle
             }
             ... on NftRoyaltyPaid {
-              __typename
               amount
               videoId
               videoTitle
             }
             ... on EnglishAuctionSettled {
-              __typename
               price
               videoId
               videoTitle
             }
             ... on DirectChannelPaymentByMember {
-              __typename
               amount
               payerHandle
             }
             ... on ChannelFundsWithdrawn {
-              __typename
               amount
             }
           }

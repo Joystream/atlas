@@ -5,10 +5,9 @@ import {
   GetNftActivitiesCountQueryVariables,
   GetNftActivitiesQuery,
   GetNftActivitiesQueryVariables,
-  useGetChannelNotificationsConnectionQuery,
-  useGetMembershipNotificationsConnectionQuery,
   useGetNftActivitiesCountQuery,
   useGetNftActivitiesQuery,
+  useGetNotificationsConnectionQuery,
   useMarkNotificationsAsReadMutation,
 } from '@/api/queries/__generated__/notifications.generated'
 
@@ -16,23 +15,15 @@ import { NftActivityOrderByInput } from '../queries/__generated__/baseTypes.gene
 
 export const useRawNotifications = (
   accountId: string,
-  type: 'membership' | 'channel',
+  type: 'MemberRecipient' | 'ChannelRecipient',
   opts?: Pick<QueryHookOptions, 'notifyOnNetworkStatusChange'>
 ) => {
-  const membershipNotifications = useGetMembershipNotificationsConnectionQuery({
-    variables: { first: 10, accountId },
-    skip: !accountId || type !== 'membership',
-    ...opts,
-  })
-  const channelNotifications = useGetChannelNotificationsConnectionQuery({
-    variables: { first: 10, accountId },
-    skip: !accountId || type !== 'channel',
+  const { data, ...rest } = useGetNotificationsConnectionQuery({
+    variables: { first: 10, accountId, type },
     ...opts,
   })
 
   const [markNotificationsAsReadMutation] = useMarkNotificationsAsReadMutation()
-
-  const { data, ...rest } = membershipNotifications ?? channelNotifications
 
   return {
     notifications: data?.notificationInAppDeliveriesConnection.edges || [],
