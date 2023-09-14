@@ -3,7 +3,7 @@ query GetMembershipNotificationsConnection($accountId: String!, $first: Int!, $a
     first: $first
     after: $after
     orderBy: notification_createdAt_DESC
-    where: { notification: { account: { id_eq: $accountId } } }
+    where: { notification: { account: { joystreamAccount_eq: $accountId } } }
   ) {
     pageInfo {
       hasNextPage
@@ -93,7 +93,7 @@ query GetChannelNotificationsConnection($accountId: String!, $first: Int!, $afte
     first: $first
     after: $after
     orderBy: notification_createdAt_DESC
-    where: { notification: { account: { id_eq: $accountId } } }
+    where: { notification: { account: { joystreamAccount_eq: $accountId } } }
   ) {
     pageInfo {
       hasNextPage

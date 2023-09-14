@@ -3006,7 +3006,7 @@ export const GetMembershipNotificationsConnectionDocument = gql`
       first: $first
       after: $after
       orderBy: notification_createdAt_DESC
-      where: { notification: { account: { id_eq: $accountId } } }
+      where: { notification: { account: { joystreamAccount_eq: $accountId } } }
     ) {
       pageInfo {
         hasNextPage
@@ -3150,7 +3150,7 @@ export const GetChannelNotificationsConnectionDocument = gql`
       first: $first
       after: $after
       orderBy: notification_createdAt_DESC
-      where: { notification: { account: { id_eq: $accountId } } }
+      where: { notification: { account: { joystreamAccount_eq: $accountId } } }
     ) {
       pageInfo {
         hasNextPage

@@ -35,10 +35,11 @@ export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkS
   const [optimisticRead, setOptimisticRead] = useState<string[]>([])
   const notifications = rawNotifications.map(({ node }): NotificationRecord => {
     const { id, createdAt, status, notificationType } = node.notification
+    const date = new Date(createdAt)
     return {
       id,
-      date: createdAt,
-      block: createdAt.getTime(), // TODO rename this field since it's not block anymore
+      date: date,
+      block: date.getTime(), // TODO rename this field since it's not block anymore
       read: status.__typename === 'Read' || optimisticRead.includes(id),
       ...parseNotificationType(notificationType as NotificationType),
     }
