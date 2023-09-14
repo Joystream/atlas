@@ -9,6 +9,7 @@ import {
   LeftPlaceholder,
   WidgetPreviewContainer,
 } from '@/components/_crt/CreateTokenDrawer/steps/styles'
+import { CrtBasicInfoWidget } from '@/components/_crt/CrtBasicInfoWidget'
 import { CrtFormWrapper } from '@/components/_crt/CrtFormWrapper'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
@@ -17,8 +18,6 @@ import { RatioSlider } from '@/components/_inputs/Slider'
 import { useMountEffect } from '@/hooks/useMountEffect'
 
 import { CommonStepProps } from './types'
-
-import { CrtBasicInfoWidget } from '../../CrtBasicInfoWidget/CrtBasicInfoWidget'
 
 const accessOptions = [
   {
@@ -65,8 +64,19 @@ export const SetupTokenStep = ({ setPrimaryButtonProps, onSubmit, form, setPrevi
         <LeftPlaceholder />
         <CrtBasicInfoWidget
           name={watchedForm.name}
-          creatorReward={watchedForm.creatorReward}
-          revenueShare={watchedForm.revenueShare}
+          titleColor="colorText"
+          details={[
+            {
+              caption: 'REVENUE SHARE',
+              content: `${watchedForm.revenueShare}%`,
+              tooltipText: 'Lorem ipsum',
+            },
+            {
+              caption: 'CREATOR REWARD',
+              content: `${watchedForm.creatorReward}%`,
+              tooltipText: 'Lorem ipsum',
+            },
+          ]}
         />
         <BottomPlaceholder>
           <svg xmlns="http://www.w3.org/2000/svg" width="371" height="163" viewBox="0 0 371 163" fill="none">
