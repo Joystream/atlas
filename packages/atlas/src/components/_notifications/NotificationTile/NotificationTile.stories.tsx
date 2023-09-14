@@ -1,5 +1,4 @@
 import { Meta, StoryFn } from '@storybook/react'
-import { useState } from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { NotificationRecord } from '@/providers/notifications/notifications.types'
@@ -39,7 +38,6 @@ export default {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Template: StoryFn<any> = (args) => {
-  const [selected, setSelected] = useState(false)
   const notification: NotificationRecord = {
     id: 'id',
     date: new Date(Date.now() - 10000000),
@@ -62,14 +60,7 @@ const Template: StoryFn<any> = (args) => {
       title: args.videoTitle,
     },
   }
-  return (
-    <NotificationTile
-      {...args}
-      notification={notification}
-      selected={selected}
-      onSelect={() => setSelected(!selected)}
-    />
-  )
+  return <NotificationTile {...args} notification={notification} />
 }
 
 export const Default = Template.bind({})

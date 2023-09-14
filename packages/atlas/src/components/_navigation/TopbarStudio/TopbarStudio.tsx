@@ -46,6 +46,9 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
     setIsWorkspaceOpen(false)
   }
 
+  // todo: add logic after orion is done
+  const unseenMemberNotifications = 1
+
   return (
     <>
       <StyledTopbarBase
@@ -72,11 +75,12 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
                   {mdMatch && 'Upload video'}
                 </Button>
               </CSSTransition>
-              <NotificationsWidget trigger={<NotificationsButton />} />
+              <NotificationsWidget type="channel" trigger={<NotificationsButton />} />
               <StyledAvatar
                 size={40}
                 assetUrls={activeChannel?.avatarPhoto?.resolvedUrls}
                 onClick={handleDrawerToggle}
+                badge={unseenMemberNotifications}
               />
             </StudioTopbarContainer>
           ) : (
@@ -88,7 +92,7 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
       <MemberDropdown
         onChannelChange={handleChannelChange}
         isActive={isMemberDropdownActive}
-        publisher={!!hasAtLeastOneChannel}
+        publisher={hasAtLeastOneChannel}
         closeDropdown={() => setIsMemberDropdownActive(false)}
       />
     </>

@@ -23,8 +23,8 @@ import { RoutingState } from '@/types/routing'
 const YppLandingView = lazy(() =>
   import('@/views/global/YppLandingView').then((module) => ({ default: module.YppLandingView }))
 )
-const NotificationsView = lazy(() =>
-  import('@/views/notifications').then((module) => ({ default: module.NotificationsView }))
+const MemberNotificationsView = lazy(() =>
+  import('@/views/notifications').then((module) => ({ default: module.MemberNotificationsView }))
 )
 const CategoryView = lazy(() => import('./CategoryView').then((module) => ({ default: module.CategoryView })))
 const ChannelView = lazy(() => import('./ChannelView').then((module) => ({ default: module.ChannelView })))
@@ -169,11 +169,11 @@ export const ViewerLayout: FC = () => {
                     }
                   />
                   <Route
-                    path={absoluteRoutes.viewer.notifications()}
+                    path={absoluteRoutes.viewer.memberNotifications()}
                     element={
                       <PrivateRoute
                         isAuth={isLoggedIn}
-                        element={<NotificationsView />}
+                        element={<MemberNotificationsView />}
                         redirectTo={ENTRY_POINT_ROUTE}
                       />
                     }

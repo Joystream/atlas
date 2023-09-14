@@ -1,26 +1,33 @@
 import { differenceInCalendarYears, differenceInDays, format } from 'date-fns'
-import { ChangeEvent, FC, ReactNode, useMemo } from 'react'
+import { FC, ReactElement, ReactNode, useMemo, useRef } from 'react'
 
+import {
+  SvgActionAddVideo,
+  SvgActionCheck,
+  SvgActionCouncil,
+  SvgActionDislikeOutline,
+  SvgActionInformative,
+  SvgActionLikeOutline,
+  SvgActionMore,
+  SvgActionNft,
+  SvgActionNotifications,
+  SvgActionPlaceholder,
+  SvgActionRevenueShare,
+} from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
-import { Checkbox } from '@/components/_inputs/Checkbox'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { KebabMenuButtonIcon } from '@/components/_nft/NftTile/NftTileDetails.styles'
+import { ContextMenu } from '@/components/_overlays/ContextMenu'
+import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { absoluteRoutes } from '@/config/routes'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { NotificationRecord } from '@/providers/notifications/notifications.types'
 import { formatDateAgo } from '@/utils/time'
 
 import { NoActorNotificationAvatar } from './NoActorNotificationAvatar'
-import {
-  AvatarWrapper,
-  CheckboxSkeleton,
-  Content,
-  StyledLink,
-  StyledListItem,
-  Title,
-  Wrapper,
-} from './NotificationTile.styles'
+import { IconContainer, IconWrapper, StyledLink, StyledListItem } from './NotificationTile.styles'
 
 const getNotificationText = (notification: NotificationRecord): ReactNode => {
   switch (notification.type) {
@@ -68,25 +75,24 @@ const getNotificationText = (notification: NotificationRecord): ReactNode => {
 export type NotificationProps = {
   notification: NotificationRecord
   loading?: boolean
-  onCheckboxChange?: (selected: boolean, e: ChangeEvent<HTMLInputElement>) => void
   onClick?: () => void
-  selected?: boolean
-  variant?: 'default' | 'compact'
   className?: string
+  onMarkAsRead?: () => void
+  onMarkAsUnread?: () => void
 }
 
 export const NotificationTile: FC<NotificationProps> = ({
   notification,
   loading,
-  onCheckboxChange,
   onClick,
-  selected = false,
-  variant = 'default',
   className,
+  onMarkAsRead,
+  onMarkAsUnread,
 }) => {
-  const { date, video, member, read } = notification
-  const { urls: avatarUrls, isLoadingAsset: isLoadingAvatar } = getMemberAvatar(member)
-
+  const { date, member, read } = notification
+  const { urls: avatarUrls } = getMemberAvatar(member)
+  const ref = useRef<HTMLButtonElement>(null)
+  const contextMenuInstanceRef = useRef<PopoverImperativeHandle>(null)
   const formattedDate = useMemo(() => {
     const differenceDays = differenceInDays(new Date(), date)
     const differenceYears = differenceInCalendarYears(new Date(), date)
@@ -99,93 +105,136 @@ export const NotificationTile: FC<NotificationProps> = ({
     return formatDateAgo(date)
   }, [date])
 
-  if (variant === 'compact') {
-    return (
-      <StyledLink
-        to={absoluteRoutes.viewer.video(notification.video.id, {
-          ...(notification.type === 'video-commented' || notification.type === 'comment-reply'
-            ? { commentId: notification.commentId }
-            : {}),
-        })}
-        onClick={onClick}
-      >
-        <StyledListItem
-          loading={loading}
-          read={read}
-          variant="compact"
-          nodeStart={
-            member ? (
-              <Avatar size={32} assetUrls={avatarUrls} loading={isLoadingAvatar || loading} />
-            ) : (
-              <NoActorNotificationAvatar size="small" />
-            )
-          }
-          caption={!loading ? `${formattedDate} • ${video.title}` : <SkeletonLoader width="50%" height={19} />}
-          label={
-            !loading ? (
-              <>
-                {member && (
-                  <Text as="span" variant="t200-strong" color="colorText">
-                    {`${member.handle} `}
-                  </Text>
-                )}
-                <Text as="span" variant="t200-strong">
-                  {getNotificationText(notification)}
-                </Text>
-              </>
-            ) : (
-              <SkeletonLoader width="40%" height={20} bottomSpace={2} />
-            )
-          }
-        />
-      </StyledLink>
-    )
-  }
-
   return (
-    <Wrapper
-      to={absoluteRoutes.viewer.video(notification.video.id)}
-      read={read}
-      selected={selected}
-      loading={loading}
-      className={className}
-      variant="default"
-      onClick={onClick}
+    <StyledLink
+      to={absoluteRoutes.viewer.video(notification.video.id, {
+        ...(notification.type === 'video-commented' || notification.type === 'comment-reply'
+          ? { commentId: notification.commentId }
+          : {}),
+      })}
+      onClick={() => {
+        onClick?.()
+        onMarkAsRead?.()
+      }}
+      onPointerLeave={() => contextMenuInstanceRef.current?.hide()}
     >
-      {!loading ? (
-        <Checkbox onChange={onCheckboxChange} value={selected} />
-      ) : (
-        <CheckboxSkeleton width={16} height={16} />
-      )}
-      <AvatarWrapper>
-        {member ? (
-          <Avatar size={40} assetUrls={avatarUrls} loading={isLoadingAvatar || loading} />
-        ) : (
-          <NoActorNotificationAvatar size="regular" />
-        )}
-      </AvatarWrapper>
-      {!loading ? (
-        <Content>
-          <Title>
-            {member && (
-              <Text as="span" variant="h300" color="colorText">
-                {`${member.handle} `}
+      <StyledListItem
+        loading={loading}
+        read={read}
+        variant="compact"
+        className={className}
+        nodeStart={
+          member ? (
+            <NotifactionIcon avatarUrls={avatarUrls ?? []} iconType={getNotificationIcon(notification)} />
+          ) : (
+            <NoActorNotificationAvatar size="small" />
+          )
+        }
+        caption={!loading ? formattedDate : <SkeletonLoader width="50%" height={19} />}
+        label={
+          !loading ? (
+            <>
+              {member && (
+                <Text as="span" variant="t100">
+                  {`${member.handle} `}
+                </Text>
+              )}
+              <Text as="span" variant="t100">
+                {getNotificationText(notification)}
               </Text>
-            )}
-            <Text as="span" variant="h300">
-              {getNotificationText(notification)}
-            </Text>
-          </Title>
-          <Text as="span" variant="t200" color="colorText">
-            {formattedDate} • {video.title}
-          </Text>
-        </Content>
-      ) : (
-        <Content>
-          <SkeletonLoader width="40%" height={24} bottomSpace={2} />
-          <SkeletonLoader width="50%" height={20} />
-        </Content>
-      )}
-    </Wrapper>
+            </>
+          ) : (
+            <SkeletonLoader width="40%" height={20} bottomSpace={2} />
+          )
+        }
+        nodeEnd={
+          <div
+            onClick={(e) => {
+              e.stopPropagation()
+              e.preventDefault()
+            }}
+          >
+            <KebabMenuButtonIcon
+              ref={ref}
+              icon={<SvgActionMore />}
+              variant="tertiary"
+              size="small"
+              isActive={!loading}
+              className="kebab-button"
+            />
+            <ContextMenu
+              ref={contextMenuInstanceRef}
+              appendTo={ref.current ?? undefined}
+              placement="bottom-end"
+              flipEnabled={false}
+              disabled={loading}
+              items={[
+                read
+                  ? {
+                      label: 'Mark as unread',
+                      nodeStart: <SvgActionCheck />,
+                      onClick: onMarkAsUnread,
+                    }
+                  : {
+                      label: 'Mark as read',
+                      nodeStart: <SvgActionCheck />,
+                      onClick: onMarkAsRead,
+                    },
+              ]}
+              trigger={null}
+              triggerTarget={ref.current}
+            />
+          </div>
+        }
+      />
+    </StyledLink>
+  )
+}
+
+type NotificationIconType = 'like' | 'dislike' | 'follow' | 'warning' | 'bell' | 'nft' | 'payout' | 'reaction' | 'video'
+
+type NotifactionIconProps = {
+  avatarUrls: string[]
+  iconType: NotificationIconType
+}
+
+const notificationIconMapper: Record<NotificationIconType, [ReactElement, 'red' | 'blue' | 'green' | 'gray']> = {
+  bell: [<SvgActionNotifications key={1} />, 'gray'],
+  dislike: [<SvgActionDislikeOutline key={1} />, 'red'],
+  follow: [<SvgActionCouncil key={1} />, 'blue'],
+  reaction: [<SvgActionPlaceholder key={1} />, 'blue'],
+  like: [<SvgActionLikeOutline key={1} />, 'blue'],
+  nft: [<SvgActionNft key={1} />, 'green'],
+  payout: [<SvgActionRevenueShare key={1} />, 'green'],
+  warning: [<SvgActionInformative key={1} />, 'gray'],
+  video: [<SvgActionAddVideo key={1} />, 'blue'],
+}
+
+const getNotificationIcon = (notification: NotificationRecord): NotificationIconType => {
+  switch (notification.type) {
+    case 'bought':
+    case 'bid-accepted':
+    case 'got-outbid':
+    case 'auction-settled-winner':
+    case 'auction-ended':
+    case 'auction-settled-owner':
+    case 'bid-made':
+      return 'nft'
+    case 'video-commented':
+    case 'comment-reply':
+      return 'reaction'
+    default:
+      return 'bell'
+  }
+}
+export const NotifactionIcon = ({ iconType, avatarUrls }: NotifactionIconProps) => {
+  const [icon, color] = notificationIconMapper[iconType]
+  return (
+    <IconWrapper>
+      <Avatar size={40} assetUrls={avatarUrls} />
+      <IconContainer className="notification-icon-container" color={color}>
+        {icon}
+      </IconContainer>
+    </IconWrapper>
   )
 }

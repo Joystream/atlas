@@ -101,6 +101,8 @@ export const TopbarViewer: FC = () => {
   }
 
   const topbarButtonLoading = isAuthenticating || membershipsLoading
+  // todo: add logic after orion is done
+  const unseenChannelNotifications = 2
 
   if (pathname === absoluteRoutes.viewer.ypp()) {
     return null
@@ -140,13 +142,14 @@ export const TopbarViewer: FC = () => {
                 {!topbarButtonLoading ? (
                   isLoggedIn ? (
                     <SignedButtonsWrapper>
-                      <NotificationsWidget trigger={<NotificationsButton />} />
+                      <NotificationsWidget type="member" trigger={<NotificationsButton />} />
                       {!mdMatch && !searchOpen && (
                         <StyledAvatar
                           size={40}
                           assetUrls={memberAvatarUrls}
                           loading={memberAvatarLoading}
                           onClick={handleDrawerToggle}
+                          badge={unseenChannelNotifications}
                         />
                       )}
                       {mdMatch && (
@@ -155,6 +158,7 @@ export const TopbarViewer: FC = () => {
                           assetUrls={memberAvatarUrls}
                           onClick={handleDrawerToggle}
                           loading={memberAvatarLoading}
+                          badge={unseenChannelNotifications}
                         />
                       )}
                     </SignedButtonsWrapper>

@@ -30,8 +30,10 @@ const StudioEntrypoint = lazy(() =>
   import('@/components/StudioEntrypoint').then((module) => ({ default: module.StudioEntrypoint }))
 )
 
-const NotificationsView = lazy(() =>
-  import('@/views/notifications').then((module) => ({ default: module.NotificationsView }))
+const ChannelNotificationsView = lazy(() =>
+  import('@/views/notifications/ChannelNotificationsView').then((module) => ({
+    default: module.ChannelNotificationsView,
+  }))
 )
 const CrtPreviewEditView = lazy(() =>
   import('@/views/studio/CrtPreviewEditView').then((module) => ({ default: module.CrtPreviewEditView }))
@@ -226,9 +228,13 @@ const _StudioLayout = () => {
                   }
                 />
                 <Route
-                  path={relativeRoutes.studio.notifications()}
+                  path={relativeRoutes.studio.channelNotifications()}
                   element={
-                    <PrivateRoute element={<NotificationsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                    <PrivateRoute
+                      element={<ChannelNotificationsView />}
+                      isAuth={channelSet}
+                      redirectTo={ENTRY_POINT_ROUTE}
+                    />
                   }
                 />
                 {atlasConfig.features.ypp.googleConsoleClientId && (
