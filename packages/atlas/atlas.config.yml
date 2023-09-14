@@ -43,7 +43,7 @@ features:
     landingPageOgImgPath: null # Path to the open graph image for the YPP landing page - if not set, the default image will be used
     googleConsoleClientId: '$VITE_GOOGLE_CONSOLE_CLIENT_ID'
     youtubeSyncApiUrl: '$VITE_YOUTUBE_SYNC_API_URL'
-    suspensionReasonsLink: https://www.notion.so/joystream/YouTube-Partner-Program-Outline-d492c2eb88ff4ace955b5f2902ec21fb?pvs=4#e03bb48ed7f7480c8896a908f63f2594 # Link with explanation what might be the reason of ypp channel suspension
+    suspensionReasonsLink: https://joystream.notion.site/My-channel-is-suspended-what-to-do-86a3df16c55c434ab2184d61dfcfc41b # Link with explanation what might be the reason of ypp channel suspension
     suspendedSupportLink: https://discord.com/channels/811216481340751934/1053294778529353788 # Link that will be displayed for users suspended in YPP
     suspendedLinkText: '#ypp-support channel on our Discord server'
     youtubeCollaboratorMemberId: '$VITE_YOUTUBE_COLLABORATOR_MEMBER_ID'
