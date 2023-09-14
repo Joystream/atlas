@@ -81,31 +81,33 @@ export const NotificationTile: FC<NotificationProps> = ({
           )
         }
         nodeEnd={
-          <div
-            onClick={(e) => {
-              e.stopPropagation()
-              e.preventDefault()
-            }}
-          >
-            <KebabMenuButtonIcon
-              ref={ref}
-              icon={<SvgActionMore />}
-              variant="tertiary"
-              size="small"
-              isActive={!loading}
-              className="kebab-button"
-            />
-            <ContextMenu
-              ref={contextMenuInstanceRef}
-              appendTo={ref.current ?? undefined}
-              placement="bottom-end"
-              flipEnabled={false}
-              disabled={loading}
-              items={read ? [] : [{ label: 'Mark as read', nodeStart: <SvgActionCheck />, onClick: onMarkAsRead }]}
-              trigger={null}
-              triggerTarget={ref.current}
-            />
-          </div>
+          !read && (
+            <div
+              onClick={(e) => {
+                e.stopPropagation()
+                e.preventDefault()
+              }}
+            >
+              <KebabMenuButtonIcon
+                ref={ref}
+                icon={<SvgActionMore />}
+                variant="tertiary"
+                size="small"
+                isActive={!loading}
+                className="kebab-button"
+              />
+              <ContextMenu
+                ref={contextMenuInstanceRef}
+                appendTo={ref.current ?? undefined}
+                placement="bottom-end"
+                flipEnabled={false}
+                disabled={loading}
+                items={[{ label: 'Mark as read', nodeStart: <SvgActionCheck />, onClick: onMarkAsRead }]}
+                trigger={null}
+                triggerTarget={ref.current}
+              />
+            </div>
+          )
         }
       />
     </StyledLink>
@@ -121,7 +123,7 @@ export const NotifactionIcon = ({ iconType, avatarUrls }: NotifactionIconProps) 
   const [icon, color] = notificationIconMapper[iconType]
   return (
     <IconWrapper>
-      {avatarUrls ? <Avatar size={40} assetUrls={avatarUrls} /> : <NoActorNotificationAvatar size="small" />}
+      {avatarUrls ? <Avatar size={40} assetUrls={avatarUrls} /> : <NoActorNotificationAvatar size="regular" />}
       <IconContainer className="notification-icon-container" color={color}>
         {icon}
       </IconContainer>

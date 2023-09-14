@@ -14,7 +14,9 @@ export type MyChannelTabs = 'General' | 'Notifications'
 const withQueryParameters = (basePath: string, query: Record<string, string> = {}) => {
   if (Object.values(query).length) {
     const queryParams = new URLSearchParams()
-    Object.entries(query).map(([key, value]) => queryParams.set(key, value))
+    Object.entries(query).forEach(([key, value]) => {
+      if (typeof value !== 'undefined') queryParams.set(key, value)
+    })
     return `${basePath}?${queryParams.toString()}`
   }
   return basePath
