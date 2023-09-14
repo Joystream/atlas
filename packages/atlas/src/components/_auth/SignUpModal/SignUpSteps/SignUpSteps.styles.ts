@@ -21,3 +21,9 @@ export const StyledLink = styled.a`
   color: ${cVar('colorTextPrimary')};
   text-decoration: underline;
 `
+
+export const WarningContainer = styled.span`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+`
