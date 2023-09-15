@@ -122,7 +122,7 @@ export const logDistributorPerformance = async (assetUrl: string, eventEntry: Di
 export const getFastestImageUrl = async (urls: string[]) => {
   const promises = urls.map((url) => {
     return axiosInstance
-      .get(url, {
+      .head(url, {
         headers: {
           'Cache-Control': 'no-cache',
         },
