@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { FlexBox } from '@/components/FlexBox/FlexBox'
@@ -41,7 +41,6 @@ const datePickerItemsFactory = (days: number[]) =>
 const endDateItems = datePickerItemsFactory([7, 14, 30])
 
 export const StartRevenueShare = ({ tokenId, onClose, show }: SellTokenModalProps) => {
-  const [tokens, setTokens] = useState<number | null>(null)
   const smMatch = useMediaMatch('sm')
   const { patronageRate, userBalance, title } = getTokenDetails(tokenId)
 
@@ -51,6 +50,7 @@ export const StartRevenueShare = ({ tokenId, onClose, show }: SellTokenModalProp
     endDate: AuctionDatePickerProps['value'] | null
   }>()
   const { trigger, control, watch } = form
+  const [startDate, endDate, tokens] = watch(['startDate', 'endDate', 'tokens'])
 
   const details = useMemo(
     () => [
@@ -58,7 +58,7 @@ export const StartRevenueShare = ({ tokenId, onClose, show }: SellTokenModalProp
         title: 'You will receive',
         content: (
           <FlexBox alignItems="baseline" width="fit-content">
-            <NumberFormat value={(tokens ?? 0) * patronageRate} as="p" variant="t100" color="colorText" withToken />
+            <NumberFormat value={(tokens || 0) * patronageRate} as="p" variant="t100" color="colorText" withToken />
             <Text variant="t100" as="p" color="colorText">
               ({Math.round(patronageRate * 100)}%)
             </Text>
@@ -66,18 +66,18 @@ export const StartRevenueShare = ({ tokenId, onClose, show }: SellTokenModalProp
         ),
       },
       {
-        title: 'You will spend',
+        title: 'Your holders will receive',
         content: (
           <FlexBox alignItems="baseline" width="fit-content">
             <NumberFormat
-              value={(tokens ?? 0) * (1 - patronageRate)}
+              value={(tokens || 0) * (1 - patronageRate)}
               as="p"
               variant="t100"
               color="colorText"
               withToken
             />
             <Text variant="t100" as="p" color="colorText">
-              ( {Math.round(1 - patronageRate) * 100}%)
+              ( {Math.round((1 - patronageRate) * 100)}%)
             </Text>
           </FlexBox>
         ),
@@ -85,8 +85,6 @@ export const StartRevenueShare = ({ tokenId, onClose, show }: SellTokenModalProp
     ],
     [patronageRate, tokens]
   )
-
-  const [startDate, endDate] = watch(['startDate', 'endDate'])
 
   const selectDurationToDate = useCallback((value: AuctionDatePickerProps['value'], base?: Date) => {
     if (value?.type === 'date') {
@@ -121,24 +119,30 @@ export const StartRevenueShare = ({ tokenId, onClose, show }: SellTokenModalProp
             withDenomination
           />
         </FlexBox>
-        <FormField
-          label="Amount to share"
-          description="Those tokens will be withdrawn from your channel balance and divided between you and your token holders."
-        >
-          <TokenInput
-            value={tokens}
-            onChange={setTokens}
-            placeholder="0"
-            nodeEnd={
-              <FlexBox gap={2} alignItems="baseline">
-                <Text variant="t300" as="p" color="colorTextMuted">
-                  $0.00
-                </Text>
-                <TextButton>Max</TextButton>
-              </FlexBox>
-            }
-          />
-        </FormField>
+        <Controller
+          name="tokens"
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <FormField
+              label="Amount to share"
+              description="Those tokens will be withdrawn from your channel balance and divided between you and your token holders."
+            >
+              <TokenInput
+                value={value}
+                onChange={onChange}
+                placeholder="0"
+                nodeEnd={
+                  <FlexBox gap={2} alignItems="baseline">
+                    <Text variant="t300" as="p" color="colorTextMuted">
+                      $0.00
+                    </Text>
+                    <TextButton>Max</TextButton>
+                  </FlexBox>
+                }
+              />
+            </FormField>
+          )}
+        />
 
         <FlexBox flow="column" gap={2}>
           {details.map((row) => (
