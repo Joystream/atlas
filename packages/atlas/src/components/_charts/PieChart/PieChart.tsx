@@ -1,26 +1,28 @@
-import styled from '@emotion/styled'
-import { PieSvgProps, ResponsivePie } from '@nivo/pie'
+import { ComputedDatum, PieSvgProps, ResponsivePie } from '@nivo/pie'
 import { MayHaveLabel } from '@nivo/pie/dist/types/types'
 import { animated } from '@react-spring/web'
+import { useState } from 'react'
 
 import { Text } from '@/components/Text'
-import { cVar, sizes } from '@/styles'
+import { cVar } from '@/styles'
 
 type Datum = {
   id: string
   value: number
+  index: number
 } & MayHaveLabel
 type ReponsiveProps = Omit<PieSvgProps<Datum>, 'width' | 'height'>
+
+export const joystreamColors = ['#9FACFF', '#7174FF', '#BECAFF', '#1B186C']
 
 const defaultJoystreamProps: Omit<ReponsiveProps, 'data'> = {
   isInteractive: true,
   enableArcLinkLabels: false,
-  // arcLabelsTextColor: 'inherit',
   arcLabelsRadiusOffset: 0.5,
   arcLabelsComponent: (datum) => {
     return (
       <animated.g transform={datum.style.transform}>
-        <foreignObject height={30} width={100}>
+        <foreignObject height={15} width={30}>
           <Text variant="h100" as="h1">
             {datum.datum.formattedValue}
           </Text>
@@ -28,7 +30,6 @@ const defaultJoystreamProps: Omit<ReponsiveProps, 'data'> = {
       </animated.g>
     )
   },
-  colors: ['#9FACFF', '#7174FF', '#BECAFF', '#1B186C'],
   theme: {
     tooltip: {
       container: {
@@ -39,22 +40,34 @@ const defaultJoystreamProps: Omit<ReponsiveProps, 'data'> = {
 }
 
 export type PieChartProps = {
-  // tooltip?: (point: Datum) => ReactNode
+  onDataHover?: (data: ComputedDatum<Datum> | null) => void
+  hoverOpacity?: boolean
 } & ReponsiveProps
 export const PieChart = (props: PieChartProps) => {
+  const [hoveredEntry, setHoveredEntry] = useState<ComputedDatum<Datum> | null>(null)
+
+  const getColor = (entry: Omit<ComputedDatum<Datum>, 'color' | 'fill' | 'arc'>) => {
+    const color = joystreamColors[entry.data.index % joystreamColors.length]
+    if (!props.hoverOpacity || entry.id === hoveredEntry?.id) {
+      return color
+    } else {
+      return `${color}4D`
+    }
+  }
+
   return (
     <ResponsivePie
+      onMouseEnter={(entry) => {
+        setHoveredEntry(entry)
+        props.onDataHover?.(entry)
+      }}
+      onMouseLeave={() => {
+        setHoveredEntry(null)
+        props.onDataHover?.(null)
+      }}
+      colors={getColor}
       {...defaultJoystreamProps}
       {...props}
-      // tooltip={(point) => (
-      //   <ChartTooltip>{props.tooltip ? props.tooltip(point.point) : String(point.point.data.y)}</ChartTooltip>
-      // )}
     />
   )
 }
-
-const ChartTooltip = styled.div`
-  background-color: ${cVar('colorBackgroundStrong')};
-  padding: ${sizes(1)} ${sizes(2)};
-  border-radius: ${cVar('radiusSmall')};
-`

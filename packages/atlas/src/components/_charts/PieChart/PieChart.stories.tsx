@@ -13,20 +13,20 @@ const Template: StoryFn<PieChartProps> = (args) => (
   </div>
 )
 
-export const Default = Template.bind({})
-
 const data = [
   {
+    index: 0,
     id: 'japan',
     value: 40,
   },
   {
+    index: 1,
     id: 'korea',
-    color: 'red',
     value: 60,
   },
 ]
 
+export const Default = Template.bind({})
 Default.args = {
   data,
 }
