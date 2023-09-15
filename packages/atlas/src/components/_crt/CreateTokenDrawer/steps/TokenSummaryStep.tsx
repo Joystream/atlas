@@ -8,6 +8,9 @@ import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
 import { CrtFormWrapper } from '@/components/_crt/CrtFormWrapper'
 import { useMountEffect } from '@/hooks/useMountEffect'
+import { useFee, useJoystream } from '@/providers/joystream'
+import { useTransaction } from '@/providers/transactions/transactions.hooks'
+import { useUser } from '@/providers/user/user.hooks'
 import { sizes } from '@/styles'
 import { formatNumber } from '@/utils/number'
 
@@ -27,10 +30,50 @@ const cliffBanner = (
   />
 )
 
+const monthDurationToBlocks = (numberOfMonths: number) => numberOfMonths * 30 * 24 * 60 * 6
+
 export const TokenSummaryStep = ({ setPrimaryButtonProps, form }: CommonStepProps) => {
+  const { joystream, proxyCallback } = useJoystream()
+  const { channelId, memberId } = useUser()
+  const handleTransaction = useTransaction()
+  const { loading, fullFee } = useFee('issueCreatorTokenTx')
+
+  console.log(form)
+  const handleSubmitTx = async () => {
+    if (!joystream || !channelId || !memberId) return
+    return handleTransaction({
+      fee: fullFee,
+      txFactory: async (handleUpdate) =>
+        (await joystream.extrinsics).issueCreatorToken(
+          memberId,
+          channelId,
+          form.name,
+          form.creatorReward,
+          form.revenueShare,
+          {
+            amount: String(form.creatorIssueAmount ?? 0),
+            cliffAmountPercentage: form.firstPayout ?? 0,
+            vestingDuration: form.vesting ? monthDurationToBlocks(+form.vesting) : 0,
+            blocksBeforeCliff: form.cliff ? monthDurationToBlocks(+form.cliff) : 0,
+          },
+          proxyCallback(handleUpdate)
+        ),
+      onTxSync: async (data) => {
+        console.log(data, ' kurwa')
+        return undefined
+      },
+      snackbarSuccessMessage: {
+        title: 'NFT price changed successfully',
+        description: 'You can update the price anytime.',
+      },
+    })
+    // const adw = await
+  }
+
   useMountEffect(() => {
     setPrimaryButtonProps({
       text: 'Create token',
+      onClick: handleSubmitTx,
     })
   })
 

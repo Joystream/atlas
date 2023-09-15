@@ -9,6 +9,8 @@ import {
 import { createType } from '@joystream/types'
 import { ApiPromise as PolkadotApi } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
+import { stringToU8a } from '@polkadot/util'
+import { blake2AsHex } from '@polkadot/util-crypto'
 import BN from 'bn.js'
 import Long from 'long'
 
@@ -1104,13 +1106,13 @@ export class JoystreamLibExtrinsics {
     channelId: ChannelId,
     symbol: string,
     patronageRate: number,
+    revenueSplitRate: number,
     initialCreatorAllocation: {
       amount: StringifiedNumber
       vestingDuration: number
       blocksBeforeCliff: number
       cliffAmountPercentage: number
-    },
-    revenueSplitRate: number
+    }
   ) => {
     const member = createType('PalletContentPermissionsContentActor', { Member: parseInt(memberId) })
     const params = createType('PalletProjectTokenTokenIssuanceParameters', {
@@ -1124,7 +1126,7 @@ export class JoystreamLibExtrinsics {
           }),
         }),
       }),
-      symbol,
+      symbol: blake2AsHex(stringToU8a(symbol)),
       patronageRate,
       revenueSplitRate,
       transferPolicy: createType('PalletProjectTokenTransferPolicyParams', { Permissionless: null }),
