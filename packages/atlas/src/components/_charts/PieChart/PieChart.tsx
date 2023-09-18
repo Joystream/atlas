@@ -41,6 +41,7 @@ const defaultJoystreamProps: Omit<ReponsiveProps, 'data'> = {
 
 export type PieChartProps = {
   onDataHover?: (data: ComputedDatum<Datum> | null) => void
+  hoveredData?: ComputedDatum<Datum>
   hoverOpacity?: boolean
 } & ReponsiveProps
 export const PieChart = (props: PieChartProps) => {
@@ -48,7 +49,7 @@ export const PieChart = (props: PieChartProps) => {
 
   const getColor = (entry: Omit<ComputedDatum<Datum>, 'color' | 'fill' | 'arc'>) => {
     const color = joystreamColors[entry.data.index % joystreamColors.length]
-    if (!props.hoverOpacity || entry.id === hoveredEntry?.id) {
+    if (!props.hoverOpacity || entry.id === (props.hoveredData ? props.hoveredData.id : hoveredEntry?.id)) {
       return color
     } else {
       return `${color}4D`
