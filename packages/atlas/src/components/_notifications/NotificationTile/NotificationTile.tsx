@@ -36,9 +36,9 @@ export const NotificationTile: FC<NotificationProps> = ({
   onMarkAsRead,
 }) => {
   const { icon, action, avatar, text } = useNotificationUX(notification)
-  const { date, read } = notification
-  const { link = '', clickAction } = useNotificationAction(action)
+  const { to, state } = useNotificationAction(action)
   const { avatarUrls } = useNotificationAvatar(avatar)
+  const { date, read } = notification
   const ref = useRef<HTMLButtonElement>(null)
   const contextMenuInstanceRef = useRef<PopoverImperativeHandle>(null)
   const formattedDate = useMemo(() => {
@@ -55,11 +55,11 @@ export const NotificationTile: FC<NotificationProps> = ({
 
   return (
     <StyledLink
-      to={link}
+      to={to}
+      state={state}
       onClick={() => {
         onClick?.()
         onMarkAsRead?.()
-        clickAction?.()
       }}
       onPointerLeave={() => contextMenuInstanceRef.current?.hide()}
     >

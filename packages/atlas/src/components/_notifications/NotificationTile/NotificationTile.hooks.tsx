@@ -1,4 +1,5 @@
 import { ReactElement, ReactNode, useMemo } from 'react'
+import { LinkProps } from 'react-router-dom'
 
 import { useGetChannelAvatarQuery } from '@/api/queries/__generated__/channels.generated'
 import { useGetMembershipsAvatarQuery } from '@/api/queries/__generated__/memberships.generated'
@@ -14,7 +15,7 @@ import {
   SvgActionRevenueShare,
 } from '@/assets/icons'
 import { NumberFormat } from '@/components/NumberFormat'
-import { relativeRoutes } from '@/config/routes'
+import { absoluteRoutes } from '@/config/routes'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { NotificationRecord } from '@/providers/notifications/notifications.types'
 import { useUser } from '@/providers/user/user.hooks'
@@ -81,46 +82,49 @@ export const useNotificationAvatar = (
 
 type ActionType =
   | 'video-page'
-  | 'video-page-nft'
+  | 'nft-page'
   | 'channel-page'
   | 'term-of-sevice-page'
   | 'category-page'
   | 'marketplace-page'
   | 'member-page'
   | 'ypp-dashboard'
-  | 'channel-dropdown'
+  | 'payments-page'
 
-export const useNotificationAction = ({
+export const useNotificationAction = (action: NotificationUX['action']) =>
+  useMemo(() => getNotificationAction(action), [action])
+
+const getNotificationAction = ({
   type,
   params = [],
-}: NotificationUX['action']): { link?: string; clickAction?: () => void } => {
+}: NotificationUX['action']): { to: string; state?: LinkProps['state'] } => {
   switch (type) {
     case 'video-page':
-      return { link: relativeRoutes.viewer.video(params[0], { commentId: params[1] }) }
+      return { to: absoluteRoutes.viewer.video(params[0], { commentId: params[1] }), state: { shouldCollapse: true } }
 
-    case 'video-page-nft':
-      return { link: relativeRoutes.viewer.video(params[0]) } // TODO
+    case 'nft-page':
+      return { to: absoluteRoutes.viewer.video(params[0]), state: { shouldCollapse: false } }
 
     case 'channel-page':
-      return { link: relativeRoutes.viewer.channel(params[0]) }
+      return { to: absoluteRoutes.viewer.channel(params[0]) }
 
     case 'member-page':
-      return { link: relativeRoutes.viewer.member(params[0]) }
+      return { to: absoluteRoutes.viewer.member(params[0]) }
 
     case 'category-page':
-      return { link: relativeRoutes.viewer.category(params[0]) }
+      return { to: absoluteRoutes.viewer.category(params[0]) }
 
     case 'marketplace-page':
-      return { link: relativeRoutes.viewer.marketplace() }
+      return { to: absoluteRoutes.viewer.marketplace() }
 
-    case 'channel-dropdown':
-      return { clickAction: () => undefined } // TODO
+    case 'payments-page':
+      return { to: absoluteRoutes.studio.payments() }
 
     case 'ypp-dashboard':
-      return { link: relativeRoutes.viewer.yppDashboard() }
+      return { to: absoluteRoutes.viewer.yppDashboard() }
 
     case 'term-of-sevice-page':
-      return { link: relativeRoutes.legal.termsOfService() }
+      return { to: absoluteRoutes.legal.termsOfService() }
   }
 }
 
@@ -194,7 +198,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     case 'NewNftOnSale':
       return {
         icon: 'nft',
-        action: { type: 'video-page-nft', params: [notification.videoId] },
+        action: { type: 'nft-page', params: [notification.videoId] },
         // avatar: { type: 'channel', params: [notification.channelId] }, // AVATAR MISSING
         text: (
           <>
@@ -205,7 +209,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     case 'NewAuction':
       return {
         icon: 'nft',
-        action: { type: 'video-page-nft', params: [notification.videoId] },
+        action: { type: 'nft-page', params: [notification.videoId] },
         // avatar: { type: 'channel', params: [notification.channelId] }, // AVATAR MISSING
         text: (
           <>
@@ -218,7 +222,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     case 'HigherBidPlaced':
       return {
         icon: 'nft-alt',
-        action: { type: 'video-page-nft', params: [notification.videoId] },
+        action: { type: 'nft-page', params: [notification.videoId] },
         avatar: { type: 'membership', params: [notification.newBidderHandle] },
         text: (
           <>
@@ -229,28 +233,28 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     case 'EnglishAuctionWon':
       return {
         icon: 'nft',
-        action: { type: 'video-page-nft', params: [notification.videoId] },
+        action: { type: 'nft-page', params: [notification.videoId] },
         avatar: { type: 'active-membership' },
         text: <>You won a timed auction for NFT: “{notification.videoTitle}”</>,
       }
     case 'EnglishAuctionLost':
       return {
         icon: 'nft-alt',
-        action: { type: 'video-page-nft', params: [notification.videoId] },
+        action: { type: 'nft-page', params: [notification.videoId] },
         avatar: { type: 'active-membership' },
         text: <>You lost a timed auction for NFT: “{notification.videoTitle}”</>,
       }
     case 'OpenAuctionWon':
       return {
         icon: 'nft',
-        action: { type: 'video-page-nft', params: [notification.videoId] },
+        action: { type: 'nft-page', params: [notification.videoId] },
         avatar: { type: 'active-membership' },
         text: <>You won an open auction for NFT: “{notification.videoTitle}”</>,
       }
     case 'OpenAuctionLost':
       return {
         icon: 'nft-alt',
-        action: { type: 'video-page-nft', params: [notification.videoId] },
+        action: { type: 'nft-page', params: [notification.videoId] },
         avatar: { type: 'active-membership' },
         text: <>You lost an open auction for NFT: “{notification.videoTitle}”</>,
       }
@@ -361,7 +365,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     case 'CommentPostedToVideo':
       return {
         icon: 'follow',
-        action: { type: 'video-page-nft', params: [notification.videoId] },
+        action: { type: 'nft-page', params: [notification.videoId] },
         avatar: { type: 'membership', params: [notification.memberHandle] },
         text: (
           <>
@@ -426,7 +430,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     case 'NftPurchased':
       return {
         icon: 'nft',
-        action: { type: 'video-page-nft', params: [notification.videoId] },
+        action: { type: 'nft-page', params: [notification.videoId] },
         avatar: { type: 'membership', params: [notification.buyerHandle] },
         text: (
           <>
@@ -439,7 +443,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     case 'NftRoyaltyPaid':
       return {
         icon: 'nft',
-        action: { type: 'video-page-nft', params: [notification.videoId] },
+        action: { type: 'nft-page', params: [notification.videoId] },
         avatar: { type: 'active-channel' },
         text: (
           <>
@@ -452,7 +456,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     case 'CreatorReceivesAuctionBid':
       return {
         icon: 'nft',
-        action: { type: 'video-page-nft', params: [notification.videoId] },
+        action: { type: 'nft-page', params: [notification.videoId] },
         avatar: { type: 'membership', params: [notification.bidderHandle] },
         text: (
           <>
@@ -465,7 +469,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     case 'EnglishAuctionSettled':
       return {
         icon: 'nft',
-        action: { type: 'video-page-nft', params: [notification.videoId] },
+        action: { type: 'nft-page', params: [notification.videoId] },
         avatar: { type: 'active-channel' },
         text: <>Timed auction expired on your NFT: “{notification.videoTitle}”</>,
       }
@@ -510,7 +514,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     case 'ChannelFundsWithdrawn':
       return {
         icon: 'payout',
-        action: { type: 'channel-dropdown' },
+        action: { type: 'payments-page' },
         avatar: { type: 'active-membership' },
         text: (
           <>
