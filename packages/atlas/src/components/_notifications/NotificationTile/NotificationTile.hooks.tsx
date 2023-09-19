@@ -167,7 +167,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         avatar: { type: 'membership', params: [notification.memberHandle] },
         text: (
           <>
-            {notification.memberHandle} replied to your commend under video: “{notification.videoTitle}”
+            {notification.memberHandle} replied to your comment under video: “{notification.videoTitle}”
           </>
         ),
       }
@@ -178,7 +178,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         avatar: { type: 'membership', params: [notification.memberHandle] },
         text: (
           <>
-            {notification.memberHandle} reacted to your commend on the video: “{notification.videoTitle}”
+            {notification.memberHandle} reacted to your comment on the video: “{notification.videoTitle}”
           </>
         ),
       }
