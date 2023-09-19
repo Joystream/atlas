@@ -42,7 +42,7 @@ export const Container = styled.div`
   top: var(--size-topbar-height);
   left: 0;
   right: 0;
-  height: calc(100vh - var(--size-topbar-height));
+  height: calc(100% - var(--size-topbar-height));
   display: flex;
   flex-direction: column;
   background-color: ${cVar('colorBackground')};
