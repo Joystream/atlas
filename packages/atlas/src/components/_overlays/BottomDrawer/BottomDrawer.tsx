@@ -2,7 +2,6 @@ import { FC, PropsWithChildren, useEffect, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { ActionBar, ActionBarProps } from '@/components/ActionBar'
-import { DrawerHeader } from '@/components/DrawerHeader'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { cVar } from '@/styles'
@@ -86,7 +85,7 @@ export const BottomDrawer: FC<BottomDrawerProps> = ({
         classNames="bottom-drawer"
       >
         <Container role="dialog">
-          <DrawerHeader title={title} label={titleLabel} onCloseClick={onClose} />
+          {/*<DrawerHeader title={title} label={titleLabel} onCloseClick={onClose} />*/}
           <Outer>
             <Inner fixedScrollbar={fixedScrollbar} data-scroll-lock-scrollable>
               {children}
