@@ -79,7 +79,7 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
                 size={40}
                 assetUrls={activeChannel?.avatarPhoto?.resolvedUrls}
                 onClick={handleDrawerToggle}
-                badge={unseenMemberNotifications}
+                badge={isMemberDropdownActive ? undefined : unseenMemberNotifications}
               />
             </StudioTopbarContainer>
           ) : (

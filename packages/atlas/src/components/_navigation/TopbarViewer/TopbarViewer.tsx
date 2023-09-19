@@ -150,7 +150,7 @@ export const TopbarViewer: FC = () => {
                           assetUrls={memberAvatarUrls}
                           loading={memberAvatarLoading}
                           onClick={handleDrawerToggle}
-                          badge={unseenChannelNotifications}
+                          badge={isMemberDropdownActive ? undefined : unseenChannelNotifications}
                         />
                       )}
                       {mdMatch && (
@@ -159,7 +159,7 @@ export const TopbarViewer: FC = () => {
                           assetUrls={memberAvatarUrls}
                           onClick={handleDrawerToggle}
                           loading={memberAvatarLoading}
-                          badge={unseenChannelNotifications}
+                          badge={isMemberDropdownActive ? undefined : unseenChannelNotifications}
                         />
                       )}
                     </SignedButtonsWrapper>
