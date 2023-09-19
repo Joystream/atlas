@@ -101,7 +101,7 @@ export const VideoWorkspace: FC = memo(() => {
             !isEdit && trackPublishAndUploadClicked(activeChannel?.id)
             formStatus?.triggerFormSubmit()
           },
-          text: formStatus?.actionBarPrimaryText,
+          text: formStatus?.actionBarPrimaryText ?? 'Show me button',
         },
     secondaryButton:
       isEdit && formStatus?.isDirty

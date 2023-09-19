@@ -2,6 +2,7 @@ import { FC, PropsWithChildren, useEffect, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { ActionBar, ActionBarProps } from '@/components/ActionBar'
+import { DrawerHeader } from '@/components/DrawerHeader'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { cVar } from '@/styles'
@@ -76,27 +77,27 @@ export const BottomDrawer: FC<BottomDrawerProps> = ({
       >
         <DrawerOverlay />
       </CSSTransition>
-      {/*<CSSTransition*/}
-      {/*  in={isOpen}*/}
-      {/*  appear*/}
-      {/*  mountOnEnter*/}
-      {/*  unmountOnExit*/}
-      {/*  timeout={parseInt(cVar('animationTimingSlow', true))}*/}
-      {/*  classNames="bottom-drawer"*/}
-      {/*>*/}
-      {isOpen && (
-        <Container>
-          {/*<DrawerHeader title={title} label={titleLabel} onCloseClick={onClose} />*/}
-          <Outer>
-            <Inner fixedScrollbar={fixedScrollbar} data-scroll-lock-scrollable>
-              {children}
-            </Inner>
-          </Outer>
+      <CSSTransition
+        in={isOpen}
+        appear
+        mountOnEnter
+        unmountOnExit
+        timeout={parseInt(cVar('animationTimingSlow', true))}
+        classNames="bottom-drawer"
+      >
+        {isOpen && (
+          <Container data-scroll-lock-scrollable>
+            <DrawerHeader title={title} label={titleLabel} onCloseClick={onClose} />
+            <Outer>
+              <Inner fixedScrollbar={fixedScrollbar} data-scroll-lock-scrollable>
+                {children}
+              </Inner>
+            </Outer>
 
-          {actionBar ? <ActionBar {...actionBar} /> : null}
-        </Container>
-      )}
-      {/*</CSSTransition>*/}
+            {actionBar ? <ActionBar {...actionBar} /> : null}
+          </Container>
+        )}
+      </CSSTransition>
     </>
   )
 }
