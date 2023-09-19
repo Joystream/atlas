@@ -15,7 +15,6 @@ import { handleAnonymousAuth } from '@/providers/auth/auth.helpers'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useSnackbar } from '@/providers/snackbars'
 import { useYppStore } from '@/providers/ypp/ypp.store'
-import { media } from '@/styles'
 import { createId } from '@/utils/createId'
 import { imageUrlToBlob } from '@/utils/image'
 import { SentryLogger } from '@/utils/logs'
@@ -412,7 +411,4 @@ export const SignUpModal = () => {
 
 const StyledDialogModal = styled(DialogModal)`
   max-height: calc(100vh - 80px);
-  ${media.sm} {
-    max-height: 576px;
-  }
 `
