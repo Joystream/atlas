@@ -30,7 +30,7 @@ export const ActionBarContainer = styled.div<ActionBarContainerProps>`
     'secondary-button primary-button' auto / auto 1fr;
 
   ${media.sm} {
-    grid-template: 'primary-text badge secondary-button primary-button' auto / 1fr max-content max-content max-content;
+    grid-template: 'primary-text badge' 'secondary-button primary-button' auto / 1fr auto max-content max-content;
   }
 
   ${media.md} {
