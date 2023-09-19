@@ -11,6 +11,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
 import { useAuthStore } from '@/providers/auth/auth.store'
+import { useNotifications } from '@/providers/notifications/notifications.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { transitions } from '@/styles'
@@ -30,6 +31,7 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
     actions: { setAuthModalOpenName },
   } = useAuthStore()
   const { isWorkspaceOpen, setIsWorkspaceOpen, uploadVideoButtonProps } = useVideoWorkspace()
+  const { unseenMemberNotifications } = useNotifications()
 
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
 
@@ -45,9 +47,6 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
     }
     setIsWorkspaceOpen(false)
   }
-
-  // todo: add logic after orion is done
-  const unseenMemberNotifications = 1
 
   return (
     <>

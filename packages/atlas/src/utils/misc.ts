@@ -80,3 +80,6 @@ export const retryWalletPromise = <T>(
       .catch((error) => reject(error))
   })
 }
+
+export const whenDefined = <T, R>(x: T | undefined | null, f: (x: T) => R): R | undefined | null =>
+  typeof x === 'undefined' || x === null ? x : f(x)

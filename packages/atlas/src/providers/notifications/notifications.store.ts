@@ -1,23 +1,28 @@
 import { createStore } from '@/utils/store'
 
+export type RecipientType = 'ChannelRecipient' | 'MemberRecipient'
+
 export type NotificationsStoreState = {
-  // block number of lastly seen (not read) notification
-  lastSeenNotificationDate: number
+  // Lists of lasts seen notifications for the various type and channel ids
+  lastSeenNotificationDates: { type: RecipientType; id: string; date: number }[]
 }
 
 export type NotificationsStoreActions = {
-  setLastSeenNotificationDate: (date: Date) => void
+  setLastSeenNotificationDate: (type: RecipientType, id: string, date: Date) => void
 }
 
 export const useNotificationStore = createStore<NotificationsStoreState, NotificationsStoreActions>(
   {
     state: {
-      lastSeenNotificationDate: 0,
+      lastSeenNotificationDates: [],
     },
     actionsFactory: (set) => ({
-      setLastSeenNotificationDate: (date) => {
+      setLastSeenNotificationDate: (type, id, date) => {
         set((state) => {
-          state.lastSeenNotificationDate = date.getTime()
+          state.lastSeenNotificationDates = [
+            ...state.lastSeenNotificationDates.filter((record) => record.type !== type && record.id !== id),
+            { id, type, date: date.getTime() },
+          ]
         })
       },
     }),
@@ -25,7 +30,7 @@ export const useNotificationStore = createStore<NotificationsStoreState, Notific
   {
     persist: {
       key: 'notifications',
-      whitelist: ['lastSeenNotificationDate'],
+      whitelist: ['lastSeenNotificationDates'],
       version: 0,
       migrate: (state) => {
         return {

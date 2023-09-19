@@ -4,9 +4,13 @@ import { useState } from 'react'
 import { useLocation } from 'react-router'
 
 import { useRawNotifications } from '@/api/hooks/notifications'
-import { GetNotificationsConnectionQuery } from '@/api/queries/__generated__/notifications.generated'
+import {
+  GetNotificationsConnectionQuery,
+  useGetNotificationsCountQuery,
+} from '@/api/queries/__generated__/notifications.generated'
 import { absoluteRoutes } from '@/config/routes'
 import { useUser } from '@/providers/user/user.hooks'
+import { whenDefined } from '@/utils/misc'
 
 import { useNotificationStore } from './notifications.store'
 import { NotificationData, NotificationRecord } from './notifications.types'
@@ -15,19 +19,52 @@ export type UseNotifications = ReturnType<typeof useNotifications>
 export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkStatusChange'>) => {
   const { pathname } = useLocation()
   const isStudio = pathname.search(absoluteRoutes.studio.index()) !== -1
-  const { accountId } = useUser()
+  const { accountId, channelId } = useUser()
+
+  const recipientType = isStudio ? 'ChannelRecipient' : 'MemberRecipient'
+  const recipientId = isStudio ? channelId : accountId
 
   const {
     notifications: rawNotifications,
     markNotificationsAsReadMutation,
     refetch,
     ...rest
-  } = useRawNotifications(accountId ?? '', isStudio ? 'ChannelRecipient' : 'MemberRecipient', opts)
+  } = useRawNotifications(accountId ?? '', recipientType, opts)
 
+  // those are different from unread notifications!
   const {
-    lastSeenNotificationDate,
+    lastSeenNotificationDates,
     actions: { setLastSeenNotificationDate },
   } = useNotificationStore()
+
+  const unseenMemberNotificationsCount = useGetNotificationsCountQuery({
+    variables: {
+      where: {
+        account: { joystreamAccount_eq: accountId },
+        notificationType: { recipient: { isTypeOf_eq: 'MemberRecipient' } },
+        createdAt_gt: whenDefined(
+          lastSeenNotificationDates.find(({ type }) => type === 'MemberRecipient'),
+          ({ date }) => new Date(date)
+        ),
+      },
+    },
+  })
+  const unseenChannelNotificationsCount = useGetNotificationsCountQuery({
+    variables: {
+      where: {
+        account: { joystreamAccount_eq: accountId },
+        notificationType: { recipient: { isTypeOf_eq: 'ChannelRecipient' } },
+        createdAt_gt: whenDefined(
+          lastSeenNotificationDates.find(({ type }) => type === 'ChannelRecipient'), // TODO There should be one case per channel date pair and one more for non of the channel in lastSeenNotificationDates
+          ({ date }) => new Date(date)
+        ),
+      },
+    },
+  })
+  const unseenMemberNotifications =
+    unseenMemberNotificationsCount.data?.notificationInAppDeliveriesConnection.totalCount
+  const unseenChannelNotifications =
+    unseenChannelNotificationsCount.data?.notificationInAppDeliveriesConnection.totalCount
 
   const [optimisticRead, setOptimisticRead] = useState<string[]>([])
   const notifications = rawNotifications.flatMap(({ node }): NotificationRecord | [] => {
@@ -43,12 +80,6 @@ export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkS
       : []
   })
 
-  // those are different from unread notifications!
-  const lastSeenNotificationIndex = notifications.findIndex(
-    (notification) => notification.date.getTime() <= lastSeenNotificationDate
-  )
-  const unseenNotificationsCounts = lastSeenNotificationIndex === -1 ? notifications.length : lastSeenNotificationIndex
-
   const markNotificationsAsRead = async (notifications: NotificationRecord[]) => {
     const notificationIds = notifications.map(({ id }) => id)
     setOptimisticRead(notificationIds)
@@ -62,8 +93,17 @@ export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkS
 
   return {
     notifications,
-    unseenNotificationsCounts,
-    setLastSeenNotificationDate,
+    unseenMemberNotifications,
+    unseenChannelNotifications,
+    unseenNotificationsCounts: isStudio ? unseenChannelNotifications : unseenMemberNotifications,
+    fetchMoreUnseen: () => {
+      unseenMemberNotificationsCount.fetchMore({})
+      unseenChannelNotificationsCount.fetchMore({})
+    },
+    setLastSeenNotificationDate: (date: Date) => {
+      if (!recipientId) return
+      setLastSeenNotificationDate(recipientType, recipientId, date)
+    },
     markNotificationsAsRead,
     ...rest,
   }

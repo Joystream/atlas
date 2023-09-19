@@ -5,10 +5,11 @@ import { atlasConfig } from '@/config'
 import { useNotifications } from './notifications.hooks'
 
 export const NotificationsManager: FC = () => {
-  const { fetchMore } = useNotifications()
+  const { fetchMore, fetchMoreUnseen } = useNotifications()
 
   useEffect(() => {
     const id = setInterval(() => {
+      fetchMoreUnseen()
       fetchMore({
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!Object.keys(prev).length) {
@@ -42,7 +43,7 @@ export const NotificationsManager: FC = () => {
     return () => {
       clearInterval(id)
     }
-  }, [fetchMore])
+  }, [fetchMore, fetchMoreUnseen])
 
   return null
 }

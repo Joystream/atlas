@@ -10,12 +10,13 @@ import {
   useGetNotificationsConnectionQuery,
   useMarkNotificationsAsReadMutation,
 } from '@/api/queries/__generated__/notifications.generated'
+import { RecipientType } from '@/providers/notifications/notifications.store'
 
 import { NftActivityOrderByInput } from '../queries/__generated__/baseTypes.generated'
 
 export const useRawNotifications = (
   accountId: string,
-  type: 'MemberRecipient' | 'ChannelRecipient',
+  type: RecipientType,
   opts?: Pick<QueryHookOptions, 'notifyOnNetworkStatusChange'>
 ) => {
   const { data, ...rest } = useGetNotificationsConnectionQuery({
@@ -27,7 +28,6 @@ export const useRawNotifications = (
 
   return {
     notifications: data?.notificationInAppDeliveriesConnection.edges || [],
-    totalCount: data?.notificationInAppDeliveriesConnection.totalCount,
     pageInfo: data?.notificationInAppDeliveriesConnection.pageInfo,
     markNotificationsAsReadMutation,
     ...rest,

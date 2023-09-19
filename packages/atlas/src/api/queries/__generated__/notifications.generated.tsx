@@ -9,6 +9,15 @@ import {
 } from './fragments.generated'
 
 const defaultOptions = {} as const
+export type GetNotificationsCountQueryVariables = Types.Exact<{
+  where: Types.NotificationWhereInput
+}>
+
+export type GetNotificationsCountQuery = {
+  __typename?: 'Query'
+  notificationInAppDeliveriesConnection: { __typename?: 'NotificationInAppDeliveriesConnection'; totalCount: number }
+}
+
 export type GetNotificationsConnectionQueryVariables = Types.Exact<{
   accountId: Types.Scalars['String']
   type: Types.Scalars['String']
@@ -20,7 +29,6 @@ export type GetNotificationsConnectionQuery = {
   __typename?: 'Query'
   notificationInAppDeliveriesConnection: {
     __typename?: 'NotificationInAppDeliveriesConnection'
-    totalCount: number
     pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor: string }
     edges: Array<{
       __typename?: 'NotificationInAppDeliveryEdge'
@@ -2941,6 +2949,54 @@ export type GetNftActivitiesQuery = {
   }
 }
 
+export const GetNotificationsCountDocument = gql`
+  query GetNotificationsCount($where: NotificationWhereInput!) {
+    notificationInAppDeliveriesConnection(orderBy: notification_createdAt_DESC, where: { notification: $where }) {
+      totalCount
+    }
+  }
+`
+
+/**
+ * __useGetNotificationsCountQuery__
+ *
+ * To run a query within a React component, call `useGetNotificationsCountQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetNotificationsCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetNotificationsCountQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetNotificationsCountQuery(
+  baseOptions: Apollo.QueryHookOptions<GetNotificationsCountQuery, GetNotificationsCountQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetNotificationsCountQuery, GetNotificationsCountQueryVariables>(
+    GetNotificationsCountDocument,
+    options
+  )
+}
+export function useGetNotificationsCountLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetNotificationsCountQuery, GetNotificationsCountQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetNotificationsCountQuery, GetNotificationsCountQueryVariables>(
+    GetNotificationsCountDocument,
+    options
+  )
+}
+export type GetNotificationsCountQueryHookResult = ReturnType<typeof useGetNotificationsCountQuery>
+export type GetNotificationsCountLazyQueryHookResult = ReturnType<typeof useGetNotificationsCountLazyQuery>
+export type GetNotificationsCountQueryResult = Apollo.QueryResult<
+  GetNotificationsCountQuery,
+  GetNotificationsCountQueryVariables
+>
 export const GetNotificationsConnectionDocument = gql`
   query GetNotificationsConnection($accountId: String!, $type: String!, $first: Int!, $after: String) {
     notificationInAppDeliveriesConnection(
@@ -2958,7 +3014,6 @@ export const GetNotificationsConnectionDocument = gql`
         hasNextPage
         endCursor
       }
-      totalCount
       edges {
         cursor
         node {

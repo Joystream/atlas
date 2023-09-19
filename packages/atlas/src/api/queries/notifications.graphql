@@ -1,3 +1,9 @@
+query GetNotificationsCount($where: NotificationWhereInput!) {
+  notificationInAppDeliveriesConnection(orderBy: notification_createdAt_DESC, where: { notification: $where }) {
+    totalCount
+  }
+}
+
 query GetNotificationsConnection($accountId: String!, $type: String!, $first: Int!, $after: String) {
   notificationInAppDeliveriesConnection(
     first: $first
@@ -14,7 +20,6 @@ query GetNotificationsConnection($accountId: String!, $type: String!, $first: In
       hasNextPage
       endCursor
     }
-    totalCount
     edges {
       cursor
       node {

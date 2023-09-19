@@ -23,6 +23,7 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
+import { useNotifications } from '@/providers/notifications/notifications.hooks'
 
 import { BalanceTooltip } from './BalanceTooltip'
 import { SectionContainer } from './MemberDropdown.styles'
@@ -260,9 +261,8 @@ type ListItemOptionsProps = {
   listItems: [ListItemProps, ListItemProps] | [ListItemProps]
 }
 const ListItemOptions: FC<ListItemOptionsProps> = ({ publisher, closeDropdown, listItems, hasAtLeastOneChannel }) => {
-  // todo: add logic after orion is done
-  const unseenChannelNotifications = 2
-  const unseenMemberNotifications = 1
+  const { unseenChannelNotifications, unseenMemberNotifications } = useNotifications()
+
   return (
     <>
       {listItems.map((listItemsProps, idx) => (
