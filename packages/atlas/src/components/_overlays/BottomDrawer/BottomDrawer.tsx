@@ -76,15 +76,16 @@ export const BottomDrawer: FC<BottomDrawerProps> = ({
       >
         <DrawerOverlay />
       </CSSTransition>
-      <CSSTransition
-        in={isOpen}
-        appear
-        mountOnEnter
-        unmountOnExit
-        timeout={parseInt(cVar('animationTimingSlow', true))}
-        classNames="bottom-drawer"
-      >
-        <Container role="dialog">
+      {/*<CSSTransition*/}
+      {/*  in={isOpen}*/}
+      {/*  appear*/}
+      {/*  mountOnEnter*/}
+      {/*  unmountOnExit*/}
+      {/*  timeout={parseInt(cVar('animationTimingSlow', true))}*/}
+      {/*  classNames="bottom-drawer"*/}
+      {/*>*/}
+      {isOpen && (
+        <Container>
           {/*<DrawerHeader title={title} label={titleLabel} onCloseClick={onClose} />*/}
           <Outer>
             <Inner fixedScrollbar={fixedScrollbar} data-scroll-lock-scrollable>
@@ -94,7 +95,8 @@ export const BottomDrawer: FC<BottomDrawerProps> = ({
 
           {actionBar ? <ActionBar {...actionBar} /> : null}
         </Container>
-      </CSSTransition>
+      )}
+      {/*</CSSTransition>*/}
     </>
   )
 }
