@@ -1,28 +1,46 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { SvgActionChevronR } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
+import { AvatarGroup } from '@/components/Avatar/AvatarGroup'
 import { FlexBox } from '@/components/FlexBox'
 import { Text } from '@/components/Text'
 import { TextButton } from '@/components/_buttons/Button'
-import { PieChart, joystreamColors } from '@/components/_charts/PieChart'
+import { PieChart, PieDatum, joystreamColors } from '@/components/_charts/PieChart'
 import { Widget } from '@/components/_crt/CrtStatusWidget/CrtStatusWidget.styles'
+import { useUser } from '@/providers/user/user.hooks'
+import { cVar } from '@/styles'
 
-const data = [
-  {
-    id: 'bedeho',
-    value: 40,
-    index: 0,
-  },
+export type HolderDatum = {
+  value: number
+  name: string
+  members: {
+    handle: string
+    avatarUrls: string[]
+  }[]
+}
 
-  {
-    id: 'radek',
-    value: 60,
-    index: 1,
-  },
-]
-export const CrtHoldersWidget = () => {
-  const [hoveredHolder, setHoveredHolder] = useState<any>()
+export type CrtHoldersWidgetProps = {
+  holders: HolderDatum[]
+}
+
+export const CrtHoldersWidget = ({ holders }: CrtHoldersWidgetProps) => {
+  const { activeMembership } = useUser()
+  const [hoveredHolder, setHoveredHolder] = useState<PieDatum | null>(null)
+  const chartData = useMemo(
+    () =>
+      holders.map((holder, index) => ({
+        id: holder.name,
+        value: holder.value,
+        members: holder.members,
+        index,
+      })),
+    [holders]
+  )
+  const owner = useMemo(
+    () => chartData.find((holder) => holder.id === activeMembership?.handle),
+    [chartData, activeMembership?.handle]
+  )
   return (
     <Widget
       title="Holders"
@@ -40,7 +58,13 @@ export const CrtHoldersWidget = () => {
               TOTAL SUPPLY
             </Text>
             <div style={{ height: 300, width: '100%' }}>
-              <PieChart data={data} onDataHover={setHoveredHolder} hoverOpacity hoveredData={hoveredHolder} />{' '}
+              <PieChart
+                data={chartData}
+                onDataHover={setHoveredHolder}
+                hoverOpacity
+                hoveredData={hoveredHolder}
+                valueFormat={(value) => `${value}%`}
+              />{' '}
             </div>{' '}
           </FlexBox>
           <FlexBox flow="column" gap={6}>
@@ -48,31 +72,37 @@ export const CrtHoldersWidget = () => {
               <Text variant="h100" as="h1" margin={{ bottom: 4 }} color="colorTextMuted">
                 YOU OWN
               </Text>
-              <MemberLegendEntry
-                key={data[0].id}
-                memberHandle={data[0].id}
-                color={joystreamColors[data[0].index]}
-                value={data[0].value}
-                isActive={data[0].id === hoveredHolder?.id}
-                onMouseEnter={() => setHoveredHolder(data[0])}
-                onMouseExit={() => setHoveredHolder(undefined)}
-              />
+              {owner && (
+                <HoldersLegendEntry
+                  key={owner.id}
+                  name={owner.id}
+                  members={owner.members}
+                  color={joystreamColors[owner.index]}
+                  value={owner.value}
+                  isActive={owner.id === hoveredHolder?.id}
+                  onMouseEnter={() => setHoveredHolder(owner)}
+                  onMouseExit={() => setHoveredHolder(null)}
+                />
+              )}
             </FlexBox>
             <FlexBox flow="column" gap={2}>
               <Text variant="h100" as="h1" margin={{ bottom: 4 }} color="colorTextMuted">
                 TOP HOLDERS
               </Text>
-              {data.map((d) => (
-                <MemberLegendEntry
-                  key={d.id}
-                  memberHandle={d.id}
-                  color={joystreamColors[d.index]}
-                  value={d.value}
-                  isActive={d.id === hoveredHolder?.id}
-                  onMouseEnter={() => setHoveredHolder(d)}
-                  onMouseExit={() => setHoveredHolder(undefined)}
-                />
-              ))}
+              {chartData.map((row) =>
+                row.id === activeMembership?.handle ? null : (
+                  <HoldersLegendEntry
+                    key={row.id}
+                    name={row.id}
+                    members={row.members}
+                    color={joystreamColors[row.index]}
+                    value={row.value}
+                    isActive={row.id === hoveredHolder?.id}
+                    onMouseEnter={() => setHoveredHolder(row)}
+                    onMouseExit={() => setHoveredHolder(null)}
+                  />
+                )
+              )}
             </FlexBox>
           </FlexBox>
         </FlexBox>
@@ -81,23 +111,28 @@ export const CrtHoldersWidget = () => {
   )
 }
 
-type MemberLegendEntryProps = {
-  memberHandle: string
+type HoldersLegendEntryProps = {
+  name: string
   value: number
   color: string
   isActive: boolean
   onMouseEnter: () => void
   onMouseExit: () => void
+  members: {
+    handle: string
+    avatarUrls: string[]
+  }[]
 }
 
-const MemberLegendEntry = ({
-  memberHandle,
+const HoldersLegendEntry = ({
+  name,
   value,
   color,
   isActive,
   onMouseExit,
   onMouseEnter,
-}: MemberLegendEntryProps) => {
+  members,
+}: HoldersLegendEntryProps) => {
   return (
     <FlexBox
       gap={2}
@@ -108,9 +143,16 @@ const MemberLegendEntry = ({
     >
       <div style={{ minWidth: 24, minHeight: 24, background: color }} />
       <FlexBox alignItems="center">
-        <Avatar />
+        {members.length === 1 ? (
+          <Avatar assetUrls={members[0].avatarUrls} />
+        ) : (
+          <AvatarGroup
+            avatars={members.map((member) => ({ urls: member.avatarUrls, tooltipText: member.handle }))}
+            avatarStrokeColor={cVar('colorBackgroundMuted')}
+          />
+        )}
         <Text variant="t100" as="p">
-          {memberHandle}
+          {name}
         </Text>
       </FlexBox>
       <Text variant="t100" as="p">

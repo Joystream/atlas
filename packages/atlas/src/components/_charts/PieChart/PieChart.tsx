@@ -6,12 +6,12 @@ import { useState } from 'react'
 import { Text } from '@/components/Text'
 import { cVar } from '@/styles'
 
-type Datum = {
+export type PieDatum = {
   id: string
   value: number
   index: number
 } & MayHaveLabel
-type ReponsiveProps = Omit<PieSvgProps<Datum>, 'width' | 'height'>
+type ReponsiveProps = Omit<PieSvgProps<PieDatum>, 'width' | 'height'>
 
 export const joystreamColors = ['#9FACFF', '#7174FF', '#BECAFF', '#1B186C']
 
@@ -22,7 +22,7 @@ const defaultJoystreamProps: Omit<ReponsiveProps, 'data'> = {
   arcLabelsComponent: (datum) => {
     return (
       <animated.g transform={datum.style.transform}>
-        <foreignObject height={15} width={30}>
+        <foreignObject height={15} width={40}>
           <Text variant="h100" as="h1">
             {datum.datum.formattedValue}
           </Text>
@@ -40,14 +40,14 @@ const defaultJoystreamProps: Omit<ReponsiveProps, 'data'> = {
 }
 
 export type PieChartProps = {
-  onDataHover?: (data: ComputedDatum<Datum> | null) => void
-  hoveredData?: ComputedDatum<Datum>
+  onDataHover?: (data: PieDatum | null) => void
+  hoveredData: PieDatum | null
   hoverOpacity?: boolean
 } & ReponsiveProps
 export const PieChart = (props: PieChartProps) => {
-  const [hoveredEntry, setHoveredEntry] = useState<ComputedDatum<Datum> | null>(null)
+  const [hoveredEntry, setHoveredEntry] = useState<ComputedDatum<PieDatum> | null>(null)
 
-  const getColor = (entry: Omit<ComputedDatum<Datum>, 'color' | 'fill' | 'arc'>) => {
+  const getColor = (entry: Omit<ComputedDatum<PieDatum>, 'color' | 'fill' | 'arc'>) => {
     const color = joystreamColors[entry.data.index % joystreamColors.length]
     if (!props.hoverOpacity || entry.id === (props.hoveredData ? props.hoveredData.id : hoveredEntry?.id)) {
       return color
@@ -60,7 +60,7 @@ export const PieChart = (props: PieChartProps) => {
     <ResponsivePie
       onMouseEnter={(entry) => {
         setHoveredEntry(entry)
-        props.onDataHover?.(entry)
+        props.onDataHover?.(entry.data)
       }}
       onMouseLeave={() => {
         setHoveredEntry(null)
