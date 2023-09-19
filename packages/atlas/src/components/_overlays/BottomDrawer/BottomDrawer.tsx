@@ -85,18 +85,16 @@ export const BottomDrawer: FC<BottomDrawerProps> = ({
         timeout={parseInt(cVar('animationTimingSlow', true))}
         classNames="bottom-drawer"
       >
-        {isOpen && (
-          <Container data-scroll-lock-scrollable>
-            <DrawerHeader title={title} label={titleLabel} onCloseClick={onClose} />
-            <Outer>
-              <Inner fixedScrollbar={fixedScrollbar} data-scroll-lock-scrollable>
-                {children}
-              </Inner>
-            </Outer>
+        <Container data-scroll-lock-scrollable>
+          <DrawerHeader title={title} label={titleLabel} onCloseClick={onClose} />
+          <Outer>
+            <Inner fixedScrollbar={fixedScrollbar} data-scroll-lock-scrollable>
+              {children}
+            </Inner>
+          </Outer>
 
-            {actionBar ? <ActionBar {...actionBar} /> : null}
-          </Container>
-        )}
+          {actionBar ? <ActionBar {...actionBar} /> : null}
+        </Container>
       </CSSTransition>
     </>
   )
