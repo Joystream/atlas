@@ -44,7 +44,7 @@ export const CrtDashboard = () => {
         })
       },
     })
-  }, [channelId, displaySnackbar, handleTransaction, joystream, memberId])
+  }, [channelId, displaySnackbar, handleTransaction, joystream, memberId, proxyCallback])
 
   return (
     <LimitedWidthContainer>
