@@ -42,6 +42,7 @@ import {
   ExtrinsicResult,
   ExtrinsicStatus,
   ExtrinsicStatusCallbackFn,
+  FinalizeRevenueSplitResult,
   GetEventDataFn,
   MemberExtrinsicResult,
   MemberId,
@@ -1073,15 +1074,15 @@ export class JoystreamLibExtrinsics {
     return this.api.tx.content.finalizeRevenueSplit(member, parseInt(channelId))
   }
 
-  finalizeRevenueSplit: PublicExtrinsic<typeof this.finalizeRevenueSplitTx, ExtrinsicResult> = async (
+  finalizeRevenueSplit: PublicExtrinsic<typeof this.finalizeRevenueSplitTx, FinalizeRevenueSplitResult> = async (
     memberId,
     channelId,
     cb
   ) => {
     const tx = await this.finalizeRevenueSplitTx(memberId, channelId)
-    const { block } = await this.sendExtrinsic(tx, cb)
-
-    return { block }
+    const { block, getEventData } = await this.sendExtrinsic(tx, cb)
+    const amount = getEventData('projectToken', 'RevenueSplitFinalized')[2]
+    return { block, amount: amount.toString() }
   }
 
   deissueCreatorTokenTx = async (memberId: MemberId, channelId: ChannelId) => {
