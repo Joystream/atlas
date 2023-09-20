@@ -39,10 +39,19 @@ export const getSingleAssetUrl = async (
       return distributionAssetUrl
     } catch (err) {
       if (err instanceof MediaError) {
-        const codec = getVideoCodec(distributionAssetUrl)
-        UserEventsLogger.logWrongCodecEvent(eventEntry, { codec })
+        let codec = ''
+        if (type === 'video') {
+          codec = getVideoCodec(distributionAssetUrl)
+        }
+        UserEventsLogger.logWrongCodecEvent(eventEntry, { assetType: type, ...(type === 'video' ? { codec } : {}) })
         SentryLogger.error('Error during asset download test, media is not supported', 'AssetsManager', err, {
-          asset: { parent, distributionAssetUrl, mediaError: err, codec },
+          asset: {
+            parent,
+            distributionAssetUrl,
+            mediaError: err,
+            assetType: type,
+            ...(type === 'video' ? { codec } : {}),
+          },
         })
       }
     }
