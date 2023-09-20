@@ -4,8 +4,11 @@ import { FlexBox } from '@/components/FlexBox'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { DialogModal } from '@/components/_overlays/DialogModal'
+import { atlasConfig } from '@/config'
 import { useFee, useJoystream } from '@/providers/joystream'
+import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
+import { useUser } from '@/providers/user/user.hooks'
 import { formatDateTime } from '@/utils/time'
 
 type ClaimShareModalProps = {
@@ -22,18 +25,38 @@ const getTokenDetails = (_?: string) => ({
 export const ClaimShareModal = ({ onClose, tokenId, show }: ClaimShareModalProps) => {
   const tokenName = 'JBC'
   const { joystream, proxyCallback } = useJoystream()
+  const { memberId } = useUser()
+  const { displaySnackbar } = useSnackbar()
   const handleTransaction = useTransaction()
   const { fullFee } = useFee('participateInSplitTx')
   const { tokenPrice, userProjectToken, revenueShareEnd } = getTokenDetails(tokenId)
 
   const onSubmit = async () => {
-    if (!joystream) return
+    if (!joystream || !tokenId || !memberId) return
     handleTransaction({
       txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).participateInSplit('1', '1', '100', proxyCallback(updateStatus)),
+        (await joystream.extrinsics).participateInSplit(
+          tokenId,
+          memberId,
+          String(userProjectToken),
+          proxyCallback(updateStatus)
+        ),
       fee: fullFee,
+      onTxSync: async () => {
+        displaySnackbar({
+          title: `${tokenPrice * userProjectToken} ${atlasConfig.joystream.tokenTicker} received`,
+          description: `${userProjectToken} $${tokenName} is locked until the end of revenue share. (${formatDateTime(
+            revenueShareEnd
+          )
+            .split(',')
+            .join(' at')})`,
+          iconType: 'success',
+        })
+        onClose()
+      },
     })
   }
+
   return (
     <DialogModal
       show={show}
