@@ -32,7 +32,7 @@ export const RevenueShareWidget = ({
   status,
   tokenId,
 }: RevenueShareWidgetProps) => {
-  const { joystream } = useJoystream()
+  const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { memberId } = useUser()
   const { displaySnackbar } = useSnackbar()
@@ -41,21 +41,16 @@ export const RevenueShareWidget = ({
       return
     }
     handleTransaction({
-      txFactory: async (updateStatus) => (await joystream.extrinsics).exitRevenueSplit(tokenId, memberId, updateStatus),
+      txFactory: async (updateStatus) =>
+        (await joystream.extrinsics).exitRevenueSplit(tokenId, memberId, proxyCallback(updateStatus)),
       onTxSync: async (data) => {
         displaySnackbar({
           title: `${data.amount} $${tokenName} unlocked`,
           iconType: 'success',
         })
       },
-      onError: () => {
-        displaySnackbar({
-          title: `Something went wrong`,
-          iconType: 'error',
-        })
-      },
     })
-  }, [joystream, memberId, tokenName, tokenId])
+  }, [joystream, memberId, handleTransaction, tokenId, proxyCallback, displaySnackbar, tokenName])
 
   const actionNode = () => {
     switch (status) {
