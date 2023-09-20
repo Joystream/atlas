@@ -9,8 +9,6 @@ import {
 import { createType } from '@joystream/types'
 import { ApiPromise as PolkadotApi } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
-import { stringToU8a } from '@polkadot/util'
-import { blake2AsHex } from '@polkadot/util-crypto'
 import BN from 'bn.js'
 import Long from 'long'
 
@@ -1115,21 +1113,29 @@ export class JoystreamLibExtrinsics {
     }
   ) => {
     const member = createType('PalletContentPermissionsContentActor', { Member: parseInt(memberId) })
-    const params = createType('PalletProjectTokenTokenIssuanceParameters', {
-      initialAllocation: createType('BTreeMap<u64, PalletProjectTokenTokenAllocation>', {
-        [parseInt(memberId)]: createType('PalletProjectTokenTokenAllocation', {
-          amount: createType('u128', new BN(initialCreatorAllocation.amount)),
-          vestingScheduleParams: createType('Option<PalletProjectTokenVestingScheduleParams>', {
-            blocksBeforeCliff: createType('u32', new BN(initialCreatorAllocation.blocksBeforeCliff)),
-            linearVestingDuration: createType('u32', new BN(initialCreatorAllocation.vestingDuration)),
-            cliffAmountPercentage: initialCreatorAllocation.cliffAmountPercentage,
-          }),
+    const initialAllocation = createType('BTreeMap<u64, PalletProjectTokenTokenAllocation>', new Map())
+    initialAllocation.set(
+      createType('u64', new BN(memberId)),
+      createType('PalletProjectTokenTokenAllocation', {
+        amount: createType('u128', new BN(initialCreatorAllocation.amount)),
+        vestingScheduleParams: createType('Option<PalletProjectTokenVestingScheduleParams>', {
+          blocksBeforeCliff: createType('u32', new BN(initialCreatorAllocation.blocksBeforeCliff)),
+          linearVestingDuration: createType('u32', new BN(initialCreatorAllocation.vestingDuration)),
+          cliffAmountPercentage: createType(
+            'Permill',
+            new BN(initialCreatorAllocation.cliffAmountPercentage)
+          ) as number,
         }),
-      }),
-      symbol: blake2AsHex(stringToU8a(symbol)),
-      patronageRate,
-      revenueSplitRate,
-      transferPolicy: createType('PalletProjectTokenTransferPolicyParams', { Permissionless: null }),
+      })
+    )
+    const metadataRaw = createType('Raw', new Uint8Array())
+    const metadataBytes = createType('Bytes', metadataRaw)
+    const params = createType('PalletProjectTokenTokenIssuanceParameters', {
+      initialAllocation,
+      patronageRate: createType('Perquintill', patronageRate) as number,
+      revenueSplitRate: createType('Permill', revenueSplitRate) as number,
+      transferPolicy: createType('PalletProjectTokenTransferPolicyParams', 'Permissionless'),
+      metadata: metadataBytes,
     })
     return this.api.tx.content.issueCreatorToken(member, parseInt(channelId), params)
   }
