@@ -74,7 +74,7 @@ export const ClaimShareModal = ({ onClose, tokenId, show }: ClaimShareModalProps
         <Banner
           icon={<SvgAlertsInformative24 />}
           title={`Locking your $${tokenName} tokens`}
-          description={`To claim the reward immediately you have to lock all your $${tokenName} tokens until the end of revenue share. When revenue share ends your tokens will be transferred nack to you.
+          description={`To claim the reward immediately you have to lock all your $${tokenName} tokens until the end of revenue share. When revenue share ends your tokens will be transferred back to you.
           `}
         />
         <FlexBox flow="column" gap={2}>
