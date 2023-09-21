@@ -1,7 +1,7 @@
 import { Datum } from '@nivo/line'
 
 import { SvgJoyTokenMonochrome16 } from '@/assets/icons'
-import { NumberFormat } from '@/components/NumberFormat'
+import { NumberFormat, formatNumberShort } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { LineChart, defaultChartTheme } from '@/components/_charts/LineChart'
 import { TooltipBox } from '@/components/_crt/CreateTokenDrawer/steps/styles'
@@ -10,17 +10,23 @@ import { cVar } from '@/styles'
 
 type MarketDrawerPreviewProps = {
   tokenName: string
+  defaultPrice: number
 }
-export const MarketDrawerPreview = ({ tokenName }: MarketDrawerPreviewProps) => {
-  const chartData: Datum[] = [
-    { x: '1k', y: 1 },
-    { x: '10k', y: 8 },
-    { x: '50k', y: 32 },
-    { x: '100k', y: 64 },
-    { x: '500k', y: 96 },
-    { x: '1m', y: 128 },
-    { x: '10m', y: 128 },
-  ]
+
+const DEFAULT_AMM_SENSIVITY = 1
+export const MarketDrawerPreview = ({ tokenName, defaultPrice }: MarketDrawerPreviewProps) => {
+  const issuedTokens = [10 ** 3, 10 ** 4, 5 * 10 ** 4, 10 ** 5, 5 * 10 ** 5, 10 ** 6, 10 ** 7]
+
+  const chartData: Datum[] = issuedTokens.map((num) => ({
+    x: formatNumberShort(num),
+    y: DEFAULT_AMM_SENSIVITY * num + defaultPrice,
+  }))
+
+  const getTickValues = (max: number) =>
+    issuedTokens.map(
+      (_, index) =>
+        Math.round((max * DEFAULT_AMM_SENSIVITY) / 2 ** (2 * (issuedTokens.length - index - 1)) / 1000) * 1000
+    )
 
   return (
     <>
@@ -32,7 +38,7 @@ export const MarketDrawerPreview = ({ tokenName }: MarketDrawerPreviewProps) => 
             return (
               <TooltipBox>
                 <Text variant="t300" as="p">
-                  <NumberFormat value={Number(point.data.yFormatted) * 1000} format="short" as="span" withToken />
+                  <NumberFormat value={Number(point.data.yFormatted)} format="short" as="span" withToken />
                 </Text>
                 <Text variant="t100" as="p" color="colorTextMuted">
                   {point.data.xFormatted} {tokenName} supply
@@ -43,15 +49,15 @@ export const MarketDrawerPreview = ({ tokenName }: MarketDrawerPreviewProps) => 
           yScale={{
             type: 'log',
             base: 2,
-            min: 1,
+            min: 'auto',
             max: 'auto',
           }}
           axisLeft={{
             tickSize: 5,
             tickPadding: 5,
-            tickValues: [1, 8, 32, 64, 128],
+            tickValues: getTickValues(issuedTokens[issuedTokens.length - 1]),
             ticksPosition: 'before',
-            format: (tick) => `${tick}K`,
+            format: (tick) => formatNumberShort(tick),
             // eslint-disable-next-line
             // @ts-ignore
             renderTick: ({ x, y, textX, textY, opacity, textBaseline, value, format }) => {
@@ -74,11 +80,11 @@ export const MarketDrawerPreview = ({ tokenName }: MarketDrawerPreviewProps) => 
               )
             },
           }}
-          gridYValues={[1, 8, 32, 64, 128]}
+          gridYValues={getTickValues(issuedTokens[issuedTokens.length - 1])}
           data={[
             {
               id: 1,
-              color: cVar('colorTextPrimary'),
+              color: cVar('colorCoreBlue500'),
               data: chartData,
             },
           ]}

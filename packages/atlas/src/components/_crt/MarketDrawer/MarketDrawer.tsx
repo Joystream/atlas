@@ -11,6 +11,7 @@ import { ColumnBox } from '@/components/ProgressWidget/ProgressWidget.styles'
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
 import { TextButton } from '@/components/_buttons/Button'
+import { HDivider } from '@/components/_crt/MarketDrawer/MarketDrawer.styles'
 import { CrtMarketForm } from '@/components/_crt/MarketDrawer/MarketDrawer.types'
 import { MarketDrawerPreview } from '@/components/_crt/MarketDrawer/MarketDrawerPreview'
 import { Checkbox } from '@/components/_inputs/Checkbox'
@@ -21,7 +22,6 @@ import { atlasConfig } from '@/config'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useJoystream } from '@/providers/joystream'
 import { transitions } from '@/styles'
-import { Divider } from '@/views/global/NftSaleBottomDrawer/NftForm/AcceptTerms/AcceptTerms.styles'
 
 enum MARKET_STEPS {
   market,
@@ -45,8 +45,8 @@ export const MarketDrawer = ({ show, onClose, tokenName }: CrtMarketSaleViewProp
 
   const {
     control,
-    getValues,
     resetField,
+    watch,
     formState: { isDirty },
   } = useForm<CrtMarketForm>({
     defaultValues: {
@@ -55,7 +55,9 @@ export const MarketDrawer = ({ show, onClose, tokenName }: CrtMarketSaleViewProp
       isChecked: true,
     },
   })
-  const tokenInUsd = (getValues('price') || 0) * (tokenPrice || 0)
+  const isChecked = watch('isChecked')
+  const price = watch('price')
+  const tokenInUsd = (price || 0) * (tokenPrice || 0)
 
   const [openDialog, closeDialog] = useConfirmationModal({
     type: 'warning',
@@ -176,7 +178,7 @@ export const MarketDrawer = ({ show, onClose, tokenName }: CrtMarketSaleViewProp
             <Controller
               control={control}
               render={({ field: { value: tnc, onChange } }) => (
-                <TextArea rows={7} value={tnc} disabled={getValues('isChecked')} onChange={onChange} />
+                <TextArea rows={7} value={tnc} disabled={isChecked} onChange={onChange} />
               )}
               name="tnc"
             />
@@ -185,7 +187,7 @@ export const MarketDrawer = ({ show, onClose, tokenName }: CrtMarketSaleViewProp
       case MARKET_STEPS.saleSummary:
         return (
           <ColumnBox gap={2}>
-            <Text variant="h500" as="h2" margin={{ top: 4, bottom: 2 }}>
+            <Text variant="h500" as="h2" margin={{ bottom: 2 }}>
               Market summary
             </Text>
             <Text variant="h400" as="h2" margin={{ bottom: 2 }}>
@@ -200,9 +202,9 @@ export const MarketDrawer = ({ show, onClose, tokenName }: CrtMarketSaleViewProp
                   <SvgAlertsInformative24 width={16} height={16} />
                 </Tooltip>
               </FlexBox>
-              <NumberFormat variant="h300" value={getValues('price')} withToken as="span" />
+              <NumberFormat variant="h300" value={price} withToken as="span" />
             </SummaryRow>
-            <Divider />
+            <HDivider />
             <SummaryRow>
               <FlexBox alignItems="center">
                 <Text as="span" variant="h300" color="colorText">
@@ -212,7 +214,7 @@ export const MarketDrawer = ({ show, onClose, tokenName }: CrtMarketSaleViewProp
                   <SvgAlertsInformative24 width={16} height={16} />
                 </Tooltip>
               </FlexBox>
-              <NumberFormat variant="h300" withDenomination="before" value={getValues('price')} withToken as="span" />
+              <NumberFormat variant="h300" withDenomination="before" value={price} withToken as="span" />
             </SummaryRow>
           </ColumnBox>
         )
@@ -230,7 +232,7 @@ export const MarketDrawer = ({ show, onClose, tokenName }: CrtMarketSaleViewProp
       }}
       isOpen={show}
       onClose={onClose}
-      preview={<MarketDrawerPreview tokenName={tokenName} />}
+      preview={<MarketDrawerPreview defaultPrice={price} tokenName={tokenName} />}
     >
       <SwitchTransition mode="out-in">
         <CSSTransition

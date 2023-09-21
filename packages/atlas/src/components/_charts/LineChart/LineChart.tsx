@@ -10,6 +10,7 @@ export const defaultChartTheme = {
       background: cVar('colorBackgroundStrong'),
     },
   },
+
   axis: {
     ticks: {
       line: {
