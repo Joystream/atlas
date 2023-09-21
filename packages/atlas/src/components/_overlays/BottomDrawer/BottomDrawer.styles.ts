@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 
-import { ActionBar } from '@/components/ActionBar'
 import { cVar, zIndex } from '@/styles'
 
 export const DrawerOverlay = styled.div`
@@ -43,7 +42,7 @@ export const Container = styled.div`
   top: var(--size-topbar-height);
   left: 0;
   right: 0;
-  height: calc(100vh - var(--size-topbar-height));
+  height: calc(100% - var(--size-topbar-height));
   display: flex;
   flex-direction: column;
   background-color: ${cVar('colorBackground')};
@@ -75,20 +74,15 @@ export const Container = styled.div`
   }
 `
 
-type ScrollContainerProps = {
-  actionBarHeight?: number
-  fixedScrollbar?: boolean
-}
-export const ScrollContainer = styled.div<ScrollContainerProps>`
+export const Outer = styled.div`
+  position: relative;
   flex: 1;
-  margin-bottom: ${({ actionBarHeight = 0 }) => actionBarHeight}px;
-  overflow-y: ${({ fixedScrollbar }) => (fixedScrollbar ? 'scroll' : 'auto')};
-  overflow-x: hidden;
+  width: 100%;
 `
 
-export const StyledActionBar = styled(ActionBar)`
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  left: 0;
+export const Inner = styled.div<{ fixedScrollbar?: boolean }>`
+  position: absolute;
+  inset: 0;
+  overflow-x: hidden;
+  overflow-y: ${({ fixedScrollbar }) => (fixedScrollbar ? 'scroll' : 'auto')};
 `
