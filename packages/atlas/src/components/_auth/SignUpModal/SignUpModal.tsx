@@ -7,7 +7,7 @@ import { useGetMembershipsLazyQuery } from '@/api/queries/__generated__/membersh
 import { Button } from '@/components/_buttons/Button'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
 import { DialogModal } from '@/components/_overlays/DialogModal'
-import { AccountFormData, FaucetError, MemberFormData, RegisterError, useCreateMember } from '@/hooks/useCreateMember'
+import { AccountFormData, MemberFormData, RegisterError, useCreateMember } from '@/hooks/useCreateMember'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useUniqueMemberHandle } from '@/hooks/useUniqueMemberHandle'
@@ -214,12 +214,8 @@ export const SignUpModal = () => {
         onStart: () => {
           goToStep(SignUpSteps.Creating)
         },
-        onError: (error) => {
-          if (error === FaucetError.MemberAlreadyCreatedForGoogleAccount) {
-            setAuthModalOpenName(undefined)
-          } else {
-            goToStep(SignUpSteps.CreateMember)
-          }
+        onError: () => {
+          setAuthModalOpenName(undefined)
         },
       })
       if (memberId) {

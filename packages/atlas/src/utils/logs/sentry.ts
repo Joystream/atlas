@@ -104,8 +104,8 @@ class _SentryLogger {
 
     Sentry.captureException(new SentryError(title, message), {
       contexts: {
-        error,
         ...contexts,
+        error,
       },
       tags,
       user: { ...this.user, ip_address: '{{auto}}' },
