@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { ReactNode } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { SvgAlertsInformative24 } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
@@ -7,6 +8,7 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
 import { CrtFormWrapper } from '@/components/_crt/CrtFormWrapper'
+import { absoluteRoutes } from '@/config/routes'
 import { useMountEffect } from '@/hooks/useMountEffect'
 import { useFee, useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
@@ -14,7 +16,7 @@ import { useUser } from '@/providers/user/user.hooks'
 import { sizes } from '@/styles'
 import { formatNumber } from '@/utils/number'
 
-import { cliffOptions, vestingOptions } from './TokenIssuanceStep/TokenIssuanceStep.utils'
+import { cliffOptions, getDataBasedOnType, vestingOptions } from './TokenIssuanceStep/TokenIssuanceStep.utils'
 import { CommonStepProps } from './types'
 
 const cliffBanner = (
@@ -36,11 +38,16 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form }: CommonStepProp
   const { joystream, proxyCallback } = useJoystream()
   const { channelId, memberId } = useUser()
   const handleTransaction = useTransaction()
-  const { loading, fullFee } = useFee('issueCreatorTokenTx')
+  const navigate = useNavigate()
+  const { fullFee } = useFee('issueCreatorTokenTx')
 
-  console.log(form)
   const handleSubmitTx = async () => {
     if (!joystream || !channelId || !memberId) return
+    const [cliff, vesting, payout] = getDataBasedOnType(form.assuranceType) ?? [
+      form.cliff,
+      form.vesting,
+      form.firstPayout,
+    ]
     return handleTransaction({
       fee: fullFee,
       txFactory: async (handleUpdate) =>
@@ -52,22 +59,19 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form }: CommonStepProp
           form.revenueShare,
           {
             amount: String(form.creatorIssueAmount ?? 0),
-            cliffAmountPercentage: form.firstPayout ?? 0,
-            vestingDuration: form.vesting ? monthDurationToBlocks(+form.vesting) : 0,
-            blocksBeforeCliff: form.cliff ? monthDurationToBlocks(+form.cliff) : 0,
+            cliffAmountPercentage: payout ?? 0,
+            vestingDuration: vesting ? monthDurationToBlocks(+vesting) : 0,
+            blocksBeforeCliff: cliff ? monthDurationToBlocks(+cliff) : 0,
           },
           proxyCallback(handleUpdate)
         ),
-      onTxSync: async (data) => {
-        console.log(data, ' kurwa')
-        return undefined
+      onTxSync: async () => {
+        navigate(absoluteRoutes.studio.crtDashboard())
       },
       snackbarSuccessMessage: {
-        title: 'NFT price changed successfully',
-        description: 'You can update the price anytime.',
+        title: `$${form.name} minted successfuly.`,
       },
     })
-    // const adw = await
   }
 
   useMountEffect(() => {
