@@ -15,19 +15,55 @@ export type RevenueShareWidgetProps = {
   userShare: number
   userTokens: number
   shareEndDate: Date
-  onClaim?: () => void
-  isActive: boolean
+  onAction?: () => void
+  status: 'active' | 'upcoming' | 'locked' | 'unlocked'
 }
 export const RevenueShareWidget = ({
   userShare,
   userTokens,
   tokenName,
-  onClaim,
+  onAction,
   shareEndDate,
-  isActive,
+  status,
 }: RevenueShareWidgetProps) => {
+  const actionNode = () => {
+    switch (status) {
+      case 'active':
+        return (
+          <Button fullWidth onClick={onAction}>
+            Claim your share
+          </Button>
+        )
+      case 'unlocked':
+        return (
+          <Button fullWidth onClick={onAction}>
+            Unlock tokens
+          </Button>
+        )
+      case 'upcoming':
+        return (
+          <FlexBox alignItems="center">
+            <SvgActionCalendar />
+            <Text variant="t200-strong" as="p">
+              Upcoming
+            </Text>
+            <Information text="lorem ipsum" />
+          </FlexBox>
+        )
+      case 'locked':
+        return (
+          <FlexBox alignItems="center">
+            <SvgActionCalendar />
+            <Text variant="t200-strong" as="p">
+              Locked
+            </Text>
+            <Information text="lorem ipsum" />
+          </FlexBox>
+        )
+    }
+  }
   return (
-    <Wrapper isActive={isActive} gap={2} alignItems="center">
+    <Wrapper isActive={['active', 'unlocked'].includes(status)} gap={2} alignItems="center">
       <InfoBox>
         <Detail title="TOKEN NAME">
           <FlexBox>
@@ -58,19 +94,7 @@ export const RevenueShareWidget = ({
           </Text>
         </Detail>
       </InfoBox>
-      {isActive ? (
-        <Button fullWidth onClick={onClaim}>
-          Claim your share
-        </Button>
-      ) : (
-        <FlexBox alignItems="center">
-          <SvgActionCalendar />
-          <Text variant="t200-strong" as="p">
-            Upcoming
-          </Text>
-          <Information text="lorem ipsum" />
-        </FlexBox>
-      )}
+      {actionNode()}
     </Wrapper>
   )
 }
