@@ -26,7 +26,6 @@ export const SignUpMembershipStep: FC<SignInModalMembershipStepProps> = ({
   setPrimaryButtonProps,
   onSubmit,
   hasNavigatedBack,
-  dialogContentRef,
   avatar,
   handle,
 }) => {
