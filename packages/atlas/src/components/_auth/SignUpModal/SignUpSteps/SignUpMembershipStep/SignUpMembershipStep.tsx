@@ -1,4 +1,3 @@
-import HCaptcha from '@hcaptcha/react-hcaptcha'
 import debouncePromise from 'awesome-debounce-promise'
 import { FC, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -9,7 +8,6 @@ import { TextButton } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
-import { atlasConfig } from '@/config'
 import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
 import { MemberFormData } from '@/hooks/useCreateMember'
 import { useUniqueMemberHandle } from '@/hooks/useUniqueMemberHandle'
@@ -28,7 +26,6 @@ export const SignUpMembershipStep: FC<SignInModalMembershipStepProps> = ({
   setPrimaryButtonProps,
   onSubmit,
   hasNavigatedBack,
-  dialogContentRef,
   avatar,
   handle,
 }) => {
@@ -53,12 +50,9 @@ export const SignUpMembershipStep: FC<SignInModalMembershipStepProps> = ({
     shallow
   )
   const handleInputRef = useRef<HTMLInputElement | null>(null)
-  const captchaInputRef = useRef<HTMLDivElement | null>(null)
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
 
   const [isHandleValidating, setIsHandleValidating] = useState(false)
-  // used to scroll the form to the bottom upon first handle field focus - this is done to let the user see Captcha form field
-  const hasDoneInitialScroll = useRef(false)
 
   const { checkIfMemberIsAvailable } = useUniqueMemberHandle()
 
@@ -109,11 +103,7 @@ export const SignUpMembershipStep: FC<SignInModalMembershipStepProps> = ({
     if (errors.handle) {
       handleInputRef.current?.scrollIntoView({ behavior: 'smooth' })
     }
-
-    if (errors.captchaToken) {
-      captchaInputRef.current?.scrollIntoView({ behavior: 'smooth' })
-    }
-  }, [errors.captchaToken, errors.handle])
+  }, [errors.handle])
 
   return (
     <AuthenticationModalStepTemplate
@@ -179,39 +169,8 @@ export const SignUpMembershipStep: FC<SignInModalMembershipStepProps> = ({
               error={!!errors.handle}
               processing={isHandleValidating || isSubmitting}
               autoComplete="off"
-              onClick={() => {
-                if (hasDoneInitialScroll.current || !dialogContentRef?.current) return
-                hasDoneInitialScroll.current = true
-                dialogContentRef.current.scrollTo({ top: dialogContentRef.current.scrollHeight, behavior: 'smooth' })
-              }}
             />
           </FormField>
-          {atlasConfig.features.members.hcaptchaSiteKey && (
-            <Controller
-              control={control}
-              name="captchaToken"
-              render={({ field: { onChange }, fieldState: { error } }) => (
-                <FormField error={error?.message} ref={captchaInputRef}>
-                  <HCaptcha
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    sitekey={atlasConfig.features.members.hcaptchaSiteKey!}
-                    theme="dark"
-                    languageOverride="en"
-                    onVerify={(token) => {
-                      onChange(token)
-                      trigger('captchaToken')
-                    }}
-                  />
-                </FormField>
-              )}
-              rules={{
-                required: {
-                  value: !!atlasConfig.features.members.hcaptchaSiteKey,
-                  message: "Verify that you're not a robot.",
-                },
-              }}
-            />
-          )}
         </StyledForm>
       }
     />

@@ -1,11 +1,13 @@
+import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FC, RefObject, useCallback, useEffect, useRef } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
+import { Controller, FormProvider, useForm } from 'react-hook-form'
 
 import { AuthenticationModalStepTemplate } from '@/components/_auth/AuthenticationModalStepTemplate'
 import { PasswordCriterias } from '@/components/_auth/PasswordCriterias'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
+import { atlasConfig } from '@/config'
 import { AccountFormData } from '@/hooks/useCreateMember'
 import { useHidePasswordInInput } from '@/hooks/useHidePasswordInInput'
 import { passwordAndRepeatPasswordSchema } from '@/utils/formValidationOptions'
@@ -16,6 +18,7 @@ import { SignUpStepsCommonProps } from '../SignUpSteps.types'
 type PasswordStepForm = {
   password: string
   confirmPassword: string
+  captchaToken?: string
 }
 
 type SignUpPasswordStepProps = {
@@ -34,6 +37,7 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
 }) => {
   const form = useForm<PasswordStepForm>({
     shouldFocusError: true,
+    reValidateMode: 'onSubmit',
     defaultValues: {
       password,
       confirmPassword: password,
@@ -44,11 +48,17 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
     handleSubmit,
     register,
     formState: { errors },
+    control,
+    trigger,
   } = form
   const [hidePasswordProps] = useHidePasswordInInput()
   const [hideConfirmPasswordProps] = useHidePasswordInInput()
 
+  const captchaRef = useRef<HCaptcha | null>(null)
+  const captchaInputRef = useRef<HTMLDivElement | null>(null)
+
   const handleGoToNextStep = useCallback(() => {
+    captchaRef.current?.resetCaptcha()
     handleSubmit((data) => {
       onPasswordSubmit(data.password)
     })()
@@ -61,7 +71,13 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
     })
   }, [handleGoToNextStep, setPrimaryButtonProps])
 
-  // used to scroll the form to the bottom upon first handle field focus - this is done to let the user see password requirements
+  useEffect(() => {
+    if (errors.captchaToken) {
+      captchaInputRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [errors.captchaToken])
+
+  // used to scroll the form to the bottom upon first handle field focus - this is done to let the user see password requirements & captcha
   const hasDoneInitialScroll = useRef(false)
 
   return (
@@ -96,6 +112,27 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
             />
           </FormField>
           <PasswordCriterias />
+          {atlasConfig.features.members.hcaptchaSiteKey && (
+            <Controller
+              control={control}
+              name="captchaToken"
+              render={({ field: { onChange }, fieldState: { error } }) => (
+                <FormField error={error?.message} ref={captchaInputRef}>
+                  <HCaptcha
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    sitekey={atlasConfig.features.members.hcaptchaSiteKey!}
+                    theme="dark"
+                    languageOverride="en"
+                    ref={captchaRef}
+                    onVerify={(token) => {
+                      onChange(token)
+                      trigger('captchaToken')
+                    }}
+                  />
+                </FormField>
+              )}
+            />
+          )}
         </StyledSignUpForm>
       </AuthenticationModalStepTemplate>
     </FormProvider>

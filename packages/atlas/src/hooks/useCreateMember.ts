@@ -146,7 +146,9 @@ export const useCreateMember = () => {
 
         const errorCode = isAxiosError<NewMemberErrorResponse>(error) ? error.response?.data?.error : null
 
-        SentryLogger.error('Failed to create a membership', 'SignUpModal', error, { error: { errorCode } })
+        SentryLogger.error(`Failed to create a membership ${ytResponseData ? 'YPP' : ''}`, 'SignUpModal', error, {
+          parsed: { errorCode },
+        })
 
         switch (errorCode) {
           case 'TooManyRequestsPerIp':
