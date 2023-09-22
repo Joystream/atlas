@@ -51,6 +51,7 @@ export type DistributorEventEntry = {
 } & DistributorEventDetails
 
 type CodecInfo = {
+  assetType: string | null
   codec?: string
 }
 

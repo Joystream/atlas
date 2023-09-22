@@ -195,7 +195,7 @@ export const MultiFileSelect: FC<MultiFileSelectProps> = memo(
       } else if (errorCode === 'file-too-large') {
         setError('File too large')
       } else {
-        SentryLogger.error('Unknown file select error', 'MultiFileSelect', null, { error: { code: errorCode } })
+        SentryLogger.error('Unknown file select error', 'MultiFileSelect', null, { parsedError: { code: errorCode } })
         setError('Unknown error')
       }
     }, [])
