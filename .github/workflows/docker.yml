@@ -9,7 +9,7 @@ jobs:
   atlas:
     runs-on: ubuntu-latest
     env:
-      NODE_OPTIONS: "--max_old_space_size=4096"
+      NODE_OPTIONS: "--max_old_space_size=6144"
     steps:
       - name: Login to DockerHub
         uses: docker/login-action@v1
