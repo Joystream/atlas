@@ -1,4 +1,4 @@
-import { css } from '@emotion/react'
+import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import topRightPattern from '@/assets/images/ypp-background-pattern-2.svg'
@@ -28,6 +28,42 @@ export const Wrapper = styled.div`
   }
 `
 
+const rot = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+`
+
+export const GlowContainer = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 1px;
+  height: 1px;
+  animation: ${rot} 30s infinite linear;
+`
+
+export const GlowBox = styled.div<{ walkHeight: number; walkWidth: number }>`
+  display: block;
+  position: absolute;
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  top: ${(props) => (props.walkHeight / 1) * -1}px;
+  box-shadow: 0 0 5000px 700px ${cVar('colorBackgroundPrimary')}; /* outer cyan */
+`
+export const StyledLimitedWidthContainerHero = styled(LimitedWidthContainer)<{ centerText?: boolean }>`
+  text-align: ${({ centerText }) => (centerText ? 'center' : 'unset')};
+  padding-bottom: unset;
+  position: relative;
+  overflow: hidden;
+  border-radius: 50px;
+`
 export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)<{ centerText?: boolean }>`
   text-align: ${({ centerText }) => (centerText ? 'center' : 'unset')};
   padding-bottom: unset;

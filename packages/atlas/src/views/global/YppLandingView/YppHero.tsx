@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import { useParallax } from 'react-scroll-parallax'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
+import useResizeObserver from 'use-resize-observer'
 
 import { useRecentlyPaidChannels } from '@/api/hooks/channel'
 import { SvgActionChevronR, SvgLogoGoogleWhiteFull, SvgLogoYoutubeWhiteFull } from '@/assets/icons'
@@ -32,7 +33,7 @@ import {
   SelectDifferentChannelButton,
   StyledInfiniteCarousel,
 } from './YppHero.styles'
-import { BackgroundContainer, StyledLimitedWidthContainer } from './YppLandingView.styles'
+import { BackgroundContainer, GlowBox, GlowContainer, StyledLimitedWidthContainerHero } from './YppLandingView.styles'
 
 export type YppAtlasStatus = 'have-channel' | 'no-channel' | 'ypp-signed' | 'connect-wallet' | null
 
@@ -53,6 +54,7 @@ export const YppHero: FC<YppHeroProps> = ({
 }) => {
   const mdMatch = useMediaMatch('md')
   const smMatch = useMediaMatch('sm')
+  const { ref, width, height } = useResizeObserver({ box: 'border-box' })
 
   const endScroll = smMatch ? window.innerHeight / 3 : window.innerHeight
   const { ref: heroImageRef } = useParallax<HTMLImageElement>({
@@ -74,7 +76,10 @@ export const YppHero: FC<YppHeroProps> = ({
 
   return (
     <BackgroundContainer noBackground>
-      <StyledLimitedWidthContainer centerText>
+      <StyledLimitedWidthContainerHero ref={ref} centerText>
+        <GlowContainer>
+          <GlowBox walkHeight={height ?? 0} walkWidth={width ?? 0} />
+        </GlowContainer>
         <LayoutGrid as="header">
           <GridItem colSpan={{ base: 12, sm: 8, lg: 6 }} colStart={{ sm: 3, lg: 4 }}>
             <LogosContainer>
@@ -180,7 +185,7 @@ export const YppHero: FC<YppHeroProps> = ({
             height="824"
           />
         </HeroImageWrapper>
-      </StyledLimitedWidthContainer>
+      </StyledLimitedWidthContainerHero>
       {items && items.length >= 7 && (
         <StyledInfiniteCarousel
           headerGridItemProps={{ colStart: { base: 1, lg: 2 }, colSpan: { base: 12, lg: 10 } }}
