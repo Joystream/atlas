@@ -2,6 +2,8 @@ import { isValid } from 'date-fns'
 import { RegisterOptions, Validate } from 'react-hook-form'
 import { z } from 'zod'
 
+import { atlasConfig } from '@/config'
+
 type TextValidationArgs = {
   name: string
   maxLength: number
@@ -67,6 +69,7 @@ export const passwordAndRepeatPasswordSchema = z
       .min(9, { message: 'Password has to meet requirements.' })
       .max(64, { message: 'Password has to meet requirements.' }),
     confirmPassword: z.string(),
+    captchaToken: z.string().optional(),
   })
   .refine(
     (data) => {
@@ -85,3 +88,7 @@ export const passwordAndRepeatPasswordSchema = z
       message: 'Password has to meet requirements.',
     }
   )
+  .refine((data) => (atlasConfig.features.members.hcaptchaSiteKey ? !!data.captchaToken : true), {
+    path: ['captchaToken'],
+    message: "Verify that you're not a robot.",
+  })
