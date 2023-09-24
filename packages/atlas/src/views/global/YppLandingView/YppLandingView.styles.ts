@@ -51,11 +51,12 @@ export const GlowContainer = styled.div`
 export const GlowBox = styled.div<{ walkHeight: number; walkWidth: number }>`
   display: block;
   position: absolute;
-  height: 10px;
-  width: 10px;
+  height: 2000px;
+  width: 2000px;
   border-radius: 50%;
   top: ${(props) => (props.walkHeight / 1) * -1}px;
-  box-shadow: 0 0 5000px 700px ${cVar('colorBackgroundPrimary')}; /* outer cyan */
+  background: radial-gradient(circle, rgb(20 52 146 / 1) 70%, transparent 100%);
+  filter: blur(400px);
 `
 export const StyledLimitedWidthContainerHero = styled(LimitedWidthContainer)<{ centerText?: boolean }>`
   text-align: ${({ centerText }) => (centerText ? 'center' : 'unset')};
