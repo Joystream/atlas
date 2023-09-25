@@ -4,13 +4,15 @@ import { ParallaxProps } from 'react-scroll-parallax/dist/components/Parallax/ty
 
 import crt1 from '@/assets/images/illustration-crt-l1.webp'
 import crt2 from '@/assets/images/illustration-crt-l2.webp'
-import crt3 from '@/assets/images/illustration-crt-l3.webp'
-import myVideosBack from '@/assets/images/illustration-my-videos-page-l1.webp'
-import myVideosFront from '@/assets/images/illustration-my-videos-page-l2.webp'
-import dashboardImgBack from '@/assets/images/illustration-ypp-dashboard-l1.webp'
-import dashboardImgFront from '@/assets/images/illustration-ypp-dashboard-l2.webp'
-import youtubeSyncBack from '@/assets/images/illustration-ypp-sync-l1.webp'
-import youtubeSyncFront from '@/assets/images/illustration-ypp-sync-l2.webp'
+import gated1 from '@/assets/images/illustration-gated-l1.webp'
+import gated2 from '@/assets/images/illustration-gated-l2.webp'
+import tip1 from '@/assets/images/illustration-tip-l1.webp'
+import tip2 from '@/assets/images/illustration-tip-l2.webp'
+import tip3 from '@/assets/images/illustration-tip-l3.webp'
+import videoNfts1 from '@/assets/images/illustration-video-nfts-l1.webp'
+import videoNfts2 from '@/assets/images/illustration-video-nfts-l2.webp'
+import videoNfts3 from '@/assets/images/illustration-video-nfts-l3.webp'
+import videoNfts4 from '@/assets/images/illustration-video-nfts-l4.webp'
 import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { ContentCard } from '@/components/_ypp/ContentCard'
@@ -83,18 +85,42 @@ export const YppCardsSections: FC = () => {
                 data-aos-offset="80"
                 data-aos-easing="atlas-easing"
               >
-                <ImageContainer>
-                  <CardImage dropShadow absolute src={dashboardImgBack} alt="Dashboard" width="640" height="388" />
+                <ImageContainer positionOnMobile="center">
+                  <CardImage absolute src={videoNfts1} alt="Nft tiles" width="640" height="413" />
                   <CardImageWithParallaxEffect
                     dropShadow
-                    src={dashboardImgFront}
-                    alt="Reward card"
+                    absolute
+                    src={videoNfts2}
                     parallaxProps={{
                       ...commonParallaxOpts,
                       speed: 5,
                     }}
+                    alt="Single nft tile"
                     width="640"
-                    height="389"
+                    height="413"
+                  />
+                  <CardImageWithParallaxEffect
+                    dropShadow
+                    absolute
+                    src={videoNfts3}
+                    parallaxProps={{
+                      ...commonParallaxOpts,
+                      speed: 10,
+                      translateX: [13, 13],
+                    }}
+                    alt="Context menu of nft tile"
+                    width="640"
+                    height="413"
+                  />
+                  <CardImageWithParallaxEffect
+                    src={videoNfts4}
+                    parallaxProps={{
+                      ...commonParallaxOpts,
+                      speed: 15,
+                    }}
+                    alt="Cursor"
+                    width="640"
+                    height="413"
                   />
                 </ImageContainer>
               </GridItem>
@@ -119,25 +145,48 @@ export const YppCardsSections: FC = () => {
                 colStart={{ sm: 2, md: 6, lg: 6 }}
                 colSpan={{ base: 12, sm: 10, md: 7, lg: 6 }}
                 data-aos="fade-up"
-                data-aos-delay="250"
-                data-aos-offset="80"
+                data-aos-delay="350"
+                data-aos-offset="100"
                 data-aos-easing="atlas-easing"
               >
-                <ImageContainer positionOnMobile="flex-end">
-                  <CardImage absolute dropShadow src={myVideosBack} alt="My videos" width="640" height="360" />
+                <ImageContainer hiddenOverflow>
+                  <CardImage dropShadow absolute src={crt1} alt="Creator token dashboard" width="640" height="460" />
                   <CardImageWithParallaxEffect
                     dropShadow
-                    src={myVideosFront}
+                    src={crt2}
                     parallaxProps={{
                       ...commonParallaxOpts,
                       speed: 5,
                     }}
-                    alt="Button"
+                    alt="Creator token holders"
                     width="640"
-                    height="360"
+                    height="460"
                   />
                 </ImageContainer>
               </GridItem>
+              {/*<GridItem*/}
+              {/*  colStart={{ sm: 2, md: 6, lg: 6 }}*/}
+              {/*  colSpan={{ base: 12, sm: 10, md: 7, lg: 6 }}*/}
+              {/*  data-aos="fade-up"*/}
+              {/*  data-aos-delay="250"*/}
+              {/*  data-aos-offset="80"*/}
+              {/*  data-aos-easing="atlas-easing"*/}
+              {/*>*/}
+              {/*  <ImageContainer positionOnMobile="flex-end">*/}
+              {/*    <CardImage absolute dropShadow src={myVideosBack} alt="My videos" width="640" height="360" />*/}
+              {/*    <CardImageWithParallaxEffect*/}
+              {/*      dropShadow*/}
+              {/*      src={myVideosFront}*/}
+              {/*      parallaxProps={{*/}
+              {/*        ...commonParallaxOpts,*/}
+              {/*        speed: 5,*/}
+              {/*      }}*/}
+              {/*      alt="Button"*/}
+              {/*      width="640"*/}
+              {/*      height="360"*/}
+              {/*    />*/}
+              {/*  </ImageContainer>*/}
+              {/*</GridItem>*/}
               <GridItem
                 colStart={{ sm: 3, md: 1, lg: 2 }}
                 rowStart={{ md: 1 }}
@@ -166,17 +215,18 @@ export const YppCardsSections: FC = () => {
                 data-aos-easing="atlas-easing"
               >
                 <ImageContainer positionOnMobile="center">
-                  <CardImage absolute src={youtubeSyncBack} alt="Video tiles" width="640" height="393" />
+                  <CardImage absolute src={tip1} alt="Tip tile" width="640" height="386" />
                   <CardImageWithParallaxEffect
-                    src={youtubeSyncFront}
+                    src={tip2}
                     parallaxProps={{
                       ...commonParallaxOpts,
                       speed: 5,
                     }}
-                    alt="Video tile"
+                    alt="Tip button"
                     width="640"
                     height="412"
                   />
+                  <CardImage absolute src={tip3} alt="Tip cursor" width="640" height="386" />
                 </ImageContainer>
               </GridItem>
               <GridItem
@@ -206,11 +256,10 @@ export const YppCardsSections: FC = () => {
                 data-aos-easing="atlas-easing"
               >
                 <ImageContainer hiddenOverflow>
-                  <CardImage dropShadow absolute src={crt1} alt="Creator token dashboard" width="640" height="460" />
+                  <CardImage dropShadow absolute src={gated1} alt="Creator token dashboard" width="640" height="460" />
                   <CardImageWithParallaxEffect
                     dropShadow
-                    absolute
-                    src={crt2}
+                    src={gated2}
                     parallaxProps={{
                       ...commonParallaxOpts,
                       speed: 5,
@@ -219,7 +268,6 @@ export const YppCardsSections: FC = () => {
                     width="640"
                     height="460"
                   />
-                  <CardImage src={crt3} alt="Transparent gradient" width="640" height="460" />
                 </ImageContainer>
               </GridItem>
               <GridItem

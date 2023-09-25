@@ -30,7 +30,7 @@ export const YppSignupVideo = () => {
           <Text variant={titleVariant} as="h1">
             Sign up in 30 seconds
           </Text>
-          <Text variant={subtitleVariant} as="p" color="colorText">
+          <Text variant={subtitleVariant} as="p" color="colorText" align="center">
             Watch the sign up demo by one of Joystream members.
           </Text>
         </FlexBox>

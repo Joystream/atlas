@@ -63,7 +63,7 @@ export const YppConnectionDetails = () => {
                   <SmallCheckBox>
                     <SvgActionCheck />
                   </SmallCheckBox>
-                  <Text variant="t300" as="p" color="colorText">
+                  <Text variant="t300" as="p" color="colorText" align="left">
                     {scope}
                   </Text>
                 </FlexBox>
