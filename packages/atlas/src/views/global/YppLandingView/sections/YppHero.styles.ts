@@ -47,17 +47,20 @@ export const FrontImage = styled.img`
   max-width: 100%;
   height: auto;
   display: block;
+  border-radius: ${cVar('radiusMedium')};
+  margin-top: 10%;
   ${imageShadow}
 `
 
 export const BackImage = styled.img`
   position: absolute;
-  width: 100%;
+  width: 80%;
   max-width: 100%;
   height: auto;
   display: block;
-  left: 0;
-  top: 0;
+  left: 10%;
+  top: -10%;
+  border-radius: ${cVar('radiusMedium')};
 `
 
 export const StyledInfiniteCarousel = styled(InfiniteCarousel)`

@@ -5,14 +5,8 @@ import useResizeObserver from 'use-resize-observer'
 
 import { useRecentlyPaidChannels } from '@/api/hooks/channel'
 import { SvgActionChevronR, SvgLogoGoogleWhiteFull, SvgLogoYoutubeWhiteFull } from '@/assets/icons'
-import hero576 from '@/assets/images/ypp-hero/hero-576.webp'
-import hero864 from '@/assets/images/ypp-hero/hero-864.webp'
-import hero1152 from '@/assets/images/ypp-hero/hero-1152.webp'
-import hero2304 from '@/assets/images/ypp-hero/hero-2304.webp'
-import yt576 from '@/assets/images/ypp-hero/yt-576.webp'
-import yt864 from '@/assets/images/ypp-hero/yt-864.webp'
-import yt1152 from '@/assets/images/ypp-hero/yt-1152.webp'
-import yt2304 from '@/assets/images/ypp-hero/yt-2304.webp'
+import hero from '@/assets/images/ypp-hero/hero.webp'
+import yt from '@/assets/images/ypp-hero/yt.webp'
 import { AppLogo } from '@/components/AppLogo'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
@@ -172,19 +166,8 @@ export const YppHero: FC<YppHeroProps> = ({
           </GridItem>
         </LayoutGrid>
         <HeroImageWrapper data-aos="fade-up" data-aos-delay="550" data-aos-offset="80" data-aos-easing="atlas-easing">
-          <BackImage
-            srcSet={`${yt576} 576w, ${yt864} 864w, ${yt1152} 1152w, ${yt2304} 2304w`}
-            alt="Hero back"
-            width="1152"
-            height="824"
-          />
-          <FrontImage
-            ref={heroImageRef}
-            srcSet={`${hero576} 576w, ${hero864} 864w, ${hero1152} 1152w, ${hero2304} 2304w`}
-            alt="Hero front"
-            width="1152"
-            height="824"
-          />
+          <BackImage src={yt} alt="Hero back" width="1152" height="824" />
+          <FrontImage ref={heroImageRef} src={hero} alt="Hero front" width="1152" height="824" />
         </HeroImageWrapper>
       </StyledLimitedWidthContainerHero>
       {items && items.length >= 7 && (

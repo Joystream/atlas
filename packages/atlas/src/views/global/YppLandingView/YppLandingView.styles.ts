@@ -63,7 +63,7 @@ export const StyledLimitedWidthContainerHero = styled.div<{ centerText?: boolean
   position: relative;
   overflow: hidden;
   border-radius: 32px;
-  padding: ${sizes(16)};
+  padding: ${sizes(4)};
 `
 export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)<{ centerText?: boolean }>`
   text-align: ${({ centerText }) => (centerText ? 'center' : 'unset')};
