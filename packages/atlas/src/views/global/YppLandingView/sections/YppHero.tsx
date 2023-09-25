@@ -33,7 +33,8 @@ import {
   SelectDifferentChannelButton,
   StyledInfiniteCarousel,
 } from './YppHero.styles'
-import { BackgroundContainer, GlowBox, GlowContainer, StyledLimitedWidthContainerHero } from './YppLandingView.styles'
+
+import { BackgroundContainer, GlowBox, GlowContainer, StyledLimitedWidthContainerHero } from '../YppLandingView.styles'
 
 export type YppAtlasStatus = 'have-channel' | 'no-channel' | 'ypp-signed' | 'connect-wallet' | null
 

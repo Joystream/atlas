@@ -9,7 +9,8 @@ import { YppWidgetIcons } from '@/config/configSchema'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { CtaBanner, StyledBannerText, StyledButton } from './YppFooter.styles'
-import { StyledLimitedWidthContainer } from './YppLandingView.styles'
+
+import { StyledLimitedWidthContainer } from '../YppLandingView.styles'
 
 export const configYppIconMapper: Record<YppWidgetIcons, ReactElement> = {
   info: <SvgActionInfo />,

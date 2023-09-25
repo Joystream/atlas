@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { InfiniteCarousel } from '@/components/InfiniteCarousel/InfiniteCarousel'
 import { cVar, media, sizes } from '@/styles'
 
-import { imageShadow } from './YppLandingView.styles'
+import { imageShadow } from '../YppLandingView.styles'
 
 export const HeroImageWrapper = styled.div`
   position: relative;

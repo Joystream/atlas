@@ -8,13 +8,14 @@ import { TierCard } from '@/components/_ypp/TierCard'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
+import { ColorAnchor, RewardsSubtitleGridItem, RewardsSubtitleWrapper } from './YppRewardSection.styles'
+
 import {
   BackgroundContainer,
   CenteredLayoutGrid,
   HeaderGridItem,
   StyledLimitedWidthContainer,
-} from './YppLandingView.styles'
-import { ColorAnchor, RewardsSubtitleGridItem, RewardsSubtitleWrapper } from './YppRewardSection.styles'
+} from '../YppLandingView.styles'
 
 export const calculateReward = (
   amount: number | number[] | { min: number | null; max: number } | null,

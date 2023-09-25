@@ -22,12 +22,13 @@ import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { CardImage, CardImageRow, CardsWithImagesContainer, ImageContainer } from './YppCardsSection.styles'
+
 import {
   BackgroundContainer,
   CenteredLayoutGrid,
   HeaderGridItem,
   StyledLimitedWidthContainer,
-} from './YppLandingView.styles'
+} from '../YppLandingView.styles'
 
 export const YppCardsSections: FC = () => {
   const mdMatch = useMediaMatch('md')

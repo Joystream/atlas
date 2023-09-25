@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { LayoutGrid } from '@/components/LayoutGrid'
 import { media, sizes } from '@/styles'
 
-import { imageShadow } from './YppLandingView.styles'
+import { imageShadow } from '../YppLandingView.styles'
 
 export const CardsWithImagesContainer = styled.div`
   display: grid;
