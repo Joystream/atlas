@@ -26,13 +26,7 @@ export const CtaBanner = styled.div`
 `
 
 export const StyledBannerText = styled(Text)`
-  max-width: 400px;
-  ${media.md} {
-    max-width: 500px;
-  }
-  ${media.lg} {
-    max-width: unset;
-  }
+  max-width: 70%;
 `
 
 export const StyledButton = styled(GoogleButton)`

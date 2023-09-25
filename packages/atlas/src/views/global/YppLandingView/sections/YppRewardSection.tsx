@@ -1,4 +1,4 @@
-import { FC, useRef, useState } from 'react'
+import { FC, useRef } from 'react'
 
 import { Information } from '@/components/Information'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
@@ -6,7 +6,7 @@ import { Text } from '@/components/Text'
 import { TooltipText } from '@/components/Tooltip/Tooltip.styles'
 import { TierCard } from '@/components/_ypp/TierCard'
 import { atlasConfig } from '@/config'
-import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useSectionTextVariants } from '@/views/global/YppLandingView/sections/useSectionTextVariants'
 
 import { ColorAnchor, RewardsSubtitleGridItem, RewardsSubtitleWrapper } from './YppRewardSection.styles'
 
@@ -40,10 +40,9 @@ export const calculateReward = (
 }
 
 export const YppRewardSection: FC = () => {
-  const mdMatch = useMediaMatch('md')
-  const tiers = atlasConfig.features.ypp.tiersDefinition?.tiers
+  // const tiers = atlasConfig.features.ypp.tiersDefinition?.tiers
   const rewards = atlasConfig.features.ypp.rewards
-  const [activeTier, setActiveTier] = useState<number>((tiers && tiers.length - 1) || 0)
+  const [titleVariant, subtitleVariant] = useSectionTextVariants()
   const ref = useRef<HTMLDivElement>(null)
 
   if (!rewards?.length) {
@@ -54,9 +53,9 @@ export const YppRewardSection: FC = () => {
     <BackgroundContainer noBackground>
       <StyledLimitedWidthContainer as="section">
         <CenteredLayoutGrid>
-          <HeaderGridItem as="header" colStart={{ sm: 3, lg: 4 }} colSpan={{ base: 12, sm: 8, lg: 6 }}>
+          <HeaderGridItem as="header" colStart={{ sm: 3 }} colSpan={{ base: 12, sm: 8, lg: 9 }}>
             <Text
-              variant={mdMatch ? 'h700' : 'h600'}
+              variant={titleVariant}
               as="h2"
               data-aos="fade-up"
               data-aos-delay="0"
@@ -66,9 +65,9 @@ export const YppRewardSection: FC = () => {
               Rewards are based on channel popularity and content quality
             </Text>
             <Text
-              variant="t300"
+              variant={subtitleVariant}
               as="p"
-              margin={{ top: 4 }}
+              margin={{ top: 4, bottom: 16 }}
               color="colorText"
               data-aos="fade-up"
               data-aos-delay="100"

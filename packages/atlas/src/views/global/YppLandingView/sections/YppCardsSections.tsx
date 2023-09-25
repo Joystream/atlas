@@ -7,10 +7,6 @@ import crt2 from '@/assets/images/illustration-crt-l2.webp'
 import crt3 from '@/assets/images/illustration-crt-l3.webp'
 import myVideosBack from '@/assets/images/illustration-my-videos-page-l1.webp'
 import myVideosFront from '@/assets/images/illustration-my-videos-page-l2.webp'
-import videoNfts1 from '@/assets/images/illustration-video-nfts-l1.webp'
-import videoNfts2 from '@/assets/images/illustration-video-nfts-l2.webp'
-import videoNfts3 from '@/assets/images/illustration-video-nfts-l3.webp'
-import videoNfts4 from '@/assets/images/illustration-video-nfts-l4.webp'
 import dashboardImgBack from '@/assets/images/illustration-ypp-dashboard-l1.webp'
 import dashboardImgFront from '@/assets/images/illustration-ypp-dashboard-l2.webp'
 import youtubeSyncBack from '@/assets/images/illustration-ypp-sync-l1.webp'
@@ -20,6 +16,7 @@ import { Text } from '@/components/Text'
 import { ContentCard } from '@/components/_ypp/ContentCard'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useSectionTextVariants } from '@/views/global/YppLandingView/sections/useSectionTextVariants'
 
 import { CardImage, CardImageRow, CardsWithImagesContainer, ImageContainer } from './YppCardsSection.styles'
 
@@ -31,9 +28,9 @@ import {
 } from '../YppLandingView.styles'
 
 export const YppCardsSections: FC = () => {
-  const mdMatch = useMediaMatch('md')
   const smMatch = useMediaMatch('sm')
   const endScroll = smMatch ? window.innerHeight / 3 : window.innerHeight
+  const [titleVariant, subtitleVariant] = useSectionTextVariants()
 
   const commonParallaxOpts: ParallaxProps = {
     disabled: !smMatch,
@@ -51,18 +48,18 @@ export const YppCardsSections: FC = () => {
             <CenteredLayoutGrid>
               <HeaderGridItem
                 as="header"
-                colStart={{ sm: 3, lg: 4 }}
-                colSpan={{ base: 12, sm: 8, lg: 6 }}
+                colStart={{ sm: 3 }}
+                colSpan={{ base: 12, sm: 9 }}
                 data-aos="fade-up"
                 data-aos-delay="350"
                 data-aos-offset="80"
                 data-aos-easing="atlas-easing"
               >
-                <Text variant={mdMatch ? 'h700' : 'h600'} as="h2">
-                  There is more to YouTube Partner Program
+                <Text variant={titleVariant} as="h2">
+                  Monetize your Gleev channel
                 </Text>
                 <Text
-                  variant="t300"
+                  variant={subtitleVariant}
                   as="p"
                   margin={{ top: 4 }}
                   color="colorText"
@@ -71,8 +68,8 @@ export const YppCardsSections: FC = () => {
                   data-aos-offset="40"
                   data-aos-easing="atlas-easing"
                 >
-                  New to {appName}? Joining our YouTube Partner Program is an exciting opportunity to try out the future
-                  of online video sharing. And we're only getting started.
+                  Build a foundation for your {appName} channel with syncing YouTube content and tap into the future of
+                  content monetization.
                 </Text>
               </HeaderGridItem>
             </CenteredLayoutGrid>
@@ -110,9 +107,9 @@ export const YppCardsSections: FC = () => {
                 data-aos-easing="atlas-easing"
               >
                 <ContentCard
-                  title="Manage your channel on a simple dashboard"
-                  subtitle="Dashboard"
-                  body={`YouTube Partner Program dashboard in ${appName} Studio allows you to see the list of rewardable tasks alongside other information about the program. `}
+                  title="Mint and sell video NFTs on the Marketplace"
+                  subtitle="Video NFTs"
+                  body="Turn your videos into NFTs and put them up for sale. Choose between fixed price, open auction, and timed auction. Define royalties to get a cut every time your NFT gets sold again."
                 />
               </GridItem>
             </CardImageRow>
@@ -151,9 +148,10 @@ export const YppCardsSections: FC = () => {
                 data-aos-easing="atlas-easing"
               >
                 <ContentCard
-                  title="Upload your videos and own them like you mean it"
-                  subtitle="Joystream"
-                  body="All the information about your videos is securely stored on the Joystream blockchain, which is owned and operated by the community."
+                  pill={{ label: 'Coming late 2023' }}
+                  title="Issue Channel Tokens"
+                  subtitle="Creator tokens"
+                  body="Turn viewers into evangelists by letting them hold a share in your channel when they buy your own channel token."
                 />
               </GridItem>
             </CardImageRow>
@@ -190,80 +188,10 @@ export const YppCardsSections: FC = () => {
                 data-aos-easing="atlas-easing"
               >
                 <ContentCard
-                  title="Automatic YouTube video sync"
-                  subtitle="YouTube sync"
-                  body={`All the videos you upload to your YouTube channel will appear in ${appName} automatically, allowing you to reach a greater audience.`}
-                />
-              </GridItem>
-            </CardImageRow>
-          </CardsWithImagesContainer>
-        </StyledLimitedWidthContainer>
-      </BackgroundContainer>
-
-      {/* nfts */}
-      <BackgroundContainer>
-        <StyledLimitedWidthContainer>
-          <CardsWithImagesContainer>
-            <CardImageRow as="article">
-              <GridItem
-                colStart={{ sm: 2, md: 1, lg: 2 }}
-                colSpan={{ base: 12, sm: 10, md: 7, lg: 6 }}
-                data-aos="fade-up"
-                data-aos-delay="250"
-                data-aos-offset="80"
-                data-aos-easing="atlas-easing"
-              >
-                <ImageContainer positionOnMobile="center">
-                  <CardImage absolute src={videoNfts1} alt="Nft tiles" width="640" height="413" />
-                  <CardImageWithParallaxEffect
-                    dropShadow
-                    absolute
-                    src={videoNfts2}
-                    parallaxProps={{
-                      ...commonParallaxOpts,
-                      speed: 5,
-                    }}
-                    alt="Single nft tile"
-                    width="640"
-                    height="413"
-                  />
-                  <CardImageWithParallaxEffect
-                    dropShadow
-                    absolute
-                    src={videoNfts3}
-                    parallaxProps={{
-                      ...commonParallaxOpts,
-                      speed: 10,
-                      translateX: [13, 13],
-                    }}
-                    alt="Context menu of nft tile"
-                    width="640"
-                    height="413"
-                  />
-                  <CardImageWithParallaxEffect
-                    src={videoNfts4}
-                    parallaxProps={{
-                      ...commonParallaxOpts,
-                      speed: 15,
-                    }}
-                    alt="Cursor"
-                    width="640"
-                    height="413"
-                  />
-                </ImageContainer>
-              </GridItem>
-              <GridItem
-                colStart={{ sm: 3, md: 8 }}
-                colSpan={{ base: 12, sm: 8, md: 5, lg: 4 }}
-                data-aos="fade-up"
-                data-aos-delay="350"
-                data-aos-offset="80"
-                data-aos-easing="atlas-easing"
-              >
-                <ContentCard
-                  title="Monetize your videos with NFT sales and royalties"
-                  subtitle="Video NFTs"
-                  body="Turn your videos into NFTs and put them up for sale. Choose between fixed price, open auction, and timed auction. Define royalties to get a cut every time your NFT gets sold again."
+                  pill={{ label: 'Coming early 2024' }}
+                  title="Get recognized and supported with tips"
+                  subtitle="Tips"
+                  body="Receive tips from your viewers who appreciate your work and want you to know about it."
                 />
               </GridItem>
             </CardImageRow>
@@ -304,10 +232,10 @@ export const YppCardsSections: FC = () => {
                 data-aos-easing="atlas-easing"
               >
                 <ContentCard
-                  pill={{ label: 'Coming late 2023' }}
-                  title="Mint your own channel token"
-                  subtitle="Creator tokens"
-                  body="Turn viewers into evangelists by letting them hold a share in your channel when they buy your own channel token."
+                  pill={{ label: 'Coming early 2024' }}
+                  title="Create videos which only your supporters can access"
+                  subtitle="Gated content"
+                  body="Offer exclusive content to the selected members who purchased your tokens and NFTs."
                 />
               </GridItem>
             </CardImageRow>

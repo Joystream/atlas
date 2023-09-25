@@ -10,8 +10,11 @@ import {
   HeaderGridItem,
   StyledLimitedWidthContainer,
 } from '@/views/global/YppLandingView/YppLandingView.styles'
+import { useSectionTextVariants } from '@/views/global/YppLandingView/sections/useSectionTextVariants'
 
 export const YppConnectionDetails = () => {
+  const [titleVariant, subtitleVariant] = useSectionTextVariants()
+
   return (
     <BackgroundContainer>
       <StyledLimitedWidthContainer centerText>
@@ -29,14 +32,14 @@ export const YppConnectionDetails = () => {
               data-aos-offset="80"
               data-aos-easing="atlas-easing"
             >
-              <Text variant="h900" as="span">
+              <Text variant={titleVariant} as="span">
                 Connecting is{' '}
-                <Text variant="h900" as="span" color="colorTextSuccess">
+                <Text variant={titleVariant} as="span" color="colorTextSuccess">
                   Safe
                 </Text>
               </Text>
               <Text
-                variant="t300"
+                variant={subtitleVariant}
                 as="p"
                 color="colorText"
                 data-aos="fade-up"
