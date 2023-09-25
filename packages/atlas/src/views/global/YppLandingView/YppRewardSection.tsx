@@ -1,11 +1,10 @@
 import { FC, useRef, useState } from 'react'
 
 import { Information } from '@/components/Information'
-import { LayoutGrid } from '@/components/LayoutGrid'
-import { NumberFormat } from '@/components/NumberFormat'
+import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { TooltipText } from '@/components/Tooltip/Tooltip.styles'
-import { BenefitCard } from '@/components/_ypp/BenefitCard'
+import { TierCard } from '@/components/_ypp/TierCard'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
@@ -15,14 +14,7 @@ import {
   HeaderGridItem,
   StyledLimitedWidthContainer,
 } from './YppLandingView.styles'
-import {
-  BenefitsCardButton,
-  BenefitsCardsButtonsGroup,
-  BenefitsCardsContainerGridItem,
-  ColorAnchor,
-  RewardsSubtitleGridItem,
-  RewardsSubtitleWrapper,
-} from './YppRewardSection.styles'
+import { ColorAnchor, RewardsSubtitleGridItem, RewardsSubtitleWrapper } from './YppRewardSection.styles'
 
 export const calculateReward = (
   amount: number | number[] | { min: number | null; max: number } | null,
@@ -58,7 +50,7 @@ export const YppRewardSection: FC = () => {
   }
 
   return (
-    <BackgroundContainer pattern="top">
+    <BackgroundContainer noBackground>
       <StyledLimitedWidthContainer as="section">
         <CenteredLayoutGrid>
           <HeaderGridItem as="header" colStart={{ sm: 3, lg: 4 }} colSpan={{ base: 12, sm: 8, lg: 6 }}>
@@ -70,7 +62,7 @@ export const YppRewardSection: FC = () => {
               data-aos-offset="80"
               data-aos-easing="atlas-easing"
             >
-              Rewards overview
+              Rewards are based on channel popularity and content quality
             </Text>
             <Text
               variant="t300"
@@ -82,109 +74,17 @@ export const YppRewardSection: FC = () => {
               data-aos-offset="40"
               data-aos-easing="atlas-easing"
             >
-              Guaranteed payouts for sign up, referrals and quality content. The more subscribers on your YouTube
-              channel, the higher are the rewards to reap!
+              Each participating channel is reviewed by the verification team and assigned to one of the reward tiers
+              below
             </Text>
           </HeaderGridItem>
         </CenteredLayoutGrid>
-
-        {tiers && (
-          <BenefitsCardsButtonsGroup
-            data-aos="fade-up"
-            data-aos-delay="200"
-            data-aos-offset="80"
-            data-aos-easing="atlas-easing"
-          >
-            {tiers.map((tier, idx, tierArray) => {
-              const isFirstTier = idx === 0
-              const isLastTier = idx === tierArray.length - 1
-              const isActiveTier = idx === activeTier
-              if (isFirstTier) {
-                return (
-                  <BenefitsCardButton
-                    variant={isActiveTier ? 'primary' : 'tertiary'}
-                    key={tier.minimumSubscribers}
-                    onClick={() => setActiveTier(idx)}
-                  >
-                    &lt;
-                    <NumberFormat
-                      as="span"
-                      format="short"
-                      color="colorTextStrong"
-                      variant="h300"
-                      value={tierArray[idx + 1].minimumSubscribers}
-                    />{' '}
-                  </BenefitsCardButton>
-                )
-              }
-              if (isLastTier) {
-                return (
-                  <BenefitsCardButton
-                    variant={isActiveTier ? 'primary' : 'tertiary'}
-                    key={tier.minimumSubscribers}
-                    onClick={() => setActiveTier(idx)}
-                  >
-                    &gt;
-                    <NumberFormat
-                      as="span"
-                      format="short"
-                      color="colorTextStrong"
-                      variant="h300"
-                      value={tier.minimumSubscribers}
-                    />{' '}
-                  </BenefitsCardButton>
-                )
-              }
-              return (
-                <BenefitsCardButton
-                  variant={isActiveTier ? 'primary' : 'tertiary'}
-                  key={tier.minimumSubscribers}
-                  onClick={() => setActiveTier(idx)}
-                >
-                  <NumberFormat
-                    as="span"
-                    format="short"
-                    color="colorTextStrong"
-                    variant="h300"
-                    value={tier.minimumSubscribers}
-                  />
-                  -
-                  <NumberFormat
-                    as="span"
-                    format="short"
-                    color="colorTextStrong"
-                    variant="h300"
-                    value={tierArray[idx + 1].minimumSubscribers}
-                  />{' '}
-                </BenefitsCardButton>
-              )
-            })}
-          </BenefitsCardsButtonsGroup>
-        )}
         <LayoutGrid data-aos="fade-up" data-aos-delay="200" data-aos-offset="80" data-aos-easing="atlas-easing">
-          <BenefitsCardsContainerGridItem colStart={{ lg: 2 }} colSpan={{ base: 12, lg: 10 }}>
-            {rewards.map((reward) => {
-              const customMultiplier = reward.customMultiplier && reward.customMultiplier[activeTier]
-              const currentMultiplier = tiers ? tiers[activeTier].multiplier : 1
-              const rewardAmount = calculateReward(reward.baseAmount, customMultiplier || currentMultiplier, activeTier)
-              const rewardAmountUsd = calculateReward(
-                reward.baseUsdAmount,
-                customMultiplier || currentMultiplier,
-                activeTier
-              )
-
-              return (
-                <BenefitCard
-                  key={reward.title}
-                  title={reward.title}
-                  joyAmount={rewardAmount}
-                  dollarAmount={rewardAmountUsd}
-                  variant="compact"
-                  description={reward.shortDescription}
-                />
-              )
-            })}
-          </BenefitsCardsContainerGridItem>
+          {['bronze', 'silver', 'gold', 'diamond'].map((rank) => (
+            <GridItem colSpan={{ base: 12, sm: 6, md: 3 }} key={rank}>
+              <TierCard checks={['Well well', 'Hah']} rewards={[0, 0, 0]} />
+            </GridItem>
+          ))}
           <RewardsSubtitleGridItem colStart={{ base: 6 }} colSpan={{ base: 7, lg: 6 }}>
             <RewardsSubtitleWrapper>
               <Text variant="t200" as="p" color="colorText" margin={{ right: 1 }}>

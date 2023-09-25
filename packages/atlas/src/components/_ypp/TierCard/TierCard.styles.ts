@@ -9,7 +9,7 @@ export const Wrapper = styled.div`
   gap: ${sizes(4)};
   background-color: ${cVar('colorBackgroundStrong')};
   border-radius: ${cVar('radiusLarge')};
-  width: fit-content;
+  width: 100%;
 `
 
 export const RewardWrapper = styled.div`

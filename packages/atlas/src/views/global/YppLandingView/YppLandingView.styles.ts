@@ -58,12 +58,12 @@ export const GlowBox = styled.div<{ walkHeight: number; walkWidth: number }>`
   background: radial-gradient(circle, rgb(20 52 146 / 1) 70%, transparent 100%);
   filter: blur(400px);
 `
-export const StyledLimitedWidthContainerHero = styled(LimitedWidthContainer)<{ centerText?: boolean }>`
+export const StyledLimitedWidthContainerHero = styled.div<{ centerText?: boolean }>`
   text-align: ${({ centerText }) => (centerText ? 'center' : 'unset')};
-  padding-bottom: unset;
   position: relative;
   overflow: hidden;
-  border-radius: 50px;
+  border-radius: 32px;
+  padding: ${sizes(16)};
 `
 export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)<{ centerText?: boolean }>`
   text-align: ${({ centerText }) => (centerText ? 'center' : 'unset')};
