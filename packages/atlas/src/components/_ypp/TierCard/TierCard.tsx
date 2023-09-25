@@ -1,6 +1,7 @@
 import { SvgActionCheck } from '@/assets/icons'
+import { FlexBox } from '@/components/FlexBox'
 import { Text } from '@/components/Text'
-import { RewardWrapper, Wrapper } from '@/components/_ypp/TierCard/TierCard.styles'
+import { RewardWrapper, TierBanner, Wrapper } from '@/components/_ypp/TierCard/TierCard.styles'
 import { TickWrapper } from '@/views/global/YppLandingView/YppAuthorizationModal/YppAuthorizationSteps/YppAuthorizationRequirementsStep/YppAuthorizationRequirementsStep.styles'
 
 export type TierCardProps = {
@@ -24,19 +25,20 @@ const getRewardTitle = (idx: number) => {
 export const TierCard = ({ checks, rewards }: TierCardProps) => {
   return (
     <Wrapper>
-      <div>
+      <TierBanner />
+      <FlexBox flow="column" gap={2} width="100%">
         {checks.map((check) => (
-          <div key={check} style={{ display: 'flex' }}>
+          <FlexBox key={check} gap={1} alignItems="center">
             <TickWrapper fulfilled>
               <SvgActionCheck />
             </TickWrapper>
             <Text variant="t200" as="p" color="colorText">
               {check}
             </Text>
-          </div>
+          </FlexBox>
         ))}
-      </div>
-      <div>
+      </FlexBox>
+      <FlexBox flow="column" gap={2} width="100%">
         <Text variant="t200-strong" as="p">
           Rewards
         </Text>
@@ -50,7 +52,7 @@ export const TierCard = ({ checks, rewards }: TierCardProps) => {
             </Text>
           </RewardWrapper>
         ))}
-      </div>
+      </FlexBox>
     </Wrapper>
   )
 }
