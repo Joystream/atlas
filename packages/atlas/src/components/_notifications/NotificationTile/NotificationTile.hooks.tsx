@@ -242,7 +242,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         icon: 'nft-alt',
         action: { type: 'nft-page', params: [notification.videoId] },
         avatar: { type: 'active-membership' },
-        text: <>You lost a timed auction for NFT: “{notification.videoTitle}”</>,
+        text: <>You lost a timed auction for NFT: “{notification.videoTitle}”. Withdraw your bid</>,
       }
     case 'OpenAuctionWon':
       return {
@@ -256,7 +256,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         icon: 'nft-alt',
         action: { type: 'nft-page', params: [notification.videoId] },
         avatar: { type: 'active-membership' },
-        text: <>You lost an open auction for NFT: “{notification.videoTitle}”</>,
+        text: <>You lost an open auction for NFT: “{notification.videoTitle}”. Withdraw your bid</>,
       }
     // case 'NFT bid becomes withdrawable (for bidder)': // MISSING
     //   return {
@@ -519,7 +519,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         text: (
           <>
             <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" />{' '}
-            transferred from your channel to your membership account
+            were withdrawn from your channel account
           </>
         ),
       }
