@@ -203,8 +203,8 @@ export const SignUpModal = () => {
   )
 
   const handlePasswordStepSubmit = useCallback(
-    async (password: string) => {
-      signUpFormData.current = { ...signUpFormData.current, password }
+    async (password: string, captchaToken?: string) => {
+      signUpFormData.current = { ...signUpFormData.current, password, captchaToken }
       const memberId = await createNewMember({
         data: {
           ...signUpFormData.current,
