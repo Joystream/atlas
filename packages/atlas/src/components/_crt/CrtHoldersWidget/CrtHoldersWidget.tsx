@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import { useMemo, useState } from 'react'
 
 import { SvgActionChevronR } from '@/assets/icons'
@@ -57,15 +58,15 @@ export const CrtHoldersWidget = ({ holders }: CrtHoldersWidgetProps) => {
             <Text variant="h100" as="h1" color="colorTextMuted">
               TOTAL SUPPLY
             </Text>
-            <div style={{ height: 300, width: '100%' }}>
+            <ChartWrapper>
               <PieChart
                 data={chartData}
                 onDataHover={setHoveredHolder}
                 hoverOpacity
                 hoveredData={hoveredHolder}
                 valueFormat={(value) => `${value}%`}
-              />{' '}
-            </div>{' '}
+              />
+            </ChartWrapper>
           </FlexBox>
           <FlexBox flow="column" gap={6}>
             <FlexBox flow="column" gap={2}>
@@ -141,7 +142,7 @@ const HoldersLegendEntry = ({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseExit}
     >
-      <div style={{ minWidth: 24, minHeight: 24, background: color }} />
+      <ColorBox color={color} />
       <FlexBox alignItems="center">
         {members.length === 1 ? (
           <Avatar assetUrls={members[0].avatarUrls} />
@@ -161,3 +162,14 @@ const HoldersLegendEntry = ({
     </FlexBox>
   )
 }
+
+const ColorBox = styled.div<{ color: string }>`
+  min-width: 24px;
+  min-height: 24px;
+  background-color: ${(props) => props.color};
+`
+
+const ChartWrapper = styled.div`
+  height: 300px;
+  width: 100%;
+`
