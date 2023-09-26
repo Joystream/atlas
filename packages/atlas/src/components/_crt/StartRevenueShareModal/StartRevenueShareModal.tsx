@@ -15,7 +15,7 @@ import { DialogModal } from '@/components/_overlays/DialogModal'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { pluralizeNoun } from '@/utils/misc'
 
-export type SellTokenModalProps = {
+export type StartRevenueShareProps = {
   tokenId: string
   onClose: () => void
   show: boolean
@@ -40,7 +40,7 @@ const datePickerItemsFactory = (days: number[]) =>
 
 const endDateItems = datePickerItemsFactory([7, 14, 30])
 
-export const StartRevenueShare = ({ tokenId, onClose, show }: SellTokenModalProps) => {
+export const StartRevenueShare = ({ tokenId, onClose, show }: StartRevenueShareProps) => {
   const smMatch = useMediaMatch('sm')
   const { patronageRate, userBalance, title } = getTokenDetails(tokenId)
 
@@ -101,11 +101,11 @@ export const StartRevenueShare = ({ tokenId, onClose, show }: SellTokenModalProp
 
   return (
     <DialogModal
-      title={`Sell $${title}`}
+      title="Start revenue share"
       show={show}
       onExitClick={onClose}
       primaryButton={{
-        text: 'Sell tokens',
+        text: 'Start revenue share',
       }}
     >
       <FlexBox flow="column" gap={8}>
