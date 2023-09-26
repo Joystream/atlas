@@ -134,12 +134,30 @@
       "desktop": {
         "type": "{typography.textStyles.textStyleType}",
         "heading": {
-          "H900": {
+          "H1100": {
+            "value": {
+              "fontFamily": "{typography.fonts.primary}",
+              "fontSize": "{typography.fontSizes.16}",
+              "fontWeight": "{typography.fontWeights.bold}",
+              "lineHeight": "7rem",
+              "letterSpacing": "-0.01em"
+            }
+          },
+          "H1000": {
             "value": {
               "fontFamily": "{typography.fonts.primary}",
               "fontSize": "{typography.fontSizes.14}",
               "fontWeight": "{typography.fontWeights.semibold}",
               "lineHeight": "5rem",
+              "letterSpacing": "-0.01em"
+            }
+          },
+          "H900": {
+            "value": {
+              "fontFamily": "{typography.fonts.primary}",
+              "fontSize": "{typography.fontSizes.13}",
+              "fontWeight": "{typography.fontWeights.semibold}",
+              "lineHeight": "4.5rem",
               "letterSpacing": "-0.01em"
             }
           },
@@ -215,6 +233,42 @@
           }
         },
         "text": {
+          "T500": {
+            "regular": {
+              "value": {
+                "fontFamily": "{typography.fonts.secondary}",
+                "fontSize": "{typography.fontSizes.8}",
+                "fontWeight": "{typography.fontWeights.normal}",
+                "lineHeight": "2.75rem"
+              }
+            },
+            "strong": {
+              "value": {
+                "fontFamily": "{typography.fonts.secondary}",
+                "fontSize": "{typography.fontSizes.8}",
+                "fontWeight": "{typography.fontWeights.semibold}",
+                "lineHeight": "2.75rem"
+              }
+            }
+          },
+          "T400": {
+            "regular": {
+              "value": {
+                "fontFamily": "{typography.fonts.secondary}",
+                "fontSize": "{typography.fontSizes.5}",
+                "fontWeight": "{typography.fontWeights.normal}",
+                "lineHeight": "2rem"
+              }
+            },
+            "strong": {
+              "value": {
+                "fontFamily": "{typography.fonts.secondary}",
+                "fontSize": "{typography.fontSizes.5}",
+                "fontWeight": "{typography.fontWeights.semibold}",
+                "lineHeight": "2rem"
+              }
+            }
+          },
           "T300": {
             "regular": {
               "value": {
@@ -278,6 +332,23 @@
       "mobile": {
         "type": "{typography.textStyles.textStyleType}",
         "heading": {
+          "H1100": {
+            "value": {
+              "fontFamily": "{typography.fonts.primary}",
+              "fontSize": "{typography.fontSizes.10}",
+              "fontWeight": "{typography.fontWeights.semibold}",
+              "lineHeight": "3.25rem",
+              "letterSpacing": "-0.01em"
+            }
+          },
+          "H1000": {
+            "value": {
+              "fontFamily": "{typography.fonts.primary}",
+              "fontSize": "{typography.fontSizes.9}",
+              "fontWeight": "{typography.fontWeights.semibold}",
+              "lineHeight": "2.75rem"
+            }
+          },
           "H900": {
             "value": {
               "fontFamily": "{typography.fonts.primary}",
@@ -358,6 +429,42 @@
           }
         },
         "text": {
+          "T500": {
+            "regular": {
+              "value": {
+                "fontFamily": "{typography.fonts.secondary}",
+                "fontSize": "{typography.fontSizes.5}",
+                "fontWeight": "{typography.fontWeights.normal}",
+                "lineHeight": "1.75rem"
+              }
+            },
+            "strong": {
+              "value": {
+                "fontFamily": "{typography.fonts.secondary}",
+                "fontSize": "{typography.fontSizes.5}",
+                "fontWeight": "{typography.fontWeights.semibold}",
+                "lineHeight": "1.75rem"
+              }
+            }
+          },
+          "T400": {
+            "regular": {
+              "value": {
+                "fontFamily": "{typography.fonts.secondary}",
+                "fontSize": "{typography.fontSizes.4}",
+                "fontWeight": "{typography.fontWeights.normal}",
+                "lineHeight": "1.5rem"
+              }
+            },
+            "strong": {
+              "value": {
+                "fontFamily": "{typography.fonts.secondary}",
+                "fontSize": "{typography.fontSizes.4}",
+                "fontWeight": "{typography.fontWeights.semibold}",
+                "lineHeight": "1.5rem"
+              }
+            }
+          },
           "T300": {
             "regular": {
               "value": {

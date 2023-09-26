@@ -40,12 +40,11 @@ export const calculateReward = (
 }
 
 export const YppRewardSection: FC = () => {
-  // const tiers = atlasConfig.features.ypp.tiersDefinition?.tiers
-  const rewards = atlasConfig.features.ypp.rewards
+  const tiers = atlasConfig.features.ypp.tiersDefinition
   const [titleVariant, subtitleVariant] = useSectionTextVariants()
   const ref = useRef<HTMLDivElement>(null)
 
-  if (!rewards?.length) {
+  if (!tiers?.length) {
     return null
   }
 
@@ -80,9 +79,9 @@ export const YppRewardSection: FC = () => {
           </HeaderGridItem>
         </CenteredLayoutGrid>
         <LayoutGrid data-aos="fade-up" data-aos-delay="200" data-aos-offset="80" data-aos-easing="atlas-easing">
-          {['bronze', 'silver', 'gold', 'diamond'].map((rank) => (
-            <GridItem colSpan={{ base: 12, sm: 6, md: 3 }} key={rank}>
-              <TierCard checks={['Well well', 'Hah']} rewards={[0, 0, 0]} />
+          {tiers.map((tier) => (
+            <GridItem colSpan={{ base: 12, sm: 6, md: 3 }} key={tier.tier}>
+              <TierCard {...tier} />
             </GridItem>
           ))}
           <RewardsSubtitleGridItem colStart={{ base: 6 }} colSpan={{ base: 7, lg: 6 }}>

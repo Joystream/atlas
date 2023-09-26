@@ -57,6 +57,13 @@ const baseStyles = ({ color = 'colorTextStrong', clampAfterLine, margin, align }
 `
 
 export const styledVariants = {
+  // h1000: styled.span<TextBaseProps>`
+  //   ${baseStyles};
+  //
+  //   font: ${cVar('typographyDesktopH1000')};
+  //   letter-spacing: ${cVar('typographyDesktopH900LetterSpacing')};
+  //   text-transform: ${cVar('typographyDesktopH900TextTransform')};
+  // `,
   h900: styled.span<TextBaseProps>`
     ${baseStyles};
 
