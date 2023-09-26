@@ -73,7 +73,7 @@ export const useNotificationAvatar = (
 
     case 'active-channel':
     case 'channel':
-      if (!channel?.avatarPhoto?.isAccepted === false) break
+      if (!channel?.avatarPhoto?.isAccepted) break
       return { avatarUrls: channel?.avatarPhoto?.resolvedUrls ?? [], isLoading: isChannelLoading }
   }
 
