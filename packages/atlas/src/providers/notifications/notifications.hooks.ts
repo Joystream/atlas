@@ -1,6 +1,6 @@
 import { QueryHookOptions } from '@apollo/client'
 import BN from 'bn.js'
-import { useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useLocation } from 'react-router'
 
 import { useRawNotifications } from '@/api/hooks/notifications'
@@ -34,7 +34,7 @@ export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkS
   // those are different from unread notifications!
   const {
     lastSeenNotificationDates,
-    actions: { setLastSeenNotificationDate },
+    actions: { setLastSeenNotificationDate: _setLastSeenNotificationDate },
   } = useNotificationStore()
 
   const unseenMemberNotificationsCount = useGetNotificationsCountQuery({
@@ -67,43 +67,57 @@ export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkS
     unseenChannelNotificationsCount.data?.notificationInAppDeliveriesConnection.totalCount
 
   const [optimisticRead, setOptimisticRead] = useState<string[]>([])
-  const notifications = rawNotifications.flatMap(({ node }): NotificationRecord | [] => {
-    const { id, createdAt, status, notificationType } = node.notification
-    const specificData = parseNotificationType(notificationType as NotificationType)
-    return specificData
-      ? {
-          id,
-          date: new Date(createdAt),
-          read: status.__typename === 'Read' || optimisticRead.includes(id),
-          ...specificData,
-        }
-      : []
-  })
+  const notifications = useMemo(
+    () =>
+      rawNotifications.flatMap(({ node }): NotificationRecord | [] => {
+        const { id, createdAt, status, notificationType } = node.notification
+        const specificData = parseNotificationType(notificationType as NotificationType)
+        return specificData
+          ? {
+              id,
+              date: new Date(createdAt),
+              read: status.__typename === 'Read' || optimisticRead.includes(id),
+              ...specificData,
+            }
+          : []
+      }),
+    [rawNotifications, optimisticRead]
+  )
 
-  const markNotificationsAsRead = async (notifications: NotificationRecord[]) => {
-    const notificationIds = notifications.map(({ id }) => id)
-    setOptimisticRead(notificationIds)
-    const { errors } = await markNotificationsAsReadMutation({ variables: { notificationIds } })
-    if (errors) {
-      return setOptimisticRead([])
-    }
-    await refetch()
-    setOptimisticRead([])
-  }
+  const markNotificationsAsRead = useCallback(
+    async (notifications: NotificationRecord[]) => {
+      const notificationIds = notifications.map(({ id }) => id)
+      setOptimisticRead(notificationIds)
+      const { errors } = await markNotificationsAsReadMutation({ variables: { notificationIds } })
+      if (errors) {
+        return setOptimisticRead([])
+      }
+      await refetch()
+      setOptimisticRead([])
+    },
+    [markNotificationsAsReadMutation, refetch]
+  )
+
+  const setLastSeenNotificationDate = useCallback(
+    (date: Date) => {
+      if (!recipientId) return
+      _setLastSeenNotificationDate(recipientType, recipientId, date)
+    },
+    [_setLastSeenNotificationDate, recipientType, recipientId]
+  )
+  const fetchMoreUnseen = useCallback(() => {
+    unseenMemberNotificationsCount.fetchMore({})
+    unseenChannelNotificationsCount.fetchMore({})
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [unseenChannelNotificationsCount.fetchMore, unseenChannelNotificationsCount.fetchMore])
 
   return {
     notifications,
     unseenMemberNotifications,
     unseenChannelNotifications,
     unseenNotificationsCounts: isStudio ? unseenChannelNotifications : unseenMemberNotifications,
-    fetchMoreUnseen: () => {
-      unseenMemberNotificationsCount.fetchMore({})
-      unseenChannelNotificationsCount.fetchMore({})
-    },
-    setLastSeenNotificationDate: (date: Date) => {
-      if (!recipientId) return
-      setLastSeenNotificationDate(recipientType, recipientId, date)
-    },
+    fetchMoreUnseen,
+    setLastSeenNotificationDate,
     markNotificationsAsRead,
     ...rest,
   }
