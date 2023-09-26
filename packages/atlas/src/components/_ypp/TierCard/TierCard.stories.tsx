@@ -12,5 +12,6 @@ const Template: StoryFn<TierCardProps> = (args) => <TierCard {...args} />
 export const Default = Template.bind({})
 Default.args = {
   rewards: [100, 200, 300],
-  checks: ['Join us!', 'Growing subscriber base of channel supporters.'],
+  reqs: ['Join us!', 'Growing subscriber base of channel supporters.'],
+  tier: 'diamond',
 }

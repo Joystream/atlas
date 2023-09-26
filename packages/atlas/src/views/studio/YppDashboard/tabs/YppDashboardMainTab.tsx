@@ -20,7 +20,7 @@ import { RewardsWrapper, StyledBanner, StyledSvgAlertsInformative24, WidgetsWrap
 import { REWARDS } from '../YppDashboard.config'
 
 const APP_NAME = atlasConfig.general.appName
-const tiers = atlasConfig.features.ypp.tiersDefinition?.tiers
+// const tiers = atlasConfig.features.ypp.tiersDefinition?.tiers
 
 type YppDashboardMainTabProps = {
   currentTier?: number
@@ -31,7 +31,7 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
   const { channelId } = useUser()
   const { currentChannel } = useGetYppSyncedChannels()
   const { trackReferralLinkGenerated } = useSegmentAnalytics()
-  const multiplier = tiers ? tiers[currentTier].multiplier : 1
+  const multiplier = 1 // todo
 
   return (
     <>
