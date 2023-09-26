@@ -4256,7 +4256,7 @@ __metadata:
     "@joystream/js": ^1.4.0
     "@joystream/metadata-protobuf": 2.8.1
     "@joystream/prettier-config": ^1.0.0
-    "@joystream/types": 2.1.0
+    "@joystream/types": 4.0.0
     "@livesession/sdk": ^1.1.4
     "@loadable/component": ^5.15.2
     "@lottiefiles/react-lottie-player": ^3.5.0
@@ -4409,7 +4409,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@joystream/types@npm:2.1.0, @joystream/types@npm:^2.0.0":
+"@joystream/types@npm:4.0.0":
+  version: 4.0.0
+  resolution: "@joystream/types@npm:4.0.0"
+  dependencies:
+    "@polkadot/api": 8.9.1
+    "@polkadot/keyring": 9.5.1
+    "@polkadot/types": 8.9.1
+    "@types/lodash": ^4.14.157
+    "@types/vfile": ^4.0.0
+    lodash: ^4.17.15
+    moment: ^2.24.0
+  checksum: 8af69c43fe9c54a0dc3327c9006bd21cb130c6aceb41410e674db79821dcdf68440634ac28c3d3eb678b679830d8929ad36ea9340ce0d0e5f914668db4ce853c
+  languageName: node
+  linkType: hard
+
+"@joystream/types@npm:^2.0.0":
   version: 2.1.0
   resolution: "@joystream/types@npm:2.1.0"
   dependencies:
