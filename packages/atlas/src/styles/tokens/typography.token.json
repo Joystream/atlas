@@ -80,6 +80,12 @@
       "14": {
         "value": "4.5625rem"
       },
+      "15": {
+        "value": "5.25rem"
+      },
+      "16": {
+        "value": "6rem"
+      },
       "type": "dimension",
       "description": "Based on the formula outlined in this article: https://spencermortensen.com/articles/typographic-scale/"
     },

@@ -17,6 +17,7 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { cVar, transitions } from '@/styles'
+import { useSectionTextVariants } from '@/views/global/YppLandingView/sections/useSectionTextVariants'
 
 import {
   BackImage,
@@ -47,10 +48,9 @@ export const YppHero: FC<YppHeroProps> = ({
   hasAnotherUnsyncedChannel,
   selectedChannelTitle,
 }) => {
-  const mdMatch = useMediaMatch('md')
   const smMatch = useMediaMatch('sm')
   const { ref, width, height } = useResizeObserver({ box: 'border-box' })
-
+  const [, subtitleVariant, titleVariant] = useSectionTextVariants()
   const endScroll = smMatch ? window.innerHeight / 3 : window.innerHeight
   const { ref: heroImageRef } = useParallax<HTMLImageElement>({
     startScroll: 0,
@@ -76,7 +76,7 @@ export const YppHero: FC<YppHeroProps> = ({
           <GlowBox walkHeight={height ?? 0} walkWidth={width ?? 0} />
         </GlowContainer>
         <LayoutGrid as="header">
-          <GridItem colSpan={{ base: 12, sm: 8, lg: 6 }} colStart={{ sm: 3, lg: 4 }}>
+          <GridItem colSpan={{ base: 12, sm: 8 }} colStart={{ sm: 3 }}>
             <LogosContainer>
               <AppLogo
                 variant="full"
@@ -90,7 +90,7 @@ export const YppHero: FC<YppHeroProps> = ({
             </LogosContainer>
             <Text
               as="h1"
-              variant={mdMatch ? 'h800' : 'h600'}
+              variant={titleVariant}
               data-aos="fade-up"
               data-aos-delay="250"
               data-aos-offset="80"
@@ -100,7 +100,7 @@ export const YppHero: FC<YppHeroProps> = ({
             </Text>
             <Text
               as="p"
-              variant="t300"
+              variant={subtitleVariant}
               color="colorText"
               margin={{ top: 4, bottom: 8 }}
               data-aos="fade-up"
