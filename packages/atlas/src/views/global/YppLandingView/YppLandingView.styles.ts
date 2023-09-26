@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 
 import topRightPattern from '@/assets/images/ypp-background-pattern-2.svg'
 import bottomLeftPattern from '@/assets/images/ypp-background-pattern.svg'
+import { FlexBox } from '@/components/FlexBox'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { cVar, media, sizes } from '@/styles'
@@ -30,11 +31,11 @@ export const Wrapper = styled.div`
 
 const rot = keyframes`
   0% {
-    transform: rotate(0deg);
+    transform: rotate(-180deg);
   }
 
   100% {
-    transform: rotate(360deg);
+    transform: rotate(180deg);
   }
 `
 
@@ -90,6 +91,31 @@ export const StyledLimitedWidthContainerVideo = styled(LimitedWidthContainer)<{ 
 export const CenteredLayoutGrid = styled(LayoutGrid)`
   text-align: center;
   row-gap: 0;
+`
+
+export const CenteredLayoutFlex = styled(FlexBox)`
+  text-align: center;
+  row-gap: 0;
+
+  ${media.lg} {
+    padding: 0 20%;
+  }
+`
+
+export const TierCardWrapper = styled.div`
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: ${sizes(6)};
+  justify-content: center;
+
+  ${media.sm} {
+    grid-template-columns: repeat(2, auto);
+  }
+
+  ${media.md} {
+    grid-template-columns: repeat(4, auto);
+  }
 `
 
 type HeaderGridItemProps = {

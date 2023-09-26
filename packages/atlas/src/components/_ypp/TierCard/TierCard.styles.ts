@@ -1,7 +1,7 @@
 import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { cVar, sizes, square } from '@/styles'
+import { cVar, media, sizes, square } from '@/styles'
 
 export const Wrapper = styled.div<{ isDiamond: boolean }>`
   display: flex;
@@ -12,8 +12,11 @@ export const Wrapper = styled.div<{ isDiamond: boolean }>`
   background-color: ${cVar('colorBackgroundStrong')};
   border-radius: ${cVar('radiusLarge')};
   width: 100%;
-  height: 100%;
   border: ${(props) => (props.isDiamond ? '1px solid #2EEAD0' : 'none')};
+
+  ${media.sm} {
+    max-width: 250px;
+  }
 `
 
 export const RewardWrapper = styled.div`

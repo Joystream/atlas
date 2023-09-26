@@ -108,8 +108,8 @@ export const YppHero: FC<YppHeroProps> = ({
               data-aos-offset="40"
               data-aos-easing="atlas-easing"
             >
-              Videos from YouTube channel get automatically synced to {atlasConfig.general.appName} and you get JOY
-              tokens for every new sync and more.
+              YouTube videos get automatically synced to your {atlasConfig.general.appName} channel, without any
+              additional effort.
             </Text>
             <LogosContainer data-aos="fade-up" data-aos-delay="350" data-aos-offset="40" data-aos-easing="atlas-easing">
               <SvgLogoYoutubeWhiteFull />
