@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import { ReactNode } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 import { SvgAlertsInformative24 } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
@@ -8,7 +7,6 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
 import { CrtFormWrapper } from '@/components/_crt/CrtFormWrapper'
-import { absoluteRoutes } from '@/config/routes'
 import { useMountEffect } from '@/hooks/useMountEffect'
 import { useFee, useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
@@ -33,14 +31,14 @@ const cliffBanner = (
 )
 
 const monthDurationToBlocks = (numberOfMonths: number) => numberOfMonths * 30 * 24 * 60 * 6
-
-export const TokenSummaryStep = ({ setPrimaryButtonProps, form }: CommonStepProps) => {
+export type TokenSummaryStepProps = {
+  onSuccess: () => void
+} & CommonStepProps
+export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: TokenSummaryStepProps) => {
   const { joystream, proxyCallback } = useJoystream()
   const { channelId, memberId } = useUser()
   const handleTransaction = useTransaction()
-  const navigate = useNavigate()
   const { fullFee } = useFee('issueCreatorTokenTx')
-
   const handleSubmitTx = async () => {
     if (!joystream || !channelId || !memberId) return
     const [cliff, vesting, payout] = getDataBasedOnType(form.assuranceType) ?? [
@@ -66,7 +64,7 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form }: CommonStepProp
           proxyCallback(handleUpdate)
         ),
       onTxSync: async () => {
-        navigate(absoluteRoutes.studio.crtDashboard())
+        onSuccess()
       },
       snackbarSuccessMessage: {
         title: `$${form.name} minted successfuly.`,
@@ -189,7 +187,7 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form }: CommonStepProp
           title="Transaction fee"
           tooltipText="This action requires a blockchain transaction, which comes with a fee."
         >
-          <NumberFormat value={9120332} variant="h300" as="p" withDenomination="before" />
+          <NumberFormat value={fullFee} format="short" variant="h300" as="p" withToken withDenomination="before" />
         </SectionRow>
       </Section>
     </CrtFormWrapper>
