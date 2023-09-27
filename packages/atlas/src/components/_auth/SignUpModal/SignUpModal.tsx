@@ -176,6 +176,7 @@ export const SignUpModal = () => {
     displaySnackbar,
     goToNextStep,
     goToStep,
+    referrerChannelId,
     setAuthModalOpenName,
     setYppModalOpenName,
     setYtResponseData,
