@@ -246,7 +246,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
 type ResolvedAvatarProps = {
   member: BasicMembershipFieldsFragment
 }
-const ResolvedAvatar: FC<ResolvedAvatarProps> = ({ member }) => {
+export const ResolvedAvatar: FC<ResolvedAvatarProps> = ({ member }) => {
   const { urls, isLoadingAsset } = getMemberAvatar(member)
   return (
     <Tooltip text={member?.handle} placement="top">
