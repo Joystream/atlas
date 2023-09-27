@@ -250,7 +250,7 @@ const _StudioLayout = () => {
                         <PrivateRoute
                           isLoadingAuthData={isLoadingYPPData}
                           element={<YppDashboard />}
-                          isAuth={channelSet && isYppSigned}
+                          isAuth={channelSet}
                           redirectTo={yppRedirect()}
                         />
                       }

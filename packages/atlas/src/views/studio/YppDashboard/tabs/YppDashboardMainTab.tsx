@@ -1,23 +1,23 @@
 import { FC } from 'react'
 
 import { SvgActionNewTab, SvgAlertsError24, SvgAlertsInformative24 } from '@/assets/icons'
-import { Banner } from '@/components/Banner'
+import { FlexBox } from '@/components/FlexBox'
+import { Information } from '@/components/Information'
+import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
-import { Button } from '@/components/_buttons/Button'
+import { Button, TextButton } from '@/components/_buttons/Button'
 import { BenefitCard } from '@/components/_ypp/BenefitCard'
 import { atlasConfig } from '@/config'
-import { useClipboard } from '@/hooks/useClipboard'
-import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
-import { useUser } from '@/providers/user/user.hooks'
+// import { useClipboard } from '@/hooks/useClipboard'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
+// import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
+// import { useUser } from '@/providers/user/user.hooks'
 import { configYppIconMapper } from '@/views/global/YppLandingView/YppFooter'
-import { calculateReward } from '@/views/global/YppLandingView/YppRewardSection'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
 
-import { RewardsWrapper, StyledBanner, StyledSvgAlertsInformative24, WidgetsWrapper } from './YppDashboardTabs.styles'
-
-import { REWARDS } from '../YppDashboard.config'
+import { StatusDot, StyledBanner, StyledSvgAlertsInformative24, YppSyncStatus } from './YppDashboardTabs.styles'
 
 const APP_NAME = atlasConfig.general.appName
 const tiers = atlasConfig.features.ypp.tiersDefinition?.tiers
@@ -25,16 +25,23 @@ const tiers = atlasConfig.features.ypp.tiersDefinition?.tiers
 type YppDashboardMainTabProps = {
   currentTier?: number
 }
-
+const syncOn = true
 export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier = 0 }) => {
-  const { copyToClipboard } = useClipboard()
-  const { channelId } = useUser()
+  // const { copyToClipboard } = useClipboard()
+  // const { channelId } = useUser()
+  const mdMatch = useMediaMatch('md')
+  const lgMatch = useMediaMatch('lg')
   const { currentChannel } = useGetYppSyncedChannels()
-  const { trackReferralLinkGenerated } = useSegmentAnalytics()
+  // const { trackReferralLinkGenerated } = useSegmentAnalytics()
   const multiplier = tiers ? tiers[currentTier].multiplier : 1
 
   return (
     <>
+      <StyledBanner
+        icon={<StyledSvgAlertsInformative24 />}
+        title="Have more than one YouTube channel?"
+        description={`You can apply to the YouTube Partner Program with as many YouTube & ${APP_NAME} channels as you want. Each YouTube channel can be assigned to only one ${APP_NAME} channel. \nYou can create a new channel from the top right menu.`}
+      />
       {currentChannel?.yppStatus === 'Suspended' && (
         <StyledBanner
           title="This channel has been suspended in the YouTube Partner Program"
@@ -73,68 +80,93 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
           }
         />
       )}
-      {atlasConfig.features.ypp.widgets && (
-        <WidgetsWrapper>
-          {atlasConfig.features.ypp.widgets.map((widget) => (
-            <WidgetTile
-              icon={widget.icon && configYppIconMapper[widget.icon]}
-              key={widget.title}
-              title={widget.label ?? widget.title}
-              text={widget.title}
-              button={{
-                text: widget.linkText ?? `Go to ${widget.title}`,
-                variant: 'primary',
-                _textOnly: true,
-                icon: <SvgActionNewTab />,
-                to: widget.link,
-                iconPlacement: 'right',
-              }}
-            />
+      <LayoutGrid>
+        <GridItem colSpan={{ xxs: 12, md: 4 }}>
+          <div style={{ width: '100%', height: 80, background: 'red' }}>tier</div>
+        </GridItem>
+
+        <GridItem colSpan={{ xxs: 12, md: 8 }}>
+          <div style={{ width: '100%', height: 80, background: 'red' }}>service status</div>
+        </GridItem>
+        <GridItem colSpan={{ xxs: 12, sm: 4 }}>
+          <WidgetTile
+            title="Next payments round"
+            tooltip={{
+              text: 'safe',
+            }}
+            customNode={
+              <FlexBox flow="column" gap={4} marginTop={2}>
+                <Text variant={mdMatch ? 'h500' : 'h400'} as="p">
+                  22 sep 2023
+                </Text>
+                <TextButton to="" icon={<SvgActionNewTab />} iconPlacement="right">
+                  Go to Airtable
+                </TextButton>
+              </FlexBox>
+            }
+          />
+        </GridItem>
+        {atlasConfig.features.ypp.widgets &&
+          atlasConfig.features.ypp.widgets.map((widget) => (
+            <GridItem colSpan={{ xxs: 12, sm: 4 }} key={widget.title}>
+              <WidgetTile
+                title={widget.label ?? widget.title}
+                customNode={
+                  <FlexBox flow="column" gap={4} marginTop={2}>
+                    <FlexBox alignItems="center">
+                      {widget.icon ? configYppIconMapper[widget.icon] : null}
+                      <Text variant={mdMatch ? 'h500' : 'h400'} as="p">
+                        {widget.title}
+                      </Text>
+                    </FlexBox>
+                    <TextButton to={widget.link} icon={<SvgActionNewTab />} iconPlacement="right">
+                      {widget.linkText ?? `Go to ${widget.title}`}
+                    </TextButton>
+                  </FlexBox>
+                }
+              />
+            </GridItem>
           ))}
-        </WidgetsWrapper>
-      )}
-      <RewardsWrapper>
-        {REWARDS?.map((reward) => {
-          const customMultiplier = reward.customMultiplier?.[currentTier]
-          const rewardAmount = calculateReward(reward.joyAmount, customMultiplier || multiplier, currentTier)
-          const rewardAmountUsd = calculateReward(reward.usdAmount, customMultiplier || multiplier, currentTier)
-          return (
-            <BenefitCard
-              key={reward.title}
-              title={reward.title}
-              description={reward.description}
-              steps={reward.steps}
-              actionButton={
-                reward.actionButton !== undefined
-                  ? {
-                      ...reward.actionButton,
-                      onClick: () => {
-                        if (
-                          reward.actionButton &&
-                          'copyReferral' in reward.actionButton &&
-                          reward.actionButton.copyReferral
-                        ) {
-                          trackReferralLinkGenerated(channelId)
-                          copyToClipboard(
-                            `${window.location.host}/ypp?referrerId=${channelId}`,
-                            'Referral link copied to clipboard'
-                          )
-                        }
-                      },
-                    }
-                  : undefined
-              }
-              joyAmount={rewardAmount}
-              dollarAmount={rewardAmountUsd}
-            />
-          )
-        })}
-      </RewardsWrapper>
-      <Banner
-        icon={<StyledSvgAlertsInformative24 />}
-        title="Have more than one YouTube channel?"
-        description={`You can apply to the YouTube Partner Program with as many YouTube & ${APP_NAME} channels as you want. Each YouTube channel can be assigned to only one ${APP_NAME} channel. \nYou can create a new channel from the top right menu.`}
-      />
+        <GridItem colSpan={{ xxs: 12 }}>
+          <BenefitCard
+            title="Thank you for signing up!"
+            description="You will receive sign up bonus on (Friday) 20 Oct 2023"
+            dollarAmount={100}
+          />
+        </GridItem>
+        <GridItem colSpan={{ xxs: 12 }}>
+          <BenefitCard
+            title="Sync videos from YouTube channel"
+            description="Get paid for every new video published on YouTube after the date of sign up. Minimum video duration has to be 5 minutes. Max videos rewarded are 3 per week."
+            dollarAmount={syncOn ? 5 : undefined}
+            actionNode={
+              syncOn ? (
+                <YppSyncStatus>
+                  <StatusDot />
+                  <Text variant="t200" as="p">
+                    Autosync: On
+                  </Text>
+                </YppSyncStatus>
+              ) : (
+                <FlexBox justifyContent={lgMatch ? 'end' : 'unset'} alignItems="center">
+                  <Text variant="h400" as="h4">
+                    Suspended
+                  </Text>
+                  <Information text="asdfhkjhaskdfj" />
+                </FlexBox>
+              )
+            }
+          />
+        </GridItem>
+        <GridItem colSpan={{ xxs: 12 }}>
+          <BenefitCard
+            title="Refer another YouTube creator"
+            description="Get rewarded for every new creator who signs up to YPP program using your referral link. Referrals rewards depends on the tier assigned to the invited channel."
+            dollarAmount={100}
+            actionNode={<Button>Copy referral link</Button>}
+          />
+        </GridItem>
+      </LayoutGrid>
     </>
   )
 }

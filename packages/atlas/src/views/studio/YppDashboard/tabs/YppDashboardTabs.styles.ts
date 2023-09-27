@@ -1,3 +1,4 @@
+import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { SvgActionArrowRight, SvgAlertsInformative24, SvgAlertsWarning32 } from '@/assets/icons'
@@ -72,4 +73,42 @@ export const StyledActionBar = styled(ActionBar)`
 
 export const FallbackContainer = styled.div`
   margin-top: 128px;
+`
+const dotPulse = keyframes`
+  0% {
+    box-shadow: none;
+  }
+  
+  10% {
+    box-shadow: 0 0 0 3px #0c984680;
+  }
+  
+  20%, 100% {
+    box-shadow: none;
+  }
+  
+  
+`
+export const YppSyncStatus = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: ${sizes(2)};
+  background-color: ${cVar('colorCoreNeutral800Lighten')};
+  padding: ${sizes(2)} ${sizes(4)};
+  border-radius: 99px;
+  width: fit-content;
+
+  p {
+    white-space: nowrap;
+  }
+`
+
+export const StatusDot = styled.div`
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: linear-gradient(#0ebe57, #096c34);
+  box-shadow: 0 0 0 5px #0c984680;
+  animation: 10s ease-out ${dotPulse} infinite;
 `

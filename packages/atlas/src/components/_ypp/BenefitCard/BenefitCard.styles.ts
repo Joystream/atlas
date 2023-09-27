@@ -4,9 +4,9 @@ import pattern1 from '@/assets/illustrations/svgs/other-benefit-card-pattern-1.s
 import pattern2 from '@/assets/illustrations/svgs/other-benefit-card-pattern-2.svg'
 import pattern3 from '@/assets/illustrations/svgs/other-benefit-card-pattern-3.svg'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
-import { Text } from '@/components/Text'
+import { LayoutGrid } from '@/components/LayoutGrid'
 import { Button } from '@/components/_buttons/Button'
-import { cVar, media, sizes, square } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 export type Variant = 'compact' | 'full'
 
@@ -46,9 +46,10 @@ export const Pattern = styled.div`
 
 export const Wrapper = styled.div<{ variant: Variant }>`
   background-color: ${({ variant }) => cVar(variant === 'full' ? 'colorBackgroundMuted' : 'colorBackground')};
-
+  width: 100%;
+  display: grid;
   ${media.sm} {
-    display: flex;
+    grid-template-columns: auto 1fr;
   }
 
   ${Pattern} {
@@ -93,12 +94,6 @@ export const Content = styled.div<{ isCompact: boolean }>`
   }
 `
 
-export const TitleWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  gap: ${sizes(6)};
-`
-
 export const StyledList = styled.ul`
   padding-left: 0;
   counter-reset: list-number;
@@ -108,28 +103,6 @@ export const StyledList = styled.ul`
   margin-bottom: 0;
 `
 
-export const ListElement = styled(Text)`
-  list-style: none;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: flex-start;
-  gap: inherit;
-
-  ::before {
-    ${square('20px')};
-
-    counter-increment: list-number;
-    content: counter(list-number);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font: ${cVar('typographyDesktopT100')};
-    background-color: ${cVar('colorBackgroundStrong')};
-    border-radius: 50%;
-    color: ${cVar('colorTextStrong')};
-  }
-`
-
 export const StyledButton = styled(Button)`
   ${media.sm} {
     align-self: flex-end;
@@ -137,33 +110,10 @@ export const StyledButton = styled(Button)`
   }
 `
 
-export const ActionWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-top: ${sizes(4)};
-
-  ${media.sm} {
-    margin-top: 0;
-    text-align: right;
-  }
-`
-
-export const RewardWrapper = styled.div<{ isCompact: boolean }>`
-  display: ${({ isCompact }) => (isCompact ? 'flex' : 'block')};
-  text-align: ${({ isCompact }) => (!isCompact ? 'right' : 'left')};
-
-  ${media.sm} {
-    display: block;
-    text-align: right;
-  }
-`
-
-export const TokenRewardWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-`
-
 export const StyledJoyTokenIcon = styled(JoyTokenIcon)`
   margin-right: ${({ size }) => sizes(size === 16 ? 1 : 2)};
+`
+
+export const ContenBox = styled(LayoutGrid)`
+  padding: ${sizes(6)};
 `
