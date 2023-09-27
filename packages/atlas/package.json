@@ -38,7 +38,7 @@
     "@hcaptcha/react-hcaptcha": "^1.4.4",
     "@hookform/resolvers": "^2.9.10",
     "@joystream/js": "^1.4.0",
-    "@joystream/metadata-protobuf": "2.8.1",
+    "@joystream/metadata-protobuf": "2.9.0",
     "@joystream/types": "4.0.0",
     "@livesession/sdk": "^1.1.4",
     "@loadable/component": "^5.15.2",

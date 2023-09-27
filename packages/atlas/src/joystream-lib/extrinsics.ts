@@ -29,6 +29,7 @@ import {
   parseChannelExtrinsicInput,
   parseMemberExtrinsicInput,
   parseVideoExtrinsicInput,
+  prepareCreatorTokenMetadata,
   wrapMetadata,
 } from './metadata'
 import {
@@ -1128,14 +1129,13 @@ export class JoystreamLibExtrinsics {
         }),
       })
     )
-    const metadataRaw = createType('Raw', new Uint8Array())
-    const metadataBytes = createType('Bytes', metadataRaw)
+
     const params = createType('PalletProjectTokenTokenIssuanceParameters', {
       initialAllocation,
       patronageRate: createType('Perquintill', patronageRate) as number,
       revenueSplitRate: createType('Permill', revenueSplitRate) as number,
       transferPolicy: createType('PalletProjectTokenTransferPolicyParams', 'Permissionless'),
-      metadata: metadataBytes,
+      metadata: prepareCreatorTokenMetadata({ symbol }),
     })
     return this.api.tx.content.issueCreatorToken(member, parseInt(channelId), params)
   }
