@@ -68,6 +68,7 @@ export const TierBanner = styled.div<{ tier: 'bronze' | 'silver' | 'gold' | 'dia
 
   > div {
     align-self: center;
+    z-index: 10;
   }
 
   svg {
@@ -78,7 +79,7 @@ export const TierBanner = styled.div<{ tier: 'bronze' | 'silver' | 'gold' | 'dia
     content: ' ';
     position: absolute;
     inset: 0;
-    opacity: 0.2;
+    opacity: 0.3;
     background: ${(props) => {
       switch (props.tier) {
         case 'diamond':

@@ -57,7 +57,7 @@ export const TierCard = ({ reqs, rewards, tier }: TierCardProps) => {
           </FlexBox>
           <svg>
             <filter id="noise">
-              <feTurbulence type="fractalNoise" baseFrequency="9" numOctaves="1" stitchTiles="stitch" />
+              <feTurbulence type="fractalNoise" baseFrequency="1" numOctaves="1" stitchTiles="stitch" />
               <feBlend in="SourceGraphic" in2="colorNoise" mode="multiply" />
             </filter>
           </svg>

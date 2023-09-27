@@ -31,11 +31,11 @@ export const Wrapper = styled.div`
 
 const rot = keyframes`
   0% {
-    transform: rotate(-180deg);
+    transform: rotate(60deg);
   }
 
   100% {
-    transform: rotate(180deg);
+    transform: rotate(300deg);
   }
 `
 
