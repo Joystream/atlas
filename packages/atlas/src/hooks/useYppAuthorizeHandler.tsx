@@ -11,7 +11,7 @@ import { useYppStore } from '@/providers/ypp/ypp.store'
 import { SentryLogger } from '@/utils/logs'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
 
-const SINGUP_DAILY_QUOTA = 500 // 2% of the total daily quota
+export const SINGUP_DAILY_QUOTA = 500 // 2% of the total daily quota
 
 export const useYppAuthorizeHandler = () => {
   const { displaySnackbar } = useSnackbar()
@@ -37,7 +37,7 @@ export const useYppAuthorizeHandler = () => {
 
   const isYppSigned = !!currentChannel
 
-  return useCallback(async () => {
+  return useCallback(() => {
     if (isTodaysQuotaReached) {
       displaySnackbar({
         title: 'Something went wrong',
@@ -45,18 +45,18 @@ export const useYppAuthorizeHandler = () => {
           "Due to high demand, we've reached the quota on the daily new sign ups. Please try again tomorrow.",
         iconType: 'error',
       })
-      return
+      return false
     }
 
     if (isYppSigned) {
       navigate(absoluteRoutes.studio.ypp())
-      return
+      return false
     }
 
     if (!yppModalOpenName) {
       trackYppSignInButtonClick(referrer, utmSource, utmCampaign)
       setYppModalOpen('ypp-requirements')
-      return
+      return true
     }
   }, [
     isTodaysQuotaReached,

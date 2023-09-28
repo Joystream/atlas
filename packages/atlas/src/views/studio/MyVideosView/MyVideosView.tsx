@@ -74,7 +74,7 @@ export const MyVideosView = () => {
   const mdMatch = useMediaMatch('md')
   const { setNftToMint } = useNftActions()
   const [shouldHideMintModal, setShouldHideMintModal] = useState(false)
-  const [showMintModal, setShowMintModal] = useState(currentChannel?.yppStatus === 'Verified')
+  const [showMintModal, setShowMintModal] = useState(!!currentChannel?.yppStatus.startsWith('Verified'))
 
   const mintConfirmationDismissed = usePersonalDataStore((state) =>
     state.dismissedMessages.some((message) => message.id === MINTING_CONFIRMATION_ID)
@@ -345,7 +345,7 @@ export const MyVideosView = () => {
       <MintNftFirstTimeModal
         shouldHideNextTime={shouldHideMintModal}
         onShouldHideNextTime={setShouldHideMintModal}
-        show={showMintModal && currentChannel?.yppStatus === 'Verified' && !mintConfirmationDismissed}
+        show={showMintModal && !!currentChannel?.yppStatus.startsWith('Verified') && !mintConfirmationDismissed}
         onClose={() => {
           if (shouldHideMintModal) {
             updateMintConfirmationDismiss(MINTING_CONFIRMATION_ID, true)

@@ -1,4 +1,5 @@
 import { FC } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { SvgActionClose, SvgActionNewChannel, SvgActionNewTab } from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox'
@@ -11,6 +12,7 @@ import { BenefitCard } from '@/components/_ypp/BenefitCard'
 import { ServiceStatusWidget } from '@/components/_ypp/ServiceStatusWidget/ServiceStatusWidget'
 import { YppDashboardTier } from '@/components/_ypp/YppDashboardTier'
 import { atlasConfig } from '@/config'
+import { absoluteRoutes } from '@/config/routes'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
@@ -35,7 +37,8 @@ export const YppDashboardMainTab: FC = () => {
   const { copyToClipboard } = useClipboard()
   const { trackReferralLinkGenerated } = useSegmentAnalytics()
   const { channelId } = useUser()
-  const handleYppSignUpClick = useYppAuthorizeHandler()
+  const navigate = useNavigate()
+  const _handleYppSignUpClick = useYppAuthorizeHandler()
   const hasDismissedSignupMessage = usePersonalDataStore((state) =>
     state.dismissedMessages.some((message) => message.id === getMessageIdForChannel(channelId as string))
   )
@@ -46,7 +49,12 @@ export const YppDashboardMainTab: FC = () => {
   const smMatch = useMediaMatch('sm')
   const lgMatch = useMediaMatch('lg')
   const nextPayoutDate = getNextFriday()
-
+  const handleYppSignUpClick = () => {
+    const success = _handleYppSignUpClick()
+    if (success) {
+      navigate(absoluteRoutes.viewer.ypp())
+    }
+  }
   return (
     <>
       <YppAuthorizationModal unSyncedChannels={unsyncedChannels} />

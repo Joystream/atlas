@@ -7,7 +7,6 @@ import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useUploadsStore } from '@/providers/uploads/uploads.store'
-import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
 import { YppDashboardReferralsTab } from '@/views/studio/YppDashboard/tabs/YppDashboardReferralsTab/YppDashboardReferralsTab'
 
 import { Divider, Header, TabsWrapper } from './YppDashboard.styles'
@@ -19,11 +18,8 @@ export const YppDashboard: FC = () => {
   const headTags = useHeadTags('YouTube Partner Program')
   const mdMatch = useMediaMatch('md')
   const [currentVideosTab, setCurrentVideosTab] = useState(0)
-  const { currentChannel, isLoading } = useGetYppSyncedChannels()
   const { trackPageView } = useSegmentAnalytics()
   const { processingAssets, uploads } = useUploadsStore()
-
-  const subscribersCount = currentChannel?.subscribersCount || 0
 
   useEffect(() => {
     // if user avatar is currently processing membership will be refetched when it's uploaded,
@@ -56,8 +52,6 @@ export const YppDashboard: FC = () => {
           <Text variant={mdMatch ? 'h700' : 'h600'} as="h1">
             YouTube Partner Program
           </Text>
-          {/*<HeaderContentBox>*/}
-          {/*</HeaderContentBox>*/}
         </Header>
         <TabsWrapper>
           <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={setCurrentVideosTab} />
