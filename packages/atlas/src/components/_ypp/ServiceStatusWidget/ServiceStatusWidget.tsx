@@ -11,6 +11,7 @@ import { YppStatusDot } from '@/components/_ypp/YppStatusPill'
 import { atlasConfig } from '@/config'
 import { cVar, sizes } from '@/styles'
 import { ConsoleLogger } from '@/utils/logs'
+import { YppChannelStatus } from '@/views/global/YppLandingView/YppLandingView.types'
 
 type YppStatusDto = {
   version: string
@@ -22,10 +23,10 @@ const YOUTUBE_BACKEND_URL = atlasConfig.features.ypp.youtubeSyncApiUrl
 const YPP_DELAY_THRESHOLD = atlasConfig.features.ypp.yppDelayThreshold ?? 500
 
 export type ServiceStatusWidgetProps = {
-  isOptedIn: boolean
+  status?: YppChannelStatus
 }
 
-export const ServiceStatusWidget = ({ isOptedIn }: ServiceStatusWidgetProps) => {
+export const ServiceStatusWidget = ({ status }: ServiceStatusWidgetProps) => {
   const { data } = useQuery('ypp-status', () =>
     axiosInstance<YppStatusDto>(`${YOUTUBE_BACKEND_URL}/status`).catch(() =>
       ConsoleLogger.warn('Failed to fetch YPP status')
@@ -34,20 +35,23 @@ export const ServiceStatusWidget = ({ isOptedIn }: ServiceStatusWidgetProps) => 
 
   const details = useMemo(() => {
     if (!data) return []
+    const hideData = !status || !status.startsWith('Verified')
     const output: [number | string, string, string][] = [] // [value, title, tooltip]
-    output.push([isOptedIn ? data.data.syncBacklog : '-', 'VIDEO IN QUEUE', "It's pretty long"])
+    output.push([hideData ? '-' : data.data.syncBacklog, 'VIDEOS IN QUEUE', "It's pretty long"])
     output.push([
-      isOptedIn ? data.data.syncBacklog * 2 : '-', // no info bout it
+      hideData ? '-' : data.data.syncBacklog * 2, // no info bout it
       'PLACE IN THE QUEUE',
       "We don' really know your place in the queue",
     ])
     output.push([
-      isOptedIn ? `In ${Math.round(data.data.syncBacklog / YPP_DELAY_THRESHOLD)} days` : '-',
+      // isOptedIn ? `In ${Math.round(data.data.syncBacklog / YPP_DELAY_THRESHOLD)} days` : '-',
+      '-',
       'ETA TO FULL SYNC',
       "Well we don't really know this either",
     ])
     return output
-  }, [data, isOptedIn])
+  }, [data, status])
+
   return (
     <LayoutBox>
       <FlexGridItem flow="column" gap={2} colSpan={{ xxs: 12 }}>

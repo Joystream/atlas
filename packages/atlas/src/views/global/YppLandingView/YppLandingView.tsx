@@ -1,20 +1,13 @@
 import AOS from 'aos'
 import 'aos/dist/aos.css'
-import { FC, useCallback, useEffect, useState } from 'react'
-import { useQuery } from 'react-query'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { FC, useEffect, useState } from 'react'
 import { ParallaxProvider } from 'react-scroll-parallax'
 
-import { axiosInstance } from '@/api/axios'
 import { YppReferralBanner } from '@/components/_ypp/YppReferralBanner'
-import { atlasConfig } from '@/config'
-import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
-import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
-import { useSnackbar } from '@/providers/snackbars'
+import { useYppAuthorizeHandler } from '@/hooks/useYppAuthorizeHandler'
 import { useUser } from '@/providers/user/user.hooks'
 import { useYppStore } from '@/providers/ypp/ypp.store'
-import { SentryLogger } from '@/utils/logs'
 
 import { YppAuthorizationModal } from './YppAuthorizationModal'
 import { YppCardsSections } from './YppCardsSections'
@@ -24,39 +17,22 @@ import { Wrapper } from './YppLandingView.styles'
 import { YppRewardSection } from './YppRewardSection'
 import { useGetYppSyncedChannels } from './useGetYppSyncedChannels'
 
-const SINGUP_DAILY_QUOTA = 500 // 2% of the total daily quota
-
 export const YppLandingView: FC = () => {
   const headTags = useHeadTags('YouTube Partner Program')
-  const yppModalOpenName = useYppStore((state) => state.yppModalOpenName)
   const setYppModalOpen = useYppStore((state) => state.actions.setYppModalOpenName)
   const { activeMembership, channelId } = useUser()
-  const [searchParams] = useSearchParams()
   const { setSelectedChannelId, setShouldContinueYppFlowAfterCreatingChannel } = useYppStore((store) => store.actions)
-  const { displaySnackbar } = useSnackbar()
-  const navigate = useNavigate()
-  const { trackYppSignInButtonClick } = useSegmentAnalytics()
+
   const selectedChannelTitle = activeMembership?.channels.find((channel) => channel.id === channelId)?.title
-  const { data } = useQuery('ypp-quota-fetch', () =>
-    axiosInstance
-      .get<{ signupQuotaUsed: number }>(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/youtube/quota-usage/today`)
-      .then((res) => res.data)
-      .catch((e) => SentryLogger.error('Quota fetch failed', 'YppLandingView', e))
-  )
   const [wasSignInTriggered, setWasSignInTriggered] = useState(false)
-  const isTodaysQuotaReached = data ? data.signupQuotaUsed > SINGUP_DAILY_QUOTA : false
   const shouldContinueYppFlowAfterCreatingChannel = useYppStore(
     (store) => store.shouldContinueYppFlowAfterCreatingChannel
   )
-  const [referrer, utmSource, utmCampaign] = [
-    searchParams.get('referrerId'),
-    searchParams.get('utm_source'),
-    searchParams.get('utm_campaign'),
-  ]
 
   const { unsyncedChannels, isLoading, currentChannel } = useGetYppSyncedChannels()
   const isYppSigned = !!currentChannel
   const hasAnotherUnsyncedChannel = isYppSigned && !!unsyncedChannels?.length
+  const handleYppSignUpClick = useYppAuthorizeHandler()
 
   useEffect(() => {
     AOS.init({
@@ -64,40 +40,6 @@ export const YppLandingView: FC = () => {
       once: true,
     })
   }, [])
-
-  const handleYppSignUpClick = useCallback(async () => {
-    if (isTodaysQuotaReached) {
-      displaySnackbar({
-        title: 'Something went wrong',
-        description:
-          "Due to high demand, we've reached the quota on the daily new sign ups. Please try again tomorrow.",
-        iconType: 'error',
-      })
-      return
-    }
-
-    if (isYppSigned) {
-      navigate(absoluteRoutes.studio.ypp())
-      return
-    }
-
-    if (!yppModalOpenName) {
-      trackYppSignInButtonClick(referrer, utmSource, utmCampaign)
-      setYppModalOpen('ypp-requirements')
-      return
-    }
-  }, [
-    isTodaysQuotaReached,
-    isYppSigned,
-    yppModalOpenName,
-    displaySnackbar,
-    navigate,
-    trackYppSignInButtonClick,
-    referrer,
-    utmSource,
-    utmCampaign,
-    setYppModalOpen,
-  ])
 
   useEffect(() => {
     // rerun handleYppSignUpClick after sign in flow

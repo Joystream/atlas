@@ -1,10 +1,8 @@
 import { FC, useEffect, useMemo, useState } from 'react'
 
-import { Information } from '@/components/Information'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Tabs } from '@/components/Tabs'
 import { Text } from '@/components/Text'
-import { atlasConfig } from '@/config'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
@@ -12,16 +10,7 @@ import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
 import { YppDashboardReferralsTab } from '@/views/studio/YppDashboard/tabs/YppDashboardReferralsTab/YppDashboardReferralsTab'
 
-import { TIERS } from './YppDashboard.config'
-import {
-  Divider,
-  Header,
-  HeaderContentBox,
-  TabsWrapper,
-  TierCount,
-  TierDescription,
-  TierWrapper,
-} from './YppDashboard.styles'
+import { Divider, Header, TabsWrapper } from './YppDashboard.styles'
 import { YppDashboardMainTab, YppDashboardSettingsTab } from './tabs'
 
 const TABS = ['Dashboard', 'Referrals', 'Settings'] as const
@@ -35,13 +24,6 @@ export const YppDashboard: FC = () => {
   const { processingAssets, uploads } = useUploadsStore()
 
   const subscribersCount = currentChannel?.subscribersCount || 0
-  const currentTier = TIERS.reduce((prev, current, idx) => {
-    if (subscribersCount >= (current?.subscribers || 0)) {
-      return idx
-    } else {
-      return prev
-    }
-  }, 0)
 
   useEffect(() => {
     // if user avatar is currently processing membership will be refetched when it's uploaded,
@@ -53,20 +35,18 @@ export const YppDashboard: FC = () => {
     trackPageView('YPP Dashboard', { tab: TABS[currentVideosTab] })
   }, [currentVideosTab, processingAssets, trackPageView, uploads])
 
-  const tiersTooltip = atlasConfig.features.ypp.tiersDefinition?.tiersTooltip
-
   const mappedTabs = TABS.map((tab) => ({ name: tab }))
 
   const content = useMemo(() => {
     switch (TABS[currentVideosTab]) {
       case 'Dashboard':
-        return <YppDashboardMainTab currentTier={currentTier} />
+        return <YppDashboardMainTab />
       case 'Referrals':
         return <YppDashboardReferralsTab />
       case 'Settings':
         return <YppDashboardSettingsTab />
     }
-  }, [currentVideosTab, currentTier])
+  }, [currentVideosTab])
 
   return (
     <>
@@ -76,29 +56,8 @@ export const YppDashboard: FC = () => {
           <Text variant={mdMatch ? 'h700' : 'h600'} as="h1">
             YouTube Partner Program
           </Text>
-          <HeaderContentBox>
-            {TIERS.length && !isLoading && (
-              <TierWrapper>
-                {TIERS[currentTier].icon}
-                <TierDescription>
-                  <div>
-                    <TierCount>
-                      <Text variant="h300" as="span">
-                        Tier {currentTier + 1}{' '}
-                      </Text>
-                      <Text variant="t100" as="span" color="colorText">
-                        out of {TIERS.length}
-                      </Text>
-                    </TierCount>
-                    <Text variant="t100" as="p" color="colorText">
-                      {TIERS[currentTier].rules}
-                    </Text>
-                  </div>
-                  {tiersTooltip ? <Information text={tiersTooltip} /> : null}
-                </TierDescription>
-              </TierWrapper>
-            )}
-          </HeaderContentBox>
+          {/*<HeaderContentBox>*/}
+          {/*</HeaderContentBox>*/}
         </Header>
         <TabsWrapper>
           <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={setCurrentVideosTab} />

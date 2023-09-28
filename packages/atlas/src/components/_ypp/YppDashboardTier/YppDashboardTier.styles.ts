@@ -3,8 +3,7 @@ import styled from '@emotion/styled'
 
 import { FlexBox } from '@/components/FlexBox'
 import { cVar, sizes, square } from '@/styles'
-
-type YppChannelTierTypes = 'Verified::Bronze' | 'Verified::Silver' | 'Verified::Gold' | 'Verified::Diamond'
+import { YppChannelTierTypes } from '@/views/global/YppLandingView/YppLandingView.types'
 
 export const SignInWrapper = styled.div`
   background-color: ${cVar('colorBackgroundAlpha')};

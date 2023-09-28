@@ -12,11 +12,19 @@ export type BenefitCardProps = {
   title: string
   description?: string
   dollarAmount?: number
+  isRangeAmount?: boolean
   className?: string
   actionNode?: ReactNode
 }
 
-export const BenefitCard: FC<BenefitCardProps> = ({ title, description, dollarAmount, className, actionNode }) => {
+export const BenefitCard: FC<BenefitCardProps> = ({
+  title,
+  description,
+  dollarAmount,
+  className,
+  actionNode,
+  isRangeAmount,
+}) => {
   const smMatch = useMediaMatch('sm')
   const lgMatch = useMediaMatch('lg')
 
@@ -38,11 +46,23 @@ export const BenefitCard: FC<BenefitCardProps> = ({ title, description, dollarAm
           alignItems={smMatch ? 'center' : 'start'}
           flow={smMatch ? (lgMatch ? 'row' : 'row-reverse') : 'column'}
         >
-          {dollarAmount && (
+          {typeof dollarAmount === 'number' && (
             <FlexBox justifyContent={lgMatch ? 'end' : 'unset'} alignItems="center">
-              <Text variant="h400" as="h1">
-                +{dollarAmount} USD
-              </Text>
+              {isRangeAmount ? (
+                <FlexBox width="fit-content" flow="column" alignItems="center">
+                  <Text variant="h400" as="h1">
+                    Up to +{dollarAmount} USD
+                  </Text>
+                  <Text variant="t200" as="p" color="colorText">
+                    Depending on tier
+                  </Text>
+                </FlexBox>
+              ) : (
+                <Text variant="h400" as="h1">
+                  {dollarAmount > 0 ? `+${dollarAmount} USD` : 'Not paid'}
+                </Text>
+              )}
+
               <Information text="hahahah" />
             </FlexBox>
           )}

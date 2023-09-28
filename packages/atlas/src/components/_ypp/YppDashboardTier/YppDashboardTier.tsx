@@ -11,24 +11,20 @@ import { FlexBox } from '@/components/FlexBox'
 import { Information } from '@/components/Information'
 import { Text } from '@/components/Text'
 import { convertUpperCamelToSentence } from '@/utils/misc'
+import {
+  YppChannelStatus,
+  YppChannelSuspendedTypes,
+  YppChannelTierTypes,
+} from '@/views/global/YppLandingView/YppLandingView.types'
 
 import { SignInWrapper, SuspendedWrapper, TierWrapper, VerificationWrapper, Wrapper } from './YppDashboardTier.styles'
 
-type YppChannelTierTypes = 'Verified::Bronze' | 'Verified::Silver' | 'Verified::Gold' | 'Verified::Diamond'
-
-type YppChannelSuspendedTypes =
-  | 'Suspended::SubparQuality'
-  | 'Suspended::DuplicateContent'
-  | 'Suspended::UnsupportedTopic'
-  | 'Suspended::ProgramTermsExploit'
-
-type YppChannelStatus = YppChannelTierTypes | YppChannelSuspendedTypes | 'Unverified' | 'OptedOut'
-
 export type YppDashboardTierProps = {
   status?: YppChannelStatus
+  onSignUp?: () => void
 }
 
-export const YppDashboardTier = ({ status }: YppDashboardTierProps) => {
+export const YppDashboardTier = ({ status, onSignUp }: YppDashboardTierProps) => {
   const content = () => {
     switch (true) {
       case status?.startsWith('Verified'):
@@ -39,7 +35,7 @@ export const YppDashboardTier = ({ status }: YppDashboardTierProps) => {
         return <VerificationBox />
       default:
       case !status:
-        return <SignInContent />
+        return <SignInContent onSignUp={onSignUp} />
     }
   }
   return (
@@ -55,9 +51,9 @@ export const YppDashboardTier = ({ status }: YppDashboardTierProps) => {
   )
 }
 
-const SignInContent = () => {
+const SignInContent = ({ onSignUp }: { onSignUp?: () => void }) => {
   return (
-    <SignInWrapper>
+    <SignInWrapper onClick={onSignUp}>
       <SvgActionNewChannel />
       <Text variant="t100" as="p">
         Sign up to participate

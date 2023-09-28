@@ -12,7 +12,6 @@ import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { SentryLogger } from '@/utils/logs'
 import { formatNumber } from '@/utils/number'
 import { formatDateTime } from '@/utils/time'
-import { TIERS } from '@/views/studio/YppDashboard/YppDashboard.config'
 import { TierDescription, TierWrapper } from '@/views/studio/YppDashboard/YppDashboard.styles'
 
 import { COLUMNS, tableLoadingData } from './YppReferralTable.utils'
@@ -80,15 +79,13 @@ const Channel = ({ channel }: { channel: YppReferral['channel'] }) => {
 const Tier = ({ tier }: { tier: number }) => {
   return (
     <TierWrapper>
-      {TIERS[tier].icon}
+      {/*{TIERS[tier].icon}*/}
       <TierDescription>
         <div style={{ display: 'grid' }}>
           <LeftAlignText variant="h300" as="span">
-            Tier {tier + 1}{' '}
+            Tier
           </LeftAlignText>
-          <Text variant="t100" as="p" color="colorText">
-            {TIERS[tier].rules}
-          </Text>
+          <Text variant="t100" as="p" color="colorText" />
         </div>
       </TierDescription>
     </TierWrapper>
