@@ -1,18 +1,18 @@
 import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { cVar, sizes } from '@/styles'
+import { sizes } from '@/styles'
 
-export const Container = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: ${sizes(2)};
-  background-color: ${cVar('colorCoreNeutral800Lighten')};
-  padding: ${sizes(2)} ${sizes(4)};
-  border-radius: 99px;
-  width: fit-content;
-`
+// export const Container = styled.div`
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   gap: ${sizes(2)};
+//   background-color: ${cVar('colorCoreNeutral800Lighten')};
+//   padding: ${sizes(2)} ${sizes(4)};
+//   border-radius: 99px;
+//   width: fit-content;
+// `
 
 type DotProps = {
   status: 'operational' | 'delayed' | 'stopped'

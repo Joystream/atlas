@@ -9,6 +9,7 @@ import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
 import { Button, TextButton } from '@/components/_buttons/Button'
 import { BenefitCard } from '@/components/_ypp/BenefitCard'
+import { ServiceStatusWidget } from '@/components/_ypp/ServiceStatusWidget/ServiceStatusWidget'
 import { atlasConfig } from '@/config'
 // import { useClipboard } from '@/hooks/useClipboard'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -82,11 +83,11 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
       )}
       <LayoutGrid>
         <GridItem colSpan={{ xxs: 12, md: 4 }}>
-          <div style={{ width: '100%', height: 80, background: 'red' }}>tier</div>
+          <div style={{ width: '100%', background: 'red' }}>tier</div>
         </GridItem>
 
         <GridItem colSpan={{ xxs: 12, md: 8 }}>
-          <div style={{ width: '100%', height: 80, background: 'red' }}>service status</div>
+          <ServiceStatusWidget />
         </GridItem>
         <GridItem colSpan={{ xxs: 12, sm: 4 }}>
           <WidgetTile

@@ -1,12 +1,12 @@
 import { Meta, StoryFn } from '@storybook/react'
 
-import { YppStatusPill } from '@/components/_ypp/YppStatusPill/YppStatusPill'
+import { YppStatusDot } from '@/components/_ypp/YppStatusPill/YppStatusDot'
 
 export default {
   title: 'components/YppStatusPill',
-  component: YppStatusPill,
+  component: YppStatusDot,
 } as Meta
 
-const Template: StoryFn = () => <YppStatusPill />
+const Template: StoryFn = () => <YppStatusDot />
 
 export const Default = Template.bind({})

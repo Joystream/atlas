@@ -4,7 +4,6 @@ import { Information } from '@/components/Information'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Tabs } from '@/components/Tabs'
 import { Text } from '@/components/Text'
-import { YppStatusPill } from '@/components/_ypp/YppStatusPill'
 import { atlasConfig } from '@/config'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -78,7 +77,6 @@ export const YppDashboard: FC = () => {
             YouTube Partner Program
           </Text>
           <HeaderContentBox>
-            <YppStatusPill />
             {TIERS.length && !isLoading && (
               <TierWrapper>
                 {TIERS[currentTier].icon}
