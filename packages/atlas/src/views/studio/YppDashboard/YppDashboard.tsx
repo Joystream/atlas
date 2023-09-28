@@ -7,6 +7,7 @@ import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useUploadsStore } from '@/providers/uploads/uploads.store'
+import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
 import { YppDashboardReferralsTab } from '@/views/studio/YppDashboard/tabs/YppDashboardReferralsTab/YppDashboardReferralsTab'
 
 import { Divider, Header, TabsWrapper } from './YppDashboard.styles'
@@ -20,6 +21,7 @@ export const YppDashboard: FC = () => {
   const [currentVideosTab, setCurrentVideosTab] = useState(0)
   const { trackPageView } = useSegmentAnalytics()
   const { processingAssets, uploads } = useUploadsStore()
+  const { currentChannel } = useGetYppSyncedChannels()
 
   useEffect(() => {
     // if user avatar is currently processing membership will be refetched when it's uploaded,
@@ -31,7 +33,7 @@ export const YppDashboard: FC = () => {
     trackPageView('YPP Dashboard', { tab: TABS[currentVideosTab] })
   }, [currentVideosTab, processingAssets, trackPageView, uploads])
 
-  const mappedTabs = TABS.map((tab) => ({ name: tab }))
+  const mappedTabs = TABS.filter((tab) => (currentChannel ? true : tab !== 'Settings')).map((tab) => ({ name: tab }))
 
   const content = useMemo(() => {
     switch (TABS[currentVideosTab]) {
