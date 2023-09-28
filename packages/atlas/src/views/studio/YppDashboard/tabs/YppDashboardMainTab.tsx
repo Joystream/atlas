@@ -11,7 +11,9 @@ import { BenefitCard } from '@/components/_ypp/BenefitCard'
 import { ServiceStatusWidget } from '@/components/_ypp/ServiceStatusWidget/ServiceStatusWidget'
 import { YppDashboardTier } from '@/components/_ypp/YppDashboardTier'
 import { atlasConfig } from '@/config'
+import { useClipboard } from '@/hooks/useClipboard'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useYppAuthorizeHandler } from '@/hooks/useYppAuthorizeHandler'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user/user.hooks'
@@ -30,22 +32,21 @@ const getMessageIdForChannel = (channelId: string) => {
 }
 
 export const YppDashboardMainTab: FC = () => {
+  const { copyToClipboard } = useClipboard()
+  const { trackReferralLinkGenerated } = useSegmentAnalytics()
   const { channelId } = useUser()
-
-  const mdMatch = useMediaMatch('md')
-  const smMatch = useMediaMatch('sm')
-  const lgMatch = useMediaMatch('lg')
   const handleYppSignUpClick = useYppAuthorizeHandler()
   const hasDismissedSignupMessage = usePersonalDataStore((state) =>
     state.dismissedMessages.some((message) => message.id === getMessageIdForChannel(channelId as string))
   )
   const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
+  const { unsyncedChannels, currentChannel } = useGetYppSyncedChannels()
 
-  const { unsyncedChannels } = useGetYppSyncedChannels()
-  // const { trackReferralLinkGenerated } = useSegmentAnalytics()
+  const mdMatch = useMediaMatch('md')
+  const smMatch = useMediaMatch('sm')
+  const lgMatch = useMediaMatch('lg')
   const nextPayoutDate = getNextFriday()
-  const currentChannel = { yppStatus: 'Verified::Diamond' }
-  console.log(hasDismissedSignupMessage)
+
   return (
     <>
       <YppAuthorizationModal unSyncedChannels={unsyncedChannels} />
@@ -190,7 +191,7 @@ export const YppDashboardMainTab: FC = () => {
             description="Get paid for every new video published on YouTube after the date of sign up. Minimum video duration has to be 5 minutes. Max videos rewarded are 3 per week."
             dollarAmount={
               !currentChannel || !currentChannel.yppStatus.startsWith('Verified')
-                ? currentChannel.yppStatus.startsWith('Suspended')
+                ? currentChannel?.yppStatus.startsWith('Suspended')
                   ? undefined
                   : 5
                 : getTierRewards(currentChannel.yppStatus.split('::')[1].toLowerCase())?.[1]
@@ -198,7 +199,7 @@ export const YppDashboardMainTab: FC = () => {
             isRangeAmount={!currentChannel || !currentChannel.yppStatus.startsWith('Verified')}
             amountTooltip="Your YouTube channel is being automatically synced with your Gleev channel. You will be rewarded every time a new video gets synced."
             actionNode={
-              !currentChannel.yppStatus.startsWith('Suspended') ? (
+              !currentChannel?.yppStatus.startsWith('Suspended') ? (
                 <YppSyncStatus>
                   <StatusDot />
                   <Text variant="t200" as="p">
@@ -222,7 +223,20 @@ export const YppDashboardMainTab: FC = () => {
             description="Get rewarded for every new creator who signs up to YPP program using your referral link. Referrals rewards depends on the tier assigned to the invited channel."
             dollarAmount={getTierRewards('diamond')?.[2]}
             isRangeAmount
-            actionNode={<Button fullWidth={!smMatch}>Copy referral link</Button>}
+            actionNode={
+              <Button
+                fullWidth={!smMatch}
+                onClick={() => {
+                  trackReferralLinkGenerated(channelId)
+                  copyToClipboard(
+                    `${window.location.host}/ypp?referrerId=${channelId}`,
+                    'Referral link copied to clipboard'
+                  )
+                }}
+              >
+                Copy referral link
+              </Button>
+            }
           />
         </GridItem>
       </LayoutGrid>
