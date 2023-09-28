@@ -34,7 +34,7 @@ export const YppDashboardMainTab: FC = () => {
   const { unsyncedChannels } = useGetYppSyncedChannels()
   // const { trackReferralLinkGenerated } = useSegmentAnalytics()
   const nextPayoutDate = getNextFriday()
-  const currentChannel = { yppStatus: 'Verified::Diamond' }
+  const currentChannel = { yppStatus: 'Suspended::DuplicateContent' }
 
   return (
     <>
@@ -95,7 +95,7 @@ export const YppDashboardMainTab: FC = () => {
           <WidgetTile
             title="Next payments round"
             tooltip={{
-              text: 'safe',
+              text: 'All of the payments are processed every Friday. The hour of payouts may vary.',
             }}
             customNode={
               <FlexBox flow="column" gap={4} marginTop={2}>
@@ -148,6 +148,7 @@ export const YppDashboardMainTab: FC = () => {
                 : getTierRewards(currentChannel.yppStatus.split('::')[1].toLowerCase())?.[0]
             }
             isRangeAmount={!currentChannel || !currentChannel.yppStatus.startsWith('Verified')}
+            amountTooltip="Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity"
             actionNode={
               !currentChannel || !currentChannel.yppStatus.startsWith('Verified') ? (
                 <Button
@@ -168,10 +169,13 @@ export const YppDashboardMainTab: FC = () => {
             description="Get paid for every new video published on YouTube after the date of sign up. Minimum video duration has to be 5 minutes. Max videos rewarded are 3 per week."
             dollarAmount={
               !currentChannel || !currentChannel.yppStatus.startsWith('Verified')
-                ? 5
+                ? currentChannel.yppStatus.startsWith('Suspended')
+                  ? undefined
+                  : 5
                 : getTierRewards(currentChannel.yppStatus.split('::')[1].toLowerCase())?.[1]
             }
             isRangeAmount={!currentChannel || !currentChannel.yppStatus.startsWith('Verified')}
+            amountTooltip="Your YouTube channel is being automatically synced with your Gleev channel. You will be rewarded every time a new video gets synced."
             actionNode={
               !currentChannel.yppStatus.startsWith('Suspended') ? (
                 <YppSyncStatus>

@@ -12,6 +12,7 @@ export type BenefitCardProps = {
   title: string
   description?: string
   dollarAmount?: number
+  amountTooltip?: string
   isRangeAmount?: boolean
   className?: string
   actionNode?: ReactNode
@@ -24,6 +25,7 @@ export const BenefitCard: FC<BenefitCardProps> = ({
   className,
   actionNode,
   isRangeAmount,
+  amountTooltip,
 }) => {
   const smMatch = useMediaMatch('sm')
   const lgMatch = useMediaMatch('lg')
@@ -63,7 +65,7 @@ export const BenefitCard: FC<BenefitCardProps> = ({
                 </Text>
               )}
 
-              <Information text="hahahah" />
+              <Information text={amountTooltip} />
             </FlexBox>
           )}
           {actionNode}

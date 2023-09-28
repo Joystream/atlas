@@ -37,17 +37,23 @@ export const ServiceStatusWidget = ({ status }: ServiceStatusWidgetProps) => {
     if (!data) return []
     const hideData = !status || !status.startsWith('Verified')
     const output: [number | string, string, string][] = [] // [value, title, tooltip]
-    output.push([hideData ? '-' : data.data.syncBacklog, 'VIDEOS IN QUEUE', "It's pretty long"])
+
+    // todo: all this data needs to be user scoped, rn backend does not support it
     output.push([
-      hideData ? '-' : data.data.syncBacklog * 2, // no info bout it
+      hideData ? '-' : data.data.syncBacklog,
+      'VIDEOS IN QUEUE',
+      'This is the total amount of your YouTube videos that are waiting to be synced',
+    ])
+    output.push([
+      hideData ? '-' : data.data.syncBacklog * 2 === 0 ? 'Syncing...' : data.data.syncBacklog * 2, // no info bout it
       'PLACE IN THE QUEUE',
-      "We don' really know your place in the queue",
+      'Sync system is based on queue as we sync channels one at a time. When you reach place 1 in queue your sync will start.',
     ])
     output.push([
       // isOptedIn ? `In ${Math.round(data.data.syncBacklog / YPP_DELAY_THRESHOLD)} days` : '-',
       '-',
       'ETA TO FULL SYNC',
-      "Well we don't really know this either",
+      'Estimated time of full sync of your videos may change based on YPP service status or  service overload.',
     ])
     return output
   }, [data, status])

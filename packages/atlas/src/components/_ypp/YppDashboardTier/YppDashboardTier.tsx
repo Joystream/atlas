@@ -44,7 +44,7 @@ export const YppDashboardTier = ({ status, onSignUp }: YppDashboardTierProps) =>
         <Text variant="h100" as="h2" color="colorText">
           CHANNEL YPP STATUS
         </Text>
-        <Information text="Nice one ;)" />
+        <Information text="Channel verification & assigning ranks is at discretion of Joystream team." />
       </FlexBox>
       {content()}
     </Wrapper>
