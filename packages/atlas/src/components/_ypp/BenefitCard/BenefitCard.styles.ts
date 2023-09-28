@@ -48,6 +48,7 @@ export const Wrapper = styled.div<{ variant: Variant }>`
   background-color: ${({ variant }) => cVar(variant === 'full' ? 'colorBackgroundMuted' : 'colorBackground')};
   width: 100%;
   display: grid;
+  position: relative;
   ${media.sm} {
     grid-template-columns: auto 1fr;
   }

@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import { SvgActionNewChannel, SvgActionNewTab } from '@/assets/icons'
+import { SvgActionClose, SvgActionNewChannel, SvgActionNewTab } from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox'
 import { Information } from '@/components/Information'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
@@ -13,38 +13,48 @@ import { YppDashboardTier } from '@/components/_ypp/YppDashboardTier'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useYppAuthorizeHandler } from '@/hooks/useYppAuthorizeHandler'
+import { usePersonalDataStore } from '@/providers/personalData'
+import { useUser } from '@/providers/user/user.hooks'
 import { formatDate, getNextFriday } from '@/utils/time'
 import { YppAuthorizationModal } from '@/views/global/YppLandingView/YppAuthorizationModal'
 import { configYppIconMapper } from '@/views/global/YppLandingView/YppFooter'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
 import { getTierRewards } from '@/views/studio/YppDashboard/YppDashboard.config'
 
-import { StatusDot, StyledBanner, StyledSvgAlertsInformative24, YppSyncStatus } from './YppDashboardTabs.styles'
+import { StatusDot, StyledCloseButton, YppSyncStatus } from './YppDashboardTabs.styles'
 
-const APP_NAME = atlasConfig.general.appName
+const SIGNUP_MESSAGE = 'YPP_SIGNUP_MESSAGE-'
+
+const getMessageIdForChannel = (channelId: string) => {
+  return SIGNUP_MESSAGE + channelId
+}
 
 export const YppDashboardMainTab: FC = () => {
-  // const { copyToClipboard } = useClipboard()
-  // const { channelId } = useUser()
+  const { channelId } = useUser()
 
   const mdMatch = useMediaMatch('md')
+  const smMatch = useMediaMatch('sm')
   const lgMatch = useMediaMatch('lg')
   const handleYppSignUpClick = useYppAuthorizeHandler()
+  const hasDismissedSignupMessage = usePersonalDataStore((state) =>
+    state.dismissedMessages.some((message) => message.id === getMessageIdForChannel(channelId as string))
+  )
+  const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
 
   const { unsyncedChannels } = useGetYppSyncedChannels()
   // const { trackReferralLinkGenerated } = useSegmentAnalytics()
   const nextPayoutDate = getNextFriday()
-  const currentChannel = { yppStatus: 'Suspended::DuplicateContent' }
-
+  const currentChannel = { yppStatus: 'Verified::Diamond' }
+  console.log(hasDismissedSignupMessage)
   return (
     <>
       <YppAuthorizationModal unSyncedChannels={unsyncedChannels} />
 
-      <StyledBanner
-        icon={<StyledSvgAlertsInformative24 />}
-        title="Have more than one YouTube channel?"
-        description={`You can apply to the YouTube Partner Program with as many YouTube & ${APP_NAME} channels as you want. Each YouTube channel can be assigned to only one ${APP_NAME} channel. \nYou can create a new channel from the top right menu.`}
-      />
+      {/*<StyledBanner*/}
+      {/*  icon={<StyledSvgAlertsInformative24 />}*/}
+      {/*  title="Have more than one YouTube channel?"*/}
+      {/*  description={`You can apply to the YouTube Partner Program with as many YouTube & ${APP_NAME} channels as you want. Each YouTube channel can be assigned to only one ${APP_NAME} channel. \nYou can create a new channel from the top right menu.`}*/}
+      {/*/>*/}
       {/*{currentChannel?.yppStatus === 'Suspended' && (*/}
       {/*  <StyledBanner*/}
       {/*    title="This channel has been suspended in the YouTube Partner Program"*/}
@@ -130,39 +140,50 @@ export const YppDashboardMainTab: FC = () => {
               />
             </GridItem>
           ))}
-        <GridItem colSpan={{ xxs: 12 }}>
-          <BenefitCard
-            title={
-              currentChannel?.yppStatus.startsWith('Verified')
-                ? 'Thank you for signing up!'
-                : `Sign up to ${atlasConfig.general.appName}`
-            }
-            description={
-              currentChannel?.yppStatus.startsWith('Verified')
-                ? `You will receive sign up bonus on (Friday) ${formatDate(nextPayoutDate)}`
-                : 'Connect you YouTube channels via a step-by-step flow and get your first reward. You can sign up with multiple channels!'
-            }
-            dollarAmount={
-              !currentChannel || !currentChannel.yppStatus.startsWith('Verified')
-                ? 100
-                : getTierRewards(currentChannel.yppStatus.split('::')[1].toLowerCase())?.[0]
-            }
-            isRangeAmount={!currentChannel || !currentChannel.yppStatus.startsWith('Verified')}
-            amountTooltip="Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity"
-            actionNode={
-              !currentChannel || !currentChannel.yppStatus.startsWith('Verified') ? (
-                <Button
-                  icon={<SvgActionNewChannel />}
-                  disabled={!!currentChannel}
-                  iconPlacement="right"
-                  onClick={handleYppSignUpClick}
-                >
-                  Sign up
-                </Button>
-              ) : undefined
-            }
-          />
-        </GridItem>
+        {!hasDismissedSignupMessage && (
+          <GridItem colSpan={{ xxs: 12 }}>
+            <BenefitCard
+              title={
+                currentChannel?.yppStatus.startsWith('Verified')
+                  ? 'Thank you for signing up!'
+                  : `Sign up to ${atlasConfig.general.appName}`
+              }
+              description={
+                currentChannel?.yppStatus.startsWith('Verified')
+                  ? `You will receive sign up bonus on (Friday) ${formatDate(nextPayoutDate)}`
+                  : 'Connect you YouTube channels via a step-by-step flow and get your first reward. You can sign up with multiple channels!'
+              }
+              dollarAmount={
+                !currentChannel || !currentChannel.yppStatus.startsWith('Verified')
+                  ? 100
+                  : getTierRewards(currentChannel.yppStatus.split('::')[1].toLowerCase())?.[0]
+              }
+              isRangeAmount={!currentChannel || !currentChannel.yppStatus.startsWith('Verified')}
+              amountTooltip="Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity"
+              actionNode={
+                !currentChannel || !currentChannel.yppStatus.startsWith('Verified') ? (
+                  <Button
+                    icon={<SvgActionNewChannel />}
+                    disabled={!!currentChannel}
+                    iconPlacement="right"
+                    onClick={handleYppSignUpClick}
+                  >
+                    Sign up
+                  </Button>
+                ) : (
+                  <StyledCloseButton
+                    variant="secondary"
+                    fullWidth={!smMatch}
+                    onClick={() => updateDismissedMessages(getMessageIdForChannel(channelId as string))}
+                    icon={smMatch && <SvgActionClose />}
+                  >
+                    {!smMatch ? 'Close' : ''}
+                  </StyledCloseButton>
+                )
+              }
+            />
+          </GridItem>
+        )}
         <GridItem colSpan={{ xxs: 12 }}>
           <BenefitCard
             title="Sync videos from YouTube channel"
@@ -201,7 +222,7 @@ export const YppDashboardMainTab: FC = () => {
             description="Get rewarded for every new creator who signs up to YPP program using your referral link. Referrals rewards depends on the tier assigned to the invited channel."
             dollarAmount={getTierRewards('diamond')?.[2]}
             isRangeAmount
-            actionNode={<Button>Copy referral link</Button>}
+            actionNode={<Button fullWidth={!smMatch}>Copy referral link</Button>}
           />
         </GridItem>
       </LayoutGrid>

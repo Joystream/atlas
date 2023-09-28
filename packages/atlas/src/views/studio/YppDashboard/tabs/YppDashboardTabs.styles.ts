@@ -4,6 +4,7 @@ import styled from '@emotion/styled'
 import { SvgActionArrowRight, SvgAlertsInformative24, SvgAlertsWarning32 } from '@/assets/icons'
 import { ActionBar } from '@/components/ActionBar'
 import { Banner } from '@/components/Banner'
+import { Button } from '@/components/_buttons/Button'
 import { cVar, media, sizes, zIndex } from '@/styles'
 
 export { Divider } from '../YppDashboard.styles'
@@ -95,9 +96,13 @@ export const YppSyncStatus = styled.div`
   justify-content: center;
   gap: ${sizes(2)};
   background-color: ${cVar('colorCoreNeutral800Lighten')};
-  padding: ${sizes(2)} ${sizes(4)};
+  padding: ${sizes(2.5)} ${sizes(4)};
   border-radius: 99px;
-  width: fit-content;
+  width: 100%;
+
+  ${media.sm} {
+    width: fit-content;
+  }
 
   p {
     white-space: nowrap;
@@ -111,4 +116,18 @@ export const StatusDot = styled.div`
   background: linear-gradient(#0ebe57, #096c34);
   box-shadow: 0 0 0 5px #0c984680;
   animation: 10s ease-out ${dotPulse} infinite;
+`
+
+export const StyledCloseButton = styled(Button)`
+  position: static;
+
+  ${media.sm} {
+    position: absolute;
+    top: ${sizes(6)};
+    right: ${sizes(6)};
+  }
+
+  ${media.lg} {
+    position: static;
+  }
 `
