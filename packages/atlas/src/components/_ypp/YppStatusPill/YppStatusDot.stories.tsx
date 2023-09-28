@@ -7,6 +7,6 @@ export default {
   component: YppStatusDot,
 } as Meta
 
-const Template: StoryFn = () => <YppStatusDot />
+const Template: StoryFn = () => <YppStatusDot status="operational" />
 
 export const Default = Template.bind({})

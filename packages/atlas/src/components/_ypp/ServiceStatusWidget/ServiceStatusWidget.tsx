@@ -21,7 +21,11 @@ type YppStatusDto = {
 const YOUTUBE_BACKEND_URL = atlasConfig.features.ypp.youtubeSyncApiUrl
 const YPP_DELAY_THRESHOLD = atlasConfig.features.ypp.yppDelayThreshold ?? 500
 
-export const ServiceStatusWidget = () => {
+export type ServiceStatusWidgetProps = {
+  isOptedIn: boolean
+}
+
+export const ServiceStatusWidget = ({ isOptedIn }: ServiceStatusWidgetProps) => {
   const { data } = useQuery('ypp-status', () =>
     axiosInstance<YppStatusDto>(`${YOUTUBE_BACKEND_URL}/status`).catch(() =>
       ConsoleLogger.warn('Failed to fetch YPP status')
@@ -31,24 +35,26 @@ export const ServiceStatusWidget = () => {
   const details = useMemo(() => {
     if (!data) return []
     const output: [number | string, string, string][] = [] // [value, title, tooltip]
-    output.push([data.data.syncBacklog, 'VIDEO IN QUEUE', "It's pretty long"])
+    output.push([isOptedIn ? data.data.syncBacklog : '-', 'VIDEO IN QUEUE', "It's pretty long"])
     output.push([
-      data.data.syncBacklog * 2, // no info bout it
+      isOptedIn ? data.data.syncBacklog * 2 : '-', // no info bout it
       'PLACE IN THE QUEUE',
       "We don' really know your place in the queue",
     ])
     output.push([
-      `In ${Math.round(data.data.syncBacklog / YPP_DELAY_THRESHOLD)} days`,
+      isOptedIn ? `In ${Math.round(data.data.syncBacklog / YPP_DELAY_THRESHOLD)} days` : '-',
       'ETA TO FULL SYNC',
       "Well we don't really know this either",
     ])
     return output
-  }, [data])
+  }, [data, isOptedIn])
   return (
     <LayoutBox>
       <FlexGridItem flow="column" gap={2} colSpan={{ xxs: 12 }}>
-        <Text variant="h200" as="span" color="colorText">
-          YPP SYNC SERVICE STATUS
+        <FlexBox alignItems="center" gap={2}>
+          <Text variant="h200" as="span" color="colorText">
+            YPP SYNC SERVICE STATUS
+          </Text>
           {data ? (
             <YppStatusDot
               status={
@@ -60,7 +66,7 @@ export const ServiceStatusWidget = () => {
               }
             />
           ) : null}
-        </Text>
+        </FlexBox>
         <Text variant="t100" as="p" color="colorTextMuted">
           New YT video uploads are checked once every 24 hours
         </Text>
@@ -84,5 +90,6 @@ export const ServiceStatusWidget = () => {
 
 const LayoutBox = styled(LayoutGrid)`
   background-color: ${cVar('colorBackgroundMuted')};
-  padding: ${sizes(6)};
+  padding: ${sizes(4)};
+  height: 100%;
 `

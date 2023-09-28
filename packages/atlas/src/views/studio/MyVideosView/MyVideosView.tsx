@@ -17,7 +17,6 @@ import { MintNftFirstTimeModal } from '@/components/_overlays/MintNftFirstTimeMo
 import { MintNftModal } from '@/components/_overlays/MintNftModal'
 import { VideoTileDraft } from '@/components/_video/VideoTileDraft'
 import { VideoTilePublisher } from '@/components/_video/VideoTilePublisher'
-import { YppStatusPill } from '@/components/_ypp/YppStatusPill'
 import { atlasConfig } from '@/config'
 import { cancelledVideoFilter } from '@/config/contentFilter'
 import { absoluteRoutes } from '@/config/routes'
@@ -362,7 +361,6 @@ export const MyVideosView = () => {
           <Text as="h1" variant="h700">
             My videos
           </Text>
-          {currentChannel && <YppStatusPill />}
         </TitleBox>
         {!smMatch && sortVisibleAndUploadButtonVisible && (
           <MobileButton size="large" icon={<SvgActionAddVideo />} fullWidth {...uploadVideoButtonProps}>

@@ -10,9 +10,11 @@ import { WidgetTile } from '@/components/WidgetTile'
 import { Button, TextButton } from '@/components/_buttons/Button'
 import { BenefitCard } from '@/components/_ypp/BenefitCard'
 import { ServiceStatusWidget } from '@/components/_ypp/ServiceStatusWidget/ServiceStatusWidget'
+import { YppDashboardTier } from '@/components/_ypp/YppDashboardTier'
 import { atlasConfig } from '@/config'
 // import { useClipboard } from '@/hooks/useClipboard'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { formatDate, getNextFriday } from '@/utils/time'
 // import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 // import { useUser } from '@/providers/user/user.hooks'
 import { configYppIconMapper } from '@/views/global/YppLandingView/YppFooter'
@@ -35,7 +37,8 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
   const { currentChannel } = useGetYppSyncedChannels()
   // const { trackReferralLinkGenerated } = useSegmentAnalytics()
   const multiplier = tiers ? tiers[currentTier].multiplier : 1
-
+  const nextPayoutDate = getNextFriday()
+  console.log(currentChannel, 'xd')
   return (
     <>
       <StyledBanner
@@ -83,11 +86,11 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
       )}
       <LayoutGrid>
         <GridItem colSpan={{ xxs: 12, md: 4 }}>
-          <div style={{ width: '100%', background: 'red' }}>tier</div>
+          <YppDashboardTier status="Suspended::DuplicateContent" />
         </GridItem>
 
         <GridItem colSpan={{ xxs: 12, md: 8 }}>
-          <ServiceStatusWidget />
+          <ServiceStatusWidget isOptedIn={!!currentChannel} />
         </GridItem>
         <GridItem colSpan={{ xxs: 12, sm: 4 }}>
           <WidgetTile
@@ -98,7 +101,7 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
             customNode={
               <FlexBox flow="column" gap={4} marginTop={2}>
                 <Text variant={mdMatch ? 'h500' : 'h400'} as="p">
-                  22 sep 2023
+                  {formatDate(nextPayoutDate)}
                 </Text>
                 <TextButton to="" icon={<SvgActionNewTab />} iconPlacement="right">
                   Go to Airtable
@@ -131,7 +134,7 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
         <GridItem colSpan={{ xxs: 12 }}>
           <BenefitCard
             title="Thank you for signing up!"
-            description="You will receive sign up bonus on (Friday) 20 Oct 2023"
+            description={`You will receive sign up bonus on (Friday) ${formatDate(nextPayoutDate)}`}
             dollarAmount={100}
           />
         </GridItem>
