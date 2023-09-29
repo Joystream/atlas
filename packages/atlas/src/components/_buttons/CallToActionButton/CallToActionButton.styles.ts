@@ -52,6 +52,7 @@ export const ContentWrapper = styled.div`
   padding: ${sizes(8)};
   background-color: ${cVar('colorCoreNeutral800')};
   transition: all ${transitions.timings.regular} ${transitions.easing};
+  border-radius: ${cVar('radiusLarge')};
 `
 
 export const StyledContainer = styled('button', { shouldForwardProp: isPropValid })<{ colorVariant: ColorVariants }>`
