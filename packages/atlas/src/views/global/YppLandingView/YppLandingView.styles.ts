@@ -81,11 +81,6 @@ export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)<{ cente
 
 export const StyledLimitedWidthContainerVideo = styled(LimitedWidthContainer)<{ centerText?: boolean }>`
   text-align: ${({ centerText }) => (centerText ? 'center' : 'unset')};
-  padding-bottom: unset;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: ${sizes(16)};
   background: radial-gradient(50% 50% at 50% 50%, #15308b 0%, #000 100%);
 `
 
