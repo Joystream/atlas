@@ -76,7 +76,7 @@ export const YppHero: FC<YppHeroProps> = ({
           <GlowBox walkHeight={height ?? 0} walkWidth={width ?? 0} />
         </GlowContainer>
         <LayoutGrid as="header">
-          <GridItem colSpan={{ base: 12, sm: 8 }} colStart={{ sm: 3 }}>
+          <GridItem colSpan={{ base: 12, sm: 10, md: 12, lg: 10 }} colStart={{ sm: 2, md: 1, lg: 2 }}>
             <LogosContainer>
               <AppLogo
                 variant="full"
@@ -98,6 +98,8 @@ export const YppHero: FC<YppHeroProps> = ({
             >
               Connect your YouTube channel & get paid
             </Text>
+          </GridItem>
+          <GridItem colSpan={{ base: 12, sm: 10, md: 8, lg: 6 }} colStart={{ sm: 2, md: 3, lg: 4 }}>
             <Text
               as="p"
               variant={subtitleVariant}
@@ -111,6 +113,9 @@ export const YppHero: FC<YppHeroProps> = ({
               YouTube videos get automatically synced to your {atlasConfig.general.appName} channel, without any
               additional effort.
             </Text>
+          </GridItem>
+
+          <GridItem colSpan={{ base: 12, sm: 8 }} colStart={{ sm: 3 }}>
             <LogosContainer data-aos="fade-up" data-aos-delay="350" data-aos-offset="40" data-aos-easing="atlas-easing">
               <SvgLogoYoutubeWhiteFull />
               <SvgLogoGoogleWhiteFull />

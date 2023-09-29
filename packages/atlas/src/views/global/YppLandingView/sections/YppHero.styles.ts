@@ -10,7 +10,7 @@ export const HeroImageWrapper = styled.div`
   margin: ${sizes(16)} auto 0 auto;
 
   ${media.lg} {
-    max-width: 1152px;
+    max-width: 1082px;
   }
 `
 

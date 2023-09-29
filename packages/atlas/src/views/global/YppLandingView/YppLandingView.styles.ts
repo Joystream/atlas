@@ -35,7 +35,7 @@ const rot = keyframes`
   }
 
   100% {
-    transform: rotate(300deg);
+    transform: rotate(420deg);
   }
 `
 
@@ -63,11 +63,12 @@ export const StyledLimitedWidthContainerHero = styled.div<{ centerText?: boolean
   text-align: ${({ centerText }) => (centerText ? 'center' : 'unset')};
   position: relative;
   overflow: hidden;
-  border-radius: 32px;
+  border-radius: 24px;
   padding: ${sizes(4)};
 
   ${media.md} {
     padding: ${sizes(8)};
+    border-radius: 32px;
   }
   ${media.lg} {
     padding: ${sizes(16)};
@@ -150,9 +151,9 @@ export const BackgroundContainer = styled.div<BackgroundContainerProps>`
   background-color: ${({ noBackground }) => (noBackground ? 'unset' : cVar('colorBackgroundMuted'))};
   margin-left: calc(-1 * var(--size-global-horizontal-padding));
   margin-right: calc(-1 * var(--size-global-horizontal-padding));
-  padding: ${sizes(16)} var(--size-global-horizontal-padding);
+  padding: ${sizes(4)} var(--size-global-horizontal-padding);
   ${media.md} {
-    padding: ${sizes(24)} var(--size-global-horizontal-padding);
+    padding: ${sizes(8)} var(--size-global-horizontal-padding);
     ${backgroundPattern};
   }
 `

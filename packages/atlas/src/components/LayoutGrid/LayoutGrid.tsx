@@ -1,6 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
+import { FlexBox } from '@/components/FlexBox'
 import { media } from '@/styles'
 
 type ReponsivenessObject = Partial<Record<keyof typeof media | 'base', number>>
@@ -44,16 +45,35 @@ const createBreakpointGridItemRules =
 
 const filteredProps = ['colStart', 'colSpan', 'rowStart', 'rowSpan', 'as']
 
+const gridItemStyles = ({ colSpan, rowSpan, rowStart, colStart }: GridItemProps) => css`
+  min-width: 0;
+
+  ${!isResponsivenessObject(colStart) && colStart && `grid-column-start: ${colStart};`}
+  ${!isResponsivenessObject(colSpan) && colSpan && `grid-column-end: span ${colSpan};`}
+  ${!isResponsivenessObject(rowStart) && rowStart && `grid-row-start: ${rowStart};`}
+  ${!isResponsivenessObject(rowSpan) && rowSpan && `grid-row-end: span ${rowSpan};`}
+`
+
 export const GridItem = styled('div', {
   shouldForwardProp: (prop) => !filteredProps.includes(prop as string),
 })<GridItemProps>`
-  min-width: 0;
+  ${gridItemStyles}
 
-  ${({ colStart }) => !isResponsivenessObject(colStart) && colStart && `grid-column-start: ${colStart};`}
-  ${({ colSpan }) => !isResponsivenessObject(colSpan) && colSpan && `grid-column-end: span ${colSpan};`}
-  ${({ rowStart }) => !isResponsivenessObject(rowStart) && rowStart && `grid-row-start: ${rowStart};`}
-  ${({ rowSpan }) => !isResponsivenessObject(rowSpan) && rowSpan && `grid-row-end: span ${rowSpan};`}
-  
+  ${createBreakpointGridItemRules('base')}
+  ${createBreakpointGridItemRules('xxs')}
+  ${createBreakpointGridItemRules('xs')}
+  ${createBreakpointGridItemRules('sm')}
+  ${createBreakpointGridItemRules('md')}
+  ${createBreakpointGridItemRules('lg')}
+  ${createBreakpointGridItemRules('xl')}
+  ${createBreakpointGridItemRules('xxl')}
+`
+
+export const FlexGridItem = styled(FlexBox, {
+  shouldForwardProp: (prop) => !filteredProps.includes(prop as string),
+})<GridItemProps>`
+  ${gridItemStyles}
+
   ${createBreakpointGridItemRules('base')}
   ${createBreakpointGridItemRules('xxs')}
   ${createBreakpointGridItemRules('xs')}
