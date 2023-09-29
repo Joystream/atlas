@@ -50,8 +50,8 @@ export const YppCardsSections: FC = () => {
             <CenteredLayoutGrid>
               <HeaderGridItem
                 as="header"
-                colStart={{ sm: 3 }}
-                colSpan={{ base: 12, sm: 9 }}
+                colSpan={{ base: 12, sm: 10, md: 12, lg: 8 }}
+                colStart={{ sm: 2, md: 1, lg: 3 }}
                 data-aos="fade-up"
                 data-aos-delay="350"
                 data-aos-offset="80"
@@ -60,6 +60,8 @@ export const YppCardsSections: FC = () => {
                 <Text variant={titleVariant} as="h2">
                   Monetize your Gleev channel
                 </Text>
+              </HeaderGridItem>
+              <GridItem colSpan={{ base: 12, sm: 10, md: 8, lg: 6 }} colStart={{ sm: 2, md: 3, lg: 4 }}>
                 <Text
                   variant={subtitleVariant}
                   as="p"
@@ -73,7 +75,7 @@ export const YppCardsSections: FC = () => {
                   Build a foundation for your {appName} channel with syncing YouTube content and tap into the future of
                   content monetization.
                 </Text>
-              </HeaderGridItem>
+              </GridItem>
             </CenteredLayoutGrid>
 
             <CardImageRow as="article">

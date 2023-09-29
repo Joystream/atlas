@@ -38,8 +38,6 @@ export const ImageContainer = styled.div<ImageContainerProps>`
 
 export const CardImage = styled.img<{ absolute?: boolean; dropShadow?: boolean }>`
   width: 100%;
-  min-width: 480px;
-  max-width: 640px;
   height: auto;
   position: ${({ absolute }) => (absolute ? 'absolute' : 'relative')};
   z-index: ${({ absolute }) => (absolute ? 0 : 1)};
