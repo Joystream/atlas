@@ -147,9 +147,9 @@ export const BackgroundContainer = styled.div<BackgroundContainerProps>`
   background-color: ${({ noBackground }) => (noBackground ? 'unset' : cVar('colorBackgroundMuted'))};
   margin-left: calc(-1 * var(--size-global-horizontal-padding));
   margin-right: calc(-1 * var(--size-global-horizontal-padding));
-  padding: ${sizes(4)} var(--size-global-horizontal-padding);
+  padding: ${sizes(16)} var(--size-global-horizontal-padding);
   ${media.md} {
-    padding: ${sizes(8)} var(--size-global-horizontal-padding);
+    padding: ${sizes(24)} var(--size-global-horizontal-padding);
     ${backgroundPattern};
   }
 `

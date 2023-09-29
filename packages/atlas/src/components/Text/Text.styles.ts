@@ -134,6 +134,20 @@ export const styledVariants = {
     letter-spacing: ${cVar('typographyDesktopH100LetterSpacing')};
     text-transform: ${cVar('typographyDesktopH100TextTransform')};
   `,
+  t500: styled.span<TextBaseProps>`
+    ${baseStyles};
+
+    font: ${cVar('typographyDesktopT500')};
+    letter-spacing: ${cVar('typographyDesktopT500LetterSpacing')};
+    text-transform: ${cVar('typographyDesktopT500TextTransform')};
+  `,
+  't500-strong': styled.span<TextBaseProps>`
+    ${baseStyles};
+
+    font: ${cVar('typographyDesktopT500Strong')};
+    letter-spacing: ${cVar('typographyDesktopT500StrongLetterSpacing')};
+    text-transform: ${cVar('typographyDesktopT500StrongTextTransform')};
+  `,
   t400: styled.span<TextBaseProps>`
     ${baseStyles};
 
