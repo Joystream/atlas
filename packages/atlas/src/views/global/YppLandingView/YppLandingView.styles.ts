@@ -103,11 +103,11 @@ export const CenteredLayoutFlex = styled(FlexBox)`
   }
 `
 
-export const TierCardWrapper = styled.div`
+export const TierCardWrapper = styled(GridItem)`
   width: 100%;
   display: grid;
   grid-template-columns: 1fr;
-  gap: ${sizes(6)};
+  gap: ${sizes(4)};
   justify-content: center;
 
   ${media.sm} {
@@ -115,6 +115,7 @@ export const TierCardWrapper = styled.div`
   }
 
   ${media.md} {
+    gap: ${sizes(6)};
     grid-template-columns: repeat(4, auto);
   }
 `

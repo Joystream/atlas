@@ -1,18 +1,19 @@
 import { FC, useRef } from 'react'
 
-import { FlexBox } from '@/components/FlexBox'
 import { Information } from '@/components/Information'
+import { FlexGridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { TooltipText } from '@/components/Tooltip/Tooltip.styles'
 import { TierCard } from '@/components/_ypp/TierCard'
 import { atlasConfig } from '@/config'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSectionTextVariants } from '@/views/global/YppLandingView/sections/useSectionTextVariants'
 
 import { ColorAnchor } from './YppRewardSection.styles'
 
 import {
   BackgroundContainer,
-  CenteredLayoutFlex,
+  CenteredLayoutGrid,
   StyledLimitedWidthContainer,
   TierCardWrapper,
 } from '../YppLandingView.styles'
@@ -40,6 +41,7 @@ export const calculateReward = (
 }
 
 export const YppRewardSection: FC = () => {
+  const mdMatch = useMediaMatch('md')
   const tiers = atlasConfig.features.ypp.tiersDefinition
   const [titleVariant, subtitleVariant] = useSectionTextVariants()
   const ref = useRef<HTMLDivElement>(null)
@@ -51,8 +53,8 @@ export const YppRewardSection: FC = () => {
   return (
     <BackgroundContainer noBackground>
       <StyledLimitedWidthContainer as="section">
-        <CenteredLayoutFlex>
-          <FlexBox flow="column" gap={3} alignItems="center">
+        <CenteredLayoutGrid>
+          <FlexGridItem colSpan={{ base: 12, sm: 10, md: 12, lg: 8 }} colStart={{ sm: 2, md: 1, lg: 3 }}>
             <Text
               variant={titleVariant}
               as="h2"
@@ -61,12 +63,14 @@ export const YppRewardSection: FC = () => {
               data-aos-offset="80"
               data-aos-easing="atlas-easing"
             >
-              Rewards are based on channel popularity and content quality
+              Rewards based on quality and popularity
             </Text>
+          </FlexGridItem>
+          <FlexGridItem colSpan={{ base: 12, sm: 10, md: 8, lg: 6 }} colStart={{ sm: 2, md: 3, lg: 4 }}>
             <Text
               variant={subtitleVariant}
               as="p"
-              margin={{ top: 4, bottom: 16 }}
+              margin={{ bottom: mdMatch ? 16 : 12 }}
               color="colorText"
               data-aos="fade-up"
               data-aos-delay="100"
@@ -76,16 +80,22 @@ export const YppRewardSection: FC = () => {
               Each participating channel is reviewed by the verification team and assigned to one of the reward tiers
               below
             </Text>
-          </FlexBox>
-        </CenteredLayoutFlex>
-        <FlexBox flow="column" gap={10}>
-          <TierCardWrapper>
+          </FlexGridItem>
+        </CenteredLayoutGrid>
+        <LayoutGrid>
+          <TierCardWrapper colSpan={{ base: 12, sm: 10, md: 12, lg: 10 }} colStart={{ sm: 2, md: 1, lg: 2 }}>
             {tiers.map((tier) => (
               <TierCard key={tier.tier} {...tier} />
             ))}
           </TierCardWrapper>
-          <FlexBox gap={2} justifyContent="end">
-            <Text variant="t200" as="p" color="colorText" margin={{ right: 1 }}>
+          <FlexGridItem
+            colSpan={{ base: 12, sm: 10, md: 12, lg: 10 }}
+            colStart={{ sm: 2, md: 1, lg: 2 }}
+            marginTop={4}
+            alignItems="center"
+            justifyContent="end"
+          >
+            <Text variant="t200" as="p" color="colorText">
               Payments are made in {atlasConfig.joystream.tokenTicker} tokens
             </Text>
             <Information
@@ -105,8 +115,8 @@ export const YppRewardSection: FC = () => {
               reference={ref.current}
               delay={1000}
             />
-          </FlexBox>
-        </FlexBox>
+          </FlexGridItem>
+        </LayoutGrid>
       </StyledLimitedWidthContainer>
     </BackgroundContainer>
   )

@@ -1,7 +1,7 @@
 import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { cVar, media, sizes, square } from '@/styles'
+import { cVar, sizes, square } from '@/styles'
 
 export const Wrapper = styled.div<{ isDiamond: boolean }>`
   display: flex;
@@ -13,10 +13,6 @@ export const Wrapper = styled.div<{ isDiamond: boolean }>`
   border-radius: ${cVar('radiusLarge')};
   width: 100%;
   border: ${(props) => (props.isDiamond ? '1px solid #2EEAD0' : 'none')};
-
-  ${media.sm} {
-    max-width: 250px;
-  }
 `
 
 export const RewardWrapper = styled.div`
@@ -65,6 +61,7 @@ export const TierBanner = styled.div<{ tier: 'bronze' | 'silver' | 'gold' | 'dia
         return 'radial-gradient(128.74% 56.2% at 50% 97.53%, #C77D6E 0%, #834C3F 67.19%, #603930 100%)'
     }
   }};
+  text-shadow: 0 1px 4px rgb(0 0 0 / 0.25);
 
   > div {
     align-self: center;
@@ -72,7 +69,7 @@ export const TierBanner = styled.div<{ tier: 'bronze' | 'silver' | 'gold' | 'dia
   }
 
   svg {
-    ${square(42)}
+    ${square(48)}
   }
 
   ::before {

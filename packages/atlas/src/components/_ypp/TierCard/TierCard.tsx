@@ -49,7 +49,7 @@ export const TierCard = ({ reqs, rewards, tier }: TierCardProps) => {
     <Wrapper isDiamond={tier === 'diamond'}>
       <FlexBox flow="column" gap={4}>
         <TierBanner tier={tier}>
-          <FlexBox flow="column" alignItems="center">
+          <FlexBox flow="column" gap={0} alignItems="center">
             {getTierIcon(tier)}
             <Text variant="t100-strong" as="p">
               {capitalizeFirstLetter(tier)}
