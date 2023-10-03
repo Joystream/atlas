@@ -24,7 +24,7 @@ export const LogosContainer = styled.div`
   align-items: center;
   justify-content: center;
   gap: ${sizes(10)};
-  margin-bottom: ${sizes(8)};
+  margin-bottom: ${sizes(6)};
 `
 
 export const SelectDifferentChannelButton = styled.button`

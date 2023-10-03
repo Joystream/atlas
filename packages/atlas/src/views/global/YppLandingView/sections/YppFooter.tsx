@@ -8,7 +8,7 @@ import { atlasConfig } from '@/config'
 import { YppWidgetIcons } from '@/config/configSchema'
 import { useSectionTextVariants } from '@/views/global/YppLandingView/sections/useSectionTextVariants'
 
-import { CtaBanner, StyledBannerText, StyledButton } from './YppFooter.styles'
+import { CtaBanner, StyledButton } from './YppFooter.styles'
 
 import { StyledLimitedWidthContainer } from '../YppLandingView.styles'
 
@@ -40,9 +40,9 @@ export const YppFooter: FC<YppFooterSectionProps> = ({ onSignUpClick }) => {
               <Text variant="h100" as="p" color="colorText">
                 Get started now
               </Text>
-              <StyledBannerText variant={titleVariant} as="h2" color="colorCoreBaseWhite" margin={{ top: 1 }}>
+              <Text variant={titleVariant} as="h2" color="colorCoreBaseWhite" margin={{ top: 1 }}>
                 Pave the way to Web3 with your YouTube channel right away.
-              </StyledBannerText>
+              </Text>
 
               <StyledButton onClick={onSignUpClick}>Authorize with YouTube</StyledButton>
             </CtaBanner>

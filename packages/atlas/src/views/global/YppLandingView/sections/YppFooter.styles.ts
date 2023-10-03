@@ -2,7 +2,6 @@ import styled from '@emotion/styled'
 
 import bottomLeftPattern from '@/assets/images/ypp-background-pattern.svg'
 import topLeftBannerPattern from '@/assets/images/ypp-banner-pattern.svg'
-import { Text } from '@/components/Text'
 import { GoogleButton } from '@/components/_buttons/GoogleButton'
 import { cVar, media, sizes } from '@/styles'
 
@@ -24,16 +23,12 @@ export const CtaBanner = styled.div`
     background-image: url(${bottomLeftPattern}), url(${topLeftBannerPattern});
     background-position: bottom left, top right;
     background-repeat: no-repeat, no-repeat;
-    padding: ${sizes(12)} ${sizes(16)};
+    padding: ${sizes(16)} ${sizes(12)};
   }
 
   ${media.md} {
     margin: ${sizes(24)} 0;
   }
-`
-
-export const StyledBannerText = styled(Text)`
-  max-width: 80%;
 `
 
 export const StyledButton = styled(GoogleButton)`

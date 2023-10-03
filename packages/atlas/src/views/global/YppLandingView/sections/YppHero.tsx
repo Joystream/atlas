@@ -29,7 +29,12 @@ import {
   StyledInfiniteCarousel,
 } from './YppHero.styles'
 
-import { BackgroundContainer, GlowBox, GlowContainer, StyledLimitedWidthContainerHero } from '../YppLandingView.styles'
+import {
+  GlowBox,
+  GlowContainer,
+  HeroBackgroundContainer,
+  StyledLimitedWidthContainerHero,
+} from '../YppLandingView.styles'
 
 export type YppAtlasStatus = 'have-channel' | 'no-channel' | 'ypp-signed' | 'connect-wallet' | null
 
@@ -70,7 +75,7 @@ export const YppHero: FC<YppHeroProps> = ({
     : Array.from({ length: 30 }).map((_, idx) => <PaidChannelCard key={idx} loading />)
 
   return (
-    <BackgroundContainer noBackground>
+    <HeroBackgroundContainer noBackground>
       <StyledLimitedWidthContainerHero ref={ref} centerText>
         <GlowContainer>
           <GlowBox walkHeight={height ?? 0} walkWidth={width ?? 0} />
@@ -104,7 +109,7 @@ export const YppHero: FC<YppHeroProps> = ({
               as="p"
               variant={subtitleVariant}
               color="colorText"
-              margin={{ top: 4, bottom: 8 }}
+              margin={{ top: 4, bottom: 12 }}
               data-aos="fade-up"
               data-aos-delay="350"
               data-aos-offset="40"
@@ -190,6 +195,6 @@ export const YppHero: FC<YppHeroProps> = ({
           }}
         />
       )}
-    </BackgroundContainer>
+    </HeroBackgroundContainer>
   )
 }

@@ -14,6 +14,7 @@ export const CardsWithImagesContainer = styled.div`
 `
 
 export const CardImageRow = styled(LayoutGrid)`
+  grid-gap: ${sizes(6)};
   ${media.sm} {
     align-items: center;
     justify-items: center;

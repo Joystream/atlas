@@ -65,16 +65,6 @@ export const StyledContainer = styled('button', { shouldForwardProp: isPropValid
   text-decoration: none;
   background-color: transparent;
 
-  &:not(:last-child) {
-    margin-bottom: ${sizes(4)};
-  }
-
-  ${media.md} {
-    &:not(:last-child) {
-      margin-bottom: 0;
-    }
-  }
-
   :hover {
     ${ContentWrapper} {
       transform: translate(-${sizes(2)}, -${sizes(2)});

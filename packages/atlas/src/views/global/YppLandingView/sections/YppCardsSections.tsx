@@ -47,7 +47,7 @@ export const YppCardsSections: FC = () => {
       <BackgroundContainer noBackground>
         <StyledLimitedWidthContainer as="section">
           <CardsWithImagesContainer>
-            <CenteredLayoutGrid>
+            <CenteredLayoutGrid gap={4}>
               <HeaderGridItem
                 as="header"
                 colSpan={{ base: 12, sm: 10, md: 12, lg: 8 }}
@@ -65,7 +65,6 @@ export const YppCardsSections: FC = () => {
                 <Text
                   variant={subtitleVariant}
                   as="p"
-                  margin={{ top: 4 }}
                   color="colorText"
                   data-aos="fade-up"
                   data-aos-delay="250"

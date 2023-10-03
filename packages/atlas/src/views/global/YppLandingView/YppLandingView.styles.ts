@@ -153,3 +153,12 @@ export const BackgroundContainer = styled.div<BackgroundContainerProps>`
     ${backgroundPattern};
   }
 `
+
+export const HeroBackgroundContainer = styled(BackgroundContainer)`
+  padding-top: ${sizes(4)};
+
+  ${media.md} {
+    padding-top: ${sizes(8)};
+    ${backgroundPattern};
+  }
+`

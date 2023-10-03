@@ -2,11 +2,11 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { FlexBox } from '@/components/FlexBox'
-import { media } from '@/styles'
+import { media, sizes } from '@/styles'
 
 type ReponsivenessObject = Partial<Record<keyof typeof media | 'base', number>>
 
-export const LayoutGrid = styled.div`
+export const LayoutGrid = styled.div<{ gap?: number }>`
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-gap: 16px;
@@ -14,6 +14,8 @@ export const LayoutGrid = styled.div`
   ${media.md} {
     grid-gap: 24px;
   }
+
+  ${(props) => (props.gap ? `grid-gap: ${sizes(props.gap)}!important;` : '')}
 `
 
 export type GridItemProps = {

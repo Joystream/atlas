@@ -70,7 +70,7 @@ export const YppRewardSection: FC = () => {
             <Text
               variant={subtitleVariant}
               as="p"
-              margin={{ bottom: mdMatch ? 16 : 12 }}
+              margin={{ top: 4, bottom: mdMatch ? 16 : 12 }}
               color="colorText"
               data-aos="fade-up"
               data-aos-delay="100"
@@ -91,8 +91,8 @@ export const YppRewardSection: FC = () => {
           <FlexGridItem
             colSpan={{ base: 12, sm: 10, md: 12, lg: 10 }}
             colStart={{ sm: 2, md: 1, lg: 2 }}
-            marginTop={4}
             alignItems="center"
+            marginTop={mdMatch ? -2 : 0}
             justifyContent="end"
           >
             <Text variant="t200" as="p" color="colorText">
@@ -113,7 +113,6 @@ export const YppRewardSection: FC = () => {
               }
               multiline
               reference={ref.current}
-              delay={1000}
             />
           </FlexGridItem>
         </LayoutGrid>

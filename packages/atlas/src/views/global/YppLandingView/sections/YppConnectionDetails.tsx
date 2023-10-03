@@ -49,7 +49,7 @@ export const YppConnectionDetails = () => {
               data-aos-delay="250"
               data-aos-offset="40"
               data-aos-easing="atlas-easing"
-              margin={{ top: 4, bottom: mdMatch ? 8 : 6 }}
+              margin={{ top: 4, bottom: mdMatch ? 10 : 6 }}
             >
               We are verified by the YouTube Safety Team. We can only read specific types of data through the official
               API. We we cannot publish or change anything on your YouTube channel.
@@ -74,7 +74,7 @@ export const YppConnectionDetails = () => {
                   <SmallCheckBox>
                     <SvgActionCheck />
                   </SmallCheckBox>
-                  <Text variant="t300" as="p" color="colorText" align="left">
+                  <Text variant={smMatch ? 'h400' : 'h300'} as="p" color="colorText" align="left">
                     {scope}
                   </Text>
                 </FlexBox>
@@ -91,13 +91,15 @@ export const CheckBox = styled.div<{ square: number }>`
   background: ${cVar('colorBackgroundSuccess')};
   display: grid;
   place-items: center;
-  padding: ${sizes(4)};
+  padding: ${sizes(2)};
   border-radius: 50%;
   width: fit-content;
   margin: 0 auto;
+  ${(props) => square(props.square)};
 
   svg {
-    ${(props) => square(props.square)};
+    width: 100%;
+    height: 100%;
   }
 `
 
@@ -121,11 +123,14 @@ const AllowanceBox = styled(FlexGridItem)`
   background: ${cVar('colorBackgroundMutedAlpha')};
   border: 1px solid ${cVar('colorBorderMutedAlpha')};
   border-radius: ${cVar('radiusMedium')};
-  padding: ${sizes(8)};
-  width: fit-content;
+  padding: ${sizes(6)};
   margin: 0 auto;
 
   ${media.sm} {
     padding-right: 10%;
+  }
+
+  ${media.sm} {
+    padding: ${sizes(8)};
   }
 `
