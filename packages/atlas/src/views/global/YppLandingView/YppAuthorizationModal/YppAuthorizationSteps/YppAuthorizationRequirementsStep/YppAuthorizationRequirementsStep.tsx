@@ -3,6 +3,7 @@ import { FC, PropsWithChildren } from 'react'
 
 import { SvgActionCheck, SvgActionClose } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
+import { Text } from '@/components/Text'
 import { atlasConfig } from '@/config'
 import { pluralizeNoun } from '@/utils/misc'
 
@@ -35,22 +36,41 @@ export const YppAuthorizationRequirementsStep: FC<YppAuthorizationRequirementsSt
   return (
     <>
       <StyledList>
+        <SingleRequirement fulfilled={checkRequirmentError(YppAuthorizationErrorCode.CHANNEL_STATUS_SUSPENDED)}>
+          Original content, without reports from other creators.
+        </SingleRequirement>
+        <SingleRequirement fulfilled={checkRequirmentError(YppAuthorizationErrorCode.CHANNEL_STATUS_SUSPENDED)}>
+          Organic audience without bots, ramped up subscribers and fake comments.
+        </SingleRequirement>
         <SingleRequirement
           fulfilled={checkRequirmentError(YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_CREATION_DATE)}
         >
-          Your YouTube channel is at least {convertHoursRequirementTime(requirements?.MINIMUM_CHANNEL_AGE_HOURS || 0)}{' '}
-          old
-        </SingleRequirement>
-        <SingleRequirement fulfilled={checkRequirmentError(YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_VIDEOS)}>
-          Your YouTube channel has at least {pluralizeNoun(requirements?.MINIMUM_VIDEO_COUNT ?? 0, 'video', true)}, all
-          published at least {convertHoursRequirementTime(requirements?.MINIMUM_VIDEO_AGE_HOURS || 0)} ago
+          Channel must be older than {convertHoursRequirementTime(requirements?.MINIMUM_CHANNEL_AGE_HOURS || 0)}.
         </SingleRequirement>
         <SingleRequirement
           fulfilled={checkRequirmentError(YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_SUBSCRIBERS)}
         >
-          Your YouTube channel has at least{' '}
-          {pluralizeNoun(requirements?.MINIMUM_SUBSCRIBERS_COUNT ?? 0, 'subscriber', true)} and subscriptions are made{' '}
-          public.
+          Has at least{' '}
+          <Text variant="t200" as="span" color="colorTextCaution">
+            {pluralizeNoun(requirements?.MINIMUM_SUBSCRIBERS_COUNT ?? 0, 'subscriber', true)}
+          </Text>
+          .
+        </SingleRequirement>
+        <SingleRequirement fulfilled={checkRequirmentError(YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_VIDEOS)}>
+          Has at least{' '}
+          <Text variant="t200" as="span" color="colorTextCaution">
+            {pluralizeNoun(requirements?.MINIMUM_TOTAL_VIDEOS_COUNT ?? 0, 'video', true)}
+          </Text>
+          , all of which are older than {convertHoursRequirementTime(requirements?.MINIMUM_VIDEO_AGE_HOURS || 0)}.
+        </SingleRequirement>
+        <SingleRequirement
+          fulfilled={checkRequirmentError(YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_NEW_VIDEO_REQUIREMENT)}
+        >
+          Has at least{' '}
+          <Text variant="t200" as="span" color="colorTextCaution">
+            {pluralizeNoun(requirements?.MINIMUM_VIDEOS_PER_MONTH ?? 0, 'video', true)} per month
+          </Text>{' '}
+          posted over the last {pluralizeNoun(requirements?.MONTHS_TO_CONSIDER ?? 0, 'month', true)}.
         </SingleRequirement>
       </StyledList>
       {!hasAtLeastOneError && (
