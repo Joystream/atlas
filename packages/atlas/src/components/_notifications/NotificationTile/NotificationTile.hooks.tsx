@@ -128,11 +128,10 @@ const getNotificationAction = ({
   }
 }
 
-// TODO make the avatar field required too
 type NotificationUX = {
   icon: NotificationIconType
   action: { type: ActionType; params?: string[] }
-  avatar?: { type: NotificationAvatarType; params?: string[] }
+  avatar: { type: NotificationAvatarType; params?: string[] }
   text: ReactNode
 }
 
@@ -163,7 +162,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     case 'CommentReply':
       return {
         icon: 'follow',
-        action: { type: 'video-page', params: [notification.videoId] }, // REPLY ID MISSING
+        action: { type: 'video-page', params: [notification.videoId, notification.commentId] },
         avatar: { type: 'membership', params: [notification.memberHandle] },
         text: (
           <>
@@ -174,7 +173,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     case 'ReactionToComment':
       return {
         icon: 'reaction',
-        action: { type: 'video-page', params: [notification.videoId] }, // COMMENT ID MISSING
+        action: { type: 'video-page', params: [notification.videoId, notification.commentId] },
         avatar: { type: 'membership', params: [notification.memberHandle] },
         text: (
           <>
@@ -188,7 +187,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
       return {
         icon: 'video',
         action: { type: 'video-page', params: [notification.videoId] },
-        // avatar: { type: 'channel', params: [notification.channelId] }, // AVATAR MISSING
+        avatar: { type: 'channel', params: [notification.channelId] },
         text: (
           <>
             {notification.channelTitle} posted a new video: “{notification.videoTitle}”
@@ -199,7 +198,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
       return {
         icon: 'nft',
         action: { type: 'nft-page', params: [notification.videoId] },
-        // avatar: { type: 'channel', params: [notification.channelId] }, // AVATAR MISSING
+        avatar: { type: 'channel', params: [notification.channelId] },
         text: (
           <>
             {notification.channelTitle} started the sale of NFT: “{notification.videoTitle}”
@@ -210,7 +209,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
       return {
         icon: 'nft',
         action: { type: 'nft-page', params: [notification.videoId] },
-        // avatar: { type: 'channel', params: [notification.channelId] }, // AVATAR MISSING
+        avatar: { type: 'channel', params: [notification.channelId] },
         text: (
           <>
             {notification.channelTitle} started an auction for NFT: “{notification.videoTitle}”
@@ -230,34 +229,32 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
           </>
         ),
       }
-    case 'EnglishAuctionWon':
+    case 'AuctionWon': {
+      const auctionText = notification.auction === 'AuctionTypeOpen' ? 'an open' : 'a timed'
       return {
         icon: 'nft',
         action: { type: 'nft-page', params: [notification.videoId] },
         avatar: { type: 'active-membership' },
-        text: <>You won a timed auction for NFT: “{notification.videoTitle}”</>,
+        text: (
+          <>
+            You won {auctionText} auction for NFT: “{notification.videoTitle}”
+          </>
+        ),
       }
-    case 'EnglishAuctionLost':
+    }
+    case 'AuctionLost': {
+      const auctionText = notification.auction === 'AuctionTypeOpen' ? 'an open' : 'a timed'
       return {
         icon: 'nft-alt',
         action: { type: 'nft-page', params: [notification.videoId] },
         avatar: { type: 'active-membership' },
-        text: <>You lost a timed auction for NFT: “{notification.videoTitle}”. Withdraw your bid</>,
+        text: (
+          <>
+            You lost {auctionText} auction for NFT: “{notification.videoTitle}”. Withdraw your bid
+          </>
+        ),
       }
-    case 'OpenAuctionWon':
-      return {
-        icon: 'nft',
-        action: { type: 'nft-page', params: [notification.videoId] },
-        avatar: { type: 'active-membership' },
-        text: <>You won an open auction for NFT: “{notification.videoTitle}”</>,
-      }
-    case 'OpenAuctionLost':
-      return {
-        icon: 'nft-alt',
-        action: { type: 'nft-page', params: [notification.videoId] },
-        avatar: { type: 'active-membership' },
-        text: <>You lost an open auction for NFT: “{notification.videoTitle}”. Withdraw your bid</>,
-      }
+    }
     // case 'NFT bid becomes withdrawable (for bidder)': // MISSING
     //   return {
     //     icon: 'nft',
@@ -323,35 +320,12 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         avatar: { type: 'active-channel' },
         text: <>Your video is excluded from App: “{notification.videoTitle}”</>,
       }
-    case 'VideoFeaturedOnCategoryPage':
-      return {
-        icon: 'bell',
-        action: { type: 'category-page', params: [notification.categoryId] },
-        avatar: { type: 'active-channel' },
-        text: (
-          <>
-            Your video was featured on the “{notification.categoryName}” category page: “{notification.videoTitle}”
-          </>
-        ),
-      }
     case 'NftFeaturedOnMarketPlace':
       return {
         icon: 'bell',
         action: { type: 'marketplace-page' },
         avatar: { type: 'active-channel' },
         text: <>Your NFT was featured in the marketplace featured section: “{notification.videoTitle}”</>,
-      }
-    case 'VideoFeaturedAsCategoryHero':
-      return {
-        icon: 'bell',
-        action: { type: 'category-page', params: [notification.categoryId] },
-        avatar: { type: 'active-channel' },
-        text: (
-          <>
-            “{notification.categoryName}” category page featured your video as the category hero video: “
-            {notification.videoTitle}”
-          </>
-        ),
       }
 
     // Engagement
@@ -377,7 +351,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
       return {
         icon: 'like',
         action: { type: 'video-page', params: [notification.videoId] },
-        // avatar: { type: 'membership', params: [notification.memberHandle] }, // AVATAR MISSING
+        avatar: { type: 'membership', params: [notification.memberHandle] },
         text: (
           <>
             {/*notification.memberHandle*/ 'Someone'} liked your video: “{notification.videoTitle}”
@@ -388,7 +362,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
       return {
         icon: 'dislike',
         action: { type: 'video-page', params: [notification.videoId] },
-        // avatar: { type: 'membership', params: [notification.memberHandle] }, // AVATAR MISSING
+        avatar: { type: 'membership', params: [notification.memberHandle] },
         text: (
           <>
             {/*notification.memberHandle*/ 'Someone'} disliked your video: “{notification.videoTitle}”
@@ -466,13 +440,13 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
           </>
         ),
       }
-    case 'EnglishAuctionSettled':
-      return {
-        icon: 'nft',
-        action: { type: 'nft-page', params: [notification.videoId] },
-        avatar: { type: 'active-channel' },
-        text: <>Timed auction expired on your NFT: “{notification.videoTitle}”</>,
-      }
+    // case 'EnglishAuctionSettled': // MISSING (v2)
+    //   return {
+    //     icon: 'nft',
+    //     action: { type: 'nft-page', params: [notification.videoId] },
+    //     avatar: { type: 'active-channel' },
+    //     text: <>Timed auction expired on your NFT: “{notification.videoTitle}”</>,
+    //   }
 
     // Payouts
     case 'DirectChannelPaymentByMember':

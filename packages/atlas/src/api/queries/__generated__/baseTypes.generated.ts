@@ -33,6 +33,8 @@ export type Account = {
   notificationPreferences: AccountNotificationPreferences
   /** runtime notifications */
   notifications: Array<Notification>
+  /** ID of the channel which referred the user to the platform */
+  referrerChannelId?: Maybe<Scalars['String']>
   /** Time when the gateway account was registered */
   registeredAt: Scalars['DateTime']
   /** The user associated with the gateway account (the Gateway Account Owner) */
@@ -55,7 +57,7 @@ export type AccountData = {
   isEmailConfirmed: Scalars['Boolean']
   joystreamAccount: Scalars['String']
   membershipId: Scalars['String']
-  notificationPreferences?: Maybe<AccountNotificationPreferencesOutput>
+  preferences?: Maybe<AccountNotificationPreferencesOutput>
 }
 
 export type AccountEdge = {
@@ -74,6 +76,7 @@ export type AccountNotificationPreferences = {
   channelFundsWithdrawn: NotificationPreference
   channelPaymentReceived: NotificationPreference
   channelReceivedFundsFromWg: NotificationPreference
+  creatorTimedAuctionExpired: NotificationPreference
   fundsFromCouncilReceived: NotificationPreference
   fundsFromWgReceived: NotificationPreference
   fundsToExternalWalletSent: NotificationPreference
@@ -92,12 +95,11 @@ export type AccountNotificationPreferences = {
   videoCommentCreated: NotificationPreference
   videoDisliked: NotificationPreference
   videoExcludedFromApp: NotificationPreference
-  videoFeaturedAsHero: NotificationPreference
-  videoFeaturedOnCategoryPage: NotificationPreference
   videoLiked: NotificationPreference
   videoPosted: NotificationPreference
   yppChannelSuspended: NotificationPreference
   yppChannelVerified: NotificationPreference
+  yppSignupSuccessful: NotificationPreference
 }
 
 export type AccountNotificationPreferencesInput = {
@@ -109,6 +111,7 @@ export type AccountNotificationPreferencesInput = {
   channelFundsWithdrawn?: InputMaybe<NotificationPreferenceGql>
   channelPaymentReceived?: InputMaybe<NotificationPreferenceGql>
   channelReceivedFundsFromWg?: InputMaybe<NotificationPreferenceGql>
+  creatorTimedAuctionExpired?: InputMaybe<NotificationPreferenceGql>
   fundsFromCouncilReceived?: InputMaybe<NotificationPreferenceGql>
   fundsFromWgReceived?: InputMaybe<NotificationPreferenceGql>
   fundsToExternalWalletSent?: InputMaybe<NotificationPreferenceGql>
@@ -127,48 +130,47 @@ export type AccountNotificationPreferencesInput = {
   videoCommentCreated?: InputMaybe<NotificationPreferenceGql>
   videoDisliked?: InputMaybe<NotificationPreferenceGql>
   videoExcludedFromApp?: InputMaybe<NotificationPreferenceGql>
-  videoFeaturedAsHero?: InputMaybe<NotificationPreferenceGql>
-  videoFeaturedOnCategoryPage?: InputMaybe<NotificationPreferenceGql>
   videoLiked?: InputMaybe<NotificationPreferenceGql>
   videoPosted?: InputMaybe<NotificationPreferenceGql>
   yppChannelSuspended?: InputMaybe<NotificationPreferenceGql>
   yppChannelVerified?: InputMaybe<NotificationPreferenceGql>
+  yppSignupSuccessful?: InputMaybe<NotificationPreferenceGql>
 }
 
 export type AccountNotificationPreferencesOutput = {
   __typename?: 'AccountNotificationPreferencesOutput'
-  auctionLost: NotificationPreferenceOutput
-  auctionWon: NotificationPreferenceOutput
-  bidMadeOnNft: NotificationPreferenceOutput
-  channelCreated: NotificationPreferenceOutput
-  channelExcludedFromApp: NotificationPreferenceOutput
-  channelFundsWithdrawn: NotificationPreferenceOutput
-  channelPaymentReceived: NotificationPreferenceOutput
-  channelReceivedFundsFromWg: NotificationPreferenceOutput
-  fundsFromCouncilReceived: NotificationPreferenceOutput
-  fundsFromWgReceived: NotificationPreferenceOutput
-  fundsToExternalWalletSent: NotificationPreferenceOutput
-  higherBidThanYoursMade: NotificationPreferenceOutput
-  newChannelFollower: NotificationPreferenceOutput
-  newNftOnAuction: NotificationPreferenceOutput
-  newNftOnSale: NotificationPreferenceOutput
-  newPayoutUpdatedByCouncil: NotificationPreferenceOutput
-  nftBought: NotificationPreferenceOutput
-  nftFeaturedOnMarketPlace: NotificationPreferenceOutput
-  openAuctionBidCanBeWithdrawn: NotificationPreferenceOutput
-  reactionToComment: NotificationPreferenceOutput
-  replyToComment: NotificationPreferenceOutput
-  royaltyReceived: NotificationPreferenceOutput
-  timedAuctionExpired: NotificationPreferenceOutput
-  videoCommentCreated: NotificationPreferenceOutput
-  videoDisliked: NotificationPreferenceOutput
-  videoExcludedFromApp: NotificationPreferenceOutput
-  videoFeaturedAsHero: NotificationPreferenceOutput
-  videoFeaturedOnCategoryPage: NotificationPreferenceOutput
-  videoLiked: NotificationPreferenceOutput
-  videoPosted: NotificationPreferenceOutput
-  yppChannelSuspended: NotificationPreferenceOutput
-  yppChannelVerified: NotificationPreferenceOutput
+  auctionLost?: Maybe<NotificationPreferenceOutput>
+  auctionWon?: Maybe<NotificationPreferenceOutput>
+  bidMadeOnNft?: Maybe<NotificationPreferenceOutput>
+  channelCreated?: Maybe<NotificationPreferenceOutput>
+  channelExcludedFromApp?: Maybe<NotificationPreferenceOutput>
+  channelFundsWithdrawn?: Maybe<NotificationPreferenceOutput>
+  channelPaymentReceived?: Maybe<NotificationPreferenceOutput>
+  channelReceivedFundsFromWg?: Maybe<NotificationPreferenceOutput>
+  creatorTimedAuctionExpired?: Maybe<NotificationPreferenceOutput>
+  fundsFromCouncilReceived?: Maybe<NotificationPreferenceOutput>
+  fundsFromWgReceived?: Maybe<NotificationPreferenceOutput>
+  fundsToExternalWalletSent?: Maybe<NotificationPreferenceOutput>
+  higherBidThanYoursMade?: Maybe<NotificationPreferenceOutput>
+  newChannelFollower?: Maybe<NotificationPreferenceOutput>
+  newNftOnAuction?: Maybe<NotificationPreferenceOutput>
+  newNftOnSale?: Maybe<NotificationPreferenceOutput>
+  newPayoutUpdatedByCouncil?: Maybe<NotificationPreferenceOutput>
+  nftBought?: Maybe<NotificationPreferenceOutput>
+  nftFeaturedOnMarketPlace?: Maybe<NotificationPreferenceOutput>
+  openAuctionBidCanBeWithdrawn?: Maybe<NotificationPreferenceOutput>
+  reactionToComment?: Maybe<NotificationPreferenceOutput>
+  replyToComment?: Maybe<NotificationPreferenceOutput>
+  royaltyReceived?: Maybe<NotificationPreferenceOutput>
+  timedAuctionExpired?: Maybe<NotificationPreferenceOutput>
+  videoCommentCreated?: Maybe<NotificationPreferenceOutput>
+  videoDisliked?: Maybe<NotificationPreferenceOutput>
+  videoExcludedFromApp?: Maybe<NotificationPreferenceOutput>
+  videoLiked?: Maybe<NotificationPreferenceOutput>
+  videoPosted?: Maybe<NotificationPreferenceOutput>
+  yppChannelSuspended?: Maybe<NotificationPreferenceOutput>
+  yppChannelVerified?: Maybe<NotificationPreferenceOutput>
+  yppSignupSuccessful?: Maybe<NotificationPreferenceOutput>
 }
 
 export type AccountNotificationPreferencesResult = {
@@ -193,6 +195,8 @@ export type AccountNotificationPreferencesWhereInput = {
   channelPaymentReceived_isNull?: InputMaybe<Scalars['Boolean']>
   channelReceivedFundsFromWg?: InputMaybe<NotificationPreferenceWhereInput>
   channelReceivedFundsFromWg_isNull?: InputMaybe<Scalars['Boolean']>
+  creatorTimedAuctionExpired?: InputMaybe<NotificationPreferenceWhereInput>
+  creatorTimedAuctionExpired_isNull?: InputMaybe<Scalars['Boolean']>
   fundsFromCouncilReceived?: InputMaybe<NotificationPreferenceWhereInput>
   fundsFromCouncilReceived_isNull?: InputMaybe<Scalars['Boolean']>
   fundsFromWgReceived?: InputMaybe<NotificationPreferenceWhereInput>
@@ -229,10 +233,6 @@ export type AccountNotificationPreferencesWhereInput = {
   videoDisliked_isNull?: InputMaybe<Scalars['Boolean']>
   videoExcludedFromApp?: InputMaybe<NotificationPreferenceWhereInput>
   videoExcludedFromApp_isNull?: InputMaybe<Scalars['Boolean']>
-  videoFeaturedAsHero?: InputMaybe<NotificationPreferenceWhereInput>
-  videoFeaturedAsHero_isNull?: InputMaybe<Scalars['Boolean']>
-  videoFeaturedOnCategoryPage?: InputMaybe<NotificationPreferenceWhereInput>
-  videoFeaturedOnCategoryPage_isNull?: InputMaybe<Scalars['Boolean']>
   videoLiked?: InputMaybe<NotificationPreferenceWhereInput>
   videoLiked_isNull?: InputMaybe<Scalars['Boolean']>
   videoPosted?: InputMaybe<NotificationPreferenceWhereInput>
@@ -241,6 +241,8 @@ export type AccountNotificationPreferencesWhereInput = {
   yppChannelSuspended_isNull?: InputMaybe<Scalars['Boolean']>
   yppChannelVerified?: InputMaybe<NotificationPreferenceWhereInput>
   yppChannelVerified_isNull?: InputMaybe<Scalars['Boolean']>
+  yppSignupSuccessful?: InputMaybe<NotificationPreferenceWhereInput>
+  yppSignupSuccessful_isNull?: InputMaybe<Scalars['Boolean']>
 }
 
 export enum AccountOrderByInput {
@@ -264,6 +266,8 @@ export enum AccountOrderByInput {
   MembershipIdDesc = 'membership_id_DESC',
   MembershipTotalChannelsCreatedAsc = 'membership_totalChannelsCreated_ASC',
   MembershipTotalChannelsCreatedDesc = 'membership_totalChannelsCreated_DESC',
+  ReferrerChannelIdAsc = 'referrerChannelId_ASC',
+  ReferrerChannelIdDesc = 'referrerChannelId_DESC',
   RegisteredAtAsc = 'registeredAt_ASC',
   RegisteredAtDesc = 'registeredAt_DESC',
   UserIdAsc = 'user_id_ASC',
@@ -339,6 +343,23 @@ export type AccountWhereInput = {
   notifications_every?: InputMaybe<NotificationWhereInput>
   notifications_none?: InputMaybe<NotificationWhereInput>
   notifications_some?: InputMaybe<NotificationWhereInput>
+  referrerChannelId_contains?: InputMaybe<Scalars['String']>
+  referrerChannelId_containsInsensitive?: InputMaybe<Scalars['String']>
+  referrerChannelId_endsWith?: InputMaybe<Scalars['String']>
+  referrerChannelId_eq?: InputMaybe<Scalars['String']>
+  referrerChannelId_gt?: InputMaybe<Scalars['String']>
+  referrerChannelId_gte?: InputMaybe<Scalars['String']>
+  referrerChannelId_in?: InputMaybe<Array<Scalars['String']>>
+  referrerChannelId_isNull?: InputMaybe<Scalars['Boolean']>
+  referrerChannelId_lt?: InputMaybe<Scalars['String']>
+  referrerChannelId_lte?: InputMaybe<Scalars['String']>
+  referrerChannelId_not_contains?: InputMaybe<Scalars['String']>
+  referrerChannelId_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  referrerChannelId_not_endsWith?: InputMaybe<Scalars['String']>
+  referrerChannelId_not_eq?: InputMaybe<Scalars['String']>
+  referrerChannelId_not_in?: InputMaybe<Array<Scalars['String']>>
+  referrerChannelId_not_startsWith?: InputMaybe<Scalars['String']>
+  referrerChannelId_startsWith?: InputMaybe<Scalars['String']>
   registeredAt_eq?: InputMaybe<Scalars['DateTime']>
   registeredAt_gt?: InputMaybe<Scalars['DateTime']>
   registeredAt_gte?: InputMaybe<Scalars['DateTime']>
@@ -770,6 +791,16 @@ export type AuctionEdge = {
   node: Auction
 }
 
+export type AuctionLost = {
+  __typename?: 'AuctionLost'
+  /** Auction type */
+  type: AuctionType
+  /** video Id used for link */
+  videoId: Scalars['String']
+  /** video title for notification text */
+  videoTitle: Scalars['String']
+}
+
 export enum AuctionOrderByInput {
   AuctionTypeBidLockDurationAsc = 'auctionType_bidLockDuration_ASC',
   AuctionTypeBidLockDurationDesc = 'auctionType_bidLockDuration_DESC',
@@ -1075,6 +1106,16 @@ export type AuctionWhitelistedMembersConnection = {
   totalCount: Scalars['Int']
 }
 
+export type AuctionWon = {
+  __typename?: 'AuctionWon'
+  /** Auction type */
+  type: AuctionType
+  /** video Id used for link */
+  videoId: Scalars['String']
+  /** video title for notification text */
+  videoTitle: Scalars['String']
+}
+
 export type AuctionsConnection = {
   __typename?: 'AuctionsConnection'
   edges: Array<AuctionEdge>
@@ -1256,20 +1297,6 @@ export type BidEdge = {
   __typename?: 'BidEdge'
   cursor: Scalars['String']
   node: Bid
-}
-
-export type BidMadeCompletingAuction = {
-  __typename?: 'BidMadeCompletingAuction'
-  /** bid amount */
-  amount: Scalars['BigInt']
-  /** bidder handle for notification text */
-  bidderHandle: Scalars['String']
-  /** recipient */
-  recipient: RecipientType
-  /** video Id used for link */
-  videoId: Scalars['String']
-  /** video title for notification text */
-  videoTitle: Scalars['String']
 }
 
 export type BidMadeCompletingAuctionEventData = {
@@ -1505,12 +1532,10 @@ export type ChannelVideosArgs = {
 
 export type ChannelCreated = {
   __typename?: 'ChannelCreated'
-  /** channelId for link */
+  /** id for link construction */
   channelId: Scalars['String']
-  /** channel title for notification text */
+  /** title for link construction */
   channelTitle: Scalars['String']
-  /** recipient */
-  recipient: RecipientType
 }
 
 export type ChannelCreatedEventData = {
@@ -1527,8 +1552,7 @@ export type ChannelEdge = {
 
 export type ChannelExcluded = {
   __typename?: 'ChannelExcluded'
-  /** recipient also used for text production */
-  recipient: RecipientType
+  phantom?: Maybe<Scalars['Int']>
 }
 
 export type ChannelFollow = {
@@ -1631,8 +1655,6 @@ export type ChannelFundsWithdrawn = {
   __typename?: 'ChannelFundsWithdrawn'
   /** amount */
   amount: Scalars['BigInt']
-  /** recipient */
-  recipient: RecipientType
 }
 
 export type ChannelFundsWithdrawnEventData = {
@@ -1788,8 +1810,8 @@ export type ChannelPayoutsUpdatedEventData = {
 
 export type ChannelRecipient = {
   __typename?: 'ChannelRecipient'
-  /** channel title */
-  channelTitle: Scalars['String']
+  /** channel */
+  channel: Channel
 }
 
 export type ChannelReportInfo = {
@@ -1823,8 +1845,7 @@ export type ChannelRewardClaimedEventData = {
 
 export type ChannelSuspended = {
   __typename?: 'ChannelSuspended'
-  /** recipient also used for text production */
-  recipient: RecipientType
+  phantom?: Maybe<Scalars['Int']>
 }
 
 export type ChannelSuspension = {
@@ -2022,8 +2043,7 @@ export type ChannelVerificationsConnection = {
 
 export type ChannelVerified = {
   __typename?: 'ChannelVerified'
-  /** recipient */
-  recipient: RecipientType
+  phantom?: Maybe<Scalars['Int']>
 }
 
 export type ChannelWhereInput = {
@@ -2398,10 +2418,10 @@ export enum CommentOrderByInput {
 
 export type CommentPostedToVideo = {
   __typename?: 'CommentPostedToVideo'
+  /** id for the comment used for the link */
+  comentId: Scalars['String']
   /** commenter handle for text */
   memberHandle: Scalars['String']
-  /** recipient */
-  recipient: RecipientType
   /** video Id used for link */
   videoId: Scalars['String']
   /** video title used for notification text */
@@ -2565,10 +2585,10 @@ export type CommentReactionsCountByReactionId = {
 
 export type CommentReply = {
   __typename?: 'CommentReply'
+  /** comment Id for the link */
+  commentId: Scalars['String']
   /** member who replied */
   memberHandle: Scalars['String']
-  /** recipient */
-  recipient: RecipientType
   /** video Id used for link */
   videoId: Scalars['String']
   /** video title for notification text */
@@ -2758,8 +2778,6 @@ export type CreatorReceivesAuctionBid = {
   amount: Scalars['BigInt']
   /** bidder handle for notification text */
   bidderHandle: Scalars['String']
-  /** recipient */
-  recipient: RecipientType
   /** videoId used for notification link */
   videoId: Scalars['String']
   /** video title used for notification text */
@@ -2951,8 +2969,6 @@ export type DirectChannelPaymentByMember = {
   amount: Scalars['BigInt']
   /** payer handle */
   payerHandle: Scalars['String']
-  /** recipient, contains also channel title */
-  recipient: RecipientType
 }
 
 export type DistributionBucket = {
@@ -3532,6 +3548,8 @@ export enum EncryptionArtifactsOrderByInput {
   AccountIsEmailConfirmedDesc = 'account_isEmailConfirmed_DESC',
   AccountJoystreamAccountAsc = 'account_joystreamAccount_ASC',
   AccountJoystreamAccountDesc = 'account_joystreamAccount_DESC',
+  AccountReferrerChannelIdAsc = 'account_referrerChannelId_ASC',
+  AccountReferrerChannelIdDesc = 'account_referrerChannelId_DESC',
   AccountRegisteredAtAsc = 'account_registeredAt_ASC',
   AccountRegisteredAtDesc = 'account_registeredAt_DESC',
   CipherIvAsc = 'cipherIv_ASC',
@@ -3600,28 +3618,6 @@ export type EncryptionArtifactsWhereInput = {
   id_startsWith?: InputMaybe<Scalars['String']>
 }
 
-export type EnglishAuctionLost = {
-  __typename?: 'EnglishAuctionLost'
-  /** recipient */
-  recipient: RecipientType
-  /** video Id used for link */
-  videoId: Scalars['String']
-  /** video title for notification text */
-  videoTitle: Scalars['String']
-}
-
-export type EnglishAuctionSettled = {
-  __typename?: 'EnglishAuctionSettled'
-  /** price paid */
-  price: Scalars['BigInt']
-  /** recipient */
-  recipient: RecipientType
-  /** video Id used for link */
-  videoId: Scalars['String']
-  /** video title for notification text */
-  videoTitle: Scalars['String']
-}
-
 export type EnglishAuctionSettledEventData = {
   __typename?: 'EnglishAuctionSettledEventData'
   /** NFT owner before the english auction was settled */
@@ -3638,16 +3634,6 @@ export type EnglishAuctionStartedEventData = {
   auction: Auction
   /** owner of the NFT being auctioned */
   nftOwner: NftOwner
-}
-
-export type EnglishAuctionWon = {
-  __typename?: 'EnglishAuctionWon'
-  /** recipient */
-  recipient: RecipientType
-  /** video Id used for link */
-  videoId: Scalars['String']
-  /** video title for notification text */
-  videoTitle: Scalars['String']
 }
 
 export type EntityReportInfo = {
@@ -4332,8 +4318,6 @@ export type HigherBidPlaced = {
   __typename?: 'HigherBidPlaced'
   /** new bidder handle  */
   newBidderHandle: Scalars['String']
-  /** recipient */
-  recipient: RecipientType
   /** video Id used for link */
   videoId: Scalars['String']
   /** video title for notification text */
@@ -4571,8 +4555,8 @@ export type MemberMetadataWhereInput = {
 
 export type MemberRecipient = {
   __typename?: 'MemberRecipient'
-  /** member handle */
-  memberHandle: Scalars['String']
+  /** membership */
+  membership: Membership
 }
 
 /** Stored information about a registered user */
@@ -4993,24 +4977,10 @@ export type MutationVerifyChannelArgs = {
 
 export type NewAuction = {
   __typename?: 'NewAuction'
+  /** channel id for notification link */
+  channelId: Scalars['String']
   /** channel title for notification text */
   channelTitle: Scalars['String']
-  /** recipient */
-  recipient: RecipientType
-  /** video Id used for link */
-  videoId: Scalars['String']
-  /** video title for notification text */
-  videoTitle: Scalars['String']
-}
-
-export type NewAuctionBid = {
-  __typename?: 'NewAuctionBid'
-  /** bid amount */
-  amount: Scalars['BigInt']
-  /** bidder handle for notification text */
-  bidderHandle: Scalars['String']
-  /** recipient */
-  recipient: RecipientType
   /** video Id used for link */
   videoId: Scalars['String']
   /** video title for notification text */
@@ -5021,16 +4991,14 @@ export type NewChannelFollower = {
   __typename?: 'NewChannelFollower'
   /** follower member handle for link */
   followerHandle: Scalars['String']
-  /** recipient also used for text production */
-  recipient: RecipientType
 }
 
 export type NewNftOnSale = {
   __typename?: 'NewNftOnSale'
+  /** channel id for notification link */
+  channelId: Scalars['String']
   /** channel title for notification text */
   channelTitle: Scalars['String']
-  /** recipient */
-  recipient: RecipientType
   /** video Id used for link */
   videoId: Scalars['String']
   /** video title for notification text */
@@ -5125,8 +5093,6 @@ export type NftBoughtEventData = {
 
 export type NftFeaturedOnMarketPlace = {
   __typename?: 'NftFeaturedOnMarketPlace'
-  /** recipient */
-  recipient: RecipientType
   /** videoId used for link construction */
   videoId: Scalars['String']
   /** video title for notification text */
@@ -5337,18 +5303,6 @@ export type NftIssuedEventData = {
   nftOwner: NftOwner
 }
 
-export type NftOffered = {
-  __typename?: 'NftOffered'
-  /** offering amount */
-  amount: Scalars['BigInt']
-  /** recipient */
-  recipient: RecipientType
-  /** videoId used for notification link */
-  videoId: Scalars['String']
-  /** video title used for notification text */
-  videoTitle: Scalars['String']
-}
-
 export type NftOfferedEventData = {
   __typename?: 'NftOfferedEventData'
   /** Nft owner at the time the nft was offered */
@@ -5397,8 +5351,6 @@ export type NftPurchased = {
   buyerHandle: Scalars['String']
   /** price paid */
   price: Scalars['BigInt']
-  /** recipient */
-  recipient: RecipientType
   /** video Id used for link */
   videoId: Scalars['String']
   /** video title for notification text */
@@ -5409,8 +5361,6 @@ export type NftRoyaltyPaid = {
   __typename?: 'NftRoyaltyPaid'
   /** bid amount */
   amount: Scalars['BigInt']
-  /** recipient */
-  recipient: RecipientType
   /** video Id used for link */
   videoId: Scalars['String']
   /** video title for notification text */
@@ -5487,8 +5437,12 @@ export type Notification = {
   /** related event for on chain notifications */
   event?: Maybe<Event>
   id: Scalars['String']
+  /** wether this notification should be displayed in app */
+  inApp: Scalars['Boolean']
   /** type of the notification, used for */
   notificationType: NotificationType
+  /** recipient */
+  recipient: RecipientType
   /** status */
   status: ReadOrUnread
 }
@@ -5536,6 +5490,8 @@ export enum NotificationEmailDeliveryOrderByInput {
   NotificationCreatedAtDesc = 'notification_createdAt_DESC',
   NotificationIdAsc = 'notification_id_ASC',
   NotificationIdDesc = 'notification_id_DESC',
+  NotificationInAppAsc = 'notification_inApp_ASC',
+  NotificationInAppDesc = 'notification_inApp_DESC',
 }
 
 export type NotificationEmailDeliveryWhereInput = {
@@ -5546,60 +5502,6 @@ export type NotificationEmailDeliveryWhereInput = {
   deliveryStatus_isNull?: InputMaybe<Scalars['Boolean']>
   deliveryStatus_not_eq?: InputMaybe<EmailDeliveryStatus>
   deliveryStatus_not_in?: InputMaybe<Array<EmailDeliveryStatus>>
-  id_contains?: InputMaybe<Scalars['String']>
-  id_containsInsensitive?: InputMaybe<Scalars['String']>
-  id_endsWith?: InputMaybe<Scalars['String']>
-  id_eq?: InputMaybe<Scalars['String']>
-  id_gt?: InputMaybe<Scalars['String']>
-  id_gte?: InputMaybe<Scalars['String']>
-  id_in?: InputMaybe<Array<Scalars['String']>>
-  id_isNull?: InputMaybe<Scalars['Boolean']>
-  id_lt?: InputMaybe<Scalars['String']>
-  id_lte?: InputMaybe<Scalars['String']>
-  id_not_contains?: InputMaybe<Scalars['String']>
-  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
-  id_not_endsWith?: InputMaybe<Scalars['String']>
-  id_not_eq?: InputMaybe<Scalars['String']>
-  id_not_in?: InputMaybe<Array<Scalars['String']>>
-  id_not_startsWith?: InputMaybe<Scalars['String']>
-  id_startsWith?: InputMaybe<Scalars['String']>
-  notification?: InputMaybe<NotificationWhereInput>
-  notification_isNull?: InputMaybe<Scalars['Boolean']>
-}
-
-export type NotificationInAppDeliveriesConnection = {
-  __typename?: 'NotificationInAppDeliveriesConnection'
-  edges: Array<NotificationInAppDeliveryEdge>
-  pageInfo: PageInfo
-  totalCount: Scalars['Int']
-}
-
-export type NotificationInAppDelivery = {
-  __typename?: 'NotificationInAppDelivery'
-  /** Autoincremented */
-  id: Scalars['String']
-  /** the notification being delivered */
-  notification: Notification
-}
-
-export type NotificationInAppDeliveryEdge = {
-  __typename?: 'NotificationInAppDeliveryEdge'
-  cursor: Scalars['String']
-  node: NotificationInAppDelivery
-}
-
-export enum NotificationInAppDeliveryOrderByInput {
-  IdAsc = 'id_ASC',
-  IdDesc = 'id_DESC',
-  NotificationCreatedAtAsc = 'notification_createdAt_ASC',
-  NotificationCreatedAtDesc = 'notification_createdAt_DESC',
-  NotificationIdAsc = 'notification_id_ASC',
-  NotificationIdDesc = 'notification_id_DESC',
-}
-
-export type NotificationInAppDeliveryWhereInput = {
-  AND?: InputMaybe<Array<NotificationInAppDeliveryWhereInput>>
-  OR?: InputMaybe<Array<NotificationInAppDeliveryWhereInput>>
   id_contains?: InputMaybe<Scalars['String']>
   id_containsInsensitive?: InputMaybe<Scalars['String']>
   id_endsWith?: InputMaybe<Scalars['String']>
@@ -5632,6 +5534,8 @@ export enum NotificationOrderByInput {
   AccountIsEmailConfirmedDesc = 'account_isEmailConfirmed_DESC',
   AccountJoystreamAccountAsc = 'account_joystreamAccount_ASC',
   AccountJoystreamAccountDesc = 'account_joystreamAccount_DESC',
+  AccountReferrerChannelIdAsc = 'account_referrerChannelId_ASC',
+  AccountReferrerChannelIdDesc = 'account_referrerChannelId_DESC',
   AccountRegisteredAtAsc = 'account_registeredAt_ASC',
   AccountRegisteredAtDesc = 'account_registeredAt_DESC',
   CreatedAtAsc = 'createdAt_ASC',
@@ -5648,20 +5552,22 @@ export enum NotificationOrderByInput {
   EventTimestampDesc = 'event_timestamp_DESC',
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
+  InAppAsc = 'inApp_ASC',
+  InAppDesc = 'inApp_DESC',
   NotificationTypeAmountAsc = 'notificationType_amount_ASC',
   NotificationTypeAmountDesc = 'notificationType_amount_DESC',
   NotificationTypeBidderHandleAsc = 'notificationType_bidderHandle_ASC',
   NotificationTypeBidderHandleDesc = 'notificationType_bidderHandle_DESC',
   NotificationTypeBuyerHandleAsc = 'notificationType_buyerHandle_ASC',
   NotificationTypeBuyerHandleDesc = 'notificationType_buyerHandle_DESC',
-  NotificationTypeCategoryIdAsc = 'notificationType_categoryId_ASC',
-  NotificationTypeCategoryIdDesc = 'notificationType_categoryId_DESC',
-  NotificationTypeCategoryNameAsc = 'notificationType_categoryName_ASC',
-  NotificationTypeCategoryNameDesc = 'notificationType_categoryName_DESC',
   NotificationTypeChannelIdAsc = 'notificationType_channelId_ASC',
   NotificationTypeChannelIdDesc = 'notificationType_channelId_DESC',
   NotificationTypeChannelTitleAsc = 'notificationType_channelTitle_ASC',
   NotificationTypeChannelTitleDesc = 'notificationType_channelTitle_DESC',
+  NotificationTypeComentIdAsc = 'notificationType_comentId_ASC',
+  NotificationTypeComentIdDesc = 'notificationType_comentId_DESC',
+  NotificationTypeCommentIdAsc = 'notificationType_commentId_ASC',
+  NotificationTypeCommentIdDesc = 'notificationType_commentId_DESC',
   NotificationTypeFollowerHandleAsc = 'notificationType_followerHandle_ASC',
   NotificationTypeFollowerHandleDesc = 'notificationType_followerHandle_DESC',
   NotificationTypeIsTypeOfAsc = 'notificationType_isTypeOf_ASC',
@@ -5672,12 +5578,16 @@ export enum NotificationOrderByInput {
   NotificationTypeNewBidderHandleDesc = 'notificationType_newBidderHandle_DESC',
   NotificationTypePayerHandleAsc = 'notificationType_payerHandle_ASC',
   NotificationTypePayerHandleDesc = 'notificationType_payerHandle_DESC',
+  NotificationTypePhantomAsc = 'notificationType_phantom_ASC',
+  NotificationTypePhantomDesc = 'notificationType_phantom_DESC',
   NotificationTypePriceAsc = 'notificationType_price_ASC',
   NotificationTypePriceDesc = 'notificationType_price_DESC',
   NotificationTypeVideoIdAsc = 'notificationType_videoId_ASC',
   NotificationTypeVideoIdDesc = 'notificationType_videoId_DESC',
   NotificationTypeVideoTitleAsc = 'notificationType_videoTitle_ASC',
   NotificationTypeVideoTitleDesc = 'notificationType_videoTitle_DESC',
+  RecipientIsTypeOfAsc = 'recipient_isTypeOf_ASC',
+  RecipientIsTypeOfDesc = 'recipient_isTypeOf_DESC',
   StatusIsTypeOfAsc = 'status_isTypeOf_ASC',
   StatusIsTypeOfDesc = 'status_isTypeOf_DESC',
   StatusPhantomAsc = 'status_phantom_ASC',
@@ -5715,7 +5625,8 @@ export type NotificationPreferenceWhereInput = {
 }
 
 export type NotificationType =
-  | BidMadeCompletingAuction
+  | AuctionLost
+  | AuctionWon
   | ChannelCreated
   | ChannelExcluded
   | ChannelFundsWithdrawn
@@ -5725,25 +5636,16 @@ export type NotificationType =
   | CommentReply
   | CreatorReceivesAuctionBid
   | DirectChannelPaymentByMember
-  | EnglishAuctionLost
-  | EnglishAuctionSettled
-  | EnglishAuctionWon
   | HigherBidPlaced
   | NewAuction
-  | NewAuctionBid
   | NewChannelFollower
   | NewNftOnSale
   | NftFeaturedOnMarketPlace
-  | NftOffered
   | NftPurchased
   | NftRoyaltyPaid
-  | OpenAuctionLost
-  | OpenAuctionWon
   | ReactionToComment
   | VideoDisliked
   | VideoExcluded
-  | VideoFeaturedAsCategoryHero
-  | VideoFeaturedOnCategoryPage
   | VideoLiked
   | VideoPosted
 
@@ -5791,40 +5693,6 @@ export type NotificationTypeWhereInput = {
   buyerHandle_not_in?: InputMaybe<Array<Scalars['String']>>
   buyerHandle_not_startsWith?: InputMaybe<Scalars['String']>
   buyerHandle_startsWith?: InputMaybe<Scalars['String']>
-  categoryId_contains?: InputMaybe<Scalars['String']>
-  categoryId_containsInsensitive?: InputMaybe<Scalars['String']>
-  categoryId_endsWith?: InputMaybe<Scalars['String']>
-  categoryId_eq?: InputMaybe<Scalars['String']>
-  categoryId_gt?: InputMaybe<Scalars['String']>
-  categoryId_gte?: InputMaybe<Scalars['String']>
-  categoryId_in?: InputMaybe<Array<Scalars['String']>>
-  categoryId_isNull?: InputMaybe<Scalars['Boolean']>
-  categoryId_lt?: InputMaybe<Scalars['String']>
-  categoryId_lte?: InputMaybe<Scalars['String']>
-  categoryId_not_contains?: InputMaybe<Scalars['String']>
-  categoryId_not_containsInsensitive?: InputMaybe<Scalars['String']>
-  categoryId_not_endsWith?: InputMaybe<Scalars['String']>
-  categoryId_not_eq?: InputMaybe<Scalars['String']>
-  categoryId_not_in?: InputMaybe<Array<Scalars['String']>>
-  categoryId_not_startsWith?: InputMaybe<Scalars['String']>
-  categoryId_startsWith?: InputMaybe<Scalars['String']>
-  categoryName_contains?: InputMaybe<Scalars['String']>
-  categoryName_containsInsensitive?: InputMaybe<Scalars['String']>
-  categoryName_endsWith?: InputMaybe<Scalars['String']>
-  categoryName_eq?: InputMaybe<Scalars['String']>
-  categoryName_gt?: InputMaybe<Scalars['String']>
-  categoryName_gte?: InputMaybe<Scalars['String']>
-  categoryName_in?: InputMaybe<Array<Scalars['String']>>
-  categoryName_isNull?: InputMaybe<Scalars['Boolean']>
-  categoryName_lt?: InputMaybe<Scalars['String']>
-  categoryName_lte?: InputMaybe<Scalars['String']>
-  categoryName_not_contains?: InputMaybe<Scalars['String']>
-  categoryName_not_containsInsensitive?: InputMaybe<Scalars['String']>
-  categoryName_not_endsWith?: InputMaybe<Scalars['String']>
-  categoryName_not_eq?: InputMaybe<Scalars['String']>
-  categoryName_not_in?: InputMaybe<Array<Scalars['String']>>
-  categoryName_not_startsWith?: InputMaybe<Scalars['String']>
-  categoryName_startsWith?: InputMaybe<Scalars['String']>
   channelId_contains?: InputMaybe<Scalars['String']>
   channelId_containsInsensitive?: InputMaybe<Scalars['String']>
   channelId_endsWith?: InputMaybe<Scalars['String']>
@@ -5859,6 +5727,40 @@ export type NotificationTypeWhereInput = {
   channelTitle_not_in?: InputMaybe<Array<Scalars['String']>>
   channelTitle_not_startsWith?: InputMaybe<Scalars['String']>
   channelTitle_startsWith?: InputMaybe<Scalars['String']>
+  comentId_contains?: InputMaybe<Scalars['String']>
+  comentId_containsInsensitive?: InputMaybe<Scalars['String']>
+  comentId_endsWith?: InputMaybe<Scalars['String']>
+  comentId_eq?: InputMaybe<Scalars['String']>
+  comentId_gt?: InputMaybe<Scalars['String']>
+  comentId_gte?: InputMaybe<Scalars['String']>
+  comentId_in?: InputMaybe<Array<Scalars['String']>>
+  comentId_isNull?: InputMaybe<Scalars['Boolean']>
+  comentId_lt?: InputMaybe<Scalars['String']>
+  comentId_lte?: InputMaybe<Scalars['String']>
+  comentId_not_contains?: InputMaybe<Scalars['String']>
+  comentId_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  comentId_not_endsWith?: InputMaybe<Scalars['String']>
+  comentId_not_eq?: InputMaybe<Scalars['String']>
+  comentId_not_in?: InputMaybe<Array<Scalars['String']>>
+  comentId_not_startsWith?: InputMaybe<Scalars['String']>
+  comentId_startsWith?: InputMaybe<Scalars['String']>
+  commentId_contains?: InputMaybe<Scalars['String']>
+  commentId_containsInsensitive?: InputMaybe<Scalars['String']>
+  commentId_endsWith?: InputMaybe<Scalars['String']>
+  commentId_eq?: InputMaybe<Scalars['String']>
+  commentId_gt?: InputMaybe<Scalars['String']>
+  commentId_gte?: InputMaybe<Scalars['String']>
+  commentId_in?: InputMaybe<Array<Scalars['String']>>
+  commentId_isNull?: InputMaybe<Scalars['Boolean']>
+  commentId_lt?: InputMaybe<Scalars['String']>
+  commentId_lte?: InputMaybe<Scalars['String']>
+  commentId_not_contains?: InputMaybe<Scalars['String']>
+  commentId_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  commentId_not_endsWith?: InputMaybe<Scalars['String']>
+  commentId_not_eq?: InputMaybe<Scalars['String']>
+  commentId_not_in?: InputMaybe<Array<Scalars['String']>>
+  commentId_not_startsWith?: InputMaybe<Scalars['String']>
+  commentId_startsWith?: InputMaybe<Scalars['String']>
   followerHandle_contains?: InputMaybe<Scalars['String']>
   followerHandle_containsInsensitive?: InputMaybe<Scalars['String']>
   followerHandle_endsWith?: InputMaybe<Scalars['String']>
@@ -5944,6 +5846,15 @@ export type NotificationTypeWhereInput = {
   payerHandle_not_in?: InputMaybe<Array<Scalars['String']>>
   payerHandle_not_startsWith?: InputMaybe<Scalars['String']>
   payerHandle_startsWith?: InputMaybe<Scalars['String']>
+  phantom_eq?: InputMaybe<Scalars['Int']>
+  phantom_gt?: InputMaybe<Scalars['Int']>
+  phantom_gte?: InputMaybe<Scalars['Int']>
+  phantom_in?: InputMaybe<Array<Scalars['Int']>>
+  phantom_isNull?: InputMaybe<Scalars['Boolean']>
+  phantom_lt?: InputMaybe<Scalars['Int']>
+  phantom_lte?: InputMaybe<Scalars['Int']>
+  phantom_not_eq?: InputMaybe<Scalars['Int']>
+  phantom_not_in?: InputMaybe<Array<Scalars['Int']>>
   price_eq?: InputMaybe<Scalars['BigInt']>
   price_gt?: InputMaybe<Scalars['BigInt']>
   price_gte?: InputMaybe<Scalars['BigInt']>
@@ -5953,8 +5864,8 @@ export type NotificationTypeWhereInput = {
   price_lte?: InputMaybe<Scalars['BigInt']>
   price_not_eq?: InputMaybe<Scalars['BigInt']>
   price_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-  recipient?: InputMaybe<RecipientTypeWhereInput>
-  recipient_isNull?: InputMaybe<Scalars['Boolean']>
+  type?: InputMaybe<AuctionTypeWhereInput>
+  type_isNull?: InputMaybe<Scalars['Boolean']>
   videoId_contains?: InputMaybe<Scalars['String']>
   videoId_containsInsensitive?: InputMaybe<Scalars['String']>
   videoId_endsWith?: InputMaybe<Scalars['String']>
@@ -6024,8 +5935,13 @@ export type NotificationWhereInput = {
   id_not_in?: InputMaybe<Array<Scalars['String']>>
   id_not_startsWith?: InputMaybe<Scalars['String']>
   id_startsWith?: InputMaybe<Scalars['String']>
+  inApp_eq?: InputMaybe<Scalars['Boolean']>
+  inApp_isNull?: InputMaybe<Scalars['Boolean']>
+  inApp_not_eq?: InputMaybe<Scalars['Boolean']>
   notificationType?: InputMaybe<NotificationTypeWhereInput>
   notificationType_isNull?: InputMaybe<Scalars['Boolean']>
+  recipient?: InputMaybe<RecipientTypeWhereInput>
+  recipient_isNull?: InputMaybe<Scalars['Boolean']>
   status?: InputMaybe<ReadOrUnreadWhereInput>
   status_isNull?: InputMaybe<Scalars['Boolean']>
 }
@@ -6047,16 +5963,6 @@ export type OpenAuctionBidAcceptedEventData = {
   winningBid: Bid
 }
 
-export type OpenAuctionLost = {
-  __typename?: 'OpenAuctionLost'
-  /** recipient */
-  recipient: RecipientType
-  /** video Id used for link */
-  videoId: Scalars['String']
-  /** video title for notification text */
-  videoTitle: Scalars['String']
-}
-
 export type OpenAuctionStartedEventData = {
   __typename?: 'OpenAuctionStartedEventData'
   /** Actor that started this auction. */
@@ -6065,16 +5971,6 @@ export type OpenAuctionStartedEventData = {
   auction: Auction
   /** owner of the NFT being auctioned */
   nftOwner: NftOwner
-}
-
-export type OpenAuctionWon = {
-  __typename?: 'OpenAuctionWon'
-  /** recipient */
-  recipient: RecipientType
-  /** video Id used for link */
-  videoId: Scalars['String']
-  /** video title for notification text */
-  videoTitle: Scalars['String']
 }
 
 /** Represents NFT details */
@@ -6490,11 +6386,6 @@ export type Query = {
   notificationEmailDeliveryById?: Maybe<NotificationEmailDelivery>
   /** @deprecated Use notificationEmailDeliveryById */
   notificationEmailDeliveryByUniqueInput?: Maybe<NotificationEmailDelivery>
-  notificationInAppDeliveries: Array<NotificationInAppDelivery>
-  notificationInAppDeliveriesConnection: NotificationInAppDeliveriesConnection
-  notificationInAppDeliveryById?: Maybe<NotificationInAppDelivery>
-  /** @deprecated Use notificationInAppDeliveryById */
-  notificationInAppDeliveryByUniqueInput?: Maybe<NotificationInAppDelivery>
   notifications: Array<Notification>
   notificationsConnection: NotificationsConnection
   ownedNftById?: Maybe<OwnedNft>
@@ -7326,28 +7217,6 @@ export type QueryNotificationEmailDeliveryByUniqueInputArgs = {
   where: WhereIdInput
 }
 
-export type QueryNotificationInAppDeliveriesArgs = {
-  limit?: InputMaybe<Scalars['Int']>
-  offset?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<NotificationInAppDeliveryOrderByInput>>
-  where?: InputMaybe<NotificationInAppDeliveryWhereInput>
-}
-
-export type QueryNotificationInAppDeliveriesConnectionArgs = {
-  after?: InputMaybe<Scalars['String']>
-  first?: InputMaybe<Scalars['Int']>
-  orderBy: Array<NotificationInAppDeliveryOrderByInput>
-  where?: InputMaybe<NotificationInAppDeliveryWhereInput>
-}
-
-export type QueryNotificationInAppDeliveryByIdArgs = {
-  id: Scalars['String']
-}
-
-export type QueryNotificationInAppDeliveryByUniqueInputArgs = {
-  where: WhereIdInput
-}
-
 export type QueryNotificationsArgs = {
   limit?: InputMaybe<Scalars['Int']>
   offset?: InputMaybe<Scalars['Int']>
@@ -7810,10 +7679,10 @@ export type QueryVideosConnectionArgs = {
 
 export type ReactionToComment = {
   __typename?: 'ReactionToComment'
+  /** commentId for link */
+  commentId: Scalars['String']
   /** member who replied */
   memberHandle: Scalars['String']
-  /** recipient */
-  recipient: RecipientType
   /** video Id used for link */
   videoId: Scalars['String']
   /** video title for notification text */
@@ -7869,23 +7738,8 @@ export type ReadOrUnreadWhereInput = {
 export type RecipientType = ChannelRecipient | MemberRecipient
 
 export type RecipientTypeWhereInput = {
-  channelTitle_contains?: InputMaybe<Scalars['String']>
-  channelTitle_containsInsensitive?: InputMaybe<Scalars['String']>
-  channelTitle_endsWith?: InputMaybe<Scalars['String']>
-  channelTitle_eq?: InputMaybe<Scalars['String']>
-  channelTitle_gt?: InputMaybe<Scalars['String']>
-  channelTitle_gte?: InputMaybe<Scalars['String']>
-  channelTitle_in?: InputMaybe<Array<Scalars['String']>>
-  channelTitle_isNull?: InputMaybe<Scalars['Boolean']>
-  channelTitle_lt?: InputMaybe<Scalars['String']>
-  channelTitle_lte?: InputMaybe<Scalars['String']>
-  channelTitle_not_contains?: InputMaybe<Scalars['String']>
-  channelTitle_not_containsInsensitive?: InputMaybe<Scalars['String']>
-  channelTitle_not_endsWith?: InputMaybe<Scalars['String']>
-  channelTitle_not_eq?: InputMaybe<Scalars['String']>
-  channelTitle_not_in?: InputMaybe<Array<Scalars['String']>>
-  channelTitle_not_startsWith?: InputMaybe<Scalars['String']>
-  channelTitle_startsWith?: InputMaybe<Scalars['String']>
+  channel?: InputMaybe<ChannelWhereInput>
+  channel_isNull?: InputMaybe<Scalars['Boolean']>
   isTypeOf_contains?: InputMaybe<Scalars['String']>
   isTypeOf_containsInsensitive?: InputMaybe<Scalars['String']>
   isTypeOf_endsWith?: InputMaybe<Scalars['String']>
@@ -7903,23 +7757,8 @@ export type RecipientTypeWhereInput = {
   isTypeOf_not_in?: InputMaybe<Array<Scalars['String']>>
   isTypeOf_not_startsWith?: InputMaybe<Scalars['String']>
   isTypeOf_startsWith?: InputMaybe<Scalars['String']>
-  memberHandle_contains?: InputMaybe<Scalars['String']>
-  memberHandle_containsInsensitive?: InputMaybe<Scalars['String']>
-  memberHandle_endsWith?: InputMaybe<Scalars['String']>
-  memberHandle_eq?: InputMaybe<Scalars['String']>
-  memberHandle_gt?: InputMaybe<Scalars['String']>
-  memberHandle_gte?: InputMaybe<Scalars['String']>
-  memberHandle_in?: InputMaybe<Array<Scalars['String']>>
-  memberHandle_isNull?: InputMaybe<Scalars['Boolean']>
-  memberHandle_lt?: InputMaybe<Scalars['String']>
-  memberHandle_lte?: InputMaybe<Scalars['String']>
-  memberHandle_not_contains?: InputMaybe<Scalars['String']>
-  memberHandle_not_containsInsensitive?: InputMaybe<Scalars['String']>
-  memberHandle_not_endsWith?: InputMaybe<Scalars['String']>
-  memberHandle_not_eq?: InputMaybe<Scalars['String']>
-  memberHandle_not_in?: InputMaybe<Array<Scalars['String']>>
-  memberHandle_not_startsWith?: InputMaybe<Scalars['String']>
-  memberHandle_startsWith?: InputMaybe<Scalars['String']>
+  membership?: InputMaybe<MembershipWhereInput>
+  membership_isNull?: InputMaybe<Scalars['Boolean']>
 }
 
 export type Report = {
@@ -8206,6 +8045,8 @@ export enum SessionOrderByInput {
   AccountIsEmailConfirmedDesc = 'account_isEmailConfirmed_DESC',
   AccountJoystreamAccountAsc = 'account_joystreamAccount_ASC',
   AccountJoystreamAccountDesc = 'account_joystreamAccount_DESC',
+  AccountReferrerChannelIdAsc = 'account_referrerChannelId_ASC',
+  AccountReferrerChannelIdDesc = 'account_referrerChannelId_DESC',
   AccountRegisteredAtAsc = 'account_registeredAt_ASC',
   AccountRegisteredAtDesc = 'account_registeredAt_DESC',
   BrowserAsc = 'browser_ASC',
@@ -9222,8 +9063,6 @@ export type Subscription = {
   notificationById?: Maybe<Notification>
   notificationEmailDeliveries: Array<NotificationEmailDelivery>
   notificationEmailDeliveryById?: Maybe<NotificationEmailDelivery>
-  notificationInAppDeliveries: Array<NotificationInAppDelivery>
-  notificationInAppDeliveryById?: Maybe<NotificationInAppDelivery>
   notifications: Array<Notification>
   ownedNftById?: Maybe<OwnedNft>
   ownedNfts: Array<OwnedNft>
@@ -9613,17 +9452,6 @@ export type SubscriptionNotificationEmailDeliveryByIdArgs = {
   id: Scalars['String']
 }
 
-export type SubscriptionNotificationInAppDeliveriesArgs = {
-  limit?: InputMaybe<Scalars['Int']>
-  offset?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<NotificationInAppDeliveryOrderByInput>>
-  where?: InputMaybe<NotificationInAppDeliveryWhereInput>
-}
-
-export type SubscriptionNotificationInAppDeliveryByIdArgs = {
-  id: Scalars['String']
-}
-
 export type SubscriptionNotificationsArgs = {
   limit?: InputMaybe<Scalars['Int']>
   offset?: InputMaybe<Scalars['Int']>
@@ -9895,6 +9723,8 @@ export enum TokenOrderByInput {
   IssuedForIsEmailConfirmedDesc = 'issuedFor_isEmailConfirmed_DESC',
   IssuedForJoystreamAccountAsc = 'issuedFor_joystreamAccount_ASC',
   IssuedForJoystreamAccountDesc = 'issuedFor_joystreamAccount_DESC',
+  IssuedForReferrerChannelIdAsc = 'issuedFor_referrerChannelId_ASC',
+  IssuedForReferrerChannelIdDesc = 'issuedFor_referrerChannelId_DESC',
   IssuedForRegisteredAtAsc = 'issuedFor_registeredAt_ASC',
   IssuedForRegisteredAtDesc = 'issuedFor_registeredAt_DESC',
   TypeAsc = 'type_ASC',
@@ -10110,6 +9940,8 @@ export enum UserOrderByInput {
   AccountIsEmailConfirmedDesc = 'account_isEmailConfirmed_DESC',
   AccountJoystreamAccountAsc = 'account_joystreamAccount_ASC',
   AccountJoystreamAccountDesc = 'account_joystreamAccount_DESC',
+  AccountReferrerChannelIdAsc = 'account_referrerChannelId_ASC',
+  AccountReferrerChannelIdDesc = 'account_referrerChannelId_DESC',
   AccountRegisteredAtAsc = 'account_registeredAt_ASC',
   AccountRegisteredAtDesc = 'account_registeredAt_DESC',
   IdAsc = 'id_ASC',
@@ -10417,8 +10249,8 @@ export type VideoCreatedEventData = {
 
 export type VideoDisliked = {
   __typename?: 'VideoDisliked'
-  /** recipient */
-  recipient: RecipientType
+  /** handle for the member that dropped the dislike */
+  memberHandle: Scalars['String']
   /** video Id used for link */
   videoId: Scalars['String']
   /** video title for notification text */
@@ -10433,21 +10265,7 @@ export type VideoEdge = {
 
 export type VideoExcluded = {
   __typename?: 'VideoExcluded'
-  /** recipient */
-  recipient: RecipientType
   /** video title used for notification text */
-  videoTitle: Scalars['String']
-}
-
-export type VideoFeaturedAsCategoryHero = {
-  __typename?: 'VideoFeaturedAsCategoryHero'
-  /** category id used for notification text */
-  categoryId: Scalars['String']
-  /** category name used for notification text */
-  categoryName: Scalars['String']
-  /** recipient */
-  recipient: RecipientType
-  /** video title for notification text */
   videoTitle: Scalars['String']
 }
 
@@ -10576,18 +10394,6 @@ export type VideoFeaturedInCategoryWhereInput = {
   videoCutUrl_not_startsWith?: InputMaybe<Scalars['String']>
   videoCutUrl_startsWith?: InputMaybe<Scalars['String']>
   video_isNull?: InputMaybe<Scalars['Boolean']>
-}
-
-export type VideoFeaturedOnCategoryPage = {
-  __typename?: 'VideoFeaturedOnCategoryPage'
-  /** category id used for notification text */
-  categoryId: Scalars['String']
-  /** category name used for notification text */
-  categoryName: Scalars['String']
-  /** recipient */
-  recipient: RecipientType
-  /** video title for notification text */
-  videoTitle: Scalars['String']
 }
 
 export type VideoHero = {
@@ -10760,8 +10566,8 @@ export type VideoHerosConnection = {
 
 export type VideoLiked = {
   __typename?: 'VideoLiked'
-  /** recipient */
-  recipient: RecipientType
+  /** handle for the member that dropped the like */
+  memberHandle: Scalars['String']
   /** video Id used for link */
   videoId: Scalars['String']
   /** video title for notification text */
@@ -11217,10 +11023,10 @@ export enum VideoOrderByInput {
 
 export type VideoPosted = {
   __typename?: 'VideoPosted'
+  /** id for the channel used in link construction */
+  channelId: Scalars['String']
   /** channel title for notification text */
   channelTitle: Scalars['String']
-  /** recipient */
-  recipient: RecipientType
   /** video Id used for link */
   videoId: Scalars['String']
   /** video title for notification text */

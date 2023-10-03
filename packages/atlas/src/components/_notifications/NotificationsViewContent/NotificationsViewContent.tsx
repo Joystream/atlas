@@ -130,9 +130,9 @@ export const NotificationsViewContent = ({
                       first: 10,
                     },
                     updateQuery: (prev, { fetchMoreResult }) => {
-                      fetchMoreResult.notificationInAppDeliveriesConnection.edges = [
-                        ...(prev.notificationInAppDeliveriesConnection?.edges ?? []),
-                        ...fetchMoreResult.notificationInAppDeliveriesConnection.edges,
+                      fetchMoreResult.notificationsConnection.edges = [
+                        ...(prev.notificationsConnection?.edges ?? []),
+                        ...fetchMoreResult.notificationsConnection.edges,
                       ]
                       return fetchMoreResult
                     },

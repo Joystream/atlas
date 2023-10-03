@@ -15,80 +15,80 @@ export type GetNotificationsCountQueryVariables = Types.Exact<{
 
 export type GetNotificationsCountQuery = {
   __typename?: 'Query'
-  notificationInAppDeliveriesConnection: { __typename?: 'NotificationInAppDeliveriesConnection'; totalCount: number }
+  notificationsConnection: { __typename?: 'NotificationsConnection'; totalCount: number }
 }
 
 export type GetNotificationsConnectionQueryVariables = Types.Exact<{
-  accountId: Types.Scalars['String']
-  type: Types.Scalars['String']
+  recipient: Types.RecipientTypeWhereInput
   first: Types.Scalars['Int']
   after?: Types.InputMaybe<Types.Scalars['String']>
 }>
 
 export type GetNotificationsConnectionQuery = {
   __typename?: 'Query'
-  notificationInAppDeliveriesConnection: {
-    __typename?: 'NotificationInAppDeliveriesConnection'
+  notificationsConnection: {
+    __typename?: 'NotificationsConnection'
     pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor: string }
     edges: Array<{
-      __typename?: 'NotificationInAppDeliveryEdge'
+      __typename?: 'NotificationEdge'
       cursor: string
       node: {
-        __typename?: 'NotificationInAppDelivery'
-        notification: {
-          __typename?: 'Notification'
-          id: string
-          createdAt: Date
-          status: { __typename: 'Read' } | { __typename: 'Unread' }
-          notificationType:
-            | { __typename: 'BidMadeCompletingAuction' }
-            | { __typename: 'ChannelCreated'; channelId: string; channelTitle: string }
-            | { __typename: 'ChannelExcluded' }
-            | { __typename: 'ChannelFundsWithdrawn'; amount: string }
-            | { __typename: 'ChannelSuspended' }
-            | { __typename: 'ChannelVerified' }
-            | { __typename: 'CommentPostedToVideo'; memberHandle: string; videoId: string; videoTitle: string }
-            | { __typename: 'CommentReply'; memberHandle: string; videoId: string; videoTitle: string }
-            | {
-                __typename: 'CreatorReceivesAuctionBid'
-                amount: string
-                bidderHandle: string
-                videoId: string
-                videoTitle: string
-              }
-            | { __typename: 'DirectChannelPaymentByMember'; amount: string; payerHandle: string }
-            | { __typename: 'EnglishAuctionLost'; videoId: string; videoTitle: string }
-            | { __typename: 'EnglishAuctionSettled'; price: string; videoId: string; videoTitle: string }
-            | { __typename: 'EnglishAuctionWon'; videoId: string; videoTitle: string }
-            | { __typename: 'HigherBidPlaced'; newBidderHandle: string; videoId: string; videoTitle: string }
-            | { __typename: 'NewAuction'; channelTitle: string; videoId: string; videoTitle: string }
-            | { __typename: 'NewAuctionBid' }
-            | { __typename: 'NewChannelFollower'; followerHandle: string }
-            | { __typename: 'NewNftOnSale'; channelTitle: string; videoId: string; videoTitle: string }
-            | { __typename: 'NftFeaturedOnMarketPlace'; videoId: string; videoTitle: string }
-            | { __typename: 'NftOffered' }
-            | { __typename: 'NftPurchased'; buyerHandle: string; price: string; videoTitle: string; videoId: string }
-            | { __typename: 'NftRoyaltyPaid'; amount: string; videoId: string; videoTitle: string }
-            | { __typename: 'OpenAuctionLost'; videoTitle: string; videoId: string }
-            | { __typename: 'OpenAuctionWon'; videoId: string; videoTitle: string }
-            | { __typename: 'ReactionToComment'; memberHandle: string; videoId: string; videoTitle: string }
-            | { __typename: 'VideoDisliked'; videoId: string; videoTitle: string }
-            | { __typename: 'VideoExcluded'; videoTitle: string }
-            | {
-                __typename: 'VideoFeaturedAsCategoryHero'
-                categoryId: string
-                categoryName: string
-                videoTitle: string
-              }
-            | {
-                __typename: 'VideoFeaturedOnCategoryPage'
-                categoryId: string
-                categoryName: string
-                videoTitle: string
-              }
-            | { __typename: 'VideoLiked'; videoId: string; videoTitle: string }
-            | { __typename: 'VideoPosted'; channelTitle: string; videoId: string; videoTitle: string }
-        }
+        __typename?: 'Notification'
+        id: string
+        createdAt: Date
+        status: { __typename: 'Read' } | { __typename: 'Unread' }
+        notificationType:
+          | {
+              __typename: 'AuctionLost'
+              videoId: string
+              videoTitle: string
+              type: { __typename: 'AuctionTypeEnglish' } | { __typename: 'AuctionTypeOpen' }
+            }
+          | {
+              __typename: 'AuctionWon'
+              videoId: string
+              videoTitle: string
+              type: { __typename: 'AuctionTypeEnglish' } | { __typename: 'AuctionTypeOpen' }
+            }
+          | { __typename: 'ChannelCreated'; channelId: string; channelTitle: string }
+          | { __typename: 'ChannelExcluded' }
+          | { __typename: 'ChannelFundsWithdrawn'; amount: string }
+          | { __typename: 'ChannelSuspended' }
+          | { __typename: 'ChannelVerified' }
+          | {
+              __typename: 'CommentPostedToVideo'
+              memberHandle: string
+              videoId: string
+              videoTitle: string
+              comentId: string
+            }
+          | { __typename: 'CommentReply'; memberHandle: string; commentId: string; videoId: string; videoTitle: string }
+          | {
+              __typename: 'CreatorReceivesAuctionBid'
+              amount: string
+              bidderHandle: string
+              videoId: string
+              videoTitle: string
+            }
+          | { __typename: 'DirectChannelPaymentByMember'; amount: string; payerHandle: string }
+          | { __typename: 'HigherBidPlaced'; newBidderHandle: string; videoId: string; videoTitle: string }
+          | { __typename: 'NewAuction'; channelId: string; channelTitle: string; videoId: string; videoTitle: string }
+          | { __typename: 'NewChannelFollower'; followerHandle: string }
+          | { __typename: 'NewNftOnSale'; channelId: string; channelTitle: string; videoId: string; videoTitle: string }
+          | { __typename: 'NftFeaturedOnMarketPlace'; videoId: string; videoTitle: string }
+          | { __typename: 'NftPurchased'; buyerHandle: string; price: string; videoTitle: string; videoId: string }
+          | { __typename: 'NftRoyaltyPaid'; amount: string; videoId: string; videoTitle: string }
+          | {
+              __typename: 'ReactionToComment'
+              memberHandle: string
+              commentId: string
+              videoId: string
+              videoTitle: string
+            }
+          | { __typename: 'VideoDisliked'; memberHandle: string; videoId: string; videoTitle: string }
+          | { __typename: 'VideoExcluded'; videoTitle: string }
+          | { __typename: 'VideoLiked'; memberHandle: string; videoId: string; videoTitle: string }
+          | { __typename: 'VideoPosted'; channelId: string; channelTitle: string; videoId: string; videoTitle: string }
       }
     }>
   }
@@ -109,38 +109,61 @@ export type GetMembershipNotificationPreferencesQuery = {
   __typename?: 'Query'
   accountData: {
     __typename?: 'AccountData'
-    notificationPreferences?: {
+    preferences?: {
       __typename?: 'AccountNotificationPreferencesOutput'
-      channelCreated: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-      replyToComment: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-      reactionToComment: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-      videoPosted: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-      newNftOnAuction: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-      newNftOnSale: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-      higherBidThanYoursMade: {
+      channelCreated?: {
         __typename?: 'NotificationPreferenceOutput'
         emailEnabled: boolean
         inAppEnabled: boolean
-      }
-      timedAuctionExpired: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-      auctionWon: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-      auctionLost: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-      openAuctionBidCanBeWithdrawn: {
+      } | null
+      replyToComment?: {
         __typename?: 'NotificationPreferenceOutput'
         emailEnabled: boolean
         inAppEnabled: boolean
-      }
-      fundsFromCouncilReceived: {
+      } | null
+      reactionToComment?: {
         __typename?: 'NotificationPreferenceOutput'
         emailEnabled: boolean
         inAppEnabled: boolean
-      }
-      fundsToExternalWalletSent: {
+      } | null
+      videoPosted?: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean } | null
+      newNftOnAuction?: {
         __typename?: 'NotificationPreferenceOutput'
         emailEnabled: boolean
         inAppEnabled: boolean
-      }
-      fundsFromWgReceived: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+      } | null
+      newNftOnSale?: {
+        __typename?: 'NotificationPreferenceOutput'
+        emailEnabled: boolean
+        inAppEnabled: boolean
+      } | null
+      higherBidThanYoursMade?: {
+        __typename?: 'NotificationPreferenceOutput'
+        emailEnabled: boolean
+        inAppEnabled: boolean
+      } | null
+      auctionWon?: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean } | null
+      auctionLost?: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean } | null
+      openAuctionBidCanBeWithdrawn?: {
+        __typename?: 'NotificationPreferenceOutput'
+        emailEnabled: boolean
+        inAppEnabled: boolean
+      } | null
+      fundsFromCouncilReceived?: {
+        __typename?: 'NotificationPreferenceOutput'
+        emailEnabled: boolean
+        inAppEnabled: boolean
+      } | null
+      fundsToExternalWalletSent?: {
+        __typename?: 'NotificationPreferenceOutput'
+        emailEnabled: boolean
+        inAppEnabled: boolean
+      } | null
+      fundsFromWgReceived?: {
+        __typename?: 'NotificationPreferenceOutput'
+        emailEnabled: boolean
+        inAppEnabled: boolean
+      } | null
     } | null
   }
 }
@@ -151,52 +174,70 @@ export type GetChannelNotificationPreferencesQuery = {
   __typename?: 'Query'
   accountData: {
     __typename?: 'AccountData'
-    notificationPreferences?: {
+    preferences?: {
       __typename?: 'AccountNotificationPreferencesOutput'
-      channelExcludedFromApp: {
+      channelExcludedFromApp?: {
         __typename?: 'NotificationPreferenceOutput'
         emailEnabled: boolean
         inAppEnabled: boolean
-      }
-      videoFeaturedOnCategoryPage: {
+      } | null
+      nftFeaturedOnMarketPlace?: {
         __typename?: 'NotificationPreferenceOutput'
         emailEnabled: boolean
         inAppEnabled: boolean
-      }
-      nftFeaturedOnMarketPlace: {
+      } | null
+      newChannelFollower?: {
         __typename?: 'NotificationPreferenceOutput'
         emailEnabled: boolean
         inAppEnabled: boolean
-      }
-      videoFeaturedAsHero: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-      newChannelFollower: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-      videoCommentCreated: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-      videoLiked: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-      videoDisliked: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-      yppChannelVerified: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-      nftBought: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-      bidMadeOnNft: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-      royaltyReceived: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-      channelPaymentReceived: {
+      } | null
+      videoCommentCreated?: {
         __typename?: 'NotificationPreferenceOutput'
         emailEnabled: boolean
         inAppEnabled: boolean
-      }
-      channelReceivedFundsFromWg: {
+      } | null
+      videoLiked?: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean } | null
+      videoDisliked?: {
         __typename?: 'NotificationPreferenceOutput'
         emailEnabled: boolean
         inAppEnabled: boolean
-      }
-      newPayoutUpdatedByCouncil: {
+      } | null
+      yppChannelVerified?: {
         __typename?: 'NotificationPreferenceOutput'
         emailEnabled: boolean
         inAppEnabled: boolean
-      }
-      channelFundsWithdrawn: {
+      } | null
+      nftBought?: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean } | null
+      bidMadeOnNft?: {
         __typename?: 'NotificationPreferenceOutput'
         emailEnabled: boolean
         inAppEnabled: boolean
-      }
+      } | null
+      royaltyReceived?: {
+        __typename?: 'NotificationPreferenceOutput'
+        emailEnabled: boolean
+        inAppEnabled: boolean
+      } | null
+      channelPaymentReceived?: {
+        __typename?: 'NotificationPreferenceOutput'
+        emailEnabled: boolean
+        inAppEnabled: boolean
+      } | null
+      channelReceivedFundsFromWg?: {
+        __typename?: 'NotificationPreferenceOutput'
+        emailEnabled: boolean
+        inAppEnabled: boolean
+      } | null
+      newPayoutUpdatedByCouncil?: {
+        __typename?: 'NotificationPreferenceOutput'
+        emailEnabled: boolean
+        inAppEnabled: boolean
+      } | null
+      channelFundsWithdrawn?: {
+        __typename?: 'NotificationPreferenceOutput'
+        emailEnabled: boolean
+        inAppEnabled: boolean
+      } | null
     } | null
   }
 }
@@ -209,36 +250,55 @@ export type SetMembershipNotificationPreferencesMutation = {
   __typename?: 'Mutation'
   setAccountNotificationPreferences: {
     __typename?: 'AccountNotificationPreferencesOutput'
-    channelCreated: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-    replyToComment: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-    reactionToComment: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-    videoPosted: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-    newNftOnAuction: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-    newNftOnSale: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-    higherBidThanYoursMade: {
+    channelCreated?: {
       __typename?: 'NotificationPreferenceOutput'
       emailEnabled: boolean
       inAppEnabled: boolean
-    }
-    timedAuctionExpired: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-    auctionWon: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-    auctionLost: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-    openAuctionBidCanBeWithdrawn: {
+    } | null
+    replyToComment?: {
       __typename?: 'NotificationPreferenceOutput'
       emailEnabled: boolean
       inAppEnabled: boolean
-    }
-    fundsFromCouncilReceived: {
+    } | null
+    reactionToComment?: {
       __typename?: 'NotificationPreferenceOutput'
       emailEnabled: boolean
       inAppEnabled: boolean
-    }
-    fundsToExternalWalletSent: {
+    } | null
+    videoPosted?: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean } | null
+    newNftOnAuction?: {
       __typename?: 'NotificationPreferenceOutput'
       emailEnabled: boolean
       inAppEnabled: boolean
-    }
-    fundsFromWgReceived: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    } | null
+    newNftOnSale?: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean } | null
+    higherBidThanYoursMade?: {
+      __typename?: 'NotificationPreferenceOutput'
+      emailEnabled: boolean
+      inAppEnabled: boolean
+    } | null
+    auctionWon?: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean } | null
+    auctionLost?: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean } | null
+    openAuctionBidCanBeWithdrawn?: {
+      __typename?: 'NotificationPreferenceOutput'
+      emailEnabled: boolean
+      inAppEnabled: boolean
+    } | null
+    fundsFromCouncilReceived?: {
+      __typename?: 'NotificationPreferenceOutput'
+      emailEnabled: boolean
+      inAppEnabled: boolean
+    } | null
+    fundsToExternalWalletSent?: {
+      __typename?: 'NotificationPreferenceOutput'
+      emailEnabled: boolean
+      inAppEnabled: boolean
+    } | null
+    fundsFromWgReceived?: {
+      __typename?: 'NotificationPreferenceOutput'
+      emailEnabled: boolean
+      inAppEnabled: boolean
+    } | null
   }
 }
 
@@ -250,46 +310,60 @@ export type SetChannelNotificationPreferencesMutation = {
   __typename?: 'Mutation'
   setAccountNotificationPreferences: {
     __typename?: 'AccountNotificationPreferencesOutput'
-    channelExcludedFromApp: {
+    channelExcludedFromApp?: {
       __typename?: 'NotificationPreferenceOutput'
       emailEnabled: boolean
       inAppEnabled: boolean
-    }
-    videoFeaturedOnCategoryPage: {
+    } | null
+    nftFeaturedOnMarketPlace?: {
       __typename?: 'NotificationPreferenceOutput'
       emailEnabled: boolean
       inAppEnabled: boolean
-    }
-    nftFeaturedOnMarketPlace: {
+    } | null
+    newChannelFollower?: {
       __typename?: 'NotificationPreferenceOutput'
       emailEnabled: boolean
       inAppEnabled: boolean
-    }
-    videoFeaturedAsHero: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-    newChannelFollower: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-    videoCommentCreated: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-    videoLiked: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-    videoDisliked: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-    yppChannelVerified: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-    nftBought: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-    bidMadeOnNft: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-    royaltyReceived: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
-    channelPaymentReceived: {
+    } | null
+    videoCommentCreated?: {
       __typename?: 'NotificationPreferenceOutput'
       emailEnabled: boolean
       inAppEnabled: boolean
-    }
-    channelReceivedFundsFromWg: {
+    } | null
+    videoLiked?: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean } | null
+    videoDisliked?: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean } | null
+    yppChannelVerified?: {
       __typename?: 'NotificationPreferenceOutput'
       emailEnabled: boolean
       inAppEnabled: boolean
-    }
-    newPayoutUpdatedByCouncil: {
+    } | null
+    nftBought?: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean } | null
+    bidMadeOnNft?: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean } | null
+    royaltyReceived?: {
       __typename?: 'NotificationPreferenceOutput'
       emailEnabled: boolean
       inAppEnabled: boolean
-    }
-    channelFundsWithdrawn: { __typename?: 'NotificationPreferenceOutput'; emailEnabled: boolean; inAppEnabled: boolean }
+    } | null
+    channelPaymentReceived?: {
+      __typename?: 'NotificationPreferenceOutput'
+      emailEnabled: boolean
+      inAppEnabled: boolean
+    } | null
+    channelReceivedFundsFromWg?: {
+      __typename?: 'NotificationPreferenceOutput'
+      emailEnabled: boolean
+      inAppEnabled: boolean
+    } | null
+    newPayoutUpdatedByCouncil?: {
+      __typename?: 'NotificationPreferenceOutput'
+      emailEnabled: boolean
+      inAppEnabled: boolean
+    } | null
+    channelFundsWithdrawn?: {
+      __typename?: 'NotificationPreferenceOutput'
+      emailEnabled: boolean
+      inAppEnabled: boolean
+    } | null
   }
 }
 
@@ -2951,7 +3025,7 @@ export type GetNftActivitiesQuery = {
 
 export const GetNotificationsCountDocument = gql`
   query GetNotificationsCount($where: NotificationWhereInput!) {
-    notificationInAppDeliveriesConnection(orderBy: notification_createdAt_DESC, where: { notification: $where }) {
+    notificationsConnection(orderBy: createdAt_DESC, where: $where) {
       totalCount
     }
   }
@@ -2998,17 +3072,12 @@ export type GetNotificationsCountQueryResult = Apollo.QueryResult<
   GetNotificationsCountQueryVariables
 >
 export const GetNotificationsConnectionDocument = gql`
-  query GetNotificationsConnection($accountId: String!, $type: String!, $first: Int!, $after: String) {
-    notificationInAppDeliveriesConnection(
+  query GetNotificationsConnection($recipient: RecipientTypeWhereInput!, $first: Int!, $after: String) {
+    notificationsConnection(
       first: $first
       after: $after
-      orderBy: notification_createdAt_DESC
-      where: {
-        notification: {
-          account: { joystreamAccount_eq: $accountId }
-          notificationType: { recipient: { isTypeOf_eq: $type } }
-        }
-      }
+      orderBy: createdAt_DESC
+      where: { inApp_eq: true, recipient: $recipient }
     ) {
       pageInfo {
         hasNextPage
@@ -3017,135 +3086,124 @@ export const GetNotificationsConnectionDocument = gql`
       edges {
         cursor
         node {
-          notification {
-            id
-            createdAt
-            status {
+          id
+          createdAt
+          status {
+            __typename
+          }
+          notificationType {
+            __typename
+            ... on ChannelCreated {
+              channelId
+              channelTitle
+            }
+            ... on CommentReply {
+              memberHandle
+              commentId
+              videoId
+              videoTitle
+            }
+            ... on ReactionToComment {
+              memberHandle
+              commentId
+              videoId
+              videoTitle
+            }
+            ... on VideoPosted {
+              channelId
+              channelTitle
+              videoId
+              videoTitle
+            }
+            ... on NewAuction {
+              channelId
+              channelTitle
+              videoId
+              videoTitle
+            }
+            ... on NewNftOnSale {
+              channelId
+              channelTitle
+              videoId
+              videoTitle
+            }
+            ... on HigherBidPlaced {
+              newBidderHandle
+              videoId
+              videoTitle
+            }
+            ... on AuctionWon {
+              type {
+                __typename
+              }
+              videoId
+              videoTitle
+            }
+            ... on AuctionLost {
+              type {
+                __typename
+              }
+              videoId
+              videoTitle
+            }
+            ... on ChannelExcluded {
               __typename
             }
-            notificationType {
+            ... on NftFeaturedOnMarketPlace {
+              videoId
+              videoTitle
+            }
+            ... on VideoExcluded {
+              videoTitle
+            }
+            ... on NewChannelFollower {
+              followerHandle
+            }
+            ... on CommentPostedToVideo {
+              memberHandle
+              videoId
+              videoTitle
+              comentId
+            }
+            ... on VideoLiked {
+              memberHandle
+              videoId
+              videoTitle
+            }
+            ... on VideoDisliked {
+              memberHandle
+              videoId
+              videoTitle
+            }
+            ... on ChannelVerified {
               __typename
-              ... on ChannelCreated {
-                channelId
-                channelTitle
-              }
-              ... on CommentReply {
-                memberHandle
-                videoId
-                videoTitle
-              }
-              ... on ReactionToComment {
-                memberHandle
-                videoId
-                videoTitle
-              }
-              ... on VideoPosted {
-                channelTitle
-                videoId
-                videoTitle
-              }
-              ... on NewAuction {
-                channelTitle
-                videoId
-                videoTitle
-              }
-              ... on NewNftOnSale {
-                channelTitle
-                videoId
-                videoTitle
-              }
-              ... on HigherBidPlaced {
-                newBidderHandle
-                videoId
-                videoTitle
-              }
-              ... on EnglishAuctionWon {
-                videoId
-                videoTitle
-              }
-              ... on EnglishAuctionLost {
-                videoId
-                videoTitle
-              }
-              ... on OpenAuctionWon {
-                videoId
-                videoTitle
-              }
-              ... on OpenAuctionLost {
-                videoTitle
-                videoId
-              }
-              ... on ChannelExcluded {
-                __typename
-              }
-              ... on VideoFeaturedOnCategoryPage {
-                categoryId
-                categoryName
-                videoTitle
-              }
-              ... on NftFeaturedOnMarketPlace {
-                videoId
-                videoTitle
-              }
-              ... on VideoFeaturedAsCategoryHero {
-                categoryId
-                categoryName
-                videoTitle
-              }
-              ... on VideoExcluded {
-                videoTitle
-              }
-              ... on NewChannelFollower {
-                followerHandle
-              }
-              ... on CommentPostedToVideo {
-                memberHandle
-                videoId
-                videoTitle
-              }
-              ... on VideoLiked {
-                videoId
-                videoTitle
-              }
-              ... on VideoDisliked {
-                videoId
-                videoTitle
-              }
-              ... on ChannelVerified {
-                __typename
-              }
-              ... on ChannelSuspended {
-                __typename
-              }
-              ... on NftPurchased {
-                buyerHandle
-                price
-                videoTitle
-                videoId
-              }
-              ... on CreatorReceivesAuctionBid {
-                amount
-                bidderHandle
-                videoId
-                videoTitle
-              }
-              ... on NftRoyaltyPaid {
-                amount
-                videoId
-                videoTitle
-              }
-              ... on EnglishAuctionSettled {
-                price
-                videoId
-                videoTitle
-              }
-              ... on DirectChannelPaymentByMember {
-                amount
-                payerHandle
-              }
-              ... on ChannelFundsWithdrawn {
-                amount
-              }
+            }
+            ... on ChannelSuspended {
+              __typename
+            }
+            ... on NftPurchased {
+              buyerHandle
+              price
+              videoTitle
+              videoId
+            }
+            ... on CreatorReceivesAuctionBid {
+              amount
+              bidderHandle
+              videoId
+              videoTitle
+            }
+            ... on NftRoyaltyPaid {
+              amount
+              videoId
+              videoTitle
+            }
+            ... on DirectChannelPaymentByMember {
+              amount
+              payerHandle
+            }
+            ... on ChannelFundsWithdrawn {
+              amount
             }
           }
         }
@@ -3166,8 +3224,7 @@ export const GetNotificationsConnectionDocument = gql`
  * @example
  * const { data, loading, error } = useGetNotificationsConnectionQuery({
  *   variables: {
- *      accountId: // value for 'accountId'
- *      type: // value for 'type'
+ *      recipient: // value for 'recipient'
  *      first: // value for 'first'
  *      after: // value for 'after'
  *   },
@@ -3244,7 +3301,7 @@ export type MarkNotificationsAsReadMutationOptions = Apollo.BaseMutationOptions<
 export const GetMembershipNotificationPreferencesDocument = gql`
   query GetMembershipNotificationPreferences {
     accountData {
-      notificationPreferences {
+      preferences {
         channelCreated {
           emailEnabled
           inAppEnabled
@@ -3270,10 +3327,6 @@ export const GetMembershipNotificationPreferencesDocument = gql`
           inAppEnabled
         }
         higherBidThanYoursMade {
-          emailEnabled
-          inAppEnabled
-        }
-        timedAuctionExpired {
           emailEnabled
           inAppEnabled
         }
@@ -3358,20 +3411,12 @@ export type GetMembershipNotificationPreferencesQueryResult = Apollo.QueryResult
 export const GetChannelNotificationPreferencesDocument = gql`
   query GetChannelNotificationPreferences {
     accountData {
-      notificationPreferences {
+      preferences {
         channelExcludedFromApp {
           emailEnabled
           inAppEnabled
         }
-        videoFeaturedOnCategoryPage {
-          emailEnabled
-          inAppEnabled
-        }
         nftFeaturedOnMarketPlace {
-          emailEnabled
-          inAppEnabled
-        }
-        videoFeaturedAsHero {
           emailEnabled
           inAppEnabled
         }
@@ -3508,10 +3553,6 @@ export const SetMembershipNotificationPreferencesDocument = gql`
         emailEnabled
         inAppEnabled
       }
-      timedAuctionExpired {
-        emailEnabled
-        inAppEnabled
-      }
       auctionWon {
         emailEnabled
         inAppEnabled
@@ -3589,15 +3630,7 @@ export const SetChannelNotificationPreferencesDocument = gql`
         emailEnabled
         inAppEnabled
       }
-      videoFeaturedOnCategoryPage {
-        emailEnabled
-        inAppEnabled
-      }
       nftFeaturedOnMarketPlace {
-        emailEnabled
-        inAppEnabled
-      }
-      videoFeaturedAsHero {
         emailEnabled
         inAppEnabled
       }

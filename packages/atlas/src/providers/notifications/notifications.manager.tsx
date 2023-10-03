@@ -16,25 +16,25 @@ export const NotificationsManager: FC = () => {
             return fetchMoreResult
           }
 
-          const prevNotifs = prev.notificationInAppDeliveriesConnection.edges
-          const nextNotifs = fetchMoreResult.notificationInAppDeliveriesConnection.edges
+          const prevNotifs = prev.notificationsConnection.edges
+          const nextNotifs = fetchMoreResult.notificationsConnection.edges
 
-          const prevFirstNotif = prevNotifs[0]?.node.notification
+          const prevFirstNotif = prevNotifs[0]?.node
           if (!prevFirstNotif) {
             return fetchMoreResult
           }
 
-          if (prevFirstNotif.id === nextNotifs[0]?.node.notification.id) {
+          if (prevFirstNotif.id === nextNotifs[0]?.node.id) {
             return prev
           }
 
-          const indexMatch = nextNotifs.findIndex(({ node }) => node.notification.id === prevFirstNotif.id)
+          const indexMatch = nextNotifs.findIndex(({ node }) => node.id === prevFirstNotif.id)
           const numberOfNewNotifications = indexMatch === -1 ? nextNotifs.length : indexMatch
           const edges = [...nextNotifs.slice(0, numberOfNewNotifications), ...prevNotifs]
 
           return {
             ...prev,
-            notificationsConnection: { ...prev.notificationInAppDeliveriesConnection, edges },
+            notificationsConnection: { ...prev.notificationsConnection, edges },
           }
         },
       })

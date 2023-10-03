@@ -81,5 +81,5 @@ export const retryWalletPromise = <T>(
   })
 }
 
-export const whenDefined = <T, R>(x: T | undefined | null, f: (x: T) => R): R | undefined | null =>
-  typeof x === 'undefined' || x === null ? x : f(x)
+export const whenDefined = <T, R>(x: T | undefined | null, f: (x: T) => R): R | undefined =>
+  typeof x === 'undefined' || x === null ? undefined : f(x)

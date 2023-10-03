@@ -1,20 +1,15 @@
 query GetNotificationsCount($where: NotificationWhereInput!) {
-  notificationInAppDeliveriesConnection(orderBy: notification_createdAt_DESC, where: { notification: $where }) {
+  notificationsConnection(orderBy: createdAt_DESC, where: $where) {
     totalCount
   }
 }
 
-query GetNotificationsConnection($accountId: String!, $type: String!, $first: Int!, $after: String) {
-  notificationInAppDeliveriesConnection(
+query GetNotificationsConnection($recipient: RecipientTypeWhereInput!, $first: Int!, $after: String) {
+  notificationsConnection(
     first: $first
     after: $after
-    orderBy: notification_createdAt_DESC
-    where: {
-      notification: {
-        account: { joystreamAccount_eq: $accountId }
-        notificationType: { recipient: { isTypeOf_eq: $type } }
-      }
-    }
+    orderBy: createdAt_DESC
+    where: { inApp_eq: true, recipient: $recipient }
   ) {
     pageInfo {
       hasNextPage
@@ -23,143 +18,138 @@ query GetNotificationsConnection($accountId: String!, $type: String!, $first: In
     edges {
       cursor
       node {
-        notification {
-          id
-          createdAt
-          status {
+        id
+        createdAt
+        status {
+          __typename
+        }
+        notificationType {
+          __typename
+
+          #
+          # Members
+          #
+          ... on ChannelCreated {
+            channelId
+            channelTitle
+          }
+          ... on CommentReply {
+            memberHandle
+            commentId
+            videoId
+            videoTitle
+          }
+          ... on ReactionToComment {
+            memberHandle
+            commentId
+            videoId
+            videoTitle
+          }
+          ... on VideoPosted {
+            channelId
+            channelTitle
+            videoId
+            videoTitle
+          }
+          ... on NewAuction {
+            channelId
+            channelTitle
+            videoId
+            videoTitle
+          }
+          ... on NewNftOnSale {
+            channelId
+            channelTitle
+            videoId
+            videoTitle
+          }
+          ... on HigherBidPlaced {
+            newBidderHandle
+            videoId
+            videoTitle
+          }
+          ... on AuctionWon {
+            type {
+              __typename
+            }
+            videoId
+            videoTitle
+          }
+          ... on AuctionLost {
+            type {
+              __typename
+            }
+            videoId
+            videoTitle
+          }
+
+          #
+          # Channels
+          #
+          ... on ChannelExcluded {
             __typename
           }
-          notificationType {
+          ... on NftFeaturedOnMarketPlace {
+            videoId
+            videoTitle
+          }
+          ... on VideoExcluded {
+            videoTitle
+          }
+          ... on NewChannelFollower {
+            followerHandle
+          }
+          ... on CommentPostedToVideo {
+            memberHandle
+            videoId
+            videoTitle
+            comentId
+          }
+          ... on VideoLiked {
+            memberHandle
+            videoId
+            videoTitle
+          }
+          ... on VideoDisliked {
+            memberHandle
+            videoId
+            videoTitle
+          }
+          ... on ChannelVerified {
             __typename
-
-            #
-            # Members
-            #
-            ... on ChannelCreated {
-              channelId
-              channelTitle
-            }
-            ... on CommentReply {
-              memberHandle
-              videoId
-              videoTitle
-            }
-            ... on ReactionToComment {
-              memberHandle
-              videoId
-              videoTitle
-            }
-            ... on VideoPosted {
-              channelTitle
-              videoId
-              videoTitle
-            }
-            ... on NewAuction {
-              channelTitle
-              videoId
-              videoTitle
-            }
-            ... on NewNftOnSale {
-              channelTitle
-              videoId
-              videoTitle
-            }
-            ... on HigherBidPlaced {
-              newBidderHandle
-              videoId
-              videoTitle
-            }
-            ... on EnglishAuctionWon {
-              videoId
-              videoTitle
-            }
-            ... on EnglishAuctionLost {
-              videoId
-              videoTitle
-            }
-            ... on OpenAuctionWon {
-              videoId
-              videoTitle
-            }
-            ... on OpenAuctionLost {
-              videoTitle
-              videoId
-            }
-
-            #
-            # Channels
-            #
-            ... on ChannelExcluded {
-              __typename
-            }
-            ... on VideoFeaturedOnCategoryPage {
-              categoryId
-              categoryName
-              videoTitle
-            }
-            ... on NftFeaturedOnMarketPlace {
-              videoId
-              videoTitle
-            }
-            ... on VideoFeaturedAsCategoryHero {
-              categoryId
-              categoryName
-              videoTitle
-            }
-            ... on VideoExcluded {
-              videoTitle
-            }
-            ... on NewChannelFollower {
-              followerHandle
-            }
-            ... on CommentPostedToVideo {
-              memberHandle
-              videoId
-              videoTitle
-            }
-            ... on VideoLiked {
-              videoId
-              videoTitle
-            }
-            ... on VideoDisliked {
-              videoId
-              videoTitle
-            }
-            ... on ChannelVerified {
-              __typename
-            }
-            ... on ChannelSuspended {
-              __typename
-            }
-            ... on NftPurchased {
-              buyerHandle
-              price
-              videoTitle
-              videoId
-            }
-            ... on CreatorReceivesAuctionBid {
-              amount
-              bidderHandle
-              videoId
-              videoTitle
-            }
-            ... on NftRoyaltyPaid {
-              amount
-              videoId
-              videoTitle
-            }
-            ... on EnglishAuctionSettled {
-              price
-              videoId
-              videoTitle
-            }
-            ... on DirectChannelPaymentByMember {
-              amount
-              payerHandle
-            }
-            ... on ChannelFundsWithdrawn {
-              amount
-            }
+          }
+          ... on ChannelSuspended {
+            __typename
+          }
+          ... on NftPurchased {
+            buyerHandle
+            price
+            videoTitle
+            videoId
+          }
+          # Add NewAuctionBid too ?
+          ... on CreatorReceivesAuctionBid {
+            amount
+            bidderHandle
+            videoId
+            videoTitle
+          }
+          ... on NftRoyaltyPaid {
+            amount
+            videoId
+            videoTitle
+          }
+          # ... on EnglishAuctionSettled {
+          #   price
+          #   videoId
+          #   videoTitle
+          # }
+          ... on DirectChannelPaymentByMember {
+            amount
+            payerHandle
+          }
+          ... on ChannelFundsWithdrawn {
+            amount
           }
         }
       }
@@ -175,7 +165,7 @@ mutation MarkNotificationsAsRead($notificationIds: [String!]!) {
 
 query GetMembershipNotificationPreferences {
   accountData {
-    notificationPreferences {
+    preferences {
       channelCreated {
         emailEnabled
         inAppEnabled
@@ -204,10 +194,10 @@ query GetMembershipNotificationPreferences {
         emailEnabled
         inAppEnabled
       }
-      timedAuctionExpired {
-        emailEnabled
-        inAppEnabled
-      }
+      # timedAuctionExpired {
+      #   emailEnabled
+      #   inAppEnabled
+      # }
       auctionWon {
         emailEnabled
         inAppEnabled
@@ -238,12 +228,8 @@ query GetMembershipNotificationPreferences {
 
 query GetChannelNotificationPreferences {
   accountData {
-    notificationPreferences {
+    preferences {
       channelExcludedFromApp {
-        emailEnabled
-        inAppEnabled
-      }
-      videoFeaturedOnCategoryPage {
         emailEnabled
         inAppEnabled
       }
@@ -251,14 +237,6 @@ query GetChannelNotificationPreferences {
         emailEnabled
         inAppEnabled
       }
-      videoFeaturedAsHero {
-        emailEnabled
-        inAppEnabled
-      }
-      # videoExcludedFromApp {
-      #   emailEnabled
-      #   inAppEnabled
-      # }
       newChannelFollower {
         emailEnabled
         inAppEnabled
@@ -341,10 +319,10 @@ mutation SetMembershipNotificationPreferences($notificationPreferences: AccountN
       emailEnabled
       inAppEnabled
     }
-    timedAuctionExpired {
-      emailEnabled
-      inAppEnabled
-    }
+    # timedAuctionExpired {
+    #   emailEnabled
+    #   inAppEnabled
+    # }
     auctionWon {
       emailEnabled
       inAppEnabled
@@ -369,6 +347,10 @@ mutation SetMembershipNotificationPreferences($notificationPreferences: AccountN
       emailEnabled
       inAppEnabled
     }
+    # videoExcludedFromApp {
+    #   emailEnabled
+    #   inAppEnabled
+    # }
   }
 }
 
@@ -378,15 +360,7 @@ mutation SetChannelNotificationPreferences($notificationPreferences: AccountNoti
       emailEnabled
       inAppEnabled
     }
-    videoFeaturedOnCategoryPage {
-      emailEnabled
-      inAppEnabled
-    }
     nftFeaturedOnMarketPlace {
-      emailEnabled
-      inAppEnabled
-    }
-    videoFeaturedAsHero {
       emailEnabled
       inAppEnabled
     }

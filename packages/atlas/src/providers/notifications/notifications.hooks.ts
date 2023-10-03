@@ -4,6 +4,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { useLocation } from 'react-router'
 
 import { useRawNotifications } from '@/api/hooks/notifications'
+import { RecipientTypeWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
 import {
   GetNotificationsConnectionQuery,
   useGetNotificationsCountQuery,
@@ -12,24 +13,29 @@ import { absoluteRoutes } from '@/config/routes'
 import { useUser } from '@/providers/user/user.hooks'
 import { whenDefined } from '@/utils/misc'
 
-import { useNotificationStore } from './notifications.store'
+import { RecipientType, useNotificationStore } from './notifications.store'
 import { NotificationData, NotificationRecord } from './notifications.types'
 
 export type UseNotifications = ReturnType<typeof useNotifications>
 export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkStatusChange'>) => {
   const { pathname } = useLocation()
   const isStudio = pathname.search(absoluteRoutes.studio.index()) !== -1
-  const { accountId, channelId } = useUser()
+  const { channelId, memberId } = useUser()
 
-  const recipientType = isStudio ? 'ChannelRecipient' : 'MemberRecipient'
-  const recipientId = isStudio ? channelId : accountId
+  const recipientType: RecipientType = isStudio ? 'ChannelRecipient' : 'MemberRecipient'
+  const recipientId = isStudio ? channelId : memberId
+  const recipient: RecipientTypeWhereInput | undefined = whenDefined(recipientId, (id_eq) =>
+    isStudio
+      ? { isTypeOf_eq: recipientType, channel: { id_eq } }
+      : { isTypeOf_eq: recipientType, membership: { id_eq } }
+  )
 
   const {
     notifications: rawNotifications,
     markNotificationsAsReadMutation,
     refetch,
     ...rest
-  } = useRawNotifications(accountId ?? '', recipientType, opts)
+  } = useRawNotifications(recipient, opts)
 
   // those are different from unread notifications!
   const {
@@ -40,8 +46,7 @@ export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkS
   const unseenMemberNotificationsCount = useGetNotificationsCountQuery({
     variables: {
       where: {
-        account: { joystreamAccount_eq: accountId },
-        notificationType: { recipient: { isTypeOf_eq: 'MemberRecipient' } },
+        recipient: { isTypeOf_eq: 'MemberRecipient', membership: { id_eq: memberId } },
         createdAt_gt: whenDefined(
           lastSeenNotificationDates.find(({ type }) => type === 'MemberRecipient'),
           ({ date }) => new Date(date)
@@ -49,38 +54,36 @@ export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkS
       },
     },
   })
+
+  const channels = channelId ? [channelId] : [] // TODO
   const unseenChannelNotificationsCount = useGetNotificationsCountQuery({
     variables: {
       where: {
-        account: { joystreamAccount_eq: accountId },
-        notificationType: { recipient: { isTypeOf_eq: 'ChannelRecipient' } },
-        createdAt_gt: whenDefined(
-          lastSeenNotificationDates.find(({ type }) => type === 'ChannelRecipient'), // TODO There should be one case per channel date pair and one more for non of the channel in lastSeenNotificationDates
-          ({ date }) => new Date(date)
-        ),
+        OR: channels.map((id) => ({
+          recipient: { isTypeOf_eq: 'ChannelRecipient', channel: { id_eq: id } },
+          createdAt_gt: whenDefined(
+            lastSeenNotificationDates.find(({ type }) => type === 'ChannelRecipient'), // TODO There should be one case per channel date pair and one more for non of the channel in lastSeenNotificationDates
+            ({ date }) => new Date(date)
+          ),
+        })),
       },
     },
   })
-  const unseenMemberNotifications =
-    unseenMemberNotificationsCount.data?.notificationInAppDeliveriesConnection.totalCount
-  const unseenChannelNotifications =
-    unseenChannelNotificationsCount.data?.notificationInAppDeliveriesConnection.totalCount
+
+  const unseenMemberNotifications = unseenMemberNotificationsCount.data?.notificationsConnection.totalCount
+  const unseenChannelNotifications = unseenChannelNotificationsCount.data?.notificationsConnection.totalCount
 
   const [optimisticRead, setOptimisticRead] = useState<string[]>([])
   const notifications = useMemo(
     () =>
-      rawNotifications.flatMap(({ node }): NotificationRecord | [] => {
-        const { id, createdAt, status, notificationType } = node.notification
-        const specificData = parseNotificationType(notificationType as NotificationType)
-        return specificData
-          ? {
-              id,
-              date: new Date(createdAt),
-              read: status.__typename === 'Read' || optimisticRead.includes(id),
-              ...specificData,
-            }
-          : []
-      }),
+      rawNotifications.map(
+        ({ node: { id, createdAt, status, notificationType } }): NotificationRecord => ({
+          id,
+          date: new Date(createdAt),
+          read: status.__typename === 'Read' || optimisticRead.includes(id),
+          ...parseNotificationType(notificationType as NotificationType),
+        })
+      ),
     [rawNotifications, optimisticRead]
   )
 
@@ -124,9 +127,9 @@ export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkS
 }
 
 type NotificationType =
-  GetNotificationsConnectionQuery['notificationInAppDeliveriesConnection']['edges'][number]['node']['notification']['notificationType']
+  GetNotificationsConnectionQuery['notificationsConnection']['edges'][number]['node']['notificationType']
 
-const parseNotificationType = (notificationType: NotificationType): NotificationData | undefined => {
+const parseNotificationType = (notificationType: NotificationType): NotificationData => {
   switch (notificationType.__typename) {
     case 'ChannelFundsWithdrawn':
     case 'CreatorReceivesAuctionBid':
@@ -134,9 +137,13 @@ const parseNotificationType = (notificationType: NotificationType): Notification
     case 'NftRoyaltyPaid':
       return toNotificationData(notificationType, { amount: new BN(notificationType.amount) })
 
-    case 'EnglishAuctionSettled':
+    // case 'EnglishAuctionSettled':
     case 'NftPurchased':
       return toNotificationData(notificationType, { price: new BN(notificationType.price) })
+
+    case 'AuctionWon':
+    case 'AuctionLost':
+      return toNotificationData(notificationType, { auction: notificationType.type.__typename })
 
     case 'ChannelCreated':
     case 'CommentReply':
@@ -145,15 +152,9 @@ const parseNotificationType = (notificationType: NotificationType): Notification
     case 'NewNftOnSale':
     case 'NewAuction':
     case 'HigherBidPlaced':
-    case 'EnglishAuctionWon':
-    case 'EnglishAuctionLost':
-    case 'OpenAuctionWon':
-    case 'OpenAuctionLost':
     case 'ChannelExcluded':
     case 'VideoExcluded':
-    case 'VideoFeaturedOnCategoryPage':
     case 'NftFeaturedOnMarketPlace':
-    case 'VideoFeaturedAsCategoryHero':
     case 'NewChannelFollower':
     case 'CommentPostedToVideo':
     case 'VideoLiked':
@@ -164,16 +165,13 @@ const parseNotificationType = (notificationType: NotificationType): Notification
   }
 }
 
-type ToNotificationData<T, K extends keyof T> = T extends { __typename: infer U }
-  ? Omit<T, '__typename' | K> extends infer V
-    ? { type: U } & { [k in K]: BN } & V
-    : never
-  : never
+type TypenameOf<T> = T extends { __typename: infer Typename } ? Typename : never
+type NotifDataOfType<T> = NotificationData extends infer D ? (D extends { type: T } ? D : never) : never
 
-const toNotificationData = <T extends { __typename: string }, K extends Exclude<keyof T, '__typename'> | never>(
+const toNotificationData = <T extends NotificationType, R extends NotifDataOfType<TypenameOf<T>>>(
   notificationType: T,
-  data: { [k in K]: BN }
+  data: Partial<R>
 ) => {
   const { __typename, ...rest } = notificationType
-  return { type: __typename as T['__typename'], ...rest, ...data } as unknown as ToNotificationData<T, K>
+  return { type: __typename as T['__typename'], ...rest, ...data } as unknown as R
 }
