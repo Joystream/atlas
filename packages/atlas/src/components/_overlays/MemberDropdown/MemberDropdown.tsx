@@ -29,7 +29,7 @@ export type MemberDropdownProps = {
 export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
   ({ publisher, isActive, closeDropdown, onChannelChange }, ref) => {
     const navigate = useNavigate()
-    const { channelId, activeMembership, memberships, setActiveChannel } = useUser()
+    const { channelId, activeMembership, memberships, setActiveChannel, activeChannel } = useUser()
     const { handleLogout } = useAuth()
     const {
       actions: { setAuthModalOpenName },
@@ -169,6 +169,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                       channelBalance={channelBalance}
                       lockedAccountBalance={lockedAccountBalance}
                       activeMembership={activeMembership}
+                      activeChannel={activeChannel}
                       hasOneMember={hasOneMember}
                       onSwitchToList={(type) => handleSwitch(type, true)}
                       onCloseDropdown={closeDropdown}
