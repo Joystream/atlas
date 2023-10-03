@@ -13,6 +13,7 @@ export type MemberId = string
 export type ChannelId = string
 export type VideoId = string
 export type CategoryId = string
+export type TokenId = string
 
 export type AccountBalanceInfo = {
   // transferable balance account
@@ -152,6 +153,9 @@ export type VideoExtrinsicResult = ExtrinsicResult<{
 export type MemberExtrinsicResult = ExtrinsicResult<{ memberId: MemberId }>
 export type NftExtrinsicResult = ExtrinsicResult
 export type MetaprotcolExtrinsicResult = ExtrinsicResult<{ metaprotocol: true; transactionHash: string }>
+export type ExitRevenueSplitResult = {
+  amount: string
+} & ExtrinsicResult
 
 type TxMethodsFromClass<T> = T extends `${infer _}Tx` ? T : never
 
