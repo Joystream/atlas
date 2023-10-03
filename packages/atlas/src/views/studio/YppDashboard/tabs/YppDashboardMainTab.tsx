@@ -121,7 +121,11 @@ export const YppDashboardMainTab: FC = () => {
                 <Text variant={mdMatch ? 'h500' : 'h400'} as="p">
                   {formatDate(nextPayoutDate)}
                 </Text>
-                <TextButton to="" icon={<SvgActionNewTab />} iconPlacement="right">
+                <TextButton
+                  to="https://www.notion.so/joystream/YouTube-Creator-Payouts-02f7cf50972145bfb64c8543914ae4bb?pvs=4"
+                  icon={<SvgActionNewTab />}
+                  iconPlacement="right"
+                >
                   Go to Airtable
                 </TextButton>
               </FlexBox>
