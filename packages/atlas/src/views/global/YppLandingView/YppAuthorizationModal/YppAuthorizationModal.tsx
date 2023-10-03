@@ -54,6 +54,7 @@ type FinalFormData = {
   referrerChannelId?: number
   shouldBeIngested?: boolean
   videoCategoryId?: string
+  channelLanguage?: string
 }
 
 export type YppAuthorizationModalProps = {
@@ -254,7 +255,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
                 ownerAccount: memberId,
                 description: ytResponseData?.channelDescription,
                 isPublic: true,
-                language: DEFAULT_LANGUAGE,
+                language: ytResponseData?.channelLanguage || DEFAULT_LANGUAGE,
                 title: ytResponseData?.channelTitle || ytResponseData?.channelHandle,
               },
           refetchChannel,

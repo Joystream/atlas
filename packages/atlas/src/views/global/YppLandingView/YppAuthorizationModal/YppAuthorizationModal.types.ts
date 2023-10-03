@@ -30,6 +30,7 @@ export type ChannelVerificationSuccessResponse = {
   channelHandle: string
   channelTitle: string
   channelDescription?: string
+  channelLanguage?: string
   avatarUrl?: string
   bannerUrl?: string
 }
