@@ -4,13 +4,17 @@ import BN from 'bn.js'
 import { FC, useEffect, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
-import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import {
+  BasicMembershipFieldsFragment,
+  FullMembershipFieldsFragment,
+} from '@/api/queries/__generated__/fragments.generated'
 import {
   GetMembershipsDocument,
   GetMembershipsQuery,
   GetMembershipsQueryVariables,
 } from '@/api/queries/__generated__/memberships.generated'
 import { Avatar } from '@/components/Avatar'
+import { Banner } from '@/components/Banner'
 import { Fee } from '@/components/Fee'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { NumberFormat } from '@/components/NumberFormat'
@@ -25,6 +29,7 @@ import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useFee, useJoystream, useTokenPrice } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
+import { cVar } from '@/styles'
 import { formatJoystreamAddress, isValidAddressPolkadotAddress } from '@/utils/address'
 import { SentryLogger } from '@/utils/logs'
 import { shortenString } from '@/utils/misc'
@@ -39,11 +44,21 @@ const joystreamAddressPrefix = formattedExampleAddress.slice(0, 2)
 
 type SendFundsDialogProps = {
   onExitClick: () => void
+  activeMembership?: FullMembershipFieldsFragment | null
+  channelBalance?: BN
   accountBalance?: BN
+  channelId?: string | null
   show: boolean
 }
 
-export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, accountBalance = new BN(0), show }) => {
+export const SendFundsDialog: FC<SendFundsDialogProps> = ({
+  onExitClick,
+  accountBalance = new BN(0),
+  channelBalance,
+  channelId,
+  activeMembership,
+  show,
+}) => {
   const [destinationAccount, setDestinationAccount] = useState<BasicMembershipFieldsFragment>()
   const { convertHapiToUSD } = useTokenPrice()
   const client = useApolloClient()
@@ -61,10 +76,26 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
   const convertedAmount = convertHapiToUSD(tokenNumberToHapiBn(watch('amount') || 0))
   const account = watch('account') || ''
   const amountBN = tokenNumberToHapiBn(watch('amount') || 0)
-  const { fullFee, loading: feeLoading } = useFee(
+  const { fullFee: transferFee, loading: feeLoading } = useFee(
     'sendFundsTx',
     show && amountBN ? [isValidAddressPolkadotAddress(account) ? account : '', amountBN.toString()] : undefined
   )
+  const { fullFee: withdrawFee, loading: withdrawFeeLoading } = useFee(
+    'withdrawFromChannelBalanceTx',
+    show && channelId && activeMembership && amountBN
+      ? [activeMembership.id, channelId, amountBN.toString()]
+      : undefined
+  )
+
+  const isWithdrawalMode = !!channelBalance
+  const currentBalance = isWithdrawalMode ? channelBalance : accountBalance
+
+  const isValidJoystreamAddress = (address: string) =>
+    isValidAddressPolkadotAddress(address) && address.startsWith(joystreamAddressPrefix)
+
+  const isOwnAccount = account === activeMembership?.controllerAccount
+
+  const fullFee = isWithdrawalMode ? (isOwnAccount ? withdrawFee : withdrawFee.add(transferFee)) : transferFee
 
   useEffect(() => {
     if (!show) {
@@ -92,28 +123,61 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
     }, 500)
   )
 
-  const handleSendFounds = async () => {
-    const handler = await handleSubmit((data) => {
-      if (!joystream || !data.account || !data.amount) {
+  const handleSendFunds = async () => {
+    const handler = await handleSubmit(async (data) => {
+      if (!joystream || !data.account || !data.amount || (isWithdrawalMode && (!activeMembership || !channelId))) {
         return
       }
-      handleTransaction({
-        disableQNSync: true,
-        snackbarSuccessMessage: {
-          title: `${formatNumber(data.amount)} ${atlasConfig.joystream.tokenTicker} ${
-            convertedAmount === null ? '' : `$(${formatNumber(convertedAmount || 0)})`
-          } tokens have been sent over to ${shortenString(data.account, ADDRESS_CHARACTERS_LIMIT)} wallet address`,
-        },
-        txFactory: async (updateStatus) => {
-          const amount = amountBN.add(fullFee).gte(accountBalance) ? amountBN.sub(fullFee) : amountBN
-          return (await joystream.extrinsics).sendFunds(
-            formatJoystreamAddress(data.account || ''),
-            amount.toString(),
-            proxyCallback(updateStatus)
-          )
-        },
-        onTxSync: async () => onExitClick(),
-      })
+
+      const transferTransaction = () => {
+        if (!joystream || !data.account || !data.amount) {
+          return
+        }
+        return handleTransaction({
+          disableQNSync: true,
+          snackbarSuccessMessage: {
+            title: `${formatNumber(data.amount)} ${atlasConfig.joystream.tokenTicker} ${
+              convertedAmount === null ? '' : `$(${formatNumber(convertedAmount || 0)})`
+            } tokens have been sent over to ${shortenString(data.account, ADDRESS_CHARACTERS_LIMIT)} wallet address`,
+          },
+          txFactory: async (updateStatus) => {
+            const amount =
+              !isWithdrawalMode && amountBN.add(transferFee).gte(accountBalance) ? amountBN.sub(transferFee) : amountBN
+            return (await joystream.extrinsics).sendFunds(
+              formatJoystreamAddress(data.account || ''),
+              amount.toString(),
+              proxyCallback(updateStatus)
+            )
+          },
+          onTxSync: async () => onExitClick(),
+        })
+      }
+
+      if (isWithdrawalMode) {
+        await handleTransaction({
+          disableQNSync: true,
+          snackbarSuccessMessage: isOwnAccount
+            ? {
+                title: 'Tokens withdrawn successfully',
+                description: `You have withdrawn ${formatNumber(data.amount)} ${atlasConfig.joystream.tokenTicker}!`,
+              }
+            : undefined,
+          txFactory: async (updateStatus) => {
+            const fee = isOwnAccount ? withdrawFee : fullFee
+            const amount = amountBN.add(fee).gte(channelBalance) ? amountBN.sub(fee) : amountBN
+            return (await joystream.extrinsics).withdrawFromChannelBalance(
+              activeMembership!.id,
+              channelId as string,
+              amount.toString(),
+              proxyCallback(updateStatus)
+            )
+          },
+          onTxSync: async () => isOwnAccount && onExitClick(),
+          onTxSuccess: async () => !isOwnAccount && transferTransaction(),
+        })
+      } else {
+        transferTransaction()
+      }
     })
     return handler()
   }
@@ -126,32 +190,32 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
       shouldValidate: false,
     })
   }
-  const accountBalanceInUsd = convertHapiToUSD(accountBalance)
+  const currentBalanceInUsd = convertHapiToUSD(currentBalance)
 
   return (
     <DialogModal
       show={show}
       title="Send"
       onExitClick={onExitClick}
-      primaryButton={{ text: 'Send', onClick: handleSendFounds }}
+      primaryButton={{ text: 'Send', onClick: handleSendFunds }}
       secondaryButton={{ text: 'Cancel', onClick: onExitClick }}
-      additionalActionsNode={<Fee loading={feeLoading} variant="h200" amount={fullFee} />}
+      additionalActionsNode={<Fee loading={feeLoading || withdrawFeeLoading} variant="h200" amount={fullFee} />}
     >
       <Text as="h4" variant="h300" margin={{ bottom: 4 }}>
-        Your account balance
+        Your {isWithdrawalMode ? 'channel' : 'account'} balance
       </Text>
       <PriceWrapper>
         <VerticallyCenteredDiv>
           <JoyTokenIcon variant="gray" />
-          <NumberFormat value={accountBalance} as="p" variant="h400" margin={{ left: 1 }} format="short" />
+          <NumberFormat value={currentBalance} as="p" variant="h400" margin={{ left: 1 }} format="short" />
         </VerticallyCenteredDiv>
-        {accountBalanceInUsd !== null && (
+        {currentBalanceInUsd !== null && (
           <NumberFormat
             as="p"
             color="colorText"
             format="dollar"
             variant="t100"
-            value={accountBalanceInUsd}
+            value={currentBalanceInUsd}
             margin={{ top: 1 }}
           />
         )}
@@ -179,8 +243,8 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
                   return true
                 },
                 accountBalance: (value) => {
-                  if (value && tokenNumberToHapiBn(value).gte(accountBalance)) {
-                    return 'Not enough tokens in your account balance.'
+                  if (value && tokenNumberToHapiBn(value).gte(currentBalance)) {
+                    return `Not enough tokens in your ${isWithdrawalMode ? 'channel' : 'account'} balance.`
                   }
                   return true
                 },
@@ -238,6 +302,12 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
             error={!!errors.account}
           />
         </FormField>
+        {account && isValidAddressPolkadotAddress(account) && !isValidJoystreamAddress(account) && (
+          <Banner
+            borderColor={cVar('colorBackgroundCautionStrong')}
+            description="Address does not follow Joystream format. Make sure that destination address supports Joystream token before transfer."
+          />
+        )}
       </FormFieldsWrapper>
     </DialogModal>
   )

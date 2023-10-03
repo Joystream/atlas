@@ -37,6 +37,7 @@ type HandleTransactionOpts<T extends ExtrinsicResult> = {
   preProcess?: () => void | Promise<void>
   onTxSign?: () => void
   onTxFinalize?: (data: T) => Promise<unknown>
+  onTxSuccess?: (data: T) => Promise<unknown>
   onTxSync?: (data: T, metaStatus?: MetaprotocolTransactionResultFieldsFragment) => Promise<unknown>
   onError?: () => void
   snackbarSuccessMessage?: DisplaySnackbarArgs
@@ -72,6 +73,7 @@ export const useTransaction = (): HandleTransactionFn => {
       onTxSign,
       onTxFinalize,
       onTxSync,
+      onTxSuccess,
       snackbarSuccessMessage,
       onError,
       minimized = null,
@@ -247,7 +249,7 @@ export const useTransaction = (): HandleTransactionFn => {
         })
 
         /* === transaction was successful, do necessary cleanup === */
-        updateStatus(ExtrinsicStatus.Completed)
+        !onTxSuccess && updateStatus(ExtrinsicStatus.Completed)
         if (snackbarSuccessMessage) {
           displaySnackbar({
             ...snackbarSuccessMessage,
@@ -256,9 +258,14 @@ export const useTransaction = (): HandleTransactionFn => {
           })
         }
 
-        // if it's a minimized transaction, remove it from the list right away
-        // if it's a regular one, it will get removed by TransactionsManager when the transaction modal is closed
+        if (onTxSuccess) {
+          removeTransaction(transactionId)
+          await onTxSuccess(result)
+        }
+
         if (minimized) {
+          // if it's a minimized transaction, remove it from the list right away
+          // if it's a regular one, it will get removed by TransactionsManager when the transaction modal is closed
           removeTransaction(transactionId)
         }
 
