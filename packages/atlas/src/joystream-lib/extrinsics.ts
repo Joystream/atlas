@@ -1155,4 +1155,47 @@ export class JoystreamLibExtrinsics {
 
     return { block }
   }
+
+  purchaseTokenOnMarketTx = async (tokenId: string, memberId: string, amount: string) => {
+    const amountCast = createType('u128', new BN(amount))
+
+    return this.api.tx.projectToken.buyOnAmm(
+      parseInt(tokenId),
+      parseInt(memberId),
+      amountCast,
+      createType('Option<ITuple<[Permill, u128]>>', [createType('Permill', new BN(0.5)), amountCast]) // percent, number of joy user wants to pay --- default on 0.5%
+    )
+  }
+
+  purchaseTokenOnMarket: PublicExtrinsic<typeof this.purchaseTokenOnMarketTx, ExtrinsicResult> = async (
+    tokenId,
+    memberId,
+    amount,
+    cb
+  ) => {
+    const tx = await this.purchaseTokenOnMarketTx(tokenId, memberId, amount)
+    const { block } = await this.sendExtrinsic(tx, cb)
+    return { block }
+  }
+
+  sellTokenOnMarketTx = async (tokenId: string, memberId: string, amount: string) => {
+    const amountCast = createType('u128', new BN(amount))
+    return this.api.tx.projectToken.sellOnAmm(
+      parseInt(tokenId),
+      parseInt(memberId),
+      amountCast,
+      createType('Option<ITuple<[Permill, u128]>>', [createType('Permill', new BN(0.5)), amountCast]) // percent, number of joy user wants to pay --- default on 0.5%
+    )
+  }
+
+  sellTokenOnMarket: PublicExtrinsic<typeof this.sellTokenOnMarketTx, ExtrinsicResult> = async (
+    tokenId,
+    memberId,
+    amount,
+    cb
+  ) => {
+    const tx = await this.sellTokenOnMarketTx(tokenId, memberId, amount)
+    const { block } = await this.sendExtrinsic(tx, cb)
+    return { block }
+  }
 }
