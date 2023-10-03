@@ -41,6 +41,7 @@ const SIGNUP_FORM_DATA_INITIAL_STATE: AccountFormData & MemberFormData = {
   confirmedTerms: false,
   confirmedCopy: false,
   memberId: '',
+  referrerChannelId: undefined,
 }
 
 const stepToPageName: Partial<Record<SignUpSteps, string>> = {
@@ -64,6 +65,7 @@ export const SignUpModal = () => {
   const ytResponseData = useYppStore((state) => state.ytResponseData)
   const setYppModalOpenName = useYppStore((state) => state.actions.setYppModalOpenName)
   const setYtResponseData = useYppStore((state) => state.actions.setYtResponseData)
+  const referrerChannelId = useYppStore((state) => state.referrerId)
   const { anonymousUserId } = useAuthStore()
   const { displaySnackbar } = useSnackbar()
 
@@ -117,7 +119,11 @@ export const SignUpModal = () => {
     }
 
     return createNewOrionAccount({
-      data: { ...signUpFormData.current, memberId: memberRef.current },
+      data: {
+        ...signUpFormData.current,
+        memberId: memberRef.current,
+        ...(referrerChannelId ? { referrerChannelId } : {}),
+      },
       onError: (error) => {
         if (error === RegisterError.EmailAlreadyExists) {
           setEmailAlreadyTakenError(true)
@@ -170,6 +176,7 @@ export const SignUpModal = () => {
     displaySnackbar,
     goToNextStep,
     goToStep,
+    referrerChannelId,
     setAuthModalOpenName,
     setYppModalOpenName,
     setYtResponseData,
