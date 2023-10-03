@@ -11,7 +11,8 @@ import { YppStatusDot } from '@/components/_ypp/YppStatusPill'
 import { atlasConfig } from '@/config'
 import { cVar, sizes } from '@/styles'
 import { ConsoleLogger } from '@/utils/logs'
-import { YppChannelStatus } from '@/views/global/YppLandingView/YppLandingView.types'
+import { formatDurationShort } from '@/utils/time'
+import { YppChannelStatus, YppSyncedChannel } from '@/views/global/YppLandingView/YppLandingView.types'
 
 type YppStatusDto = {
   version: string
@@ -24,9 +25,10 @@ const YPP_DELAY_THRESHOLD = atlasConfig.features.ypp.yppDelayThreshold ?? 500
 
 export type ServiceStatusWidgetProps = {
   status?: YppChannelStatus
+  syncStatus?: YppSyncedChannel['syncStatus']
 }
 
-export const ServiceStatusWidget = ({ status }: ServiceStatusWidgetProps) => {
+export const ServiceStatusWidget = ({ status, syncStatus }: ServiceStatusWidgetProps) => {
   const { data } = useQuery('ypp-status', () =>
     axiosInstance<YppStatusDto>(`${YOUTUBE_BACKEND_URL}/status`).catch(() =>
       ConsoleLogger.warn('Failed to fetch YPP status')
@@ -34,29 +36,33 @@ export const ServiceStatusWidget = ({ status }: ServiceStatusWidgetProps) => {
   )
 
   const details = useMemo(() => {
-    if (!data) return []
+    if (!syncStatus) return []
     const hideData = !status || !status.startsWith('Verified')
     const output: [number | string, string, string][] = [] // [value, title, tooltip]
 
-    // todo: all this data needs to be user scoped, rn backend does not support it
     output.push([
-      hideData ? '-' : data.data.syncBacklog,
+      hideData ? '-' : syncStatus.backlogCount || 'All synced',
       'VIDEOS IN QUEUE',
       'This is the total amount of your YouTube videos that are waiting to be synced',
     ])
     output.push([
-      hideData ? '-' : data.data.syncBacklog * 2 === 0 ? 'Syncing...' : data.data.syncBacklog * 2, // no info bout it
+      hideData
+        ? '-'
+        : syncStatus.placeInSyncQueue === 0
+        ? syncStatus.backlogCount > 0
+          ? 'Syncing...'
+          : '-'
+        : syncStatus.placeInSyncQueue, // no info bout it
       'PLACE IN THE QUEUE',
       'Sync system is based on queue as we sync channels one at a time. When you reach place 1 in queue your sync will start.',
     ])
     output.push([
-      // isOptedIn ? `In ${Math.round(data.data.syncBacklog / YPP_DELAY_THRESHOLD)} days` : '-',
-      '-',
+      hideData ? '-' : syncStatus.backlogCount > 0 ? `In ${formatDurationShort(syncStatus.fullSyncEta)} hours` : '-',
       'ETA TO FULL SYNC',
       'Estimated time of full sync of your videos may change based on YPP service status or  service overload.',
     ])
     return output
-  }, [data, status])
+  }, [status, syncStatus])
 
   return (
     <LayoutBox>

@@ -31,4 +31,9 @@ export type YppSyncedChannel = {
     yppStatus: 'Unverified' | 'Suspended' | 'Verified'
   }[]
   referrerChannelId: string
+  syncStatus: {
+    backlogCount: number
+    fullSyncEta: number
+    placeInSyncQueue: number
+  }
 }
