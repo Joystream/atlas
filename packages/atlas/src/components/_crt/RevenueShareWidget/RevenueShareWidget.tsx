@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { ReactElement, useCallback } from 'react'
 
 import { SvgActionCalendar, SvgJoyTokenMonochrome16 } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
@@ -8,26 +8,88 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { InfoBox, Wrapper } from '@/components/_crt/RevenueShareWidget/RevenueShareWidget.styles'
+import { useJoystream } from '@/providers/joystream'
+import { useSnackbar } from '@/providers/snackbars'
+import { useTransaction } from '@/providers/transactions/transactions.hooks'
+import { useUser } from '@/providers/user/user.hooks'
 import { formatDateTime } from '@/utils/time'
 
 export type RevenueShareWidgetProps = {
+  tokenId: string
   tokenName: string
   userShare: number
   userTokens: number
   shareEndDate: Date
-  onClaim?: () => void
-  isActive: boolean
+  onClaimShare?: () => void
+  status: 'active' | 'upcoming' | 'locked' | 'unlocked'
 }
 export const RevenueShareWidget = ({
   userShare,
   userTokens,
   tokenName,
-  onClaim,
+  onClaimShare,
   shareEndDate,
-  isActive,
+  status,
+  tokenId,
 }: RevenueShareWidgetProps) => {
+  const { joystream, proxyCallback } = useJoystream()
+  const handleTransaction = useTransaction()
+  const { memberId } = useUser()
+  const { displaySnackbar } = useSnackbar()
+  const unlockStake = useCallback(async () => {
+    if (!joystream || !memberId) {
+      return
+    }
+    handleTransaction({
+      txFactory: async (updateStatus) =>
+        (await joystream.extrinsics).exitRevenueSplit(tokenId, memberId, proxyCallback(updateStatus)),
+      onTxSync: async (data) => {
+        displaySnackbar({
+          title: `${data.amount} $${tokenName} unlocked`,
+          iconType: 'success',
+        })
+      },
+    })
+  }, [joystream, memberId, handleTransaction, tokenId, proxyCallback, displaySnackbar, tokenName])
+
+  const actionNode = () => {
+    switch (status) {
+      case 'active':
+        return (
+          <Button fullWidth onClick={onClaimShare}>
+            Claim your share
+          </Button>
+        )
+      case 'unlocked':
+        return (
+          <Button fullWidth onClick={unlockStake}>
+            Unlock tokens
+          </Button>
+        )
+      case 'upcoming':
+        return (
+          <FlexBox alignItems="center">
+            <SvgActionCalendar />
+            <Text variant="t200-strong" as="p">
+              Upcoming
+            </Text>
+            <Information text="lorem ipsum" />
+          </FlexBox>
+        )
+      case 'locked':
+        return (
+          <FlexBox alignItems="center">
+            <SvgActionCalendar />
+            <Text variant="t200-strong" as="p">
+              Locked
+            </Text>
+            <Information text="lorem ipsum" />
+          </FlexBox>
+        )
+    }
+  }
   return (
-    <Wrapper isActive={isActive} gap={2} alignItems="center">
+    <Wrapper isActive={['active', 'unlocked'].includes(status)} gap={2} alignItems="center">
       <InfoBox>
         <Detail title="TOKEN NAME">
           <FlexBox>
@@ -58,19 +120,7 @@ export const RevenueShareWidget = ({
           </Text>
         </Detail>
       </InfoBox>
-      {isActive ? (
-        <Button fullWidth onClick={onClaim}>
-          Claim your share
-        </Button>
-      ) : (
-        <FlexBox alignItems="center">
-          <SvgActionCalendar />
-          <Text variant="t200-strong" as="p">
-            Upcoming
-          </Text>
-          <Information text="lorem ipsum" />
-        </FlexBox>
-      )}
+      {actionNode()}
     </Wrapper>
   )
 }

@@ -39,6 +39,7 @@ import {
   ChannelInputBuckets,
   ChannelInputMetadata,
   CommentReaction,
+  ExitRevenueSplitResult,
   ExtrinsicResult,
   ExtrinsicStatus,
   ExtrinsicStatusCallbackFn,
@@ -1012,14 +1013,15 @@ export class JoystreamLibExtrinsics {
     return this.api.tx.projectToken.exitRevenueSplit(parseInt(tokenId), parseInt(memberId))
   }
 
-  exitRevenueSplit: PublicExtrinsic<typeof this.exitRevenueSplitTx, ExtrinsicResult> = async (
+  exitRevenueSplit: PublicExtrinsic<typeof this.exitRevenueSplitTx, ExitRevenueSplitResult> = async (
     tokenId,
     memberId,
     cb
   ) => {
     const tx = await this.exitRevenueSplitTx(tokenId, memberId)
-    const { block } = await this.sendExtrinsic(tx, cb)
-    return { block }
+    const { block, getEventData } = await this.sendExtrinsic(tx, cb)
+    const amount = getEventData('projectToken', 'RevenueSplitLeft')[2]
+    return { block, amount: amount.toString() }
   }
 
   participateInSplitTx = async (tokenId: TokenId, memberId: MemberId, amount: StringifiedNumber) => {
