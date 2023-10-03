@@ -76,7 +76,7 @@ const Channel = ({ channel }: { channel: YppReferral['channel'] }) => {
   )
 }
 
-const Tier = ({ tier }: { tier: number }) => {
+const Tier = (_: { tier: number }) => {
   return (
     <TierWrapper>
       {/*{TIERS[tier].icon}*/}
