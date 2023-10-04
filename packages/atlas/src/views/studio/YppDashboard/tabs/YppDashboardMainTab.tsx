@@ -30,6 +30,7 @@ import {
   StatusDotWrapper,
   StyledCloseButton,
   StyledCopyButton,
+  WidgetTileContent,
   YppSyncStatus,
 } from './YppDashboardTabs.styles'
 
@@ -100,7 +101,7 @@ export const YppDashboardMainTab: FC = () => {
               placement: 'top-start',
             }}
             customNode={
-              <FlexBox flow="column" gap={4} marginTop={2}>
+              <WidgetTileContent gap={4} marginTop={2}>
                 <Text variant={mdMatch ? 'h500' : 'h400'} as="p">
                   {formatDate(nextPayoutDate)}
                 </Text>
@@ -109,9 +110,9 @@ export const YppDashboardMainTab: FC = () => {
                   icon={<SvgActionNewTab />}
                   iconPlacement="right"
                 >
-                  Go to Airtable
+                  View payments
                 </TextButton>
-              </FlexBox>
+              </WidgetTileContent>
             }
           />
         </GridItem>
@@ -121,7 +122,7 @@ export const YppDashboardMainTab: FC = () => {
               <WidgetTile
                 title={widget.label ?? widget.title}
                 customNode={
-                  <FlexBox flow="column" gap={4} marginTop={2}>
+                  <WidgetTileContent gap={4} marginTop={2}>
                     <FlexBox alignItems="center">
                       {widget.icon ? configYppIconMapper[widget.icon] : null}
                       <Text variant={mdMatch ? 'h500' : 'h400'} as="p">
@@ -131,7 +132,7 @@ export const YppDashboardMainTab: FC = () => {
                     <TextButton to={widget.link} icon={<SvgActionNewTab />} iconPlacement="right">
                       {widget.linkText ?? `Go to ${widget.title}`}
                     </TextButton>
-                  </FlexBox>
+                  </WidgetTileContent>
                 }
               />
             </GridItem>

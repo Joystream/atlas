@@ -5,6 +5,7 @@ import { SvgActionArrowRight, SvgAlertsInformative24, SvgAlertsWarning32 } from 
 import { ActionBar } from '@/components/ActionBar'
 import { Banner } from '@/components/Banner'
 import { CopyButton } from '@/components/CopyButton/CopyButton'
+import { FlexBox } from '@/components/FlexBox'
 import { Button } from '@/components/_buttons/Button'
 import { cVar, media, sizes, square, zIndex } from '@/styles'
 
@@ -118,5 +119,15 @@ export const StyledCopyButton = styled(CopyButton)`
 
   ${media.sm} {
     width: auto;
+  }
+`
+
+export const WidgetTileContent = styled(FlexBox)`
+  flex-direction: column;
+
+  ${media.lg} {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
   }
 `

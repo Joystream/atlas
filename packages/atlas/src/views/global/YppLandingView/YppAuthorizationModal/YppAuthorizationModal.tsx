@@ -75,7 +75,7 @@ const COLLABORATOR_ID = atlasConfig.features.ypp.youtubeCollaboratorMemberId
 const DEFAULT_LANGUAGE = atlasConfig.derived.popularLanguagesSelectValues[0].value
 
 export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSyncedChannels }) => {
-  const { memberId, refetchUserMemberships, setActiveChannel, channelId, isLoggedIn } = useUser()
+  const { memberId, refetchUserMemberships, activeChannel, setActiveChannel, channelId, isLoggedIn } = useUser()
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -321,8 +321,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
           navigate(absoluteRoutes.studio.ypp())
           displaySnackbar({
             title: 'Sign up successful!',
-            description:
-              'We will start importing your YouTube videos once your channel is verified. It could take up to 24 hours after verification for your videos to start showing on the "My videos" page. You can check your channel\'s sync status on the dashboard page',
+            description: 'It may take up to 24 hours after sign up for the videos to start syncing.',
             iconType: 'success',
           })
         },
@@ -397,7 +396,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
 
           // non signed users
           return {
-            text: 'Create account',
+            text: activeChannel?.id ? 'Continue' : 'Create account',
             onClick: () => {
               trackClickAuthModalSignUpButton(utmSource, utmCampaign)
               setSelectedChannelId(yppUnsyncedChannels?.[0]?.id ?? '')
@@ -497,6 +496,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     isLoading,
     yppCurrentChannel,
     yppUnsyncedChannels,
+    activeChannel?.id,
     navigate,
     setSelectedChannelId,
     handleClose,

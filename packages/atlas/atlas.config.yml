@@ -54,31 +54,31 @@ features:
       - tier: 'bronze'
         reqs:
           - Lower effort production.
-          - Growing subscriber count base of channel supporters.
+          - Growing subscriber base of channel supporters.
         rewards:
           - 0 # Reward for signup in USD
           - 0 # Reward for synced video
-          - 0 # Reward for referral
+          - 50 # Reward for referral
       - tier: 'silver'
         reqs:
           - Original good quality of content.
           - Sizeable subscriber base with high ratio of views for videos.
         rewards:
-          - 10
+          - 25
           - 1
-          - 10
+          - 50
       - tier: 'gold'
         reqs:
           - Great quality of content.
           - Large subscriber base of fans active in the comments section.
         rewards:
-          - 30
+          - 50
           - 3
-          - 20
+          - 50
       - tier: 'diamond'
         reqs:
           - Top tier professional quality.
-          - Recognized influencer & large follower audience
+          - Recognized influencer and large follower audience
         rewards:
           - 100
           - 5
@@ -119,11 +119,11 @@ features:
         linkText: Go to Notion # Used only on YPP Dashboard - if empty defaults to "Go to {title}"
         label: Notion # Used for YPP Dashboard to inform user which vendor given feature uses - if empty defaults to title
         icon: info # Optional icon to be displayed. Possible icons: message, info, tokenStack
-      #      - title: Payments
-      #        link: /studio/payments
-      #        linkText: Go to Payments
-      #        label: Studio
-      #        icon: tokenStack
+      - title: Payments
+        link: /studio/payments
+        linkText: Go to Payments
+        label: Studio
+        icon: tokenStack
       - title: Support
         link: https://discord.com/channels/811216481340751934/1053294778529353788
         linkText: Go to Discord
