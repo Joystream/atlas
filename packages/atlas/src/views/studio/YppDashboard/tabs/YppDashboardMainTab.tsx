@@ -21,7 +21,7 @@ import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user/user.hooks'
 import { formatDate, getNextFriday } from '@/utils/time'
 import { YppAuthorizationModal } from '@/views/global/YppLandingView/YppAuthorizationModal'
-import { configYppIconMapper } from '@/views/global/YppLandingView/YppFooter'
+import { configYppIconMapper } from '@/views/global/YppLandingView/sections/YppFooter'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
 import { getTierRewards } from '@/views/studio/YppDashboard/YppDashboard.config'
 

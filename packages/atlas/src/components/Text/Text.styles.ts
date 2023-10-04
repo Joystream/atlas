@@ -57,6 +57,20 @@ const baseStyles = ({ color = 'colorTextStrong', clampAfterLine, margin, align }
 `
 
 export const styledVariants = {
+  h1100: styled.span<TextBaseProps>`
+    ${baseStyles};
+
+    font: ${cVar('typographyDesktopH1100')};
+    letter-spacing: ${cVar('typographyDesktopH1100LetterSpacing')};
+    text-transform: ${cVar('typographyDesktopH1100TextTransform')};
+  `,
+  h1000: styled.span<TextBaseProps>`
+    ${baseStyles};
+
+    font: ${cVar('typographyDesktopH1000')};
+    letter-spacing: ${cVar('typographyDesktopH1000LetterSpacing')};
+    text-transform: ${cVar('typographyDesktopH1000TextTransform')};
+  `,
   h900: styled.span<TextBaseProps>`
     ${baseStyles};
 
@@ -119,6 +133,34 @@ export const styledVariants = {
     font: ${cVar('typographyDesktopH100')};
     letter-spacing: ${cVar('typographyDesktopH100LetterSpacing')};
     text-transform: ${cVar('typographyDesktopH100TextTransform')};
+  `,
+  t500: styled.span<TextBaseProps>`
+    ${baseStyles};
+
+    font: ${cVar('typographyDesktopT500')};
+    letter-spacing: ${cVar('typographyDesktopT500LetterSpacing')};
+    text-transform: ${cVar('typographyDesktopT500TextTransform')};
+  `,
+  't500-strong': styled.span<TextBaseProps>`
+    ${baseStyles};
+
+    font: ${cVar('typographyDesktopT500Strong')};
+    letter-spacing: ${cVar('typographyDesktopT500StrongLetterSpacing')};
+    text-transform: ${cVar('typographyDesktopT500StrongTextTransform')};
+  `,
+  t400: styled.span<TextBaseProps>`
+    ${baseStyles};
+
+    font: ${cVar('typographyDesktopT400')};
+    letter-spacing: ${cVar('typographyDesktopT400LetterSpacing')};
+    text-transform: ${cVar('typographyDesktopT400TextTransform')};
+  `,
+  't400-strong': styled.span<TextBaseProps>`
+    ${baseStyles};
+
+    font: ${cVar('typographyDesktopT400Strong')};
+    letter-spacing: ${cVar('typographyDesktopT400StrongLetterSpacing')};
+    text-transform: ${cVar('typographyDesktopT400StrongTextTransform')};
   `,
   t300: styled.span<TextBaseProps>`
     ${baseStyles};

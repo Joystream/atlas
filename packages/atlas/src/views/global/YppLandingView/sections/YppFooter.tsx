@@ -6,10 +6,11 @@ import { Text } from '@/components/Text'
 import { CallToActionButton, CallToActionWrapper } from '@/components/_buttons/CallToActionButton'
 import { atlasConfig } from '@/config'
 import { YppWidgetIcons } from '@/config/configSchema'
-import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useSectionTextVariants } from '@/views/global/YppLandingView/sections/useSectionTextVariants'
 
-import { CtaBanner, StyledBannerText, StyledButton } from './YppFooter.styles'
-import { StyledLimitedWidthContainer } from './YppLandingView.styles'
+import { CtaBanner, StyledButton } from './YppFooter.styles'
+
+import { StyledLimitedWidthContainer } from '../YppLandingView.styles'
 
 export const configYppIconMapper: Record<YppWidgetIcons, ReactElement> = {
   info: <SvgActionInfo />,
@@ -22,7 +23,8 @@ type YppFooterSectionProps = {
 }
 
 export const YppFooter: FC<YppFooterSectionProps> = ({ onSignUpClick }) => {
-  const mdMatch = useMediaMatch('md')
+  const [titleVariant] = useSectionTextVariants()
+
   return (
     <>
       <StyledLimitedWidthContainer
@@ -38,14 +40,9 @@ export const YppFooter: FC<YppFooterSectionProps> = ({ onSignUpClick }) => {
               <Text variant="h100" as="p" color="colorText">
                 Get started now
               </Text>
-              <StyledBannerText
-                variant={mdMatch ? 'h700' : 'h600'}
-                as="h2"
-                color="colorCoreBaseWhite"
-                margin={{ top: 1 }}
-              >
-                Get the most out of your YouTube channel
-              </StyledBannerText>
+              <Text variant={titleVariant} as="h2" color="colorCoreBaseWhite" margin={{ top: 1 }}>
+                Pave the way to Web3 with your YouTube channel right away.
+              </Text>
 
               <StyledButton onClick={onSignUpClick}>Authorize with YouTube</StyledButton>
             </CtaBanner>
