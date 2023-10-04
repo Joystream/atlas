@@ -4,6 +4,7 @@ import styled from '@emotion/styled'
 import { SvgActionArrowRight, SvgAlertsInformative24, SvgAlertsWarning32 } from '@/assets/icons'
 import { ActionBar } from '@/components/ActionBar'
 import { Banner } from '@/components/Banner'
+import { CopyButton } from '@/components/CopyButton/CopyButton'
 import { Button } from '@/components/_buttons/Button'
 import { cVar, media, sizes, square, zIndex } from '@/styles'
 
@@ -109,5 +110,13 @@ export const StyledCloseButton = styled(Button)`
 
   ${media.lg} {
     position: static;
+  }
+`
+
+export const StyledCopyButton = styled(CopyButton)`
+  width: 100%;
+
+  ${media.sm} {
+    width: auto;
   }
 `

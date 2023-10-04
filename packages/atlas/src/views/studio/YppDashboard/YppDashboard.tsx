@@ -18,6 +18,7 @@ const TABS = ['Dashboard', 'Referrals', 'Settings'] as const
 export const YppDashboard: FC = () => {
   const headTags = useHeadTags('YouTube Partner Program')
   const mdMatch = useMediaMatch('md')
+  const xsMatch = useMediaMatch('xs')
   const [currentVideosTab, setCurrentVideosTab] = useState(0)
   const { trackPageView } = useSegmentAnalytics()
   const { processingAssets, uploads } = useUploadsStore()
@@ -51,7 +52,7 @@ export const YppDashboard: FC = () => {
       {headTags}
       <LimitedWidthContainer>
         <Header>
-          <Text variant={mdMatch ? 'h700' : 'h600'} as="h1">
+          <Text variant={!xsMatch ? 'h500' : mdMatch ? 'h700' : 'h600'} as="h1">
             YouTube Partner Program
           </Text>
         </Header>

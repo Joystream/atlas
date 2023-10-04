@@ -116,5 +116,9 @@ export const StyledJoyTokenIcon = styled(JoyTokenIcon)`
 `
 
 export const ContenBox = styled(LayoutGrid)`
-  padding: ${sizes(6)};
+  padding: ${sizes(4)};
+
+  ${media.sm} {
+    padding: ${sizes(6)};
+  }
 `

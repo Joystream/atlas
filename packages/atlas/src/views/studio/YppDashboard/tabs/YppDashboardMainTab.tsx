@@ -2,7 +2,6 @@ import { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { SvgActionClose, SvgActionNewChannel, SvgActionNewTab } from '@/assets/icons'
-import { CopyButton } from '@/components/CopyButton/CopyButton'
 import { FlexBox } from '@/components/FlexBox'
 import { Information } from '@/components/Information'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
@@ -26,7 +25,13 @@ import { configYppIconMapper } from '@/views/global/YppLandingView/YppFooter'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
 import { getTierRewards } from '@/views/studio/YppDashboard/YppDashboard.config'
 
-import { StatusDot, StatusDotWrapper, StyledCloseButton, YppSyncStatus } from './YppDashboardTabs.styles'
+import {
+  StatusDot,
+  StatusDotWrapper,
+  StyledCloseButton,
+  StyledCopyButton,
+  YppSyncStatus,
+} from './YppDashboardTabs.styles'
 
 const SIGNUP_MESSAGE = 'YPP_SIGNUP_MESSAGE-'
 
@@ -43,11 +48,8 @@ export const YppDashboardMainTab: FC = () => {
     state.dismissedMessages.some((message) => message.id === getMessageIdForChannel(channelId as string))
   )
   const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
-  const { unsyncedChannels } = useGetYppSyncedChannels()
-  const currentChannel = {
-    yppStatus: 'Verified::Bronze',
-    shouldBeIngested: true,
-  }
+  const { unsyncedChannels, currentChannel } = useGetYppSyncedChannels()
+
   const mdMatch = useMediaMatch('md')
   const smMatch = useMediaMatch('sm')
   const lgMatch = useMediaMatch('lg')
@@ -139,6 +141,7 @@ export const YppDashboardMainTab: FC = () => {
                     icon={<SvgActionNewChannel />}
                     disabled={!!currentChannel}
                     iconPlacement="right"
+                    fullWidth={!smMatch}
                     onClick={handleYppSignUpClick}
                   >
                     Sign up
@@ -202,15 +205,14 @@ export const YppDashboardMainTab: FC = () => {
             dollarAmount={getTierRewards('diamond')?.[2]}
             isRangeAmount
             actionNode={
-              <span onClick={() => trackReferralLinkGenerated(channelId)}>
-                <CopyButton
-                  fullWidth={!smMatch}
-                  textToCopy={`${window.location.host}/ypp?referrerId=${channelId}`}
-                  copySuccessText="Referral link copied to clipboard"
-                >
-                  Copy referral link
-                </CopyButton>
-              </span>
+              <StyledCopyButton
+                fullWidth={!smMatch}
+                textToCopy={`${window.location.host}/ypp?referrerId=${channelId}`}
+                copySuccessText="Referral link copied to clipboard"
+                onClick={() => trackReferralLinkGenerated(channelId)}
+              >
+                Copy referral link
+              </StyledCopyButton>
             }
           />
         </GridItem>

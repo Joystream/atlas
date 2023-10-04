@@ -10,8 +10,16 @@ import { cVar, sizes } from '@/styles'
 export type CopyButtonProps = {
   textToCopy: string
   copySuccessText?: string
-} & Omit<ButtonProps, 'onClick' | 'to'>
-export const CopyButton = ({ textToCopy, copySuccessText = 'Copied', ...buttonProps }: CopyButtonProps) => {
+  className?: string
+  onClick?: () => void
+} & Omit<ButtonProps, 'to' | 'onClick'>
+export const CopyButton = ({
+  textToCopy,
+  copySuccessText = 'Copied',
+  className,
+  onClick,
+  ...buttonProps
+}: CopyButtonProps) => {
   const { copyToClipboard } = useClipboard()
   const popoverRef = useRef<PopoverImperativeHandle>(null)
   const [copyButtonClicked, setCopyButtonClicked] = useState(false)
@@ -21,6 +29,7 @@ export const CopyButton = ({ textToCopy, copySuccessText = 'Copied', ...buttonPr
     }
     copyToClipboard(textToCopy)
     setCopyButtonClicked(true)
+    onClick?.()
     popoverRef.current?.show()
     setTimeout(() => {
       setCopyButtonClicked(false)
@@ -29,7 +38,7 @@ export const CopyButton = ({ textToCopy, copySuccessText = 'Copied', ...buttonPr
   }
 
   return (
-    <div>
+    <span className={className}>
       <Popover placement="top" ref={popoverRef} trigger={<div />}>
         <PopoverContent>
           <Text variant="t100" as="p">
@@ -39,7 +48,7 @@ export const CopyButton = ({ textToCopy, copySuccessText = 'Copied', ...buttonPr
       </Popover>
 
       <Button {...buttonProps} onClick={handleCopy} />
-    </div>
+    </span>
   )
 }
 

@@ -28,6 +28,7 @@ export const BenefitCard: FC<BenefitCardProps> = ({
   amountTooltip,
 }) => {
   const smMatch = useMediaMatch('sm')
+  const mdMatch = useMediaMatch('md')
   const lgMatch = useMediaMatch('lg')
 
   return (
@@ -35,7 +36,7 @@ export const BenefitCard: FC<BenefitCardProps> = ({
       <Pattern />
       <ContenBox>
         <FlexGridItem flow="column" colSpan={{ xxs: 12, lg: 8 }}>
-          <Text variant="h500" as="h2">
+          <Text variant={lgMatch ? 'h500' : 'h400'} as="h2">
             {title}
           </Text>
           <Text variant="t200" color="colorText" as="p">
@@ -44,14 +45,14 @@ export const BenefitCard: FC<BenefitCardProps> = ({
         </FlexGridItem>
         <FlexGridItem
           colSpan={{ xxs: 12, lg: 4 }}
-          gap={4}
+          gap={smMatch ? 8 : 4}
           alignItems={smMatch ? 'center' : 'start'}
           flow={smMatch ? (lgMatch ? 'row' : 'row-reverse') : 'column'}
         >
           {typeof dollarAmount === 'number' && (
             <FlexBox justifyContent={lgMatch ? 'end' : 'unset'} alignItems="center">
               {isRangeAmount ? (
-                <FlexBox width="fit-content" flow="column" alignItems="center">
+                <FlexBox width="fit-content" flow="column" alignItems={mdMatch ? 'center' : 'start'}>
                   <Text variant="h400" as="h1">
                     Up to +{dollarAmount} USD
                   </Text>
