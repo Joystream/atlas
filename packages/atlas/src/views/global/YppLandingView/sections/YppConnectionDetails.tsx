@@ -127,10 +127,6 @@ const AllowanceBox = styled(FlexGridItem)`
   margin: 0 auto;
 
   ${media.sm} {
-    padding-right: 10%;
-  }
-
-  ${media.sm} {
     padding: ${sizes(8)};
   }
 `
