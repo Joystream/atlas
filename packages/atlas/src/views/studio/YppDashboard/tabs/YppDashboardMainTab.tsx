@@ -60,6 +60,27 @@ export const YppDashboardMainTab: FC = () => {
       navigate(absoluteRoutes.viewer.ypp())
     }
   }
+
+  const syncStatusContent = (
+    <YppSyncStatus>
+      <Tooltip
+        text={
+          currentChannel?.shouldBeIngested
+            ? 'Your YouTube channel is being automatically synced with your Gleev channel. You will be rewarded every time a new video gets synced.'
+            : 'Automatic YouTube channel sync with Gleev is disabled. You can enable it again anytime in YPP settings tab.'
+        }
+        placement="top-start"
+      >
+        <StatusDotWrapper>
+          <StatusDot isOn={currentChannel?.shouldBeIngested ?? false} />
+        </StatusDotWrapper>
+      </Tooltip>
+      <Text variant="t200" as="p">
+        Autosync: {currentChannel?.shouldBeIngested ? 'On' : 'Off'}
+      </Text>
+    </YppSyncStatus>
+  )
+
   return (
     <>
       <YppAuthorizationModal unSyncedChannels={unsyncedChannels} />
@@ -115,7 +136,7 @@ export const YppDashboardMainTab: FC = () => {
               />
             </GridItem>
           ))}
-        {!hasDismissedSignupMessage && (
+        {!hasDismissedSignupMessage && !currentChannel?.yppStatus.startsWith('Suspended') && (
           <GridItem colSpan={{ xxs: 12 }}>
             <BenefitCard
               title={
@@ -179,24 +200,27 @@ export const YppDashboardMainTab: FC = () => {
             }
             actionNode={
               currentChannel?.yppStatus.startsWith('Verified') ? (
-                currentChannel?.shouldBeIngested && (
-                  <YppSyncStatus>
-                    <Tooltip text="Your YouTube channel is being automatically synced with your Gleev channel. You will be rewarded every time a new video gets synced.">
-                      <StatusDotWrapper>
-                        <StatusDot />
-                      </StatusDotWrapper>
-                    </Tooltip>
-                    <Text variant="t200" as="p">
-                      Autosync: {currentChannel.shouldBeIngested ? 'On' : 'Off'}
-                    </Text>
-                  </YppSyncStatus>
-                )
+                syncStatusContent
               ) : !currentChannel?.yppStatus.startsWith('Suspended') ? null : (
-                <FlexBox justifyContent={lgMatch ? 'end' : 'unset'} alignItems="center">
-                  <Text variant="h400" as="h4">
-                    Suspended
-                  </Text>
-                  <Information text="asdfhkjhaskdfj" />
+                <FlexBox
+                  gap={lgMatch ? 14 : smMatch ? 8 : 4}
+                  flow={smMatch ? 'row' : 'column'}
+                  alignItems={smMatch ? 'center' : 'start'}
+                >
+                  <FlexBox
+                    width={lgMatch ? undefined : 'auto'}
+                    justifyContent={lgMatch ? 'end' : 'unset'}
+                    alignItems="center"
+                  >
+                    <Text variant="h400" as="h4">
+                      Suspended
+                    </Text>
+                    <Information
+                      text="Suspended channels are not eligible for receiving any reward from YouTube Partner Program."
+                      placement="top-start"
+                    />
+                  </FlexBox>
+                  {syncStatusContent}
                 </FlexBox>
               )
             }

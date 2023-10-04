@@ -66,10 +66,16 @@ export const BenefitCard: FC<BenefitCardProps> = ({
         </FlexGridItem>
         {lgMatch ? (
           <>
-            <FlexGridItem colSpan={{ lg: 2 }} alignItems="center">
-              {rewardContent}
-            </FlexGridItem>
-            <FlexGridItem colSpan={{ lg: 2 }} alignItems="center" justifyContent="end">
+            {typeof dollarAmount === 'number' && (
+              <FlexGridItem colSpan={{ lg: 2 }} alignItems="center">
+                {rewardContent}
+              </FlexGridItem>
+            )}
+            <FlexGridItem
+              colSpan={{ lg: typeof dollarAmount === 'number' ? 2 : 4 }}
+              alignItems="center"
+              justifyContent="end"
+            >
               {actionNode}
             </FlexGridItem>
           </>

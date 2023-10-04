@@ -51,13 +51,13 @@ export const StyledActionBar = styled(ActionBar)`
 export const FallbackContainer = styled.div`
   margin-top: 128px;
 `
-const dotPulse = keyframes`
+const dotPulse = ({ isOn }: { isOn: boolean }) => keyframes`
   0% {
     box-shadow: none;
   }
   
   10% {
-    box-shadow: 0 0 0 3px #0c984680;
+    box-shadow: 0 0 0 3px ${isOn ? '#0c984680' : '#ff695f80'};
   }
   
   20%, 100% {
@@ -90,13 +90,13 @@ export const StatusDotWrapper = styled.div`
   display: grid;
   place-items: center;
 `
-export const StatusDot = styled.div`
+export const StatusDot = styled.div<{ isOn: boolean }>`
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: linear-gradient(#0ebe57, #096c34);
-  box-shadow: 0 0 0 5px #0c984680;
-  animation: 10s ease-out ${dotPulse} infinite;
+  background: ${(props) => (props.isOn ? 'linear-gradient(#0ebe57, #096c34)' : 'linear-gradient(#ff695f, #bf0c00)')};
+  box-shadow: 0 0 0 5px ${(props) => (props.isOn ? '#0c984680' : '#ff695f80')};
+  animation: 10s ease-out ${(props) => dotPulse(props)} infinite;
 `
 
 export const StyledCloseButton = styled(Button)`
