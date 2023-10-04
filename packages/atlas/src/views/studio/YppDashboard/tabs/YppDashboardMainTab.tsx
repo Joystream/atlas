@@ -172,7 +172,11 @@ export const YppDashboardMainTab: FC = () => {
                 : getTierRewards(currentChannel.yppStatus.split('::')[1].toLowerCase())?.[1]
             }
             isRangeAmount={!currentChannel || !currentChannel.yppStatus.startsWith('Verified')}
-            amountTooltip="Your YouTube channel is being automatically synced with your Gleev channel. You will be rewarded every time a new video gets synced."
+            amountTooltip={
+              !currentChannel?.yppStatus.startsWith('Verified')
+                ? 'Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity'
+                : 'Your YouTube channel is being automatically synced with your Gleev channel. You will be rewarded every time a new video gets synced.'
+            }
             actionNode={
               currentChannel?.yppStatus.startsWith('Verified') ? (
                 currentChannel?.shouldBeIngested && (
@@ -203,6 +207,7 @@ export const YppDashboardMainTab: FC = () => {
             title="Refer another YouTube creator"
             description="Get rewarded for every new creator who signs up to YPP program using your referral link. Referrals rewards depends on the tier assigned to the invited channel."
             dollarAmount={getTierRewards('diamond')?.[2]}
+            amountTooltip="Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity"
             isRangeAmount
             actionNode={
               <StyledCopyButton

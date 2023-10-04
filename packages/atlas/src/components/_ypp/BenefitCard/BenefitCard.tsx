@@ -28,8 +28,29 @@ export const BenefitCard: FC<BenefitCardProps> = ({
   amountTooltip,
 }) => {
   const smMatch = useMediaMatch('sm')
-  const mdMatch = useMediaMatch('md')
   const lgMatch = useMediaMatch('lg')
+
+  const rewardContent =
+    typeof dollarAmount === 'number' ? (
+      <FlexBox justifyContent={lgMatch ? 'end' : 'unset'} alignItems="center">
+        {isRangeAmount ? (
+          <FlexBox width="fit-content" flow="column" alignItems={smMatch ? 'center' : 'start'}>
+            <Text variant="h400" as="h1">
+              Up to +{dollarAmount} USD
+            </Text>
+            <Text variant="t200" as="p" color="colorText">
+              Depending on tier
+            </Text>
+          </FlexBox>
+        ) : (
+          <Text variant="h400" as="h1">
+            {dollarAmount > 0 ? `+${dollarAmount} USD` : 'Not paid'}
+          </Text>
+        )}
+
+        {amountTooltip && <Information text={amountTooltip} placement="top-start" />}
+      </FlexBox>
+    ) : null
 
   return (
     <Wrapper variant="full" className={className}>
@@ -43,34 +64,26 @@ export const BenefitCard: FC<BenefitCardProps> = ({
             {description}
           </Text>
         </FlexGridItem>
-        <FlexGridItem
-          colSpan={{ xxs: 12, lg: 4 }}
-          gap={smMatch ? 8 : 4}
-          alignItems={smMatch ? 'center' : 'start'}
-          flow={smMatch ? (lgMatch ? 'row' : 'row-reverse') : 'column'}
-        >
-          {typeof dollarAmount === 'number' && (
-            <FlexBox justifyContent={lgMatch ? 'end' : 'unset'} alignItems="center">
-              {isRangeAmount ? (
-                <FlexBox width="fit-content" flow="column" alignItems={mdMatch ? 'center' : 'start'}>
-                  <Text variant="h400" as="h1">
-                    Up to +{dollarAmount} USD
-                  </Text>
-                  <Text variant="t200" as="p" color="colorText">
-                    Depending on tier
-                  </Text>
-                </FlexBox>
-              ) : (
-                <Text variant="h400" as="h1">
-                  {dollarAmount > 0 ? `+${dollarAmount} USD` : 'Not paid'}
-                </Text>
-              )}
-
-              {amountTooltip && <Information text={amountTooltip} placement="top-start" />}
-            </FlexBox>
-          )}
-          {actionNode}
-        </FlexGridItem>
+        {lgMatch ? (
+          <>
+            <FlexGridItem colSpan={{ lg: 2 }} alignItems="center">
+              {rewardContent}
+            </FlexGridItem>
+            <FlexGridItem colSpan={{ lg: 2 }} alignItems="center" justifyContent="end">
+              {actionNode}
+            </FlexGridItem>
+          </>
+        ) : (
+          <FlexGridItem
+            colSpan={{ xxs: 12, lg: 4 }}
+            gap={smMatch ? 8 : 4}
+            alignItems={smMatch ? 'center' : 'start'}
+            flow={smMatch ? (lgMatch ? 'row' : 'row-reverse') : 'column'}
+          >
+            {rewardContent}
+            {actionNode}
+          </FlexGridItem>
+        )}
       </ContenBox>
     </Wrapper>
   )
