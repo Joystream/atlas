@@ -64,7 +64,7 @@ export const YppAuthorizationRequirementsStep: FC<YppAuthorizationRequirementsSt
           , all of which are older than {convertHoursRequirementTime(requirements?.MINIMUM_VIDEO_AGE_HOURS || 0)}.
         </SingleRequirement>
         <SingleRequirement
-          fulfilled={checkRequirmentError(YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_NEW_VIDEO_REQUIREMENT)}
+          fulfilled={checkRequirmentError(YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_NEW_VIDEOS_REQUIREMENT)}
         >
           Has at least{' '}
           <Text variant="t200" as="span" color="colorTextCaution">
