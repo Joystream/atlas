@@ -119,11 +119,11 @@ features:
         linkText: Go to Notion # Used only on YPP Dashboard - if empty defaults to "Go to {title}"
         label: Notion # Used for YPP Dashboard to inform user which vendor given feature uses - if empty defaults to title
         icon: info # Optional icon to be displayed. Possible icons: message, info, tokenStack
-      - title: Payments
-        link: /studio/payments
-        linkText: Go to Payments
-        label: Studio
-        icon: tokenStack
+      #      - title: Payments
+      #        link: /studio/payments
+      #        linkText: Go to Payments
+      #        label: Studio
+      #        icon: tokenStack
       - title: Support
         link: https://discord.com/channels/811216481340751934/1053294778529353788
         linkText: Go to Discord

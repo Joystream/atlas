@@ -1,7 +1,7 @@
 import { FC, useRef } from 'react'
 
 import { Information } from '@/components/Information'
-import { FlexGridItem, LayoutGrid } from '@/components/LayoutGrid'
+import { FlexGridItem, GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { TooltipText } from '@/components/Tooltip/Tooltip.styles'
 import { TierCard } from '@/components/_ypp/TierCard'
@@ -54,7 +54,7 @@ export const YppRewardSection: FC = () => {
     <BackgroundContainer noBackground>
       <StyledLimitedWidthContainer as="section">
         <CenteredLayoutGrid>
-          <FlexGridItem colSpan={{ base: 12, sm: 10, md: 12, lg: 8 }} colStart={{ sm: 2, md: 1, lg: 3 }}>
+          <GridItem colSpan={{ base: 12, sm: 10, md: 12, lg: 8 }} colStart={{ sm: 2, md: 1, lg: 3 }}>
             <Text
               variant={titleVariant}
               as="h2"
@@ -65,7 +65,7 @@ export const YppRewardSection: FC = () => {
             >
               Rewards based on quality and popularity
             </Text>
-          </FlexGridItem>
+          </GridItem>
           <FlexGridItem colSpan={{ base: 12, sm: 10, md: 8, lg: 6 }} colStart={{ sm: 2, md: 3, lg: 4 }}>
             <Text
               variant={subtitleVariant}

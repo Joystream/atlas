@@ -58,7 +58,7 @@ const studioNavbarItems: NavItemType[] = [
           icon: <SvgSidebarYpp />,
           name: 'YPP',
           expandedName: 'YouTube Partner Program',
-          to: absoluteRoutes.studio.ypp(),
+          to: absoluteRoutes.studio.yppDashboard(),
           matchPattern: {
             path: absoluteRoutes.studio.ypp() + '/*',
           },

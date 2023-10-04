@@ -17,7 +17,6 @@ import { MintNftFirstTimeModal } from '@/components/_overlays/MintNftFirstTimeMo
 import { MintNftModal } from '@/components/_overlays/MintNftModal'
 import { VideoTileDraft } from '@/components/_video/VideoTileDraft'
 import { VideoTilePublisher } from '@/components/_video/VideoTilePublisher'
-import { YppStatusPill } from '@/components/_ypp/YppStatusPill'
 import { atlasConfig } from '@/config'
 import { cancelledVideoFilter } from '@/config/contentFilter'
 import { absoluteRoutes } from '@/config/routes'
@@ -75,7 +74,7 @@ export const MyVideosView = () => {
   const mdMatch = useMediaMatch('md')
   const { setNftToMint } = useNftActions()
   const [shouldHideMintModal, setShouldHideMintModal] = useState(false)
-  const [showMintModal, setShowMintModal] = useState(currentChannel?.yppStatus === 'Verified')
+  const [showMintModal, setShowMintModal] = useState(!!currentChannel?.yppStatus.startsWith('Verified'))
 
   const mintConfirmationDismissed = usePersonalDataStore((state) =>
     state.dismissedMessages.some((message) => message.id === MINTING_CONFIRMATION_ID)
@@ -346,7 +345,7 @@ export const MyVideosView = () => {
       <MintNftFirstTimeModal
         shouldHideNextTime={shouldHideMintModal}
         onShouldHideNextTime={setShouldHideMintModal}
-        show={showMintModal && currentChannel?.yppStatus === 'Verified' && !mintConfirmationDismissed}
+        show={showMintModal && !!currentChannel?.yppStatus.startsWith('Verified') && !mintConfirmationDismissed}
         onClose={() => {
           if (shouldHideMintModal) {
             updateMintConfirmationDismiss(MINTING_CONFIRMATION_ID, true)
@@ -362,7 +361,6 @@ export const MyVideosView = () => {
           <Text as="h1" variant="h700">
             My videos
           </Text>
-          {currentChannel && <YppStatusPill />}
         </TitleBox>
         {!smMatch && sortVisibleAndUploadButtonVisible && (
           <MobileButton size="large" icon={<SvgActionAddVideo />} fullWidth {...uploadVideoButtonProps}>

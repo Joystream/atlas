@@ -4,11 +4,14 @@ import { SvgActionLinkUrl } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { YppReferral, YppReferralTable } from '@/components/YppReferralTable/YppReferralTable'
 import { Button } from '@/components/_buttons/Button'
+import { atlasConfig } from '@/config'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useUser } from '@/providers/user/user.hooks'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
 
 import { FallbackContainer } from '../YppDashboardTabs.styles'
+
+const BASE_REFERRAL_REWARD = atlasConfig.features.ypp.referralBaseReward ?? 0
 
 export const YppDashboardReferralsTab = () => {
   const { currentChannel, isLoading } = useGetYppSyncedChannels()
@@ -27,7 +30,7 @@ export const YppDashboardReferralsTab = () => {
         return {
           date: new Date(channelData.createdAt),
           channel: String(channelData.joystreamChannelId),
-          rewardUsd: 1, // TIERS[tier].multiplier * BASE_REFERRAL_REWARD, todo
+          rewardUsd: 1 * BASE_REFERRAL_REWARD,
           status: channelData.yppStatus,
           tier: 1,
         }

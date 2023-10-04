@@ -76,18 +76,16 @@ const Channel = ({ channel }: { channel: YppReferral['channel'] }) => {
   )
 }
 
-const Tier = ({ tier }: { tier: number }) => {
+const Tier = (_: { tier: number }) => {
   return (
     <TierWrapper>
-      {/* todo {TIERS[tier].icon}*/}
+      {/*{TIERS[tier].icon}*/}
       <TierDescription>
         <div style={{ display: 'grid' }}>
           <LeftAlignText variant="h300" as="span">
-            Tier {tier + 1}{' '}
+            Tier
           </LeftAlignText>
-          <Text variant="t100" as="p" color="colorText">
-            {/* todo {TIERS[tier].rules}*/}
-          </Text>
+          <Text variant="t100" as="p" color="colorText" />
         </div>
       </TierDescription>
     </TierWrapper>

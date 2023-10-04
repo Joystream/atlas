@@ -40,3 +40,11 @@ export const getTimeDiffInSeconds = (time: Date) => Math.max(0, Math.round((time
 export const convertDateFormat = (timestamp: Date | string) => {
   return timestamp instanceof Date ? timestamp : parseISO(timestamp)
 }
+
+export const getNextFriday = (date = new Date()) => {
+  const nextDate = new Date(date)
+  const currentDayOfWeek = nextDate.getDay()
+  const daysToAdd = currentDayOfWeek <= 5 ? 5 - currentDayOfWeek : 7 - currentDayOfWeek + 5
+  nextDate.setDate(nextDate.getDate() + daysToAdd)
+  return nextDate
+}

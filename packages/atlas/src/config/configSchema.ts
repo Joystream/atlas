@@ -1,9 +1,8 @@
 import { z } from 'zod'
 
 // keep config schema in separate file so it can be imported without relying on YAML plugin
-
-const YppWidgetIconEnum = z.enum(['info', 'message', 'tokenStack'])
 const YppTierEnum = z.enum(['bronze', 'silver', 'gold', 'diamond'])
+const YppWidgetIconEnum = z.enum(['info', 'message', 'tokenStack'])
 
 export const configSchema = z.object({
   general: z.object({

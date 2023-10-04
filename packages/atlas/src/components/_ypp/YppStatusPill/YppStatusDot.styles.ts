@@ -1,18 +1,18 @@
 import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { cVar, sizes } from '@/styles'
+import { sizes, square } from '@/styles'
 
-export const Container = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: ${sizes(2)};
-  background-color: ${cVar('colorCoreNeutral800Lighten')};
-  padding: ${sizes(2)} ${sizes(4)};
-  border-radius: 99px;
-  width: fit-content;
-`
+// export const Container = styled.div`
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   gap: ${sizes(2)};
+//   background-color: ${cVar('colorCoreNeutral800Lighten')};
+//   padding: ${sizes(2)} ${sizes(4)};
+//   border-radius: 99px;
+//   width: fit-content;
+// `
 
 type DotProps = {
   status: 'operational' | 'delayed' | 'stopped'
@@ -61,6 +61,13 @@ export const StatusDot = styled.div<DotProps>`
   ${getStatusDotStyles};
 
   animation: 10s ease-out ${getDotAnimation} infinite;
+`
+
+export const StatusDotWrapper = styled.div`
+  ${square(32)};
+
+  display: grid;
+  place-items: center;
 `
 
 export const TooltipBox = styled.div`

@@ -5,7 +5,7 @@ import { sizes } from '@/styles'
 
 type FlexBoxProps = {
   gap?: number
-  flow?: 'row' | 'column'
+  flow?: 'row' | 'column' | 'column-reverse' | 'row-reverse'
   alignItems?: string
   justifyContent?: string
   equalChildren?: boolean
