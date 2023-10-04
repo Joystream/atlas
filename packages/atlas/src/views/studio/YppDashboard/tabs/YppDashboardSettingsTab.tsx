@@ -125,7 +125,7 @@ export const YppDashboardSettingsTab = () => {
         displaySnackbar({
           title: 'Settings updated successfully',
           description: isSync
-            ? 'We started syncing your YouTube videos. Please allow 30 to 60 minutes for your videos to start showing up on the My videos page.'
+            ? 'We started syncing your YouTube videos. It could take up to 24 hours after verification for your videos to start showing on the "My videos" page. You can check your channel\'s sync status on the dashboard page'
             : 'Your videos will no longer be synced with your YouTube channel.',
           iconType: 'success',
           actionText: isSync ? 'Go to My Videos' : undefined,

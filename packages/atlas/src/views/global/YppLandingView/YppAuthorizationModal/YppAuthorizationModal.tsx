@@ -322,7 +322,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
           displaySnackbar({
             title: 'Sign up successful!',
             description:
-              'We will start importing your YouTube videos once your channel is verified. Please allow 30 to 60 minutes after verification for your videos to start showing on the My videos page.',
+              'We will start importing your YouTube videos once your channel is verified. It could take up to 24 hours after verification for your videos to start showing on the "My videos" page. You can check your channel\'s sync status on the dashboard page',
             iconType: 'success',
           })
         },
