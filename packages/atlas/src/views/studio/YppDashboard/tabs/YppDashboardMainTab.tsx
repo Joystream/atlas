@@ -2,10 +2,12 @@ import { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { SvgActionClose, SvgActionNewChannel, SvgActionNewTab } from '@/assets/icons'
+import { CopyButton } from '@/components/CopyButton/CopyButton'
 import { FlexBox } from '@/components/FlexBox'
 import { Information } from '@/components/Information'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
+import { Tooltip } from '@/components/Tooltip'
 import { WidgetTile } from '@/components/WidgetTile'
 import { Button, TextButton } from '@/components/_buttons/Button'
 import { BenefitCard } from '@/components/_ypp/BenefitCard'
@@ -13,7 +15,6 @@ import { ServiceStatusWidget } from '@/components/_ypp/ServiceStatusWidget/Servi
 import { YppDashboardTier } from '@/components/_ypp/YppDashboardTier'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
-import { useClipboard } from '@/hooks/useClipboard'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useYppAuthorizeHandler } from '@/hooks/useYppAuthorizeHandler'
@@ -25,7 +26,7 @@ import { configYppIconMapper } from '@/views/global/YppLandingView/YppFooter'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
 import { getTierRewards } from '@/views/studio/YppDashboard/YppDashboard.config'
 
-import { StatusDot, StyledCloseButton, YppSyncStatus } from './YppDashboardTabs.styles'
+import { StatusDot, StatusDotWrapper, StyledCloseButton, YppSyncStatus } from './YppDashboardTabs.styles'
 
 const SIGNUP_MESSAGE = 'YPP_SIGNUP_MESSAGE-'
 
@@ -34,7 +35,6 @@ const getMessageIdForChannel = (channelId: string) => {
 }
 
 export const YppDashboardMainTab: FC = () => {
-  const { copyToClipboard } = useClipboard()
   const { trackReferralLinkGenerated } = useSegmentAnalytics()
   const { channelId } = useUser()
   const navigate = useNavigate()
@@ -43,8 +43,11 @@ export const YppDashboardMainTab: FC = () => {
     state.dismissedMessages.some((message) => message.id === getMessageIdForChannel(channelId as string))
   )
   const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
-  const { unsyncedChannels, currentChannel } = useGetYppSyncedChannels()
-
+  const { unsyncedChannels } = useGetYppSyncedChannels()
+  const currentChannel = {
+    yppStatus: 'Verified::Bronze',
+    shouldBeIngested: true,
+  }
   const mdMatch = useMediaMatch('md')
   const smMatch = useMediaMatch('sm')
   const lgMatch = useMediaMatch('lg')
@@ -58,50 +61,6 @@ export const YppDashboardMainTab: FC = () => {
   return (
     <>
       <YppAuthorizationModal unSyncedChannels={unsyncedChannels} />
-
-      {/*<StyledBanner*/}
-      {/*  icon={<StyledSvgAlertsInformative24 />}*/}
-      {/*  title="Have more than one YouTube channel?"*/}
-      {/*  description={`You can apply to the YouTube Partner Program with as many YouTube & ${APP_NAME} channels as you want. Each YouTube channel can be assigned to only one ${APP_NAME} channel. \nYou can create a new channel from the top right menu.`}*/}
-      {/*/>*/}
-      {/*{currentChannel?.yppStatus === 'Suspended' && (*/}
-      {/*  <StyledBanner*/}
-      {/*    title="This channel has been suspended in the YouTube Partner Program"*/}
-      {/*    icon={<SvgAlertsError24 />}*/}
-      {/*    description={*/}
-      {/*      <Text variant="t200" as="span" color="colorCoreNeutral200">*/}
-      {/*        You will not be rewarded while this channel is suspended. Your channel did not pass the verification due*/}
-      {/*        to{' '}*/}
-      {/*        <Button variant="primary" _textOnly to={atlasConfig.features.ypp.suspensionReasonsLink ?? ''}>*/}
-      {/*          one of these reasons*/}
-      {/*        </Button>*/}
-      {/*        .*/}
-      {/*      </Text>*/}
-      {/*    }*/}
-      {/*  />*/}
-      {/*)}*/}
-      {/*{currentChannel?.yppStatus === 'Unverified' && (*/}
-      {/*  <StyledBanner*/}
-      {/*    title="Channel Verification Pending"*/}
-      {/*    icon={<SvgAlertsInformative24 />}*/}
-      {/*    description={*/}
-      {/*      <Text variant="t200" as="span" color="colorCoreNeutral200">*/}
-      {/*        Your channel needs to get verified before content syncing starts. It normally takes 12-48 hours for*/}
-      {/*        channels to get verified.*/}
-      {/*        <br />*/}
-      {/*        Once verified, you will qualify for the rewards. Payouts are made on a weekly basis, every Friday, for the*/}
-      {/*        previous calendar week. Your first payment will involve the reward for the sign up of{' '}*/}
-      {/*        <NumberFormat*/}
-      {/*          value={(atlasConfig.features.ypp.enrollmentUsdReward ?? 0) * multiplier}*/}
-      {/*          format="dollar"*/}
-      {/*          as="span"*/}
-      {/*          withTooltip={false}*/}
-      {/*        />{' '}*/}
-      {/*        USD paid out in ${atlasConfig.joystream.tokenTicker} tokens based on the market rate.*/}
-      {/*      </Text>*/}
-      {/*    }*/}
-      {/*  />*/}
-      {/*)}*/}
       <LayoutGrid>
         <GridItem colSpan={{ xxs: 12, md: 4 }}>
           <YppDashboardTier onSignUp={handleYppSignUpClick} status={currentChannel?.yppStatus} />
@@ -115,6 +74,7 @@ export const YppDashboardMainTab: FC = () => {
             title="Next payments round"
             tooltip={{
               text: 'All of the payments are processed every Friday. The hour of payouts may vary.',
+              placement: 'top-start',
             }}
             customNode={
               <FlexBox flow="column" gap={4} marginTop={2}>
@@ -211,14 +171,20 @@ export const YppDashboardMainTab: FC = () => {
             isRangeAmount={!currentChannel || !currentChannel.yppStatus.startsWith('Verified')}
             amountTooltip="Your YouTube channel is being automatically synced with your Gleev channel. You will be rewarded every time a new video gets synced."
             actionNode={
-              !currentChannel?.yppStatus.startsWith('Suspended') ? (
-                <YppSyncStatus>
-                  <StatusDot />
-                  <Text variant="t200" as="p">
-                    Autosync: On
-                  </Text>
-                </YppSyncStatus>
-              ) : (
+              currentChannel?.yppStatus.startsWith('Verified') ? (
+                currentChannel?.shouldBeIngested && (
+                  <YppSyncStatus>
+                    <Tooltip text="Your YouTube channel is being automatically synced with your Gleev channel. You will be rewarded every time a new video gets synced.">
+                      <StatusDotWrapper>
+                        <StatusDot />
+                      </StatusDotWrapper>
+                    </Tooltip>
+                    <Text variant="t200" as="p">
+                      Autosync: {currentChannel.shouldBeIngested ? 'On' : 'Off'}
+                    </Text>
+                  </YppSyncStatus>
+                )
+              ) : !currentChannel?.yppStatus.startsWith('Suspended') ? null : (
                 <FlexBox justifyContent={lgMatch ? 'end' : 'unset'} alignItems="center">
                   <Text variant="h400" as="h4">
                     Suspended
@@ -236,18 +202,15 @@ export const YppDashboardMainTab: FC = () => {
             dollarAmount={getTierRewards('diamond')?.[2]}
             isRangeAmount
             actionNode={
-              <Button
-                fullWidth={!smMatch}
-                onClick={() => {
-                  trackReferralLinkGenerated(channelId)
-                  copyToClipboard(
-                    `${window.location.host}/ypp?referrerId=${channelId}`,
-                    'Referral link copied to clipboard'
-                  )
-                }}
-              >
-                Copy referral link
-              </Button>
+              <span onClick={() => trackReferralLinkGenerated(channelId)}>
+                <CopyButton
+                  fullWidth={!smMatch}
+                  textToCopy={`${window.location.host}/ypp?referrerId=${channelId}`}
+                  copySuccessText="Referral link copied to clipboard"
+                >
+                  Copy referral link
+                </CopyButton>
+              </span>
             }
           />
         </GridItem>

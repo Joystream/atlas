@@ -36,8 +36,7 @@ export const ServiceStatusWidget = ({ status, syncStatus }: ServiceStatusWidgetP
   )
 
   const details = useMemo(() => {
-    if (!syncStatus) return []
-    const hideData = !status || !status.startsWith('Verified')
+    const hideData = !status || !syncStatus || !status.startsWith('Verified')
     const output: [number | string, string, string][] = [] // [value, title, tooltip]
 
     output.push([
@@ -67,7 +66,7 @@ export const ServiceStatusWidget = ({ status, syncStatus }: ServiceStatusWidgetP
   return (
     <LayoutBox>
       <FlexGridItem flow="column" gap={2} colSpan={{ xxs: 12 }}>
-        <FlexBox alignItems="center" gap={2}>
+        <FlexBox alignItems="center" gap={0}>
           <Text variant="h200" as="span" color="colorText">
             YPP SYNC SERVICE STATUS
           </Text>
@@ -96,7 +95,7 @@ export const ServiceStatusWidget = ({ status, syncStatus }: ServiceStatusWidgetP
             <Text variant="h100" as="h1" color="colorText">
               {title}
             </Text>
-            <Information text={tooltip} />
+            <Information text={tooltip} placement="top-start" />
           </FlexBox>
         </FlexGridItem>
       ))}

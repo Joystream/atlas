@@ -1,7 +1,7 @@
 import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { sizes } from '@/styles'
+import { sizes, square } from '@/styles'
 
 // export const Container = styled.div`
 //   display: flex;
@@ -61,6 +61,13 @@ export const StatusDot = styled.div<DotProps>`
   ${getStatusDotStyles};
 
   animation: 10s ease-out ${getDotAnimation} infinite;
+`
+
+export const StatusDotWrapper = styled.div`
+  ${square(32)};
+
+  display: grid;
+  place-items: center;
 `
 
 export const TooltipBox = styled.div`

@@ -3,7 +3,7 @@ import { useRef } from 'react'
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
 
-import { StatusDot, TooltipBox } from './YppStatusDot.styles'
+import { StatusDot, StatusDotWrapper, TooltipBox } from './YppStatusDot.styles'
 
 export type YppStatusType = 'operational' | 'delayed' | 'stopped'
 
@@ -28,7 +28,9 @@ export const YppStatusDot = ({ status }: YppStatusDotProps) => {
 
   return (
     <>
-      <StatusDot ref={statusRef} status={status} />
+      <StatusDotWrapper ref={statusRef}>
+        <StatusDot status={status} />
+      </StatusDotWrapper>
       <Tooltip
         reference={statusRef}
         placement="bottom-start"

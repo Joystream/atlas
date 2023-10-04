@@ -65,7 +65,7 @@ export const BenefitCard: FC<BenefitCardProps> = ({
                 </Text>
               )}
 
-              <Information text={amountTooltip} />
+              {amountTooltip && <Information text={amountTooltip} placement="top-start" />}
             </FlexBox>
           )}
           {actionNode}

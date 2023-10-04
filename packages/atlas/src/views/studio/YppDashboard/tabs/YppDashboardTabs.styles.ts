@@ -5,34 +5,9 @@ import { SvgActionArrowRight, SvgAlertsInformative24, SvgAlertsWarning32 } from 
 import { ActionBar } from '@/components/ActionBar'
 import { Banner } from '@/components/Banner'
 import { Button } from '@/components/_buttons/Button'
-import { cVar, media, sizes, zIndex } from '@/styles'
+import { cVar, media, sizes, square, zIndex } from '@/styles'
 
 export { Divider } from '../YppDashboard.styles'
-
-export const RewardsWrapper = styled.div`
-  display: grid;
-  gap: ${sizes(4)};
-  margin-bottom: ${sizes(4)};
-
-  ${media.md} {
-    gap: ${sizes(6)};
-    margin-bottom: ${sizes(6)};
-  }
-`
-
-export const WidgetsWrapper = styled.section`
-  display: grid;
-  gap: ${sizes(4)};
-  margin-bottom: ${sizes(4)};
-
-  ${media.sm} {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  ${media.md} {
-    margin-bottom: ${sizes(6)};
-  }
-`
 
 export const StyledSvgAlertsInformative24 = styled(SvgAlertsInformative24)`
   path {
@@ -108,7 +83,12 @@ export const YppSyncStatus = styled.div`
     white-space: nowrap;
   }
 `
+export const StatusDotWrapper = styled.div`
+  ${square(20)};
 
+  display: grid;
+  place-items: center;
+`
 export const StatusDot = styled.div`
   width: 10px;
   height: 10px;
