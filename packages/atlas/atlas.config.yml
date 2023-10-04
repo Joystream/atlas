@@ -289,110 +289,152 @@ content:
 
   categories: # List of display categories to be used in the app. Those are local to the application and are related to metaprotocol categories via 'videoCategories' array.
     - id: '1' # Local category ID
-      name: 'Science & Technology' # Display name of the category
+      name: 'Art' # Display name of the category
       color: '#D92E61' # Color used in the UI for this category
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/science-and-technology.svg' # URL for category icon SVG
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/science-and-technology.webp' # URL for category cover image
-      videoCategories: ['848-2'] # List of metaprotocol category IDs that should be included in this display category
-      defaultVideoCategory: '848-2'
+      iconUrl: '' # URL for category icon SVG
+      coverImgUrl: '' # URL for category cover image
+      videoCategories: ['3142434-2'] # List of metaprotocol category IDs that should be included in this display category
+      defaultVideoCategory: '3142434-2'
     - id: '2'
-      name: 'Pets & Animals'
+      name: 'Animation and Film'
       color: '#E7BE2D'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/pets-and-animals.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/pets-and-animals.webp'
-      videoCategories: ['893-2']
-      defaultVideoCategory: '893-2'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142437-2']
+      defaultVideoCategory: '3142437-2'
     - id: '3'
-      name: 'Film & Animation'
+      name: 'Autos and Vehicles'
       color: '#BD4BE4'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/film-and-animation.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/film-and-animation.webp'
-      videoCategories: ['888-2']
-      defaultVideoCategory: '888-2'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142440-2']
+      defaultVideoCategory: '3142440-2'
     - id: '4'
-      name: 'People & Blogs'
+      name: 'Business and Finance'
       color: '#BDE933'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/people-and-blogs.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/people-and-blogs.webp'
-      videoCategories: ['883-2']
-      defaultVideoCategory: '883-2'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142443-2']
+      defaultVideoCategory: '3142443-2'
     - id: '5'
-      name: 'Entertainment'
+      name: 'Crypto'
       color: '#54A7F0'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/entertainment.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/entertainment.webp'
-      videoCategories: ['878-2']
-      defaultVideoCategory: '878-2'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142446-2']
+      defaultVideoCategory: '3142446-2'
     - id: '6'
-      name: 'Education'
+      name: 'DIY'
       color: '#DD379D'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/education.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/education.webp'
-      videoCategories: ['873-2']
-      defaultVideoCategory: '873-2'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142448-2']
+      defaultVideoCategory: '3142448-2'
     - id: '7'
-      name: 'Travel & Events'
+      name: 'Education'
       color: '#5A7AEE'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/travel-and-events.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/travel-and-events.webp'
-      videoCategories: ['868-2']
-      defaultVideoCategory: '868-2'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142451-2']
+      defaultVideoCategory: '3142451-2'
     - id: '8'
-      name: 'Sports'
+      name: 'Entertainment'
       color: '#41EE5A'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/sports.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/sports.webp'
-      videoCategories: ['864-2']
-      defaultVideoCategory: '864-2'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142456-2']
+      defaultVideoCategory: '3142456-2'
     - id: '9'
-      name: 'Gaming'
+      name: 'Lifestyle'
       color: '#9455E8'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/gaming.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/gaming.webp'
-      videoCategories: ['860-2']
-      defaultVideoCategory: '860-2'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142459-4']
+      defaultVideoCategory: '"3142459-4'
     - id: '10'
-      name: 'Comedy'
+      name: 'Memes and Humour'
       color: '#4FE1F2'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/comedy.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/comedy.webp'
-      videoCategories: ['856-2']
-      defaultVideoCategory: '856-2'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142468-2']
+      defaultVideoCategory: '3142468-2'
     - id: '11'
-      name: 'Autos & Vehicles'
+      name: 'Music and Music Videos'
       color: '#6E5FEC'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/autos-and-vehicles.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/autos-and-vehicles.webp'
-      videoCategories: ['852-2']
-      defaultVideoCategory: '852-2'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142471-2']
+      defaultVideoCategory: '3142471-2'
     - id: '12'
-      name: 'Howto & Style'
+      name: 'Nature'
       color: '#E57827'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/howto-and-style.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/howto-and-style.webp'
-      videoCategories: ['898-2']
-      defaultVideoCategory: '898-2'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142475-2']
+      defaultVideoCategory: '3142475-2'
     - id: '13'
-      name: 'Music'
+      name: 'News and Current Affairs'
       color: '#6EEC3A'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/music.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/music.webp'
-      videoCategories: ['905-2']
-      defaultVideoCategory: '905-2'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142484-2']
+      defaultVideoCategory: '3142484-2'
     - id: '14'
-      name: 'Nonprofits & Activism'
+      name: 'People and Blogs'
       color: '#E141D6'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/nonprofits-and-activism.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/nonprofit-and-activism.webp'
-      videoCategories: ['910-2']
-      defaultVideoCategory: '910-2'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142490-2']
+      defaultVideoCategory: '3142490-2'
     - id: '15'
-      name: 'News & Politics'
+      name: 'Pets and Animals'
       color: '#48F0B3'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/news-and-politics.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/news-and-politics.webp'
-      videoCategories: ['915-2']
-      defaultVideoCategory: '915-2'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142493-2']
+      defaultVideoCategory: '3142493-2'
+    - id: '16'
+      name: 'Pets and Animals'
+      color: '#EB723F'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142493-2']
+      defaultVideoCategory: '3142493-2'
+    - id: '17'
+      name: 'Sports'
+      color: '#B0E839'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142501-3']
+      defaultVideoCategory: '3142501-3'
+    - id: '18'
+      name: 'Technology'
+      color: '#3EE7B4'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142503-2']
+      defaultVideoCategory: '3142503-2'
+    - id: '19'
+      name: 'Travel'
+      color: '#68FA63'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142506-2']
+      defaultVideoCategory: '3142506-2'
+    - id: '20'
+      name: 'Unboxing'
+      color: '#EE4BB7'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142509-2']
+      defaultVideoCategory: '3142509-2'
+    - id: '21'
+      name: 'Video Games'
+      color: '#FCAC4D'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142511-2']
+      defaultVideoCategory: '3142511-2'
 
   languages: # List of languages to be used in the app. Those will be used when setting video's language, for adding subtitles, etc.
     - isoCode: ar
