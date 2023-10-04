@@ -15,13 +15,15 @@ import { useSnackbar } from '@/providers/snackbars'
 import { useUser } from '@/providers/user/user.hooks'
 import { useYppStore } from '@/providers/ypp/ypp.store'
 import { SentryLogger } from '@/utils/logs'
+import { YppConnectionDetails } from '@/views/global/YppLandingView/sections/YppConnectionDetails'
+import { YppSignupVideo } from '@/views/global/YppLandingView/sections/YppSignupVideo'
 
 import { YppAuthorizationModal } from './YppAuthorizationModal'
-import { YppCardsSections } from './YppCardsSections'
-import { YppFooter } from './YppFooter'
-import { YppHero } from './YppHero'
 import { Wrapper } from './YppLandingView.styles'
-import { YppRewardSection } from './YppRewardSection'
+import { YppCardsSections } from './sections/YppCardsSections'
+import { YppFooter } from './sections/YppFooter'
+import { YppHero } from './sections/YppHero'
+import { YppRewardSection } from './sections/YppRewardSection'
 import { useGetYppSyncedChannels } from './useGetYppSyncedChannels'
 
 const SINGUP_DAILY_QUOTA = 500 // 2% of the total daily quota
@@ -150,6 +152,8 @@ export const YppLandingView: FC = () => {
           selectedChannelTitle={selectedChannelTitle}
         />
         <YppRewardSection />
+        <YppSignupVideo />
+        <YppConnectionDetails />
         <YppCardsSections />
         <YppFooter onSignUpClick={handleYppSignUpClick} />
       </ParallaxProvider>

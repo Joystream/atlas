@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { LayoutGrid } from '@/components/LayoutGrid'
 import { media, sizes } from '@/styles'
 
-import { imageShadow } from './YppLandingView.styles'
+import { imageShadow } from '../YppLandingView.styles'
 
 export const CardsWithImagesContainer = styled.div`
   display: grid;
@@ -14,6 +14,7 @@ export const CardsWithImagesContainer = styled.div`
 `
 
 export const CardImageRow = styled(LayoutGrid)`
+  grid-gap: ${sizes(6)};
   ${media.sm} {
     align-items: center;
     justify-items: center;
@@ -38,8 +39,6 @@ export const ImageContainer = styled.div<ImageContainerProps>`
 
 export const CardImage = styled.img<{ absolute?: boolean; dropShadow?: boolean }>`
   width: 100%;
-  min-width: 480px;
-  max-width: 640px;
   height: auto;
   position: ${({ absolute }) => (absolute ? 'absolute' : 'relative')};
   z-index: ${({ absolute }) => (absolute ? 0 : 1)};

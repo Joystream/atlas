@@ -51,20 +51,38 @@ features:
     enrollmentUsdReward: 5 # Amount for successful enrollment in YPP in USD.
     referralBaseReward: 2.5 # Self-explanatory, it should match `baseUsdAmount.min` value in last `rewards` entry
     tiersDefinition: # Tiers for YouTube partner program rewards. You can provide maximum three tiers. Each tier should has own multiplier.
-      tiers:
-        - minimumSubscribers: 0
-          multiplier: 1
-        - minimumSubscribers: 1000
-          multiplier: 2
-        - minimumSubscribers: 5000
-          multiplier: 4
-        - minimumSubscribers: 25000
-          multiplier: 6
-        - minimumSubscribers: 50000
-          multiplier: 8
-        - minimumSubscribers: 100000
-          multiplier: 10
-      tiersTooltip: The more subscribers you have on YouTube, the higher the payouts in the program.
+      - tier: 'bronze'
+        reqs:
+          - Lower effort production.
+          - Growing subscriber count base of channel supporters.
+        rewards:
+          - 0 # Reward for signup in USD
+          - 0 # Reward for synced video
+          - 0 # Reward for referral
+      - tier: 'silver'
+        reqs:
+          - Original good quality of content.
+          - Sizeable subscriber base with high ratio of views for videos.
+        rewards:
+          - 10
+          - 1
+          - 10
+      - tier: 'gold'
+        reqs:
+          - Great quality of content.
+          - Large subscriber base of fans active in the comments section.
+        rewards:
+          - 30
+          - 3
+          - 20
+      - tier: 'diamond'
+        reqs:
+          - Top tier professional quality.
+          - Recognized influencer & large follower audience
+        rewards:
+          - 100
+          - 5
+          - 50
     rewards:
       - title: Sign Up to YouTube Partner Program
         showInDashboard: false # Optional. If false the reward will be shown only on YouTube partner program landing page. Default true

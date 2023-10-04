@@ -90,6 +90,7 @@ export type VideoPlayerProps = {
   availableTextTracks?: AvailableTrack[]
   isMinimized?: boolean
   onMinimizedExit?: () => void
+  hideCinematic?: boolean
 } & VideoJsConfig
 
 declare global {
@@ -124,6 +125,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     isMinimized,
     onMinimizedExit,
     onError,
+    hideCinematic,
     ...videoJsConfig
   },
   externalRef
@@ -875,7 +877,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                       {captionsEnabled ? <SvgControlsCaptionsSolid /> : <SvgControlsCaptionsOutline />}
                     </PlayerControlButton>
                   )}
-                  {!isMinimized && mdMatch && !isEmbedded && !player?.isFullscreen() && (
+                  {!isMinimized && !hideCinematic && mdMatch && !isEmbedded && !player?.isFullscreen() && (
                     <PlayerControlButton
                       tooltipEnabled={!isSettingsPopoverOpened}
                       onClick={toggleCinematicView}

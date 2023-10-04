@@ -1,17 +1,12 @@
 import { FC } from 'react'
 import { useParallax } from 'react-scroll-parallax'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
+import useResizeObserver from 'use-resize-observer'
 
 import { useRecentlyPaidChannels } from '@/api/hooks/channel'
 import { SvgActionChevronR, SvgLogoGoogleWhiteFull, SvgLogoYoutubeWhiteFull } from '@/assets/icons'
-import hero576 from '@/assets/images/ypp-hero/hero-576.webp'
-import hero864 from '@/assets/images/ypp-hero/hero-864.webp'
-import hero1152 from '@/assets/images/ypp-hero/hero-1152.webp'
-import hero2304 from '@/assets/images/ypp-hero/hero-2304.webp'
-import yt576 from '@/assets/images/ypp-hero/yt-576.webp'
-import yt864 from '@/assets/images/ypp-hero/yt-864.webp'
-import yt1152 from '@/assets/images/ypp-hero/yt-1152.webp'
-import yt2304 from '@/assets/images/ypp-hero/yt-2304.webp'
+import hero from '@/assets/images/ypp-hero/hero.webp'
+import yt from '@/assets/images/ypp-hero/yt.webp'
 import { AppLogo } from '@/components/AppLogo'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
@@ -22,6 +17,7 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { cVar, transitions } from '@/styles'
+import { useSectionTextVariants } from '@/views/global/YppLandingView/sections/useSectionTextVariants'
 
 import {
   BackImage,
@@ -32,7 +28,13 @@ import {
   SelectDifferentChannelButton,
   StyledInfiniteCarousel,
 } from './YppHero.styles'
-import { BackgroundContainer, StyledLimitedWidthContainer } from './YppLandingView.styles'
+
+import {
+  GlowBox,
+  GlowContainer,
+  HeroBackgroundContainer,
+  StyledLimitedWidthContainerHero,
+} from '../YppLandingView.styles'
 
 export type YppAtlasStatus = 'have-channel' | 'no-channel' | 'ypp-signed' | 'connect-wallet' | null
 
@@ -51,9 +53,9 @@ export const YppHero: FC<YppHeroProps> = ({
   hasAnotherUnsyncedChannel,
   selectedChannelTitle,
 }) => {
-  const mdMatch = useMediaMatch('md')
   const smMatch = useMediaMatch('sm')
-
+  const { ref, width, height } = useResizeObserver({ box: 'border-box' })
+  const [, subtitleVariant, titleVariant] = useSectionTextVariants()
   const endScroll = smMatch ? window.innerHeight / 3 : window.innerHeight
   const { ref: heroImageRef } = useParallax<HTMLImageElement>({
     startScroll: 0,
@@ -73,10 +75,13 @@ export const YppHero: FC<YppHeroProps> = ({
     : Array.from({ length: 30 }).map((_, idx) => <PaidChannelCard key={idx} loading />)
 
   return (
-    <BackgroundContainer noBackground>
-      <StyledLimitedWidthContainer centerText>
+    <HeroBackgroundContainer noBackground>
+      <StyledLimitedWidthContainerHero ref={ref} centerText>
+        <GlowContainer>
+          <GlowBox walkHeight={height ?? 0} walkWidth={width ?? 0} />
+        </GlowContainer>
         <LayoutGrid as="header">
-          <GridItem colSpan={{ base: 12, sm: 8, lg: 6 }} colStart={{ sm: 3, lg: 4 }}>
+          <GridItem colSpan={{ base: 12, sm: 10, md: 12, lg: 10 }} colStart={{ sm: 2, md: 1, lg: 2 }}>
             <LogosContainer>
               <AppLogo
                 variant="full"
@@ -90,7 +95,7 @@ export const YppHero: FC<YppHeroProps> = ({
             </LogosContainer>
             <Text
               as="h1"
-              variant={mdMatch ? 'h800' : 'h600'}
+              variant={titleVariant}
               data-aos="fade-up"
               data-aos-delay="250"
               data-aos-offset="80"
@@ -98,19 +103,24 @@ export const YppHero: FC<YppHeroProps> = ({
             >
               Connect your YouTube channel & get paid
             </Text>
+          </GridItem>
+          <GridItem colSpan={{ base: 12, sm: 10, md: 8, lg: 6 }} colStart={{ sm: 2, md: 3, lg: 4 }}>
             <Text
               as="p"
-              variant="t300"
+              variant={subtitleVariant}
               color="colorText"
-              margin={{ top: 4, bottom: 8 }}
+              margin={{ top: 4, bottom: 12 }}
               data-aos="fade-up"
               data-aos-delay="350"
               data-aos-offset="40"
               data-aos-easing="atlas-easing"
             >
-              Videos from YouTube channel get automatically synced to {atlasConfig.general.appName} and you get JOY
-              tokens for every new sync and more.
+              YouTube videos get automatically synced to your {atlasConfig.general.appName} channel, without any
+              additional effort.
             </Text>
+          </GridItem>
+
+          <GridItem colSpan={{ base: 12, sm: 8 }} colStart={{ sm: 3 }}>
             <LogosContainer data-aos="fade-up" data-aos-delay="350" data-aos-offset="40" data-aos-easing="atlas-easing">
               <SvgLogoYoutubeWhiteFull />
               <SvgLogoGoogleWhiteFull />
@@ -166,21 +176,10 @@ export const YppHero: FC<YppHeroProps> = ({
           </GridItem>
         </LayoutGrid>
         <HeroImageWrapper data-aos="fade-up" data-aos-delay="550" data-aos-offset="80" data-aos-easing="atlas-easing">
-          <BackImage
-            srcSet={`${yt576} 576w, ${yt864} 864w, ${yt1152} 1152w, ${yt2304} 2304w`}
-            alt="Hero back"
-            width="1152"
-            height="824"
-          />
-          <FrontImage
-            ref={heroImageRef}
-            srcSet={`${hero576} 576w, ${hero864} 864w, ${hero1152} 1152w, ${hero2304} 2304w`}
-            alt="Hero front"
-            width="1152"
-            height="824"
-          />
+          <BackImage src={yt} alt="Hero back" width="1152" height="824" />
+          <FrontImage ref={heroImageRef} src={hero} alt="Hero front" width="1152" height="824" />
         </HeroImageWrapper>
-      </StyledLimitedWidthContainer>
+      </StyledLimitedWidthContainerHero>
       {items && items.length >= 7 && (
         <StyledInfiniteCarousel
           headerGridItemProps={{ colStart: { base: 1, lg: 2 }, colSpan: { base: 12, lg: 10 } }}
@@ -196,6 +195,6 @@ export const YppHero: FC<YppHeroProps> = ({
           }}
         />
       )}
-    </BackgroundContainer>
+    </HeroBackgroundContainer>
   )
 }

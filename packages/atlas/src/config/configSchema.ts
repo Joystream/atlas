@@ -3,6 +3,7 @@ import { z } from 'zod'
 // keep config schema in separate file so it can be imported without relying on YAML plugin
 
 const YppWidgetIconEnum = z.enum(['info', 'message', 'tokenStack'])
+const YppTierEnum = z.enum(['bronze', 'silver', 'gold', 'diamond'])
 
 export const configSchema = z.object({
   general: z.object({
@@ -49,15 +50,13 @@ export const configSchema = z.object({
       enrollmentReward: z.number().nullable(),
       enrollmentUsdReward: z.number().nullable(),
       referralBaseReward: z.number().nullable(),
-      tiersDefinition: z
-        .object({
-          tiersTooltip: z.string().nullable(),
-          tiers: z
-            .array(z.object({ minimumSubscribers: z.number(), multiplier: z.number().default(1) }))
-            .max(6)
-            .optional(),
+      tiersDefinition: z.array(
+        z.object({
+          tier: YppTierEnum,
+          reqs: z.array(z.string()),
+          rewards: z.array(z.number()).max(3),
         })
-        .optional(),
+      ),
       rewards: z
         .array(
           z.object({

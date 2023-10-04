@@ -3,14 +3,14 @@ import styled from '@emotion/styled'
 import { InfiniteCarousel } from '@/components/InfiniteCarousel/InfiniteCarousel'
 import { cVar, media, sizes } from '@/styles'
 
-import { imageShadow } from './YppLandingView.styles'
+import { imageShadow } from '../YppLandingView.styles'
 
 export const HeroImageWrapper = styled.div`
   position: relative;
   margin: ${sizes(16)} auto 0 auto;
 
   ${media.lg} {
-    max-width: 1152px;
+    max-width: 1082px;
   }
 `
 
@@ -24,7 +24,7 @@ export const LogosContainer = styled.div`
   align-items: center;
   justify-content: center;
   gap: ${sizes(10)};
-  margin-bottom: ${sizes(8)};
+  margin-bottom: ${sizes(6)};
 `
 
 export const SelectDifferentChannelButton = styled.button`
@@ -47,17 +47,20 @@ export const FrontImage = styled.img`
   max-width: 100%;
   height: auto;
   display: block;
+  border-radius: ${cVar('radiusMedium')};
+  margin-top: 10%;
   ${imageShadow}
 `
 
 export const BackImage = styled.img`
   position: absolute;
-  width: 100%;
+  width: 80%;
   max-width: 100%;
   height: auto;
   display: block;
-  left: 0;
-  top: 0;
+  left: 10%;
+  top: -10%;
+  border-radius: ${cVar('radiusMedium')};
 `
 
 export const StyledInfiniteCarousel = styled(InfiniteCarousel)`
