@@ -496,7 +496,6 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     isLoading,
     yppCurrentChannel,
     yppUnsyncedChannels,
-    activeChannel?.id,
     navigate,
     setSelectedChannelId,
     handleClose,
