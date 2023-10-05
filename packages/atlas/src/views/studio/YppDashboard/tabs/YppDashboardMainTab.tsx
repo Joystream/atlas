@@ -101,7 +101,7 @@ export const YppDashboardMainTab: FC = () => {
               placement: 'top-start',
             }}
             customNode={
-              <WidgetTileContent gap={4} marginTop={2}>
+              <WidgetTileContent marginTop={2}>
                 <Text variant={mdMatch ? 'h500' : 'h400'} as="p">
                   {formatDate(nextPayoutDate)}
                 </Text>
@@ -122,7 +122,7 @@ export const YppDashboardMainTab: FC = () => {
               <WidgetTile
                 title={widget.label ?? widget.title}
                 customNode={
-                  <WidgetTileContent gap={4} marginTop={2}>
+                  <WidgetTileContent marginTop={2}>
                     <FlexBox alignItems="center">
                       {widget.icon ? configYppIconMapper[widget.icon] : null}
                       <Text variant={mdMatch ? 'h500' : 'h400'} as="p">

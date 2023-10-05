@@ -124,8 +124,10 @@ export const StyledCopyButton = styled(CopyButton)`
 
 export const WidgetTileContent = styled(FlexBox)`
   flex-direction: column;
+  gap: ${({ gap }) => sizes(gap ?? 1)};
 
   ${media.lg} {
+    gap: 0;
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-end;
