@@ -153,10 +153,8 @@ export const StyledHamburgerButton = styled(HamburgerButton)`
   top: ${sizes(2)};
   left: ${sizes(3)};
   z-index: ${zIndex.sideNav};
-  display: none;
   ${media.md} {
     top: ${sizes(4)};
-    display: block;
   }
 `
 
