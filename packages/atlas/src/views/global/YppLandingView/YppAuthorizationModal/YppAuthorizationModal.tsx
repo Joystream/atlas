@@ -75,7 +75,7 @@ const COLLABORATOR_ID = atlasConfig.features.ypp.youtubeCollaboratorMemberId
 const DEFAULT_LANGUAGE = atlasConfig.derived.popularLanguagesSelectValues[0].value
 
 export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSyncedChannels }) => {
-  const { memberId, refetchUserMemberships, activeChannel, setActiveChannel, channelId, isLoggedIn } = useUser()
+  const { memberId, refetchUserMemberships, setActiveChannel, channelId, isLoggedIn } = useUser()
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const [isSubmitting, setIsSubmitting] = useState(false)
