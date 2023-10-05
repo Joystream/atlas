@@ -26,12 +26,6 @@ export const YppDashboardReferralsTab = () => {
     [currentChannel?.referredChannels]
   )
 
-  mappedData.push({
-    date: new Date(),
-    channel: '1',
-    status: 'Verified::Diamond',
-  })
-
   if (!isLoading && !mappedData?.length) {
     return (
       <FallbackContainer>

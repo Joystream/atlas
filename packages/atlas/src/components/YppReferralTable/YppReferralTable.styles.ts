@@ -11,6 +11,6 @@ export const RightAlignText = styled(Text)`
 
 export const TierWrapper = styled(FlexBox)`
   svg {
-    ${square(36)};
+    ${square(32)};
   }
 `

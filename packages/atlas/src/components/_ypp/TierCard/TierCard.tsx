@@ -1,9 +1,9 @@
 import {
   SvgActionCheck,
-  SvgIconRankBronze,
-  SvgIconRankDiamond,
-  SvgIconRankGold,
-  SvgIconRankSilver,
+  SvgIconRankBronzeMonochrome,
+  SvgIconRankDiamondMonochrome,
+  SvgIconRankGoldMonochrome,
+  SvgIconRankSilverMonochrome,
 } from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox'
 import { Text } from '@/components/Text'
@@ -33,14 +33,14 @@ const getRewardTitle = (idx: number) => {
 const getTierIcon = (tier: TierCardProps['tier']) => {
   switch (tier) {
     case 'diamond':
-      return <SvgIconRankDiamond />
+      return <SvgIconRankDiamondMonochrome />
     case 'gold':
-      return <SvgIconRankGold />
+      return <SvgIconRankGoldMonochrome />
     case 'silver':
-      return <SvgIconRankSilver />
+      return <SvgIconRankSilverMonochrome />
     case 'bronze':
     default:
-      return <SvgIconRankBronze />
+      return <SvgIconRankBronzeMonochrome />
   }
 }
 
@@ -49,7 +49,7 @@ export const TierCard = ({ reqs, rewards, tier }: TierCardProps) => {
     <Wrapper isDiamond={tier === 'diamond'}>
       <FlexBox flow="column" gap={4}>
         <TierBanner tier={tier}>
-          <FlexBox flow="column" gap={0} alignItems="center">
+          <FlexBox flow="column" gap={1.5} alignItems="center">
             {getTierIcon(tier)}
             <Text variant="t100-strong" as="p">
               {capitalizeFirstLetter(tier)}

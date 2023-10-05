@@ -78,19 +78,8 @@ const Channel = ({ channel }: { channel: YppReferral['channel'] }) => {
 
 const Tier = ({ yppStatus }: { yppStatus: YppChannelStatus }) => {
   return (
-    // <TierWrapper>
-    //   {/*{TIERS[tier].icon}*/}
-    //   <TierDescription>
-    //     <div style={{ display: 'grid' }}>
-    //       <LeftAlignText variant="h300" as="span">
-    //         Tier
-    //       </LeftAlignText>
-    //       <Text variant="t100" as="p" color="colorText" />
-    //     </div>
-    //   </TierDescription>
-    // </TierWrapper>
     <TierWrapper gap={2} alignItems="center">
-      {getTierIcon(yppStatus)}
+      {getTierIcon(yppStatus, true)}
       <FlexBox flow="column" width="fit-content" gap={1}>
         <Text variant="t100" as="p">
           {yppStatus.startsWith('Verified')
@@ -108,7 +97,7 @@ const Tier = ({ yppStatus }: { yppStatus: YppChannelStatus }) => {
             ? 'Verified'
             : yppStatus.startsWith('Suspended')
             ? `Reason: ${convertUpperCamelToSentence(yppStatus.split('::')[1])}`
-            : ''}
+            : 'Sync paused'}
         </Text>
       </FlexBox>
     </TierWrapper>
@@ -124,7 +113,7 @@ const Reward = ({ yppStatus }: { yppStatus: YppChannelStatus }) => {
         ? 'Pending'
         : yppStatus.startsWith('Verified')
         ? `$${getTierRewards(yppStatus.split('::')[1].toLowerCase())?.[2]}`
-        : ''}
+        : 'n/a'}
     </RightAlignText>
   )
 }

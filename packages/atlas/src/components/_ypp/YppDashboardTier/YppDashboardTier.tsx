@@ -1,15 +1,20 @@
 import {
   SvgActionNewChannel,
   SvgAlertsError32,
-  SvgIconRankBronze,
-  SvgIconRankDiamond,
-  SvgIconRankGold,
-  SvgIconRankSilver,
+  SvgAlertsWarning32,
+  SvgIconRankBronzeColor,
+  SvgIconRankBronzeMonochrome,
+  SvgIconRankDiamondColor,
+  SvgIconRankDiamondMonochrome,
+  SvgIconRankGoldColor,
+  SvgIconRankGoldMonochrome,
+  SvgIconRankSilverColor,
+  SvgIconRankSilverMonochrome,
+  SvgLoaderMStatic,
 } from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox'
 import { Information } from '@/components/Information'
 import { Text } from '@/components/Text'
-import { Loader } from '@/components/_loaders/Loader'
 import { convertUpperCamelToSentence } from '@/utils/misc'
 import {
   YppChannelStatus,
@@ -24,24 +29,26 @@ export type YppDashboardTierProps = {
   onSignUp?: () => void
 }
 
-export const getTierIcon = (tier: YppChannelStatus) => {
+export const getTierIcon = (tier: YppChannelStatus, color?: boolean) => {
   switch (tier) {
     case 'Verified::Diamond':
-      return <SvgIconRankDiamond />
+      return color ? <SvgIconRankDiamondColor /> : <SvgIconRankDiamondMonochrome />
     case 'Verified::Gold':
-      return <SvgIconRankGold />
+      return color ? <SvgIconRankGoldColor /> : <SvgIconRankGoldMonochrome />
     case 'Verified::Silver':
-      return <SvgIconRankSilver />
+      return color ? <SvgIconRankSilverColor /> : <SvgIconRankSilverMonochrome />
     case 'Suspended::DuplicateContent':
     case 'Suspended::ProgramTermsExploit':
     case 'Suspended::SubparQuality':
     case 'Suspended::UnsupportedTopic':
       return <SvgAlertsError32 />
     case 'Unverified':
-      return <Loader variant="medium" />
+      return <SvgLoaderMStatic />
+    case 'OptedOut':
+      return <SvgAlertsWarning32 />
     case 'Verified::Bronze':
     default:
-      return <SvgIconRankBronze />
+      return color ? <SvgIconRankBronzeColor /> : <SvgIconRankBronzeMonochrome />
   }
 }
 
