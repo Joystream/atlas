@@ -59,9 +59,6 @@ const studioNavbarItems: NavItemType[] = [
           name: 'YPP',
           expandedName: 'YouTube Partner Program',
           to: absoluteRoutes.studio.yppDashboard(),
-          matchPattern: {
-            path: absoluteRoutes.studio.ypp() + '/*',
-          },
         },
       ]
     : []),

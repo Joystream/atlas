@@ -318,7 +318,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
           setReferrerId(null)
           setYtResponseData(null)
 
-          navigate(absoluteRoutes.studio.ypp())
+          navigate(absoluteRoutes.studio.yppDashboard())
           displaySnackbar({
             title: 'Sign up successful!',
             description:
@@ -374,7 +374,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
           }
 
           if (yppCurrentChannel) {
-            navigate(absoluteRoutes.studio.ypp())
+            navigate(absoluteRoutes.studio.yppDashboard())
           }
 
           if (yppUnsyncedChannels?.length) {

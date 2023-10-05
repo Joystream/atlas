@@ -216,7 +216,6 @@ export const YppDashboardSettingsTab = () => {
               iconType: 'success',
             })
           }
-          navigate(absoluteRoutes.studio.ypp())
         }
       }
     } catch (e) {
@@ -248,7 +247,6 @@ export const YppDashboardSettingsTab = () => {
     handleTransaction,
     joystream,
     memberId,
-    navigate,
     proxyCallback,
   ])
 

@@ -90,7 +90,7 @@ export const YppDashboardMainTab: FC = () => {
         </GridItem>
 
         <GridItem colSpan={{ xxs: 12, md: 8 }}>
-          <ServiceStatusWidget status={currentChannel?.yppStatus} />
+          <ServiceStatusWidget status={currentChannel?.yppStatus} syncStatus={currentChannel?.syncStatus} />
         </GridItem>
         <GridItem colSpan={{ xxs: 12, sm: 4 }}>
           <WidgetTile
