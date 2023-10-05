@@ -117,26 +117,28 @@ export const YppDashboardMainTab: FC = () => {
           />
         </GridItem>
         {atlasConfig.features.ypp.widgets &&
-          atlasConfig.features.ypp.widgets.map((widget) => (
-            <GridItem colSpan={{ xxs: 12, sm: 4 }} key={widget.title}>
-              <WidgetTile
-                title={widget.label ?? widget.title}
-                customNode={
-                  <WidgetTileContent marginTop={2}>
-                    <FlexBox alignItems="center">
-                      {widget.icon ? configYppIconMapper[widget.icon] : null}
-                      <Text variant={mdMatch ? 'h500' : 'h400'} as="p">
-                        {widget.title}
-                      </Text>
-                    </FlexBox>
-                    <TextButton to={widget.link} icon={<SvgActionNewTab />} iconPlacement="right">
-                      {widget.linkText ?? `Go to ${widget.title}`}
-                    </TextButton>
-                  </WidgetTileContent>
-                }
-              />
-            </GridItem>
-          ))}
+          atlasConfig.features.ypp.widgets
+            .filter((widget) => widget.title !== 'Payments')
+            .map((widget) => (
+              <GridItem colSpan={{ xxs: 12, sm: 4 }} key={widget.title}>
+                <WidgetTile
+                  title={widget.label ?? widget.title}
+                  customNode={
+                    <WidgetTileContent marginTop={2}>
+                      <FlexBox alignItems="center">
+                        {widget.icon ? configYppIconMapper[widget.icon] : null}
+                        <Text variant={mdMatch ? 'h500' : 'h400'} as="p">
+                          {widget.title}
+                        </Text>
+                      </FlexBox>
+                      <TextButton to={widget.link} icon={<SvgActionNewTab />} iconPlacement="right">
+                        {widget.linkText ?? `Go to ${widget.title}`}
+                      </TextButton>
+                    </WidgetTileContent>
+                  }
+                />
+              </GridItem>
+            ))}
         {!hasDismissedSignupMessage && !currentChannel?.yppStatus.startsWith('Suspended') && (
           <GridItem colSpan={{ xxs: 12 }}>
             <BenefitCard
