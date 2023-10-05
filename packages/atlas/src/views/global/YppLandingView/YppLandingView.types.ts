@@ -1,8 +1,8 @@
 export type YppChannelTierTypes = 'Verified::Bronze' | 'Verified::Silver' | 'Verified::Gold' | 'Verified::Diamond'
 
 export type YppChannelSuspendedTypes =
-  | 'Suspended::SubparQuality'
-  | 'Suspended::DuplicateContent'
+  | 'Suspended::CopyrightBreach'
+  | 'Suspended::MisleadingContent'
   | 'Suspended::UnsupportedTopic'
   | 'Suspended::ProgramTermsExploit'
 
