@@ -396,7 +396,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
 
           // non signed users
           return {
-            text: activeChannel?.id ? 'Continue' : 'Create account',
+            text: yppUnsyncedChannels?.length ? 'Continue' : 'Create account',
             onClick: () => {
               trackClickAuthModalSignUpButton(utmSource, utmCampaign)
               setSelectedChannelId(yppUnsyncedChannels?.[0]?.id ?? '')

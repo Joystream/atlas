@@ -84,9 +84,11 @@ export const YppRewardSection: FC = () => {
         </CenteredLayoutGrid>
         <LayoutGrid>
           <TierCardWrapper colSpan={{ base: 12, sm: 10, md: 12, lg: 10 }} colStart={{ sm: 2, md: 1, lg: 2 }}>
-            {tiers.map((tier) => (
-              <TierCard key={tier.tier} {...tier} />
-            ))}
+            {tiers.map((tier) => {
+              const [maxReferralReward] = tiers[tiers.length - 1].rewards.slice(-1)
+              tier.rewards = [...tier.rewards.slice(0, -1), maxReferralReward]
+              return <TierCard key={tier.tier} {...tier} />
+            })}
           </TierCardWrapper>
           <FlexGridItem
             colSpan={{ base: 12, sm: 10, md: 12, lg: 10 }}

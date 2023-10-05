@@ -58,7 +58,7 @@ features:
         rewards:
           - 0 # Reward for signup in USD
           - 0 # Reward for synced video
-          - 50 # Reward for referral
+          - 0 # Reward for referral
       - tier: 'silver'
         reqs:
           - Original good quality of content.
@@ -66,7 +66,7 @@ features:
         rewards:
           - 25
           - 1
-          - 50
+          - 10
       - tier: 'gold'
         reqs:
           - Great quality of content.
@@ -74,7 +74,7 @@ features:
         rewards:
           - 50
           - 3
-          - 50
+          - 25
       - tier: 'diamond'
         reqs:
           - Top tier professional quality.
