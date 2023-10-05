@@ -69,7 +69,7 @@ export const TierBanner = styled.div<{ tier: 'bronze' | 'silver' | 'gold' | 'dia
   }
 
   svg {
-    ${square(48)}
+    ${square(36)}
   }
 
   ::before {

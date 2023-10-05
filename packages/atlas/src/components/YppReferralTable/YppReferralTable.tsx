@@ -2,26 +2,27 @@ import { useMemo } from 'react'
 
 import { useBasicChannel } from '@/api/hooks/channel'
 import { Avatar } from '@/components/Avatar'
-import { Pill } from '@/components/Pill'
+import { FlexBox } from '@/components/FlexBox'
 import { Table, TableProps } from '@/components/Table'
 import { SenderItem, StyledLink } from '@/components/TablePaymentsHistory/TablePaymentsHistory.styles'
 import { Text } from '@/components/Text'
-import { LeftAlignText, RightAlignText } from '@/components/YppReferralTable/YppReferralTable.styles'
+import { RightAlignText, TierWrapper } from '@/components/YppReferralTable/YppReferralTable.styles'
+import { getTierIcon } from '@/components/_ypp/YppDashboardTier'
 import { absoluteRoutes } from '@/config/routes'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { SentryLogger } from '@/utils/logs'
+import { convertUpperCamelToSentence } from '@/utils/misc'
 import { formatNumber } from '@/utils/number'
 import { formatDateTime } from '@/utils/time'
-import { TierDescription, TierWrapper } from '@/views/studio/YppDashboard/YppDashboard.styles'
+import { YppChannelStatus } from '@/views/global/YppLandingView/YppLandingView.types'
+import { getTierRewards } from '@/views/studio/YppDashboard/YppDashboard.config'
 
 import { COLUMNS, tableLoadingData } from './YppReferralTable.utils'
 
 export type YppReferral = {
   date: Date
   channel: string
-  tier: number
-  rewardUsd: number
-  status: 'Unverified' | 'Suspended' | 'Verified'
+  status: YppChannelStatus
 }
 
 type YppReferralTableProps = {
@@ -35,9 +36,8 @@ export const YppReferralTable = ({ isLoading, data }: YppReferralTableProps) => 
       data.map((entry) => ({
         date: <RegDate date={entry.date} />,
         channel: <Channel channel={entry.channel} />,
-        tier: <Tier tier={entry.tier} />,
-        status: <Status status={entry.status} />,
-        reward: <Reward reward={entry.rewardUsd} />,
+        tier: <Tier yppStatus={entry.status} />,
+        reward: <Reward yppStatus={entry.status} />,
       })),
     [data]
   )
@@ -76,30 +76,44 @@ const Channel = ({ channel }: { channel: YppReferral['channel'] }) => {
   )
 }
 
-const Tier = (_: { tier: number }) => {
+const Tier = ({ yppStatus }: { yppStatus: YppChannelStatus }) => {
   return (
-    <TierWrapper>
-      {/*{TIERS[tier].icon}*/}
-      <TierDescription>
-        <div style={{ display: 'grid' }}>
-          <LeftAlignText variant="h300" as="span">
-            Tier
-          </LeftAlignText>
-          <Text variant="t100" as="p" color="colorText" />
-        </div>
-      </TierDescription>
+    <TierWrapper gap={2} alignItems="center">
+      {getTierIcon(yppStatus, true)}
+      <FlexBox flow="column" width="fit-content" gap={1}>
+        <Text variant="t100" as="p">
+          {yppStatus.startsWith('Verified')
+            ? `${yppStatus.split('::')[1]} tier`
+            : yppStatus.startsWith('Suspended')
+            ? 'Suspended'
+            : yppStatus === 'Unverified'
+            ? 'Unverified'
+            : 'Opted out'}
+        </Text>
+        <Text variant="t100" as="p" color="colorText">
+          {yppStatus === 'Unverified'
+            ? 'May take up to 48 hours'
+            : yppStatus.startsWith('Verified')
+            ? 'Verified'
+            : yppStatus.startsWith('Suspended')
+            ? `Reason: ${convertUpperCamelToSentence(yppStatus.split('::')[1])}`
+            : 'Sync paused'}
+        </Text>
+      </FlexBox>
     </TierWrapper>
   )
 }
 
-const Reward = ({ reward }: { reward: number }) => {
+const Reward = ({ yppStatus }: { yppStatus: YppChannelStatus }) => {
   return (
     <RightAlignText as="p" variant="t100-strong">
-      ${reward}
+      {yppStatus.startsWith('Suspended')
+        ? 'Not paid'
+        : yppStatus === 'Unverified'
+        ? 'Pending'
+        : yppStatus.startsWith('Verified')
+        ? `$${getTierRewards(yppStatus.split('::')[1].toLowerCase())?.[2]}`
+        : 'n/a'}
     </RightAlignText>
   )
 }
-
-const Status = ({ status }: { status: 'Unverified' | 'Suspended' | 'Verified' }) => (
-  <Pill variant={status === 'Verified' ? 'success' : 'default'} label={status} />
-)

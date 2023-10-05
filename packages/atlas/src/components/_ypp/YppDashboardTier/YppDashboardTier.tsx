@@ -1,11 +1,16 @@
 import {
-  SvgActionLoader,
   SvgActionNewChannel,
   SvgAlertsError32,
-  SvgIconRankBronze,
-  SvgIconRankDiamond,
-  SvgIconRankGold,
-  SvgIconRankSilver,
+  SvgAlertsWarning32,
+  SvgIconRankBronzeColor,
+  SvgIconRankBronzeMonochrome,
+  SvgIconRankDiamondColor,
+  SvgIconRankDiamondMonochrome,
+  SvgIconRankGoldColor,
+  SvgIconRankGoldMonochrome,
+  SvgIconRankSilverColor,
+  SvgIconRankSilverMonochrome,
+  SvgLoaderMStatic,
 } from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox'
 import { Information } from '@/components/Information'
@@ -22,6 +27,29 @@ import { SignInWrapper, SuspendedWrapper, TierWrapper, VerificationWrapper, Wrap
 export type YppDashboardTierProps = {
   status?: YppChannelStatus
   onSignUp?: () => void
+}
+
+export const getTierIcon = (tier: YppChannelStatus, color?: boolean) => {
+  switch (tier) {
+    case 'Verified::Diamond':
+      return color ? <SvgIconRankDiamondColor /> : <SvgIconRankDiamondMonochrome />
+    case 'Verified::Gold':
+      return color ? <SvgIconRankGoldColor /> : <SvgIconRankGoldMonochrome />
+    case 'Verified::Silver':
+      return color ? <SvgIconRankSilverColor /> : <SvgIconRankSilverMonochrome />
+    case 'Suspended::DuplicateContent':
+    case 'Suspended::ProgramTermsExploit':
+    case 'Suspended::SubparQuality':
+    case 'Suspended::UnsupportedTopic':
+      return <SvgAlertsError32 />
+    case 'Unverified':
+      return <SvgLoaderMStatic />
+    case 'OptedOut':
+      return <SvgAlertsWarning32 />
+    case 'Verified::Bronze':
+    default:
+      return color ? <SvgIconRankBronzeColor /> : <SvgIconRankBronzeMonochrome />
+  }
 }
 
 export const YppDashboardTier = ({ status, onSignUp }: YppDashboardTierProps) => {
@@ -69,7 +97,7 @@ const VerificationBox = () => {
   return (
     <VerificationWrapper>
       <FlexBox justifyContent="center" gap={3} alignItems="center">
-        <SvgActionLoader />
+        {getTierIcon('Unverified')}
         <FlexBox flow="column" width="fit-content" gap={2}>
           <Text variant="t100-strong" as="p">
             Verification pending
@@ -81,20 +109,6 @@ const VerificationBox = () => {
       </FlexBox>
     </VerificationWrapper>
   )
-}
-
-const getTierIcon = (tier: YppChannelTierTypes) => {
-  switch (tier) {
-    case 'Verified::Diamond':
-      return <SvgIconRankDiamond />
-    case 'Verified::Gold':
-      return <SvgIconRankGold />
-    case 'Verified::Silver':
-      return <SvgIconRankSilver />
-    case 'Verified::Bronze':
-    default:
-      return <SvgIconRankBronze />
-  }
 }
 
 const TierBox = ({ tier }: { tier: YppChannelTierTypes }) => {
@@ -121,7 +135,7 @@ const SuspendedBox = ({ status }: { status: YppChannelSuspendedTypes }) => {
   return (
     <SuspendedWrapper>
       <FlexBox justifyContent="center" gap={3} alignItems="center">
-        <SvgAlertsError32 />
+        {getTierIcon(status)}
         <FlexBox flow="column" width="fit-content" gap={1}>
           <Text variant="t100-strong" as="p">
             Suspended

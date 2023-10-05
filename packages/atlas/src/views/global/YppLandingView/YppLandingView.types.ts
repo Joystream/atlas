@@ -28,7 +28,7 @@ export type YppSyncedChannel = {
     joystreamChannelId: number
     createdAt: string
     subscribersCount: number
-    yppStatus: 'Unverified' | 'Suspended' | 'Verified'
+    yppStatus: YppChannelStatus
   }[]
   referrerChannelId: string
   syncStatus: {
