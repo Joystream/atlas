@@ -49,7 +49,7 @@ export const useYppAuthorizeHandler = () => {
     }
 
     if (isYppSigned) {
-      navigate(absoluteRoutes.studio.ypp())
+      navigate(absoluteRoutes.studio.yppDashboard())
       return false
     }
 

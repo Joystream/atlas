@@ -11,7 +11,7 @@ import { YppStatusDot } from '@/components/_ypp/YppStatusPill'
 import { atlasConfig } from '@/config'
 import { cVar, sizes } from '@/styles'
 import { ConsoleLogger } from '@/utils/logs'
-import { formatDurationShort } from '@/utils/time'
+import { formatDurationBiggestTick } from '@/utils/time'
 import { YppChannelStatus, YppSyncedChannel } from '@/views/global/YppLandingView/YppLandingView.types'
 
 type YppStatusDto = {
@@ -56,7 +56,7 @@ export const ServiceStatusWidget = ({ status, syncStatus }: ServiceStatusWidgetP
       'Sync system is based on queue as we sync channels one at a time. When you reach place 1 in queue your sync will start.',
     ])
     output.push([
-      hideData ? '-' : syncStatus.backlogCount > 0 ? `In ${formatDurationShort(syncStatus.fullSyncEta)} hours` : '-',
+      hideData ? '-' : syncStatus.backlogCount > 0 ? `~${formatDurationBiggestTick(syncStatus.fullSyncEta)}` : '-',
       'ETA TO FULL SYNC',
       'Estimated time of full sync of your videos may change based on YPP service status or  service overload.',
     ])
