@@ -37,10 +37,10 @@ export const YppAuthorizationRequirementsStep: FC<YppAuthorizationRequirementsSt
     <>
       <StyledList>
         <SingleRequirement fulfilled={checkRequirmentError(YppAuthorizationErrorCode.CHANNEL_STATUS_SUSPENDED)}>
-          Original content, without reports from other creators.
+          Original content, without reposts from other creators.
         </SingleRequirement>
         <SingleRequirement fulfilled={checkRequirmentError(YppAuthorizationErrorCode.CHANNEL_STATUS_SUSPENDED)}>
-          Organic audience without bots, ramped up subscribers and fake comments.
+          Organic audience, without bots, purchased subscribers and fake comments.
         </SingleRequirement>
         <SingleRequirement
           fulfilled={checkRequirmentError(YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_CREATION_DATE)}

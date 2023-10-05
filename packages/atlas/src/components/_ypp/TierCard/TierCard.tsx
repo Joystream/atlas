@@ -85,7 +85,7 @@ export const TierCard = ({ reqs, rewards, tier }: TierCardProps) => {
               {getRewardTitle(idx)}
             </Text>
             <Text variant="t200-strong" as="p">
-              {price === 0 ? 'Not paid' : `+${price} USD`}
+              {price === 0 ? 'Not paid' : `${idx === 2 ? 'Up to ' : ''}+${price} USD`}
             </Text>
           </RewardWrapper>
         ))}

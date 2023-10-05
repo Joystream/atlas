@@ -8,6 +8,7 @@ import { TierCard } from '@/components/_ypp/TierCard'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSectionTextVariants } from '@/views/global/YppLandingView/sections/useSectionTextVariants'
+import { getTierRewards } from '@/views/studio/YppDashboard/YppDashboard.config'
 
 import { ColorAnchor } from './YppRewardSection.styles'
 
@@ -84,10 +85,24 @@ export const YppRewardSection: FC = () => {
         </CenteredLayoutGrid>
         <LayoutGrid>
           <TierCardWrapper colSpan={{ base: 12, sm: 10, md: 12, lg: 10 }} colStart={{ sm: 2, md: 1, lg: 2 }}>
-            {tiers.map((tier) => (
-              <TierCard key={tier.tier} {...tier} />
-            ))}
+            {tiers.map((tier) => {
+              const maxReferralReward = getTierRewards('diamond')?.slice(-1)[0] || 0
+              tier.rewards = [...tier.rewards.slice(0, -1), maxReferralReward]
+              return <TierCard key={tier.tier} {...tier} />
+            })}
           </TierCardWrapper>
+          <FlexGridItem
+            colSpan={{ base: 12, sm: 10, md: 12, lg: 10 }}
+            colStart={{ sm: 2, md: 1, lg: 2 }}
+            alignItems="center"
+            marginTop={mdMatch ? -2 : 0}
+            justifyContent="start"
+          >
+            <Text variant="t200" as="p" color="colorTextMuted">
+              *Referral rewards depend on the tier of the invited channel. Referrer gets half of the sign up rewards for
+              invited channels that are verified.
+            </Text>
+          </FlexGridItem>
           <FlexGridItem
             colSpan={{ base: 12, sm: 10, md: 12, lg: 10 }}
             colStart={{ sm: 2, md: 1, lg: 2 }}

@@ -23,11 +23,15 @@ export const Content = styled.div`
   display: grid;
   align-self: flex-end;
   gap: ${sizes(4)};
+  padding-right: ${sizes(2)};
 
   ${media.md} {
     gap: ${sizes(6)};
     grid-template-columns: 1fr auto;
     align-items: center;
+  }
+  ${media.lg} {
+    gap: 0;
   }
 `
 
