@@ -37,9 +37,9 @@ export const getTierIcon = (tier: YppChannelStatus, color?: boolean) => {
       return color ? <SvgIconRankGoldColor /> : <SvgIconRankGoldMonochrome />
     case 'Verified::Silver':
       return color ? <SvgIconRankSilverColor /> : <SvgIconRankSilverMonochrome />
-    case 'Suspended::DuplicateContent':
+    case 'Suspended::CopyrightBreach':
     case 'Suspended::ProgramTermsExploit':
-    case 'Suspended::SubparQuality':
+    case 'Suspended::MisleadingContent':
     case 'Suspended::UnsupportedTopic':
       return <SvgAlertsError32 />
     case 'Unverified':
@@ -47,8 +47,9 @@ export const getTierIcon = (tier: YppChannelStatus, color?: boolean) => {
     case 'OptedOut':
       return <SvgAlertsWarning32 />
     case 'Verified::Bronze':
-    default:
       return color ? <SvgIconRankBronzeColor /> : <SvgIconRankBronzeMonochrome />
+    default:
+      return null
   }
 }
 
