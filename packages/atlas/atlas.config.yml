@@ -120,7 +120,7 @@ features:
         label: Notion # Used for YPP Dashboard to inform user which vendor given feature uses - if empty defaults to title
         icon: info # Optional icon to be displayed. Possible icons: message, info, tokenStack
       - title: Payments
-        link: /studio/payments
+        link: https://joystream.notion.site/YouTube-Creator-Payouts-02f7cf50972145bfb64c8543914ae4bb
         linkText: Go to Payments
         label: Studio
         icon: tokenStack
