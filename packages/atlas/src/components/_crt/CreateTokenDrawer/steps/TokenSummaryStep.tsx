@@ -8,10 +8,13 @@ import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
 import { CrtFormWrapper } from '@/components/_crt/CrtFormWrapper'
 import { useMountEffect } from '@/hooks/useMountEffect'
+import { useFee, useJoystream } from '@/providers/joystream'
+import { useTransaction } from '@/providers/transactions/transactions.hooks'
+import { useUser } from '@/providers/user/user.hooks'
 import { sizes } from '@/styles'
 import { formatNumber } from '@/utils/number'
 
-import { cliffOptions, vestingOptions } from './TokenIssuanceStep/TokenIssuanceStep.utils'
+import { cliffOptions, getDataBasedOnType, vestingOptions } from './TokenIssuanceStep/TokenIssuanceStep.utils'
 import { CommonStepProps } from './types'
 
 const cliffBanner = (
@@ -27,10 +30,52 @@ const cliffBanner = (
   />
 )
 
-export const TokenSummaryStep = ({ setPrimaryButtonProps, form }: CommonStepProps) => {
+const monthDurationToBlocks = (numberOfMonths: number) => numberOfMonths * 30 * 24 * 60 * 6
+export type TokenSummaryStepProps = {
+  onSuccess: () => void
+} & CommonStepProps
+export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: TokenSummaryStepProps) => {
+  const { joystream, proxyCallback } = useJoystream()
+  const { channelId, memberId } = useUser()
+  const handleTransaction = useTransaction()
+  const { fullFee } = useFee('issueCreatorTokenTx')
+  const handleSubmitTx = async () => {
+    if (!joystream || !channelId || !memberId) return
+    const [cliff, vesting, payout] = getDataBasedOnType(form.assuranceType) ?? [
+      form.cliff,
+      form.vesting,
+      form.firstPayout,
+    ]
+    return handleTransaction({
+      fee: fullFee,
+      txFactory: async (handleUpdate) =>
+        (await joystream.extrinsics).issueCreatorToken(
+          memberId,
+          channelId,
+          form.name,
+          form.creatorReward,
+          form.revenueShare,
+          {
+            amount: String(form.creatorIssueAmount ?? 0),
+            cliffAmountPercentage: payout ?? 0,
+            vestingDuration: vesting ? monthDurationToBlocks(+vesting) : 0,
+            blocksBeforeCliff: cliff ? monthDurationToBlocks(+cliff) : 0,
+          },
+          proxyCallback(handleUpdate)
+        ),
+      onTxSync: async () => {
+        onSuccess()
+      },
+      snackbarSuccessMessage: {
+        title: `$${form.name} minted successfuly.`,
+      },
+    })
+  }
+
   useMountEffect(() => {
     setPrimaryButtonProps({
       text: 'Create token',
+      onClick: handleSubmitTx,
     })
   })
 
@@ -142,7 +187,7 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form }: CommonStepProp
           title="Transaction fee"
           tooltipText="This action requires a blockchain transaction, which comes with a fee."
         >
-          <NumberFormat value={9120332} variant="h300" as="p" withDenomination="before" />
+          <NumberFormat value={fullFee} format="short" variant="h300" as="p" withToken withDenomination="before" />
         </SectionRow>
       </Section>
     </CrtFormWrapper>

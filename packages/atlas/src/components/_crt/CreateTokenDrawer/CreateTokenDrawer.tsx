@@ -3,6 +3,7 @@ import { flushSync } from 'react-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { CrtDrawer, CrtDrawerProps } from '@/components/CrtDrawer'
+import { CreateTokenSuccessModal } from '@/components/_crt/CreateTokenSuccessModal'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { transitions } from '@/styles'
 
@@ -36,6 +37,7 @@ type CreateTokenDrawerProps = {
 
 export const CreateTokenDrawer = ({ show, onClose }: CreateTokenDrawerProps) => {
   const [activeStep, setActiveStep] = useState(CREATE_TOKEN_STEPS.setup)
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
   const formData = useRef<CreateTokenForm>(CREATOR_TOKEN_INITIAL_DATA)
   const [primaryButtonProps, setPrimaryButtonProps] =
     useState<NonNullable<CrtDrawerProps['actionBar']>['primaryButton']>()
@@ -106,53 +108,58 @@ export const CreateTokenDrawer = ({ show, onClose }: CreateTokenDrawerProps) => 
   }
 
   return (
-    <CrtDrawer
-      steps={steps}
-      activeStep={activeStep}
-      isOpen={show}
-      onClose={() => onClose()}
-      actionBar={{
-        isNoneCrypto: true,
-        primaryButton: primaryButtonProps ?? {},
-        secondaryButton,
-      }}
-      preview={preview}
-      formWrapperRef={formRef}
-    >
-      <SwitchTransition mode="out-in">
-        <CSSTransition
-          key={activeStep}
-          nodeRef={nodeRef}
-          timeout={100}
-          addEndListener={(done) => {
-            nodeRef.current?.addEventListener('transitionend', done, false)
-          }}
-          onEntered={() => setIsGoingBack(false)}
-          classNames={isGoingBack ? transitions.names.backwardSlideSwitch : transitions.names.forwardSlideSwitch}
-        >
-          <div ref={nodeRef}>
-            {activeStep === CREATE_TOKEN_STEPS.setup && (
-              <SetupTokenStep
-                {...commonProps}
-                onSubmit={(data) => {
-                  formData.current = { ...formData.current, ...data }
-                  setActiveStep(CREATE_TOKEN_STEPS.issuance)
-                }}
-              />
-            )}
-            {activeStep === CREATE_TOKEN_STEPS.issuance && (
-              <TokenIssuanceStep
-                {...commonProps}
-                onSubmit={(data) => {
-                  formData.current = { ...formData.current, ...data }
-                  setActiveStep(CREATE_TOKEN_STEPS.summary)
-                }}
-              />
-            )}
-            {activeStep === CREATE_TOKEN_STEPS.summary && <TokenSummaryStep {...commonProps} />}
-          </div>
-        </CSSTransition>
-      </SwitchTransition>
-    </CrtDrawer>
+    <>
+      <CreateTokenSuccessModal show={showSuccessModal} tokenName={formData.current.name} tokenId="1" />
+      <CrtDrawer
+        steps={steps}
+        activeStep={activeStep}
+        isOpen={show}
+        onClose={() => onClose()}
+        actionBar={{
+          isNoneCrypto: true,
+          primaryButton: primaryButtonProps ?? {},
+          secondaryButton,
+        }}
+        preview={preview}
+        formWrapperRef={formRef}
+      >
+        <SwitchTransition mode="out-in">
+          <CSSTransition
+            key={activeStep}
+            nodeRef={nodeRef}
+            timeout={100}
+            addEndListener={(done) => {
+              nodeRef.current?.addEventListener('transitionend', done, false)
+            }}
+            onEntered={() => setIsGoingBack(false)}
+            classNames={isGoingBack ? transitions.names.backwardSlideSwitch : transitions.names.forwardSlideSwitch}
+          >
+            <div ref={nodeRef}>
+              {activeStep === CREATE_TOKEN_STEPS.setup && (
+                <SetupTokenStep
+                  {...commonProps}
+                  onSubmit={(data) => {
+                    formData.current = { ...formData.current, ...data }
+                    setActiveStep(CREATE_TOKEN_STEPS.issuance)
+                  }}
+                />
+              )}
+              {activeStep === CREATE_TOKEN_STEPS.issuance && (
+                <TokenIssuanceStep
+                  {...commonProps}
+                  onSubmit={(data) => {
+                    formData.current = { ...formData.current, ...data }
+                    setActiveStep(CREATE_TOKEN_STEPS.summary)
+                  }}
+                />
+              )}
+              {activeStep === CREATE_TOKEN_STEPS.summary && (
+                <TokenSummaryStep {...commonProps} onSuccess={() => setShowSuccessModal(true)} />
+              )}
+            </div>
+          </CSSTransition>
+        </SwitchTransition>
+      </CrtDrawer>
+    </>
   )
 }

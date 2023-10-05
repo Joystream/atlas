@@ -176,7 +176,7 @@ export const TokenIssuanceStep = ({
     const data =
       assuranceType === 'custom'
         ? generateChartData(Number(customCliff ?? 0), Number(customVesting ?? 0), firstPayout ? firstPayout : 0)
-        : generateChartData(...getDataBasedOnType(assuranceType))
+        : generateChartData(...(getDataBasedOnType(assuranceType) as [number, number, number]))
     setPreview(
       <PreviewContainer>
         <Text variant="h100" as="h1" color="colorTextMuted">

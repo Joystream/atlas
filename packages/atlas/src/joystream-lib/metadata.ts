@@ -6,8 +6,10 @@ import {
   IMediaType,
   IMembershipMetadata,
   IPublishedBeforeJoystream,
+  ITokenMetadata,
   IVideoMetadata,
   MembershipMetadata,
+  TokenMetadata,
 } from '@joystream/metadata-protobuf'
 import { createType } from '@joystream/types'
 import { ApiPromise as PolkadotApi } from '@polkadot/api'
@@ -228,4 +230,12 @@ export const parseMemberExtrinsicInput: ParseExtrinsicInputFn<MemberInputMetadat
   const metadata = wrapMetadata(MembershipMetadata.encode(properties).finish())
 
   return [metadata, undefined]
+}
+
+export const prepareCreatorTokenMetadata = (metadata: ITokenMetadata) => {
+  const uInt8AMetadata = TokenMetadata.encode(metadata).finish()
+
+  const metadataRaw = createType('Raw', uInt8AMetadata)
+  const metadataBytes = createType('Bytes', metadataRaw)
+  return createType('Bytes', metadataBytes)
 }
