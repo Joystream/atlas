@@ -1,10 +1,12 @@
 import { FC, ReactNode, createRef, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
 import { NavItem, NavItemType } from '@/components/_navigation/NavItem'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMiscStore } from '@/providers/misc/store'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { transitions } from '@/styles'
@@ -50,13 +52,14 @@ const SidenavBase: FC<SidenavProps> = ({
 }) => {
   const scrollContainer = createRef<HTMLDivElement>()
   const setAdminModalOpen = useMiscStore((store) => store.actions.setAdminModalOpen)
+  const { pathname } = useLocation()
+  const mdMatch = useMediaMatch('md')
 
   const scrollAndToggle = (expended: boolean) => {
     scrollContainer?.current && scrollContainer.current.scrollTo(0, 0)
     toggleSideNav(expended)
   }
   const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
-
   useEffect(() => {
     if (expanded) {
       incrementOverlaysOpenCount()
@@ -154,7 +157,9 @@ const SidenavBase: FC<SidenavProps> = ({
           </SidebarNavFooter>
         </CSSTransition>
       </SidebarNav>
-      <StyledHamburgerButton active={expanded} onClick={() => scrollAndToggle(!expanded)} />
+      {pathname !== absoluteRoutes.viewer.ypp() || mdMatch ? (
+        <StyledHamburgerButton active={expanded} onClick={() => scrollAndToggle(!expanded)} />
+      ) : null}
     </>
   )
 }
