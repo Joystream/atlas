@@ -16,7 +16,6 @@ import { useUser } from '@/providers/user/user.hooks'
 import { useYppStore } from '@/providers/ypp/ypp.store'
 import { SentryLogger } from '@/utils/logs'
 import { YppConnectionDetails } from '@/views/global/YppLandingView/sections/YppConnectionDetails'
-import { YppSignupVideo } from '@/views/global/YppLandingView/sections/YppSignupVideo'
 
 import { YppAuthorizationModal } from './YppAuthorizationModal'
 import { Wrapper } from './YppLandingView.styles'
@@ -152,7 +151,7 @@ export const YppLandingView: FC = () => {
           selectedChannelTitle={selectedChannelTitle}
         />
         <YppRewardSection />
-        <YppSignupVideo />
+        {/*<YppSignupVideo />*/}
         <YppConnectionDetails />
         <YppCardsSections />
         <YppFooter onSignUpClick={handleYppSignUpClick} />
