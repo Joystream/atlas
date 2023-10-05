@@ -36,7 +36,7 @@ export const ServiceStatusWidget = ({ status, syncStatus }: ServiceStatusWidgetP
   )
 
   const details = useMemo(() => {
-    const hideData = !status || !syncStatus || !status.startsWith('Verified')
+    const hideData = !status || !syncStatus || !(status.startsWith('Verified') || status === 'Unverified')
     const output: [number | string, string, string][] = [] // [value, title, tooltip]
 
     output.push([
