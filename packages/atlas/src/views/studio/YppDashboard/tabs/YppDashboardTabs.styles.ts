@@ -1,36 +1,15 @@
+import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { SvgActionArrowRight, SvgAlertsInformative24, SvgAlertsWarning32 } from '@/assets/icons'
 import { ActionBar } from '@/components/ActionBar'
 import { Banner } from '@/components/Banner'
-import { cVar, media, sizes, zIndex } from '@/styles'
+import { CopyButton } from '@/components/CopyButton/CopyButton'
+import { FlexBox } from '@/components/FlexBox'
+import { Button } from '@/components/_buttons/Button'
+import { cVar, media, sizes, square, zIndex } from '@/styles'
 
 export { Divider } from '../YppDashboard.styles'
-
-export const RewardsWrapper = styled.div`
-  display: grid;
-  gap: ${sizes(4)};
-  margin-bottom: ${sizes(4)};
-
-  ${media.md} {
-    gap: ${sizes(6)};
-    margin-bottom: ${sizes(6)};
-  }
-`
-
-export const WidgetsWrapper = styled.section`
-  display: grid;
-  gap: ${sizes(4)};
-  margin-bottom: ${sizes(4)};
-
-  ${media.sm} {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  ${media.md} {
-    margin-bottom: ${sizes(6)};
-  }
-`
 
 export const StyledSvgAlertsInformative24 = styled(SvgAlertsInformative24)`
   path {
@@ -72,4 +51,85 @@ export const StyledActionBar = styled(ActionBar)`
 
 export const FallbackContainer = styled.div`
   margin-top: 128px;
+`
+const dotPulse = ({ isOn }: { isOn: boolean }) => keyframes`
+  0% {
+    box-shadow: none;
+  }
+  
+  10% {
+    box-shadow: 0 0 0 3px ${isOn ? '#0c984680' : '#ff695f80'};
+  }
+  
+  20%, 100% {
+    box-shadow: none;
+  }
+  
+  
+`
+export const YppSyncStatus = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: ${sizes(2)};
+  background-color: ${cVar('colorCoreNeutral800Lighten')};
+  padding: ${sizes(2.5)} ${sizes(4)};
+  border-radius: 99px;
+  width: 100%;
+
+  ${media.sm} {
+    width: fit-content;
+  }
+
+  p {
+    white-space: nowrap;
+  }
+`
+export const StatusDotWrapper = styled.div`
+  ${square(20)};
+
+  display: grid;
+  place-items: center;
+`
+export const StatusDot = styled.div<{ isOn: boolean }>`
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: ${(props) => (props.isOn ? 'linear-gradient(#0ebe57, #096c34)' : 'linear-gradient(#ff695f, #bf0c00)')};
+  box-shadow: 0 0 0 5px ${(props) => (props.isOn ? '#0c984680' : '#ff695f80')};
+  animation: 10s ease-out ${(props) => dotPulse(props)} infinite;
+`
+
+export const StyledCloseButton = styled(Button)`
+  position: static;
+
+  ${media.sm} {
+    position: absolute;
+    top: ${sizes(6)};
+    right: ${sizes(6)};
+  }
+
+  ${media.lg} {
+    position: static;
+  }
+`
+
+export const StyledCopyButton = styled(CopyButton)`
+  width: 100%;
+
+  ${media.sm} {
+    width: auto;
+  }
+`
+
+export const WidgetTileContent = styled(FlexBox)`
+  flex-direction: column;
+  gap: ${({ gap }) => sizes(gap ?? 1)};
+
+  ${media.lg} {
+    gap: 0;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
 `

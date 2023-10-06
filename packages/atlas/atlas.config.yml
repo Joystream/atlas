@@ -51,20 +51,38 @@ features:
     enrollmentUsdReward: 5 # Amount for successful enrollment in YPP in USD.
     referralBaseReward: 2.5 # Self-explanatory, it should match `baseUsdAmount.min` value in last `rewards` entry
     tiersDefinition: # Tiers for YouTube partner program rewards. You can provide maximum three tiers. Each tier should has own multiplier.
-      tiers:
-        - minimumSubscribers: 0
-          multiplier: 1
-        - minimumSubscribers: 1000
-          multiplier: 2
-        - minimumSubscribers: 5000
-          multiplier: 4
-        - minimumSubscribers: 25000
-          multiplier: 6
-        - minimumSubscribers: 50000
-          multiplier: 8
-        - minimumSubscribers: 100000
-          multiplier: 10
-      tiersTooltip: The more subscribers you have on YouTube, the higher the payouts in the program.
+      - tier: 'bronze'
+        reqs:
+          - Lower effort production.
+          - Growing subscriber base of channel supporters.
+        rewards:
+          - 0 # Reward for signup in USD
+          - 0 # Reward for synced video
+          - 0 # Reward for referral
+      - tier: 'silver'
+        reqs:
+          - Original good quality of content.
+          - Sizeable subscriber base with high ratio of views for videos.
+        rewards:
+          - 25
+          - 1
+          - 10
+      - tier: 'gold'
+        reqs:
+          - Great quality of content.
+          - Large subscriber base of fans active in the comments section.
+        rewards:
+          - 50
+          - 3
+          - 25
+      - tier: 'diamond'
+        reqs:
+          - Top tier professional quality.
+          - Recognized influencer and large follower audience.
+        rewards:
+          - 100
+          - 5
+          - 50
     rewards:
       - title: Sign Up to YouTube Partner Program
         showInDashboard: false # Optional. If false the reward will be shown only on YouTube partner program landing page. Default true
@@ -102,7 +120,7 @@ features:
         label: Notion # Used for YPP Dashboard to inform user which vendor given feature uses - if empty defaults to title
         icon: info # Optional icon to be displayed. Possible icons: message, info, tokenStack
       - title: Payments
-        link: /studio/payments
+        link: https://joystream.notion.site/YouTube-Creator-Payouts-02f7cf50972145bfb64c8543914ae4bb
         linkText: Go to Payments
         label: Studio
         icon: tokenStack
@@ -271,89 +289,167 @@ content:
 
   categories: # List of display categories to be used in the app. Those are local to the application and are related to metaprotocol categories via 'videoCategories' array.
     - id: '1' # Local category ID
-      name: 'Investing' # Display name of the category
-      color: '#5A7AEE' # Color used in the UI for this category
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/gleev/icons/investing.svg' # URL for category icon SVG
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/gleev/images/investing.webp' # URL for category cover image
-      videoCategories: ['254433-2'] # List of metaprotocol category IDs that should be included in this display category
-      defaultVideoCategory: '254433-2'
+      name: 'Art' # Display name of the category
+      color: '#D92E61' # Color used in the UI for this category
+      iconUrl: '' # URL for category icon SVG
+      coverImgUrl: '' # URL for category cover image
+      videoCategories: ['3142434-2'] # List of metaprotocol category IDs that should be included in this display category
+      defaultVideoCategory: '3142434-2'
     - id: '2'
-      name: 'Podcasts'
+      name: 'Animation and Film'
       color: '#E7BE2D'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/gleev/icons/podcasts.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/gleev/images/podcasts.webp'
-      videoCategories: ['254434-2']
-      defaultVideoCategory: '254434-2'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142437-2']
+      defaultVideoCategory: '3142437-2'
     - id: '3'
-      name: 'Conferences'
-      color: '#E57827'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/gleev/icons/conferences.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/gleev/images/conferences.webp'
-      videoCategories: ['254435-2']
-      defaultVideoCategory: '254435-2'
-    - id: '4'
-      name: 'Reviews'
-      color: '#BDE933'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/gleev/icons/reviews.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/gleev/images/reviews.webp'
-      videoCategories: ['254436-2']
-      defaultVideoCategory: '254436-2'
-    - id: '5'
-      name: 'Tutorials'
-      color: '#54A7F0'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/gleev/icons/tutorials.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/gleev/images/tutorials.webp'
-      videoCategories: ['254437-2']
-      defaultVideoCategory: '254437-2'
-    - id: '6'
-      name: 'News'
-      color: '#DD379D'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/gleev/icons/news.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/gleev/images/news.webp'
-      videoCategories: ['254438-2']
-      defaultVideoCategory: '254438-2'
-    - id: '7'
-      name: 'Memes'
-      color: '#D92E61'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/gleev/icons/memes.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/gleev/images/memes.webp'
-      videoCategories: ['254441-2']
-      defaultVideoCategory: '254441-2'
-    - id: '8'
-      name: 'Interviews'
-      color: '#41EE5A'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/gleev/icons/interviews.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/gleev/images/interviews.webp'
-      videoCategories: ['254445-2']
-      defaultVideoCategory: '254445-2'
-    - id: '9'
-      name: 'Analysis'
-      color: '#9455E8'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/gleev/icons/analysis.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/gleev/images/analysis.webp'
-      videoCategories: ['254446-2']
-      defaultVideoCategory: '254446-2'
-    - id: '10'
-      name: 'Trading'
-      color: '#6E5FEC'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/gleev/icons/trading.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/gleev/images/trading.webp'
-      videoCategories: ['254450-2']
-      defaultVideoCategory: '254450-2'
-    - id: '11'
-      name: 'Crypto art'
+      name: 'Autos and Vehicles'
       color: '#BD4BE4'
-      iconUrl: 'https://atlas-assets.eu-central-1.linodeobjects.com/categories/gleev/icons/crypto-art.svg'
-      coverImgUrl: 'https://atlas-assets.eu-central-1.linodeobjects.com/categories/gleev/images/crypto-art.webp'
-      videoCategories: ['887567-2']
-      defaultVideoCategory: '887567-2'
-    - id: '12'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142440-2']
+      defaultVideoCategory: '3142440-2'
+    - id: '4'
+      name: 'Business and Finance'
+      color: '#BDE933'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142443-2']
+      defaultVideoCategory: '3142443-2'
+    - id: '5'
+      name: 'Crypto'
+      color: '#54A7F0'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories:
+        [
+          '3142446-2',
+          '57-2',
+          '59-2',
+          '61-2',
+          '63-2',
+          '848-2',
+          '852-2',
+          '856-2',
+          '860-2',
+          '864-2',
+          '868-2',
+          '873-2',
+          '878-2',
+          '883-2',
+          '888-2',
+          '893-2',
+          '898-2',
+          '905-2',
+          '910-2',
+          '915-2',
+        ]
+      defaultVideoCategory: '3142446-2'
+    - id: '6'
+      name: 'DIY'
+      color: '#DD379D'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142448-2']
+      defaultVideoCategory: '3142448-2'
+    - id: '7'
       name: 'Education'
+      color: '#5A7AEE'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142451-2']
+      defaultVideoCategory: '3142451-2'
+    - id: '8'
+      name: 'Entertainment'
+      color: '#41EE5A'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142456-2']
+      defaultVideoCategory: '3142456-2'
+    - id: '9'
+      name: 'Lifestyle'
+      color: '#9455E8'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142459-4']
+      defaultVideoCategory: '"3142459-4'
+    - id: '10'
+      name: 'Memes and Humour'
+      color: '#4FE1F2'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142468-2']
+      defaultVideoCategory: '3142468-2'
+    - id: '11'
+      name: 'Music and Music Videos'
+      color: '#6E5FEC'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142471-2']
+      defaultVideoCategory: '3142471-2'
+    - id: '12'
+      name: 'Nature'
+      color: '#E57827'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142475-2']
+      defaultVideoCategory: '3142475-2'
+    - id: '13'
+      name: 'News and Current Affairs'
+      color: '#6EEC3A'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142484-2']
+      defaultVideoCategory: '3142484-2'
+    - id: '14'
+      name: 'People and Blogs'
+      color: '#E141D6'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142490-2']
+      defaultVideoCategory: '3142490-2'
+    - id: '15'
+      name: 'Pets and Animals'
       color: '#48F0B3'
-      iconUrl: 'https://atlas-assets.eu-central-1.linodeobjects.com/categories/gleev/icons/education.svg'
-      coverImgUrl: 'https://atlas-assets.eu-central-1.linodeobjects.com/categories/gleev/images/education.webp'
-      videoCategories: ['254423-2']
-      defaultVideoCategory: '254423-2'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142493-2']
+      defaultVideoCategory: '3142493-2'
+    - id: '16'
+      name: 'Sports'
+      color: '#B0E839'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142501-3']
+      defaultVideoCategory: '3142501-3'
+    - id: '17'
+      name: 'Technology'
+      color: '#3EE7B4'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142503-2']
+      defaultVideoCategory: '3142503-2'
+    - id: '18'
+      name: 'Travel'
+      color: '#68FA63'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142506-2']
+      defaultVideoCategory: '3142506-2'
+    - id: '19'
+      name: 'Unboxing'
+      color: '#EE4BB7'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142509-2']
+      defaultVideoCategory: '3142509-2'
+    - id: '20'
+      name: 'Video Games'
+      color: '#FCAC4D'
+      iconUrl: ''
+      coverImgUrl: ''
+      videoCategories: ['3142511-2']
+      defaultVideoCategory: '3142511-2'
 
   showAllContent: false # With this disabled, Atlas will display only content from display categories defined above. If you want your app to display all Joystream content, set this to true.
 

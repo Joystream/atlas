@@ -3,7 +3,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { OwnedNftOrderByInput, OwnedNftWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { SvgActionSell, SvgActionSettings, SvgActionShoppingCart } from '@/assets/icons'
 import { FilterButtonOption, SectionFilter } from '@/components/FilterButton'
-import { publicVideoFilter } from '@/config/contentFilter'
+import { publicCryptoVideoFilter } from '@/config/contentFilter'
 import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
 
 export const NFT_STATUSES: FilterButtonOption[] = [
@@ -107,7 +107,7 @@ export const useNftSectionFilters = () => {
       lastSalePrice_gte: minPrice ? tokenNumberToHapiBn(minPrice).toString() : undefined,
       lastSalePrice_lte: maxPrice ? tokenNumberToHapiBn(maxPrice).toString() : undefined,
       video: {
-        ...publicVideoFilter,
+        ...publicCryptoVideoFilter,
         ...(isMatureExcluded ? { isExcluded_eq: false } : {}),
         ...(isPromotionalExcluded ? { hasMarketing_eq: false } : {}),
       },

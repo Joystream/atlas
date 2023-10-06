@@ -18,9 +18,11 @@ export const useGetYppChannelRequirements = () => {
   const requirements: Requirements = useMemo(
     () => ({
       MINIMUM_SUBSCRIBERS_COUNT: data?.MINIMUM_SUBSCRIBERS_COUNT,
-      MINIMUM_VIDEO_COUNT: data?.MINIMUM_VIDEO_COUNT,
+      MINIMUM_TOTAL_VIDEOS_COUNT: data?.MINIMUM_TOTAL_VIDEOS_COUNT,
       MINIMUM_VIDEO_AGE_HOURS: data?.MINIMUM_VIDEO_AGE_HOURS,
       MINIMUM_CHANNEL_AGE_HOURS: data?.MINIMUM_CHANNEL_AGE_HOURS,
+      MINIMUM_VIDEOS_PER_MONTH: data?.MINIMUM_VIDEOS_PER_MONTH,
+      MONTHS_TO_CONSIDER: data?.MONTHS_TO_CONSIDER,
     }),
     [data]
   )

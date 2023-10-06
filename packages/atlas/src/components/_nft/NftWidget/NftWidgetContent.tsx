@@ -115,7 +115,11 @@ export const NftWidgetContent: FC<NftWidgetContentProps> = memo(
                   title="Withdraw your bid"
                   description="You placed a bid in a previous auction that you can now withdraw to claim back your money."
                 />
-                <WithdrawBidFromPreviousAuction size={size} bidFromPreviousAuction={bidFromPreviousAuction} />
+                <WithdrawBidFromPreviousAuction
+                  size={size}
+                  bidFromPreviousAuction={bidFromPreviousAuction}
+                  onWithdrawBid={onWithdrawBid}
+                />
               </>
             )}
             {isOwner && (
@@ -161,6 +165,7 @@ export const NftWidgetContent: FC<NftWidgetContentProps> = memo(
                       secondary
                       size={size}
                       bidFromPreviousAuction={bidFromPreviousAuction}
+                      onWithdrawBid={onWithdrawBid}
                     />
                   </>
                 )}
@@ -365,7 +370,11 @@ export const NftWidgetContent: FC<NftWidgetContentProps> = memo(
             )}
 
             {nftStatus.hasTimersLoaded && bidFromPreviousAuction && (
-              <WithdrawBidFromPreviousAuction size={size} bidFromPreviousAuction={bidFromPreviousAuction} />
+              <WithdrawBidFromPreviousAuction
+                size={size}
+                bidFromPreviousAuction={bidFromPreviousAuction}
+                onWithdrawBid={onWithdrawBid}
+              />
             )}
 
             {nftStatus.hasTimersLoaded &&

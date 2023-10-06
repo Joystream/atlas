@@ -6,7 +6,7 @@ import { CarouselProps } from '@/components/Carousel'
 import { RankingNumberTile } from '@/components/RankingNumberTile'
 import { Section } from '@/components/Section/Section'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
-import { publicChannelFilter, publicVideoFilter } from '@/config/contentFilter'
+import { publicChannelFilter, publicCryptoVideoFilter } from '@/config/contentFilter'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { breakpoints } from '@/styles'
 import { createPlaceholderData } from '@/utils/data'
@@ -52,7 +52,7 @@ export const TopTenVideos: FC<TopTenVideosProps> = ({ period }) => {
       limit: 10,
       periodDays: period === 'week' ? 7 : 30,
       where: {
-        ...publicVideoFilter,
+        ...publicCryptoVideoFilter,
         channel: publicChannelFilter,
       },
     },

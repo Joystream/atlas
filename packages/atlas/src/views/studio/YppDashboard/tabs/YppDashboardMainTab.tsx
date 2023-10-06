@@ -1,140 +1,254 @@
 import { FC } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-import { SvgActionNewTab, SvgAlertsError24, SvgAlertsInformative24 } from '@/assets/icons'
-import { Banner } from '@/components/Banner'
-import { NumberFormat } from '@/components/NumberFormat'
+import { SvgActionClose, SvgActionNewChannel, SvgActionNewTab } from '@/assets/icons'
+import { FlexBox } from '@/components/FlexBox'
+import { Information } from '@/components/Information'
+import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
+import { Tooltip } from '@/components/Tooltip'
 import { WidgetTile } from '@/components/WidgetTile'
-import { Button } from '@/components/_buttons/Button'
+import { Button, TextButton } from '@/components/_buttons/Button'
 import { BenefitCard } from '@/components/_ypp/BenefitCard'
+import { ServiceStatusWidget } from '@/components/_ypp/ServiceStatusWidget/ServiceStatusWidget'
+import { YppDashboardTier } from '@/components/_ypp/YppDashboardTier'
 import { atlasConfig } from '@/config'
-import { useClipboard } from '@/hooks/useClipboard'
+import { absoluteRoutes } from '@/config/routes'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
+import { useYppAuthorizeHandler } from '@/hooks/useYppAuthorizeHandler'
+import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user/user.hooks'
-import { configYppIconMapper } from '@/views/global/YppLandingView/YppFooter'
-import { calculateReward } from '@/views/global/YppLandingView/YppRewardSection'
+import { formatDate, getNextFriday } from '@/utils/time'
+import { YppAuthorizationModal } from '@/views/global/YppLandingView/YppAuthorizationModal'
+import { configYppIconMapper } from '@/views/global/YppLandingView/sections/YppFooter'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
+import { getTierRewards } from '@/views/studio/YppDashboard/YppDashboard.config'
 
-import { RewardsWrapper, StyledBanner, StyledSvgAlertsInformative24, WidgetsWrapper } from './YppDashboardTabs.styles'
+import {
+  StatusDot,
+  StatusDotWrapper,
+  StyledCloseButton,
+  StyledCopyButton,
+  WidgetTileContent,
+  YppSyncStatus,
+} from './YppDashboardTabs.styles'
 
-import { REWARDS } from '../YppDashboard.config'
+const SIGNUP_MESSAGE = 'YPP_SIGNUP_MESSAGE-'
 
-const APP_NAME = atlasConfig.general.appName
-const tiers = atlasConfig.features.ypp.tiersDefinition?.tiers
-
-type YppDashboardMainTabProps = {
-  currentTier?: number
+const getMessageIdForChannel = (channelId: string) => {
+  return SIGNUP_MESSAGE + channelId
 }
 
-export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier = 0 }) => {
-  const { copyToClipboard } = useClipboard()
-  const { channelId } = useUser()
-  const { currentChannel } = useGetYppSyncedChannels()
+export const YppDashboardMainTab: FC = () => {
   const { trackReferralLinkGenerated } = useSegmentAnalytics()
-  const multiplier = tiers ? tiers[currentTier].multiplier : 1
+  const { channelId } = useUser()
+  const navigate = useNavigate()
+  const _handleYppSignUpClick = useYppAuthorizeHandler()
+  const hasDismissedSignupMessage = usePersonalDataStore((state) =>
+    state.dismissedMessages.some((message) => message.id === getMessageIdForChannel(channelId as string))
+  )
+  const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
+  const { unsyncedChannels, currentChannel } = useGetYppSyncedChannels()
+
+  const mdMatch = useMediaMatch('md')
+  const smMatch = useMediaMatch('sm')
+  const lgMatch = useMediaMatch('lg')
+  const nextPayoutDate = getNextFriday()
+  const handleYppSignUpClick = () => {
+    const success = _handleYppSignUpClick()
+    if (success) {
+      navigate(absoluteRoutes.viewer.ypp())
+    }
+  }
+
+  const syncStatusContent = (
+    <YppSyncStatus>
+      <Tooltip
+        text={
+          currentChannel?.shouldBeIngested
+            ? 'Your YouTube channel is being automatically synced with your Gleev channel. You will be rewarded every time a new video gets synced.'
+            : 'Automatic YouTube channel sync with Gleev is disabled. You can enable it again anytime in YPP settings tab.'
+        }
+        placement="top-start"
+      >
+        <StatusDotWrapper>
+          <StatusDot isOn={currentChannel?.shouldBeIngested ?? false} />
+        </StatusDotWrapper>
+      </Tooltip>
+      <Text variant="t200" as="p">
+        Autosync: {currentChannel?.shouldBeIngested ? 'On' : 'Off'}
+      </Text>
+    </YppSyncStatus>
+  )
 
   return (
     <>
-      {currentChannel?.yppStatus === 'Suspended' && (
-        <StyledBanner
-          title="This channel has been suspended in the YouTube Partner Program"
-          icon={<SvgAlertsError24 />}
-          description={
-            <Text variant="t200" as="span" color="colorCoreNeutral200">
-              You will not be rewarded while this channel is suspended. Your channel did not pass the verification due
-              to{' '}
-              <Button variant="primary" _textOnly to={atlasConfig.features.ypp.suspensionReasonsLink ?? ''}>
-                one of these reasons
-              </Button>
-              .
-            </Text>
-          }
-        />
-      )}
-      {currentChannel?.yppStatus === 'Unverified' && (
-        <StyledBanner
-          title="Channel Verification Pending"
-          icon={<SvgAlertsInformative24 />}
-          description={
-            <Text variant="t200" as="span" color="colorCoreNeutral200">
-              Your channel needs to get verified before content syncing starts. It normally takes 12-48 hours for
-              channels to get verified.
-              <br />
-              Once verified, you will qualify for the rewards. Payouts are made on a weekly basis, every Friday, for the
-              previous calendar week. Your first payment will involve the reward for the sign up of{' '}
-              <NumberFormat
-                value={(atlasConfig.features.ypp.enrollmentUsdReward ?? 0) * multiplier}
-                format="dollar"
-                as="span"
-                withTooltip={false}
-              />{' '}
-              USD paid out in ${atlasConfig.joystream.tokenTicker} tokens based on the market rate.
-            </Text>
-          }
-        />
-      )}
-      {atlasConfig.features.ypp.widgets && (
-        <WidgetsWrapper>
-          {atlasConfig.features.ypp.widgets.map((widget) => (
-            <WidgetTile
-              icon={widget.icon && configYppIconMapper[widget.icon]}
-              key={widget.title}
-              title={widget.label ?? widget.title}
-              text={widget.title}
-              button={{
-                text: widget.linkText ?? `Go to ${widget.title}`,
-                variant: 'primary',
-                _textOnly: true,
-                icon: <SvgActionNewTab />,
-                to: widget.link,
-                iconPlacement: 'right',
-              }}
-            />
-          ))}
-        </WidgetsWrapper>
-      )}
-      <RewardsWrapper>
-        {REWARDS?.map((reward) => {
-          const customMultiplier = reward.customMultiplier?.[currentTier]
-          const rewardAmount = calculateReward(reward.joyAmount, customMultiplier || multiplier, currentTier)
-          const rewardAmountUsd = calculateReward(reward.usdAmount, customMultiplier || multiplier, currentTier)
-          return (
+      <YppAuthorizationModal unSyncedChannels={unsyncedChannels} />
+      <LayoutGrid>
+        <GridItem colSpan={{ xxs: 12, md: 4 }}>
+          <YppDashboardTier onSignUp={handleYppSignUpClick} status={currentChannel?.yppStatus} />
+        </GridItem>
+
+        <GridItem colSpan={{ xxs: 12, md: 8 }}>
+          <ServiceStatusWidget status={currentChannel?.yppStatus} syncStatus={currentChannel?.syncStatus} />
+        </GridItem>
+        <GridItem colSpan={{ xxs: 12, sm: 4 }}>
+          <WidgetTile
+            title="Next payments round"
+            tooltip={{
+              text: 'All of the payments are processed every Friday. The hour of payouts may vary.',
+              placement: 'top-start',
+            }}
+            customNode={
+              <WidgetTileContent marginTop={2}>
+                <Text variant={mdMatch ? 'h500' : 'h400'} as="p">
+                  {formatDate(nextPayoutDate)}
+                </Text>
+                <TextButton
+                  to="https://www.notion.so/joystream/YouTube-Creator-Payouts-02f7cf50972145bfb64c8543914ae4bb?pvs=4"
+                  icon={<SvgActionNewTab />}
+                  iconPlacement="right"
+                >
+                  View payments
+                </TextButton>
+              </WidgetTileContent>
+            }
+          />
+        </GridItem>
+        {atlasConfig.features.ypp.widgets &&
+          atlasConfig.features.ypp.widgets
+            .filter((widget) => widget.title !== 'Payments')
+            .map((widget) => (
+              <GridItem colSpan={{ xxs: 12, sm: 4 }} key={widget.title}>
+                <WidgetTile
+                  title={widget.label ?? widget.title}
+                  customNode={
+                    <WidgetTileContent marginTop={2}>
+                      <FlexBox alignItems="center">
+                        {widget.icon ? configYppIconMapper[widget.icon] : null}
+                        <Text variant={mdMatch ? 'h500' : 'h400'} as="p">
+                          {widget.title}
+                        </Text>
+                      </FlexBox>
+                      <TextButton to={widget.link} icon={<SvgActionNewTab />} iconPlacement="right">
+                        {widget.linkText ?? `Go to ${widget.title}`}
+                      </TextButton>
+                    </WidgetTileContent>
+                  }
+                />
+              </GridItem>
+            ))}
+        {!hasDismissedSignupMessage && !currentChannel?.yppStatus.startsWith('Suspended') && (
+          <GridItem colSpan={{ xxs: 12 }}>
             <BenefitCard
-              key={reward.title}
-              title={reward.title}
-              description={reward.description}
-              steps={reward.steps}
-              actionButton={
-                reward.actionButton !== undefined
-                  ? {
-                      ...reward.actionButton,
-                      onClick: () => {
-                        if (
-                          reward.actionButton &&
-                          'copyReferral' in reward.actionButton &&
-                          reward.actionButton.copyReferral
-                        ) {
-                          trackReferralLinkGenerated(channelId)
-                          copyToClipboard(
-                            `${window.location.host}/ypp?referrerId=${channelId}`,
-                            'Referral link copied to clipboard'
-                          )
-                        }
-                      },
-                    }
-                  : undefined
+              title={
+                currentChannel?.yppStatus.startsWith('Verified')
+                  ? 'Thank you for signing up!'
+                  : `Sign up to ${atlasConfig.general.appName}`
               }
-              joyAmount={rewardAmount}
-              dollarAmount={rewardAmountUsd}
+              description={
+                currentChannel?.yppStatus.startsWith('Verified')
+                  ? `You will receive sign up bonus on (Friday) ${formatDate(nextPayoutDate)}`
+                  : 'Connect you YouTube channels via a step-by-step flow and get your first reward. You can sign up with multiple channels!'
+              }
+              dollarAmount={
+                !currentChannel || !currentChannel.yppStatus.startsWith('Verified')
+                  ? 100
+                  : getTierRewards(currentChannel.yppStatus.split('::')[1].toLowerCase())?.[0]
+              }
+              isRangeAmount={!currentChannel || !currentChannel.yppStatus.startsWith('Verified')}
+              amountTooltip="Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity."
+              actionNode={
+                !currentChannel || !currentChannel.yppStatus.startsWith('Verified') ? (
+                  <Button
+                    icon={<SvgActionNewChannel />}
+                    disabled={!!currentChannel}
+                    iconPlacement="right"
+                    fullWidth={!smMatch}
+                    onClick={handleYppSignUpClick}
+                  >
+                    Sign up
+                  </Button>
+                ) : (
+                  <StyledCloseButton
+                    variant="secondary"
+                    fullWidth={!smMatch}
+                    onClick={() => updateDismissedMessages(getMessageIdForChannel(channelId as string))}
+                    icon={smMatch && <SvgActionClose />}
+                  >
+                    {!smMatch ? 'Close' : ''}
+                  </StyledCloseButton>
+                )
+              }
             />
-          )
-        })}
-      </RewardsWrapper>
-      <Banner
-        icon={<StyledSvgAlertsInformative24 />}
-        title="Have more than one YouTube channel?"
-        description={`You can apply to the YouTube Partner Program with as many YouTube & ${APP_NAME} channels as you want. Each YouTube channel can be assigned to only one ${APP_NAME} channel. \nYou can create a new channel from the top right menu.`}
-      />
+          </GridItem>
+        )}
+        <GridItem colSpan={{ xxs: 12 }}>
+          <BenefitCard
+            title="Sync videos from YouTube channel"
+            description="Get paid for every new video published on YouTube after the date of sign up. Minimum video duration has to be 5 minutes. Max videos rewarded are 3 per week."
+            dollarAmount={
+              !currentChannel || !currentChannel.yppStatus.startsWith('Verified')
+                ? currentChannel?.yppStatus.startsWith('Suspended')
+                  ? undefined
+                  : 5
+                : getTierRewards(currentChannel.yppStatus.split('::')[1].toLowerCase())?.[1]
+            }
+            isRangeAmount={!currentChannel || !currentChannel.yppStatus.startsWith('Verified')}
+            amountTooltip={
+              !currentChannel?.yppStatus.startsWith('Verified')
+                ? 'Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity.'
+                : 'Your YouTube channel is being automatically synced with your Gleev channel. You will be rewarded every time a new video gets synced.'
+            }
+            actionNode={
+              currentChannel?.yppStatus.startsWith('Verified') ? (
+                syncStatusContent
+              ) : !currentChannel?.yppStatus.startsWith('Suspended') ? null : (
+                <FlexBox
+                  gap={lgMatch ? 14 : smMatch ? 8 : 4}
+                  flow={smMatch ? 'row' : 'column'}
+                  alignItems={smMatch ? 'center' : 'start'}
+                >
+                  <FlexBox
+                    width={lgMatch ? undefined : 'auto'}
+                    justifyContent={lgMatch ? 'end' : 'unset'}
+                    alignItems="center"
+                  >
+                    <Text variant="h400" as="h4">
+                      Suspended
+                    </Text>
+                    <Information
+                      text="Suspended channels are not eligible for receiving any reward from YouTube Partner Program."
+                      placement="top-start"
+                    />
+                  </FlexBox>
+                  {syncStatusContent}
+                </FlexBox>
+              )
+            }
+          />
+        </GridItem>
+        <GridItem colSpan={{ xxs: 12 }}>
+          <BenefitCard
+            title="Refer another YouTube creator"
+            description="Get rewarded for every new creator who signs up to YPP program using your referral link. Referrals rewards depends on the tier assigned to the invited channel."
+            dollarAmount={getTierRewards('diamond')?.[2]}
+            amountTooltip="Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity."
+            isRangeAmount
+            actionNode={
+              <StyledCopyButton
+                fullWidth={!smMatch}
+                textToCopy={`${window.location.host}/ypp?referrerId=${channelId}`}
+                copySuccessText="Referral link copied to clipboard"
+                onClick={() => trackReferralLinkGenerated(channelId)}
+              >
+                Copy referral link
+              </StyledCopyButton>
+            }
+          />
+        </GridItem>
+      </LayoutGrid>
     </>
   )
 }

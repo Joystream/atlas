@@ -125,7 +125,7 @@ export const YppDashboardSettingsTab = () => {
         displaySnackbar({
           title: 'Settings updated successfully',
           description: isSync
-            ? 'We started syncing your YouTube videos. Please allow 30 to 60 minutes for your videos to start showing up on the My videos page.'
+            ? 'Auto-sync is successfully enabled. It may take up to 24 hours for the videos to start syncing.'
             : 'Your videos will no longer be synced with your YouTube channel.',
           iconType: 'success',
           actionText: isSync ? 'Go to My Videos' : undefined,
@@ -216,7 +216,6 @@ export const YppDashboardSettingsTab = () => {
               iconType: 'success',
             })
           }
-          navigate(absoluteRoutes.studio.ypp())
         }
       }
     } catch (e) {
@@ -248,7 +247,6 @@ export const YppDashboardSettingsTab = () => {
     handleTransaction,
     joystream,
     memberId,
-    navigate,
     proxyCallback,
   ])
 

@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.10.0] - 2023-10-06
+
+### Added
+
+- Introduced new categories
+- YPP was updated to v2.0: updated landing page, new tiers system; rewards, referrals and dashboard changes
+
+### Changed
+
+- Changed channel tokens withdrawal from membership account to any Joystream account
+
+### Fixed
+
+- Fixed bug with slow loading of a homepage
+- Fixed bug with bid withdrawal from an auction
+- Minor markup fixes
+
 ## [4.9.2] - 2023-09-22
 
 ### Changed

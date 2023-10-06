@@ -1,8 +1,9 @@
-import { css } from '@emotion/react'
+import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import topRightPattern from '@/assets/images/ypp-background-pattern-2.svg'
 import bottomLeftPattern from '@/assets/images/ypp-background-pattern.svg'
+import { FlexBox } from '@/components/FlexBox'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { cVar, media, sizes } from '@/styles'
@@ -28,14 +29,90 @@ export const Wrapper = styled.div`
   }
 `
 
+const rot = keyframes`
+  0% {
+    transform: rotate(60deg);
+  }
+
+  100% {
+    transform: rotate(420deg);
+  }
+`
+
+export const GlowContainer = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 1px;
+  height: 1px;
+  animation: ${rot} 30s infinite linear;
+`
+
+export const GlowBox = styled.div<{ walkHeight: number; walkWidth: number }>`
+  display: block;
+  position: absolute;
+  height: 2000px;
+  width: 2000px;
+  border-radius: 50%;
+  top: ${(props) => (props.walkHeight / 1) * -1}px;
+  background: radial-gradient(circle, rgb(20 52 146 / 1) 70%, transparent 100%);
+  filter: blur(400px);
+`
+export const StyledLimitedWidthContainerHero = styled.div<{ centerText?: boolean }>`
+  text-align: ${({ centerText }) => (centerText ? 'center' : 'unset')};
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  padding: ${sizes(4)};
+
+  ${media.md} {
+    padding: ${sizes(8)};
+    border-radius: 32px;
+  }
+  ${media.lg} {
+    padding: ${sizes(16)};
+  }
+`
 export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)<{ centerText?: boolean }>`
   text-align: ${({ centerText }) => (centerText ? 'center' : 'unset')};
   padding-bottom: unset;
 `
 
+export const StyledLimitedWidthContainerVideo = styled(LimitedWidthContainer)<{ centerText?: boolean }>`
+  text-align: ${({ centerText }) => (centerText ? 'center' : 'unset')};
+  background: radial-gradient(50% 50% at 50% 50%, #15308b 0%, #000 100%);
+`
+
 export const CenteredLayoutGrid = styled(LayoutGrid)`
   text-align: center;
   row-gap: 0;
+`
+
+export const CenteredLayoutFlex = styled(FlexBox)`
+  text-align: center;
+  row-gap: 0;
+
+  ${media.lg} {
+    padding: 0 20%;
+  }
+`
+
+export const TierCardWrapper = styled(GridItem)`
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: ${sizes(4)};
+  justify-content: center;
+
+  ${media.sm} {
+    grid-template-columns: repeat(2, auto);
+  }
+
+  ${media.md} {
+    gap: ${sizes(6)};
+    grid-template-columns: repeat(4, auto);
+  }
 `
 
 type HeaderGridItemProps = {
@@ -73,6 +150,15 @@ export const BackgroundContainer = styled.div<BackgroundContainerProps>`
   padding: ${sizes(16)} var(--size-global-horizontal-padding);
   ${media.md} {
     padding: ${sizes(24)} var(--size-global-horizontal-padding);
+    ${backgroundPattern};
+  }
+`
+
+export const HeroBackgroundContainer = styled(BackgroundContainer)`
+  padding-top: ${sizes(4)};
+
+  ${media.md} {
+    padding-top: ${sizes(8)};
     ${backgroundPattern};
   }
 `

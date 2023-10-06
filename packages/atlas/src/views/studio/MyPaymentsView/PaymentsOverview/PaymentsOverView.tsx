@@ -7,9 +7,8 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
 import { ClaimChannelPaymentsDialog } from '@/components/_overlays/ClaimChannelPaymentsDialog'
-import { WithdrawFundsDialog } from '@/components/_overlays/SendTransferDialogs'
+import { SendFundsDialog } from '@/components/_overlays/SendTransferDialogs'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useSubscribeAccountBalance } from '@/providers/joystream'
 import { useUser } from '@/providers/user/user.hooks'
 
@@ -18,8 +17,6 @@ import { CustomNodeWrapper, StyledSvgJoyTokenMonochrome24, TilesWrapper } from '
 
 export const PaymentsOverView = () => {
   const { channelId, activeMembership } = useUser()
-  const { urls: memberAvatarUrls } = getMemberAvatar(activeMembership)
-  const { totalBalance } = useSubscribeAccountBalance()
   const [showWithdrawDialog, setShowWithdrawDialog] = useState(false)
   const [showClaimDialog, setShowClaimDialog] = useState<boolean>(false)
   const { channel, loading } = useFullChannel(channelId || '')
@@ -38,12 +35,10 @@ export const PaymentsOverView = () => {
 
   return (
     <>
-      <WithdrawFundsDialog
-        avatarUrls={memberAvatarUrls}
+      <SendFundsDialog
         activeMembership={activeMembership}
         show={showWithdrawDialog}
         onExitClick={() => setShowWithdrawDialog(false)}
-        totalBalance={totalBalance}
         channelBalance={channelBalance}
         channelId={channelId}
       />
