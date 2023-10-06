@@ -288,168 +288,163 @@ content:
   officialJoystreamChannelId: null # ID of the official Joystream channel to display "Official Joystream updates" section on the homepage - can be set to null to disable this section
 
   categories: # List of display categories to be used in the app. Those are local to the application and are related to metaprotocol categories via 'videoCategories' array.
-    - id: '1' # Local category ID
-      name: 'Art' # Display name of the category
-      color: '#D92E61' # Color used in the UI for this category
-      iconUrl: '' # URL for category icon SVG
-      coverImgUrl: '' # URL for category cover image
-      videoCategories: ['3142434-2'] # List of metaprotocol category IDs that should be included in this display category
-      defaultVideoCategory: '3142434-2'
-    - id: '2'
-      name: 'Animation and Film'
-      color: '#E7BE2D'
-      iconUrl: ''
-      coverImgUrl: ''
-      videoCategories: ['3142437-2']
-      defaultVideoCategory: '3142437-2'
-    - id: '3'
-      name: 'Autos and Vehicles'
-      color: '#BD4BE4'
-      iconUrl: ''
-      coverImgUrl: ''
-      videoCategories: ['3142440-2']
-      defaultVideoCategory: '3142440-2'
-    - id: '4'
-      name: 'Business and Finance'
-      color: '#BDE933'
-      iconUrl: ''
-      coverImgUrl: ''
-      videoCategories: ['3142443-2']
-      defaultVideoCategory: '3142443-2'
-    - id: '5'
-      name: 'Crypto'
-      color: '#54A7F0'
-      iconUrl: ''
-      coverImgUrl: ''
-      videoCategories:
-        [
-          '3142446-2',
-          '57-2',
-          '59-2',
-          '61-2',
-          '63-2',
-          '848-2',
-          '852-2',
-          '856-2',
-          '860-2',
-          '864-2',
-          '868-2',
-          '873-2',
-          '878-2',
-          '883-2',
-          '888-2',
-          '893-2',
-          '898-2',
-          '905-2',
-          '910-2',
-          '915-2',
-        ]
-      defaultVideoCategory: '3142446-2'
-    - id: '6'
-      name: 'DIY'
-      color: '#DD379D'
-      iconUrl: ''
-      coverImgUrl: ''
-      videoCategories: ['3142448-2']
-      defaultVideoCategory: '3142448-2'
-    - id: '7'
-      name: 'Education'
-      color: '#5A7AEE'
-      iconUrl: ''
-      coverImgUrl: ''
-      videoCategories: ['3142451-2']
-      defaultVideoCategory: '3142451-2'
-    - id: '8'
-      name: 'Entertainment'
-      color: '#41EE5A'
-      iconUrl: ''
-      coverImgUrl: ''
-      videoCategories: ['3142456-2']
-      defaultVideoCategory: '3142456-2'
-    - id: '9'
-      name: 'Lifestyle'
-      color: '#9455E8'
-      iconUrl: ''
-      coverImgUrl: ''
-      videoCategories: ['3142459-4']
-      defaultVideoCategory: '"3142459-4'
-    - id: '10'
-      name: 'Memes and Humour'
-      color: '#4FE1F2'
-      iconUrl: ''
-      coverImgUrl: ''
-      videoCategories: ['3142468-2']
-      defaultVideoCategory: '3142468-2'
-    - id: '11'
-      name: 'Music and Music Videos'
-      color: '#6E5FEC'
-      iconUrl: ''
-      coverImgUrl: ''
-      videoCategories: ['3142471-2']
-      defaultVideoCategory: '3142471-2'
-    - id: '12'
-      name: 'Nature'
-      color: '#E57827'
-      iconUrl: ''
-      coverImgUrl: ''
-      videoCategories: ['3142475-2']
-      defaultVideoCategory: '3142475-2'
-    - id: '13'
-      name: 'News and Current Affairs'
-      color: '#6EEC3A'
-      iconUrl: ''
-      coverImgUrl: ''
-      videoCategories: ['3142484-2']
-      defaultVideoCategory: '3142484-2'
-    - id: '14'
-      name: 'People and Blogs'
-      color: '#E141D6'
-      iconUrl: ''
-      coverImgUrl: ''
-      videoCategories: ['3142490-2']
-      defaultVideoCategory: '3142490-2'
-    - id: '15'
-      name: 'Pets and Animals'
-      color: '#48F0B3'
-      iconUrl: ''
-      coverImgUrl: ''
-      videoCategories: ['3142493-2']
-      defaultVideoCategory: '3142493-2'
-    - id: '16'
-      name: 'Sports'
-      color: '#B0E839'
-      iconUrl: ''
-      coverImgUrl: ''
-      videoCategories: ['3142501-3']
-      defaultVideoCategory: '3142501-3'
-    - id: '17'
-      name: 'Technology'
-      color: '#3EE7B4'
-      iconUrl: ''
-      coverImgUrl: ''
-      videoCategories: ['3142503-2']
-      defaultVideoCategory: '3142503-2'
-    - id: '18'
-      name: 'Travel'
-      color: '#68FA63'
-      iconUrl: ''
-      coverImgUrl: ''
-      videoCategories: ['3142506-2']
-      defaultVideoCategory: '3142506-2'
-    - id: '19'
-      name: 'Unboxing'
-      color: '#EE4BB7'
-      iconUrl: ''
-      coverImgUrl: ''
-      videoCategories: ['3142509-2']
-      defaultVideoCategory: '3142509-2'
-    - id: '20'
-      name: 'Video Games'
-      color: '#FCAC4D'
-      iconUrl: ''
-      coverImgUrl: ''
-      videoCategories: ['3142511-2']
-      defaultVideoCategory: '3142511-2'
+    categories: # List of display categories to be used in the app. Those are local to the application and are related to metaprotocol categories via 'videoCategories' array.
+      - id: '1' # Local category ID
+        name: 'Art' # Display name of the category
+        color: '#D92E61' # Color used in the UI for this category
+        iconUrl: '' # URL for category icon SVG
+        coverImgUrl: '' # URL for category cover image
+        videoCategories: ['4209396-2'] # List of metaprotocol category IDs that should be included in this display category
+        defaultVideoCategory: '4209396-2'
+      - id: '2'
+        name: 'Animation and Film'
+        color: '#E7BE2D'
+        iconUrl: ''
+        coverImgUrl: ''
+        videoCategories: ['4209546-2']
+        defaultVideoCategory: '4209546-2'
+      - id: '3'
+        name: 'Autos and Vehicles'
+        color: '#BD4BE4'
+        iconUrl: ''
+        coverImgUrl: ''
+        videoCategories: ['4209572-2']
+        defaultVideoCategory: '4209572-2'
+      - id: '4'
+        name: 'Business and Finance'
+        color: '#BDE933'
+        iconUrl: ''
+        coverImgUrl: ''
+        videoCategories: ['4209583-2']
+        defaultVideoCategory: '4209583-2'
+      - id: '5'
+        name: 'Crypto'
+        color: '#54A7F0'
+        iconUrl: ''
+        coverImgUrl: ''
+        videoCategories:
+          [
+            '4209591-2',
+            '254423-2',
+            '254433-2',
+            '254434-2',
+            '254435-2',
+            '254436-2',
+            '254437-2',
+            '254438-2',
+            '254441-2',
+            '254445-2',
+            '254446-2',
+            '254449-2',
+            '887567-2',
+            '254450-2',
+          ]
+        defaultVideoCategory: '4209591-2'
+      - id: '6'
+        name: 'DIY'
+        color: '#DD379D'
+        iconUrl: ''
+        coverImgUrl: ''
+        videoCategories: ['4209595-2']
+        defaultVideoCategory: '4209595-2'
+      - id: '7'
+        name: 'Education'
+        color: '#5A7AEE'
+        iconUrl: ''
+        coverImgUrl: ''
+        videoCategories: ['4209603-2']
+        defaultVideoCategory: '4209603-2'
+      - id: '8'
+        name: 'Entertainment'
+        color: '#41EE5A'
+        iconUrl: ''
+        coverImgUrl: ''
+        videoCategories: ['4209609-2']
+        defaultVideoCategory: '4209609-2'
+      - id: '9'
+        name: 'Lifestyle'
+        color: '#9455E8'
+        iconUrl: ''
+        coverImgUrl: ''
+        videoCategories: ['4209637-2']
+        defaultVideoCategory: '4209637-2'
+      - id: '10'
+        name: 'Memes and Humour'
+        color: '#4FE1F2'
+        iconUrl: ''
+        coverImgUrl: ''
+        videoCategories: ['4209643-2']
+        defaultVideoCategory: '4209643-2'
+      - id: '11'
+        name: 'Music and Music Videos'
+        color: '#6E5FEC'
+        iconUrl: ''
+        coverImgUrl: ''
+        videoCategories: ['4209650-2']
+        defaultVideoCategory: '4209650-2'
+      - id: '12'
+        name: 'Nature'
+        color: '#E57827'
+        iconUrl: ''
+        coverImgUrl: ''
+        videoCategories: ['4209658-2']
+        defaultVideoCategory: '4209658-2'
+      - id: '13'
+        name: 'News and Current Affairs'
+        color: '#6EEC3A'
+        iconUrl: ''
+        coverImgUrl: ''
+        videoCategories: ['4209664-2']
+        defaultVideoCategory: '4209664-2'
+      - id: '14'
+        name: 'People and Blogs'
+        color: '#E141D6'
+        iconUrl: ''
+        coverImgUrl: ''
+        videoCategories: ['4209674-2']
+        defaultVideoCategory: '4209674-2'
+      - id: '15'
+        name: 'Pets and Animals'
+        color: '#48F0B3'
+        iconUrl: ''
+        coverImgUrl: ''
+        videoCategories: ['4209679-2']
+        defaultVideoCategory: '4209679-2'
+      - id: '16'
+        name: 'Sports'
+        color: '#B0E839'
+        iconUrl: ''
+        coverImgUrl: ''
+        videoCategories: ['4209685-2']
+        defaultVideoCategory: '4209685-2'
+      - id: '17'
+        name: 'Technology'
+        color: '#3EE7B4'
+        iconUrl: ''
+        coverImgUrl: ''
+        videoCategories: ['4209691-2']
+        defaultVideoCategory: '4209691-2'
+      - id: '18'
+        name: 'Travel'
+        color: '#68FA63'
+        iconUrl: ''
+        coverImgUrl: ''
+        videoCategories: ['4209700-2']
+        defaultVideoCategory: '4209700-2'
+      - id: '19'
+        name: 'Unboxing'
+        color: '#EE4BB7'
+        iconUrl: ''
+        coverImgUrl: ''
+        videoCategories: ['4209707-2']
+        defaultVideoCategory: '4209707-2'
+      - id: '20'
+        name: 'Video Games'
+        color: '#FCAC4D'
+        iconUrl: ''
+        coverImgUrl: ''
+        videoCategories: ['4209721-2']
+        defaultVideoCategory: '4209721-2'
 
   showAllContent: false # With this disabled, Atlas will display only content from display categories defined above. If you want your app to display all Joystream content, set this to true.
 
