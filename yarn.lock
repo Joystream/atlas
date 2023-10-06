@@ -4215,7 +4215,7 @@ __metadata:
     "@hcaptcha/react-hcaptcha": ^1.4.4
     "@hookform/resolvers": ^2.9.10
     "@joystream/js": ^1.4.0
-    "@joystream/metadata-protobuf": 2.8.1
+    "@joystream/metadata-protobuf": 2.9.0
     "@joystream/prettier-config": ^1.0.0
     "@joystream/types": 4.0.0
     "@livesession/sdk": ^1.1.4
@@ -4343,7 +4343,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@joystream/metadata-protobuf@npm:2.8.1, @joystream/metadata-protobuf@npm:^2.8.1":
+"@joystream/metadata-protobuf@npm:2.9.0":
+  version: 2.9.0
+  resolution: "@joystream/metadata-protobuf@npm:2.9.0"
+  dependencies:
+    "@types/iso-3166-2": ^1.0.0
+    "@types/long": ^4.0.1
+    google-protobuf: ^3.14.0
+    i18n-iso-countries: ^6.8.0
+    iso-3166-2: ^1.0.0
+    iso-639-1: ^2.1.9
+    long: ^4.0.0
+    protobufjs: ^6.11.2
+  checksum: 790392c16853b79fed43a3c49a5f473ce12076ca54b1853aa5b3e7f9b6effbb4103e3e68d96aae0a5c6c6245f359439278bf6fac5d6f0f80793d06a382abb52a
+  languageName: node
+  linkType: hard
+
+"@joystream/metadata-protobuf@npm:^2.8.1":
   version: 2.8.1
   resolution: "@joystream/metadata-protobuf@npm:2.8.1"
   dependencies:
