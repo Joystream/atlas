@@ -15,7 +15,6 @@ import { handleAnonymousAuth } from '@/providers/auth/auth.helpers'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useSnackbar } from '@/providers/snackbars'
 import { useYppStore } from '@/providers/ypp/ypp.store'
-import { media } from '@/styles'
 import { createId } from '@/utils/createId'
 import { imageUrlToBlob } from '@/utils/image'
 import { SentryLogger } from '@/utils/logs'
@@ -41,6 +40,7 @@ const SIGNUP_FORM_DATA_INITIAL_STATE: AccountFormData & MemberFormData = {
   confirmedTerms: false,
   confirmedCopy: false,
   memberId: '',
+  referrerChannelId: undefined,
 }
 
 const stepToPageName: Partial<Record<SignUpSteps, string>> = {
@@ -64,6 +64,7 @@ export const SignUpModal = () => {
   const ytResponseData = useYppStore((state) => state.ytResponseData)
   const setYppModalOpenName = useYppStore((state) => state.actions.setYppModalOpenName)
   const setYtResponseData = useYppStore((state) => state.actions.setYtResponseData)
+  const referrerChannelId = useYppStore((state) => state.referrerId)
   const { anonymousUserId } = useAuthStore()
   const { displaySnackbar } = useSnackbar()
 
@@ -117,7 +118,11 @@ export const SignUpModal = () => {
     }
 
     return createNewOrionAccount({
-      data: { ...signUpFormData.current, memberId: memberRef.current },
+      data: {
+        ...signUpFormData.current,
+        memberId: memberRef.current,
+        ...(referrerChannelId ? { referrerChannelId } : {}),
+      },
       onError: (error) => {
         if (error === RegisterError.EmailAlreadyExists) {
           setEmailAlreadyTakenError(true)
@@ -170,6 +175,7 @@ export const SignUpModal = () => {
     displaySnackbar,
     goToNextStep,
     goToStep,
+    referrerChannelId,
     setAuthModalOpenName,
     setYppModalOpenName,
     setYtResponseData,
@@ -203,8 +209,8 @@ export const SignUpModal = () => {
   )
 
   const handlePasswordStepSubmit = useCallback(
-    async (password: string) => {
-      signUpFormData.current = { ...signUpFormData.current, password }
+    async (password: string, captchaToken?: string) => {
+      signUpFormData.current = { ...signUpFormData.current, password, captchaToken }
       const memberId = await createNewMember({
         data: {
           ...signUpFormData.current,
@@ -408,7 +414,4 @@ export const SignUpModal = () => {
 
 const StyledDialogModal = styled(DialogModal)`
   max-height: calc(100vh - 80px);
-  ${media.sm} {
-    max-height: 576px;
-  }
 `

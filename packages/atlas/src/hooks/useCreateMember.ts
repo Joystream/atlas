@@ -29,6 +29,7 @@ export type MemberFormData = {
   authorizationCode?: string
   userId?: string
   confirmedCopy: boolean
+  referrerChannelId?: string
 }
 
 export type AccountFormData = {
@@ -37,6 +38,7 @@ export type AccountFormData = {
   mnemonic: string
   confirmedTerms: boolean
   memberId: string
+  referrerChannelId?: string
 }
 
 type NewMemberResponse = {
@@ -122,6 +124,7 @@ export const useCreateMember = () => {
           ? {
               userId: data.userId,
               authorizationCode: data.authorizationCode,
+              ...(data.referrerChannelId ? { referrerChannelId: data.referrerChannelId } : {}),
             }
           : {}),
       }

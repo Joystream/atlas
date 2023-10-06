@@ -28,6 +28,7 @@ export const TickWrapper = styled.div<{ fulfilled: boolean }>`
   justify-content: center;
   background-color: ${({ fulfilled }) => cVar(fulfilled ? 'colorBackgroundAlpha' : 'colorBackgroundError')};
   border-radius: 50%;
+  margin-top: -2px;
 `
 
 export const Paragraph = styled.p<{ important?: boolean }>`

@@ -6,7 +6,6 @@ import { SvgActionCopy } from '@/assets/icons'
 import { AuthenticationModalStepTemplate } from '@/components/_auth/AuthenticationModalStepTemplate'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { FormField } from '@/components/_inputs/FormField'
-import { useClipboard } from '@/hooks/useClipboard'
 import { MemberFormData } from '@/hooks/useCreateMember'
 
 import { StyledTextArea, StyledTextButton } from './SignupSeedStep.styles'
@@ -28,13 +27,12 @@ export const SignUpSeedStep: FC<SignUpSeedStepProps> = ({
   confirmedCopy,
   onSeedSubmit,
 }) => {
-  const { copyToClipboard } = useClipboard()
   const {
     control,
     register,
+    getValues,
     handleSubmit,
     setValue,
-    getValues,
     formState: { errors },
   } = useForm<FormData>({
     shouldFocusError: true,
@@ -58,6 +56,18 @@ export const SignUpSeedStep: FC<SignUpSeedStepProps> = ({
     })()
   }, [handleSubmit, onSeedSubmit])
 
+  const downloadSeed = () => {
+    const blobText = new Blob([getValues('mnemonic')], { type: 'text/plain' })
+    const url = URL.createObjectURL(blobText)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = 'mnemonic.txt'
+    link.click()
+
+    link.remove()
+    URL.revokeObjectURL(url)
+  }
+
   useEffect(() => {
     setPrimaryButtonProps({
       text: 'Continue',
@@ -76,13 +86,8 @@ export const SignUpSeedStep: FC<SignUpSeedStepProps> = ({
         <FormField label="Password recovery seed">
           <StyledTextArea data-ls-disabled {...register('mnemonic')} disabled />
         </FormField>
-        <StyledTextButton
-          variant="secondary"
-          icon={<SvgActionCopy />}
-          iconPlacement="left"
-          onClick={() => copyToClipboard(getValues('mnemonic'), 'Seed copied to your clipboard')}
-        >
-          Copy to clipboard
+        <StyledTextButton variant="secondary" icon={<SvgActionCopy />} iconPlacement="left" onClick={downloadSeed}>
+          Download as text file
         </StyledTextButton>
         <Controller
           control={control}

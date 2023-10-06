@@ -54,6 +54,7 @@ type FinalFormData = {
   referrerChannelId?: number
   shouldBeIngested?: boolean
   videoCategoryId?: string
+  channelLanguage?: string
 }
 
 export type YppAuthorizationModalProps = {
@@ -254,7 +255,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
                 ownerAccount: memberId,
                 description: ytResponseData?.channelDescription,
                 isPublic: true,
-                language: DEFAULT_LANGUAGE,
+                language: ytResponseData?.channelLanguage || DEFAULT_LANGUAGE,
                 title: ytResponseData?.channelTitle || ytResponseData?.channelHandle,
               },
           refetchChannel,
@@ -317,11 +318,10 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
           setReferrerId(null)
           setYtResponseData(null)
 
-          navigate(absoluteRoutes.studio.ypp())
+          navigate(absoluteRoutes.studio.yppDashboard())
           displaySnackbar({
             title: 'Sign up successful!',
-            description:
-              'We will start importing your YouTube videos once your channel is verified. Please allow 30 to 60 minutes after verification for your videos to start showing on the My videos page.',
+            description: 'It may take up to 24 hours after sign up for the videos to start syncing.',
             iconType: 'success',
           })
         },
@@ -373,7 +373,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
           }
 
           if (yppCurrentChannel) {
-            navigate(absoluteRoutes.studio.ypp())
+            navigate(absoluteRoutes.studio.yppDashboard())
           }
 
           if (yppUnsyncedChannels?.length) {
@@ -396,7 +396,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
 
           // non signed users
           return {
-            text: 'Create account',
+            text: yppUnsyncedChannels?.length ? 'Continue' : 'Create account',
             onClick: () => {
               trackClickAuthModalSignUpButton(utmSource, utmCampaign)
               setSelectedChannelId(yppUnsyncedChannels?.[0]?.id ?? '')

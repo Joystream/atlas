@@ -35,11 +35,6 @@ export const COLUMNS: TableProps['columns'] = [
     width: 100,
   },
   {
-    Header: 'Status',
-    accessor: 'status',
-    width: 100,
-  },
-  {
     Header: () => <RightAlignedHeader>REFERRAL REWARD</RightAlignedHeader>,
     accessor: 'reward',
     width: 100,

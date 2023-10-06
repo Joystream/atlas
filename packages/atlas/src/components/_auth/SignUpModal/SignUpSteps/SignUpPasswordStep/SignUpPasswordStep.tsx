@@ -22,7 +22,7 @@ type PasswordStepForm = {
 }
 
 type SignUpPasswordStepProps = {
-  onPasswordSubmit: (password: string) => void
+  onPasswordSubmit: (password: string, captchaToken?: string) => void
   password?: string
   dialogContentRef?: RefObject<HTMLDivElement>
 } & SignUpStepsCommonProps &
@@ -58,10 +58,10 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
   const captchaInputRef = useRef<HTMLDivElement | null>(null)
 
   const handleGoToNextStep = useCallback(() => {
-    captchaRef.current?.resetCaptcha()
     handleSubmit((data) => {
-      onPasswordSubmit(data.password)
+      onPasswordSubmit(data.password, data.captchaToken)
     })()
+    captchaRef.current?.resetCaptcha()
   }, [handleSubmit, onPasswordSubmit])
 
   useEffect(() => {

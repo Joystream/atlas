@@ -55,6 +55,7 @@ type MemberDropdownNavProps = {
   onSignOut: () => void
   onShowFundsDialog: () => void
   activeMembership?: FullMembershipFieldsFragment | null
+  activeChannel?: FullMembershipFieldsFragment['channels'][number] | null
   hasOneMember?: boolean
   channelId: string | null
   accountBalance?: BN
@@ -78,6 +79,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
   lockedAccountBalance,
   channelBalance,
   isInDebt,
+  activeChannel,
 }) => {
   const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
   const { urls: memberAvatarUrls, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(activeMembership)
@@ -173,7 +175,11 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
               </BalanceContainer>
             </div>
             <AddressContainer>
-              <CopyAddressButton address={activeMembership?.controllerAccount ?? ''} size="big" truncate />
+              <CopyAddressButton
+                address={(type === 'member' ? activeMembership?.controllerAccount : activeChannel?.rewardAccount) ?? ''}
+                size="big"
+                truncate
+              />
             </AddressContainer>
           </AvatarContainer>
         </MemberInfoContainer>
