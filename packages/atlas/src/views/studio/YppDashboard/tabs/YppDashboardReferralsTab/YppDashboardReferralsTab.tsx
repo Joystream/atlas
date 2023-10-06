@@ -1,29 +1,39 @@
 import { useMemo } from 'react'
+import { useQuery } from 'react-query'
 
+import { axiosInstance } from '@/api/axios'
 import { SvgActionLinkUrl } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { YppReferral, YppReferralTable } from '@/components/YppReferralTable/YppReferralTable'
 import { Button } from '@/components/_buttons/Button'
+import { atlasConfig } from '@/config'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useUser } from '@/providers/user/user.hooks'
-import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
+import { YppSyncedChannel } from '@/views/global/YppLandingView/YppLandingView.types'
 
 import { FallbackContainer } from '../YppDashboardTabs.styles'
 
+const YPP_SYNC_URL = atlasConfig.features.ypp.youtubeSyncApiUrl
+
 export const YppDashboardReferralsTab = () => {
-  const { currentChannel, isLoading } = useGetYppSyncedChannels()
   const { copyToClipboard } = useClipboard()
   const { channelId } = useUser()
+  const { isLoading, data } = useQuery(
+    ['referralsTable', channelId],
+    () => axiosInstance.get<YppSyncedChannel[]>(`${YPP_SYNC_URL}/channels/${channelId}/referrals`),
+    { enabled: !!channelId }
+  )
+
   const mappedData: YppReferral[] = useMemo(
     () =>
-      currentChannel?.referredChannels?.map((channelData) => {
+      data?.data.map((channelData) => {
         return {
           date: new Date(channelData.createdAt),
           channel: String(channelData.joystreamChannelId),
           status: channelData.yppStatus,
         }
       }) ?? [],
-    [currentChannel?.referredChannels]
+    [data?.data]
   )
 
   if (!isLoading && !mappedData?.length) {
