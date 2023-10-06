@@ -1,6 +1,8 @@
 import { Datum } from '@nivo/line'
 import { z } from 'zod'
 
+import { IssuanceStepForm } from '@/components/_crt/CreateTokenDrawer/CreateTokenDrawer.types'
+
 export const assuranceOptions = [
   {
     label: 'Secure',
@@ -172,13 +174,15 @@ export const generateChartData = (cliffTime: number, vestingTime: number, firstP
   return data
 }
 
-export const getDataBasedOnType = (type: 'secure' | 'safe' | 'risky'): [number, number, number] => {
+export const getDataBasedOnType = (type: IssuanceStepForm['assuranceType']): [number, number, number] | null => {
   switch (type) {
     case 'secure':
       return [6, 12, 50]
     case 'safe':
       return [0, 6, 50]
     case 'risky':
-      return [0, 0, 0]
+      return [0, 0, 100]
+    case 'custom':
+      return null
   }
 }

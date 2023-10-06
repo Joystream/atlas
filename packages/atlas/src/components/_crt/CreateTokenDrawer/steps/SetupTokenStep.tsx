@@ -31,6 +31,7 @@ const accessOptions = [
     caption: 'Only members on allowlist can own your token. ',
     icon: <SvgActionLock />,
     value: false,
+    disabled: true,
   },
 ]
 
