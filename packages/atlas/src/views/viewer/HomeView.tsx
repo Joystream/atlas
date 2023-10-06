@@ -6,7 +6,7 @@ import { GetBasicVideosConnectionLightweightDocument } from '@/api/queries/__gen
 import { Section } from '@/components/Section/Section'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
-import { publicVideoFilter } from '@/config/contentFilter'
+import { publicCryptoVideoFilter } from '@/config/contentFilter'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useInfiniteVideoGrid } from '@/hooks/useInfiniteVideoGrid'
 import { DEFAULT_VIDEO_GRID, sizes } from '@/styles'
@@ -17,7 +17,7 @@ export const HomeView: FC = () => {
   const { columns, fetchMore, pageInfo, tiles } = useInfiniteVideoGrid({
     query: GetBasicVideosConnectionLightweightDocument,
     variables: {
-      where: publicVideoFilter,
+      where: publicCryptoVideoFilter,
       orderBy: VideoOrderByInput.VideoRelevanceDesc,
     },
   })

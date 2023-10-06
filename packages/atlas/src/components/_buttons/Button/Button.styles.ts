@@ -426,6 +426,10 @@ export const ButtonBase = styled('button', { shouldForwardProp: isPropValid })<B
   transition-property: background-color, box-shadow, color, fill;
   border-radius: ${({ rounded }) => (rounded ? '999px' : cVar('radiusSmall'))};
 
+  span {
+    white-space: nowrap;
+  }
+
   &:focus ${BorderWrapper} {
     visibility: visible;
   }

@@ -8,6 +8,8 @@ export enum YppAuthorizationErrorCode {
   CHANNEL_CRITERIA_UNMET_SUBSCRIBERS = 'CHANNEL_CRITERIA_UNMET_SUBSCRIBERS',
   CHANNEL_CRITERIA_UNMET_VIDEOS = 'CHANNEL_CRITERIA_UNMET_VIDEOS',
   CHANNEL_CRITERIA_UNMET_CREATION_DATE = 'CHANNEL_CRITERIA_UNMET_CREATION_DATE',
+  CHANNEL_STATUS_SUSPENDED = 'CHANNEL_STATUS_SUSPENDED',
+  CHANNEL_CRITERIA_UNMET_NEW_VIDEOS_REQUIREMENT = 'CHANNEL_CRITERIA_UNMET_NEW_VIDEOS_REQUIREMENT',
   YOUTUBE_QUOTA_LIMIT_EXCEEDED = 'YOUTUBE_QUOTA_LIMIT_EXCEEDED',
   YOUTUBE_API_NOT_CONNECTED = 'YOUTUBE_API_NOT_CONNECTED',
   QUERY_NODE_NOT_CONNECTED = 'QUERY_NODE_NOT_CONNECTED',
@@ -18,6 +20,8 @@ export type YppRequirementsErrorCode = PickEnum<
   | YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_SUBSCRIBERS
   | YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_VIDEOS
   | YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_CREATION_DATE
+  | YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_NEW_VIDEOS_REQUIREMENT
+  | YppAuthorizationErrorCode.CHANNEL_STATUS_SUSPENDED
 >
 
 export type ChannelVerificationSuccessResponse = {
@@ -26,15 +30,18 @@ export type ChannelVerificationSuccessResponse = {
   channelHandle: string
   channelTitle: string
   channelDescription?: string
+  channelLanguage?: string
   avatarUrl?: string
   bannerUrl?: string
 }
 
 export type ChannelRequirements = {
   MINIMUM_SUBSCRIBERS_COUNT: number
-  MINIMUM_VIDEO_COUNT: number
+  MINIMUM_TOTAL_VIDEOS_COUNT: number
   MINIMUM_VIDEO_AGE_HOURS: number
   MINIMUM_CHANNEL_AGE_HOURS: number
+  MINIMUM_VIDEOS_PER_MONTH: number
+  MONTHS_TO_CONSIDER: number
 }
 
 export type Requirements = Record<keyof ChannelRequirements, number | undefined>
