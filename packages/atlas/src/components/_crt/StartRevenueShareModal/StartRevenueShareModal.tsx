@@ -42,7 +42,7 @@ const endDateItems = datePickerItemsFactory([7, 14, 30])
 
 export const StartRevenueShare = ({ tokenId, onClose, show }: StartRevenueShareProps) => {
   const smMatch = useMediaMatch('sm')
-  const { patronageRate, userBalance, title } = getTokenDetails(tokenId)
+  const { patronageRate, userBalance } = getTokenDetails(tokenId)
 
   const form = useForm<{
     tokens: number | null
