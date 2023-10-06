@@ -58,7 +58,7 @@ export const ServiceStatusWidget = ({ status, syncStatus }: ServiceStatusWidgetP
     output.push([
       hideData ? '-' : syncStatus.backlogCount > 0 ? `~${formatDurationBiggestTick(syncStatus.fullSyncEta)}` : '-',
       'ETA TO FULL SYNC',
-      'Estimated time of full sync of your videos may change based on YPP service status or  service overload.',
+      'Estimated time of full sync of your videos may change based on YPP service status or service overload.',
     ])
     return output
   }, [status, syncStatus])
@@ -83,7 +83,7 @@ export const ServiceStatusWidget = ({ status, syncStatus }: ServiceStatusWidgetP
           ) : null}
         </FlexBox>
         <Text variant="t100" as="p" color="colorTextMuted">
-          New YT video uploads are checked once every 24 hours
+          New YouTube video uploads are checked once every 24 hours
         </Text>
       </FlexGridItem>
       {details.map(([value, title, tooltip], idx) => (

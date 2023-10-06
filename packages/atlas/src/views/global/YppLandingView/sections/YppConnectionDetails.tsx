@@ -52,7 +52,7 @@ export const YppConnectionDetails = () => {
               margin={{ top: 4, bottom: mdMatch ? 10 : 6 }}
             >
               We are verified by the YouTube Safety Team. We can only read specific types of data through the official
-              API. We we cannot publish or change anything on your YouTube channel.
+              API. We cannot publish or change anything on your YouTube channel.
             </Text>
           </HeaderGridItem>
           <AllowanceBox
@@ -68,7 +68,7 @@ export const YppConnectionDetails = () => {
               {[
                 'Channel title, avater, image, sub count, date.',
                 'Video titles, views and date.',
-                'Account profile',
+                'Account profile.',
               ].map((scope, idx) => (
                 <FlexBox key={idx} alignItems="center" gap={2}>
                   <SmallCheckBox>
