@@ -44,7 +44,6 @@ import {
   ExtrinsicResult,
   ExtrinsicStatus,
   ExtrinsicStatusCallbackFn,
-  FinalizeRevenueSplitResult,
   GetEventDataFn,
   MemberExtrinsicResult,
   MemberId,
@@ -1077,7 +1076,7 @@ export class JoystreamLibExtrinsics {
     return this.api.tx.content.finalizeRevenueSplit(member, parseInt(channelId))
   }
 
-  finalizeRevenueSplit: PublicExtrinsic<typeof this.finalizeRevenueSplitTx, FinalizeRevenueSplitResult> = async (
+  finalizeRevenueSplit: PublicExtrinsic<typeof this.finalizeRevenueSplitTx, ExitRevenueSplitResult> = async (
     memberId,
     channelId,
     cb
