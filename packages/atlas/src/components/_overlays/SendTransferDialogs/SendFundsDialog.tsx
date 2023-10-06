@@ -266,7 +266,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({
           label="Destination account"
           error={errors.account?.message}
           tooltip={{
-            text: `Any Polkadot wallet address format is supported, but if you’re transferring tokens over to another Joystream member, we recommend using the Joystream wallet address format, which starts with "${joystreamAddressPrefix}".`,
+            text: `All substrate generic accounts are supported, but make sure you are transferring to the wallet address that supports JOYSTREAM token in case of withdrawing to exchange deposit address.`,
             placement: 'top',
           }}
         >
@@ -281,7 +281,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({
                 },
                 wrongAddress: (value) => {
                   if (value && !isValidAddressPolkadotAddress(value)) {
-                    return 'Enter a valid Polkadot wallet address.'
+                    return 'Enter a valid Joystream wallet address.'
                   }
                   return true
                 },
@@ -298,14 +298,14 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({
               },
             })}
             nodeEnd={destinationAccount && <ResolvedAvatar member={destinationAccount} />}
-            placeholder="Polkadot wallet address"
+            placeholder="Joystream wallet address"
             error={!!errors.account}
           />
         </FormField>
         {account && isValidAddressPolkadotAddress(account) && !isValidJoystreamAddress(account) && (
           <Banner
             borderColor={cVar('colorBackgroundCautionStrong')}
-            description="Address does not follow Joystream format. Make sure that destination address supports Joystream token before transfer."
+            description="All substrate generic accounts are supported, but make sure you are transferring to the wallet address that supports JOYSTREAM token in case of withdrawing to exchange deposit address."
           />
         )}
       </FormFieldsWrapper>
