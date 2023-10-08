@@ -19,8 +19,18 @@ export const yppBackendTierToConfig = (beTier: YppChannelStatus): ConfigTier | u
   }
 }
 
-export const getTierRewards = (tier?: ConfigTier): number[] | undefined => {
-  // [signup, video sync, referral]
-  console.log('t', tier, configTiers)
-  return configTiers.find((configTier) => configTier.tier === tier)?.rewards
+type YppRewards = {
+  signUp: number
+  videoSync: number
+  referral: number
+}
+
+export const getTierRewards = (tier?: ConfigTier): YppRewards | undefined => {
+  const tierRewards = configTiers.find((configTier) => configTier.tier === tier)?.rewards
+  if (!tierRewards) return undefined
+  return {
+    signUp: tierRewards[0],
+    videoSync: tierRewards[1],
+    referral: tierRewards[2],
+  }
 }

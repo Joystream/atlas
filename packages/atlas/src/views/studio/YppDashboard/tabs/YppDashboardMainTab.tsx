@@ -155,7 +155,7 @@ export const YppDashboardMainTab: FC = () => {
               dollarAmount={
                 !currentChannel || !currentChannel.yppStatus.startsWith('Verified')
                   ? 100
-                  : getTierRewards(yppBackendTierToConfig(currentChannel.yppStatus))?.[0]
+                  : getTierRewards(yppBackendTierToConfig(currentChannel.yppStatus))?.signUp
               }
               isRangeAmount={!currentChannel || !currentChannel.yppStatus.startsWith('Verified')}
               amountTooltip="Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity."
@@ -193,7 +193,7 @@ export const YppDashboardMainTab: FC = () => {
                 ? currentChannel?.yppStatus.startsWith('Suspended')
                   ? undefined
                   : 5
-                : getTierRewards(yppBackendTierToConfig(currentChannel.yppStatus))?.[1]
+                : getTierRewards(yppBackendTierToConfig(currentChannel.yppStatus))?.videoSync
             }
             isRangeAmount={!currentChannel || !currentChannel.yppStatus.startsWith('Verified')}
             amountTooltip={
@@ -233,7 +233,7 @@ export const YppDashboardMainTab: FC = () => {
           <BenefitCard
             title="Refer another YouTube creator"
             description="Get rewarded for every new creator who signs up to YPP program using your referral link. Referrals rewards depends on the tier assigned to the invited channel."
-            dollarAmount={getTierRewards('diamond')?.[2]}
+            dollarAmount={getTierRewards('diamond')?.referral}
             amountTooltip="Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity."
             isRangeAmount
             actionNode={

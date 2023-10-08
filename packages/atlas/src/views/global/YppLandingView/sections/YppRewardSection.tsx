@@ -86,8 +86,7 @@ export const YppRewardSection: FC = () => {
         <LayoutGrid>
           <TierCardWrapper colSpan={{ base: 12, sm: 10, md: 12, lg: 10 }} colStart={{ sm: 2, md: 1, lg: 2 }}>
             {tiers.map((tier) => {
-              const maxReferralReward = getTierRewards('diamond')?.slice(-1)[0] || 0
-              tier.rewards = [...tier.rewards.slice(0, -1), maxReferralReward]
+              tier.rewards[tier.rewards.length - 1] = getTierRewards('diamond')?.referral || 0
               return <TierCard key={tier.tier} {...tier} />
             })}
           </TierCardWrapper>

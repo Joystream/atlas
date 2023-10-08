@@ -112,7 +112,7 @@ const Reward = ({ yppStatus }: { yppStatus: YppChannelStatus }) => {
         : yppStatus === 'Unverified'
         ? 'Pending'
         : yppStatus.startsWith('Verified')
-        ? `$${getTierRewards(yppBackendTierToConfig(yppStatus))?.[2]}`
+        ? `$${getTierRewards(yppBackendTierToConfig(yppStatus))?.referral}`
         : 'n/a'}
     </RightAlignText>
   )
