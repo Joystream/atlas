@@ -7,8 +7,8 @@ import { TooltipText } from '@/components/Tooltip/Tooltip.styles'
 import { TierCard } from '@/components/_ypp/TierCard'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { getTierRewards } from '@/utils/ypp'
 import { useSectionTextVariants } from '@/views/global/YppLandingView/sections/useSectionTextVariants'
-import { getTierRewards } from '@/views/studio/YppDashboard/YppDashboard.config'
 
 import { ColorAnchor } from './YppRewardSection.styles'
 

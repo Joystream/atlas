@@ -14,8 +14,8 @@ import { SentryLogger } from '@/utils/logs'
 import { convertUpperCamelToSentence } from '@/utils/misc'
 import { formatNumber } from '@/utils/number'
 import { formatDateTime } from '@/utils/time'
+import { getTierRewards, yppBackendTierToConfig } from '@/utils/ypp'
 import { YppChannelStatus } from '@/views/global/YppLandingView/YppLandingView.types'
-import { getTierRewards } from '@/views/studio/YppDashboard/YppDashboard.config'
 
 import { COLUMNS, tableLoadingData } from './YppReferralTable.utils'
 
@@ -112,7 +112,7 @@ const Reward = ({ yppStatus }: { yppStatus: YppChannelStatus }) => {
         : yppStatus === 'Unverified'
         ? 'Pending'
         : yppStatus.startsWith('Verified')
-        ? `$${getTierRewards(yppStatus.split('::')[1].toLowerCase())?.[2]}`
+        ? `$${getTierRewards(yppBackendTierToConfig(yppStatus))?.[2]}`
         : 'n/a'}
     </RightAlignText>
   )

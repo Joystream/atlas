@@ -20,10 +20,10 @@ import { useYppAuthorizeHandler } from '@/hooks/useYppAuthorizeHandler'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user/user.hooks'
 import { formatDate, getNextFriday } from '@/utils/time'
+import { getTierRewards, yppBackendTierToConfig } from '@/utils/ypp'
 import { YppAuthorizationModal } from '@/views/global/YppLandingView/YppAuthorizationModal'
 import { configYppIconMapper } from '@/views/global/YppLandingView/sections/YppFooter'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
-import { getTierRewards } from '@/views/studio/YppDashboard/YppDashboard.config'
 
 import {
   StatusDot,
@@ -155,7 +155,7 @@ export const YppDashboardMainTab: FC = () => {
               dollarAmount={
                 !currentChannel || !currentChannel.yppStatus.startsWith('Verified')
                   ? 100
-                  : getTierRewards(currentChannel.yppStatus.split('::')[1].toLowerCase())?.[0]
+                  : getTierRewards(yppBackendTierToConfig(currentChannel.yppStatus))?.[0]
               }
               isRangeAmount={!currentChannel || !currentChannel.yppStatus.startsWith('Verified')}
               amountTooltip="Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity."
@@ -193,7 +193,7 @@ export const YppDashboardMainTab: FC = () => {
                 ? currentChannel?.yppStatus.startsWith('Suspended')
                   ? undefined
                   : 5
-                : getTierRewards(currentChannel.yppStatus.split('::')[1].toLowerCase())?.[1]
+                : getTierRewards(yppBackendTierToConfig(currentChannel.yppStatus))?.[1]
             }
             isRangeAmount={!currentChannel || !currentChannel.yppStatus.startsWith('Verified')}
             amountTooltip={
