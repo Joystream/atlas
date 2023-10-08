@@ -155,7 +155,7 @@ export const YppDashboardMainTab: FC = () => {
               dollarAmount={
                 !currentChannel || !currentChannel.yppStatus.startsWith('Verified')
                   ? 100
-                  : getTierRewards(currentChannel.yppStatus.split('::')[1].toLowerCase())?.[0]
+                  : getTierRewards(currentChannel.yppStatus.split('::')[1]?.toLowerCase())?.[0] || 0
               }
               isRangeAmount={!currentChannel || !currentChannel.yppStatus.startsWith('Verified')}
               amountTooltip="Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity."
@@ -193,7 +193,7 @@ export const YppDashboardMainTab: FC = () => {
                 ? currentChannel?.yppStatus.startsWith('Suspended')
                   ? undefined
                   : 5
-                : getTierRewards(currentChannel.yppStatus.split('::')[1].toLowerCase())?.[1]
+                : getTierRewards(currentChannel.yppStatus.split('::')[1]?.toLowerCase())?.[1] || 0
             }
             isRangeAmount={!currentChannel || !currentChannel.yppStatus.startsWith('Verified')}
             amountTooltip={
