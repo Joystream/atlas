@@ -126,6 +126,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
           show={showWithdrawDialog}
           onExitClick={toggleWithdrawDialog}
           channelBalance={channelBalance}
+          totalBalance={totalBalance}
           channelId={channelId}
         />
         <SendFundsDialog show={showSendDialog} onExitClick={toggleSendDialog} accountBalance={accountBalance} />
