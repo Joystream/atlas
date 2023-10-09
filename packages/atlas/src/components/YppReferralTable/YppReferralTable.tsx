@@ -83,7 +83,7 @@ const Tier = ({ yppStatus }: { yppStatus: YppChannelStatus }) => {
       <FlexBox flow="column" width="fit-content" gap={1}>
         <Text variant="t100" as="p">
           {yppStatus.startsWith('Verified')
-            ? `${yppStatus.split('::')[1]} tier`
+            ? `${yppStatus.split('::')[1] || 'N/A'} tier`
             : yppStatus.startsWith('Suspended')
             ? 'Suspended'
             : yppStatus === 'Unverified'
