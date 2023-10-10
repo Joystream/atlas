@@ -7,8 +7,8 @@ import { TooltipText } from '@/components/Tooltip/Tooltip.styles'
 import { TierCard } from '@/components/_ypp/TierCard'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { getTierRewards } from '@/utils/ypp'
 import { useSectionTextVariants } from '@/views/global/YppLandingView/sections/useSectionTextVariants'
-import { getTierRewards } from '@/views/studio/YppDashboard/YppDashboard.config'
 
 import { ColorAnchor } from './YppRewardSection.styles'
 
@@ -85,11 +85,9 @@ export const YppRewardSection: FC = () => {
         </CenteredLayoutGrid>
         <LayoutGrid>
           <TierCardWrapper colSpan={{ base: 12, sm: 10, md: 12, lg: 10 }} colStart={{ sm: 2, md: 1, lg: 2 }}>
-            {tiers.map((tier) => {
-              const maxReferralReward = getTierRewards('diamond')?.slice(-1)[0] || 0
-              const newRewards = [...tier.rewards.slice(0, -1), maxReferralReward]
-              const newTier = { ...tier, rewards: newRewards }
-              return <TierCard key={tier.tier} {...newTier} />
+            {[...tiers].map((tier) => {
+              tier.rewards[tier.rewards.length - 1] = getTierRewards('diamond')?.referral || 0
+              return <TierCard key={tier.tier} {...tier} />
             })}
           </TierCardWrapper>
           <FlexGridItem
