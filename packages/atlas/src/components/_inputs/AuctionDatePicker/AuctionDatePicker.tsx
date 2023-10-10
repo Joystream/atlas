@@ -136,6 +136,7 @@ export const AuctionDatePicker: FC<AuctionDatePickerProps> = ({
         offset={[0, 8]}
         ref={popOverRef}
         triggerMode="manual"
+        appendTo={document.body}
         triggerTarget={selectRef.current}
         trigger={null}
         onShow={() => {
