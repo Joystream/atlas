@@ -166,7 +166,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         avatar: { type: 'membership', params: [notification.memberHandle] },
         text: (
           <>
-            {notification.memberHandle} replied to your comment under video: “{notification.videoTitle}”
+            {notification.memberHandle} replied to your comment under the video: “{notification.videoTitle}”
           </>
         ),
       }
