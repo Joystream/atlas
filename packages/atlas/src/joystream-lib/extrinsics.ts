@@ -71,6 +71,8 @@ type PublicExtrinsic<TxFunction, ReturnValue> = TxFunction extends (...a: infer 
   ? (...a: [...U, ExtrinsicStatusCallbackFn | undefined]) => Promise<ReturnValue>
   : never
 
+const PERMILLS_PER_PERCENTAGE = 10
+
 export class JoystreamLibExtrinsics {
   readonly api: PolkadotApi
   readonly getAccount: AccountIdAccessor
@@ -1126,7 +1128,7 @@ export class JoystreamLibExtrinsics {
           linearVestingDuration: createType('u32', new BN(initialCreatorAllocation.vestingDuration)),
           cliffAmountPercentage: createType(
             'Permill',
-            new BN(initialCreatorAllocation.cliffAmountPercentage)
+            new BN(initialCreatorAllocation.cliffAmountPercentage * PERMILLS_PER_PERCENTAGE)
           ) as number,
         }),
       })
@@ -1134,8 +1136,8 @@ export class JoystreamLibExtrinsics {
 
     const params = createType('PalletProjectTokenTokenIssuanceParameters', {
       initialAllocation,
-      patronageRate: createType('Perquintill', patronageRate) as number,
-      revenueSplitRate: createType('Permill', revenueSplitRate) as number,
+      patronageRate: createType('Perquintill', patronageRate * PERMILLS_PER_PERCENTAGE) as number,
+      revenueSplitRate: createType('Permill', revenueSplitRate * PERMILLS_PER_PERCENTAGE) as number,
       transferPolicy: createType('PalletProjectTokenTransferPolicyParams', 'Permissionless'),
       metadata: prepareCreatorTokenMetadata({ symbol }),
     })
@@ -1171,7 +1173,10 @@ export class JoystreamLibExtrinsics {
       parseInt(tokenId),
       parseInt(memberId),
       amountCast,
-      createType('Option<ITuple<[Permill, u128]>>', [createType('Permill', new BN(0.5)), amountCast]) // percent, number of joy user wants to pay --- default on 0.5%
+      createType('Option<ITuple<[Permill, u128]>>', [
+        createType('Permill', new BN(0.5 * PERMILLS_PER_PERCENTAGE)),
+        amountCast,
+      ]) // percent, number of joy user wants to pay --- default on 0.5%
     )
   }
 
@@ -1192,7 +1197,10 @@ export class JoystreamLibExtrinsics {
       parseInt(tokenId),
       parseInt(memberId),
       amountCast,
-      createType('Option<ITuple<[Permill, u128]>>', [createType('Permill', new BN(0.5)), amountCast]) // percent, number of joy user wants to pay --- default on 0.5%
+      createType('Option<ITuple<[Permill, u128]>>', [
+        createType('Permill', new BN(0.5 * PERMILLS_PER_PERCENTAGE)),
+        amountCast,
+      ]) // percent, number of joy user wants to pay --- default on 0.5%
     )
   }
 
