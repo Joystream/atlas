@@ -1,3 +1,5 @@
+import { atlasConfig } from '@/config'
+import { CrtMaintenanceView } from '@/views/studio/CrtMaintenanceView'
 import { useState } from 'react'
 
 import { SvgActionPlay } from '@/assets/icons'
@@ -6,6 +8,9 @@ import { CreateTokenDrawer } from '@/components/_crt/CreateTokenDrawer/CreateTok
 
 export const CrtWelcomeView = () => {
   const [showDrawer, setShowDrawer] = useState(false)
+    if (atlasConfig.general.crtMaintenanceMode) {
+        return <CrtMaintenanceView />
+    }
   return (
     <>
       <CreateTokenDrawer show={showDrawer} onClose={() => setShowDrawer(false)} />
