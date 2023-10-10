@@ -263,7 +263,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       isWalletUser,
       handleLogout,
       encodedSeed,
-      isLoggedIn: !!currentUser && !isAuthenticating,
+      isLoggedIn: isAuthenticating ? undefined : !!currentUser,
     }),
     [currentUser, encodedSeed, handleLogin, handleLogout, isAuthenticating, isWalletUser, loggedAddress, refetch]
   )
