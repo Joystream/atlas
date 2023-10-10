@@ -251,8 +251,10 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({
                   return true
                 },
                 accountBalance: (value) => {
-                  if (value && tokenNumberToHapiBn(value).gte(currentBalance)) {
-                    return `Not enough tokens in your ${isWithdrawalMode ? 'channel' : 'account'} balance.`
+                  if (isWithdrawalMode && value && tokenNumberToHapiBn(value).gt(channelBalance)) {
+                    return `Not enough tokens in your channel balance.`
+                  } else if (value && tokenNumberToHapiBn(value).gte(accountBalance)) {
+                    return `Not enough tokens in your account balance.`
                   }
                   return true
                 },
