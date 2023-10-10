@@ -4,7 +4,7 @@ import { useUserContext } from './user.provider'
 import { UserContextValue } from './user.types'
 
 type UseUserHookReturn = UserContextValue & {
-  isLoggedIn: boolean
+  isLoggedIn?: boolean
 }
 
 export const useUser = (): UseUserHookReturn => {

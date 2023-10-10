@@ -58,7 +58,7 @@ interface WelcomeViewProps {
 }
 
 const typeIllustrationsFactory = (
-  isLoggedIn: boolean
+  isLoggedIn?: boolean
 ): Record<WelcomeViewProps['type'], { srcSet: string; alt: string }[]> => ({
   'crt': [
     {
