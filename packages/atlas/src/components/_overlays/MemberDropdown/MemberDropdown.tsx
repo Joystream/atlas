@@ -128,8 +128,14 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
           channelBalance={channelBalance}
           totalBalance={totalBalance}
           channelId={channelId}
+          accountDebt={debt}
         />
-        <SendFundsDialog show={showSendDialog} onExitClick={toggleSendDialog} accountBalance={accountBalance} />
+        <SendFundsDialog
+          show={showSendDialog}
+          onExitClick={toggleSendDialog}
+          accountBalance={accountBalance}
+          accountDebt={debt}
+        />
 
         <CSSTransition classNames={transitions.names.dropdown} in={isActive} timeout={0} mountOnEnter unmountOnExit>
           <Container ref={mergeRefs([ref, containerRef])}>
