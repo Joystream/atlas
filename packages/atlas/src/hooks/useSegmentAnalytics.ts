@@ -1,7 +1,6 @@
 import { useCallback, useRef } from 'react'
 
 import { useSegmentAnalyticsContext } from '@/providers/segmentAnalytics/useSegmentAnalyticsContext'
-import { YppRequirementsErrorCode } from '@/views/global/YppLandingView/YppAuthorizationModal/YppAuthorizationModal.types'
 
 export type videoPlaybackParams = {
   videoId: string
@@ -350,17 +349,6 @@ export const useSegmentAnalytics = () => {
     [analytics]
   )
 
-  const trackYppReqsNotMet = useCallback(
-    (
-      errors: YppRequirementsErrorCode[],
-      utmSource: string | null | undefined,
-      utmCampaign: string | null | undefined
-    ) => {
-      analytics.track('YPP Sign Up Failed - Reqs Not Met', { errors, utmSource, utmCampaign })
-    },
-    [analytics]
-  )
-
   const trackLogout = useCallback(() => {
     analytics.reset()
   }, [analytics])
@@ -432,7 +420,6 @@ export const useSegmentAnalytics = () => {
     trackVideoUpload,
     trackWithdrawnFunds,
     trackYppOptIn,
-    trackYppReqsNotMet,
     trackYppSignInButtonClick,
   }
 }

@@ -1,5 +1,4 @@
 import { useApolloClient } from '@apollo/client'
-import { isArray } from 'lodash-es'
 import { useCallback, useEffect, useState } from 'react'
 import { useMutation } from 'react-query'
 import { useSearchParams } from 'react-router-dom'
@@ -26,7 +25,6 @@ import {
   ChannelVerificationErrorResponse,
   ChannelVerificationSuccessResponse,
   YppAuthorizationErrorCode,
-  YppRequirementsErrorCode,
 } from './YppAuthorizationModal.types'
 
 const GOOGLE_CONSOLE_CLIENT_ID = atlasConfig.features.ypp.googleConsoleClientId
@@ -54,8 +52,6 @@ export const useYppGoogleAuth = ({ channelsLoaded }: { channelsLoaded: boolean }
   const { isLoggedIn, isAuthenticating } = useAuth()
 
   const { setYtStateParam: setYppAuthState, setSelectedChannelId } = useYppStore((state) => state.actions)
-  const [ytRequirementsErrors, setYtRequirementsErrors] = useState<YppRequirementsErrorCode[]>([])
-
   const [alreadyRegisteredChannel, setAlreadyRegisteredChannel] = useState<AlreadyRegisteredChannel | null>(null)
   const { mutateAsync: authMutation } = useMutation('ypp-auth-post', (authorizationCode: string) =>
     axiosInstance.post<ChannelVerificationSuccessResponse>(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/users`, {
@@ -195,15 +191,6 @@ export const useYppGoogleAuth = ({ channelsLoaded }: { channelsLoaded: boolean }
             return
           }
 
-          const isRequirementsError = isArray(errorMessages)
-          if (isRequirementsError) {
-            const errorCodes = isRequirementsError ? errorMessages?.map((message) => message.code) : undefined
-
-            errorCodes && setYtRequirementsErrors(errorCodes)
-            setYppModalOpenName('ypp-requirements')
-            return
-          }
-
           if (errorResponseData && 'code' in errorResponseData) {
             switch (errorResponseData.code) {
               case YppAuthorizationErrorCode.YOUTUBE_QUOTA_LIMIT_EXCEEDED:
@@ -221,11 +208,6 @@ export const useYppGoogleAuth = ({ channelsLoaded }: { channelsLoaded: boolean }
                   description: `You don't have a YouTube channel.`,
                   iconType: 'error',
                 })
-                setYtRequirementsErrors([
-                  YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_CREATION_DATE,
-                  YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_VIDEOS,
-                  YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_SUBSCRIBERS,
-                ])
                 setYppModalOpenName('ypp-requirements')
                 return
               case YppAuthorizationErrorCode.CHANNEL_ALREADY_REGISTERED: {
@@ -311,8 +293,6 @@ export const useYppGoogleAuth = ({ channelsLoaded }: { channelsLoaded: boolean }
 
   return {
     handleAuthorizeClick,
-    setYtRequirementsErrors,
-    ytRequirementsErrors,
     alreadyRegisteredChannel,
   }
 }
