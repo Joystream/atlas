@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
 
+import { useGetFullCreatorTokenQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { SvgActionEdit, SvgActionLinkUrl, SvgActionRevenueShare, SvgActionSell } from '@/assets/icons'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Tabs } from '@/components/Tabs'
@@ -22,7 +23,12 @@ export const CrtDashboard = () => {
   const [currentTab, setCurrentTab] = useState<number>(0)
   const [openRevenueShareModal, setOpenRevenueShareModal] = useState(false)
   const { joystream, proxyCallback } = useJoystream()
-  const { channelId, memberId } = useUser()
+  const { channelId, memberId, activeChannel } = useUser()
+  const { data } = useGetFullCreatorTokenQuery({
+    variables: {
+      id: activeChannel?.creatorToken?.token.id ?? '',
+    },
+  })
   const { displaySnackbar } = useSnackbar()
   const handleTransaction = useTransaction()
   const handleChangeTab = useCallback((idx: number) => {
@@ -48,13 +54,17 @@ export const CrtDashboard = () => {
     })
   }, [channelId, displaySnackbar, handleTransaction, joystream, memberId, proxyCallback])
 
+  if (!data?.creatorTokenById) {
+    return null
+  }
+
   return (
     <LimitedWidthContainer>
       <StartRevenueShare show={openRevenueShareModal} tokenId="1" onClose={() => setOpenRevenueShareModal(false)} />
       <MainContainer>
         <HeaderContainer>
           <Text variant="h700" as="h1">
-            $JBC
+            ${data.creatorTokenById.symbol ?? 'N/A'}
           </Text>
           <Button variant="tertiary" icon={<SvgActionLinkUrl />} iconPlacement="right">
             See your token
@@ -80,8 +90,8 @@ export const CrtDashboard = () => {
             </>
           )}
         </TabsContainer>
-        {currentTab === 0 && <CrtDashboardMainTab />}
-        {currentTab === 1 && <CrtHoldersTab />}
+        {currentTab === 0 && <CrtDashboardMainTab token={data.creatorTokenById} />}
+        {currentTab === 1 && <CrtHoldersTab token={data.creatorTokenById} />}
         {currentTab === 2 && <CrtRevenueTab />}
       </MainContainer>
     </LimitedWidthContainer>

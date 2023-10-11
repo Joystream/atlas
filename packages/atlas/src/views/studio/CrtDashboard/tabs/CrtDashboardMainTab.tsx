@@ -1,10 +1,12 @@
-import BN from 'bn.js'
-
+import { useGetCreatorTokenHoldersQuery } from '@/api/queries/__generated__/creatorTokens.generated'
+import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgActionChevronR } from '@/assets/icons'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
 import { TextButton } from '@/components/_buttons/Button'
+import { CrtHoldersWidget } from '@/components/_crt/CrtHoldersWidget'
+import { useUser } from '@/providers/user/user.hooks'
 import {
   BigWidgetContainer,
   HoldersPlaceholders,
@@ -14,7 +16,22 @@ import {
 } from '@/views/studio/CrtDashboard/CrtDashboard.styles'
 import { StyledSvgJoyTokenMonochrome24 } from '@/views/studio/MyPaymentsView/PaymentsOverview/PaymentsOverview.styles'
 
-export const CrtDashboardMainTab = () => {
+type CrtDashboardMainTabProps = {
+  token: FullCreatorTokenFragment
+}
+
+export const CrtDashboardMainTab = ({ token }: CrtDashboardMainTabProps) => {
+  const { memberId } = useUser()
+  const { data } = useGetCreatorTokenHoldersQuery({
+    variables: {
+      where: {
+        member: {
+          id_eq: memberId,
+        },
+      },
+    },
+  })
+  const memberTokenAccount = data?.tokenAccounts[0]
   return (
     <>
       <NoGlobalPaddingWrapper>
@@ -26,12 +43,12 @@ export const CrtDashboardMainTab = () => {
           title="Transferable"
           customNode={
             <NumberFormat
-              value={new BN(9999999)}
+              value={+(memberTokenAccount?.totalAmount ?? 0) - +(memberTokenAccount?.stakedAmount ?? 0)}
               as="span"
               icon={<StyledSvgJoyTokenMonochrome24 />}
               withDenomination
               withToken
-              customTicker="$JBC"
+              customTicker={`$${token.symbol}`}
               variant="h400"
             />
           }
@@ -43,12 +60,12 @@ export const CrtDashboardMainTab = () => {
           }}
           customNode={
             <NumberFormat
-              value={new BN(9999999)}
+              value={+(memberTokenAccount?.stakedAmount ?? 0)}
               as="span"
               icon={<StyledSvgJoyTokenMonochrome24 />}
               withDenomination
               withToken
-              customTicker="$JBC"
+              customTicker={`$${token.symbol}`}
               variant="h400"
             />
           }
@@ -60,12 +77,12 @@ export const CrtDashboardMainTab = () => {
           }}
           customNode={
             <NumberFormat
-              value={new BN(9999999)}
+              value={69}
               as="span"
               icon={<StyledSvgJoyTokenMonochrome24 />}
               withDenomination
               withToken
-              customTicker="$JBC"
+              customTicker={`$${token.symbol}`}
               variant="h400"
             />
           }
@@ -77,23 +94,13 @@ export const CrtDashboardMainTab = () => {
           }}
           customNode={
             <Text variant="h400" as="h4">
-              10%
+              {token.annualCreatorReward}%
             </Text>
           }
         />
       </WidgetContainer>
       <BigWidgetContainer>
-        <WidgetTile
-          title="Token holders"
-          titleColor="colorTextStrong"
-          titleVariant="h500"
-          customTopRightNode={
-            <TextButton iconPlacement="right" icon={<SvgActionChevronR />}>
-              Show holders
-            </TextButton>
-          }
-          customNode={<HoldersPlaceholders />}
-        />
+        <CrtHoldersWidget tokenId={token.id} totalSupply={+(token.totalSupply ?? 0)} />
         <WidgetTile
           title="Revenue share with holders"
           titleColor="colorTextStrong"

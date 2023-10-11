@@ -77,7 +77,7 @@ const StudioLayout = () => {
   const { currentChannel, isLoading } = useGetYppSyncedChannels()
   const isLoadingYPPData = isLoading || membershipsLoading || isAuthenticating
   const isYppSigned = !!currentChannel
-  const hasToken = !!(activeChannel && activeChannel.creatorToken?.id)
+  const hasToken = !!(activeChannel && activeChannel.creatorToken?.token.id)
 
   useEffect(() => {
     if (!isAllowedBrowser()) {

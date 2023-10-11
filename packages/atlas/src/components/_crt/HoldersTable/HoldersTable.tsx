@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { useMemo } from 'react'
 
-import { useMemberships } from '@/api/hooks/membership'
+import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { Avatar } from '@/components/Avatar'
 import { FlexBox } from '@/components/FlexBox'
 import { NumberFormat } from '@/components/NumberFormat'
@@ -20,7 +20,7 @@ const COLUMNS: TableProps['columns'] = [
 
 export type HoldersTableProps = {
   data: {
-    memberId: string
+    member: BasicMembershipFieldsFragment
     transferable: number
     vested: number
     total: number
@@ -34,7 +34,7 @@ export const HoldersTable = ({ data, currentMemberId }: HoldersTableProps) => {
   const mappedData = useMemo(
     () =>
       data.map((row) => ({
-        member: <MemberCell memberId={row.memberId} isCurrentMember={row.memberId === currentMemberId} />,
+        member: <MemberCell member={row.member} isCurrentMember={row.member.id === currentMemberId} />,
         transferable: <NumberFormat value={row.transferable} as="p" withToken customTicker="$JBC" />,
         vested: <NumberFormat value={row.vested} as="p" withToken customTicker="$JBC" />,
         total: <NumberFormat value={row.total} as="p" withToken customTicker="$JBC" />,
@@ -45,18 +45,19 @@ export const HoldersTable = ({ data, currentMemberId }: HoldersTableProps) => {
   return <StyledTable columns={COLUMNS} data={mappedData} />
 }
 
-const MemberCell = ({ memberId, isCurrentMember }: { memberId: string; isCurrentMember: boolean }) => {
-  const { loading, memberships } = useMemberships({
-    where: {
-      id_eq: memberId,
-    },
-  })
-  const { urls } = getMemberAvatar(memberships?.[0])
+const MemberCell = ({
+  member,
+  isCurrentMember,
+}: {
+  member: BasicMembershipFieldsFragment
+  isCurrentMember: boolean
+}) => {
+  const { urls } = getMemberAvatar(member)
   return (
     <FlexBox alignItems="center" gap={2}>
-      <Avatar loading={loading} assetUrls={urls} />
+      <Avatar assetUrls={urls} />
       <Text variant="t100" as="p">
-        {memberships?.[0]?.handle ?? 'Unknown'}
+        {member.handle ?? 'Unknown'}
       </Text>
       {isCurrentMember && <Pill label="You" />}
     </FlexBox>
