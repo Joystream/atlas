@@ -42,7 +42,8 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
       return new BN(selectedChannel?.channelStateBloatBond || 0)
     }, [selectedChannel?.channelStateBloatBond])
 
-    const { accountBalance, lockedAccountBalance, totalBalance, totalInvitationLock } = useSubscribeAccountBalance()
+    const { accountBalance, lockedAccountBalance, totalBalance, debt, totalInvitationLock } =
+      useSubscribeAccountBalance()
     const { accountBalance: channelBalance } =
       useSubscribeAccountBalance(selectedChannel?.rewardAccount, {
         channelStateBloatBond: memoizedChannelStateBloatBond,
