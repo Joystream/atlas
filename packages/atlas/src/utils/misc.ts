@@ -81,7 +81,9 @@ export const retryWalletPromise = <T>(
   })
 }
 
-export function convertUpperCamelToSentence(input: string) {
+export function convertUpperCamelToSentence(input?: string) {
+  if (!input) return ''
+
   const words = input.split(/(?=[A-Z])/)
   return words
     .map((word, index) => {

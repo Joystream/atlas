@@ -21,7 +21,7 @@ export const PrivateRoute: FC<PrivateRouteProps> = ({ redirectTo, isAuth, elemen
     )
   }
 
-  if (!isAuth && redirectTo) {
+  if (isAuth === false && redirectTo) {
     return <Navigate to={redirectTo} />
   }
   return element

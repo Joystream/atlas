@@ -14,8 +14,8 @@ import { SentryLogger } from '@/utils/logs'
 import { convertUpperCamelToSentence } from '@/utils/misc'
 import { formatNumber } from '@/utils/number'
 import { formatDateTime } from '@/utils/time'
+import { getTierRewards, yppBackendTierToConfig } from '@/utils/ypp'
 import { YppChannelStatus } from '@/views/global/YppLandingView/YppLandingView.types'
-import { getTierRewards } from '@/views/studio/YppDashboard/YppDashboard.config'
 
 import { COLUMNS, tableLoadingData } from './YppReferralTable.utils'
 
@@ -83,7 +83,7 @@ const Tier = ({ yppStatus }: { yppStatus: YppChannelStatus }) => {
       <FlexBox flow="column" width="fit-content" gap={1}>
         <Text variant="t100" as="p">
           {yppStatus.startsWith('Verified')
-            ? `${yppStatus.split('::')[1]} tier`
+            ? `${yppStatus.split('::')[1] || 'N/A'} tier`
             : yppStatus.startsWith('Suspended')
             ? 'Suspended'
             : yppStatus === 'Unverified'
@@ -112,7 +112,7 @@ const Reward = ({ yppStatus }: { yppStatus: YppChannelStatus }) => {
         : yppStatus === 'Unverified'
         ? 'Pending'
         : yppStatus.startsWith('Verified')
-        ? `$${getTierRewards(yppStatus.split('::')[1].toLowerCase())?.[2]}`
+        ? `$${getTierRewards(yppBackendTierToConfig(yppStatus))?.referral}`
         : 'n/a'}
     </RightAlignText>
   )
