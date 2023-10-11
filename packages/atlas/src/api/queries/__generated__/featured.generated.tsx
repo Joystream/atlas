@@ -50,7 +50,7 @@ export type GetVideoHeroQuery = {
             | { __typename: 'DataObjectTypeVideoThumbnail' }
             | null
         } | null
-        creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+        creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
       }
       thumbnailPhoto?: {
         __typename?: 'StorageDataObject'
@@ -140,7 +140,10 @@ export type GetVideoHeroQuery = {
                     | { __typename: 'DataObjectTypeVideoThumbnail' }
                     | null
                 } | null
-                creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+                creatorToken?: {
+                  __typename?: 'TokenChannel'
+                  token: { __typename?: 'CreatorToken'; id: string }
+                } | null
               }
             }
           | {
@@ -375,7 +378,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
               | { __typename: 'DataObjectTypeVideoThumbnail' }
               | null
           } | null
-          creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+          creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
         }
         thumbnailPhoto?: {
           __typename?: 'StorageDataObject'
@@ -475,7 +478,7 @@ export type GetCategoryFeaturedVideosQuery = {
               | { __typename: 'DataObjectTypeVideoThumbnail' }
               | null
           } | null
-          creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+          creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
         }
         thumbnailPhoto?: {
           __typename?: 'StorageDataObject'

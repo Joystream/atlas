@@ -2,7 +2,11 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import { BasicCreatorTokenFragmentDoc, FullCreatorTokenFragmentDoc } from './fragments.generated'
+import {
+  BasicCreatorTokenFragmentDoc,
+  BasicCreatorTokenHolderFragmentDoc,
+  FullCreatorTokenFragmentDoc,
+} from './fragments.generated'
 
 const defaultOptions = {} as const
 export type GetBasicCreatorTokenQueryVariables = Types.Exact<{
@@ -23,43 +27,6 @@ export type GetBasicCreatorTokenQuery = {
     deissued: boolean
     status: Types.TokenStatus
     createdAt: Date
-    accounts: Array<{
-      __typename?: 'TokenAccount'
-      id: string
-      member: {
-        __typename?: 'Membership'
-        id: string
-        handle: string
-        metadata?: {
-          __typename?: 'MemberMetadata'
-          about?: string | null
-          avatar?:
-            | {
-                __typename?: 'AvatarObject'
-                avatarObject: {
-                  __typename?: 'StorageDataObject'
-                  id: string
-                  resolvedUrls: Array<string>
-                  createdAt: Date
-                  size: string
-                  isAccepted: boolean
-                  ipfsHash: string
-                  storageBag: { __typename?: 'StorageBag'; id: string }
-                  type?:
-                    | { __typename: 'DataObjectTypeChannelAvatar' }
-                    | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                    | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                    | { __typename: 'DataObjectTypeVideoMedia' }
-                    | { __typename: 'DataObjectTypeVideoSubtitle' }
-                    | { __typename: 'DataObjectTypeVideoThumbnail' }
-                    | null
-                }
-              }
-            | { __typename?: 'AvatarUri'; avatarUri: string }
-            | null
-        } | null
-      }
-    }>
     channel?: {
       __typename?: 'TokenChannel'
       channel: {
@@ -89,7 +56,7 @@ export type GetBasicCreatorTokenQuery = {
             | { __typename: 'DataObjectTypeVideoThumbnail' }
             | null
         } | null
-        creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+        creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
       }
     } | null
     avatar?:
@@ -184,7 +151,7 @@ export type GetFullCreatorTokenQuery = {
               | { __typename: 'DataObjectTypeVideoThumbnail' }
               | null
           } | null
-          creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+          creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
         }
         thumbnailPhoto?: {
           __typename?: 'StorageDataObject'
@@ -274,7 +241,10 @@ export type GetFullCreatorTokenQuery = {
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                       | null
                   } | null
-                  creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+                  creatorToken?: {
+                    __typename?: 'TokenChannel'
+                    token: { __typename?: 'CreatorToken'; id: string }
+                  } | null
                 }
               }
             | {
@@ -472,43 +442,6 @@ export type GetFullCreatorTokenQuery = {
       startingAt: number
       stakers: Array<{ __typename?: 'RevenueShareParticipation'; id: string; stakedAmount: string; earnings: string }>
     }>
-    accounts: Array<{
-      __typename?: 'TokenAccount'
-      id: string
-      member: {
-        __typename?: 'Membership'
-        id: string
-        handle: string
-        metadata?: {
-          __typename?: 'MemberMetadata'
-          about?: string | null
-          avatar?:
-            | {
-                __typename?: 'AvatarObject'
-                avatarObject: {
-                  __typename?: 'StorageDataObject'
-                  id: string
-                  resolvedUrls: Array<string>
-                  createdAt: Date
-                  size: string
-                  isAccepted: boolean
-                  ipfsHash: string
-                  storageBag: { __typename?: 'StorageBag'; id: string }
-                  type?:
-                    | { __typename: 'DataObjectTypeChannelAvatar' }
-                    | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                    | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                    | { __typename: 'DataObjectTypeVideoMedia' }
-                    | { __typename: 'DataObjectTypeVideoSubtitle' }
-                    | { __typename: 'DataObjectTypeVideoThumbnail' }
-                    | null
-                }
-              }
-            | { __typename?: 'AvatarUri'; avatarUri: string }
-            | null
-        } | null
-      }
-    }>
     channel?: {
       __typename?: 'TokenChannel'
       channel: {
@@ -538,7 +471,7 @@ export type GetFullCreatorTokenQuery = {
             | { __typename: 'DataObjectTypeVideoThumbnail' }
             | null
         } | null
-        creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+        creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
       }
     } | null
     avatar?:
@@ -566,6 +499,73 @@ export type GetFullCreatorTokenQuery = {
       | { __typename?: 'TokenAvatarUri'; avatarUri: string }
       | null
   } | null
+}
+
+export type GetCreatorTokenHoldersQueryVariables = Types.Exact<{
+  where?: Types.InputMaybe<Types.TokenAccountWhereInput>
+  orderBy?: Types.InputMaybe<Array<Types.TokenAccountOrderByInput> | Types.TokenAccountOrderByInput>
+  limit?: Types.InputMaybe<Types.Scalars['Int']>
+  offset?: Types.InputMaybe<Types.Scalars['Int']>
+}>
+
+export type GetCreatorTokenHoldersQuery = {
+  __typename?: 'Query'
+  tokenAccounts: Array<{
+    __typename?: 'TokenAccount'
+    id: string
+    stakedAmount: string
+    deleted: boolean
+    totalAmount: string
+    member: {
+      __typename?: 'Membership'
+      id: string
+      handle: string
+      metadata?: {
+        __typename?: 'MemberMetadata'
+        about?: string | null
+        avatar?:
+          | {
+              __typename?: 'AvatarObject'
+              avatarObject: {
+                __typename?: 'StorageDataObject'
+                id: string
+                resolvedUrls: Array<string>
+                createdAt: Date
+                size: string
+                isAccepted: boolean
+                ipfsHash: string
+                storageBag: { __typename?: 'StorageBag'; id: string }
+                type?:
+                  | { __typename: 'DataObjectTypeChannelAvatar' }
+                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+                  | { __typename: 'DataObjectTypeVideoMedia' }
+                  | { __typename: 'DataObjectTypeVideoSubtitle' }
+                  | { __typename: 'DataObjectTypeVideoThumbnail' }
+                  | null
+              }
+            }
+          | { __typename?: 'AvatarUri'; avatarUri: string }
+          | null
+      } | null
+    }
+    vestingSchedules: Array<{
+      __typename?: 'VestedAccount'
+      totalVestingAmount: string
+      vestingSource:
+        | { __typename: 'InitialIssuanceVestingSource' }
+        | { __typename: 'IssuerTransferVestingSource' }
+        | { __typename: 'SaleVestingSource' }
+      vesting: {
+        __typename?: 'VestingSchedule'
+        endsAt: number
+        cliffBlock: number
+        cliffDurationBlocks: number
+        cliffPercent: number
+        vestingDurationBlocks: number
+      }
+    }>
+  }>
 }
 
 export const GetBasicCreatorTokenDocument = gql`
@@ -673,4 +673,61 @@ export type GetFullCreatorTokenLazyQueryHookResult = ReturnType<typeof useGetFul
 export type GetFullCreatorTokenQueryResult = Apollo.QueryResult<
   GetFullCreatorTokenQuery,
   GetFullCreatorTokenQueryVariables
+>
+export const GetCreatorTokenHoldersDocument = gql`
+  query GetCreatorTokenHolders(
+    $where: TokenAccountWhereInput
+    $orderBy: [TokenAccountOrderByInput!]
+    $limit: Int
+    $offset: Int
+  ) {
+    tokenAccounts(where: $where, orderBy: $orderBy, offset: $offset, limit: $limit) {
+      ...BasicCreatorTokenHolder
+    }
+  }
+  ${BasicCreatorTokenHolderFragmentDoc}
+`
+
+/**
+ * __useGetCreatorTokenHoldersQuery__
+ *
+ * To run a query within a React component, call `useGetCreatorTokenHoldersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCreatorTokenHoldersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCreatorTokenHoldersQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *   },
+ * });
+ */
+export function useGetCreatorTokenHoldersQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetCreatorTokenHoldersQuery, GetCreatorTokenHoldersQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetCreatorTokenHoldersQuery, GetCreatorTokenHoldersQueryVariables>(
+    GetCreatorTokenHoldersDocument,
+    options
+  )
+}
+export function useGetCreatorTokenHoldersLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetCreatorTokenHoldersQuery, GetCreatorTokenHoldersQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetCreatorTokenHoldersQuery, GetCreatorTokenHoldersQueryVariables>(
+    GetCreatorTokenHoldersDocument,
+    options
+  )
+}
+export type GetCreatorTokenHoldersQueryHookResult = ReturnType<typeof useGetCreatorTokenHoldersQuery>
+export type GetCreatorTokenHoldersLazyQueryHookResult = ReturnType<typeof useGetCreatorTokenHoldersLazyQuery>
+export type GetCreatorTokenHoldersQueryResult = Apollo.QueryResult<
+  GetCreatorTokenHoldersQuery,
+  GetCreatorTokenHoldersQueryVariables
 >

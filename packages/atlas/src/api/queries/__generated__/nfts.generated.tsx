@@ -58,7 +58,7 @@ export type GetNftQuery = {
             | { __typename: 'DataObjectTypeVideoThumbnail' }
             | null
         } | null
-        creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+        creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
       }
       thumbnailPhoto?: {
         __typename?: 'StorageDataObject'
@@ -148,7 +148,10 @@ export type GetNftQuery = {
                     | { __typename: 'DataObjectTypeVideoThumbnail' }
                     | null
                 } | null
-                creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+                creatorToken?: {
+                  __typename?: 'TokenChannel'
+                  token: { __typename?: 'CreatorToken'; id: string }
+                } | null
               }
             }
           | {
@@ -396,7 +399,7 @@ export type GetNftQuery = {
                 | { __typename: 'DataObjectTypeVideoThumbnail' }
                 | null
             } | null
-            creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+            creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
           }
         }
       | {
@@ -634,7 +637,7 @@ export type GetNftsQuery = {
             | { __typename: 'DataObjectTypeVideoThumbnail' }
             | null
         } | null
-        creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+        creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
       }
       thumbnailPhoto?: {
         __typename?: 'StorageDataObject'
@@ -724,7 +727,10 @@ export type GetNftsQuery = {
                     | { __typename: 'DataObjectTypeVideoThumbnail' }
                     | null
                 } | null
-                creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+                creatorToken?: {
+                  __typename?: 'TokenChannel'
+                  token: { __typename?: 'CreatorToken'; id: string }
+                } | null
               }
             }
           | {
@@ -972,7 +978,7 @@ export type GetNftsQuery = {
                 | { __typename: 'DataObjectTypeVideoThumbnail' }
                 | null
             } | null
-            creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+            creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
           }
         }
       | {
@@ -1216,7 +1222,7 @@ export type GetNftsConnectionQuery = {
                 | { __typename: 'DataObjectTypeVideoThumbnail' }
                 | null
             } | null
-            creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+            creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
           }
           thumbnailPhoto?: {
             __typename?: 'StorageDataObject'
@@ -1306,7 +1312,10 @@ export type GetNftsConnectionQuery = {
                         | { __typename: 'DataObjectTypeVideoThumbnail' }
                         | null
                     } | null
-                    creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+                    creatorToken?: {
+                      __typename?: 'TokenChannel'
+                      token: { __typename?: 'CreatorToken'; id: string }
+                    } | null
                   }
                 }
               | {
@@ -1554,7 +1563,10 @@ export type GetNftsConnectionQuery = {
                     | { __typename: 'DataObjectTypeVideoThumbnail' }
                     | null
                 } | null
-                creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+                creatorToken?: {
+                  __typename?: 'TokenChannel'
+                  token: { __typename?: 'CreatorToken'; id: string }
+                } | null
               }
             }
           | {
@@ -1812,7 +1824,7 @@ export type GetFeaturedNftsVideosQuery = {
             | { __typename: 'DataObjectTypeVideoThumbnail' }
             | null
         } | null
-        creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+        creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
       }
       thumbnailPhoto?: {
         __typename?: 'StorageDataObject'
@@ -1902,7 +1914,10 @@ export type GetFeaturedNftsVideosQuery = {
                     | { __typename: 'DataObjectTypeVideoThumbnail' }
                     | null
                 } | null
-                creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+                creatorToken?: {
+                  __typename?: 'TokenChannel'
+                  token: { __typename?: 'CreatorToken'; id: string }
+                } | null
               }
             }
           | {
@@ -2150,7 +2165,7 @@ export type GetFeaturedNftsVideosQuery = {
                 | { __typename: 'DataObjectTypeVideoThumbnail' }
                 | null
             } | null
-            creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+            creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
           }
         }
       | {

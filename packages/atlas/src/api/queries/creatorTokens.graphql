@@ -10,3 +10,9 @@ query GetFullCreatorToken($id: String!) {
     }
 }
 
+query GetCreatorTokenHolders($where: TokenAccountWhereInput, $orderBy: [TokenAccountOrderByInput!], $limit: Int, $offset: Int) {
+    tokenAccounts(where: $where, orderBy: $orderBy, offset: $offset, limit: $limit) {
+        ...BasicCreatorTokenHolder
+    }
+}
+

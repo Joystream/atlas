@@ -19,7 +19,9 @@ fragment BasicChannelFields on Channel {
     ...StorageDataObjectFields
   }
   creatorToken {
-    id
+    token {
+      id
+    }
   }
 }
 
@@ -458,6 +460,29 @@ fragment BasicVideoActivityFields on Video {
   }
 }
 
+fragment BasicCreatorTokenHolder on TokenAccount {
+  id
+  stakedAmount
+  deleted
+  totalAmount
+  member {
+    ...BasicMembershipFields
+  }
+  vestingSchedules {
+    totalVestingAmount
+    vestingSource {
+      __typename
+    }
+    vesting {
+      endsAt
+      cliffBlock
+      cliffDurationBlocks
+      cliffPercent
+      vestingDurationBlocks
+      }
+    }
+  }
+
 fragment BasicCreatorToken on CreatorToken {
   id
   accountsNum
@@ -466,12 +491,6 @@ fragment BasicCreatorToken on CreatorToken {
   deissued
   status
   createdAt
-  accounts {
-    id
-    member {
-      ...BasicMembershipFields
-    }
-  }
   channel {
     ... on TokenChannel {
       channel {

@@ -35,7 +35,7 @@ export type BasicChannelFieldsFragment = {
       | { __typename: 'DataObjectTypeVideoThumbnail' }
       | null
   } | null
-  creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+  creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
 }
 
 export type FullChannelFieldsFragment = {
@@ -121,7 +121,7 @@ export type FullChannelFieldsFragment = {
       | { __typename: 'DataObjectTypeVideoThumbnail' }
       | null
   } | null
-  creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+  creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
 }
 
 export type ExtendedFullChannelFieldsFragment = {
@@ -210,7 +210,7 @@ export type ExtendedFullChannelFieldsFragment = {
         | { __typename: 'DataObjectTypeVideoThumbnail' }
         | null
     } | null
-    creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+    creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
   }
 }
 
@@ -244,7 +244,7 @@ export type ExtendedBasicChannelFieldsFragment = {
         | { __typename: 'DataObjectTypeVideoThumbnail' }
         | null
     } | null
-    creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+    creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
   }
 }
 
@@ -335,7 +335,7 @@ export type FullMembershipFieldsFragment = {
         | { __typename: 'DataObjectTypeVideoThumbnail' }
         | null
     } | null
-    creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+    creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
   }>
   metadata?: {
     __typename?: 'MemberMetadata'
@@ -477,7 +477,7 @@ export type BasicVideoFieldsFragment = {
         | { __typename: 'DataObjectTypeVideoThumbnail' }
         | null
     } | null
-    creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+    creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
   }
   thumbnailPhoto?: {
     __typename?: 'StorageDataObject'
@@ -567,7 +567,7 @@ export type BasicVideoFieldsFragment = {
                 | { __typename: 'DataObjectTypeVideoThumbnail' }
                 | null
             } | null
-            creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+            creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
           }
         }
       | {
@@ -904,7 +904,7 @@ export type FullVideoFieldsFragment = {
         | { __typename: 'DataObjectTypeVideoThumbnail' }
         | null
     } | null
-    creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+    creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
   }
   license?: {
     __typename?: 'License'
@@ -983,7 +983,7 @@ export type FullVideoFieldsFragment = {
                 | { __typename: 'DataObjectTypeVideoThumbnail' }
                 | null
             } | null
-            creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+            creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
           }
         }
       | {
@@ -1264,7 +1264,7 @@ export type BasicNftFieldsFragment = {
               | { __typename: 'DataObjectTypeVideoThumbnail' }
               | null
           } | null
-          creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+          creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
         }
       }
     | {
@@ -1492,7 +1492,7 @@ export type FullNftFieldsFragment = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
       } | null
-      creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
     }
     thumbnailPhoto?: {
       __typename?: 'StorageDataObject'
@@ -1582,7 +1582,7 @@ export type FullNftFieldsFragment = {
                   | { __typename: 'DataObjectTypeVideoThumbnail' }
                   | null
               } | null
-              creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+              creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
             }
           }
         | {
@@ -1830,7 +1830,7 @@ export type FullNftFieldsFragment = {
               | { __typename: 'DataObjectTypeVideoThumbnail' }
               | null
           } | null
-          creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+          creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
         }
       }
     | {
@@ -2513,7 +2513,7 @@ export type BasicFeaturedVideoFragment = {
         | { __typename: 'DataObjectTypeVideoThumbnail' }
         | null
     } | null
-    creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+    creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
   }
   thumbnailPhoto?: {
     __typename?: 'StorageDataObject'
@@ -2602,7 +2602,7 @@ export type BasicVideoFeaturedInCategoryFragment = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
       } | null
-      creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
     }
     thumbnailPhoto?: {
       __typename?: 'StorageDataObject'
@@ -2677,6 +2677,63 @@ export type BasicVideoActivityFieldsFragment = {
   } | null
 }
 
+export type BasicCreatorTokenHolderFragment = {
+  __typename?: 'TokenAccount'
+  id: string
+  stakedAmount: string
+  deleted: boolean
+  totalAmount: string
+  member: {
+    __typename?: 'Membership'
+    id: string
+    handle: string
+    metadata?: {
+      __typename?: 'MemberMetadata'
+      about?: string | null
+      avatar?:
+        | {
+            __typename?: 'AvatarObject'
+            avatarObject: {
+              __typename?: 'StorageDataObject'
+              id: string
+              resolvedUrls: Array<string>
+              createdAt: Date
+              size: string
+              isAccepted: boolean
+              ipfsHash: string
+              storageBag: { __typename?: 'StorageBag'; id: string }
+              type?:
+                | { __typename: 'DataObjectTypeChannelAvatar' }
+                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+                | { __typename: 'DataObjectTypeVideoMedia' }
+                | { __typename: 'DataObjectTypeVideoSubtitle' }
+                | { __typename: 'DataObjectTypeVideoThumbnail' }
+                | null
+            }
+          }
+        | { __typename?: 'AvatarUri'; avatarUri: string }
+        | null
+    } | null
+  }
+  vestingSchedules: Array<{
+    __typename?: 'VestedAccount'
+    totalVestingAmount: string
+    vestingSource:
+      | { __typename: 'InitialIssuanceVestingSource' }
+      | { __typename: 'IssuerTransferVestingSource' }
+      | { __typename: 'SaleVestingSource' }
+    vesting: {
+      __typename?: 'VestingSchedule'
+      endsAt: number
+      cliffBlock: number
+      cliffDurationBlocks: number
+      cliffPercent: number
+      vestingDurationBlocks: number
+    }
+  }>
+}
+
 export type BasicCreatorTokenFragment = {
   __typename?: 'CreatorToken'
   id: string
@@ -2686,43 +2743,6 @@ export type BasicCreatorTokenFragment = {
   deissued: boolean
   status: Types.TokenStatus
   createdAt: Date
-  accounts: Array<{
-    __typename?: 'TokenAccount'
-    id: string
-    member: {
-      __typename?: 'Membership'
-      id: string
-      handle: string
-      metadata?: {
-        __typename?: 'MemberMetadata'
-        about?: string | null
-        avatar?:
-          | {
-              __typename?: 'AvatarObject'
-              avatarObject: {
-                __typename?: 'StorageDataObject'
-                id: string
-                resolvedUrls: Array<string>
-                createdAt: Date
-                size: string
-                isAccepted: boolean
-                ipfsHash: string
-                storageBag: { __typename?: 'StorageBag'; id: string }
-                type?:
-                  | { __typename: 'DataObjectTypeChannelAvatar' }
-                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                  | { __typename: 'DataObjectTypeVideoMedia' }
-                  | { __typename: 'DataObjectTypeVideoSubtitle' }
-                  | { __typename: 'DataObjectTypeVideoThumbnail' }
-                  | null
-              }
-            }
-          | { __typename?: 'AvatarUri'; avatarUri: string }
-          | null
-      } | null
-    }
-  }>
   channel?: {
     __typename?: 'TokenChannel'
     channel: {
@@ -2752,7 +2772,7 @@ export type BasicCreatorTokenFragment = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
       } | null
-      creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
     }
   } | null
   avatar?:
@@ -2840,7 +2860,7 @@ export type FullCreatorTokenFragment = {
             | { __typename: 'DataObjectTypeVideoThumbnail' }
             | null
         } | null
-        creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+        creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
       }
       thumbnailPhoto?: {
         __typename?: 'StorageDataObject'
@@ -2930,7 +2950,10 @@ export type FullCreatorTokenFragment = {
                     | { __typename: 'DataObjectTypeVideoThumbnail' }
                     | null
                 } | null
-                creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+                creatorToken?: {
+                  __typename?: 'TokenChannel'
+                  token: { __typename?: 'CreatorToken'; id: string }
+                } | null
               }
             }
           | {
@@ -3128,43 +3151,6 @@ export type FullCreatorTokenFragment = {
     startingAt: number
     stakers: Array<{ __typename?: 'RevenueShareParticipation'; id: string; stakedAmount: string; earnings: string }>
   }>
-  accounts: Array<{
-    __typename?: 'TokenAccount'
-    id: string
-    member: {
-      __typename?: 'Membership'
-      id: string
-      handle: string
-      metadata?: {
-        __typename?: 'MemberMetadata'
-        about?: string | null
-        avatar?:
-          | {
-              __typename?: 'AvatarObject'
-              avatarObject: {
-                __typename?: 'StorageDataObject'
-                id: string
-                resolvedUrls: Array<string>
-                createdAt: Date
-                size: string
-                isAccepted: boolean
-                ipfsHash: string
-                storageBag: { __typename?: 'StorageBag'; id: string }
-                type?:
-                  | { __typename: 'DataObjectTypeChannelAvatar' }
-                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                  | { __typename: 'DataObjectTypeVideoMedia' }
-                  | { __typename: 'DataObjectTypeVideoSubtitle' }
-                  | { __typename: 'DataObjectTypeVideoThumbnail' }
-                  | null
-              }
-            }
-          | { __typename?: 'AvatarUri'; avatarUri: string }
-          | null
-      } | null
-    }
-  }>
   channel?: {
     __typename?: 'TokenChannel'
     channel: {
@@ -3194,7 +3180,7 @@ export type FullCreatorTokenFragment = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
       } | null
-      creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
     }
   } | null
   avatar?:
@@ -3261,7 +3247,9 @@ export const BasicChannelFieldsFragmentDoc = gql`
       ...StorageDataObjectFields
     }
     creatorToken {
-      id
+      token {
+        id
+      }
     }
   }
   ${StorageDataObjectFieldsFragmentDoc}
@@ -3719,6 +3707,31 @@ export const BasicVideoActivityFieldsFragmentDoc = gql`
   }
   ${StorageDataObjectFieldsFragmentDoc}
 `
+export const BasicCreatorTokenHolderFragmentDoc = gql`
+  fragment BasicCreatorTokenHolder on TokenAccount {
+    id
+    stakedAmount
+    deleted
+    totalAmount
+    member {
+      ...BasicMembershipFields
+    }
+    vestingSchedules {
+      totalVestingAmount
+      vestingSource {
+        __typename
+      }
+      vesting {
+        endsAt
+        cliffBlock
+        cliffDurationBlocks
+        cliffPercent
+        vestingDurationBlocks
+      }
+    }
+  }
+  ${BasicMembershipFieldsFragmentDoc}
+`
 export const BasicCreatorTokenFragmentDoc = gql`
   fragment BasicCreatorToken on CreatorToken {
     id
@@ -3728,12 +3741,6 @@ export const BasicCreatorTokenFragmentDoc = gql`
     deissued
     status
     createdAt
-    accounts {
-      id
-      member {
-        ...BasicMembershipFields
-      }
-    }
     channel {
       ... on TokenChannel {
         channel {
@@ -3752,7 +3759,6 @@ export const BasicCreatorTokenFragmentDoc = gql`
       }
     }
   }
-  ${BasicMembershipFieldsFragmentDoc}
   ${BasicChannelFieldsFragmentDoc}
   ${StorageDataObjectFieldsFragmentDoc}
 `

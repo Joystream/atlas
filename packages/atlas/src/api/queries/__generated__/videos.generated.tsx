@@ -162,7 +162,7 @@ export type GetFullVideoQuery = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
       } | null
-      creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
     }
     license?: {
       __typename?: 'License'
@@ -241,7 +241,7 @@ export type GetFullVideoQuery = {
                   | { __typename: 'DataObjectTypeVideoThumbnail' }
                   | null
               } | null
-              creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+              creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
             }
           }
         | {
@@ -504,7 +504,7 @@ export type GetBasicVideosConnectionQuery = {
               | { __typename: 'DataObjectTypeVideoThumbnail' }
               | null
           } | null
-          creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+          creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
         }
         thumbnailPhoto?: {
           __typename?: 'StorageDataObject'
@@ -594,7 +594,10 @@ export type GetBasicVideosConnectionQuery = {
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                       | null
                   } | null
-                  creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+                  creatorToken?: {
+                    __typename?: 'TokenChannel'
+                    token: { __typename?: 'CreatorToken'; id: string }
+                  } | null
                 }
               }
             | {
@@ -950,7 +953,7 @@ export type GetFullVideosConnectionQuery = {
               | { __typename: 'DataObjectTypeVideoThumbnail' }
               | null
           } | null
-          creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+          creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
         }
         license?: {
           __typename?: 'License'
@@ -1029,7 +1032,10 @@ export type GetFullVideosConnectionQuery = {
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                       | null
                   } | null
-                  creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+                  creatorToken?: {
+                    __typename?: 'TokenChannel'
+                    token: { __typename?: 'CreatorToken'; id: string }
+                  } | null
                 }
               }
             | {
@@ -1289,7 +1295,7 @@ export type GetBasicVideosQuery = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
       } | null
-      creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
     }
     thumbnailPhoto?: {
       __typename?: 'StorageDataObject'
@@ -1379,7 +1385,7 @@ export type GetBasicVideosQuery = {
                   | { __typename: 'DataObjectTypeVideoThumbnail' }
                   | null
               } | null
-              creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+              creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
             }
           }
         | {
@@ -1726,7 +1732,7 @@ export type GetFullVideosQuery = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
       } | null
-      creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
     }
     license?: {
       __typename?: 'License'
@@ -1805,7 +1811,7 @@ export type GetFullVideosQuery = {
                   | { __typename: 'DataObjectTypeVideoThumbnail' }
                   | null
               } | null
-              creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+              creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
             }
           }
         | {
@@ -2070,7 +2076,7 @@ export type GetMostViewedVideosConnectionQuery = {
               | { __typename: 'DataObjectTypeVideoThumbnail' }
               | null
           } | null
-          creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+          creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
         }
         thumbnailPhoto?: {
           __typename?: 'StorageDataObject'
@@ -2160,7 +2166,10 @@ export type GetMostViewedVideosConnectionQuery = {
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                       | null
                   } | null
-                  creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+                  creatorToken?: {
+                    __typename?: 'TokenChannel'
+                    token: { __typename?: 'CreatorToken'; id: string }
+                  } | null
                 }
               }
             | {

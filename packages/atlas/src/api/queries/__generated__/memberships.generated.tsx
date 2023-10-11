@@ -64,7 +64,7 @@ export type GetMembershipsQuery = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
       } | null
-      creatorToken?: { __typename?: 'TokenChannel'; id: string } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
     }>
     metadata?: {
       __typename?: 'MemberMetadata'
