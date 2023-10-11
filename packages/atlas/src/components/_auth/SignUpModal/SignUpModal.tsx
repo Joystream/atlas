@@ -54,7 +54,7 @@ export const SignUpModal = () => {
   const [emailAlreadyTakenError, setEmailAlreadyTakenError] = useState(false)
   const [hasNavigatedBack, setHasNavigatedBack] = useState(false)
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogButtonProps>({ text: 'Continue' })
-  const [amountOfTokens, setAmountofTokens] = useState<number>()
+  const [amountOfTokens] = useState<number>()
   const [memberId, setMemberId] = useState<string | null>(null)
   const syncState = useRef<'synced' | 'tried' | null>(null)
   const ytResponseData = useYppStore((state) => state.ytResponseData)
@@ -128,7 +128,7 @@ export const SignUpModal = () => {
               setAuthModalOpenName(undefined)
               setYppModalOpenName('ypp-sync-options')
             } else {
-              setAmountofTokens(amountOfTokens)
+              amountOfTokens
               goToNextStep()
             }
           },
@@ -174,7 +174,7 @@ export const SignUpModal = () => {
               setAuthModalOpenName(undefined)
               setYppModalOpenName('ypp-sync-options')
             } else {
-              setAmountofTokens(amountOfTokens)
+              amountOfTokens
               goToNextStep()
             }
           },

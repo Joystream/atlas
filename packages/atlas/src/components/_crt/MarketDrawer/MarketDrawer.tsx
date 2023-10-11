@@ -1,26 +1,14 @@
-import { useMemo, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
-import { Controller, useForm } from 'react-hook-form'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { SvgActionPlay, SvgAlertsInformative24 } from '@/assets/icons'
+import { ActionDialogButtonProps } from '@/components/ActionBar'
 import { CrtDrawer } from '@/components/CrtDrawer'
-import { FlexBox } from '@/components/FlexBox'
-import { NumberFormat } from '@/components/NumberFormat'
-import { ColumnBox } from '@/components/ProgressWidget/ProgressWidget.styles'
-import { Text } from '@/components/Text'
-import { Tooltip } from '@/components/Tooltip'
-import { TextButton } from '@/components/_buttons/Button'
-import { HDivider } from '@/components/_crt/MarketDrawer/MarketDrawer.styles'
 import { CrtMarketForm } from '@/components/_crt/MarketDrawer/MarketDrawer.types'
 import { MarketDrawerPreview } from '@/components/_crt/MarketDrawer/MarketDrawerPreview'
-import { Checkbox } from '@/components/_inputs/Checkbox'
-import { TextArea } from '@/components/_inputs/TextArea'
-import { TokenInput } from '@/components/_inputs/TokenInput'
-import { SummaryRow } from '@/components/_overlays/SendTransferDialogs/SendTransferDialogs.styles'
+import { MarketStep } from '@/components/_crt/MarketDrawer/steps/MarketStep'
+import { SaleSummaryStep } from '@/components/_crt/MarketDrawer/steps/SaleSummaryStep'
 import { atlasConfig } from '@/config'
-import { useConfirmationModal } from '@/providers/confirmationModal'
-import { useJoystream } from '@/providers/joystream'
 import { transitions } from '@/styles'
 
 enum MARKET_STEPS {
@@ -35,188 +23,54 @@ export type CrtMarketSaleViewProps = {
   onClose: () => void
 }
 
-const DEFAULT_MIN_PRICE = 100
-
 export const MarketDrawer = ({ show, onClose, tokenName }: CrtMarketSaleViewProps) => {
   const [activeStep, setActiveStep] = useState(MARKET_STEPS.market)
+  const [marketData, setMarketData] = useState<CrtMarketForm>({
+    price: 0,
+    tnc: atlasConfig.legal.crtTnc,
+    isChecked: true,
+  })
+  const [primaryButtonProps, setPrimaryButtonProps] = useState<ActionDialogButtonProps>({ text: 'Continue' })
+  const [secondaryButtonProps, setSecondaryButtonProps] = useState<ActionDialogButtonProps>({ text: 'Back' })
   const [isGoingBack, setIsGoingBack] = useState(false)
-  const { tokenPrice } = useJoystream()
   const nodeRef = useRef<HTMLDivElement>(null)
 
-  const {
-    control,
-    resetField,
-    watch,
-    formState: { isDirty },
-  } = useForm<CrtMarketForm>({
-    defaultValues: {
-      price: DEFAULT_MIN_PRICE,
-      tnc: atlasConfig.legal.crtTnc,
-      isChecked: true,
+  const handleNextStep = useCallback(
+    ({ price, tnc }: CrtMarketForm) => {
+      setMarketData({ ...marketData, price, tnc })
+      setActiveStep(MARKET_STEPS.saleSummary)
     },
-  })
-  const isChecked = watch('isChecked')
-  const price = watch('price')
-  const tokenInUsd = (price || 0) * (tokenPrice || 0)
+    [marketData]
+  )
 
-  const [openDialog, closeDialog] = useConfirmationModal({
-    type: 'warning',
-    title: 'Discard changes?',
-    description:
-      'You have unsaved changes which are going to be lost if you close this window. Are you sure you want to continue?',
-    primaryButton: {
-      variant: 'warning',
-      text: 'Confirm and discard',
-      onClick: () => {
-        closeDialog()
-        onClose()
-      },
-    },
-    secondaryButton: {
-      text: 'Cancel',
-      onClick: () => closeDialog(),
-    },
-  })
-
-  const secondaryButton = useMemo(() => {
-    switch (activeStep) {
-      case MARKET_STEPS.market:
-        return {
-          text: 'Cancel',
-          onClick: () => (isDirty ? onClose() : openDialog()),
-        }
-      case MARKET_STEPS.saleSummary:
-        return {
-          text: 'Back',
-          onClick: () => {
-            flushSync(() => {
-              setIsGoingBack(true)
-            })
-            setActiveStep(MARKET_STEPS.market)
-          },
-        }
-    }
-  }, [activeStep, isDirty, onClose, openDialog])
-
-  const primaryButton = useMemo(() => {
-    switch (activeStep) {
-      case MARKET_STEPS.market:
-        return {
-          text: 'Next',
-          onClick: () => {
-            setActiveStep(MARKET_STEPS.saleSummary)
-          },
-        }
-      case MARKET_STEPS.saleSummary:
-        return {
-          text: 'Start sale',
-          onClick: () => {
-            //token sale tx
-          },
-        }
-    }
-  }, [activeStep])
+  const handleBackClick = useCallback(() => {
+    flushSync(() => {
+      setIsGoingBack(true)
+    })
+    setActiveStep(MARKET_STEPS.market)
+  }, [])
 
   const stepContent = () => {
     switch (activeStep) {
       case MARKET_STEPS.market:
         return (
-          <div>
-            <Text variant="h500" as="span" margin={{ bottom: 2, right: 4 }}>
-              Market
-            </Text>
-            <TextButton as="span" icon={<SvgActionPlay />} iconPlacement="left" color="colorTextPrimary">
-              Learn more
-            </TextButton>
-            <Text variant="t300" color="colorText" as="p">
-              Automated market maker (AMM) will increase ${tokenName} price after each purchase and decrease its price
-              when someone sells it to the AMM.
-            </Text>
-            <Text variant="h300" as="h1" margin={{ top: 8, bottom: 2 }}>
-              Starting price for token
-            </Text>
-            <Text variant="t100" color="colorText" as="div" margin={{ bottom: 4 }}>
-              You cannot set price lower than <NumberFormat value={DEFAULT_MIN_PRICE} as="span" withToken />
-            </Text>
-            <Controller
-              control={control}
-              render={({ field: { value: price, onChange: setPrice } }) => (
-                <TokenInput
-                  value={price}
-                  onChange={setPrice}
-                  nodeEnd={
-                    <Text variant="t300" as="p" color="colorTextMuted">
-                      ${tokenInUsd.toFixed(2)}
-                    </Text>
-                  }
-                />
-              )}
-              name="price"
-            />
-            <Text variant="h300" as="h1" margin={{ top: 8, bottom: 2 }}>
-              Terms and conditions
-            </Text>
-            <Text variant="t100" color="colorText" as="p" margin={{ bottom: 4 }}>
-              Change default rules if you want to add some additional terms.
-            </Text>
-            <Controller
-              control={control}
-              render={({ field: { value: isChecked, onChange } }) => (
-                <Checkbox
-                  value={isChecked}
-                  label="Keep the default terms & conditions"
-                  onChange={(checked) => {
-                    if (checked) {
-                      resetField('tnc')
-                    }
-                    onChange(checked)
-                  }}
-                />
-              )}
-              name="isChecked"
-            />
-            <Controller
-              control={control}
-              render={({ field: { value: tnc, onChange } }) => (
-                <TextArea rows={7} value={tnc} disabled={isChecked} onChange={onChange} />
-              )}
-              name="tnc"
-            />
-          </div>
+          <MarketStep
+            setPrimaryButtonProps={setPrimaryButtonProps}
+            setSecondaryButtonProps={setSecondaryButtonProps}
+            tokenName={tokenName}
+            onClose={onClose}
+            onNextStep={handleNextStep}
+          />
         )
       case MARKET_STEPS.saleSummary:
         return (
-          <ColumnBox gap={2}>
-            <Text variant="h500" as="h2" margin={{ bottom: 2 }}>
-              Market summary
-            </Text>
-            <Text variant="h400" as="h2" margin={{ bottom: 2 }}>
-              Sale settings
-            </Text>
-            <SummaryRow>
-              <FlexBox alignItems="center">
-                <Text as="span" variant="h300" color="colorText">
-                  Starting price
-                </Text>
-                <Tooltip text="Tooltip placeholder" placement="top" offsetY={4} delay={[1000, null]}>
-                  <SvgAlertsInformative24 width={16} height={16} />
-                </Tooltip>
-              </FlexBox>
-              <NumberFormat variant="h300" value={price} withToken as="span" />
-            </SummaryRow>
-            <HDivider />
-            <SummaryRow>
-              <FlexBox alignItems="center">
-                <Text as="span" variant="h300" color="colorText">
-                  Transaction Fee
-                </Text>
-                <Tooltip text="Tooltip placeholder" placement="top" offsetY={4} delay={[1000, null]}>
-                  <SvgAlertsInformative24 width={16} height={16} />
-                </Tooltip>
-              </FlexBox>
-              <NumberFormat variant="h300" withDenomination="before" value={price} withToken as="span" />
-            </SummaryRow>
-          </ColumnBox>
+          <SaleSummaryStep
+            price={marketData.price}
+            tnc={marketData.tnc}
+            setPrimaryButtonProps={setPrimaryButtonProps}
+            setSecondaryButtonProps={setSecondaryButtonProps}
+            handleBackClick={handleBackClick}
+          />
         )
     }
   }
@@ -227,12 +81,12 @@ export const MarketDrawer = ({ show, onClose, tokenName }: CrtMarketSaleViewProp
       activeStep={activeStep}
       actionBar={{
         isNoneCrypto: true,
-        primaryButton,
-        secondaryButton,
+        primaryButton: primaryButtonProps,
+        secondaryButton: secondaryButtonProps,
       }}
       isOpen={show}
       onClose={onClose}
-      preview={<MarketDrawerPreview defaultPrice={price} tokenName={tokenName} />}
+      preview={<MarketDrawerPreview startingPrice={marketData.price || 0} tokenName={tokenName} />}
     >
       <SwitchTransition mode="out-in">
         <CSSTransition

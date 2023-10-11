@@ -10,23 +10,26 @@ import { cVar } from '@/styles'
 
 type MarketDrawerPreviewProps = {
   tokenName: string
-  defaultPrice: number
+  startingPrice: number
 }
 
 const DEFAULT_AMM_SENSIVITY = 1
-export const MarketDrawerPreview = ({ tokenName, defaultPrice }: MarketDrawerPreviewProps) => {
+export const MarketDrawerPreview = ({ tokenName, startingPrice }: MarketDrawerPreviewProps) => {
   const issuedTokens = [10 ** 3, 10 ** 4, 5 * 10 ** 4, 10 ** 5, 5 * 10 ** 5, 10 ** 6, 10 ** 7]
 
   const chartData: Datum[] = issuedTokens.map((num) => ({
     x: formatNumberShort(num),
-    y: DEFAULT_AMM_SENSIVITY * num + defaultPrice,
+    y: DEFAULT_AMM_SENSIVITY * num + startingPrice,
   }))
 
-  const getTickValues = (max: number) =>
-    issuedTokens.map(
-      (_, index) =>
-        Math.round((max * DEFAULT_AMM_SENSIVITY) / 2 ** (2 * (issuedTokens.length - index - 1)) / 1000) * 1000
-    )
+  const getTickValues = (max: number) => [
+    ...new Set(
+      issuedTokens.map((elem, index) => {
+        const floor = Math.pow(10, Math.round(Math.log10(DEFAULT_AMM_SENSIVITY * elem + startingPrice)))
+        return Math.max(Math.floor(elem / floor), 1) * floor
+      })
+    ),
+  ]
 
   return (
     <>
