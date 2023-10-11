@@ -72,7 +72,7 @@ type PublicExtrinsic<TxFunction, ReturnValue> = TxFunction extends (...a: infer 
   : never
 
 const PERMILLS_PER_PERCENTAGE = 10
-const PERQUINTILLS_PER_PERCENTAGE = 100
+const PERQUINTILLS_PER_PERCENTAGE = new BN(10).pow(new BN(16))
 
 export class JoystreamLibExtrinsics {
   readonly api: PolkadotApi
@@ -1137,7 +1137,7 @@ export class JoystreamLibExtrinsics {
 
     const params = createType('PalletProjectTokenTokenIssuanceParameters', {
       initialAllocation,
-      patronageRate: createType('Perquintill', patronageRate * PERQUINTILLS_PER_PERCENTAGE) as number,
+      patronageRate: createType('Perquintill', PERQUINTILLS_PER_PERCENTAGE.muln(patronageRate)) as number,
       revenueSplitRate: createType('Permill', revenueSplitRate * PERMILLS_PER_PERCENTAGE) as number,
       transferPolicy: createType('PalletProjectTokenTransferPolicyParams', 'Permissionless'),
       metadata: prepareCreatorTokenMetadata({ symbol }),
