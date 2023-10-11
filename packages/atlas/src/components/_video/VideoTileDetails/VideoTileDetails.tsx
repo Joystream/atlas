@@ -4,6 +4,7 @@ import { LinkProps } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { SvgActionMore } from '@/assets/icons'
+import { ChannelTitle } from '@/components/ChannelTitle'
 import { ListItemProps } from '@/components/ListItem'
 import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
@@ -12,7 +13,6 @@ import { cVar, transitions } from '@/styles'
 import { formatVideoDate } from '@/utils/video'
 
 import {
-  ChannelTitle,
   KebabMenuButtonIcon,
   PlaylistButton,
   StyledAvatar,

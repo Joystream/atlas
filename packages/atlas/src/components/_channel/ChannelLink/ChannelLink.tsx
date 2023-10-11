@@ -4,6 +4,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { useBasicChannel } from '@/api/hooks/channel'
 import { BasicChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { AvatarSize } from '@/components/Avatar'
+import { ChannelTitle } from '@/components/ChannelTitle'
 import { Text, TextVariant } from '@/components/Text'
 import { ProtectedActionWrapper } from '@/components/_auth/ProtectedActionWrapper'
 import { Button } from '@/components/_buttons/Button'
@@ -86,9 +87,13 @@ export const ChannelLink: FC<ChannelLinkProps> = ({
             {displayedChannel ? (
               <TitleWrapper followButton={followButton}>
                 <StyledLink onClick={onClick} to={absoluteRoutes.viewer.channel(id)} disabled={!id || noLink}>
-                  <Text as="span" variant={_textVariant} color={textSecondary ? 'colorCoreNeutral200' : undefined}>
+                  <ChannelTitle
+                    variant={_textVariant}
+                    as="span"
+                    color={textSecondary ? 'colorCoreNeutral200' : undefined}
+                  >
                     {customTitle || displayedChannel.channel.title}
-                  </Text>
+                  </ChannelTitle>
                   {followButton && (
                     <Text as="p" variant="t100" color="colorText" margin={{ top: 1 }}>
                       {displayedChannel.channel.followsNum}{' '}
