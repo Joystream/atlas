@@ -1,0 +1,12 @@
+query GetBasicCreatorToken($where: CreatorTokenWhereInput, $orderBy: [CreatorTokenOrderByInput!], $limit: Int, $offset: Int) {
+    creatorTokens(where: $where, orderBy: $orderBy, limit: $limit, offset: $offset) {
+        ...BasicCreatorToken
+    }
+}
+
+query GetFullCreatorToken($id: String!) {
+    creatorTokenById(id: $id) {
+        ...FullCreatorToken
+    }
+}
+

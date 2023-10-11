@@ -16,12 +16,451 @@ export type Scalars = {
   DateTime: Date
 }
 
+/** A Gateway Account */
+export type Account = {
+  __typename?: 'Account'
+  /** Gateway account's e-mail address */
+  email: Scalars['String']
+  /** Unique identifier (can be sequential) */
+  id: Scalars['String']
+  /** Indicates whether the access to the gateway account is blocked */
+  isBlocked: Scalars['Boolean']
+  /** Indicates whether the gateway account's e-mail has been confirmed or not. */
+  isEmailConfirmed: Scalars['Boolean']
+  /** Blockchain (joystream) account associated with the gateway account */
+  joystreamAccount: Scalars['String']
+  /** On-chain membership associated with the gateway account */
+  membership: Membership
+  /** Time when the gateway account was registered */
+  registeredAt: Scalars['DateTime']
+  /** The user associated with the gateway account (the Gateway Account Owner) */
+  user: User
+}
+
+export type AccountData = {
+  __typename?: 'AccountData'
+  email: Scalars['String']
+  followedChannels: Array<FollowedChannel>
+  id: Scalars['String']
+  isEmailConfirmed: Scalars['Boolean']
+  joystreamAccount: Scalars['String']
+  membershipId: Scalars['String']
+}
+
+export type AccountEdge = {
+  __typename?: 'AccountEdge'
+  cursor: Scalars['String']
+  node: Account
+}
+
+export enum AccountOrderByInput {
+  EmailAsc = 'email_ASC',
+  EmailDesc = 'email_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  IsBlockedAsc = 'isBlocked_ASC',
+  IsBlockedDesc = 'isBlocked_DESC',
+  IsEmailConfirmedAsc = 'isEmailConfirmed_ASC',
+  IsEmailConfirmedDesc = 'isEmailConfirmed_DESC',
+  JoystreamAccountAsc = 'joystreamAccount_ASC',
+  JoystreamAccountDesc = 'joystreamAccount_DESC',
+  MembershipControllerAccountAsc = 'membership_controllerAccount_ASC',
+  MembershipControllerAccountDesc = 'membership_controllerAccount_DESC',
+  MembershipCreatedAtAsc = 'membership_createdAt_ASC',
+  MembershipCreatedAtDesc = 'membership_createdAt_DESC',
+  MembershipHandleAsc = 'membership_handle_ASC',
+  MembershipHandleDesc = 'membership_handle_DESC',
+  MembershipIdAsc = 'membership_id_ASC',
+  MembershipIdDesc = 'membership_id_DESC',
+  MembershipTotalChannelsCreatedAsc = 'membership_totalChannelsCreated_ASC',
+  MembershipTotalChannelsCreatedDesc = 'membership_totalChannelsCreated_DESC',
+  RegisteredAtAsc = 'registeredAt_ASC',
+  RegisteredAtDesc = 'registeredAt_DESC',
+  UserIdAsc = 'user_id_ASC',
+  UserIdDesc = 'user_id_DESC',
+  UserIsRootAsc = 'user_isRoot_ASC',
+  UserIsRootDesc = 'user_isRoot_DESC',
+}
+
+export type AccountWhereInput = {
+  AND?: InputMaybe<Array<AccountWhereInput>>
+  OR?: InputMaybe<Array<AccountWhereInput>>
+  email_contains?: InputMaybe<Scalars['String']>
+  email_containsInsensitive?: InputMaybe<Scalars['String']>
+  email_endsWith?: InputMaybe<Scalars['String']>
+  email_eq?: InputMaybe<Scalars['String']>
+  email_gt?: InputMaybe<Scalars['String']>
+  email_gte?: InputMaybe<Scalars['String']>
+  email_in?: InputMaybe<Array<Scalars['String']>>
+  email_isNull?: InputMaybe<Scalars['Boolean']>
+  email_lt?: InputMaybe<Scalars['String']>
+  email_lte?: InputMaybe<Scalars['String']>
+  email_not_contains?: InputMaybe<Scalars['String']>
+  email_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  email_not_endsWith?: InputMaybe<Scalars['String']>
+  email_not_eq?: InputMaybe<Scalars['String']>
+  email_not_in?: InputMaybe<Array<Scalars['String']>>
+  email_not_startsWith?: InputMaybe<Scalars['String']>
+  email_startsWith?: InputMaybe<Scalars['String']>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  isBlocked_eq?: InputMaybe<Scalars['Boolean']>
+  isBlocked_isNull?: InputMaybe<Scalars['Boolean']>
+  isBlocked_not_eq?: InputMaybe<Scalars['Boolean']>
+  isEmailConfirmed_eq?: InputMaybe<Scalars['Boolean']>
+  isEmailConfirmed_isNull?: InputMaybe<Scalars['Boolean']>
+  isEmailConfirmed_not_eq?: InputMaybe<Scalars['Boolean']>
+  joystreamAccount_contains?: InputMaybe<Scalars['String']>
+  joystreamAccount_containsInsensitive?: InputMaybe<Scalars['String']>
+  joystreamAccount_endsWith?: InputMaybe<Scalars['String']>
+  joystreamAccount_eq?: InputMaybe<Scalars['String']>
+  joystreamAccount_gt?: InputMaybe<Scalars['String']>
+  joystreamAccount_gte?: InputMaybe<Scalars['String']>
+  joystreamAccount_in?: InputMaybe<Array<Scalars['String']>>
+  joystreamAccount_isNull?: InputMaybe<Scalars['Boolean']>
+  joystreamAccount_lt?: InputMaybe<Scalars['String']>
+  joystreamAccount_lte?: InputMaybe<Scalars['String']>
+  joystreamAccount_not_contains?: InputMaybe<Scalars['String']>
+  joystreamAccount_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  joystreamAccount_not_endsWith?: InputMaybe<Scalars['String']>
+  joystreamAccount_not_eq?: InputMaybe<Scalars['String']>
+  joystreamAccount_not_in?: InputMaybe<Array<Scalars['String']>>
+  joystreamAccount_not_startsWith?: InputMaybe<Scalars['String']>
+  joystreamAccount_startsWith?: InputMaybe<Scalars['String']>
+  membership?: InputMaybe<MembershipWhereInput>
+  membership_isNull?: InputMaybe<Scalars['Boolean']>
+  registeredAt_eq?: InputMaybe<Scalars['DateTime']>
+  registeredAt_gt?: InputMaybe<Scalars['DateTime']>
+  registeredAt_gte?: InputMaybe<Scalars['DateTime']>
+  registeredAt_in?: InputMaybe<Array<Scalars['DateTime']>>
+  registeredAt_isNull?: InputMaybe<Scalars['Boolean']>
+  registeredAt_lt?: InputMaybe<Scalars['DateTime']>
+  registeredAt_lte?: InputMaybe<Scalars['DateTime']>
+  registeredAt_not_eq?: InputMaybe<Scalars['DateTime']>
+  registeredAt_not_in?: InputMaybe<Array<Scalars['DateTime']>>
+  user?: InputMaybe<UserWhereInput>
+  user_isNull?: InputMaybe<Scalars['Boolean']>
+}
+
+export type AccountsConnection = {
+  __typename?: 'AccountsConnection'
+  edges: Array<AccountEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
 export type AddVideoViewResult = {
   __typename?: 'AddVideoViewResult'
   added: Scalars['Boolean']
   videoId: Scalars['String']
   viewId: Scalars['String']
   viewsNum: Scalars['Int']
+}
+
+export type AmmCurve = {
+  __typename?: 'AmmCurve'
+  /** the amm intercept parameter b in the formula a * x + b */
+  ammInitPrice: Scalars['BigInt']
+  /** the amm slope parameter a in the formula a * x + b */
+  ammSlopeParameter: Scalars['BigInt']
+  /** quantity bought on the market by the amm */
+  burnedByAmm: Scalars['BigInt']
+  /** finalized (i.e. closed) */
+  finalized: Scalars['Boolean']
+  /** counter */
+  id: Scalars['String']
+  /** quantity sold to the market */
+  mintedByAmm: Scalars['BigInt']
+  /** token this Amm is for */
+  token: CreatorToken
+  /** transaction for this amm */
+  transactions: Array<AmmTransaction>
+}
+
+export type AmmCurveTransactionsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<AmmTransactionOrderByInput>>
+  where?: InputMaybe<AmmTransactionWhereInput>
+}
+
+export type AmmCurveEdge = {
+  __typename?: 'AmmCurveEdge'
+  cursor: Scalars['String']
+  node: AmmCurve
+}
+
+export enum AmmCurveOrderByInput {
+  AmmInitPriceAsc = 'ammInitPrice_ASC',
+  AmmInitPriceDesc = 'ammInitPrice_DESC',
+  AmmSlopeParameterAsc = 'ammSlopeParameter_ASC',
+  AmmSlopeParameterDesc = 'ammSlopeParameter_DESC',
+  BurnedByAmmAsc = 'burnedByAmm_ASC',
+  BurnedByAmmDesc = 'burnedByAmm_DESC',
+  FinalizedAsc = 'finalized_ASC',
+  FinalizedDesc = 'finalized_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  MintedByAmmAsc = 'mintedByAmm_ASC',
+  MintedByAmmDesc = 'mintedByAmm_DESC',
+  TokenAccountsNumAsc = 'token_accountsNum_ASC',
+  TokenAccountsNumDesc = 'token_accountsNum_DESC',
+  TokenAnnualCreatorRewardAsc = 'token_annualCreatorReward_ASC',
+  TokenAnnualCreatorRewardDesc = 'token_annualCreatorReward_DESC',
+  TokenCreatedAtAsc = 'token_createdAt_ASC',
+  TokenCreatedAtDesc = 'token_createdAt_DESC',
+  TokenDeissuedAsc = 'token_deissued_ASC',
+  TokenDeissuedDesc = 'token_deissued_DESC',
+  TokenDescriptionAsc = 'token_description_ASC',
+  TokenDescriptionDesc = 'token_description_DESC',
+  TokenIdAsc = 'token_id_ASC',
+  TokenIdDesc = 'token_id_DESC',
+  TokenIsInviteOnlyAsc = 'token_isInviteOnly_ASC',
+  TokenIsInviteOnlyDesc = 'token_isInviteOnly_DESC',
+  TokenNumberOfRevenueShareActivationsAsc = 'token_numberOfRevenueShareActivations_ASC',
+  TokenNumberOfRevenueShareActivationsDesc = 'token_numberOfRevenueShareActivations_DESC',
+  TokenNumberOfVestedTransferIssuedAsc = 'token_numberOfVestedTransferIssued_ASC',
+  TokenNumberOfVestedTransferIssuedDesc = 'token_numberOfVestedTransferIssued_DESC',
+  TokenRevenueShareRatioPermillAsc = 'token_revenueShareRatioPermill_ASC',
+  TokenRevenueShareRatioPermillDesc = 'token_revenueShareRatioPermill_DESC',
+  TokenStatusAsc = 'token_status_ASC',
+  TokenStatusDesc = 'token_status_DESC',
+  TokenSymbolAsc = 'token_symbol_ASC',
+  TokenSymbolDesc = 'token_symbol_DESC',
+  TokenTotalSupplyAsc = 'token_totalSupply_ASC',
+  TokenTotalSupplyDesc = 'token_totalSupply_DESC',
+  TokenWhitelistApplicantLinkAsc = 'token_whitelistApplicantLink_ASC',
+  TokenWhitelistApplicantLinkDesc = 'token_whitelistApplicantLink_DESC',
+  TokenWhitelistApplicantNoteAsc = 'token_whitelistApplicantNote_ASC',
+  TokenWhitelistApplicantNoteDesc = 'token_whitelistApplicantNote_DESC',
+}
+
+export type AmmCurveWhereInput = {
+  AND?: InputMaybe<Array<AmmCurveWhereInput>>
+  OR?: InputMaybe<Array<AmmCurveWhereInput>>
+  ammInitPrice_eq?: InputMaybe<Scalars['BigInt']>
+  ammInitPrice_gt?: InputMaybe<Scalars['BigInt']>
+  ammInitPrice_gte?: InputMaybe<Scalars['BigInt']>
+  ammInitPrice_in?: InputMaybe<Array<Scalars['BigInt']>>
+  ammInitPrice_isNull?: InputMaybe<Scalars['Boolean']>
+  ammInitPrice_lt?: InputMaybe<Scalars['BigInt']>
+  ammInitPrice_lte?: InputMaybe<Scalars['BigInt']>
+  ammInitPrice_not_eq?: InputMaybe<Scalars['BigInt']>
+  ammInitPrice_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  ammSlopeParameter_eq?: InputMaybe<Scalars['BigInt']>
+  ammSlopeParameter_gt?: InputMaybe<Scalars['BigInt']>
+  ammSlopeParameter_gte?: InputMaybe<Scalars['BigInt']>
+  ammSlopeParameter_in?: InputMaybe<Array<Scalars['BigInt']>>
+  ammSlopeParameter_isNull?: InputMaybe<Scalars['Boolean']>
+  ammSlopeParameter_lt?: InputMaybe<Scalars['BigInt']>
+  ammSlopeParameter_lte?: InputMaybe<Scalars['BigInt']>
+  ammSlopeParameter_not_eq?: InputMaybe<Scalars['BigInt']>
+  ammSlopeParameter_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  burnedByAmm_eq?: InputMaybe<Scalars['BigInt']>
+  burnedByAmm_gt?: InputMaybe<Scalars['BigInt']>
+  burnedByAmm_gte?: InputMaybe<Scalars['BigInt']>
+  burnedByAmm_in?: InputMaybe<Array<Scalars['BigInt']>>
+  burnedByAmm_isNull?: InputMaybe<Scalars['Boolean']>
+  burnedByAmm_lt?: InputMaybe<Scalars['BigInt']>
+  burnedByAmm_lte?: InputMaybe<Scalars['BigInt']>
+  burnedByAmm_not_eq?: InputMaybe<Scalars['BigInt']>
+  burnedByAmm_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  finalized_eq?: InputMaybe<Scalars['Boolean']>
+  finalized_isNull?: InputMaybe<Scalars['Boolean']>
+  finalized_not_eq?: InputMaybe<Scalars['Boolean']>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  mintedByAmm_eq?: InputMaybe<Scalars['BigInt']>
+  mintedByAmm_gt?: InputMaybe<Scalars['BigInt']>
+  mintedByAmm_gte?: InputMaybe<Scalars['BigInt']>
+  mintedByAmm_in?: InputMaybe<Array<Scalars['BigInt']>>
+  mintedByAmm_isNull?: InputMaybe<Scalars['Boolean']>
+  mintedByAmm_lt?: InputMaybe<Scalars['BigInt']>
+  mintedByAmm_lte?: InputMaybe<Scalars['BigInt']>
+  mintedByAmm_not_eq?: InputMaybe<Scalars['BigInt']>
+  mintedByAmm_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  token?: InputMaybe<CreatorTokenWhereInput>
+  token_isNull?: InputMaybe<Scalars['Boolean']>
+  transactions_every?: InputMaybe<AmmTransactionWhereInput>
+  transactions_none?: InputMaybe<AmmTransactionWhereInput>
+  transactions_some?: InputMaybe<AmmTransactionWhereInput>
+}
+
+export type AmmCurvesConnection = {
+  __typename?: 'AmmCurvesConnection'
+  edges: Array<AmmCurveEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type AmmTransaction = {
+  __typename?: 'AmmTransaction'
+  /** buyer account */
+  account: TokenAccount
+  /** Reference to the Amm Sale */
+  amm: AmmCurve
+  /** block */
+  createdIn: Scalars['Int']
+  /** counter */
+  id: Scalars['String']
+  /** total HAPI paid/received for the quantity */
+  pricePaid: Scalars['BigInt']
+  /** price per unit in HAPI */
+  pricePerUnit: Scalars['BigInt']
+  /** amount of token bought/sold */
+  quantity: Scalars['BigInt']
+  /** was it bought/sold */
+  transactionType: AmmTransactionType
+}
+
+export type AmmTransactionEdge = {
+  __typename?: 'AmmTransactionEdge'
+  cursor: Scalars['String']
+  node: AmmTransaction
+}
+
+export enum AmmTransactionOrderByInput {
+  AccountDeletedAsc = 'account_deleted_ASC',
+  AccountDeletedDesc = 'account_deleted_DESC',
+  AccountIdAsc = 'account_id_ASC',
+  AccountIdDesc = 'account_id_DESC',
+  AccountStakedAmountAsc = 'account_stakedAmount_ASC',
+  AccountStakedAmountDesc = 'account_stakedAmount_DESC',
+  AccountTotalAmountAsc = 'account_totalAmount_ASC',
+  AccountTotalAmountDesc = 'account_totalAmount_DESC',
+  AmmAmmInitPriceAsc = 'amm_ammInitPrice_ASC',
+  AmmAmmInitPriceDesc = 'amm_ammInitPrice_DESC',
+  AmmAmmSlopeParameterAsc = 'amm_ammSlopeParameter_ASC',
+  AmmAmmSlopeParameterDesc = 'amm_ammSlopeParameter_DESC',
+  AmmBurnedByAmmAsc = 'amm_burnedByAmm_ASC',
+  AmmBurnedByAmmDesc = 'amm_burnedByAmm_DESC',
+  AmmFinalizedAsc = 'amm_finalized_ASC',
+  AmmFinalizedDesc = 'amm_finalized_DESC',
+  AmmIdAsc = 'amm_id_ASC',
+  AmmIdDesc = 'amm_id_DESC',
+  AmmMintedByAmmAsc = 'amm_mintedByAmm_ASC',
+  AmmMintedByAmmDesc = 'amm_mintedByAmm_DESC',
+  CreatedInAsc = 'createdIn_ASC',
+  CreatedInDesc = 'createdIn_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  PricePaidAsc = 'pricePaid_ASC',
+  PricePaidDesc = 'pricePaid_DESC',
+  PricePerUnitAsc = 'pricePerUnit_ASC',
+  PricePerUnitDesc = 'pricePerUnit_DESC',
+  QuantityAsc = 'quantity_ASC',
+  QuantityDesc = 'quantity_DESC',
+  TransactionTypeAsc = 'transactionType_ASC',
+  TransactionTypeDesc = 'transactionType_DESC',
+}
+
+export enum AmmTransactionType {
+  Buy = 'BUY',
+  Sell = 'SELL',
+}
+
+export type AmmTransactionWhereInput = {
+  AND?: InputMaybe<Array<AmmTransactionWhereInput>>
+  OR?: InputMaybe<Array<AmmTransactionWhereInput>>
+  account?: InputMaybe<TokenAccountWhereInput>
+  account_isNull?: InputMaybe<Scalars['Boolean']>
+  amm?: InputMaybe<AmmCurveWhereInput>
+  amm_isNull?: InputMaybe<Scalars['Boolean']>
+  createdIn_eq?: InputMaybe<Scalars['Int']>
+  createdIn_gt?: InputMaybe<Scalars['Int']>
+  createdIn_gte?: InputMaybe<Scalars['Int']>
+  createdIn_in?: InputMaybe<Array<Scalars['Int']>>
+  createdIn_isNull?: InputMaybe<Scalars['Boolean']>
+  createdIn_lt?: InputMaybe<Scalars['Int']>
+  createdIn_lte?: InputMaybe<Scalars['Int']>
+  createdIn_not_eq?: InputMaybe<Scalars['Int']>
+  createdIn_not_in?: InputMaybe<Array<Scalars['Int']>>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  pricePaid_eq?: InputMaybe<Scalars['BigInt']>
+  pricePaid_gt?: InputMaybe<Scalars['BigInt']>
+  pricePaid_gte?: InputMaybe<Scalars['BigInt']>
+  pricePaid_in?: InputMaybe<Array<Scalars['BigInt']>>
+  pricePaid_isNull?: InputMaybe<Scalars['Boolean']>
+  pricePaid_lt?: InputMaybe<Scalars['BigInt']>
+  pricePaid_lte?: InputMaybe<Scalars['BigInt']>
+  pricePaid_not_eq?: InputMaybe<Scalars['BigInt']>
+  pricePaid_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  pricePerUnit_eq?: InputMaybe<Scalars['BigInt']>
+  pricePerUnit_gt?: InputMaybe<Scalars['BigInt']>
+  pricePerUnit_gte?: InputMaybe<Scalars['BigInt']>
+  pricePerUnit_in?: InputMaybe<Array<Scalars['BigInt']>>
+  pricePerUnit_isNull?: InputMaybe<Scalars['Boolean']>
+  pricePerUnit_lt?: InputMaybe<Scalars['BigInt']>
+  pricePerUnit_lte?: InputMaybe<Scalars['BigInt']>
+  pricePerUnit_not_eq?: InputMaybe<Scalars['BigInt']>
+  pricePerUnit_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  quantity_eq?: InputMaybe<Scalars['BigInt']>
+  quantity_gt?: InputMaybe<Scalars['BigInt']>
+  quantity_gte?: InputMaybe<Scalars['BigInt']>
+  quantity_in?: InputMaybe<Array<Scalars['BigInt']>>
+  quantity_isNull?: InputMaybe<Scalars['Boolean']>
+  quantity_lt?: InputMaybe<Scalars['BigInt']>
+  quantity_lte?: InputMaybe<Scalars['BigInt']>
+  quantity_not_eq?: InputMaybe<Scalars['BigInt']>
+  quantity_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  transactionType_eq?: InputMaybe<AmmTransactionType>
+  transactionType_in?: InputMaybe<Array<AmmTransactionType>>
+  transactionType_isNull?: InputMaybe<Scalars['Boolean']>
+  transactionType_not_eq?: InputMaybe<AmmTransactionType>
+  transactionType_not_in?: InputMaybe<Array<AmmTransactionType>>
+}
+
+export type AmmTransactionsConnection = {
+  __typename?: 'AmmTransactionsConnection'
+  edges: Array<AmmTransactionEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
 }
 
 export type App = {
@@ -824,6 +1263,8 @@ export enum BannedMemberOrderByInput {
   ChannelIsPublicDesc = 'channel_isPublic_DESC',
   ChannelLanguageAsc = 'channel_language_ASC',
   ChannelLanguageDesc = 'channel_language_DESC',
+  ChannelRevenueShareRatioPercentAsc = 'channel_revenueShareRatioPercent_ASC',
+  ChannelRevenueShareRatioPercentDesc = 'channel_revenueShareRatioPercent_DESC',
   ChannelRewardAccountAsc = 'channel_rewardAccount_ASC',
   ChannelRewardAccountDesc = 'channel_rewardAccount_DESC',
   ChannelTitleAsc = 'channel_title_ASC',
@@ -875,6 +1316,162 @@ export type BannedMemberWhereInput = {
 export type BannedMembersConnection = {
   __typename?: 'BannedMembersConnection'
   edges: Array<BannedMemberEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type Benefit = {
+  __typename?: 'Benefit'
+  /** description for the benefit */
+  description: Scalars['String']
+  /** order in which the benefits is displayed */
+  displayOrder: Scalars['Int']
+  /** emoji for the benefit */
+  emojiCode?: Maybe<Scalars['String']>
+  /** counter */
+  id: Scalars['String']
+  /** title for the benefit */
+  title: Scalars['String']
+  /** token the benefit is for */
+  token: CreatorToken
+}
+
+export type BenefitEdge = {
+  __typename?: 'BenefitEdge'
+  cursor: Scalars['String']
+  node: Benefit
+}
+
+export enum BenefitOrderByInput {
+  DescriptionAsc = 'description_ASC',
+  DescriptionDesc = 'description_DESC',
+  DisplayOrderAsc = 'displayOrder_ASC',
+  DisplayOrderDesc = 'displayOrder_DESC',
+  EmojiCodeAsc = 'emojiCode_ASC',
+  EmojiCodeDesc = 'emojiCode_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TokenAccountsNumAsc = 'token_accountsNum_ASC',
+  TokenAccountsNumDesc = 'token_accountsNum_DESC',
+  TokenAnnualCreatorRewardAsc = 'token_annualCreatorReward_ASC',
+  TokenAnnualCreatorRewardDesc = 'token_annualCreatorReward_DESC',
+  TokenCreatedAtAsc = 'token_createdAt_ASC',
+  TokenCreatedAtDesc = 'token_createdAt_DESC',
+  TokenDeissuedAsc = 'token_deissued_ASC',
+  TokenDeissuedDesc = 'token_deissued_DESC',
+  TokenDescriptionAsc = 'token_description_ASC',
+  TokenDescriptionDesc = 'token_description_DESC',
+  TokenIdAsc = 'token_id_ASC',
+  TokenIdDesc = 'token_id_DESC',
+  TokenIsInviteOnlyAsc = 'token_isInviteOnly_ASC',
+  TokenIsInviteOnlyDesc = 'token_isInviteOnly_DESC',
+  TokenNumberOfRevenueShareActivationsAsc = 'token_numberOfRevenueShareActivations_ASC',
+  TokenNumberOfRevenueShareActivationsDesc = 'token_numberOfRevenueShareActivations_DESC',
+  TokenNumberOfVestedTransferIssuedAsc = 'token_numberOfVestedTransferIssued_ASC',
+  TokenNumberOfVestedTransferIssuedDesc = 'token_numberOfVestedTransferIssued_DESC',
+  TokenRevenueShareRatioPermillAsc = 'token_revenueShareRatioPermill_ASC',
+  TokenRevenueShareRatioPermillDesc = 'token_revenueShareRatioPermill_DESC',
+  TokenStatusAsc = 'token_status_ASC',
+  TokenStatusDesc = 'token_status_DESC',
+  TokenSymbolAsc = 'token_symbol_ASC',
+  TokenSymbolDesc = 'token_symbol_DESC',
+  TokenTotalSupplyAsc = 'token_totalSupply_ASC',
+  TokenTotalSupplyDesc = 'token_totalSupply_DESC',
+  TokenWhitelistApplicantLinkAsc = 'token_whitelistApplicantLink_ASC',
+  TokenWhitelistApplicantLinkDesc = 'token_whitelistApplicantLink_DESC',
+  TokenWhitelistApplicantNoteAsc = 'token_whitelistApplicantNote_ASC',
+  TokenWhitelistApplicantNoteDesc = 'token_whitelistApplicantNote_DESC',
+}
+
+export type BenefitWhereInput = {
+  AND?: InputMaybe<Array<BenefitWhereInput>>
+  OR?: InputMaybe<Array<BenefitWhereInput>>
+  description_contains?: InputMaybe<Scalars['String']>
+  description_containsInsensitive?: InputMaybe<Scalars['String']>
+  description_endsWith?: InputMaybe<Scalars['String']>
+  description_eq?: InputMaybe<Scalars['String']>
+  description_gt?: InputMaybe<Scalars['String']>
+  description_gte?: InputMaybe<Scalars['String']>
+  description_in?: InputMaybe<Array<Scalars['String']>>
+  description_isNull?: InputMaybe<Scalars['Boolean']>
+  description_lt?: InputMaybe<Scalars['String']>
+  description_lte?: InputMaybe<Scalars['String']>
+  description_not_contains?: InputMaybe<Scalars['String']>
+  description_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  description_not_endsWith?: InputMaybe<Scalars['String']>
+  description_not_eq?: InputMaybe<Scalars['String']>
+  description_not_in?: InputMaybe<Array<Scalars['String']>>
+  description_not_startsWith?: InputMaybe<Scalars['String']>
+  description_startsWith?: InputMaybe<Scalars['String']>
+  displayOrder_eq?: InputMaybe<Scalars['Int']>
+  displayOrder_gt?: InputMaybe<Scalars['Int']>
+  displayOrder_gte?: InputMaybe<Scalars['Int']>
+  displayOrder_in?: InputMaybe<Array<Scalars['Int']>>
+  displayOrder_isNull?: InputMaybe<Scalars['Boolean']>
+  displayOrder_lt?: InputMaybe<Scalars['Int']>
+  displayOrder_lte?: InputMaybe<Scalars['Int']>
+  displayOrder_not_eq?: InputMaybe<Scalars['Int']>
+  displayOrder_not_in?: InputMaybe<Array<Scalars['Int']>>
+  emojiCode_contains?: InputMaybe<Scalars['String']>
+  emojiCode_containsInsensitive?: InputMaybe<Scalars['String']>
+  emojiCode_endsWith?: InputMaybe<Scalars['String']>
+  emojiCode_eq?: InputMaybe<Scalars['String']>
+  emojiCode_gt?: InputMaybe<Scalars['String']>
+  emojiCode_gte?: InputMaybe<Scalars['String']>
+  emojiCode_in?: InputMaybe<Array<Scalars['String']>>
+  emojiCode_isNull?: InputMaybe<Scalars['Boolean']>
+  emojiCode_lt?: InputMaybe<Scalars['String']>
+  emojiCode_lte?: InputMaybe<Scalars['String']>
+  emojiCode_not_contains?: InputMaybe<Scalars['String']>
+  emojiCode_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  emojiCode_not_endsWith?: InputMaybe<Scalars['String']>
+  emojiCode_not_eq?: InputMaybe<Scalars['String']>
+  emojiCode_not_in?: InputMaybe<Array<Scalars['String']>>
+  emojiCode_not_startsWith?: InputMaybe<Scalars['String']>
+  emojiCode_startsWith?: InputMaybe<Scalars['String']>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  title_contains?: InputMaybe<Scalars['String']>
+  title_containsInsensitive?: InputMaybe<Scalars['String']>
+  title_endsWith?: InputMaybe<Scalars['String']>
+  title_eq?: InputMaybe<Scalars['String']>
+  title_gt?: InputMaybe<Scalars['String']>
+  title_gte?: InputMaybe<Scalars['String']>
+  title_in?: InputMaybe<Array<Scalars['String']>>
+  title_isNull?: InputMaybe<Scalars['Boolean']>
+  title_lt?: InputMaybe<Scalars['String']>
+  title_lte?: InputMaybe<Scalars['String']>
+  title_not_contains?: InputMaybe<Scalars['String']>
+  title_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  title_not_endsWith?: InputMaybe<Scalars['String']>
+  title_not_eq?: InputMaybe<Scalars['String']>
+  title_not_in?: InputMaybe<Array<Scalars['String']>>
+  title_not_startsWith?: InputMaybe<Scalars['String']>
+  title_startsWith?: InputMaybe<Scalars['String']>
+  token?: InputMaybe<CreatorTokenWhereInput>
+  token_isNull?: InputMaybe<Scalars['Boolean']>
+}
+
+export type BenefitsConnection = {
+  __typename?: 'BenefitsConnection'
+  edges: Array<BenefitEdge>
   pageInfo: PageInfo
   totalCount: Scalars['Int']
 }
@@ -1093,6 +1690,8 @@ export type Channel = {
   createdAt: Scalars['DateTime']
   /** Number of the block the channel was created in */
   createdInBlock: Scalars['Int']
+  /** Token issued by channel if any */
+  creatorToken?: Maybe<TokenChannel>
   /** Cumulative rewards claimed by this channel */
   cumulativeRewardClaimed?: Maybe<Scalars['BigInt']>
   /** The description of a Channel */
@@ -1113,6 +1712,8 @@ export type Channel = {
   language?: Maybe<Scalars['String']>
   /** Current member-owner of the channel (if owned by a member) */
   ownerMember?: Maybe<Membership>
+  /** % of channel balance that the creator devotes to revenue shares */
+  revenueShareRatioPercent?: Maybe<Scalars['Int']>
   /** Channel's reward account, storing the income from the nft sales and channel payouts. */
   rewardAccount: Scalars['String']
   /** The title of the Channel */
@@ -1149,12 +1750,12 @@ export type ChannelFollow = {
   __typename?: 'ChannelFollow'
   /** ID of the channel being followed (the channel may no longer exist) */
   channelId: Scalars['String']
-  /** Unique identifier of the follow, also serves as a 'cancelToken' that needs to be provided when unfollowing the channel (to prevent abuse / inconsistent state) */
+  /** Unique identifier of the follow */
   id: Scalars['String']
-  /** IP address of the follower */
-  ip: Scalars['String']
   /** Time when user started following the channel */
   timestamp: Scalars['DateTime']
+  /** User that followed the channel */
+  user: User
 }
 
 export type ChannelFollowEdge = {
@@ -1168,17 +1769,19 @@ export enum ChannelFollowOrderByInput {
   ChannelIdDesc = 'channelId_DESC',
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
-  IpAsc = 'ip_ASC',
-  IpDesc = 'ip_DESC',
   TimestampAsc = 'timestamp_ASC',
   TimestampDesc = 'timestamp_DESC',
+  UserIdAsc = 'user_id_ASC',
+  UserIdDesc = 'user_id_DESC',
+  UserIsRootAsc = 'user_isRoot_ASC',
+  UserIsRootDesc = 'user_isRoot_DESC',
 }
 
 export type ChannelFollowResult = {
   __typename?: 'ChannelFollowResult'
   added: Scalars['Boolean']
-  cancelToken: Scalars['String']
   channelId: Scalars['String']
+  followId: Scalars['String']
   follows: Scalars['Int']
 }
 
@@ -1219,23 +1822,6 @@ export type ChannelFollowWhereInput = {
   id_not_in?: InputMaybe<Array<Scalars['String']>>
   id_not_startsWith?: InputMaybe<Scalars['String']>
   id_startsWith?: InputMaybe<Scalars['String']>
-  ip_contains?: InputMaybe<Scalars['String']>
-  ip_containsInsensitive?: InputMaybe<Scalars['String']>
-  ip_endsWith?: InputMaybe<Scalars['String']>
-  ip_eq?: InputMaybe<Scalars['String']>
-  ip_gt?: InputMaybe<Scalars['String']>
-  ip_gte?: InputMaybe<Scalars['String']>
-  ip_in?: InputMaybe<Array<Scalars['String']>>
-  ip_isNull?: InputMaybe<Scalars['Boolean']>
-  ip_lt?: InputMaybe<Scalars['String']>
-  ip_lte?: InputMaybe<Scalars['String']>
-  ip_not_contains?: InputMaybe<Scalars['String']>
-  ip_not_containsInsensitive?: InputMaybe<Scalars['String']>
-  ip_not_endsWith?: InputMaybe<Scalars['String']>
-  ip_not_eq?: InputMaybe<Scalars['String']>
-  ip_not_in?: InputMaybe<Array<Scalars['String']>>
-  ip_not_startsWith?: InputMaybe<Scalars['String']>
-  ip_startsWith?: InputMaybe<Scalars['String']>
   timestamp_eq?: InputMaybe<Scalars['DateTime']>
   timestamp_gt?: InputMaybe<Scalars['DateTime']>
   timestamp_gte?: InputMaybe<Scalars['DateTime']>
@@ -1245,6 +1831,8 @@ export type ChannelFollowWhereInput = {
   timestamp_lte?: InputMaybe<Scalars['DateTime']>
   timestamp_not_eq?: InputMaybe<Scalars['DateTime']>
   timestamp_not_in?: InputMaybe<Array<Scalars['DateTime']>>
+  user?: InputMaybe<UserWhereInput>
+  user_isNull?: InputMaybe<Scalars['Boolean']>
 }
 
 export type ChannelFollowsConnection = {
@@ -1312,6 +1900,8 @@ export enum ChannelOrderByInput {
   CreatedAtDesc = 'createdAt_DESC',
   CreatedInBlockAsc = 'createdInBlock_ASC',
   CreatedInBlockDesc = 'createdInBlock_DESC',
+  CreatorTokenIdAsc = 'creatorToken_id_ASC',
+  CreatorTokenIdDesc = 'creatorToken_id_DESC',
   CumulativeRewardClaimedAsc = 'cumulativeRewardClaimed_ASC',
   CumulativeRewardClaimedDesc = 'cumulativeRewardClaimed_DESC',
   DescriptionAsc = 'description_ASC',
@@ -1362,6 +1952,8 @@ export enum ChannelOrderByInput {
   OwnerMemberIdDesc = 'ownerMember_id_DESC',
   OwnerMemberTotalChannelsCreatedAsc = 'ownerMember_totalChannelsCreated_ASC',
   OwnerMemberTotalChannelsCreatedDesc = 'ownerMember_totalChannelsCreated_DESC',
+  RevenueShareRatioPercentAsc = 'revenueShareRatioPercent_ASC',
+  RevenueShareRatioPercentDesc = 'revenueShareRatioPercent_DESC',
   RewardAccountAsc = 'rewardAccount_ASC',
   RewardAccountDesc = 'rewardAccount_DESC',
   TitleAsc = 'title_ASC',
@@ -1408,7 +2000,6 @@ export type ChannelReportInfo = {
   createdAt: Scalars['DateTime']
   id: Scalars['String']
   rationale: Scalars['String']
-  reporterIp: Scalars['String']
 }
 
 export type ChannelRewardClaimedAndWithdrawnEventData = {
@@ -1475,6 +2066,8 @@ export type ChannelWhereInput = {
   createdInBlock_lte?: InputMaybe<Scalars['Int']>
   createdInBlock_not_eq?: InputMaybe<Scalars['Int']>
   createdInBlock_not_in?: InputMaybe<Array<Scalars['Int']>>
+  creatorToken?: InputMaybe<TokenChannelWhereInput>
+  creatorToken_isNull?: InputMaybe<Scalars['Boolean']>
   cumulativeRewardClaimed_eq?: InputMaybe<Scalars['BigInt']>
   cumulativeRewardClaimed_gt?: InputMaybe<Scalars['BigInt']>
   cumulativeRewardClaimed_gte?: InputMaybe<Scalars['BigInt']>
@@ -1557,6 +2150,15 @@ export type ChannelWhereInput = {
   language_startsWith?: InputMaybe<Scalars['String']>
   ownerMember?: InputMaybe<MembershipWhereInput>
   ownerMember_isNull?: InputMaybe<Scalars['Boolean']>
+  revenueShareRatioPercent_eq?: InputMaybe<Scalars['Int']>
+  revenueShareRatioPercent_gt?: InputMaybe<Scalars['Int']>
+  revenueShareRatioPercent_gte?: InputMaybe<Scalars['Int']>
+  revenueShareRatioPercent_in?: InputMaybe<Array<Scalars['Int']>>
+  revenueShareRatioPercent_isNull?: InputMaybe<Scalars['Boolean']>
+  revenueShareRatioPercent_lt?: InputMaybe<Scalars['Int']>
+  revenueShareRatioPercent_lte?: InputMaybe<Scalars['Int']>
+  revenueShareRatioPercent_not_eq?: InputMaybe<Scalars['Int']>
+  revenueShareRatioPercent_not_in?: InputMaybe<Array<Scalars['Int']>>
   rewardAccount_contains?: InputMaybe<Scalars['String']>
   rewardAccount_containsInsensitive?: InputMaybe<Scalars['String']>
   rewardAccount_endsWith?: InputMaybe<Scalars['String']>
@@ -2095,6 +2697,390 @@ export enum Continent {
   Na = 'NA',
   Oc = 'OC',
   Sa = 'SA',
+}
+
+export type CreatorToken = {
+  __typename?: 'CreatorToken'
+  /** holders having some amount of this token */
+  accounts: Array<TokenAccount>
+  /** number of accounts to avoid aggregate COUNT */
+  accountsNum: Scalars['Int']
+  /** amm curves issued for this token */
+  ammCurves: Array<AmmCurve>
+  /** creator annual revenue permill (minted) */
+  annualCreatorReward: Scalars['Int']
+  /** avatar object (profile picture) */
+  avatar?: Maybe<TokenAvatar>
+  /** list of benefits for the token */
+  benefits: Array<Benefit>
+  /** channel from which the token is issued uniqueness guaranteed by runtime */
+  channel?: Maybe<TokenChannel>
+  /** date at which this token was created */
+  createdAt: Scalars['DateTime']
+  /** current amm sale if ongoing */
+  currentAmmSale?: Maybe<AmmCurve>
+  /** current revenue share if ongoing */
+  currentRenvenueShare?: Maybe<RevenueShare>
+  /** current sale if ongoing */
+  currentSale?: Maybe<Sale>
+  /** whether it has been deissued or not */
+  deissued: Scalars['Boolean']
+  /** about information displayed under the presentation video */
+  description?: Maybe<Scalars['String']>
+  /** runtime token identifier */
+  id: Scalars['String']
+  /** access status invite only vs anyone */
+  isInviteOnly: Scalars['Boolean']
+  /** number of revenue shares issued */
+  numberOfRevenueShareActivations: Scalars['Int']
+  /** number of vested transfer completed */
+  numberOfVestedTransferIssued: Scalars['Int']
+  /** revenue share ratio between creator and holder */
+  revenueShareRatioPermill: Scalars['Int']
+  /** revenue shares issued for this token */
+  revenueShares: Array<RevenueShare>
+  /** sales issued for this token */
+  sales: Array<Sale>
+  /** status sale / market / idle */
+  status: TokenStatus
+  /** symbol for the token uniqueness guaranteed by runtime */
+  symbol?: Maybe<Scalars['String']>
+  /** total supply */
+  totalSupply: Scalars['BigInt']
+  /** video for the token presentation page */
+  trailerVideo?: Maybe<TrailerVideo>
+  /** link for creator to member interested in joining the whitelist */
+  whitelistApplicantLink?: Maybe<Scalars['String']>
+  /** note from creator to member interested in joining the whitelist */
+  whitelistApplicantNote?: Maybe<Scalars['String']>
+}
+
+export type CreatorTokenAccountsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<TokenAccountOrderByInput>>
+  where?: InputMaybe<TokenAccountWhereInput>
+}
+
+export type CreatorTokenAmmCurvesArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<AmmCurveOrderByInput>>
+  where?: InputMaybe<AmmCurveWhereInput>
+}
+
+export type CreatorTokenBenefitsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<BenefitOrderByInput>>
+  where?: InputMaybe<BenefitWhereInput>
+}
+
+export type CreatorTokenRevenueSharesArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<RevenueShareOrderByInput>>
+  where?: InputMaybe<RevenueShareWhereInput>
+}
+
+export type CreatorTokenSalesArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<SaleOrderByInput>>
+  where?: InputMaybe<SaleWhereInput>
+}
+
+export type CreatorTokenEdge = {
+  __typename?: 'CreatorTokenEdge'
+  cursor: Scalars['String']
+  node: CreatorToken
+}
+
+export enum CreatorTokenOrderByInput {
+  AccountsNumAsc = 'accountsNum_ASC',
+  AccountsNumDesc = 'accountsNum_DESC',
+  AnnualCreatorRewardAsc = 'annualCreatorReward_ASC',
+  AnnualCreatorRewardDesc = 'annualCreatorReward_DESC',
+  AvatarAvatarUriAsc = 'avatar_avatarUri_ASC',
+  AvatarAvatarUriDesc = 'avatar_avatarUri_DESC',
+  AvatarIsTypeOfAsc = 'avatar_isTypeOf_ASC',
+  AvatarIsTypeOfDesc = 'avatar_isTypeOf_DESC',
+  ChannelIdAsc = 'channel_id_ASC',
+  ChannelIdDesc = 'channel_id_DESC',
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  CurrentAmmSaleAmmInitPriceAsc = 'currentAmmSale_ammInitPrice_ASC',
+  CurrentAmmSaleAmmInitPriceDesc = 'currentAmmSale_ammInitPrice_DESC',
+  CurrentAmmSaleAmmSlopeParameterAsc = 'currentAmmSale_ammSlopeParameter_ASC',
+  CurrentAmmSaleAmmSlopeParameterDesc = 'currentAmmSale_ammSlopeParameter_DESC',
+  CurrentAmmSaleBurnedByAmmAsc = 'currentAmmSale_burnedByAmm_ASC',
+  CurrentAmmSaleBurnedByAmmDesc = 'currentAmmSale_burnedByAmm_DESC',
+  CurrentAmmSaleFinalizedAsc = 'currentAmmSale_finalized_ASC',
+  CurrentAmmSaleFinalizedDesc = 'currentAmmSale_finalized_DESC',
+  CurrentAmmSaleIdAsc = 'currentAmmSale_id_ASC',
+  CurrentAmmSaleIdDesc = 'currentAmmSale_id_DESC',
+  CurrentAmmSaleMintedByAmmAsc = 'currentAmmSale_mintedByAmm_ASC',
+  CurrentAmmSaleMintedByAmmDesc = 'currentAmmSale_mintedByAmm_DESC',
+  CurrentRenvenueShareAllocationAsc = 'currentRenvenueShare_allocation_ASC',
+  CurrentRenvenueShareAllocationDesc = 'currentRenvenueShare_allocation_DESC',
+  CurrentRenvenueShareClaimedAsc = 'currentRenvenueShare_claimed_ASC',
+  CurrentRenvenueShareClaimedDesc = 'currentRenvenueShare_claimed_DESC',
+  CurrentRenvenueShareCreatedInAsc = 'currentRenvenueShare_createdIn_ASC',
+  CurrentRenvenueShareCreatedInDesc = 'currentRenvenueShare_createdIn_DESC',
+  CurrentRenvenueShareEndsAtAsc = 'currentRenvenueShare_endsAt_ASC',
+  CurrentRenvenueShareEndsAtDesc = 'currentRenvenueShare_endsAt_DESC',
+  CurrentRenvenueShareFinalizedAsc = 'currentRenvenueShare_finalized_ASC',
+  CurrentRenvenueShareFinalizedDesc = 'currentRenvenueShare_finalized_DESC',
+  CurrentRenvenueShareIdAsc = 'currentRenvenueShare_id_ASC',
+  CurrentRenvenueShareIdDesc = 'currentRenvenueShare_id_DESC',
+  CurrentRenvenueShareParticipantsNumAsc = 'currentRenvenueShare_participantsNum_ASC',
+  CurrentRenvenueShareParticipantsNumDesc = 'currentRenvenueShare_participantsNum_DESC',
+  CurrentRenvenueShareStartingAtAsc = 'currentRenvenueShare_startingAt_ASC',
+  CurrentRenvenueShareStartingAtDesc = 'currentRenvenueShare_startingAt_DESC',
+  CurrentSaleCreatedInAsc = 'currentSale_createdIn_ASC',
+  CurrentSaleCreatedInDesc = 'currentSale_createdIn_DESC',
+  CurrentSaleEndsAtAsc = 'currentSale_endsAt_ASC',
+  CurrentSaleEndsAtDesc = 'currentSale_endsAt_DESC',
+  CurrentSaleFinalizedAsc = 'currentSale_finalized_ASC',
+  CurrentSaleFinalizedDesc = 'currentSale_finalized_DESC',
+  CurrentSaleIdAsc = 'currentSale_id_ASC',
+  CurrentSaleIdDesc = 'currentSale_id_DESC',
+  CurrentSaleMaxAmountPerMemberAsc = 'currentSale_maxAmountPerMember_ASC',
+  CurrentSaleMaxAmountPerMemberDesc = 'currentSale_maxAmountPerMember_DESC',
+  CurrentSalePricePerUnitAsc = 'currentSale_pricePerUnit_ASC',
+  CurrentSalePricePerUnitDesc = 'currentSale_pricePerUnit_DESC',
+  CurrentSaleStartBlockAsc = 'currentSale_startBlock_ASC',
+  CurrentSaleStartBlockDesc = 'currentSale_startBlock_DESC',
+  CurrentSaleTermsAndConditionsAsc = 'currentSale_termsAndConditions_ASC',
+  CurrentSaleTermsAndConditionsDesc = 'currentSale_termsAndConditions_DESC',
+  CurrentSaleTokenSaleAllocationAsc = 'currentSale_tokenSaleAllocation_ASC',
+  CurrentSaleTokenSaleAllocationDesc = 'currentSale_tokenSaleAllocation_DESC',
+  CurrentSaleTokensSoldAsc = 'currentSale_tokensSold_ASC',
+  CurrentSaleTokensSoldDesc = 'currentSale_tokensSold_DESC',
+  DeissuedAsc = 'deissued_ASC',
+  DeissuedDesc = 'deissued_DESC',
+  DescriptionAsc = 'description_ASC',
+  DescriptionDesc = 'description_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  IsInviteOnlyAsc = 'isInviteOnly_ASC',
+  IsInviteOnlyDesc = 'isInviteOnly_DESC',
+  NumberOfRevenueShareActivationsAsc = 'numberOfRevenueShareActivations_ASC',
+  NumberOfRevenueShareActivationsDesc = 'numberOfRevenueShareActivations_DESC',
+  NumberOfVestedTransferIssuedAsc = 'numberOfVestedTransferIssued_ASC',
+  NumberOfVestedTransferIssuedDesc = 'numberOfVestedTransferIssued_DESC',
+  RevenueShareRatioPermillAsc = 'revenueShareRatioPermill_ASC',
+  RevenueShareRatioPermillDesc = 'revenueShareRatioPermill_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SymbolAsc = 'symbol_ASC',
+  SymbolDesc = 'symbol_DESC',
+  TotalSupplyAsc = 'totalSupply_ASC',
+  TotalSupplyDesc = 'totalSupply_DESC',
+  TrailerVideoIdAsc = 'trailerVideo_id_ASC',
+  TrailerVideoIdDesc = 'trailerVideo_id_DESC',
+  WhitelistApplicantLinkAsc = 'whitelistApplicantLink_ASC',
+  WhitelistApplicantLinkDesc = 'whitelistApplicantLink_DESC',
+  WhitelistApplicantNoteAsc = 'whitelistApplicantNote_ASC',
+  WhitelistApplicantNoteDesc = 'whitelistApplicantNote_DESC',
+}
+
+export type CreatorTokenWhereInput = {
+  AND?: InputMaybe<Array<CreatorTokenWhereInput>>
+  OR?: InputMaybe<Array<CreatorTokenWhereInput>>
+  accountsNum_eq?: InputMaybe<Scalars['Int']>
+  accountsNum_gt?: InputMaybe<Scalars['Int']>
+  accountsNum_gte?: InputMaybe<Scalars['Int']>
+  accountsNum_in?: InputMaybe<Array<Scalars['Int']>>
+  accountsNum_isNull?: InputMaybe<Scalars['Boolean']>
+  accountsNum_lt?: InputMaybe<Scalars['Int']>
+  accountsNum_lte?: InputMaybe<Scalars['Int']>
+  accountsNum_not_eq?: InputMaybe<Scalars['Int']>
+  accountsNum_not_in?: InputMaybe<Array<Scalars['Int']>>
+  accounts_every?: InputMaybe<TokenAccountWhereInput>
+  accounts_none?: InputMaybe<TokenAccountWhereInput>
+  accounts_some?: InputMaybe<TokenAccountWhereInput>
+  ammCurves_every?: InputMaybe<AmmCurveWhereInput>
+  ammCurves_none?: InputMaybe<AmmCurveWhereInput>
+  ammCurves_some?: InputMaybe<AmmCurveWhereInput>
+  annualCreatorReward_eq?: InputMaybe<Scalars['Int']>
+  annualCreatorReward_gt?: InputMaybe<Scalars['Int']>
+  annualCreatorReward_gte?: InputMaybe<Scalars['Int']>
+  annualCreatorReward_in?: InputMaybe<Array<Scalars['Int']>>
+  annualCreatorReward_isNull?: InputMaybe<Scalars['Boolean']>
+  annualCreatorReward_lt?: InputMaybe<Scalars['Int']>
+  annualCreatorReward_lte?: InputMaybe<Scalars['Int']>
+  annualCreatorReward_not_eq?: InputMaybe<Scalars['Int']>
+  annualCreatorReward_not_in?: InputMaybe<Array<Scalars['Int']>>
+  avatar?: InputMaybe<TokenAvatarWhereInput>
+  avatar_isNull?: InputMaybe<Scalars['Boolean']>
+  benefits_every?: InputMaybe<BenefitWhereInput>
+  benefits_none?: InputMaybe<BenefitWhereInput>
+  benefits_some?: InputMaybe<BenefitWhereInput>
+  channel?: InputMaybe<TokenChannelWhereInput>
+  channel_isNull?: InputMaybe<Scalars['Boolean']>
+  createdAt_eq?: InputMaybe<Scalars['DateTime']>
+  createdAt_gt?: InputMaybe<Scalars['DateTime']>
+  createdAt_gte?: InputMaybe<Scalars['DateTime']>
+  createdAt_in?: InputMaybe<Array<Scalars['DateTime']>>
+  createdAt_isNull?: InputMaybe<Scalars['Boolean']>
+  createdAt_lt?: InputMaybe<Scalars['DateTime']>
+  createdAt_lte?: InputMaybe<Scalars['DateTime']>
+  createdAt_not_eq?: InputMaybe<Scalars['DateTime']>
+  createdAt_not_in?: InputMaybe<Array<Scalars['DateTime']>>
+  currentAmmSale?: InputMaybe<AmmCurveWhereInput>
+  currentAmmSale_isNull?: InputMaybe<Scalars['Boolean']>
+  currentRenvenueShare?: InputMaybe<RevenueShareWhereInput>
+  currentRenvenueShare_isNull?: InputMaybe<Scalars['Boolean']>
+  currentSale?: InputMaybe<SaleWhereInput>
+  currentSale_isNull?: InputMaybe<Scalars['Boolean']>
+  deissued_eq?: InputMaybe<Scalars['Boolean']>
+  deissued_isNull?: InputMaybe<Scalars['Boolean']>
+  deissued_not_eq?: InputMaybe<Scalars['Boolean']>
+  description_contains?: InputMaybe<Scalars['String']>
+  description_containsInsensitive?: InputMaybe<Scalars['String']>
+  description_endsWith?: InputMaybe<Scalars['String']>
+  description_eq?: InputMaybe<Scalars['String']>
+  description_gt?: InputMaybe<Scalars['String']>
+  description_gte?: InputMaybe<Scalars['String']>
+  description_in?: InputMaybe<Array<Scalars['String']>>
+  description_isNull?: InputMaybe<Scalars['Boolean']>
+  description_lt?: InputMaybe<Scalars['String']>
+  description_lte?: InputMaybe<Scalars['String']>
+  description_not_contains?: InputMaybe<Scalars['String']>
+  description_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  description_not_endsWith?: InputMaybe<Scalars['String']>
+  description_not_eq?: InputMaybe<Scalars['String']>
+  description_not_in?: InputMaybe<Array<Scalars['String']>>
+  description_not_startsWith?: InputMaybe<Scalars['String']>
+  description_startsWith?: InputMaybe<Scalars['String']>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  isInviteOnly_eq?: InputMaybe<Scalars['Boolean']>
+  isInviteOnly_isNull?: InputMaybe<Scalars['Boolean']>
+  isInviteOnly_not_eq?: InputMaybe<Scalars['Boolean']>
+  numberOfRevenueShareActivations_eq?: InputMaybe<Scalars['Int']>
+  numberOfRevenueShareActivations_gt?: InputMaybe<Scalars['Int']>
+  numberOfRevenueShareActivations_gte?: InputMaybe<Scalars['Int']>
+  numberOfRevenueShareActivations_in?: InputMaybe<Array<Scalars['Int']>>
+  numberOfRevenueShareActivations_isNull?: InputMaybe<Scalars['Boolean']>
+  numberOfRevenueShareActivations_lt?: InputMaybe<Scalars['Int']>
+  numberOfRevenueShareActivations_lte?: InputMaybe<Scalars['Int']>
+  numberOfRevenueShareActivations_not_eq?: InputMaybe<Scalars['Int']>
+  numberOfRevenueShareActivations_not_in?: InputMaybe<Array<Scalars['Int']>>
+  numberOfVestedTransferIssued_eq?: InputMaybe<Scalars['Int']>
+  numberOfVestedTransferIssued_gt?: InputMaybe<Scalars['Int']>
+  numberOfVestedTransferIssued_gte?: InputMaybe<Scalars['Int']>
+  numberOfVestedTransferIssued_in?: InputMaybe<Array<Scalars['Int']>>
+  numberOfVestedTransferIssued_isNull?: InputMaybe<Scalars['Boolean']>
+  numberOfVestedTransferIssued_lt?: InputMaybe<Scalars['Int']>
+  numberOfVestedTransferIssued_lte?: InputMaybe<Scalars['Int']>
+  numberOfVestedTransferIssued_not_eq?: InputMaybe<Scalars['Int']>
+  numberOfVestedTransferIssued_not_in?: InputMaybe<Array<Scalars['Int']>>
+  revenueShareRatioPermill_eq?: InputMaybe<Scalars['Int']>
+  revenueShareRatioPermill_gt?: InputMaybe<Scalars['Int']>
+  revenueShareRatioPermill_gte?: InputMaybe<Scalars['Int']>
+  revenueShareRatioPermill_in?: InputMaybe<Array<Scalars['Int']>>
+  revenueShareRatioPermill_isNull?: InputMaybe<Scalars['Boolean']>
+  revenueShareRatioPermill_lt?: InputMaybe<Scalars['Int']>
+  revenueShareRatioPermill_lte?: InputMaybe<Scalars['Int']>
+  revenueShareRatioPermill_not_eq?: InputMaybe<Scalars['Int']>
+  revenueShareRatioPermill_not_in?: InputMaybe<Array<Scalars['Int']>>
+  revenueShares_every?: InputMaybe<RevenueShareWhereInput>
+  revenueShares_none?: InputMaybe<RevenueShareWhereInput>
+  revenueShares_some?: InputMaybe<RevenueShareWhereInput>
+  sales_every?: InputMaybe<SaleWhereInput>
+  sales_none?: InputMaybe<SaleWhereInput>
+  sales_some?: InputMaybe<SaleWhereInput>
+  status_eq?: InputMaybe<TokenStatus>
+  status_in?: InputMaybe<Array<TokenStatus>>
+  status_isNull?: InputMaybe<Scalars['Boolean']>
+  status_not_eq?: InputMaybe<TokenStatus>
+  status_not_in?: InputMaybe<Array<TokenStatus>>
+  symbol_contains?: InputMaybe<Scalars['String']>
+  symbol_containsInsensitive?: InputMaybe<Scalars['String']>
+  symbol_endsWith?: InputMaybe<Scalars['String']>
+  symbol_eq?: InputMaybe<Scalars['String']>
+  symbol_gt?: InputMaybe<Scalars['String']>
+  symbol_gte?: InputMaybe<Scalars['String']>
+  symbol_in?: InputMaybe<Array<Scalars['String']>>
+  symbol_isNull?: InputMaybe<Scalars['Boolean']>
+  symbol_lt?: InputMaybe<Scalars['String']>
+  symbol_lte?: InputMaybe<Scalars['String']>
+  symbol_not_contains?: InputMaybe<Scalars['String']>
+  symbol_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  symbol_not_endsWith?: InputMaybe<Scalars['String']>
+  symbol_not_eq?: InputMaybe<Scalars['String']>
+  symbol_not_in?: InputMaybe<Array<Scalars['String']>>
+  symbol_not_startsWith?: InputMaybe<Scalars['String']>
+  symbol_startsWith?: InputMaybe<Scalars['String']>
+  totalSupply_eq?: InputMaybe<Scalars['BigInt']>
+  totalSupply_gt?: InputMaybe<Scalars['BigInt']>
+  totalSupply_gte?: InputMaybe<Scalars['BigInt']>
+  totalSupply_in?: InputMaybe<Array<Scalars['BigInt']>>
+  totalSupply_isNull?: InputMaybe<Scalars['Boolean']>
+  totalSupply_lt?: InputMaybe<Scalars['BigInt']>
+  totalSupply_lte?: InputMaybe<Scalars['BigInt']>
+  totalSupply_not_eq?: InputMaybe<Scalars['BigInt']>
+  totalSupply_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  trailerVideo?: InputMaybe<TrailerVideoWhereInput>
+  trailerVideo_isNull?: InputMaybe<Scalars['Boolean']>
+  whitelistApplicantLink_contains?: InputMaybe<Scalars['String']>
+  whitelistApplicantLink_containsInsensitive?: InputMaybe<Scalars['String']>
+  whitelistApplicantLink_endsWith?: InputMaybe<Scalars['String']>
+  whitelistApplicantLink_eq?: InputMaybe<Scalars['String']>
+  whitelistApplicantLink_gt?: InputMaybe<Scalars['String']>
+  whitelistApplicantLink_gte?: InputMaybe<Scalars['String']>
+  whitelistApplicantLink_in?: InputMaybe<Array<Scalars['String']>>
+  whitelistApplicantLink_isNull?: InputMaybe<Scalars['Boolean']>
+  whitelistApplicantLink_lt?: InputMaybe<Scalars['String']>
+  whitelistApplicantLink_lte?: InputMaybe<Scalars['String']>
+  whitelistApplicantLink_not_contains?: InputMaybe<Scalars['String']>
+  whitelistApplicantLink_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  whitelistApplicantLink_not_endsWith?: InputMaybe<Scalars['String']>
+  whitelistApplicantLink_not_eq?: InputMaybe<Scalars['String']>
+  whitelistApplicantLink_not_in?: InputMaybe<Array<Scalars['String']>>
+  whitelistApplicantLink_not_startsWith?: InputMaybe<Scalars['String']>
+  whitelistApplicantLink_startsWith?: InputMaybe<Scalars['String']>
+  whitelistApplicantNote_contains?: InputMaybe<Scalars['String']>
+  whitelistApplicantNote_containsInsensitive?: InputMaybe<Scalars['String']>
+  whitelistApplicantNote_endsWith?: InputMaybe<Scalars['String']>
+  whitelistApplicantNote_eq?: InputMaybe<Scalars['String']>
+  whitelistApplicantNote_gt?: InputMaybe<Scalars['String']>
+  whitelistApplicantNote_gte?: InputMaybe<Scalars['String']>
+  whitelistApplicantNote_in?: InputMaybe<Array<Scalars['String']>>
+  whitelistApplicantNote_isNull?: InputMaybe<Scalars['Boolean']>
+  whitelistApplicantNote_lt?: InputMaybe<Scalars['String']>
+  whitelistApplicantNote_lte?: InputMaybe<Scalars['String']>
+  whitelistApplicantNote_not_contains?: InputMaybe<Scalars['String']>
+  whitelistApplicantNote_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  whitelistApplicantNote_not_endsWith?: InputMaybe<Scalars['String']>
+  whitelistApplicantNote_not_eq?: InputMaybe<Scalars['String']>
+  whitelistApplicantNote_not_in?: InputMaybe<Array<Scalars['String']>>
+  whitelistApplicantNote_not_startsWith?: InputMaybe<Scalars['String']>
+  whitelistApplicantNote_startsWith?: InputMaybe<Scalars['String']>
+}
+
+export type CreatorTokensConnection = {
+  __typename?: 'CreatorTokensConnection'
+  edges: Array<CreatorTokenEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
 }
 
 export type Curator = {
@@ -2811,6 +3797,110 @@ export type DistributionBucketsConnection = {
   totalCount: Scalars['Int']
 }
 
+export type EncryptionArtifacts = {
+  __typename?: 'EncryptionArtifacts'
+  /** The account the encryption artifacts are associated with */
+  account: Account
+  /** The IV used to encrypt the wallet seed with user credentials */
+  cipherIv: Scalars['String']
+  /** Wallet seed encrypted with user credentials */
+  encryptedSeed: Scalars['String']
+  /** ID / lookupKey */
+  id: Scalars['String']
+}
+
+export type EncryptionArtifactsConnection = {
+  __typename?: 'EncryptionArtifactsConnection'
+  edges: Array<EncryptionArtifactsEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type EncryptionArtifactsEdge = {
+  __typename?: 'EncryptionArtifactsEdge'
+  cursor: Scalars['String']
+  node: EncryptionArtifacts
+}
+
+export enum EncryptionArtifactsOrderByInput {
+  AccountEmailAsc = 'account_email_ASC',
+  AccountEmailDesc = 'account_email_DESC',
+  AccountIdAsc = 'account_id_ASC',
+  AccountIdDesc = 'account_id_DESC',
+  AccountIsBlockedAsc = 'account_isBlocked_ASC',
+  AccountIsBlockedDesc = 'account_isBlocked_DESC',
+  AccountIsEmailConfirmedAsc = 'account_isEmailConfirmed_ASC',
+  AccountIsEmailConfirmedDesc = 'account_isEmailConfirmed_DESC',
+  AccountJoystreamAccountAsc = 'account_joystreamAccount_ASC',
+  AccountJoystreamAccountDesc = 'account_joystreamAccount_DESC',
+  AccountRegisteredAtAsc = 'account_registeredAt_ASC',
+  AccountRegisteredAtDesc = 'account_registeredAt_DESC',
+  CipherIvAsc = 'cipherIv_ASC',
+  CipherIvDesc = 'cipherIv_DESC',
+  EncryptedSeedAsc = 'encryptedSeed_ASC',
+  EncryptedSeedDesc = 'encryptedSeed_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+}
+
+export type EncryptionArtifactsWhereInput = {
+  AND?: InputMaybe<Array<EncryptionArtifactsWhereInput>>
+  OR?: InputMaybe<Array<EncryptionArtifactsWhereInput>>
+  account?: InputMaybe<AccountWhereInput>
+  account_isNull?: InputMaybe<Scalars['Boolean']>
+  cipherIv_contains?: InputMaybe<Scalars['String']>
+  cipherIv_containsInsensitive?: InputMaybe<Scalars['String']>
+  cipherIv_endsWith?: InputMaybe<Scalars['String']>
+  cipherIv_eq?: InputMaybe<Scalars['String']>
+  cipherIv_gt?: InputMaybe<Scalars['String']>
+  cipherIv_gte?: InputMaybe<Scalars['String']>
+  cipherIv_in?: InputMaybe<Array<Scalars['String']>>
+  cipherIv_isNull?: InputMaybe<Scalars['Boolean']>
+  cipherIv_lt?: InputMaybe<Scalars['String']>
+  cipherIv_lte?: InputMaybe<Scalars['String']>
+  cipherIv_not_contains?: InputMaybe<Scalars['String']>
+  cipherIv_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  cipherIv_not_endsWith?: InputMaybe<Scalars['String']>
+  cipherIv_not_eq?: InputMaybe<Scalars['String']>
+  cipherIv_not_in?: InputMaybe<Array<Scalars['String']>>
+  cipherIv_not_startsWith?: InputMaybe<Scalars['String']>
+  cipherIv_startsWith?: InputMaybe<Scalars['String']>
+  encryptedSeed_contains?: InputMaybe<Scalars['String']>
+  encryptedSeed_containsInsensitive?: InputMaybe<Scalars['String']>
+  encryptedSeed_endsWith?: InputMaybe<Scalars['String']>
+  encryptedSeed_eq?: InputMaybe<Scalars['String']>
+  encryptedSeed_gt?: InputMaybe<Scalars['String']>
+  encryptedSeed_gte?: InputMaybe<Scalars['String']>
+  encryptedSeed_in?: InputMaybe<Array<Scalars['String']>>
+  encryptedSeed_isNull?: InputMaybe<Scalars['Boolean']>
+  encryptedSeed_lt?: InputMaybe<Scalars['String']>
+  encryptedSeed_lte?: InputMaybe<Scalars['String']>
+  encryptedSeed_not_contains?: InputMaybe<Scalars['String']>
+  encryptedSeed_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  encryptedSeed_not_endsWith?: InputMaybe<Scalars['String']>
+  encryptedSeed_not_eq?: InputMaybe<Scalars['String']>
+  encryptedSeed_not_in?: InputMaybe<Array<Scalars['String']>>
+  encryptedSeed_not_startsWith?: InputMaybe<Scalars['String']>
+  encryptedSeed_startsWith?: InputMaybe<Scalars['String']>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+}
+
 export type EnglishAuctionSettledEventData = {
   __typename?: 'EnglishAuctionSettledEventData'
   /** NFT owner before the english auction was settled */
@@ -2835,7 +3925,6 @@ export type EntityReportInfo = {
   createdAt: Scalars['DateTime']
   id: Scalars['String']
   rationale: Scalars['String']
-  reporterIp: Scalars['String']
 }
 
 export type Event = {
@@ -3219,6 +4308,92 @@ export type FeaturedVideoInput = {
   videoId: Scalars['String']
 }
 
+export type FollowedChannel = {
+  __typename?: 'FollowedChannel'
+  channelId: Scalars['String']
+  timestamp: Scalars['String']
+}
+
+export type GatewayConfig = {
+  __typename?: 'GatewayConfig'
+  /** Unique name of the configuration variable */
+  id: Scalars['String']
+  /** Last time the configuration variable was updated */
+  updatedAt: Scalars['DateTime']
+  /** Value of the configuration variable serialized to a string */
+  value: Scalars['String']
+}
+
+export type GatewayConfigEdge = {
+  __typename?: 'GatewayConfigEdge'
+  cursor: Scalars['String']
+  node: GatewayConfig
+}
+
+export enum GatewayConfigOrderByInput {
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC',
+  ValueAsc = 'value_ASC',
+  ValueDesc = 'value_DESC',
+}
+
+export type GatewayConfigWhereInput = {
+  AND?: InputMaybe<Array<GatewayConfigWhereInput>>
+  OR?: InputMaybe<Array<GatewayConfigWhereInput>>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  updatedAt_eq?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']>
+  updatedAt_in?: InputMaybe<Array<Scalars['DateTime']>>
+  updatedAt_isNull?: InputMaybe<Scalars['Boolean']>
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']>
+  updatedAt_not_eq?: InputMaybe<Scalars['DateTime']>
+  updatedAt_not_in?: InputMaybe<Array<Scalars['DateTime']>>
+  value_contains?: InputMaybe<Scalars['String']>
+  value_containsInsensitive?: InputMaybe<Scalars['String']>
+  value_endsWith?: InputMaybe<Scalars['String']>
+  value_eq?: InputMaybe<Scalars['String']>
+  value_gt?: InputMaybe<Scalars['String']>
+  value_gte?: InputMaybe<Scalars['String']>
+  value_in?: InputMaybe<Array<Scalars['String']>>
+  value_isNull?: InputMaybe<Scalars['Boolean']>
+  value_lt?: InputMaybe<Scalars['String']>
+  value_lte?: InputMaybe<Scalars['String']>
+  value_not_contains?: InputMaybe<Scalars['String']>
+  value_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  value_not_endsWith?: InputMaybe<Scalars['String']>
+  value_not_eq?: InputMaybe<Scalars['String']>
+  value_not_in?: InputMaybe<Array<Scalars['String']>>
+  value_not_startsWith?: InputMaybe<Scalars['String']>
+  value_startsWith?: InputMaybe<Scalars['String']>
+}
+
+export type GatewayConfigsConnection = {
+  __typename?: 'GatewayConfigsConnection'
+  edges: Array<GatewayConfigEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
 export type GeneratedSignature = {
   __typename?: 'GeneratedSignature'
   /** App signature converted to hexadecimal string. */
@@ -3269,6 +4444,16 @@ export type GeographicalAreaSubdivistion = {
   __typename?: 'GeographicalAreaSubdivistion'
   /** ISO 3166-2 subdivision code */
   subdivisionCode?: Maybe<Scalars['String']>
+}
+
+export type InitialIssuanceVestingSource = {
+  __typename?: 'InitialIssuanceVestingSource'
+  phantom?: Maybe<Scalars['Int']>
+}
+
+export type IssuerTransferVestingSource = {
+  __typename?: 'IssuerTransferVestingSource'
+  phantom?: Maybe<Scalars['Int']>
 }
 
 export type KillSwitch = {
@@ -3512,6 +4697,8 @@ export type Membership = {
   id: Scalars['String']
   /** Member's metadata */
   metadata?: Maybe<MemberMetadata>
+  /** token accounts */
+  tokenAccounts: Array<TokenAccount>
   /** Number of channels ever created by this member */
   totalChannelsCreated: Scalars['Int']
   /** Auctions in which is this user whitelisted to participate */
@@ -3532,6 +4719,14 @@ export type MembershipChannelsArgs = {
   offset?: InputMaybe<Scalars['Int']>
   orderBy?: InputMaybe<Array<ChannelOrderByInput>>
   where?: InputMaybe<ChannelWhereInput>
+}
+
+/** Stored information about a registered user */
+export type MembershipTokenAccountsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<TokenAccountOrderByInput>>
+  where?: InputMaybe<TokenAccountWhereInput>
 }
 
 /** Stored information about a registered user */
@@ -3638,6 +4833,9 @@ export type MembershipWhereInput = {
   id_startsWith?: InputMaybe<Scalars['String']>
   metadata?: InputMaybe<MemberMetadataWhereInput>
   metadata_isNull?: InputMaybe<Scalars['Boolean']>
+  tokenAccounts_every?: InputMaybe<TokenAccountWhereInput>
+  tokenAccounts_none?: InputMaybe<TokenAccountWhereInput>
+  tokenAccounts_some?: InputMaybe<TokenAccountWhereInput>
   totalChannelsCreated_eq?: InputMaybe<Scalars['Int']>
   totalChannelsCreated_gt?: InputMaybe<Scalars['Int']>
   totalChannelsCreated_gte?: InputMaybe<Scalars['Int']>
@@ -3779,7 +4977,7 @@ export type Mutation = {
   setKillSwitch: KillSwitch
   setSupportedCategories: SetSupportedCategoriesResult
   setVideoHero: SetVideoHeroResult
-  setVideoViewPerIpTimeLimit: VideoViewPerIpTimeLimit
+  setVideoViewPerUserTimeLimit: VideoViewPerUserTimeLimit
   setVideoWeights: VideoWeights
   signAppActionCommitment: GeneratedSignature
   unfollowChannel: ChannelUnfollowResult
@@ -3844,7 +5042,7 @@ export type MutationSetVideoHeroArgs = {
   videoId: Scalars['String']
 }
 
-export type MutationSetVideoViewPerIpTimeLimitArgs = {
+export type MutationSetVideoViewPerUserTimeLimitArgs = {
   limitInSeconds: Scalars['Int']
 }
 
@@ -3867,7 +5065,6 @@ export type MutationSignAppActionCommitmentArgs = {
 
 export type MutationUnfollowChannelArgs = {
   channelId: Scalars['String']
-  token: Scalars['String']
 }
 
 export type NftActivitiesConnection = {
@@ -3963,21 +5160,20 @@ export type NftFeaturedRequstInfo = {
   id: Scalars['String']
   nftId: Scalars['String']
   rationale: Scalars['String']
-  reporterIp: Scalars['String']
 }
 
 export type NftFeaturingRequest = {
   __typename?: 'NftFeaturingRequest'
   /** Unique identifier of the request */
   id: Scalars['String']
-  /** IP address of the reporter */
-  ip: Scalars['String']
   /** ID of the nft that is being requested to be featured by operator */
   nftId: Scalars['String']
   /** Rationale behind the request */
   rationale: Scalars['String']
   /** Time of the request */
   timestamp: Scalars['DateTime']
+  /** User that requested the nft to be featured */
+  user: User
 }
 
 export type NftFeaturingRequestEdge = {
@@ -3989,14 +5185,16 @@ export type NftFeaturingRequestEdge = {
 export enum NftFeaturingRequestOrderByInput {
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
-  IpAsc = 'ip_ASC',
-  IpDesc = 'ip_DESC',
   NftIdAsc = 'nftId_ASC',
   NftIdDesc = 'nftId_DESC',
   RationaleAsc = 'rationale_ASC',
   RationaleDesc = 'rationale_DESC',
   TimestampAsc = 'timestamp_ASC',
   TimestampDesc = 'timestamp_DESC',
+  UserIdAsc = 'user_id_ASC',
+  UserIdDesc = 'user_id_DESC',
+  UserIsRootAsc = 'user_isRoot_ASC',
+  UserIsRootDesc = 'user_isRoot_DESC',
 }
 
 export type NftFeaturingRequestWhereInput = {
@@ -4019,23 +5217,6 @@ export type NftFeaturingRequestWhereInput = {
   id_not_in?: InputMaybe<Array<Scalars['String']>>
   id_not_startsWith?: InputMaybe<Scalars['String']>
   id_startsWith?: InputMaybe<Scalars['String']>
-  ip_contains?: InputMaybe<Scalars['String']>
-  ip_containsInsensitive?: InputMaybe<Scalars['String']>
-  ip_endsWith?: InputMaybe<Scalars['String']>
-  ip_eq?: InputMaybe<Scalars['String']>
-  ip_gt?: InputMaybe<Scalars['String']>
-  ip_gte?: InputMaybe<Scalars['String']>
-  ip_in?: InputMaybe<Array<Scalars['String']>>
-  ip_isNull?: InputMaybe<Scalars['Boolean']>
-  ip_lt?: InputMaybe<Scalars['String']>
-  ip_lte?: InputMaybe<Scalars['String']>
-  ip_not_contains?: InputMaybe<Scalars['String']>
-  ip_not_containsInsensitive?: InputMaybe<Scalars['String']>
-  ip_not_endsWith?: InputMaybe<Scalars['String']>
-  ip_not_eq?: InputMaybe<Scalars['String']>
-  ip_not_in?: InputMaybe<Array<Scalars['String']>>
-  ip_not_startsWith?: InputMaybe<Scalars['String']>
-  ip_startsWith?: InputMaybe<Scalars['String']>
   nftId_contains?: InputMaybe<Scalars['String']>
   nftId_containsInsensitive?: InputMaybe<Scalars['String']>
   nftId_endsWith?: InputMaybe<Scalars['String']>
@@ -4079,6 +5260,8 @@ export type NftFeaturingRequestWhereInput = {
   timestamp_lte?: InputMaybe<Scalars['DateTime']>
   timestamp_not_eq?: InputMaybe<Scalars['DateTime']>
   timestamp_not_in?: InputMaybe<Array<Scalars['DateTime']>>
+  user?: InputMaybe<UserWhereInput>
+  user_isNull?: InputMaybe<Scalars['Boolean']>
 }
 
 export type NftFeaturingRequestsConnection = {
@@ -4612,6 +5795,22 @@ export type ProcessorState = {
 
 export type Query = {
   __typename?: 'Query'
+  accountById?: Maybe<Account>
+  /** @deprecated Use accountById */
+  accountByUniqueInput?: Maybe<Account>
+  accountData: AccountData
+  accounts: Array<Account>
+  accountsConnection: AccountsConnection
+  ammCurveById?: Maybe<AmmCurve>
+  /** @deprecated Use ammCurveById */
+  ammCurveByUniqueInput?: Maybe<AmmCurve>
+  ammCurves: Array<AmmCurve>
+  ammCurvesConnection: AmmCurvesConnection
+  ammTransactionById?: Maybe<AmmTransaction>
+  /** @deprecated Use ammTransactionById */
+  ammTransactionByUniqueInput?: Maybe<AmmTransaction>
+  ammTransactions: Array<AmmTransaction>
+  ammTransactionsConnection: AmmTransactionsConnection
   appById?: Maybe<App>
   /** @deprecated Use appById */
   appByUniqueInput?: Maybe<App>
@@ -4632,6 +5831,11 @@ export type Query = {
   bannedMemberByUniqueInput?: Maybe<BannedMember>
   bannedMembers: Array<BannedMember>
   bannedMembersConnection: BannedMembersConnection
+  benefitById?: Maybe<Benefit>
+  /** @deprecated Use benefitById */
+  benefitByUniqueInput?: Maybe<Benefit>
+  benefits: Array<Benefit>
+  benefitsConnection: BenefitsConnection
   bidById?: Maybe<Bid>
   /** @deprecated Use bidById */
   bidByUniqueInput?: Maybe<Bid>
@@ -4658,6 +5862,11 @@ export type Query = {
   commentReactionsConnection: CommentReactionsConnection
   comments: Array<Comment>
   commentsConnection: CommentsConnection
+  creatorTokenById?: Maybe<CreatorToken>
+  /** @deprecated Use creatorTokenById */
+  creatorTokenByUniqueInput?: Maybe<CreatorToken>
+  creatorTokens: Array<CreatorToken>
+  creatorTokensConnection: CreatorTokensConnection
   curatorById?: Maybe<Curator>
   /** @deprecated Use curatorById */
   curatorByUniqueInput?: Maybe<Curator>
@@ -4698,6 +5907,11 @@ export type Query = {
   distributionBucketOperatorsConnection: DistributionBucketOperatorsConnection
   distributionBuckets: Array<DistributionBucket>
   distributionBucketsConnection: DistributionBucketsConnection
+  encryptionArtifacts: Array<EncryptionArtifacts>
+  encryptionArtifactsById?: Maybe<EncryptionArtifacts>
+  /** @deprecated Use encryptionArtifactsById */
+  encryptionArtifactsByUniqueInput?: Maybe<EncryptionArtifacts>
+  encryptionArtifactsConnection: EncryptionArtifactsConnection
   endingAuctionsNfts: Array<OwnedNft>
   eventById?: Maybe<Event>
   /** @deprecated Use eventById */
@@ -4706,8 +5920,12 @@ export type Query = {
   eventsConnection: EventsConnection
   extendedChannels: Array<ExtendedChannel>
   extendedVideoCategories: Array<ExtendedVideoCategory>
+  gatewayConfigById?: Maybe<GatewayConfig>
+  /** @deprecated Use gatewayConfigById */
+  gatewayConfigByUniqueInput?: Maybe<GatewayConfig>
+  gatewayConfigs: Array<GatewayConfig>
+  gatewayConfigsConnection: GatewayConfigsConnection
   getKillSwitch: KillSwitch
-  getVideoViewPerIpTimeLimit: VideoViewPerIpTimeLimit
   licenseById?: Maybe<License>
   /** @deprecated Use licenseById */
   licenseByUniqueInput?: Maybe<License>
@@ -4755,6 +5973,36 @@ export type Query = {
   reportByUniqueInput?: Maybe<Report>
   reports: Array<Report>
   reportsConnection: ReportsConnection
+  revenueShareById?: Maybe<RevenueShare>
+  /** @deprecated Use revenueShareById */
+  revenueShareByUniqueInput?: Maybe<RevenueShare>
+  revenueShareParticipationById?: Maybe<RevenueShareParticipation>
+  /** @deprecated Use revenueShareParticipationById */
+  revenueShareParticipationByUniqueInput?: Maybe<RevenueShareParticipation>
+  revenueShareParticipations: Array<RevenueShareParticipation>
+  revenueShareParticipationsConnection: RevenueShareParticipationsConnection
+  revenueShares: Array<RevenueShare>
+  revenueSharesConnection: RevenueSharesConnection
+  saleById?: Maybe<Sale>
+  /** @deprecated Use saleById */
+  saleByUniqueInput?: Maybe<Sale>
+  saleTransactionById?: Maybe<SaleTransaction>
+  /** @deprecated Use saleTransactionById */
+  saleTransactionByUniqueInput?: Maybe<SaleTransaction>
+  saleTransactions: Array<SaleTransaction>
+  saleTransactionsConnection: SaleTransactionsConnection
+  sales: Array<Sale>
+  salesConnection: SalesConnection
+  sessionById?: Maybe<Session>
+  /** @deprecated Use sessionById */
+  sessionByUniqueInput?: Maybe<Session>
+  sessionEncryptionArtifacts: Array<SessionEncryptionArtifacts>
+  sessionEncryptionArtifactsById?: Maybe<SessionEncryptionArtifacts>
+  /** @deprecated Use sessionEncryptionArtifactsById */
+  sessionEncryptionArtifactsByUniqueInput?: Maybe<SessionEncryptionArtifacts>
+  sessionEncryptionArtifactsConnection: SessionEncryptionArtifactsConnection
+  sessions: Array<Session>
+  sessionsConnection: SessionsConnection
   squidStatus?: Maybe<SquidStatus>
   storageBagById?: Maybe<StorageBag>
   /** @deprecated Use storageBagById */
@@ -4781,7 +6029,47 @@ export type Query = {
   storageDataObjectByUniqueInput?: Maybe<StorageDataObject>
   storageDataObjects: Array<StorageDataObject>
   storageDataObjectsConnection: StorageDataObjectsConnection
+  tokenAccountById?: Maybe<TokenAccount>
+  /** @deprecated Use tokenAccountById */
+  tokenAccountByUniqueInput?: Maybe<TokenAccount>
+  tokenAccounts: Array<TokenAccount>
+  tokenAccountsConnection: TokenAccountsConnection
+  tokenById?: Maybe<Token>
+  /** @deprecated Use tokenById */
+  tokenByUniqueInput?: Maybe<Token>
+  tokenChannelById?: Maybe<TokenChannel>
+  /** @deprecated Use tokenChannelById */
+  tokenChannelByUniqueInput?: Maybe<TokenChannel>
+  tokenChannels: Array<TokenChannel>
+  tokenChannelsConnection: TokenChannelsConnection
+  tokens: Array<Token>
+  tokensConnection: TokensConnection
   topSellingChannels: Array<TopSellingChannelsResult>
+  trailerVideoById?: Maybe<TrailerVideo>
+  /** @deprecated Use trailerVideoById */
+  trailerVideoByUniqueInput?: Maybe<TrailerVideo>
+  trailerVideos: Array<TrailerVideo>
+  trailerVideosConnection: TrailerVideosConnection
+  userById?: Maybe<User>
+  /** @deprecated Use userById */
+  userByUniqueInput?: Maybe<User>
+  users: Array<User>
+  usersConnection: UsersConnection
+  vestedAccountById?: Maybe<VestedAccount>
+  /** @deprecated Use vestedAccountById */
+  vestedAccountByUniqueInput?: Maybe<VestedAccount>
+  vestedAccounts: Array<VestedAccount>
+  vestedAccountsConnection: VestedAccountsConnection
+  vestedSaleById?: Maybe<VestedSale>
+  /** @deprecated Use vestedSaleById */
+  vestedSaleByUniqueInput?: Maybe<VestedSale>
+  vestedSales: Array<VestedSale>
+  vestedSalesConnection: VestedSalesConnection
+  vestingScheduleById?: Maybe<VestingSchedule>
+  /** @deprecated Use vestingScheduleById */
+  vestingScheduleByUniqueInput?: Maybe<VestingSchedule>
+  vestingSchedules: Array<VestingSchedule>
+  vestingSchedulesConnection: VestingSchedulesConnection
   videoById?: Maybe<Video>
   /** @deprecated Use videoById */
   videoByUniqueInput?: Maybe<Video>
@@ -4828,6 +6116,72 @@ export type Query = {
   videoViewEventsConnection: VideoViewEventsConnection
   videos: Array<Video>
   videosConnection: VideosConnection
+}
+
+export type QueryAccountByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryAccountByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryAccountsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<AccountOrderByInput>>
+  where?: InputMaybe<AccountWhereInput>
+}
+
+export type QueryAccountsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<AccountOrderByInput>
+  where?: InputMaybe<AccountWhereInput>
+}
+
+export type QueryAmmCurveByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryAmmCurveByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryAmmCurvesArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<AmmCurveOrderByInput>>
+  where?: InputMaybe<AmmCurveWhereInput>
+}
+
+export type QueryAmmCurvesConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<AmmCurveOrderByInput>
+  where?: InputMaybe<AmmCurveWhereInput>
+}
+
+export type QueryAmmTransactionByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryAmmTransactionByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryAmmTransactionsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<AmmTransactionOrderByInput>>
+  where?: InputMaybe<AmmTransactionWhereInput>
+}
+
+export type QueryAmmTransactionsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<AmmTransactionOrderByInput>
+  where?: InputMaybe<AmmTransactionWhereInput>
 }
 
 export type QueryAppByIdArgs = {
@@ -4916,6 +6270,28 @@ export type QueryBannedMembersConnectionArgs = {
   first?: InputMaybe<Scalars['Int']>
   orderBy: Array<BannedMemberOrderByInput>
   where?: InputMaybe<BannedMemberWhereInput>
+}
+
+export type QueryBenefitByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryBenefitByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryBenefitsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<BenefitOrderByInput>>
+  where?: InputMaybe<BenefitWhereInput>
+}
+
+export type QueryBenefitsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<BenefitOrderByInput>
+  where?: InputMaybe<BenefitWhereInput>
 }
 
 export type QueryBidByIdArgs = {
@@ -5032,6 +6408,28 @@ export type QueryCommentsConnectionArgs = {
   first?: InputMaybe<Scalars['Int']>
   orderBy: Array<CommentOrderByInput>
   where?: InputMaybe<CommentWhereInput>
+}
+
+export type QueryCreatorTokenByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryCreatorTokenByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryCreatorTokensArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<CreatorTokenOrderByInput>>
+  where?: InputMaybe<CreatorTokenWhereInput>
+}
+
+export type QueryCreatorTokensConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<CreatorTokenOrderByInput>
+  where?: InputMaybe<CreatorTokenWhereInput>
 }
 
 export type QueryCuratorByIdArgs = {
@@ -5210,6 +6608,28 @@ export type QueryDistributionBucketsConnectionArgs = {
   where?: InputMaybe<DistributionBucketWhereInput>
 }
 
+export type QueryEncryptionArtifactsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<EncryptionArtifactsOrderByInput>>
+  where?: InputMaybe<EncryptionArtifactsWhereInput>
+}
+
+export type QueryEncryptionArtifactsByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryEncryptionArtifactsByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryEncryptionArtifactsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<EncryptionArtifactsOrderByInput>
+  where?: InputMaybe<EncryptionArtifactsWhereInput>
+}
+
 export type QueryEndingAuctionsNftsArgs = {
   limit?: InputMaybe<Scalars['Int']>
   offset?: InputMaybe<Scalars['Int']>
@@ -5242,6 +6662,28 @@ export type QueryExtendedChannelsArgs = {
   limit?: InputMaybe<Scalars['Int']>
   orderBy?: InputMaybe<Array<ChannelOrderByInput>>
   where?: InputMaybe<ExtendedChannelWhereInput>
+}
+
+export type QueryGatewayConfigByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryGatewayConfigByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryGatewayConfigsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<GatewayConfigOrderByInput>>
+  where?: InputMaybe<GatewayConfigWhereInput>
+}
+
+export type QueryGatewayConfigsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<GatewayConfigOrderByInput>
+  where?: InputMaybe<GatewayConfigWhereInput>
 }
 
 export type QueryLicenseByIdArgs = {
@@ -5458,6 +6900,138 @@ export type QueryReportsConnectionArgs = {
   where?: InputMaybe<ReportWhereInput>
 }
 
+export type QueryRevenueShareByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryRevenueShareByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryRevenueShareParticipationByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryRevenueShareParticipationByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryRevenueShareParticipationsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<RevenueShareParticipationOrderByInput>>
+  where?: InputMaybe<RevenueShareParticipationWhereInput>
+}
+
+export type QueryRevenueShareParticipationsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<RevenueShareParticipationOrderByInput>
+  where?: InputMaybe<RevenueShareParticipationWhereInput>
+}
+
+export type QueryRevenueSharesArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<RevenueShareOrderByInput>>
+  where?: InputMaybe<RevenueShareWhereInput>
+}
+
+export type QueryRevenueSharesConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<RevenueShareOrderByInput>
+  where?: InputMaybe<RevenueShareWhereInput>
+}
+
+export type QuerySaleByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QuerySaleByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QuerySaleTransactionByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QuerySaleTransactionByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QuerySaleTransactionsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<SaleTransactionOrderByInput>>
+  where?: InputMaybe<SaleTransactionWhereInput>
+}
+
+export type QuerySaleTransactionsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<SaleTransactionOrderByInput>
+  where?: InputMaybe<SaleTransactionWhereInput>
+}
+
+export type QuerySalesArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<SaleOrderByInput>>
+  where?: InputMaybe<SaleWhereInput>
+}
+
+export type QuerySalesConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<SaleOrderByInput>
+  where?: InputMaybe<SaleWhereInput>
+}
+
+export type QuerySessionByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QuerySessionByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QuerySessionEncryptionArtifactsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<SessionEncryptionArtifactsOrderByInput>>
+  where?: InputMaybe<SessionEncryptionArtifactsWhereInput>
+}
+
+export type QuerySessionEncryptionArtifactsByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QuerySessionEncryptionArtifactsByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QuerySessionEncryptionArtifactsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<SessionEncryptionArtifactsOrderByInput>
+  where?: InputMaybe<SessionEncryptionArtifactsWhereInput>
+}
+
+export type QuerySessionsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<SessionOrderByInput>>
+  where?: InputMaybe<SessionWhereInput>
+}
+
+export type QuerySessionsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<SessionOrderByInput>
+  where?: InputMaybe<SessionWhereInput>
+}
+
 export type QueryStorageBagByIdArgs = {
   id: Scalars['String']
 }
@@ -5568,10 +7142,186 @@ export type QueryStorageDataObjectsConnectionArgs = {
   where?: InputMaybe<StorageDataObjectWhereInput>
 }
 
+export type QueryTokenAccountByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryTokenAccountByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryTokenAccountsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<TokenAccountOrderByInput>>
+  where?: InputMaybe<TokenAccountWhereInput>
+}
+
+export type QueryTokenAccountsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<TokenAccountOrderByInput>
+  where?: InputMaybe<TokenAccountWhereInput>
+}
+
+export type QueryTokenByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryTokenByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryTokenChannelByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryTokenChannelByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryTokenChannelsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<TokenChannelOrderByInput>>
+  where?: InputMaybe<TokenChannelWhereInput>
+}
+
+export type QueryTokenChannelsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<TokenChannelOrderByInput>
+  where?: InputMaybe<TokenChannelWhereInput>
+}
+
+export type QueryTokensArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<TokenOrderByInput>>
+  where?: InputMaybe<TokenWhereInput>
+}
+
+export type QueryTokensConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<TokenOrderByInput>
+  where?: InputMaybe<TokenWhereInput>
+}
+
 export type QueryTopSellingChannelsArgs = {
   limit: Scalars['Int']
   periodDays: Scalars['Int']
   where?: InputMaybe<ExtendedChannelWhereInput>
+}
+
+export type QueryTrailerVideoByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryTrailerVideoByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryTrailerVideosArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<TrailerVideoOrderByInput>>
+  where?: InputMaybe<TrailerVideoWhereInput>
+}
+
+export type QueryTrailerVideosConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<TrailerVideoOrderByInput>
+  where?: InputMaybe<TrailerVideoWhereInput>
+}
+
+export type QueryUserByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryUserByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryUsersArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<UserOrderByInput>>
+  where?: InputMaybe<UserWhereInput>
+}
+
+export type QueryUsersConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<UserOrderByInput>
+  where?: InputMaybe<UserWhereInput>
+}
+
+export type QueryVestedAccountByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryVestedAccountByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryVestedAccountsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<VestedAccountOrderByInput>>
+  where?: InputMaybe<VestedAccountWhereInput>
+}
+
+export type QueryVestedAccountsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<VestedAccountOrderByInput>
+  where?: InputMaybe<VestedAccountWhereInput>
+}
+
+export type QueryVestedSaleByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryVestedSaleByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryVestedSalesArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<VestedSaleOrderByInput>>
+  where?: InputMaybe<VestedSaleWhereInput>
+}
+
+export type QueryVestedSalesConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<VestedSaleOrderByInput>
+  where?: InputMaybe<VestedSaleWhereInput>
+}
+
+export type QueryVestingScheduleByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryVestingScheduleByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryVestingSchedulesArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<VestingScheduleOrderByInput>>
+  where?: InputMaybe<VestingScheduleWhereInput>
+}
+
+export type QueryVestingSchedulesConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<VestingScheduleOrderByInput>
+  where?: InputMaybe<VestingScheduleWhereInput>
 }
 
 export type QueryVideoByIdArgs = {
@@ -5778,12 +7528,12 @@ export type Report = {
   channelId?: Maybe<Scalars['String']>
   /** Unique identifier of the report */
   id: Scalars['String']
-  /** IP address of the reporter */
-  ip: Scalars['String']
   /** Rationale behind the report */
   rationale: Scalars['String']
   /** Time of the report */
   timestamp: Scalars['DateTime']
+  /** User that reported the channel / video */
+  user: User
   /** If it's a video report: ID of the video being reported (the video may no longer exist) */
   videoId?: Maybe<Scalars['String']>
 }
@@ -5799,12 +7549,14 @@ export enum ReportOrderByInput {
   ChannelIdDesc = 'channelId_DESC',
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
-  IpAsc = 'ip_ASC',
-  IpDesc = 'ip_DESC',
   RationaleAsc = 'rationale_ASC',
   RationaleDesc = 'rationale_DESC',
   TimestampAsc = 'timestamp_ASC',
   TimestampDesc = 'timestamp_DESC',
+  UserIdAsc = 'user_id_ASC',
+  UserIdDesc = 'user_id_DESC',
+  UserIsRootAsc = 'user_isRoot_ASC',
+  UserIsRootDesc = 'user_isRoot_DESC',
   VideoIdAsc = 'videoId_ASC',
   VideoIdDesc = 'videoId_DESC',
 }
@@ -5846,23 +7598,6 @@ export type ReportWhereInput = {
   id_not_in?: InputMaybe<Array<Scalars['String']>>
   id_not_startsWith?: InputMaybe<Scalars['String']>
   id_startsWith?: InputMaybe<Scalars['String']>
-  ip_contains?: InputMaybe<Scalars['String']>
-  ip_containsInsensitive?: InputMaybe<Scalars['String']>
-  ip_endsWith?: InputMaybe<Scalars['String']>
-  ip_eq?: InputMaybe<Scalars['String']>
-  ip_gt?: InputMaybe<Scalars['String']>
-  ip_gte?: InputMaybe<Scalars['String']>
-  ip_in?: InputMaybe<Array<Scalars['String']>>
-  ip_isNull?: InputMaybe<Scalars['Boolean']>
-  ip_lt?: InputMaybe<Scalars['String']>
-  ip_lte?: InputMaybe<Scalars['String']>
-  ip_not_contains?: InputMaybe<Scalars['String']>
-  ip_not_containsInsensitive?: InputMaybe<Scalars['String']>
-  ip_not_endsWith?: InputMaybe<Scalars['String']>
-  ip_not_eq?: InputMaybe<Scalars['String']>
-  ip_not_in?: InputMaybe<Array<Scalars['String']>>
-  ip_not_startsWith?: InputMaybe<Scalars['String']>
-  ip_startsWith?: InputMaybe<Scalars['String']>
   rationale_contains?: InputMaybe<Scalars['String']>
   rationale_containsInsensitive?: InputMaybe<Scalars['String']>
   rationale_endsWith?: InputMaybe<Scalars['String']>
@@ -5889,6 +7624,8 @@ export type ReportWhereInput = {
   timestamp_lte?: InputMaybe<Scalars['DateTime']>
   timestamp_not_eq?: InputMaybe<Scalars['DateTime']>
   timestamp_not_in?: InputMaybe<Array<Scalars['DateTime']>>
+  user?: InputMaybe<UserWhereInput>
+  user_isNull?: InputMaybe<Scalars['Boolean']>
   videoId_contains?: InputMaybe<Scalars['String']>
   videoId_containsInsensitive?: InputMaybe<Scalars['String']>
   videoId_endsWith?: InputMaybe<Scalars['String']>
@@ -5918,6 +7655,951 @@ export type ReportsConnection = {
 export type RestoreContentResult = {
   __typename?: 'RestoreContentResult'
   numberOfEntitiesAffected: Scalars['Int']
+}
+
+export type RevenueShare = {
+  __typename?: 'RevenueShare'
+  /** total number of HAPI allocated */
+  allocation: Scalars['BigInt']
+  /** amounts claimed so far in order to avoid SUM aggregations */
+  claimed: Scalars['BigInt']
+  /** block at which the revenue share was issued */
+  createdIn: Scalars['Int']
+  /** ending block */
+  endsAt: Scalars['Int']
+  /** finalized */
+  finalized: Scalars['Boolean']
+  /** counter */
+  id: Scalars['String']
+  /** Number of participants (stackers) */
+  participantsNum: Scalars['Int']
+  /** list of participating members */
+  stakers: Array<RevenueShareParticipation>
+  /** starting block */
+  startingAt: Scalars['Int']
+  /** token which this revenue share is for */
+  token: CreatorToken
+}
+
+export type RevenueShareStakersArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<RevenueShareParticipationOrderByInput>>
+  where?: InputMaybe<RevenueShareParticipationWhereInput>
+}
+
+export type RevenueShareEdge = {
+  __typename?: 'RevenueShareEdge'
+  cursor: Scalars['String']
+  node: RevenueShare
+}
+
+export enum RevenueShareOrderByInput {
+  AllocationAsc = 'allocation_ASC',
+  AllocationDesc = 'allocation_DESC',
+  ClaimedAsc = 'claimed_ASC',
+  ClaimedDesc = 'claimed_DESC',
+  CreatedInAsc = 'createdIn_ASC',
+  CreatedInDesc = 'createdIn_DESC',
+  EndsAtAsc = 'endsAt_ASC',
+  EndsAtDesc = 'endsAt_DESC',
+  FinalizedAsc = 'finalized_ASC',
+  FinalizedDesc = 'finalized_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  ParticipantsNumAsc = 'participantsNum_ASC',
+  ParticipantsNumDesc = 'participantsNum_DESC',
+  StartingAtAsc = 'startingAt_ASC',
+  StartingAtDesc = 'startingAt_DESC',
+  TokenAccountsNumAsc = 'token_accountsNum_ASC',
+  TokenAccountsNumDesc = 'token_accountsNum_DESC',
+  TokenAnnualCreatorRewardAsc = 'token_annualCreatorReward_ASC',
+  TokenAnnualCreatorRewardDesc = 'token_annualCreatorReward_DESC',
+  TokenCreatedAtAsc = 'token_createdAt_ASC',
+  TokenCreatedAtDesc = 'token_createdAt_DESC',
+  TokenDeissuedAsc = 'token_deissued_ASC',
+  TokenDeissuedDesc = 'token_deissued_DESC',
+  TokenDescriptionAsc = 'token_description_ASC',
+  TokenDescriptionDesc = 'token_description_DESC',
+  TokenIdAsc = 'token_id_ASC',
+  TokenIdDesc = 'token_id_DESC',
+  TokenIsInviteOnlyAsc = 'token_isInviteOnly_ASC',
+  TokenIsInviteOnlyDesc = 'token_isInviteOnly_DESC',
+  TokenNumberOfRevenueShareActivationsAsc = 'token_numberOfRevenueShareActivations_ASC',
+  TokenNumberOfRevenueShareActivationsDesc = 'token_numberOfRevenueShareActivations_DESC',
+  TokenNumberOfVestedTransferIssuedAsc = 'token_numberOfVestedTransferIssued_ASC',
+  TokenNumberOfVestedTransferIssuedDesc = 'token_numberOfVestedTransferIssued_DESC',
+  TokenRevenueShareRatioPermillAsc = 'token_revenueShareRatioPermill_ASC',
+  TokenRevenueShareRatioPermillDesc = 'token_revenueShareRatioPermill_DESC',
+  TokenStatusAsc = 'token_status_ASC',
+  TokenStatusDesc = 'token_status_DESC',
+  TokenSymbolAsc = 'token_symbol_ASC',
+  TokenSymbolDesc = 'token_symbol_DESC',
+  TokenTotalSupplyAsc = 'token_totalSupply_ASC',
+  TokenTotalSupplyDesc = 'token_totalSupply_DESC',
+  TokenWhitelistApplicantLinkAsc = 'token_whitelistApplicantLink_ASC',
+  TokenWhitelistApplicantLinkDesc = 'token_whitelistApplicantLink_DESC',
+  TokenWhitelistApplicantNoteAsc = 'token_whitelistApplicantNote_ASC',
+  TokenWhitelistApplicantNoteDesc = 'token_whitelistApplicantNote_DESC',
+}
+
+export type RevenueShareParticipation = {
+  __typename?: 'RevenueShareParticipation'
+  /** participating Account */
+  account: TokenAccount
+  /** block */
+  createdIn: Scalars['Int']
+  /** eearned joy amounts */
+  earnings: Scalars['BigInt']
+  /** counter */
+  id: Scalars['String']
+  /** revenue share the account is participating in */
+  revenueShare: RevenueShare
+  /** staked amount */
+  stakedAmount: Scalars['BigInt']
+}
+
+export type RevenueShareParticipationEdge = {
+  __typename?: 'RevenueShareParticipationEdge'
+  cursor: Scalars['String']
+  node: RevenueShareParticipation
+}
+
+export enum RevenueShareParticipationOrderByInput {
+  AccountDeletedAsc = 'account_deleted_ASC',
+  AccountDeletedDesc = 'account_deleted_DESC',
+  AccountIdAsc = 'account_id_ASC',
+  AccountIdDesc = 'account_id_DESC',
+  AccountStakedAmountAsc = 'account_stakedAmount_ASC',
+  AccountStakedAmountDesc = 'account_stakedAmount_DESC',
+  AccountTotalAmountAsc = 'account_totalAmount_ASC',
+  AccountTotalAmountDesc = 'account_totalAmount_DESC',
+  CreatedInAsc = 'createdIn_ASC',
+  CreatedInDesc = 'createdIn_DESC',
+  EarningsAsc = 'earnings_ASC',
+  EarningsDesc = 'earnings_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  RevenueShareAllocationAsc = 'revenueShare_allocation_ASC',
+  RevenueShareAllocationDesc = 'revenueShare_allocation_DESC',
+  RevenueShareClaimedAsc = 'revenueShare_claimed_ASC',
+  RevenueShareClaimedDesc = 'revenueShare_claimed_DESC',
+  RevenueShareCreatedInAsc = 'revenueShare_createdIn_ASC',
+  RevenueShareCreatedInDesc = 'revenueShare_createdIn_DESC',
+  RevenueShareEndsAtAsc = 'revenueShare_endsAt_ASC',
+  RevenueShareEndsAtDesc = 'revenueShare_endsAt_DESC',
+  RevenueShareFinalizedAsc = 'revenueShare_finalized_ASC',
+  RevenueShareFinalizedDesc = 'revenueShare_finalized_DESC',
+  RevenueShareIdAsc = 'revenueShare_id_ASC',
+  RevenueShareIdDesc = 'revenueShare_id_DESC',
+  RevenueShareParticipantsNumAsc = 'revenueShare_participantsNum_ASC',
+  RevenueShareParticipantsNumDesc = 'revenueShare_participantsNum_DESC',
+  RevenueShareStartingAtAsc = 'revenueShare_startingAt_ASC',
+  RevenueShareStartingAtDesc = 'revenueShare_startingAt_DESC',
+  StakedAmountAsc = 'stakedAmount_ASC',
+  StakedAmountDesc = 'stakedAmount_DESC',
+}
+
+export type RevenueShareParticipationWhereInput = {
+  AND?: InputMaybe<Array<RevenueShareParticipationWhereInput>>
+  OR?: InputMaybe<Array<RevenueShareParticipationWhereInput>>
+  account?: InputMaybe<TokenAccountWhereInput>
+  account_isNull?: InputMaybe<Scalars['Boolean']>
+  createdIn_eq?: InputMaybe<Scalars['Int']>
+  createdIn_gt?: InputMaybe<Scalars['Int']>
+  createdIn_gte?: InputMaybe<Scalars['Int']>
+  createdIn_in?: InputMaybe<Array<Scalars['Int']>>
+  createdIn_isNull?: InputMaybe<Scalars['Boolean']>
+  createdIn_lt?: InputMaybe<Scalars['Int']>
+  createdIn_lte?: InputMaybe<Scalars['Int']>
+  createdIn_not_eq?: InputMaybe<Scalars['Int']>
+  createdIn_not_in?: InputMaybe<Array<Scalars['Int']>>
+  earnings_eq?: InputMaybe<Scalars['BigInt']>
+  earnings_gt?: InputMaybe<Scalars['BigInt']>
+  earnings_gte?: InputMaybe<Scalars['BigInt']>
+  earnings_in?: InputMaybe<Array<Scalars['BigInt']>>
+  earnings_isNull?: InputMaybe<Scalars['Boolean']>
+  earnings_lt?: InputMaybe<Scalars['BigInt']>
+  earnings_lte?: InputMaybe<Scalars['BigInt']>
+  earnings_not_eq?: InputMaybe<Scalars['BigInt']>
+  earnings_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  revenueShare?: InputMaybe<RevenueShareWhereInput>
+  revenueShare_isNull?: InputMaybe<Scalars['Boolean']>
+  stakedAmount_eq?: InputMaybe<Scalars['BigInt']>
+  stakedAmount_gt?: InputMaybe<Scalars['BigInt']>
+  stakedAmount_gte?: InputMaybe<Scalars['BigInt']>
+  stakedAmount_in?: InputMaybe<Array<Scalars['BigInt']>>
+  stakedAmount_isNull?: InputMaybe<Scalars['Boolean']>
+  stakedAmount_lt?: InputMaybe<Scalars['BigInt']>
+  stakedAmount_lte?: InputMaybe<Scalars['BigInt']>
+  stakedAmount_not_eq?: InputMaybe<Scalars['BigInt']>
+  stakedAmount_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+}
+
+export type RevenueShareParticipationsConnection = {
+  __typename?: 'RevenueShareParticipationsConnection'
+  edges: Array<RevenueShareParticipationEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type RevenueShareWhereInput = {
+  AND?: InputMaybe<Array<RevenueShareWhereInput>>
+  OR?: InputMaybe<Array<RevenueShareWhereInput>>
+  allocation_eq?: InputMaybe<Scalars['BigInt']>
+  allocation_gt?: InputMaybe<Scalars['BigInt']>
+  allocation_gte?: InputMaybe<Scalars['BigInt']>
+  allocation_in?: InputMaybe<Array<Scalars['BigInt']>>
+  allocation_isNull?: InputMaybe<Scalars['Boolean']>
+  allocation_lt?: InputMaybe<Scalars['BigInt']>
+  allocation_lte?: InputMaybe<Scalars['BigInt']>
+  allocation_not_eq?: InputMaybe<Scalars['BigInt']>
+  allocation_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  claimed_eq?: InputMaybe<Scalars['BigInt']>
+  claimed_gt?: InputMaybe<Scalars['BigInt']>
+  claimed_gte?: InputMaybe<Scalars['BigInt']>
+  claimed_in?: InputMaybe<Array<Scalars['BigInt']>>
+  claimed_isNull?: InputMaybe<Scalars['Boolean']>
+  claimed_lt?: InputMaybe<Scalars['BigInt']>
+  claimed_lte?: InputMaybe<Scalars['BigInt']>
+  claimed_not_eq?: InputMaybe<Scalars['BigInt']>
+  claimed_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  createdIn_eq?: InputMaybe<Scalars['Int']>
+  createdIn_gt?: InputMaybe<Scalars['Int']>
+  createdIn_gte?: InputMaybe<Scalars['Int']>
+  createdIn_in?: InputMaybe<Array<Scalars['Int']>>
+  createdIn_isNull?: InputMaybe<Scalars['Boolean']>
+  createdIn_lt?: InputMaybe<Scalars['Int']>
+  createdIn_lte?: InputMaybe<Scalars['Int']>
+  createdIn_not_eq?: InputMaybe<Scalars['Int']>
+  createdIn_not_in?: InputMaybe<Array<Scalars['Int']>>
+  endsAt_eq?: InputMaybe<Scalars['Int']>
+  endsAt_gt?: InputMaybe<Scalars['Int']>
+  endsAt_gte?: InputMaybe<Scalars['Int']>
+  endsAt_in?: InputMaybe<Array<Scalars['Int']>>
+  endsAt_isNull?: InputMaybe<Scalars['Boolean']>
+  endsAt_lt?: InputMaybe<Scalars['Int']>
+  endsAt_lte?: InputMaybe<Scalars['Int']>
+  endsAt_not_eq?: InputMaybe<Scalars['Int']>
+  endsAt_not_in?: InputMaybe<Array<Scalars['Int']>>
+  finalized_eq?: InputMaybe<Scalars['Boolean']>
+  finalized_isNull?: InputMaybe<Scalars['Boolean']>
+  finalized_not_eq?: InputMaybe<Scalars['Boolean']>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  participantsNum_eq?: InputMaybe<Scalars['Int']>
+  participantsNum_gt?: InputMaybe<Scalars['Int']>
+  participantsNum_gte?: InputMaybe<Scalars['Int']>
+  participantsNum_in?: InputMaybe<Array<Scalars['Int']>>
+  participantsNum_isNull?: InputMaybe<Scalars['Boolean']>
+  participantsNum_lt?: InputMaybe<Scalars['Int']>
+  participantsNum_lte?: InputMaybe<Scalars['Int']>
+  participantsNum_not_eq?: InputMaybe<Scalars['Int']>
+  participantsNum_not_in?: InputMaybe<Array<Scalars['Int']>>
+  stakers_every?: InputMaybe<RevenueShareParticipationWhereInput>
+  stakers_none?: InputMaybe<RevenueShareParticipationWhereInput>
+  stakers_some?: InputMaybe<RevenueShareParticipationWhereInput>
+  startingAt_eq?: InputMaybe<Scalars['Int']>
+  startingAt_gt?: InputMaybe<Scalars['Int']>
+  startingAt_gte?: InputMaybe<Scalars['Int']>
+  startingAt_in?: InputMaybe<Array<Scalars['Int']>>
+  startingAt_isNull?: InputMaybe<Scalars['Boolean']>
+  startingAt_lt?: InputMaybe<Scalars['Int']>
+  startingAt_lte?: InputMaybe<Scalars['Int']>
+  startingAt_not_eq?: InputMaybe<Scalars['Int']>
+  startingAt_not_in?: InputMaybe<Array<Scalars['Int']>>
+  token?: InputMaybe<CreatorTokenWhereInput>
+  token_isNull?: InputMaybe<Scalars['Boolean']>
+}
+
+export type RevenueSharesConnection = {
+  __typename?: 'RevenueSharesConnection'
+  edges: Array<RevenueShareEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type Sale = {
+  __typename?: 'Sale'
+  /** creation block */
+  createdIn: Scalars['Int']
+  /** ending block */
+  endsAt: Scalars['Int']
+  /** finalized */
+  finalized: Scalars['Boolean']
+  /** sale funds source */
+  fundsSourceAccount: TokenAccount
+  /** counter */
+  id: Scalars['String']
+  /** max amount that member can purchase */
+  maxAmountPerMember?: Maybe<Scalars['BigInt']>
+  /** constant price in HAPI for each token */
+  pricePerUnit: Scalars['BigInt']
+  /** sale start block */
+  startBlock: Scalars['Int']
+  /** terms and conditions text */
+  termsAndConditions: Scalars['String']
+  /** token for which the sale is issued */
+  token: CreatorToken
+  /** total amount of token on sale */
+  tokenSaleAllocation: Scalars['BigInt']
+  /** amount of tokens that has been sold */
+  tokensSold: Scalars['BigInt']
+  /** transactions references */
+  transactions: Array<SaleTransaction>
+  /** vesting schedule for sale */
+  vestedSale?: Maybe<VestedSale>
+}
+
+export type SaleTransactionsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<SaleTransactionOrderByInput>>
+  where?: InputMaybe<SaleTransactionWhereInput>
+}
+
+export type SaleEdge = {
+  __typename?: 'SaleEdge'
+  cursor: Scalars['String']
+  node: Sale
+}
+
+export enum SaleOrderByInput {
+  CreatedInAsc = 'createdIn_ASC',
+  CreatedInDesc = 'createdIn_DESC',
+  EndsAtAsc = 'endsAt_ASC',
+  EndsAtDesc = 'endsAt_DESC',
+  FinalizedAsc = 'finalized_ASC',
+  FinalizedDesc = 'finalized_DESC',
+  FundsSourceAccountDeletedAsc = 'fundsSourceAccount_deleted_ASC',
+  FundsSourceAccountDeletedDesc = 'fundsSourceAccount_deleted_DESC',
+  FundsSourceAccountIdAsc = 'fundsSourceAccount_id_ASC',
+  FundsSourceAccountIdDesc = 'fundsSourceAccount_id_DESC',
+  FundsSourceAccountStakedAmountAsc = 'fundsSourceAccount_stakedAmount_ASC',
+  FundsSourceAccountStakedAmountDesc = 'fundsSourceAccount_stakedAmount_DESC',
+  FundsSourceAccountTotalAmountAsc = 'fundsSourceAccount_totalAmount_ASC',
+  FundsSourceAccountTotalAmountDesc = 'fundsSourceAccount_totalAmount_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  MaxAmountPerMemberAsc = 'maxAmountPerMember_ASC',
+  MaxAmountPerMemberDesc = 'maxAmountPerMember_DESC',
+  PricePerUnitAsc = 'pricePerUnit_ASC',
+  PricePerUnitDesc = 'pricePerUnit_DESC',
+  StartBlockAsc = 'startBlock_ASC',
+  StartBlockDesc = 'startBlock_DESC',
+  TermsAndConditionsAsc = 'termsAndConditions_ASC',
+  TermsAndConditionsDesc = 'termsAndConditions_DESC',
+  TokenSaleAllocationAsc = 'tokenSaleAllocation_ASC',
+  TokenSaleAllocationDesc = 'tokenSaleAllocation_DESC',
+  TokenAccountsNumAsc = 'token_accountsNum_ASC',
+  TokenAccountsNumDesc = 'token_accountsNum_DESC',
+  TokenAnnualCreatorRewardAsc = 'token_annualCreatorReward_ASC',
+  TokenAnnualCreatorRewardDesc = 'token_annualCreatorReward_DESC',
+  TokenCreatedAtAsc = 'token_createdAt_ASC',
+  TokenCreatedAtDesc = 'token_createdAt_DESC',
+  TokenDeissuedAsc = 'token_deissued_ASC',
+  TokenDeissuedDesc = 'token_deissued_DESC',
+  TokenDescriptionAsc = 'token_description_ASC',
+  TokenDescriptionDesc = 'token_description_DESC',
+  TokenIdAsc = 'token_id_ASC',
+  TokenIdDesc = 'token_id_DESC',
+  TokenIsInviteOnlyAsc = 'token_isInviteOnly_ASC',
+  TokenIsInviteOnlyDesc = 'token_isInviteOnly_DESC',
+  TokenNumberOfRevenueShareActivationsAsc = 'token_numberOfRevenueShareActivations_ASC',
+  TokenNumberOfRevenueShareActivationsDesc = 'token_numberOfRevenueShareActivations_DESC',
+  TokenNumberOfVestedTransferIssuedAsc = 'token_numberOfVestedTransferIssued_ASC',
+  TokenNumberOfVestedTransferIssuedDesc = 'token_numberOfVestedTransferIssued_DESC',
+  TokenRevenueShareRatioPermillAsc = 'token_revenueShareRatioPermill_ASC',
+  TokenRevenueShareRatioPermillDesc = 'token_revenueShareRatioPermill_DESC',
+  TokenStatusAsc = 'token_status_ASC',
+  TokenStatusDesc = 'token_status_DESC',
+  TokenSymbolAsc = 'token_symbol_ASC',
+  TokenSymbolDesc = 'token_symbol_DESC',
+  TokenTotalSupplyAsc = 'token_totalSupply_ASC',
+  TokenTotalSupplyDesc = 'token_totalSupply_DESC',
+  TokenWhitelistApplicantLinkAsc = 'token_whitelistApplicantLink_ASC',
+  TokenWhitelistApplicantLinkDesc = 'token_whitelistApplicantLink_DESC',
+  TokenWhitelistApplicantNoteAsc = 'token_whitelistApplicantNote_ASC',
+  TokenWhitelistApplicantNoteDesc = 'token_whitelistApplicantNote_DESC',
+  TokensSoldAsc = 'tokensSold_ASC',
+  TokensSoldDesc = 'tokensSold_DESC',
+  VestedSaleIdAsc = 'vestedSale_id_ASC',
+  VestedSaleIdDesc = 'vestedSale_id_DESC',
+}
+
+export type SaleTransaction = {
+  __typename?: 'SaleTransaction'
+  /** buyer account */
+  account: TokenAccount
+  /** block */
+  createdIn: Scalars['Int']
+  /** counter */
+  id: Scalars['String']
+  /** amount of token bought */
+  quantity: Scalars['BigInt']
+  /** sale */
+  sale: Sale
+}
+
+export type SaleTransactionEdge = {
+  __typename?: 'SaleTransactionEdge'
+  cursor: Scalars['String']
+  node: SaleTransaction
+}
+
+export enum SaleTransactionOrderByInput {
+  AccountDeletedAsc = 'account_deleted_ASC',
+  AccountDeletedDesc = 'account_deleted_DESC',
+  AccountIdAsc = 'account_id_ASC',
+  AccountIdDesc = 'account_id_DESC',
+  AccountStakedAmountAsc = 'account_stakedAmount_ASC',
+  AccountStakedAmountDesc = 'account_stakedAmount_DESC',
+  AccountTotalAmountAsc = 'account_totalAmount_ASC',
+  AccountTotalAmountDesc = 'account_totalAmount_DESC',
+  CreatedInAsc = 'createdIn_ASC',
+  CreatedInDesc = 'createdIn_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  QuantityAsc = 'quantity_ASC',
+  QuantityDesc = 'quantity_DESC',
+  SaleCreatedInAsc = 'sale_createdIn_ASC',
+  SaleCreatedInDesc = 'sale_createdIn_DESC',
+  SaleEndsAtAsc = 'sale_endsAt_ASC',
+  SaleEndsAtDesc = 'sale_endsAt_DESC',
+  SaleFinalizedAsc = 'sale_finalized_ASC',
+  SaleFinalizedDesc = 'sale_finalized_DESC',
+  SaleIdAsc = 'sale_id_ASC',
+  SaleIdDesc = 'sale_id_DESC',
+  SaleMaxAmountPerMemberAsc = 'sale_maxAmountPerMember_ASC',
+  SaleMaxAmountPerMemberDesc = 'sale_maxAmountPerMember_DESC',
+  SalePricePerUnitAsc = 'sale_pricePerUnit_ASC',
+  SalePricePerUnitDesc = 'sale_pricePerUnit_DESC',
+  SaleStartBlockAsc = 'sale_startBlock_ASC',
+  SaleStartBlockDesc = 'sale_startBlock_DESC',
+  SaleTermsAndConditionsAsc = 'sale_termsAndConditions_ASC',
+  SaleTermsAndConditionsDesc = 'sale_termsAndConditions_DESC',
+  SaleTokenSaleAllocationAsc = 'sale_tokenSaleAllocation_ASC',
+  SaleTokenSaleAllocationDesc = 'sale_tokenSaleAllocation_DESC',
+  SaleTokensSoldAsc = 'sale_tokensSold_ASC',
+  SaleTokensSoldDesc = 'sale_tokensSold_DESC',
+}
+
+export type SaleTransactionWhereInput = {
+  AND?: InputMaybe<Array<SaleTransactionWhereInput>>
+  OR?: InputMaybe<Array<SaleTransactionWhereInput>>
+  account?: InputMaybe<TokenAccountWhereInput>
+  account_isNull?: InputMaybe<Scalars['Boolean']>
+  createdIn_eq?: InputMaybe<Scalars['Int']>
+  createdIn_gt?: InputMaybe<Scalars['Int']>
+  createdIn_gte?: InputMaybe<Scalars['Int']>
+  createdIn_in?: InputMaybe<Array<Scalars['Int']>>
+  createdIn_isNull?: InputMaybe<Scalars['Boolean']>
+  createdIn_lt?: InputMaybe<Scalars['Int']>
+  createdIn_lte?: InputMaybe<Scalars['Int']>
+  createdIn_not_eq?: InputMaybe<Scalars['Int']>
+  createdIn_not_in?: InputMaybe<Array<Scalars['Int']>>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  quantity_eq?: InputMaybe<Scalars['BigInt']>
+  quantity_gt?: InputMaybe<Scalars['BigInt']>
+  quantity_gte?: InputMaybe<Scalars['BigInt']>
+  quantity_in?: InputMaybe<Array<Scalars['BigInt']>>
+  quantity_isNull?: InputMaybe<Scalars['Boolean']>
+  quantity_lt?: InputMaybe<Scalars['BigInt']>
+  quantity_lte?: InputMaybe<Scalars['BigInt']>
+  quantity_not_eq?: InputMaybe<Scalars['BigInt']>
+  quantity_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  sale?: InputMaybe<SaleWhereInput>
+  sale_isNull?: InputMaybe<Scalars['Boolean']>
+}
+
+export type SaleTransactionsConnection = {
+  __typename?: 'SaleTransactionsConnection'
+  edges: Array<SaleTransactionEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type SaleVestingSource = {
+  __typename?: 'SaleVestingSource'
+  sale: Sale
+}
+
+export type SaleWhereInput = {
+  AND?: InputMaybe<Array<SaleWhereInput>>
+  OR?: InputMaybe<Array<SaleWhereInput>>
+  createdIn_eq?: InputMaybe<Scalars['Int']>
+  createdIn_gt?: InputMaybe<Scalars['Int']>
+  createdIn_gte?: InputMaybe<Scalars['Int']>
+  createdIn_in?: InputMaybe<Array<Scalars['Int']>>
+  createdIn_isNull?: InputMaybe<Scalars['Boolean']>
+  createdIn_lt?: InputMaybe<Scalars['Int']>
+  createdIn_lte?: InputMaybe<Scalars['Int']>
+  createdIn_not_eq?: InputMaybe<Scalars['Int']>
+  createdIn_not_in?: InputMaybe<Array<Scalars['Int']>>
+  endsAt_eq?: InputMaybe<Scalars['Int']>
+  endsAt_gt?: InputMaybe<Scalars['Int']>
+  endsAt_gte?: InputMaybe<Scalars['Int']>
+  endsAt_in?: InputMaybe<Array<Scalars['Int']>>
+  endsAt_isNull?: InputMaybe<Scalars['Boolean']>
+  endsAt_lt?: InputMaybe<Scalars['Int']>
+  endsAt_lte?: InputMaybe<Scalars['Int']>
+  endsAt_not_eq?: InputMaybe<Scalars['Int']>
+  endsAt_not_in?: InputMaybe<Array<Scalars['Int']>>
+  finalized_eq?: InputMaybe<Scalars['Boolean']>
+  finalized_isNull?: InputMaybe<Scalars['Boolean']>
+  finalized_not_eq?: InputMaybe<Scalars['Boolean']>
+  fundsSourceAccount?: InputMaybe<TokenAccountWhereInput>
+  fundsSourceAccount_isNull?: InputMaybe<Scalars['Boolean']>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  maxAmountPerMember_eq?: InputMaybe<Scalars['BigInt']>
+  maxAmountPerMember_gt?: InputMaybe<Scalars['BigInt']>
+  maxAmountPerMember_gte?: InputMaybe<Scalars['BigInt']>
+  maxAmountPerMember_in?: InputMaybe<Array<Scalars['BigInt']>>
+  maxAmountPerMember_isNull?: InputMaybe<Scalars['Boolean']>
+  maxAmountPerMember_lt?: InputMaybe<Scalars['BigInt']>
+  maxAmountPerMember_lte?: InputMaybe<Scalars['BigInt']>
+  maxAmountPerMember_not_eq?: InputMaybe<Scalars['BigInt']>
+  maxAmountPerMember_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  pricePerUnit_eq?: InputMaybe<Scalars['BigInt']>
+  pricePerUnit_gt?: InputMaybe<Scalars['BigInt']>
+  pricePerUnit_gte?: InputMaybe<Scalars['BigInt']>
+  pricePerUnit_in?: InputMaybe<Array<Scalars['BigInt']>>
+  pricePerUnit_isNull?: InputMaybe<Scalars['Boolean']>
+  pricePerUnit_lt?: InputMaybe<Scalars['BigInt']>
+  pricePerUnit_lte?: InputMaybe<Scalars['BigInt']>
+  pricePerUnit_not_eq?: InputMaybe<Scalars['BigInt']>
+  pricePerUnit_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  startBlock_eq?: InputMaybe<Scalars['Int']>
+  startBlock_gt?: InputMaybe<Scalars['Int']>
+  startBlock_gte?: InputMaybe<Scalars['Int']>
+  startBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  startBlock_isNull?: InputMaybe<Scalars['Boolean']>
+  startBlock_lt?: InputMaybe<Scalars['Int']>
+  startBlock_lte?: InputMaybe<Scalars['Int']>
+  startBlock_not_eq?: InputMaybe<Scalars['Int']>
+  startBlock_not_in?: InputMaybe<Array<Scalars['Int']>>
+  termsAndConditions_contains?: InputMaybe<Scalars['String']>
+  termsAndConditions_containsInsensitive?: InputMaybe<Scalars['String']>
+  termsAndConditions_endsWith?: InputMaybe<Scalars['String']>
+  termsAndConditions_eq?: InputMaybe<Scalars['String']>
+  termsAndConditions_gt?: InputMaybe<Scalars['String']>
+  termsAndConditions_gte?: InputMaybe<Scalars['String']>
+  termsAndConditions_in?: InputMaybe<Array<Scalars['String']>>
+  termsAndConditions_isNull?: InputMaybe<Scalars['Boolean']>
+  termsAndConditions_lt?: InputMaybe<Scalars['String']>
+  termsAndConditions_lte?: InputMaybe<Scalars['String']>
+  termsAndConditions_not_contains?: InputMaybe<Scalars['String']>
+  termsAndConditions_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  termsAndConditions_not_endsWith?: InputMaybe<Scalars['String']>
+  termsAndConditions_not_eq?: InputMaybe<Scalars['String']>
+  termsAndConditions_not_in?: InputMaybe<Array<Scalars['String']>>
+  termsAndConditions_not_startsWith?: InputMaybe<Scalars['String']>
+  termsAndConditions_startsWith?: InputMaybe<Scalars['String']>
+  token?: InputMaybe<CreatorTokenWhereInput>
+  tokenSaleAllocation_eq?: InputMaybe<Scalars['BigInt']>
+  tokenSaleAllocation_gt?: InputMaybe<Scalars['BigInt']>
+  tokenSaleAllocation_gte?: InputMaybe<Scalars['BigInt']>
+  tokenSaleAllocation_in?: InputMaybe<Array<Scalars['BigInt']>>
+  tokenSaleAllocation_isNull?: InputMaybe<Scalars['Boolean']>
+  tokenSaleAllocation_lt?: InputMaybe<Scalars['BigInt']>
+  tokenSaleAllocation_lte?: InputMaybe<Scalars['BigInt']>
+  tokenSaleAllocation_not_eq?: InputMaybe<Scalars['BigInt']>
+  tokenSaleAllocation_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  token_isNull?: InputMaybe<Scalars['Boolean']>
+  tokensSold_eq?: InputMaybe<Scalars['BigInt']>
+  tokensSold_gt?: InputMaybe<Scalars['BigInt']>
+  tokensSold_gte?: InputMaybe<Scalars['BigInt']>
+  tokensSold_in?: InputMaybe<Array<Scalars['BigInt']>>
+  tokensSold_isNull?: InputMaybe<Scalars['Boolean']>
+  tokensSold_lt?: InputMaybe<Scalars['BigInt']>
+  tokensSold_lte?: InputMaybe<Scalars['BigInt']>
+  tokensSold_not_eq?: InputMaybe<Scalars['BigInt']>
+  tokensSold_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  transactions_every?: InputMaybe<SaleTransactionWhereInput>
+  transactions_none?: InputMaybe<SaleTransactionWhereInput>
+  transactions_some?: InputMaybe<SaleTransactionWhereInput>
+  vestedSale?: InputMaybe<VestedSaleWhereInput>
+  vestedSale_isNull?: InputMaybe<Scalars['Boolean']>
+}
+
+export type SalesConnection = {
+  __typename?: 'SalesConnection'
+  edges: Array<SaleEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type Session = {
+  __typename?: 'Session'
+  /** Account associated with the session (if any) */
+  account?: Maybe<Account>
+  /** Browser (as deterimned based on user-agent header) */
+  browser: Scalars['String']
+  /** Device (as deterimned based on user-agent header) */
+  device: Scalars['String']
+  /** Device type (as deterimned based on user-agent header) */
+  deviceType?: Maybe<Scalars['String']>
+  /** Time when the session expires or did expire */
+  expiry: Scalars['DateTime']
+  /** Unique identifier (32-byte string, securely random) */
+  id: Scalars['String']
+  /** IP address associated with the session */
+  ip: Scalars['String']
+  /** Operating system (as deterimned based on user-agent header) */
+  os: Scalars['String']
+  /** Time when the session started */
+  startedAt: Scalars['DateTime']
+  /** User associated with the session */
+  user: User
+}
+
+export type SessionEdge = {
+  __typename?: 'SessionEdge'
+  cursor: Scalars['String']
+  node: Session
+}
+
+export type SessionEncryptionArtifacts = {
+  __typename?: 'SessionEncryptionArtifacts'
+  /** The IV used to encrypt the seed with cipherKey */
+  cipherIv: Scalars['String']
+  /** cipherKey used to encrypt the seed stored client-side for the duration of the session */
+  cipherKey: Scalars['String']
+  /** Unique identifier */
+  id: Scalars['String']
+  /** The session the encryption artifacts are associated with */
+  session: Session
+}
+
+export type SessionEncryptionArtifactsConnection = {
+  __typename?: 'SessionEncryptionArtifactsConnection'
+  edges: Array<SessionEncryptionArtifactsEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type SessionEncryptionArtifactsEdge = {
+  __typename?: 'SessionEncryptionArtifactsEdge'
+  cursor: Scalars['String']
+  node: SessionEncryptionArtifacts
+}
+
+export enum SessionEncryptionArtifactsOrderByInput {
+  CipherIvAsc = 'cipherIv_ASC',
+  CipherIvDesc = 'cipherIv_DESC',
+  CipherKeyAsc = 'cipherKey_ASC',
+  CipherKeyDesc = 'cipherKey_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  SessionBrowserAsc = 'session_browser_ASC',
+  SessionBrowserDesc = 'session_browser_DESC',
+  SessionDeviceTypeAsc = 'session_deviceType_ASC',
+  SessionDeviceTypeDesc = 'session_deviceType_DESC',
+  SessionDeviceAsc = 'session_device_ASC',
+  SessionDeviceDesc = 'session_device_DESC',
+  SessionExpiryAsc = 'session_expiry_ASC',
+  SessionExpiryDesc = 'session_expiry_DESC',
+  SessionIdAsc = 'session_id_ASC',
+  SessionIdDesc = 'session_id_DESC',
+  SessionIpAsc = 'session_ip_ASC',
+  SessionIpDesc = 'session_ip_DESC',
+  SessionOsAsc = 'session_os_ASC',
+  SessionOsDesc = 'session_os_DESC',
+  SessionStartedAtAsc = 'session_startedAt_ASC',
+  SessionStartedAtDesc = 'session_startedAt_DESC',
+}
+
+export type SessionEncryptionArtifactsWhereInput = {
+  AND?: InputMaybe<Array<SessionEncryptionArtifactsWhereInput>>
+  OR?: InputMaybe<Array<SessionEncryptionArtifactsWhereInput>>
+  cipherIv_contains?: InputMaybe<Scalars['String']>
+  cipherIv_containsInsensitive?: InputMaybe<Scalars['String']>
+  cipherIv_endsWith?: InputMaybe<Scalars['String']>
+  cipherIv_eq?: InputMaybe<Scalars['String']>
+  cipherIv_gt?: InputMaybe<Scalars['String']>
+  cipherIv_gte?: InputMaybe<Scalars['String']>
+  cipherIv_in?: InputMaybe<Array<Scalars['String']>>
+  cipherIv_isNull?: InputMaybe<Scalars['Boolean']>
+  cipherIv_lt?: InputMaybe<Scalars['String']>
+  cipherIv_lte?: InputMaybe<Scalars['String']>
+  cipherIv_not_contains?: InputMaybe<Scalars['String']>
+  cipherIv_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  cipherIv_not_endsWith?: InputMaybe<Scalars['String']>
+  cipherIv_not_eq?: InputMaybe<Scalars['String']>
+  cipherIv_not_in?: InputMaybe<Array<Scalars['String']>>
+  cipherIv_not_startsWith?: InputMaybe<Scalars['String']>
+  cipherIv_startsWith?: InputMaybe<Scalars['String']>
+  cipherKey_contains?: InputMaybe<Scalars['String']>
+  cipherKey_containsInsensitive?: InputMaybe<Scalars['String']>
+  cipherKey_endsWith?: InputMaybe<Scalars['String']>
+  cipherKey_eq?: InputMaybe<Scalars['String']>
+  cipherKey_gt?: InputMaybe<Scalars['String']>
+  cipherKey_gte?: InputMaybe<Scalars['String']>
+  cipherKey_in?: InputMaybe<Array<Scalars['String']>>
+  cipherKey_isNull?: InputMaybe<Scalars['Boolean']>
+  cipherKey_lt?: InputMaybe<Scalars['String']>
+  cipherKey_lte?: InputMaybe<Scalars['String']>
+  cipherKey_not_contains?: InputMaybe<Scalars['String']>
+  cipherKey_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  cipherKey_not_endsWith?: InputMaybe<Scalars['String']>
+  cipherKey_not_eq?: InputMaybe<Scalars['String']>
+  cipherKey_not_in?: InputMaybe<Array<Scalars['String']>>
+  cipherKey_not_startsWith?: InputMaybe<Scalars['String']>
+  cipherKey_startsWith?: InputMaybe<Scalars['String']>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  session?: InputMaybe<SessionWhereInput>
+  session_isNull?: InputMaybe<Scalars['Boolean']>
+}
+
+export enum SessionOrderByInput {
+  AccountEmailAsc = 'account_email_ASC',
+  AccountEmailDesc = 'account_email_DESC',
+  AccountIdAsc = 'account_id_ASC',
+  AccountIdDesc = 'account_id_DESC',
+  AccountIsBlockedAsc = 'account_isBlocked_ASC',
+  AccountIsBlockedDesc = 'account_isBlocked_DESC',
+  AccountIsEmailConfirmedAsc = 'account_isEmailConfirmed_ASC',
+  AccountIsEmailConfirmedDesc = 'account_isEmailConfirmed_DESC',
+  AccountJoystreamAccountAsc = 'account_joystreamAccount_ASC',
+  AccountJoystreamAccountDesc = 'account_joystreamAccount_DESC',
+  AccountRegisteredAtAsc = 'account_registeredAt_ASC',
+  AccountRegisteredAtDesc = 'account_registeredAt_DESC',
+  BrowserAsc = 'browser_ASC',
+  BrowserDesc = 'browser_DESC',
+  DeviceTypeAsc = 'deviceType_ASC',
+  DeviceTypeDesc = 'deviceType_DESC',
+  DeviceAsc = 'device_ASC',
+  DeviceDesc = 'device_DESC',
+  ExpiryAsc = 'expiry_ASC',
+  ExpiryDesc = 'expiry_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  IpAsc = 'ip_ASC',
+  IpDesc = 'ip_DESC',
+  OsAsc = 'os_ASC',
+  OsDesc = 'os_DESC',
+  StartedAtAsc = 'startedAt_ASC',
+  StartedAtDesc = 'startedAt_DESC',
+  UserIdAsc = 'user_id_ASC',
+  UserIdDesc = 'user_id_DESC',
+  UserIsRootAsc = 'user_isRoot_ASC',
+  UserIsRootDesc = 'user_isRoot_DESC',
+}
+
+export type SessionWhereInput = {
+  AND?: InputMaybe<Array<SessionWhereInput>>
+  OR?: InputMaybe<Array<SessionWhereInput>>
+  account?: InputMaybe<AccountWhereInput>
+  account_isNull?: InputMaybe<Scalars['Boolean']>
+  browser_contains?: InputMaybe<Scalars['String']>
+  browser_containsInsensitive?: InputMaybe<Scalars['String']>
+  browser_endsWith?: InputMaybe<Scalars['String']>
+  browser_eq?: InputMaybe<Scalars['String']>
+  browser_gt?: InputMaybe<Scalars['String']>
+  browser_gte?: InputMaybe<Scalars['String']>
+  browser_in?: InputMaybe<Array<Scalars['String']>>
+  browser_isNull?: InputMaybe<Scalars['Boolean']>
+  browser_lt?: InputMaybe<Scalars['String']>
+  browser_lte?: InputMaybe<Scalars['String']>
+  browser_not_contains?: InputMaybe<Scalars['String']>
+  browser_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  browser_not_endsWith?: InputMaybe<Scalars['String']>
+  browser_not_eq?: InputMaybe<Scalars['String']>
+  browser_not_in?: InputMaybe<Array<Scalars['String']>>
+  browser_not_startsWith?: InputMaybe<Scalars['String']>
+  browser_startsWith?: InputMaybe<Scalars['String']>
+  deviceType_contains?: InputMaybe<Scalars['String']>
+  deviceType_containsInsensitive?: InputMaybe<Scalars['String']>
+  deviceType_endsWith?: InputMaybe<Scalars['String']>
+  deviceType_eq?: InputMaybe<Scalars['String']>
+  deviceType_gt?: InputMaybe<Scalars['String']>
+  deviceType_gte?: InputMaybe<Scalars['String']>
+  deviceType_in?: InputMaybe<Array<Scalars['String']>>
+  deviceType_isNull?: InputMaybe<Scalars['Boolean']>
+  deviceType_lt?: InputMaybe<Scalars['String']>
+  deviceType_lte?: InputMaybe<Scalars['String']>
+  deviceType_not_contains?: InputMaybe<Scalars['String']>
+  deviceType_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  deviceType_not_endsWith?: InputMaybe<Scalars['String']>
+  deviceType_not_eq?: InputMaybe<Scalars['String']>
+  deviceType_not_in?: InputMaybe<Array<Scalars['String']>>
+  deviceType_not_startsWith?: InputMaybe<Scalars['String']>
+  deviceType_startsWith?: InputMaybe<Scalars['String']>
+  device_contains?: InputMaybe<Scalars['String']>
+  device_containsInsensitive?: InputMaybe<Scalars['String']>
+  device_endsWith?: InputMaybe<Scalars['String']>
+  device_eq?: InputMaybe<Scalars['String']>
+  device_gt?: InputMaybe<Scalars['String']>
+  device_gte?: InputMaybe<Scalars['String']>
+  device_in?: InputMaybe<Array<Scalars['String']>>
+  device_isNull?: InputMaybe<Scalars['Boolean']>
+  device_lt?: InputMaybe<Scalars['String']>
+  device_lte?: InputMaybe<Scalars['String']>
+  device_not_contains?: InputMaybe<Scalars['String']>
+  device_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  device_not_endsWith?: InputMaybe<Scalars['String']>
+  device_not_eq?: InputMaybe<Scalars['String']>
+  device_not_in?: InputMaybe<Array<Scalars['String']>>
+  device_not_startsWith?: InputMaybe<Scalars['String']>
+  device_startsWith?: InputMaybe<Scalars['String']>
+  expiry_eq?: InputMaybe<Scalars['DateTime']>
+  expiry_gt?: InputMaybe<Scalars['DateTime']>
+  expiry_gte?: InputMaybe<Scalars['DateTime']>
+  expiry_in?: InputMaybe<Array<Scalars['DateTime']>>
+  expiry_isNull?: InputMaybe<Scalars['Boolean']>
+  expiry_lt?: InputMaybe<Scalars['DateTime']>
+  expiry_lte?: InputMaybe<Scalars['DateTime']>
+  expiry_not_eq?: InputMaybe<Scalars['DateTime']>
+  expiry_not_in?: InputMaybe<Array<Scalars['DateTime']>>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  ip_contains?: InputMaybe<Scalars['String']>
+  ip_containsInsensitive?: InputMaybe<Scalars['String']>
+  ip_endsWith?: InputMaybe<Scalars['String']>
+  ip_eq?: InputMaybe<Scalars['String']>
+  ip_gt?: InputMaybe<Scalars['String']>
+  ip_gte?: InputMaybe<Scalars['String']>
+  ip_in?: InputMaybe<Array<Scalars['String']>>
+  ip_isNull?: InputMaybe<Scalars['Boolean']>
+  ip_lt?: InputMaybe<Scalars['String']>
+  ip_lte?: InputMaybe<Scalars['String']>
+  ip_not_contains?: InputMaybe<Scalars['String']>
+  ip_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  ip_not_endsWith?: InputMaybe<Scalars['String']>
+  ip_not_eq?: InputMaybe<Scalars['String']>
+  ip_not_in?: InputMaybe<Array<Scalars['String']>>
+  ip_not_startsWith?: InputMaybe<Scalars['String']>
+  ip_startsWith?: InputMaybe<Scalars['String']>
+  os_contains?: InputMaybe<Scalars['String']>
+  os_containsInsensitive?: InputMaybe<Scalars['String']>
+  os_endsWith?: InputMaybe<Scalars['String']>
+  os_eq?: InputMaybe<Scalars['String']>
+  os_gt?: InputMaybe<Scalars['String']>
+  os_gte?: InputMaybe<Scalars['String']>
+  os_in?: InputMaybe<Array<Scalars['String']>>
+  os_isNull?: InputMaybe<Scalars['Boolean']>
+  os_lt?: InputMaybe<Scalars['String']>
+  os_lte?: InputMaybe<Scalars['String']>
+  os_not_contains?: InputMaybe<Scalars['String']>
+  os_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  os_not_endsWith?: InputMaybe<Scalars['String']>
+  os_not_eq?: InputMaybe<Scalars['String']>
+  os_not_in?: InputMaybe<Array<Scalars['String']>>
+  os_not_startsWith?: InputMaybe<Scalars['String']>
+  os_startsWith?: InputMaybe<Scalars['String']>
+  startedAt_eq?: InputMaybe<Scalars['DateTime']>
+  startedAt_gt?: InputMaybe<Scalars['DateTime']>
+  startedAt_gte?: InputMaybe<Scalars['DateTime']>
+  startedAt_in?: InputMaybe<Array<Scalars['DateTime']>>
+  startedAt_isNull?: InputMaybe<Scalars['Boolean']>
+  startedAt_lt?: InputMaybe<Scalars['DateTime']>
+  startedAt_lte?: InputMaybe<Scalars['DateTime']>
+  startedAt_not_eq?: InputMaybe<Scalars['DateTime']>
+  startedAt_not_in?: InputMaybe<Array<Scalars['DateTime']>>
+  user?: InputMaybe<UserWhereInput>
+  user_isNull?: InputMaybe<Scalars['Boolean']>
+}
+
+export type SessionsConnection = {
+  __typename?: 'SessionsConnection'
+  edges: Array<SessionEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
 }
 
 export type SetCategoryFeaturedVideosResult = {
@@ -6575,6 +9257,7 @@ export type StorageDataObject = {
   ipfsHash: Scalars['String']
   /** Whether the data object was uploaded and accepted by the storage provider */
   isAccepted: Scalars['Boolean']
+  resolvedUrl?: Maybe<Scalars['String']>
   /** Resolved asset urls */
   resolvedUrls: Array<Scalars['String']>
   /** Data object size in bytes */
@@ -6713,6 +9396,12 @@ export type StorageDataObjectsConnection = {
 
 export type Subscription = {
   __typename?: 'Subscription'
+  accountById?: Maybe<Account>
+  accounts: Array<Account>
+  ammCurveById?: Maybe<AmmCurve>
+  ammCurves: Array<AmmCurve>
+  ammTransactionById?: Maybe<AmmTransaction>
+  ammTransactions: Array<AmmTransaction>
   appById?: Maybe<App>
   apps: Array<App>
   auctionById?: Maybe<Auction>
@@ -6721,6 +9410,8 @@ export type Subscription = {
   auctions: Array<Auction>
   bannedMemberById?: Maybe<BannedMember>
   bannedMembers: Array<BannedMember>
+  benefitById?: Maybe<Benefit>
+  benefits: Array<Benefit>
   bidById?: Maybe<Bid>
   bids: Array<Bid>
   channelById?: Maybe<Channel>
@@ -6731,6 +9422,8 @@ export type Subscription = {
   commentReactionById?: Maybe<CommentReaction>
   commentReactions: Array<CommentReaction>
   comments: Array<Comment>
+  creatorTokenById?: Maybe<CreatorToken>
+  creatorTokens: Array<CreatorToken>
   curatorById?: Maybe<Curator>
   curatorGroupById?: Maybe<CuratorGroup>
   curatorGroups: Array<CuratorGroup>
@@ -6747,8 +9440,12 @@ export type Subscription = {
   distributionBucketOperatorMetadataById?: Maybe<DistributionBucketOperatorMetadata>
   distributionBucketOperators: Array<DistributionBucketOperator>
   distributionBuckets: Array<DistributionBucket>
+  encryptionArtifacts: Array<EncryptionArtifacts>
+  encryptionArtifactsById?: Maybe<EncryptionArtifacts>
   eventById?: Maybe<Event>
   events: Array<Event>
+  gatewayConfigById?: Maybe<GatewayConfig>
+  gatewayConfigs: Array<GatewayConfig>
   licenseById?: Maybe<License>
   licenses: Array<License>
   memberMetadata: Array<MemberMetadata>
@@ -6768,6 +9465,18 @@ export type Subscription = {
   processorState: ProcessorState
   reportById?: Maybe<Report>
   reports: Array<Report>
+  revenueShareById?: Maybe<RevenueShare>
+  revenueShareParticipationById?: Maybe<RevenueShareParticipation>
+  revenueShareParticipations: Array<RevenueShareParticipation>
+  revenueShares: Array<RevenueShare>
+  saleById?: Maybe<Sale>
+  saleTransactionById?: Maybe<SaleTransaction>
+  saleTransactions: Array<SaleTransaction>
+  sales: Array<Sale>
+  sessionById?: Maybe<Session>
+  sessionEncryptionArtifacts: Array<SessionEncryptionArtifacts>
+  sessionEncryptionArtifactsById?: Maybe<SessionEncryptionArtifacts>
+  sessions: Array<Session>
   storageBagById?: Maybe<StorageBag>
   storageBags: Array<StorageBag>
   storageBucketBagById?: Maybe<StorageBucketBag>
@@ -6778,6 +9487,22 @@ export type Subscription = {
   storageBuckets: Array<StorageBucket>
   storageDataObjectById?: Maybe<StorageDataObject>
   storageDataObjects: Array<StorageDataObject>
+  tokenAccountById?: Maybe<TokenAccount>
+  tokenAccounts: Array<TokenAccount>
+  tokenById?: Maybe<Token>
+  tokenChannelById?: Maybe<TokenChannel>
+  tokenChannels: Array<TokenChannel>
+  tokens: Array<Token>
+  trailerVideoById?: Maybe<TrailerVideo>
+  trailerVideos: Array<TrailerVideo>
+  userById?: Maybe<User>
+  users: Array<User>
+  vestedAccountById?: Maybe<VestedAccount>
+  vestedAccounts: Array<VestedAccount>
+  vestedSaleById?: Maybe<VestedSale>
+  vestedSales: Array<VestedSale>
+  vestingScheduleById?: Maybe<VestingSchedule>
+  vestingSchedules: Array<VestingSchedule>
   videoById?: Maybe<Video>
   videoCategories: Array<VideoCategory>
   videoCategoryById?: Maybe<VideoCategory>
@@ -6796,6 +9521,39 @@ export type Subscription = {
   videoViewEventById?: Maybe<VideoViewEvent>
   videoViewEvents: Array<VideoViewEvent>
   videos: Array<Video>
+}
+
+export type SubscriptionAccountByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionAccountsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<AccountOrderByInput>>
+  where?: InputMaybe<AccountWhereInput>
+}
+
+export type SubscriptionAmmCurveByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionAmmCurvesArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<AmmCurveOrderByInput>>
+  where?: InputMaybe<AmmCurveWhereInput>
+}
+
+export type SubscriptionAmmTransactionByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionAmmTransactionsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<AmmTransactionOrderByInput>>
+  where?: InputMaybe<AmmTransactionWhereInput>
 }
 
 export type SubscriptionAppByIdArgs = {
@@ -6840,6 +9598,17 @@ export type SubscriptionBannedMembersArgs = {
   offset?: InputMaybe<Scalars['Int']>
   orderBy?: InputMaybe<Array<BannedMemberOrderByInput>>
   where?: InputMaybe<BannedMemberWhereInput>
+}
+
+export type SubscriptionBenefitByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionBenefitsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<BenefitOrderByInput>>
+  where?: InputMaybe<BenefitWhereInput>
 }
 
 export type SubscriptionBidByIdArgs = {
@@ -6895,6 +9664,17 @@ export type SubscriptionCommentsArgs = {
   offset?: InputMaybe<Scalars['Int']>
   orderBy?: InputMaybe<Array<CommentOrderByInput>>
   where?: InputMaybe<CommentWhereInput>
+}
+
+export type SubscriptionCreatorTokenByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionCreatorTokensArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<CreatorTokenOrderByInput>>
+  where?: InputMaybe<CreatorTokenWhereInput>
 }
 
 export type SubscriptionCuratorByIdArgs = {
@@ -6985,6 +9765,17 @@ export type SubscriptionDistributionBucketsArgs = {
   where?: InputMaybe<DistributionBucketWhereInput>
 }
 
+export type SubscriptionEncryptionArtifactsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<EncryptionArtifactsOrderByInput>>
+  where?: InputMaybe<EncryptionArtifactsWhereInput>
+}
+
+export type SubscriptionEncryptionArtifactsByIdArgs = {
+  id: Scalars['String']
+}
+
 export type SubscriptionEventByIdArgs = {
   id: Scalars['String']
 }
@@ -6994,6 +9785,17 @@ export type SubscriptionEventsArgs = {
   offset?: InputMaybe<Scalars['Int']>
   orderBy?: InputMaybe<Array<EventOrderByInput>>
   where?: InputMaybe<EventWhereInput>
+}
+
+export type SubscriptionGatewayConfigByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionGatewayConfigsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<GatewayConfigOrderByInput>>
+  where?: InputMaybe<GatewayConfigWhereInput>
 }
 
 export type SubscriptionLicenseByIdArgs = {
@@ -7095,6 +9897,72 @@ export type SubscriptionReportsArgs = {
   where?: InputMaybe<ReportWhereInput>
 }
 
+export type SubscriptionRevenueShareByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionRevenueShareParticipationByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionRevenueShareParticipationsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<RevenueShareParticipationOrderByInput>>
+  where?: InputMaybe<RevenueShareParticipationWhereInput>
+}
+
+export type SubscriptionRevenueSharesArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<RevenueShareOrderByInput>>
+  where?: InputMaybe<RevenueShareWhereInput>
+}
+
+export type SubscriptionSaleByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionSaleTransactionByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionSaleTransactionsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<SaleTransactionOrderByInput>>
+  where?: InputMaybe<SaleTransactionWhereInput>
+}
+
+export type SubscriptionSalesArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<SaleOrderByInput>>
+  where?: InputMaybe<SaleWhereInput>
+}
+
+export type SubscriptionSessionByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionSessionEncryptionArtifactsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<SessionEncryptionArtifactsOrderByInput>>
+  where?: InputMaybe<SessionEncryptionArtifactsWhereInput>
+}
+
+export type SubscriptionSessionEncryptionArtifactsByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionSessionsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<SessionOrderByInput>>
+  where?: InputMaybe<SessionWhereInput>
+}
+
 export type SubscriptionStorageBagByIdArgs = {
   id: Scalars['String']
 }
@@ -7148,6 +10016,94 @@ export type SubscriptionStorageDataObjectsArgs = {
   offset?: InputMaybe<Scalars['Int']>
   orderBy?: InputMaybe<Array<StorageDataObjectOrderByInput>>
   where?: InputMaybe<StorageDataObjectWhereInput>
+}
+
+export type SubscriptionTokenAccountByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionTokenAccountsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<TokenAccountOrderByInput>>
+  where?: InputMaybe<TokenAccountWhereInput>
+}
+
+export type SubscriptionTokenByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionTokenChannelByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionTokenChannelsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<TokenChannelOrderByInput>>
+  where?: InputMaybe<TokenChannelWhereInput>
+}
+
+export type SubscriptionTokensArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<TokenOrderByInput>>
+  where?: InputMaybe<TokenWhereInput>
+}
+
+export type SubscriptionTrailerVideoByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionTrailerVideosArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<TrailerVideoOrderByInput>>
+  where?: InputMaybe<TrailerVideoWhereInput>
+}
+
+export type SubscriptionUserByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionUsersArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<UserOrderByInput>>
+  where?: InputMaybe<UserWhereInput>
+}
+
+export type SubscriptionVestedAccountByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionVestedAccountsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<VestedAccountOrderByInput>>
+  where?: InputMaybe<VestedAccountWhereInput>
+}
+
+export type SubscriptionVestedSaleByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionVestedSalesArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<VestedSaleOrderByInput>>
+  where?: InputMaybe<VestedSaleWhereInput>
+}
+
+export type SubscriptionVestingScheduleByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionVestingSchedulesArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<VestingScheduleOrderByInput>>
+  where?: InputMaybe<VestingScheduleWhereInput>
 }
 
 export type SubscriptionVideoByIdArgs = {
@@ -7249,11 +10205,588 @@ export type SubscriptionVideosArgs = {
   where?: InputMaybe<VideoWhereInput>
 }
 
+export type Token = {
+  __typename?: 'Token'
+  /** When does the token expire or when has it expired */
+  expiry: Scalars['DateTime']
+  /** The token itself (32-byte string, securely random) */
+  id: Scalars['String']
+  /** When was the token issued */
+  issuedAt: Scalars['DateTime']
+  /** The account the token was issued for */
+  issuedFor: Account
+  /** Type of the token (its intended purpose) */
+  type: TokenType
+}
+
+export type TokenAccount = {
+  __typename?: 'TokenAccount'
+  /** amm transactions for this account */
+  ammTransactions: Array<AmmTransaction>
+  /** has been deleted or not */
+  deleted: Scalars['Boolean']
+  /** counter */
+  id: Scalars['String']
+  /** member id ref */
+  member: Membership
+  /** information about token account's participation in revenue shares */
+  revenueShareParticipation: Array<RevenueShareParticipation>
+  /** sale transactions for this account */
+  saleTransactions: Array<SaleTransaction>
+  /** staked amount, to avoid walking to split participations */
+  stakedAmount: Scalars['BigInt']
+  /** token for which the account is created */
+  token: CreatorToken
+  /** total token amount (not necessarely liqud) for the account */
+  totalAmount: Scalars['BigInt']
+  /** vesting schedule info, it can be empty if no vesting schedules are pending */
+  vestingSchedules: Array<VestedAccount>
+}
+
+export type TokenAccountAmmTransactionsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<AmmTransactionOrderByInput>>
+  where?: InputMaybe<AmmTransactionWhereInput>
+}
+
+export type TokenAccountRevenueShareParticipationArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<RevenueShareParticipationOrderByInput>>
+  where?: InputMaybe<RevenueShareParticipationWhereInput>
+}
+
+export type TokenAccountSaleTransactionsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<SaleTransactionOrderByInput>>
+  where?: InputMaybe<SaleTransactionWhereInput>
+}
+
+export type TokenAccountVestingSchedulesArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<VestedAccountOrderByInput>>
+  where?: InputMaybe<VestedAccountWhereInput>
+}
+
+export type TokenAccountEdge = {
+  __typename?: 'TokenAccountEdge'
+  cursor: Scalars['String']
+  node: TokenAccount
+}
+
+export enum TokenAccountOrderByInput {
+  DeletedAsc = 'deleted_ASC',
+  DeletedDesc = 'deleted_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  MemberControllerAccountAsc = 'member_controllerAccount_ASC',
+  MemberControllerAccountDesc = 'member_controllerAccount_DESC',
+  MemberCreatedAtAsc = 'member_createdAt_ASC',
+  MemberCreatedAtDesc = 'member_createdAt_DESC',
+  MemberHandleAsc = 'member_handle_ASC',
+  MemberHandleDesc = 'member_handle_DESC',
+  MemberIdAsc = 'member_id_ASC',
+  MemberIdDesc = 'member_id_DESC',
+  MemberTotalChannelsCreatedAsc = 'member_totalChannelsCreated_ASC',
+  MemberTotalChannelsCreatedDesc = 'member_totalChannelsCreated_DESC',
+  StakedAmountAsc = 'stakedAmount_ASC',
+  StakedAmountDesc = 'stakedAmount_DESC',
+  TokenAccountsNumAsc = 'token_accountsNum_ASC',
+  TokenAccountsNumDesc = 'token_accountsNum_DESC',
+  TokenAnnualCreatorRewardAsc = 'token_annualCreatorReward_ASC',
+  TokenAnnualCreatorRewardDesc = 'token_annualCreatorReward_DESC',
+  TokenCreatedAtAsc = 'token_createdAt_ASC',
+  TokenCreatedAtDesc = 'token_createdAt_DESC',
+  TokenDeissuedAsc = 'token_deissued_ASC',
+  TokenDeissuedDesc = 'token_deissued_DESC',
+  TokenDescriptionAsc = 'token_description_ASC',
+  TokenDescriptionDesc = 'token_description_DESC',
+  TokenIdAsc = 'token_id_ASC',
+  TokenIdDesc = 'token_id_DESC',
+  TokenIsInviteOnlyAsc = 'token_isInviteOnly_ASC',
+  TokenIsInviteOnlyDesc = 'token_isInviteOnly_DESC',
+  TokenNumberOfRevenueShareActivationsAsc = 'token_numberOfRevenueShareActivations_ASC',
+  TokenNumberOfRevenueShareActivationsDesc = 'token_numberOfRevenueShareActivations_DESC',
+  TokenNumberOfVestedTransferIssuedAsc = 'token_numberOfVestedTransferIssued_ASC',
+  TokenNumberOfVestedTransferIssuedDesc = 'token_numberOfVestedTransferIssued_DESC',
+  TokenRevenueShareRatioPermillAsc = 'token_revenueShareRatioPermill_ASC',
+  TokenRevenueShareRatioPermillDesc = 'token_revenueShareRatioPermill_DESC',
+  TokenStatusAsc = 'token_status_ASC',
+  TokenStatusDesc = 'token_status_DESC',
+  TokenSymbolAsc = 'token_symbol_ASC',
+  TokenSymbolDesc = 'token_symbol_DESC',
+  TokenTotalSupplyAsc = 'token_totalSupply_ASC',
+  TokenTotalSupplyDesc = 'token_totalSupply_DESC',
+  TokenWhitelistApplicantLinkAsc = 'token_whitelistApplicantLink_ASC',
+  TokenWhitelistApplicantLinkDesc = 'token_whitelistApplicantLink_DESC',
+  TokenWhitelistApplicantNoteAsc = 'token_whitelistApplicantNote_ASC',
+  TokenWhitelistApplicantNoteDesc = 'token_whitelistApplicantNote_DESC',
+  TotalAmountAsc = 'totalAmount_ASC',
+  TotalAmountDesc = 'totalAmount_DESC',
+}
+
+export type TokenAccountWhereInput = {
+  AND?: InputMaybe<Array<TokenAccountWhereInput>>
+  OR?: InputMaybe<Array<TokenAccountWhereInput>>
+  ammTransactions_every?: InputMaybe<AmmTransactionWhereInput>
+  ammTransactions_none?: InputMaybe<AmmTransactionWhereInput>
+  ammTransactions_some?: InputMaybe<AmmTransactionWhereInput>
+  deleted_eq?: InputMaybe<Scalars['Boolean']>
+  deleted_isNull?: InputMaybe<Scalars['Boolean']>
+  deleted_not_eq?: InputMaybe<Scalars['Boolean']>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  member?: InputMaybe<MembershipWhereInput>
+  member_isNull?: InputMaybe<Scalars['Boolean']>
+  revenueShareParticipation_every?: InputMaybe<RevenueShareParticipationWhereInput>
+  revenueShareParticipation_none?: InputMaybe<RevenueShareParticipationWhereInput>
+  revenueShareParticipation_some?: InputMaybe<RevenueShareParticipationWhereInput>
+  saleTransactions_every?: InputMaybe<SaleTransactionWhereInput>
+  saleTransactions_none?: InputMaybe<SaleTransactionWhereInput>
+  saleTransactions_some?: InputMaybe<SaleTransactionWhereInput>
+  stakedAmount_eq?: InputMaybe<Scalars['BigInt']>
+  stakedAmount_gt?: InputMaybe<Scalars['BigInt']>
+  stakedAmount_gte?: InputMaybe<Scalars['BigInt']>
+  stakedAmount_in?: InputMaybe<Array<Scalars['BigInt']>>
+  stakedAmount_isNull?: InputMaybe<Scalars['Boolean']>
+  stakedAmount_lt?: InputMaybe<Scalars['BigInt']>
+  stakedAmount_lte?: InputMaybe<Scalars['BigInt']>
+  stakedAmount_not_eq?: InputMaybe<Scalars['BigInt']>
+  stakedAmount_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  token?: InputMaybe<CreatorTokenWhereInput>
+  token_isNull?: InputMaybe<Scalars['Boolean']>
+  totalAmount_eq?: InputMaybe<Scalars['BigInt']>
+  totalAmount_gt?: InputMaybe<Scalars['BigInt']>
+  totalAmount_gte?: InputMaybe<Scalars['BigInt']>
+  totalAmount_in?: InputMaybe<Array<Scalars['BigInt']>>
+  totalAmount_isNull?: InputMaybe<Scalars['Boolean']>
+  totalAmount_lt?: InputMaybe<Scalars['BigInt']>
+  totalAmount_lte?: InputMaybe<Scalars['BigInt']>
+  totalAmount_not_eq?: InputMaybe<Scalars['BigInt']>
+  totalAmount_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  vestingSchedules_every?: InputMaybe<VestedAccountWhereInput>
+  vestingSchedules_none?: InputMaybe<VestedAccountWhereInput>
+  vestingSchedules_some?: InputMaybe<VestedAccountWhereInput>
+}
+
+export type TokenAccountsConnection = {
+  __typename?: 'TokenAccountsConnection'
+  edges: Array<TokenAccountEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type TokenAvatar = TokenAvatarObject | TokenAvatarUri
+
+export type TokenAvatarObject = {
+  __typename?: 'TokenAvatarObject'
+  /** The avatar data object */
+  avatarObject: StorageDataObject
+}
+
+export type TokenAvatarUri = {
+  __typename?: 'TokenAvatarUri'
+  /** The avatar URL */
+  avatarUri: Scalars['String']
+}
+
+export type TokenAvatarWhereInput = {
+  avatarObject?: InputMaybe<StorageDataObjectWhereInput>
+  avatarObject_isNull?: InputMaybe<Scalars['Boolean']>
+  avatarUri_contains?: InputMaybe<Scalars['String']>
+  avatarUri_containsInsensitive?: InputMaybe<Scalars['String']>
+  avatarUri_endsWith?: InputMaybe<Scalars['String']>
+  avatarUri_eq?: InputMaybe<Scalars['String']>
+  avatarUri_gt?: InputMaybe<Scalars['String']>
+  avatarUri_gte?: InputMaybe<Scalars['String']>
+  avatarUri_in?: InputMaybe<Array<Scalars['String']>>
+  avatarUri_isNull?: InputMaybe<Scalars['Boolean']>
+  avatarUri_lt?: InputMaybe<Scalars['String']>
+  avatarUri_lte?: InputMaybe<Scalars['String']>
+  avatarUri_not_contains?: InputMaybe<Scalars['String']>
+  avatarUri_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  avatarUri_not_endsWith?: InputMaybe<Scalars['String']>
+  avatarUri_not_eq?: InputMaybe<Scalars['String']>
+  avatarUri_not_in?: InputMaybe<Array<Scalars['String']>>
+  avatarUri_not_startsWith?: InputMaybe<Scalars['String']>
+  avatarUri_startsWith?: InputMaybe<Scalars['String']>
+  isTypeOf_contains?: InputMaybe<Scalars['String']>
+  isTypeOf_containsInsensitive?: InputMaybe<Scalars['String']>
+  isTypeOf_endsWith?: InputMaybe<Scalars['String']>
+  isTypeOf_eq?: InputMaybe<Scalars['String']>
+  isTypeOf_gt?: InputMaybe<Scalars['String']>
+  isTypeOf_gte?: InputMaybe<Scalars['String']>
+  isTypeOf_in?: InputMaybe<Array<Scalars['String']>>
+  isTypeOf_isNull?: InputMaybe<Scalars['Boolean']>
+  isTypeOf_lt?: InputMaybe<Scalars['String']>
+  isTypeOf_lte?: InputMaybe<Scalars['String']>
+  isTypeOf_not_contains?: InputMaybe<Scalars['String']>
+  isTypeOf_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  isTypeOf_not_endsWith?: InputMaybe<Scalars['String']>
+  isTypeOf_not_eq?: InputMaybe<Scalars['String']>
+  isTypeOf_not_in?: InputMaybe<Array<Scalars['String']>>
+  isTypeOf_not_startsWith?: InputMaybe<Scalars['String']>
+  isTypeOf_startsWith?: InputMaybe<Scalars['String']>
+}
+
+export type TokenChannel = {
+  __typename?: 'TokenChannel'
+  /** channel reference */
+  channel: Channel
+  /** counter */
+  id: Scalars['String']
+  /** token reference */
+  token: CreatorToken
+}
+
+export type TokenChannelEdge = {
+  __typename?: 'TokenChannelEdge'
+  cursor: Scalars['String']
+  node: TokenChannel
+}
+
+export enum TokenChannelOrderByInput {
+  ChannelChannelStateBloatBondAsc = 'channel_channelStateBloatBond_ASC',
+  ChannelChannelStateBloatBondDesc = 'channel_channelStateBloatBond_DESC',
+  ChannelCreatedAtAsc = 'channel_createdAt_ASC',
+  ChannelCreatedAtDesc = 'channel_createdAt_DESC',
+  ChannelCreatedInBlockAsc = 'channel_createdInBlock_ASC',
+  ChannelCreatedInBlockDesc = 'channel_createdInBlock_DESC',
+  ChannelCumulativeRewardClaimedAsc = 'channel_cumulativeRewardClaimed_ASC',
+  ChannelCumulativeRewardClaimedDesc = 'channel_cumulativeRewardClaimed_DESC',
+  ChannelDescriptionAsc = 'channel_description_ASC',
+  ChannelDescriptionDesc = 'channel_description_DESC',
+  ChannelFollowsNumAsc = 'channel_followsNum_ASC',
+  ChannelFollowsNumDesc = 'channel_followsNum_DESC',
+  ChannelIdAsc = 'channel_id_ASC',
+  ChannelIdDesc = 'channel_id_DESC',
+  ChannelIsCensoredAsc = 'channel_isCensored_ASC',
+  ChannelIsCensoredDesc = 'channel_isCensored_DESC',
+  ChannelIsExcludedAsc = 'channel_isExcluded_ASC',
+  ChannelIsExcludedDesc = 'channel_isExcluded_DESC',
+  ChannelIsPublicAsc = 'channel_isPublic_ASC',
+  ChannelIsPublicDesc = 'channel_isPublic_DESC',
+  ChannelLanguageAsc = 'channel_language_ASC',
+  ChannelLanguageDesc = 'channel_language_DESC',
+  ChannelRevenueShareRatioPercentAsc = 'channel_revenueShareRatioPercent_ASC',
+  ChannelRevenueShareRatioPercentDesc = 'channel_revenueShareRatioPercent_DESC',
+  ChannelRewardAccountAsc = 'channel_rewardAccount_ASC',
+  ChannelRewardAccountDesc = 'channel_rewardAccount_DESC',
+  ChannelTitleAsc = 'channel_title_ASC',
+  ChannelTitleDesc = 'channel_title_DESC',
+  ChannelTotalVideosCreatedAsc = 'channel_totalVideosCreated_ASC',
+  ChannelTotalVideosCreatedDesc = 'channel_totalVideosCreated_DESC',
+  ChannelVideoViewsNumAsc = 'channel_videoViewsNum_ASC',
+  ChannelVideoViewsNumDesc = 'channel_videoViewsNum_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  TokenAccountsNumAsc = 'token_accountsNum_ASC',
+  TokenAccountsNumDesc = 'token_accountsNum_DESC',
+  TokenAnnualCreatorRewardAsc = 'token_annualCreatorReward_ASC',
+  TokenAnnualCreatorRewardDesc = 'token_annualCreatorReward_DESC',
+  TokenCreatedAtAsc = 'token_createdAt_ASC',
+  TokenCreatedAtDesc = 'token_createdAt_DESC',
+  TokenDeissuedAsc = 'token_deissued_ASC',
+  TokenDeissuedDesc = 'token_deissued_DESC',
+  TokenDescriptionAsc = 'token_description_ASC',
+  TokenDescriptionDesc = 'token_description_DESC',
+  TokenIdAsc = 'token_id_ASC',
+  TokenIdDesc = 'token_id_DESC',
+  TokenIsInviteOnlyAsc = 'token_isInviteOnly_ASC',
+  TokenIsInviteOnlyDesc = 'token_isInviteOnly_DESC',
+  TokenNumberOfRevenueShareActivationsAsc = 'token_numberOfRevenueShareActivations_ASC',
+  TokenNumberOfRevenueShareActivationsDesc = 'token_numberOfRevenueShareActivations_DESC',
+  TokenNumberOfVestedTransferIssuedAsc = 'token_numberOfVestedTransferIssued_ASC',
+  TokenNumberOfVestedTransferIssuedDesc = 'token_numberOfVestedTransferIssued_DESC',
+  TokenRevenueShareRatioPermillAsc = 'token_revenueShareRatioPermill_ASC',
+  TokenRevenueShareRatioPermillDesc = 'token_revenueShareRatioPermill_DESC',
+  TokenStatusAsc = 'token_status_ASC',
+  TokenStatusDesc = 'token_status_DESC',
+  TokenSymbolAsc = 'token_symbol_ASC',
+  TokenSymbolDesc = 'token_symbol_DESC',
+  TokenTotalSupplyAsc = 'token_totalSupply_ASC',
+  TokenTotalSupplyDesc = 'token_totalSupply_DESC',
+  TokenWhitelistApplicantLinkAsc = 'token_whitelistApplicantLink_ASC',
+  TokenWhitelistApplicantLinkDesc = 'token_whitelistApplicantLink_DESC',
+  TokenWhitelistApplicantNoteAsc = 'token_whitelistApplicantNote_ASC',
+  TokenWhitelistApplicantNoteDesc = 'token_whitelistApplicantNote_DESC',
+}
+
+export type TokenChannelWhereInput = {
+  AND?: InputMaybe<Array<TokenChannelWhereInput>>
+  OR?: InputMaybe<Array<TokenChannelWhereInput>>
+  channel?: InputMaybe<ChannelWhereInput>
+  channel_isNull?: InputMaybe<Scalars['Boolean']>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  token?: InputMaybe<CreatorTokenWhereInput>
+  token_isNull?: InputMaybe<Scalars['Boolean']>
+}
+
+export type TokenChannelsConnection = {
+  __typename?: 'TokenChannelsConnection'
+  edges: Array<TokenChannelEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type TokenEdge = {
+  __typename?: 'TokenEdge'
+  cursor: Scalars['String']
+  node: Token
+}
+
+export enum TokenOrderByInput {
+  ExpiryAsc = 'expiry_ASC',
+  ExpiryDesc = 'expiry_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  IssuedAtAsc = 'issuedAt_ASC',
+  IssuedAtDesc = 'issuedAt_DESC',
+  IssuedForEmailAsc = 'issuedFor_email_ASC',
+  IssuedForEmailDesc = 'issuedFor_email_DESC',
+  IssuedForIdAsc = 'issuedFor_id_ASC',
+  IssuedForIdDesc = 'issuedFor_id_DESC',
+  IssuedForIsBlockedAsc = 'issuedFor_isBlocked_ASC',
+  IssuedForIsBlockedDesc = 'issuedFor_isBlocked_DESC',
+  IssuedForIsEmailConfirmedAsc = 'issuedFor_isEmailConfirmed_ASC',
+  IssuedForIsEmailConfirmedDesc = 'issuedFor_isEmailConfirmed_DESC',
+  IssuedForJoystreamAccountAsc = 'issuedFor_joystreamAccount_ASC',
+  IssuedForJoystreamAccountDesc = 'issuedFor_joystreamAccount_DESC',
+  IssuedForRegisteredAtAsc = 'issuedFor_registeredAt_ASC',
+  IssuedForRegisteredAtDesc = 'issuedFor_registeredAt_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+}
+
+export enum TokenStatus {
+  Idle = 'IDLE',
+  Market = 'MARKET',
+  Sale = 'SALE',
+}
+
+export enum TokenType {
+  EmailConfirmation = 'EMAIL_CONFIRMATION',
+}
+
+export type TokenWhereInput = {
+  AND?: InputMaybe<Array<TokenWhereInput>>
+  OR?: InputMaybe<Array<TokenWhereInput>>
+  expiry_eq?: InputMaybe<Scalars['DateTime']>
+  expiry_gt?: InputMaybe<Scalars['DateTime']>
+  expiry_gte?: InputMaybe<Scalars['DateTime']>
+  expiry_in?: InputMaybe<Array<Scalars['DateTime']>>
+  expiry_isNull?: InputMaybe<Scalars['Boolean']>
+  expiry_lt?: InputMaybe<Scalars['DateTime']>
+  expiry_lte?: InputMaybe<Scalars['DateTime']>
+  expiry_not_eq?: InputMaybe<Scalars['DateTime']>
+  expiry_not_in?: InputMaybe<Array<Scalars['DateTime']>>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  issuedAt_eq?: InputMaybe<Scalars['DateTime']>
+  issuedAt_gt?: InputMaybe<Scalars['DateTime']>
+  issuedAt_gte?: InputMaybe<Scalars['DateTime']>
+  issuedAt_in?: InputMaybe<Array<Scalars['DateTime']>>
+  issuedAt_isNull?: InputMaybe<Scalars['Boolean']>
+  issuedAt_lt?: InputMaybe<Scalars['DateTime']>
+  issuedAt_lte?: InputMaybe<Scalars['DateTime']>
+  issuedAt_not_eq?: InputMaybe<Scalars['DateTime']>
+  issuedAt_not_in?: InputMaybe<Array<Scalars['DateTime']>>
+  issuedFor?: InputMaybe<AccountWhereInput>
+  issuedFor_isNull?: InputMaybe<Scalars['Boolean']>
+  type_eq?: InputMaybe<TokenType>
+  type_in?: InputMaybe<Array<TokenType>>
+  type_isNull?: InputMaybe<Scalars['Boolean']>
+  type_not_eq?: InputMaybe<TokenType>
+  type_not_in?: InputMaybe<Array<TokenType>>
+}
+
+export type TokensConnection = {
+  __typename?: 'TokensConnection'
+  edges: Array<TokenEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
 export type TopSellingChannelsResult = {
   __typename?: 'TopSellingChannelsResult'
   amount: Scalars['String']
   channel: Channel
   nftSold: Scalars['Int']
+}
+
+export type TrailerVideo = {
+  __typename?: 'TrailerVideo'
+  /** counter */
+  id: Scalars['String']
+  /** token reference, unique as one token cannot have multiple trailers */
+  token: CreatorToken
+  /** video reference */
+  video: Video
+}
+
+export type TrailerVideoEdge = {
+  __typename?: 'TrailerVideoEdge'
+  cursor: Scalars['String']
+  node: TrailerVideo
+}
+
+export enum TrailerVideoOrderByInput {
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  TokenAccountsNumAsc = 'token_accountsNum_ASC',
+  TokenAccountsNumDesc = 'token_accountsNum_DESC',
+  TokenAnnualCreatorRewardAsc = 'token_annualCreatorReward_ASC',
+  TokenAnnualCreatorRewardDesc = 'token_annualCreatorReward_DESC',
+  TokenCreatedAtAsc = 'token_createdAt_ASC',
+  TokenCreatedAtDesc = 'token_createdAt_DESC',
+  TokenDeissuedAsc = 'token_deissued_ASC',
+  TokenDeissuedDesc = 'token_deissued_DESC',
+  TokenDescriptionAsc = 'token_description_ASC',
+  TokenDescriptionDesc = 'token_description_DESC',
+  TokenIdAsc = 'token_id_ASC',
+  TokenIdDesc = 'token_id_DESC',
+  TokenIsInviteOnlyAsc = 'token_isInviteOnly_ASC',
+  TokenIsInviteOnlyDesc = 'token_isInviteOnly_DESC',
+  TokenNumberOfRevenueShareActivationsAsc = 'token_numberOfRevenueShareActivations_ASC',
+  TokenNumberOfRevenueShareActivationsDesc = 'token_numberOfRevenueShareActivations_DESC',
+  TokenNumberOfVestedTransferIssuedAsc = 'token_numberOfVestedTransferIssued_ASC',
+  TokenNumberOfVestedTransferIssuedDesc = 'token_numberOfVestedTransferIssued_DESC',
+  TokenRevenueShareRatioPermillAsc = 'token_revenueShareRatioPermill_ASC',
+  TokenRevenueShareRatioPermillDesc = 'token_revenueShareRatioPermill_DESC',
+  TokenStatusAsc = 'token_status_ASC',
+  TokenStatusDesc = 'token_status_DESC',
+  TokenSymbolAsc = 'token_symbol_ASC',
+  TokenSymbolDesc = 'token_symbol_DESC',
+  TokenTotalSupplyAsc = 'token_totalSupply_ASC',
+  TokenTotalSupplyDesc = 'token_totalSupply_DESC',
+  TokenWhitelistApplicantLinkAsc = 'token_whitelistApplicantLink_ASC',
+  TokenWhitelistApplicantLinkDesc = 'token_whitelistApplicantLink_DESC',
+  TokenWhitelistApplicantNoteAsc = 'token_whitelistApplicantNote_ASC',
+  TokenWhitelistApplicantNoteDesc = 'token_whitelistApplicantNote_DESC',
+  VideoCommentsCountAsc = 'video_commentsCount_ASC',
+  VideoCommentsCountDesc = 'video_commentsCount_DESC',
+  VideoCreatedAtAsc = 'video_createdAt_ASC',
+  VideoCreatedAtDesc = 'video_createdAt_DESC',
+  VideoCreatedInBlockAsc = 'video_createdInBlock_ASC',
+  VideoCreatedInBlockDesc = 'video_createdInBlock_DESC',
+  VideoDescriptionAsc = 'video_description_ASC',
+  VideoDescriptionDesc = 'video_description_DESC',
+  VideoDurationAsc = 'video_duration_ASC',
+  VideoDurationDesc = 'video_duration_DESC',
+  VideoHasMarketingAsc = 'video_hasMarketing_ASC',
+  VideoHasMarketingDesc = 'video_hasMarketing_DESC',
+  VideoIdAsc = 'video_id_ASC',
+  VideoIdDesc = 'video_id_DESC',
+  VideoIsCensoredAsc = 'video_isCensored_ASC',
+  VideoIsCensoredDesc = 'video_isCensored_DESC',
+  VideoIsCommentSectionEnabledAsc = 'video_isCommentSectionEnabled_ASC',
+  VideoIsCommentSectionEnabledDesc = 'video_isCommentSectionEnabled_DESC',
+  VideoIsExcludedAsc = 'video_isExcluded_ASC',
+  VideoIsExcludedDesc = 'video_isExcluded_DESC',
+  VideoIsExplicitAsc = 'video_isExplicit_ASC',
+  VideoIsExplicitDesc = 'video_isExplicit_DESC',
+  VideoIsPublicAsc = 'video_isPublic_ASC',
+  VideoIsPublicDesc = 'video_isPublic_DESC',
+  VideoIsReactionFeatureEnabledAsc = 'video_isReactionFeatureEnabled_ASC',
+  VideoIsReactionFeatureEnabledDesc = 'video_isReactionFeatureEnabled_DESC',
+  VideoLanguageAsc = 'video_language_ASC',
+  VideoLanguageDesc = 'video_language_DESC',
+  VideoPublishedBeforeJoystreamAsc = 'video_publishedBeforeJoystream_ASC',
+  VideoPublishedBeforeJoystreamDesc = 'video_publishedBeforeJoystream_DESC',
+  VideoReactionsCountAsc = 'video_reactionsCount_ASC',
+  VideoReactionsCountDesc = 'video_reactionsCount_DESC',
+  VideoTitleAsc = 'video_title_ASC',
+  VideoTitleDesc = 'video_title_DESC',
+  VideoVideoRelevanceAsc = 'video_videoRelevance_ASC',
+  VideoVideoRelevanceDesc = 'video_videoRelevance_DESC',
+  VideoVideoStateBloatBondAsc = 'video_videoStateBloatBond_ASC',
+  VideoVideoStateBloatBondDesc = 'video_videoStateBloatBond_DESC',
+  VideoViewsNumAsc = 'video_viewsNum_ASC',
+  VideoViewsNumDesc = 'video_viewsNum_DESC',
+  VideoYtVideoIdAsc = 'video_ytVideoId_ASC',
+  VideoYtVideoIdDesc = 'video_ytVideoId_DESC',
+}
+
+export type TrailerVideoWhereInput = {
+  AND?: InputMaybe<Array<TrailerVideoWhereInput>>
+  OR?: InputMaybe<Array<TrailerVideoWhereInput>>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  token?: InputMaybe<CreatorTokenWhereInput>
+  token_isNull?: InputMaybe<Scalars['Boolean']>
+  video?: InputMaybe<VideoWhereInput>
+  video_isNull?: InputMaybe<Scalars['Boolean']>
+}
+
+export type TrailerVideosConnection = {
+  __typename?: 'TrailerVideosConnection'
+  edges: Array<TrailerVideoEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
 }
 
 /** NFT transactional state */
@@ -7332,6 +10865,466 @@ export type TransactionalStatusWhereInput = {
   price_not_in?: InputMaybe<Array<Scalars['BigInt']>>
 }
 
+export type User = {
+  __typename?: 'User'
+  /** The account associated with the user (if any) */
+  account?: Maybe<Account>
+  /** User's channel follows */
+  channelFollows: Array<ChannelFollow>
+  /** Unique identifier (32-byte string, securely random) */
+  id: Scalars['String']
+  /** Whether the user has root (gateway operator) privileges */
+  isRoot: Scalars['Boolean']
+  /** NFT featuring requests associated with the user */
+  nftFeaturingRequests: Array<NftFeaturingRequest>
+  /** Reports associated with the user */
+  reports: Array<Report>
+  /** Video views associated with the user */
+  videoViewEvents: Array<VideoViewEvent>
+}
+
+export type UserChannelFollowsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<ChannelFollowOrderByInput>>
+  where?: InputMaybe<ChannelFollowWhereInput>
+}
+
+export type UserNftFeaturingRequestsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<NftFeaturingRequestOrderByInput>>
+  where?: InputMaybe<NftFeaturingRequestWhereInput>
+}
+
+export type UserReportsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<ReportOrderByInput>>
+  where?: InputMaybe<ReportWhereInput>
+}
+
+export type UserVideoViewEventsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<VideoViewEventOrderByInput>>
+  where?: InputMaybe<VideoViewEventWhereInput>
+}
+
+export type UserEdge = {
+  __typename?: 'UserEdge'
+  cursor: Scalars['String']
+  node: User
+}
+
+export enum UserOrderByInput {
+  AccountEmailAsc = 'account_email_ASC',
+  AccountEmailDesc = 'account_email_DESC',
+  AccountIdAsc = 'account_id_ASC',
+  AccountIdDesc = 'account_id_DESC',
+  AccountIsBlockedAsc = 'account_isBlocked_ASC',
+  AccountIsBlockedDesc = 'account_isBlocked_DESC',
+  AccountIsEmailConfirmedAsc = 'account_isEmailConfirmed_ASC',
+  AccountIsEmailConfirmedDesc = 'account_isEmailConfirmed_DESC',
+  AccountJoystreamAccountAsc = 'account_joystreamAccount_ASC',
+  AccountJoystreamAccountDesc = 'account_joystreamAccount_DESC',
+  AccountRegisteredAtAsc = 'account_registeredAt_ASC',
+  AccountRegisteredAtDesc = 'account_registeredAt_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  IsRootAsc = 'isRoot_ASC',
+  IsRootDesc = 'isRoot_DESC',
+}
+
+export type UserWhereInput = {
+  AND?: InputMaybe<Array<UserWhereInput>>
+  OR?: InputMaybe<Array<UserWhereInput>>
+  account?: InputMaybe<AccountWhereInput>
+  account_isNull?: InputMaybe<Scalars['Boolean']>
+  channelFollows_every?: InputMaybe<ChannelFollowWhereInput>
+  channelFollows_none?: InputMaybe<ChannelFollowWhereInput>
+  channelFollows_some?: InputMaybe<ChannelFollowWhereInput>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  isRoot_eq?: InputMaybe<Scalars['Boolean']>
+  isRoot_isNull?: InputMaybe<Scalars['Boolean']>
+  isRoot_not_eq?: InputMaybe<Scalars['Boolean']>
+  nftFeaturingRequests_every?: InputMaybe<NftFeaturingRequestWhereInput>
+  nftFeaturingRequests_none?: InputMaybe<NftFeaturingRequestWhereInput>
+  nftFeaturingRequests_some?: InputMaybe<NftFeaturingRequestWhereInput>
+  reports_every?: InputMaybe<ReportWhereInput>
+  reports_none?: InputMaybe<ReportWhereInput>
+  reports_some?: InputMaybe<ReportWhereInput>
+  videoViewEvents_every?: InputMaybe<VideoViewEventWhereInput>
+  videoViewEvents_none?: InputMaybe<VideoViewEventWhereInput>
+  videoViewEvents_some?: InputMaybe<VideoViewEventWhereInput>
+}
+
+export type UsersConnection = {
+  __typename?: 'UsersConnection'
+  edges: Array<UserEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type VestedAccount = {
+  __typename?: 'VestedAccount'
+  /** account reference */
+  account: TokenAccount
+  /** counter */
+  id: Scalars['String']
+  /** total amount the schedule is vested */
+  totalVestingAmount: Scalars['BigInt']
+  /** vesting schedule reference */
+  vesting: VestingSchedule
+  /** vesting source */
+  vestingSource: VestingSource
+}
+
+export type VestedAccountEdge = {
+  __typename?: 'VestedAccountEdge'
+  cursor: Scalars['String']
+  node: VestedAccount
+}
+
+export enum VestedAccountOrderByInput {
+  AccountDeletedAsc = 'account_deleted_ASC',
+  AccountDeletedDesc = 'account_deleted_DESC',
+  AccountIdAsc = 'account_id_ASC',
+  AccountIdDesc = 'account_id_DESC',
+  AccountStakedAmountAsc = 'account_stakedAmount_ASC',
+  AccountStakedAmountDesc = 'account_stakedAmount_DESC',
+  AccountTotalAmountAsc = 'account_totalAmount_ASC',
+  AccountTotalAmountDesc = 'account_totalAmount_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  TotalVestingAmountAsc = 'totalVestingAmount_ASC',
+  TotalVestingAmountDesc = 'totalVestingAmount_DESC',
+  VestingSourceIsTypeOfAsc = 'vestingSource_isTypeOf_ASC',
+  VestingSourceIsTypeOfDesc = 'vestingSource_isTypeOf_DESC',
+  VestingSourcePhantomAsc = 'vestingSource_phantom_ASC',
+  VestingSourcePhantomDesc = 'vestingSource_phantom_DESC',
+  VestingCliffBlockAsc = 'vesting_cliffBlock_ASC',
+  VestingCliffBlockDesc = 'vesting_cliffBlock_DESC',
+  VestingCliffDurationBlocksAsc = 'vesting_cliffDurationBlocks_ASC',
+  VestingCliffDurationBlocksDesc = 'vesting_cliffDurationBlocks_DESC',
+  VestingCliffPercentAsc = 'vesting_cliffPercent_ASC',
+  VestingCliffPercentDesc = 'vesting_cliffPercent_DESC',
+  VestingEndsAtAsc = 'vesting_endsAt_ASC',
+  VestingEndsAtDesc = 'vesting_endsAt_DESC',
+  VestingIdAsc = 'vesting_id_ASC',
+  VestingIdDesc = 'vesting_id_DESC',
+  VestingVestingDurationBlocksAsc = 'vesting_vestingDurationBlocks_ASC',
+  VestingVestingDurationBlocksDesc = 'vesting_vestingDurationBlocks_DESC',
+}
+
+export type VestedAccountWhereInput = {
+  AND?: InputMaybe<Array<VestedAccountWhereInput>>
+  OR?: InputMaybe<Array<VestedAccountWhereInput>>
+  account?: InputMaybe<TokenAccountWhereInput>
+  account_isNull?: InputMaybe<Scalars['Boolean']>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  totalVestingAmount_eq?: InputMaybe<Scalars['BigInt']>
+  totalVestingAmount_gt?: InputMaybe<Scalars['BigInt']>
+  totalVestingAmount_gte?: InputMaybe<Scalars['BigInt']>
+  totalVestingAmount_in?: InputMaybe<Array<Scalars['BigInt']>>
+  totalVestingAmount_isNull?: InputMaybe<Scalars['Boolean']>
+  totalVestingAmount_lt?: InputMaybe<Scalars['BigInt']>
+  totalVestingAmount_lte?: InputMaybe<Scalars['BigInt']>
+  totalVestingAmount_not_eq?: InputMaybe<Scalars['BigInt']>
+  totalVestingAmount_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  vesting?: InputMaybe<VestingScheduleWhereInput>
+  vestingSource?: InputMaybe<VestingSourceWhereInput>
+  vestingSource_isNull?: InputMaybe<Scalars['Boolean']>
+  vesting_isNull?: InputMaybe<Scalars['Boolean']>
+}
+
+export type VestedAccountsConnection = {
+  __typename?: 'VestedAccountsConnection'
+  edges: Array<VestedAccountEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type VestedSale = {
+  __typename?: 'VestedSale'
+  /** counter */
+  id: Scalars['String']
+  /** Sale reference */
+  sale: Sale
+  /** vesting schedule reference */
+  vesting: VestingSchedule
+}
+
+export type VestedSaleEdge = {
+  __typename?: 'VestedSaleEdge'
+  cursor: Scalars['String']
+  node: VestedSale
+}
+
+export enum VestedSaleOrderByInput {
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  SaleCreatedInAsc = 'sale_createdIn_ASC',
+  SaleCreatedInDesc = 'sale_createdIn_DESC',
+  SaleEndsAtAsc = 'sale_endsAt_ASC',
+  SaleEndsAtDesc = 'sale_endsAt_DESC',
+  SaleFinalizedAsc = 'sale_finalized_ASC',
+  SaleFinalizedDesc = 'sale_finalized_DESC',
+  SaleIdAsc = 'sale_id_ASC',
+  SaleIdDesc = 'sale_id_DESC',
+  SaleMaxAmountPerMemberAsc = 'sale_maxAmountPerMember_ASC',
+  SaleMaxAmountPerMemberDesc = 'sale_maxAmountPerMember_DESC',
+  SalePricePerUnitAsc = 'sale_pricePerUnit_ASC',
+  SalePricePerUnitDesc = 'sale_pricePerUnit_DESC',
+  SaleStartBlockAsc = 'sale_startBlock_ASC',
+  SaleStartBlockDesc = 'sale_startBlock_DESC',
+  SaleTermsAndConditionsAsc = 'sale_termsAndConditions_ASC',
+  SaleTermsAndConditionsDesc = 'sale_termsAndConditions_DESC',
+  SaleTokenSaleAllocationAsc = 'sale_tokenSaleAllocation_ASC',
+  SaleTokenSaleAllocationDesc = 'sale_tokenSaleAllocation_DESC',
+  SaleTokensSoldAsc = 'sale_tokensSold_ASC',
+  SaleTokensSoldDesc = 'sale_tokensSold_DESC',
+  VestingCliffBlockAsc = 'vesting_cliffBlock_ASC',
+  VestingCliffBlockDesc = 'vesting_cliffBlock_DESC',
+  VestingCliffDurationBlocksAsc = 'vesting_cliffDurationBlocks_ASC',
+  VestingCliffDurationBlocksDesc = 'vesting_cliffDurationBlocks_DESC',
+  VestingCliffPercentAsc = 'vesting_cliffPercent_ASC',
+  VestingCliffPercentDesc = 'vesting_cliffPercent_DESC',
+  VestingEndsAtAsc = 'vesting_endsAt_ASC',
+  VestingEndsAtDesc = 'vesting_endsAt_DESC',
+  VestingIdAsc = 'vesting_id_ASC',
+  VestingIdDesc = 'vesting_id_DESC',
+  VestingVestingDurationBlocksAsc = 'vesting_vestingDurationBlocks_ASC',
+  VestingVestingDurationBlocksDesc = 'vesting_vestingDurationBlocks_DESC',
+}
+
+export type VestedSaleWhereInput = {
+  AND?: InputMaybe<Array<VestedSaleWhereInput>>
+  OR?: InputMaybe<Array<VestedSaleWhereInput>>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  sale?: InputMaybe<SaleWhereInput>
+  sale_isNull?: InputMaybe<Scalars['Boolean']>
+  vesting?: InputMaybe<VestingScheduleWhereInput>
+  vesting_isNull?: InputMaybe<Scalars['Boolean']>
+}
+
+export type VestedSalesConnection = {
+  __typename?: 'VestedSalesConnection'
+  edges: Array<VestedSaleEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type VestingSchedule = {
+  __typename?: 'VestingSchedule'
+  /** accounts reference */
+  accounts: Array<VestedAccount>
+  /** cliff block */
+  cliffBlock: Scalars['Int']
+  /** cliff duration in blocks */
+  cliffDurationBlocks: Scalars['Int']
+  /** % of amount vested immediately after cliff period */
+  cliffPercent: Scalars['Int']
+  /** vesting ending block */
+  endsAt: Scalars['Int']
+  /** counter */
+  id: Scalars['String']
+  /** vesting schedule for sale */
+  vestedSale?: Maybe<VestedSale>
+  /** vesting duration in blocks */
+  vestingDurationBlocks: Scalars['Int']
+}
+
+export type VestingScheduleAccountsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<VestedAccountOrderByInput>>
+  where?: InputMaybe<VestedAccountWhereInput>
+}
+
+export type VestingScheduleEdge = {
+  __typename?: 'VestingScheduleEdge'
+  cursor: Scalars['String']
+  node: VestingSchedule
+}
+
+export enum VestingScheduleOrderByInput {
+  CliffBlockAsc = 'cliffBlock_ASC',
+  CliffBlockDesc = 'cliffBlock_DESC',
+  CliffDurationBlocksAsc = 'cliffDurationBlocks_ASC',
+  CliffDurationBlocksDesc = 'cliffDurationBlocks_DESC',
+  CliffPercentAsc = 'cliffPercent_ASC',
+  CliffPercentDesc = 'cliffPercent_DESC',
+  EndsAtAsc = 'endsAt_ASC',
+  EndsAtDesc = 'endsAt_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  VestedSaleIdAsc = 'vestedSale_id_ASC',
+  VestedSaleIdDesc = 'vestedSale_id_DESC',
+  VestingDurationBlocksAsc = 'vestingDurationBlocks_ASC',
+  VestingDurationBlocksDesc = 'vestingDurationBlocks_DESC',
+}
+
+export type VestingScheduleWhereInput = {
+  AND?: InputMaybe<Array<VestingScheduleWhereInput>>
+  OR?: InputMaybe<Array<VestingScheduleWhereInput>>
+  accounts_every?: InputMaybe<VestedAccountWhereInput>
+  accounts_none?: InputMaybe<VestedAccountWhereInput>
+  accounts_some?: InputMaybe<VestedAccountWhereInput>
+  cliffBlock_eq?: InputMaybe<Scalars['Int']>
+  cliffBlock_gt?: InputMaybe<Scalars['Int']>
+  cliffBlock_gte?: InputMaybe<Scalars['Int']>
+  cliffBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  cliffBlock_isNull?: InputMaybe<Scalars['Boolean']>
+  cliffBlock_lt?: InputMaybe<Scalars['Int']>
+  cliffBlock_lte?: InputMaybe<Scalars['Int']>
+  cliffBlock_not_eq?: InputMaybe<Scalars['Int']>
+  cliffBlock_not_in?: InputMaybe<Array<Scalars['Int']>>
+  cliffDurationBlocks_eq?: InputMaybe<Scalars['Int']>
+  cliffDurationBlocks_gt?: InputMaybe<Scalars['Int']>
+  cliffDurationBlocks_gte?: InputMaybe<Scalars['Int']>
+  cliffDurationBlocks_in?: InputMaybe<Array<Scalars['Int']>>
+  cliffDurationBlocks_isNull?: InputMaybe<Scalars['Boolean']>
+  cliffDurationBlocks_lt?: InputMaybe<Scalars['Int']>
+  cliffDurationBlocks_lte?: InputMaybe<Scalars['Int']>
+  cliffDurationBlocks_not_eq?: InputMaybe<Scalars['Int']>
+  cliffDurationBlocks_not_in?: InputMaybe<Array<Scalars['Int']>>
+  cliffPercent_eq?: InputMaybe<Scalars['Int']>
+  cliffPercent_gt?: InputMaybe<Scalars['Int']>
+  cliffPercent_gte?: InputMaybe<Scalars['Int']>
+  cliffPercent_in?: InputMaybe<Array<Scalars['Int']>>
+  cliffPercent_isNull?: InputMaybe<Scalars['Boolean']>
+  cliffPercent_lt?: InputMaybe<Scalars['Int']>
+  cliffPercent_lte?: InputMaybe<Scalars['Int']>
+  cliffPercent_not_eq?: InputMaybe<Scalars['Int']>
+  cliffPercent_not_in?: InputMaybe<Array<Scalars['Int']>>
+  endsAt_eq?: InputMaybe<Scalars['Int']>
+  endsAt_gt?: InputMaybe<Scalars['Int']>
+  endsAt_gte?: InputMaybe<Scalars['Int']>
+  endsAt_in?: InputMaybe<Array<Scalars['Int']>>
+  endsAt_isNull?: InputMaybe<Scalars['Boolean']>
+  endsAt_lt?: InputMaybe<Scalars['Int']>
+  endsAt_lte?: InputMaybe<Scalars['Int']>
+  endsAt_not_eq?: InputMaybe<Scalars['Int']>
+  endsAt_not_in?: InputMaybe<Array<Scalars['Int']>>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  vestedSale?: InputMaybe<VestedSaleWhereInput>
+  vestedSale_isNull?: InputMaybe<Scalars['Boolean']>
+  vestingDurationBlocks_eq?: InputMaybe<Scalars['Int']>
+  vestingDurationBlocks_gt?: InputMaybe<Scalars['Int']>
+  vestingDurationBlocks_gte?: InputMaybe<Scalars['Int']>
+  vestingDurationBlocks_in?: InputMaybe<Array<Scalars['Int']>>
+  vestingDurationBlocks_isNull?: InputMaybe<Scalars['Boolean']>
+  vestingDurationBlocks_lt?: InputMaybe<Scalars['Int']>
+  vestingDurationBlocks_lte?: InputMaybe<Scalars['Int']>
+  vestingDurationBlocks_not_eq?: InputMaybe<Scalars['Int']>
+  vestingDurationBlocks_not_in?: InputMaybe<Array<Scalars['Int']>>
+}
+
+export type VestingSchedulesConnection = {
+  __typename?: 'VestingSchedulesConnection'
+  edges: Array<VestingScheduleEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type VestingSource = InitialIssuanceVestingSource | IssuerTransferVestingSource | SaleVestingSource
+
+export type VestingSourceWhereInput = {
+  isTypeOf_contains?: InputMaybe<Scalars['String']>
+  isTypeOf_containsInsensitive?: InputMaybe<Scalars['String']>
+  isTypeOf_endsWith?: InputMaybe<Scalars['String']>
+  isTypeOf_eq?: InputMaybe<Scalars['String']>
+  isTypeOf_gt?: InputMaybe<Scalars['String']>
+  isTypeOf_gte?: InputMaybe<Scalars['String']>
+  isTypeOf_in?: InputMaybe<Array<Scalars['String']>>
+  isTypeOf_isNull?: InputMaybe<Scalars['Boolean']>
+  isTypeOf_lt?: InputMaybe<Scalars['String']>
+  isTypeOf_lte?: InputMaybe<Scalars['String']>
+  isTypeOf_not_contains?: InputMaybe<Scalars['String']>
+  isTypeOf_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  isTypeOf_not_endsWith?: InputMaybe<Scalars['String']>
+  isTypeOf_not_eq?: InputMaybe<Scalars['String']>
+  isTypeOf_not_in?: InputMaybe<Array<Scalars['String']>>
+  isTypeOf_not_startsWith?: InputMaybe<Scalars['String']>
+  isTypeOf_startsWith?: InputMaybe<Scalars['String']>
+  phantom_eq?: InputMaybe<Scalars['Int']>
+  phantom_gt?: InputMaybe<Scalars['Int']>
+  phantom_gte?: InputMaybe<Scalars['Int']>
+  phantom_in?: InputMaybe<Array<Scalars['Int']>>
+  phantom_isNull?: InputMaybe<Scalars['Boolean']>
+  phantom_lt?: InputMaybe<Scalars['Int']>
+  phantom_lte?: InputMaybe<Scalars['Int']>
+  phantom_not_eq?: InputMaybe<Scalars['Int']>
+  phantom_not_in?: InputMaybe<Array<Scalars['Int']>>
+  sale?: InputMaybe<SaleWhereInput>
+  sale_isNull?: InputMaybe<Scalars['Boolean']>
+}
+
 export type Video = {
   __typename?: 'Video'
   /** Reference to a video category */
@@ -7394,6 +11387,8 @@ export type Video = {
   thumbnailPhoto?: Maybe<StorageDataObject>
   /** The title of the video */
   title?: Maybe<Scalars['String']>
+  /** token for which this video is trailer */
+  trailerVideoForToken?: Maybe<Token>
   /** Video relevance score based on the views, reactions, comments and update date */
   videoRelevance: Scalars['Float']
   /** Value of video state bloat bond fee paid by channel owner */
@@ -8164,6 +12159,8 @@ export enum VideoOrderByInput {
   ChannelIsPublicDesc = 'channel_isPublic_DESC',
   ChannelLanguageAsc = 'channel_language_ASC',
   ChannelLanguageDesc = 'channel_language_DESC',
+  ChannelRevenueShareRatioPercentAsc = 'channel_revenueShareRatioPercent_ASC',
+  ChannelRevenueShareRatioPercentDesc = 'channel_revenueShareRatioPercent_DESC',
   ChannelRewardAccountAsc = 'channel_rewardAccount_ASC',
   ChannelRewardAccountDesc = 'channel_rewardAccount_DESC',
   ChannelTitleAsc = 'channel_title_ASC',
@@ -8306,6 +12303,14 @@ export enum VideoOrderByInput {
   ThumbnailPhotoUnsetAtDesc = 'thumbnailPhoto_unsetAt_DESC',
   TitleAsc = 'title_ASC',
   TitleDesc = 'title_DESC',
+  TrailerVideoForTokenExpiryAsc = 'trailerVideoForToken_expiry_ASC',
+  TrailerVideoForTokenExpiryDesc = 'trailerVideoForToken_expiry_DESC',
+  TrailerVideoForTokenIdAsc = 'trailerVideoForToken_id_ASC',
+  TrailerVideoForTokenIdDesc = 'trailerVideoForToken_id_DESC',
+  TrailerVideoForTokenIssuedAtAsc = 'trailerVideoForToken_issuedAt_ASC',
+  TrailerVideoForTokenIssuedAtDesc = 'trailerVideoForToken_issuedAt_DESC',
+  TrailerVideoForTokenTypeAsc = 'trailerVideoForToken_type_ASC',
+  TrailerVideoForTokenTypeDesc = 'trailerVideoForToken_type_DESC',
   VideoRelevanceAsc = 'videoRelevance_ASC',
   VideoRelevanceDesc = 'videoRelevance_DESC',
   VideoStateBloatBondAsc = 'videoStateBloatBond_ASC',
@@ -8463,7 +12468,6 @@ export type VideoReportInfo = {
   createdAt: Scalars['DateTime']
   id: Scalars['String']
   rationale: Scalars['String']
-  reporterIp: Scalars['String']
   videoId: Scalars['String']
 }
 
@@ -8644,10 +12648,10 @@ export type VideoViewEvent = {
   __typename?: 'VideoViewEvent'
   /** Unique identifier of the video view event */
   id: Scalars['String']
-  /** IP address of the viewer */
-  ip: Scalars['String']
   /** Video view event timestamp */
   timestamp: Scalars['DateTime']
+  /** User that viewed the video */
+  user: User
   /** ID of the video that was viewed (the video may no longer exist) */
   videoId: Scalars['String']
 }
@@ -8661,10 +12665,12 @@ export type VideoViewEventEdge = {
 export enum VideoViewEventOrderByInput {
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
-  IpAsc = 'ip_ASC',
-  IpDesc = 'ip_DESC',
   TimestampAsc = 'timestamp_ASC',
   TimestampDesc = 'timestamp_DESC',
+  UserIdAsc = 'user_id_ASC',
+  UserIdDesc = 'user_id_DESC',
+  UserIsRootAsc = 'user_isRoot_ASC',
+  UserIsRootDesc = 'user_isRoot_DESC',
   VideoIdAsc = 'videoId_ASC',
   VideoIdDesc = 'videoId_DESC',
 }
@@ -8689,23 +12695,6 @@ export type VideoViewEventWhereInput = {
   id_not_in?: InputMaybe<Array<Scalars['String']>>
   id_not_startsWith?: InputMaybe<Scalars['String']>
   id_startsWith?: InputMaybe<Scalars['String']>
-  ip_contains?: InputMaybe<Scalars['String']>
-  ip_containsInsensitive?: InputMaybe<Scalars['String']>
-  ip_endsWith?: InputMaybe<Scalars['String']>
-  ip_eq?: InputMaybe<Scalars['String']>
-  ip_gt?: InputMaybe<Scalars['String']>
-  ip_gte?: InputMaybe<Scalars['String']>
-  ip_in?: InputMaybe<Array<Scalars['String']>>
-  ip_isNull?: InputMaybe<Scalars['Boolean']>
-  ip_lt?: InputMaybe<Scalars['String']>
-  ip_lte?: InputMaybe<Scalars['String']>
-  ip_not_contains?: InputMaybe<Scalars['String']>
-  ip_not_containsInsensitive?: InputMaybe<Scalars['String']>
-  ip_not_endsWith?: InputMaybe<Scalars['String']>
-  ip_not_eq?: InputMaybe<Scalars['String']>
-  ip_not_in?: InputMaybe<Array<Scalars['String']>>
-  ip_not_startsWith?: InputMaybe<Scalars['String']>
-  ip_startsWith?: InputMaybe<Scalars['String']>
   timestamp_eq?: InputMaybe<Scalars['DateTime']>
   timestamp_gt?: InputMaybe<Scalars['DateTime']>
   timestamp_gte?: InputMaybe<Scalars['DateTime']>
@@ -8715,6 +12704,8 @@ export type VideoViewEventWhereInput = {
   timestamp_lte?: InputMaybe<Scalars['DateTime']>
   timestamp_not_eq?: InputMaybe<Scalars['DateTime']>
   timestamp_not_in?: InputMaybe<Array<Scalars['DateTime']>>
+  user?: InputMaybe<UserWhereInput>
+  user_isNull?: InputMaybe<Scalars['Boolean']>
   videoId_contains?: InputMaybe<Scalars['String']>
   videoId_containsInsensitive?: InputMaybe<Scalars['String']>
   videoId_endsWith?: InputMaybe<Scalars['String']>
@@ -8741,8 +12732,8 @@ export type VideoViewEventsConnection = {
   totalCount: Scalars['Int']
 }
 
-export type VideoViewPerIpTimeLimit = {
-  __typename?: 'VideoViewPerIpTimeLimit'
+export type VideoViewPerUserTimeLimit = {
+  __typename?: 'VideoViewPerUserTimeLimit'
   limitInSeconds: Scalars['Int']
 }
 
@@ -8925,6 +12916,8 @@ export type VideoWhereInput = {
   title_not_in?: InputMaybe<Array<Scalars['String']>>
   title_not_startsWith?: InputMaybe<Scalars['String']>
   title_startsWith?: InputMaybe<Scalars['String']>
+  trailerVideoForToken?: InputMaybe<TokenWhereInput>
+  trailerVideoForToken_isNull?: InputMaybe<Scalars['Boolean']>
   videoRelevance_eq?: InputMaybe<Scalars['Float']>
   videoRelevance_gt?: InputMaybe<Scalars['Float']>
   videoRelevance_gte?: InputMaybe<Scalars['Float']>

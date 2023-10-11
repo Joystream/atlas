@@ -18,6 +18,9 @@ fragment BasicChannelFields on Channel {
   avatarPhoto {
     ...StorageDataObjectFields
   }
+  creatorToken {
+    id
+  }
 }
 
 fragment FullChannelFields on Channel {
@@ -454,3 +457,72 @@ fragment BasicVideoActivityFields on Video {
     ...StorageDataObjectFields
   }
 }
+
+fragment BasicCreatorToken on CreatorToken {
+  id
+  accountsNum
+  symbol
+  isInviteOnly
+  deissued
+  status
+  createdAt
+  accounts {
+    id
+    member {
+      ...BasicMembershipFields
+    }
+  }
+  channel {
+    ... on TokenChannel {
+      channel {
+        ...BasicChannelFields
+      }
+    }
+  }
+  avatar {
+    ... on TokenAvatarObject {
+      avatarObject {
+        ...StorageDataObjectFields
+      }
+    }
+    ... on TokenAvatarUri {
+      avatarUri
+    }
+  }
+}
+
+fragment FullCreatorToken on CreatorToken {
+    ...BasicCreatorToken
+  annualCreatorReward
+  description
+  benefits {
+    id
+    description
+    title
+    displayOrder
+    emojiCode
+  }
+  totalSupply
+  trailerVideo {
+    id
+    video {
+      ...BasicVideoFields
+    }
+  }
+  revenueShares {
+    id
+    allocation
+    claimed
+    endsAt
+    createdIn
+    finalized
+    participantsNum
+    startingAt
+    stakers {
+      id
+      stakedAmount
+      earnings
+    }
+  }
+}
+
