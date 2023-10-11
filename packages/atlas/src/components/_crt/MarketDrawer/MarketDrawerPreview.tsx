@@ -22,9 +22,9 @@ export const MarketDrawerPreview = ({ tokenName, startingPrice }: MarketDrawerPr
     y: DEFAULT_AMM_SENSIVITY * num + startingPrice,
   }))
 
-  const getTickValues = (max: number) => [
+  const getTickValues = () => [
     ...new Set(
-      issuedTokens.map((elem, index) => {
+      issuedTokens.map((elem) => {
         const floor = Math.pow(10, Math.round(Math.log10(DEFAULT_AMM_SENSIVITY * elem + startingPrice)))
         return Math.max(Math.floor(elem / floor), 1) * floor
       })
@@ -58,7 +58,7 @@ export const MarketDrawerPreview = ({ tokenName, startingPrice }: MarketDrawerPr
           axisLeft={{
             tickSize: 5,
             tickPadding: 5,
-            tickValues: getTickValues(issuedTokens[issuedTokens.length - 1]),
+            tickValues: getTickValues(),
             ticksPosition: 'before',
             format: (tick) => formatNumberShort(tick),
             // eslint-disable-next-line
@@ -83,7 +83,7 @@ export const MarketDrawerPreview = ({ tokenName, startingPrice }: MarketDrawerPr
               )
             },
           }}
-          gridYValues={getTickValues(issuedTokens[issuedTokens.length - 1])}
+          gridYValues={getTickValues()}
           data={[
             {
               id: 1,
