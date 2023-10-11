@@ -4,6 +4,7 @@ import { BasicChannelFieldsFragment, BasicVideoFieldsFragment } from '@/api/quer
 import { Text } from '@/components/Text'
 import { absoluteRoutes } from '@/config/routes'
 import { useGetAssetUrl } from '@/hooks/useGetAssetUrl'
+import { pluralizeNoun } from '@/utils/misc'
 
 import { ResultTitle } from './ResultTitle'
 import { ResultWrapper } from './ResultWrapper'
@@ -77,9 +78,12 @@ export const Result: FC<ResultProps> = ({
             <ResultTitle title={title} query={query} />
           </Title>
           <Text as="span" color="colorText" variant="t100">
+            {/*todo: add correct checks for verified and token*/}
             {video
               ? video.channel?.title
-              : `${channel?.followsNum} ${channel?.followsNum === 1 ? 'Follower' : 'Followers'}`}
+              : `${pluralizeNoun(channel?.followsNum || 0, 'Follower')} ${
+                  channel?.followsNum === -10 ? '・Verified' : ''
+                } ${channel?.followsNum === -10 ? `・$${channel.title}` : ''}`}
           </Text>
         </div>
       </ResultContent>

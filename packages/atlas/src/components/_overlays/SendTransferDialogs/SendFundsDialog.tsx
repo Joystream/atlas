@@ -47,6 +47,8 @@ type SendFundsDialogProps = {
   activeMembership?: FullMembershipFieldsFragment | null
   channelBalance?: BN
   accountBalance?: BN
+  totalBalance?: BN
+  accountDebt?: BN
   channelId?: string | null
   show: boolean
 }
@@ -55,6 +57,8 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({
   onExitClick,
   accountBalance = new BN(0),
   channelBalance,
+  totalBalance = new BN(0),
+  accountDebt = new BN(0),
   channelId,
   activeMembership,
   show,
@@ -126,6 +130,12 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({
   const handleSendFunds = async () => {
     const handler = await handleSubmit(async (data) => {
       if (!joystream || !data.account || !data.amount || (isWithdrawalMode && (!activeMembership || !channelId))) {
+        SentryLogger.error('Failed to send funds', 'SendFundsDialog', {
+          isWithdrawalMode,
+          activeMembership,
+          channelId,
+          data,
+        })
         return
       }
 
@@ -142,7 +152,8 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({
           },
           txFactory: async (updateStatus) => {
             const amount =
-              !isWithdrawalMode && amountBN.add(transferFee).gte(accountBalance) ? amountBN.sub(transferFee) : amountBN
+              !isWithdrawalMode &&
+              amountBN.sub(amountBN.add(transferFee).gte(accountBalance) ? transferFee : new BN(0)).sub(accountDebt)
             return (await joystream.extrinsics).sendFunds(
               formatJoystreamAddress(data.account || ''),
               amount.toString(),
@@ -243,8 +254,16 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({
                   return true
                 },
                 accountBalance: (value) => {
-                  if (value && tokenNumberToHapiBn(value).gte(currentBalance)) {
-                    return `Not enough tokens in your ${isWithdrawalMode ? 'channel' : 'account'} balance.`
+                  if (isWithdrawalMode && value && tokenNumberToHapiBn(value).gt(channelBalance)) {
+                    return `Not enough tokens in your channel balance.`
+                  } else if (value && tokenNumberToHapiBn(value).gte(accountBalance)) {
+                    return `Not enough tokens in your account balance.`
+                  }
+                  return true
+                },
+                memberBalance: () => {
+                  if (isWithdrawalMode && fullFee.gt(totalBalance)) {
+                    return 'Membership wallet has insufficient balance to cover transaction fees. Top up your membership wallet and try again. '
                   }
                   return true
                 },

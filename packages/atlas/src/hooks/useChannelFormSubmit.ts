@@ -23,6 +23,7 @@ import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { useUser } from '@/providers/user/user.hooks'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { modifyAssetUrlInCache } from '@/utils/cachingAssets'
+import { createId } from '@/utils/createId'
 import { computeFileHash } from '@/utils/hashing'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
@@ -155,7 +156,7 @@ export const useCreateEditChannelSubmit = () => {
             dimensions: data.assets.avatarPhoto?.assetDimensions ?? undefined,
             imageCropData: data.assets.avatarPhoto?.imageCropData ?? undefined,
             type: 'avatar',
-            name: (data.assets.avatarPhoto?.originalBlob as File).name,
+            name: (data.assets.avatarPhoto?.originalBlob as File)?.name ?? `${channelId}-avatar-${createId()}`,
           })
           uploadPromises.push(uploadPromise)
         }
@@ -170,7 +171,7 @@ export const useCreateEditChannelSubmit = () => {
             dimensions: data.assets.coverPhoto?.assetDimensions ?? undefined,
             imageCropData: data.assets.coverPhoto?.imageCropData ?? undefined,
             type: 'cover',
-            name: (data.assets.coverPhoto?.originalBlob as File).name,
+            name: (data.assets.coverPhoto?.originalBlob as File)?.name ?? `${channelId}-cover-${createId()}`,
           })
           uploadPromises.push(uploadPromise)
         }

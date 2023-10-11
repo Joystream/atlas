@@ -13,10 +13,10 @@ import {
   ChannelCardAnchor,
   ChannelCardArticle,
   ChannelFollows,
-  ChannelTitle,
   FollowButton,
   InfoWrapper,
   StyledAvatar,
+  StyledChannelTitle,
 } from './ChannelCard.styles'
 
 export type ChannelCardProps = {
@@ -62,9 +62,9 @@ export const ChannelCard: FC<ChannelCardProps> = ({
                 </>
               ) : (
                 <>
-                  <ChannelTitle as="h3" variant={mdMatch ? 'h300' : 't200-strong'}>
+                  <StyledChannelTitle as="h3" variant={mdMatch ? 'h300' : 't200-strong'}>
                     {channel.title}
-                  </ChannelTitle>
+                  </StyledChannelTitle>
                   <ChannelFollows as="p" variant={mdMatch ? 't200' : 't100'} color="colorText">
                     <NumberFormat as="span" format="short" value={channel.followsNum || 0} color="colorText" />{' '}
                     followers
