@@ -1,5 +1,4 @@
 import { ReactElement, ReactNode, useMemo } from 'react'
-import { LinkProps } from 'react-router-dom'
 
 import { useGetChannelAvatarQuery } from '@/api/queries/__generated__/channels.generated'
 import { useGetMembershipsAvatarQuery } from '@/api/queries/__generated__/memberships.generated'
@@ -59,7 +58,7 @@ export const useNotificationAvatar = (
 
 type NotificationUX = {
   icon: ReactNode
-  link: LinkProps
+  link: string
   avatar: { type: NotificationAvatarType; params?: string[] }
   text: ReactNode
 }
@@ -507,33 +506,33 @@ type LinkType =
   | 'ypp-dashboard'
   | 'payments-page'
 
-const getLink = (type: LinkType, params: string[] = []): LinkProps => {
+const getLink = (type: LinkType, params: string[] = []): string => {
   switch (type) {
     case 'video-page':
-      return { to: absoluteRoutes.viewer.video(params[0], { commentId: params[1] }), state: { shouldCollapse: true } }
+      return absoluteRoutes.viewer.video(params[0], { commentId: params[1] })
 
     case 'nft-page':
-      return { to: absoluteRoutes.viewer.video(params[0]), state: { shouldCollapse: false } }
+      return absoluteRoutes.viewer.video(params[0], { nftWidget: true })
 
     case 'channel-page':
-      return { to: absoluteRoutes.viewer.channel(params[0]) }
+      return absoluteRoutes.viewer.channel(params[0])
 
     case 'member-page':
-      return { to: absoluteRoutes.viewer.member(params[0]) }
+      return absoluteRoutes.viewer.member(params[0])
 
     case 'category-page':
-      return { to: absoluteRoutes.viewer.category(params[0]) }
+      return absoluteRoutes.viewer.category(params[0])
 
     case 'marketplace-page':
-      return { to: absoluteRoutes.viewer.marketplace() }
+      return absoluteRoutes.viewer.marketplace()
 
     case 'payments-page':
-      return { to: absoluteRoutes.studio.payments() }
+      return absoluteRoutes.studio.payments()
 
     case 'ypp-dashboard':
-      return { to: absoluteRoutes.viewer.yppDashboard() }
+      return absoluteRoutes.viewer.yppDashboard()
 
     case 'term-of-sevice-page':
-      return { to: absoluteRoutes.legal.termsOfService() }
+      return absoluteRoutes.legal.termsOfService()
   }
 }

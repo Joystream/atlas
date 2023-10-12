@@ -47,8 +47,7 @@ export const NotificationTile: FC<NotificationProps> = ({
 
   return (
     <StyledLink
-      to={link.to}
-      state={link.state}
+      to={link}
       onClick={() => {
         onClick?.()
         onMarkAsRead?.()

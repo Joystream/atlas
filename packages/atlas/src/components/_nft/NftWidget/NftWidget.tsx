@@ -6,7 +6,8 @@ import useResizeObserver from 'use-resize-observer'
 import { FullBidFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { absoluteRoutes } from '@/config/routes'
+import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
+import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { NftSaleType } from '@/joystream-lib/types'
 
 import { NftHistory, NftHistoryEntry } from './NftHistory'
@@ -81,7 +82,8 @@ export const NftWidget: FC<NftWidgetProps> = ({
   const location = useLocation()
   const [isCollapsed, setIsCollapsed] = useState(true)
 
-  const shouldCollapse = location.state?.shouldCollapse === undefined ? true : location.state?.shouldCollapse
+  const shouldCollapse =
+    !useRouterQuery(QUERY_PARAMS.NFT_WIDGET) && !location.state?.shouldCollapse ? true : location.state?.shouldCollapse
 
   useEffect(() => {
     setIsCollapsed(shouldCollapse)
