@@ -73,7 +73,7 @@ export const CrtDashboardMainTab = ({ token }: CrtDashboardMainTabProps) => {
     if (!token.ammCurves.length && !token.sales.length) return 2
     if (!token.revenueShares.length) return 3
     return -1
-  }, [])
+  }, [token.description, token.ammCurves.length, token.sales.length, token.revenueShares.length])
 
   return (
     <>

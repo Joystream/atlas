@@ -34,7 +34,7 @@ export type CrtHoldersWidgetProps = {
 
 export const holdersToDatum = (accounts: BasicCreatorTokenHolderFragment[], totalSupply: number): HolderDatum[] =>
   accounts.map((acc, index) => ({
-    id: acc.member.id,
+    id: acc.member.handle,
     name: acc.member.handle,
     value: Math.round((+(acc.totalAmount ?? 0) / totalSupply) * 100),
     members: [

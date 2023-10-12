@@ -57,7 +57,7 @@ mutation FollowChannel($channelId: String!) {
   followChannel(channelId: $channelId) {
     channelId
     follows
-#    cancelToken
+    #    cancelToken
   }
 }
 
