@@ -19,7 +19,7 @@ export const Wrapper = styled.div`
     padding: ${sizes(6)};
   }
 `
-export const Content = styled.div`
+export const Content = styled.div<{ withButton?: boolean }>`
   display: grid;
   align-self: flex-end;
   gap: ${sizes(4)};
@@ -27,8 +27,8 @@ export const Content = styled.div`
 
   ${media.md} {
     gap: ${sizes(6)};
-    grid-template-columns: 1fr auto;
     align-items: center;
+    ${(props) => (props.withButton ? 'grid-template-columns: 1fr auto;' : '')}
   }
   ${media.lg} {
     gap: 0;

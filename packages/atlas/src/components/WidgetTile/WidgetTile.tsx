@@ -67,7 +67,7 @@ export const WidgetTile: FC<WidgetTileProps> = ({
         {withTooltip && <Information {...tooltip} />}
         {withCustomTopRightNode && customTopRightNode}
       </Title>
-      <Content>
+      <Content withButton={!!button}>
         {withCustomNode && customNode}
         {loading && (
           <>
