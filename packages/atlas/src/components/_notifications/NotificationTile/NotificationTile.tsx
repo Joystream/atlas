@@ -1,5 +1,5 @@
 import { differenceInCalendarYears, differenceInDays, format } from 'date-fns'
-import { FC, useMemo, useRef } from 'react'
+import { FC, ReactNode, useMemo, useRef } from 'react'
 
 import { SvgActionCheck, SvgActionMore } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
@@ -11,14 +11,8 @@ import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { NotificationRecord } from '@/providers/notifications/notifications.types'
 import { formatDateAgo } from '@/utils/time'
 
-import {
-  NotificationIconType,
-  notificationIconMapper,
-  useNotificationAction,
-  useNotificationAvatar,
-  useNotificationUX,
-} from './NotificationTile.hooks'
-import { IconContainer, IconWrapper, StyledLink, StyledListItem } from './NotificationTile.styles'
+import { useNotificationAvatar, useNotificationUX } from './NotificationTile.hooks'
+import { IconWrapper, StyledLink, StyledListItem } from './NotificationTile.styles'
 
 export type NotificationProps = {
   notification: NotificationRecord
@@ -35,9 +29,7 @@ export const NotificationTile: FC<NotificationProps> = ({
   className,
   onMarkAsRead,
 }) => {
-  const { icon, action, avatar, text } = useNotificationUX(notification)
-  const { to, state } = useNotificationAction(action)
-  const { avatarUrls } = useNotificationAvatar(avatar)
+  const { icon, link, avatar, text } = useNotificationUX(notification)
   const { date, read } = notification
   const ref = useRef<HTMLButtonElement>(null)
   const contextMenuInstanceRef = useRef<PopoverImperativeHandle>(null)
@@ -55,8 +47,8 @@ export const NotificationTile: FC<NotificationProps> = ({
 
   return (
     <StyledLink
-      to={to}
-      state={state}
+      to={link.to}
+      state={link.state}
       onClick={() => {
         onClick?.()
         onMarkAsRead?.()
@@ -68,7 +60,7 @@ export const NotificationTile: FC<NotificationProps> = ({
         read={read}
         variant="compact"
         className={className}
-        nodeStart={<NotifactionIcon avatarUrls={avatarUrls} iconType={icon} />}
+        nodeStart={<NotifactionAvatar avatar={avatar} icon={icon} />}
         caption={!loading ? formattedDate : <SkeletonLoader width="50%" height={19} />}
         label={
           !loading ? (
@@ -114,18 +106,16 @@ export const NotificationTile: FC<NotificationProps> = ({
 }
 
 type NotifactionIconProps = {
-  avatarUrls: string[]
-  iconType: NotificationIconType
+  avatar: ReturnType<typeof useNotificationUX>['avatar']
+  icon: ReactNode
 }
 
-export const NotifactionIcon = ({ iconType, avatarUrls }: NotifactionIconProps) => {
-  const [icon, color] = notificationIconMapper[iconType]
+export const NotifactionAvatar = ({ icon, avatar }: NotifactionIconProps) => {
+  const { avatarUrls } = useNotificationAvatar(avatar)
   return (
     <IconWrapper>
       <Avatar size={40} assetUrls={avatarUrls} />
-      <IconContainer className="notification-icon-container" color={color}>
-        {icon}
-      </IconContainer>
+      {icon}
     </IconWrapper>
   )
 }
