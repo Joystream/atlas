@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.10.2] - 2023-10-12
+
+### Fixed
+
+- Fixed issues with channel funds withdrawal
+
 ## [4.10.1] - 2023-10-11
 
 ### Changed
@@ -166,7 +172,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed bug with infinite loop in studio
-- Fixed error with WASM 
+- Fixed error with WASM
 
 ## [4.4.2] - 2023-08-09
 

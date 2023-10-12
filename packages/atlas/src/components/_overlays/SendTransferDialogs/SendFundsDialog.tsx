@@ -194,7 +194,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({
   }
 
   const handleMaxClick = async () => {
-    const value = Math.floor(hapiBnToTokenNumber(accountBalance) * 100) / 100
+    const value = Math.floor(hapiBnToTokenNumber(isWithdrawalMode ? channelBalance : accountBalance) * 100) / 100
     setValue('amount', value, {
       shouldTouch: true,
       shouldDirty: true,
@@ -256,7 +256,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({
                 accountBalance: (value) => {
                   if (isWithdrawalMode && value && tokenNumberToHapiBn(value).gt(channelBalance)) {
                     return `Not enough tokens in your channel balance.`
-                  } else if (value && tokenNumberToHapiBn(value).gte(accountBalance)) {
+                  } else if (!isWithdrawalMode && value && tokenNumberToHapiBn(value).gte(accountBalance)) {
                     return `Not enough tokens in your account balance.`
                   }
                   return true
