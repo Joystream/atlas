@@ -1,29 +1,21 @@
 import styled from '@emotion/styled'
 
 import { SvgJoyTokenMonochrome24 } from '@/assets/icons'
-import { FlexBox } from '@/components/FlexBox'
 import { NumberFormat } from '@/components/NumberFormat'
 import { RatioPreview } from '@/components/RatioPreview/RatioPreview'
-import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
+import { RevenueShareStateWidget } from '@/components/_crt/RevenueShareStateWidget'
 import { media, sizes } from '@/styles'
 
+const DATA = {
+  revenueShare: {
+    endDate: new Date(Date.now() + 1000000),
+  },
+}
 export const CrtRevenueTab = () => {
   return (
     <WidgetContainer>
-      <WidgetTile
-        title="CURRENT STATE"
-        customNode={
-          <FlexBox flow="column">
-            <Text variant="h500" as="h5">
-              5/10 staked
-            </Text>
-            <Text variant="t100" as="p" color="colorText">
-              50% of all holders
-            </Text>
-          </FlexBox>
-        }
-      />
+      <RevenueShareStateWidget end={DATA.revenueShare.endDate} />
       <WidgetTile
         title="CHANNEL BALANCE"
         customNode={
