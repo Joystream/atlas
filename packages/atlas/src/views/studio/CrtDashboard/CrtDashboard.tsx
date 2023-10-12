@@ -92,7 +92,7 @@ export const CrtDashboard = () => {
         </TabsContainer>
         {currentTab === 0 && <CrtDashboardMainTab token={data.creatorTokenById} />}
         {currentTab === 1 && <CrtHoldersTab token={data.creatorTokenById} />}
-        {currentTab === 2 && <CrtRevenueTab />}
+        {currentTab === 2 && <CrtRevenueTab token={data.creatorTokenById} />}
       </MainContainer>
     </LimitedWidthContainer>
   )
