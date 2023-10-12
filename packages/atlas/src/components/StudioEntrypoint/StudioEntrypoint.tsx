@@ -30,7 +30,7 @@ export const StudioEntrypoint: FC<StudioEntrypointProps> = ({ enterLocation }) =
   }
 
   if (channelSet) {
-    return <Navigate to={DEFAULT_ROUTE} replace />
+    return <Navigate to={enterLocation || DEFAULT_ROUTE} replace />
   }
 
   return <StudioLoading />
