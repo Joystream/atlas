@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 
 import { FlexBox } from '@/components/FlexBox/FlexBox'
 import { Information } from '@/components/Information'
@@ -12,7 +13,8 @@ import { DetailsContent } from '@/components/_nft/NftTile'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMountEffect } from '@/hooks/useMountEffect'
-import { useJoystream } from '@/providers/joystream'
+import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
+import { useJoystream, useSubscribeAccountBalance } from '@/providers/joystream'
 
 import { CommonProps } from './types'
 
@@ -25,11 +27,13 @@ export const getTokenDetails = (_: string) => ({
 
 type BuySaleTokenFormProps = {
   tokenId: string
-  onSubmit: () => void
+  onSubmit: (tokens: number | null) => void
 } & CommonProps
 
 export const BuySaleTokenForm = ({ tokenId, setPrimaryButtonProps, onSubmit }: BuySaleTokenFormProps) => {
-  const [tokens, setTokens] = useState<number | null>(null)
+  const { control, watch, handleSubmit } = useForm<{ tokens: number | null }>()
+  const { accountBalance } = useSubscribeAccountBalance()
+  const tokens = watch('tokens')
   const { pricePerUnit, tokensOnSale, userBalance, title } = getTokenDetails(tokenId)
   const { tokenPrice } = useJoystream()
   const tokenInUsd = (tokens || 0) * pricePerUnit * (tokenPrice ?? 0)
@@ -70,7 +74,7 @@ export const BuySaleTokenForm = ({ tokenId, setPrimaryButtonProps, onSubmit }: B
   useMountEffect(() => {
     setPrimaryButtonProps({
       text: 'Continue',
-      onClick: () => onSubmit(),
+      onClick: () => handleSubmit((data) => onSubmit(data.tokens))(),
     })
   })
 
@@ -97,21 +101,40 @@ export const BuySaleTokenForm = ({ tokenId, setPrimaryButtonProps, onSubmit }: B
             withDenomination
           />
         </FlexBox>
-        <FormField label="Tokens to spend">
-          <TokenInput
-            value={tokens}
-            onChange={setTokens}
-            placeholder="0"
-            nodeEnd={
-              <FlexBox gap={2} alignItems="baseline">
-                <Text variant="t300" as="p" color="colorTextMuted">
-                  ${tokenInUsd.toFixed(2)}
-                </Text>
-                <TextButton onClick={() => setTokens(Math.floor(userBalance / pricePerUnit))}>Max</TextButton>
-              </FlexBox>
-            }
-          />
-        </FormField>
+        <Controller
+          name="tokens"
+          control={control}
+          rules={{
+            max: {
+              value: accountBalance ? hapiBnToTokenNumber(accountBalance) : 0,
+              message: 'Amount exceeds your account balance',
+            },
+            required: true,
+          }}
+          render={({ field }) => (
+            <FormField label="Tokens to spend">
+              <TokenInput
+                value={field.value}
+                onChange={field.onChange}
+                placeholder="0"
+                nodeEnd={
+                  <FlexBox gap={2} alignItems="baseline">
+                    <Text variant="t300" as="p" color="colorTextMuted">
+                      ${tokenInUsd.toFixed(2)}
+                    </Text>
+                    <TextButton
+                      onClick={() =>
+                        accountBalance && field.onChange(Math.floor(hapiBnToTokenNumber(accountBalance) / pricePerUnit))
+                      }
+                    >
+                      Max
+                    </TextButton>
+                  </FlexBox>
+                }
+              />
+            </FormField>
+          )}
+        />
 
         <FlexBox flow="column" gap={2}>
           {details.map((row, i) => (

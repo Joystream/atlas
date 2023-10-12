@@ -4,6 +4,31 @@ import { ReactNode } from 'react'
 
 import { cVar, sizes } from '@/styles'
 
+export const defaultChartTheme = {
+  tooltip: {
+    container: {
+      background: cVar('colorBackgroundStrong'),
+    },
+  },
+
+  axis: {
+    ticks: {
+      line: {
+        stroke: cVar('colorBackgroundAlpha'),
+      },
+      text: {
+        fill: cVar('colorTextMuted'),
+        font: cVar('typographyDesktopT100'),
+      },
+    },
+  },
+  grid: {
+    line: {
+      stroke: cVar('colorBackgroundAlpha'),
+    },
+  },
+}
+
 const defaultJoystreamProps: Omit<LineSvgProps, 'data'> = {
   isInteractive: true,
   useMesh: true,
@@ -29,29 +54,7 @@ const defaultJoystreamProps: Omit<LineSvgProps, 'data'> = {
     tickValues: 6,
   },
   colors: (d) => d.color,
-  theme: {
-    tooltip: {
-      container: {
-        background: cVar('colorBackgroundStrong'),
-      },
-    },
-    axis: {
-      ticks: {
-        line: {
-          stroke: cVar('colorBackgroundAlpha'),
-        },
-        text: {
-          fill: cVar('colorTextMuted'),
-          font: cVar('typographyDesktopT100'),
-        },
-      },
-    },
-    grid: {
-      line: {
-        stroke: cVar('colorBackgroundAlpha'),
-      },
-    },
-  },
+  theme: defaultChartTheme,
 }
 export type LineChartProps = {
   tooltip?: (point: Point) => ReactNode
