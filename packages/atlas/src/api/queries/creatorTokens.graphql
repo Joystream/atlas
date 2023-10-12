@@ -1,18 +1,27 @@
-query GetBasicCreatorToken($where: CreatorTokenWhereInput, $orderBy: [CreatorTokenOrderByInput!], $limit: Int, $offset: Int) {
-    creatorTokens(where: $where, orderBy: $orderBy, limit: $limit, offset: $offset) {
-        ...BasicCreatorToken
-    }
+query GetBasicCreatorToken(
+  $where: CreatorTokenWhereInput
+  $orderBy: [CreatorTokenOrderByInput!]
+  $limit: Int
+  $offset: Int
+) {
+  creatorTokens(where: $where, orderBy: $orderBy, limit: $limit, offset: $offset) {
+    ...BasicCreatorToken
+  }
 }
 
 query GetFullCreatorToken($id: String!) {
-    creatorTokenById(id: $id) {
-        ...FullCreatorToken
-    }
+  creatorTokenById(id: $id) {
+    ...FullCreatorToken
+  }
 }
 
-query GetCreatorTokenHolders($where: TokenAccountWhereInput, $orderBy: [TokenAccountOrderByInput!], $limit: Int, $offset: Int) {
-    tokenAccounts(where: $where, orderBy: $orderBy, offset: $offset, limit: $limit) {
-        ...BasicCreatorTokenHolder
-    }
+query GetCreatorTokenHolders(
+  $where: TokenAccountWhereInput
+  $orderBy: [TokenAccountOrderByInput!]
+  $limit: Int
+  $offset: Int
+) {
+  tokenAccounts(where: $where, orderBy: $orderBy, offset: $offset, limit: $limit) {
+    ...BasicCreatorTokenHolder
+  }
 }
-

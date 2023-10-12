@@ -2813,6 +2813,22 @@ export type FullCreatorTokenFragment = {
   deissued: boolean
   status: Types.TokenStatus
   createdAt: Date
+  ammCurves: Array<{
+    __typename?: 'AmmCurve'
+    id: string
+    finalized: boolean
+    ammInitPrice: string
+    burnedByAmm: string
+    mintedByAmm: string
+  }>
+  sales: Array<{
+    __typename?: 'Sale'
+    id: string
+    maxAmountPerMember?: string | null
+    pricePerUnit: string
+    tokensSold: string
+    finalized: boolean
+  }>
   benefits: Array<{
     __typename?: 'Benefit'
     id: string
@@ -3767,6 +3783,20 @@ export const FullCreatorTokenFragmentDoc = gql`
     ...BasicCreatorToken
     annualCreatorReward
     description
+    ammCurves {
+      id
+      finalized
+      ammInitPrice
+      burnedByAmm
+      mintedByAmm
+    }
+    sales {
+      id
+      maxAmountPerMember
+      pricePerUnit
+      tokensSold
+      finalized
+    }
     benefits {
       id
       description

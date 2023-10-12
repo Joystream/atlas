@@ -479,9 +479,9 @@ fragment BasicCreatorTokenHolder on TokenAccount {
       cliffDurationBlocks
       cliffPercent
       vestingDurationBlocks
-      }
     }
   }
+}
 
 fragment BasicCreatorToken on CreatorToken {
   id
@@ -511,9 +511,23 @@ fragment BasicCreatorToken on CreatorToken {
 }
 
 fragment FullCreatorToken on CreatorToken {
-    ...BasicCreatorToken
+  ...BasicCreatorToken
   annualCreatorReward
   description
+  ammCurves {
+    id
+    finalized
+    ammInitPrice
+    burnedByAmm
+    mintedByAmm
+  }
+  sales {
+    id
+    maxAmountPerMember
+    pricePerUnit
+    tokensSold
+    finalized
+  }
   benefits {
     id
     description
@@ -544,4 +558,3 @@ fragment FullCreatorToken on CreatorToken {
     }
   }
 }
-
