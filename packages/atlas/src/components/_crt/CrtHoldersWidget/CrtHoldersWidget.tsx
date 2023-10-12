@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { useMemo, useState } from 'react'
 
+import { TokenAccountOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { useGetCreatorTokenHoldersQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { BasicCreatorTokenHolderFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgActionChevronR } from '@/assets/icons'
@@ -16,22 +17,24 @@ import { useUser } from '@/providers/user/user.hooks'
 import { cVar } from '@/styles'
 
 export type HolderDatum = {
+  id: string
   value: number
   name: string
   members: {
     handle: string
     avatarUrls: string[]
   }[]
+  index: number
 }
 
 export type CrtHoldersWidgetProps = {
-  // holders: HolderDatum[]
   tokenId: string
   totalSupply: number
 }
 
 export const holdersToDatum = (accounts: BasicCreatorTokenHolderFragment[], totalSupply: number): HolderDatum[] =>
-  accounts.map((acc) => ({
+  accounts.map((acc, index) => ({
+    id: acc.member.id,
     name: acc.member.handle,
     value: Math.round((+(acc.totalAmount ?? 0) / totalSupply) * 100),
     members: [
@@ -40,6 +43,7 @@ export const holdersToDatum = (accounts: BasicCreatorTokenHolderFragment[], tota
         handle: acc.member.handle,
       },
     ],
+    index,
   }))
 
 export const CrtHoldersWidget = ({ tokenId, totalSupply }: CrtHoldersWidgetProps) => {
@@ -52,20 +56,35 @@ export const CrtHoldersWidget = ({ tokenId, totalSupply }: CrtHoldersWidgetProps
           id_eq: tokenId,
         },
       },
+      limit: 6,
+      orderBy: TokenAccountOrderByInput.TokenAccountsNumDesc,
     },
   })
-  const chartData = useMemo(
-    () =>
-      data?.tokenAccounts
-        ? holdersToDatum(data.tokenAccounts, totalSupply).map((holder, index) => ({
-            id: holder.name,
-            value: holder.value,
-            members: holder.members,
-            index,
-          }))
-        : [],
-    [data?.tokenAccounts, totalSupply]
-  )
+  const chartData = useMemo(() => {
+    const parsedData = data?.tokenAccounts ? holdersToDatum(data.tokenAccounts, totalSupply) : []
+    if (parsedData.length > 3) {
+      let namedHoldersAccumulated = 0
+      const namedHolders = parsedData.slice(0, 3)
+      namedHolders.forEach((holder) => {
+        namedHoldersAccumulated += holder.value
+      })
+
+      namedHolders.push({
+        id: 'others',
+        value: 100 - namedHoldersAccumulated,
+        name: 'Others',
+        index: namedHolders.length,
+        members: parsedData.slice(3).map((holder) => ({
+          handle: holder.name,
+          avatarUrls: holder.members[0].avatarUrls,
+        })),
+      })
+
+      return namedHolders
+    }
+    return parsedData
+  }, [data?.tokenAccounts, totalSupply])
+
   const owner = useMemo(
     () => chartData.find((holder) => holder.id === activeMembership?.handle),
     [chartData, activeMembership?.handle]
