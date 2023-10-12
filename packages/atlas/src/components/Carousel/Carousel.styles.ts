@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { SwiperOptions } from 'swiper'
-import { Swiper } from 'swiper/react'
+import { Swiper, SwiperSlide } from 'swiper/react'
 
 import { Button } from '@/components/_buttons/Button'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
@@ -86,4 +86,8 @@ export const Arrow = styled(Button)`
   &.glider-next {
     right: 0;
   }
+`
+
+export const StyledSwiperSlide = styled(SwiperSlide)`
+  height: auto;
 `
