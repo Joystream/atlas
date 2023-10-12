@@ -71,6 +71,9 @@ type PublicExtrinsic<TxFunction, ReturnValue> = TxFunction extends (...a: infer 
   ? (...a: [...U, ExtrinsicStatusCallbackFn | undefined]) => Promise<ReturnValue>
   : never
 
+const PERMILLS_PER_PERCENTAGE = 10
+const PERQUINTILLS_PER_PERCENTAGE = new BN(10).pow(new BN(16))
+
 export class JoystreamLibExtrinsics {
   readonly api: PolkadotApi
   readonly getAccount: AccountIdAccessor
@@ -1126,7 +1129,7 @@ export class JoystreamLibExtrinsics {
           linearVestingDuration: createType('u32', new BN(initialCreatorAllocation.vestingDuration)),
           cliffAmountPercentage: createType(
             'Permill',
-            new BN(initialCreatorAllocation.cliffAmountPercentage)
+            new BN(initialCreatorAllocation.cliffAmountPercentage * PERMILLS_PER_PERCENTAGE)
           ) as number,
         }),
       })
@@ -1134,8 +1137,8 @@ export class JoystreamLibExtrinsics {
 
     const params = createType('PalletProjectTokenTokenIssuanceParameters', {
       initialAllocation,
-      patronageRate: createType('Perquintill', patronageRate) as number,
-      revenueSplitRate: createType('Permill', revenueSplitRate) as number,
+      patronageRate: createType('Perquintill', PERQUINTILLS_PER_PERCENTAGE.muln(patronageRate)) as number,
+      revenueSplitRate: createType('Permill', revenueSplitRate * PERMILLS_PER_PERCENTAGE) as number,
       transferPolicy: createType('PalletProjectTokenTransferPolicyParams', 'Permissionless'),
       metadata: prepareCreatorTokenMetadata({ symbol }),
     })
@@ -1161,6 +1164,55 @@ export class JoystreamLibExtrinsics {
     )
     const { block } = await this.sendExtrinsic(tx, cb)
 
+    return { block }
+  }
+
+  purchaseTokenOnMarketTx = async (tokenId: string, memberId: string, amount: string) => {
+    const amountCast = createType('u128', new BN(amount))
+
+    return this.api.tx.projectToken.buyOnAmm(
+      parseInt(tokenId),
+      parseInt(memberId),
+      amountCast,
+      createType('Option<ITuple<[Permill, u128]>>', [
+        createType('Permill', new BN(0.5 * PERMILLS_PER_PERCENTAGE)),
+        amountCast,
+      ]) // percent, number of joy user wants to pay --- default on 0.5%
+    )
+  }
+
+  purchaseTokenOnMarket: PublicExtrinsic<typeof this.purchaseTokenOnMarketTx, ExtrinsicResult> = async (
+    tokenId,
+    memberId,
+    amount,
+    cb
+  ) => {
+    const tx = await this.purchaseTokenOnMarketTx(tokenId, memberId, amount)
+    const { block } = await this.sendExtrinsic(tx, cb)
+    return { block }
+  }
+
+  sellTokenOnMarketTx = async (tokenId: string, memberId: string, amount: string) => {
+    const amountCast = createType('u128', new BN(amount))
+    return this.api.tx.projectToken.sellOnAmm(
+      parseInt(tokenId),
+      parseInt(memberId),
+      amountCast,
+      createType('Option<ITuple<[Permill, u128]>>', [
+        createType('Permill', new BN(0.5 * PERMILLS_PER_PERCENTAGE)),
+        amountCast,
+      ]) // percent, number of joy user wants to pay --- default on 0.5%
+    )
+  }
+
+  sellTokenOnMarket: PublicExtrinsic<typeof this.sellTokenOnMarketTx, ExtrinsicResult> = async (
+    tokenId,
+    memberId,
+    amount,
+    cb
+  ) => {
+    const tx = await this.sellTokenOnMarketTx(tokenId, memberId, amount)
+    const { block } = await this.sendExtrinsic(tx, cb)
     return { block }
   }
 }
