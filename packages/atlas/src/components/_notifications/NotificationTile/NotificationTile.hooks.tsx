@@ -52,21 +52,21 @@ export const useNotificationAvatar = (
 ): { avatarUrls: string[]; isLoading: boolean } => {
   const { activeChannel, activeMembership } = useUser()
 
-  const memberHandle = avatar?.type === 'membership' ? avatar.params?.[0] : undefined
+  const memberHandle = avatar.type === 'membership' ? avatar.params?.[0] : undefined
   const { data: memberData, loading: isMemberLoading } = useGetMembershipsAvatarQuery({
     variables: { where: { handle_eq: memberHandle }, limit: 1 },
     skip: !memberHandle,
   })
-  const member = avatar?.type === 'active-membership' ? activeMembership : memberData?.memberships[0]
+  const member = avatar.type === 'active-membership' ? activeMembership : memberData?.memberships[0]
 
-  const channelId = avatar?.type === 'channel' ? avatar.params?.[0] : undefined
+  const channelId = avatar.type === 'channel' ? avatar.params?.[0] : undefined
   const { data: channelData, loading: isChannelLoading } = useGetChannelAvatarQuery({
     variables: { id: channelId ?? '' },
     skip: !channelId,
   })
-  const channel = avatar?.type === 'active-channel' ? activeChannel : channelData?.channelById
+  const channel = avatar.type === 'active-channel' ? activeChannel : channelData?.channelById
 
-  switch (avatar?.type) {
+  switch (avatar.type) {
     case 'active-membership':
     case 'membership':
       return { avatarUrls: getMemberAvatar(member).urls ?? [], isLoading: isMemberLoading }
@@ -74,7 +74,7 @@ export const useNotificationAvatar = (
     case 'active-channel':
     case 'channel':
       if (!channel?.avatarPhoto?.isAccepted) break
-      return { avatarUrls: channel?.avatarPhoto?.resolvedUrls ?? [], isLoading: isChannelLoading }
+      return { avatarUrls: channel.avatarPhoto.resolvedUrls ?? [], isLoading: isChannelLoading }
   }
 
   return { avatarUrls: [], isLoading: false }
@@ -354,7 +354,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         avatar: { type: 'membership', params: [notification.memberHandle] },
         text: (
           <>
-            {/*notification.memberHandle*/ 'Someone'} liked your video: “{notification.videoTitle}”
+            {notification.memberHandle} liked your video: “{notification.videoTitle}”
           </>
         ),
       }
@@ -365,7 +365,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         avatar: { type: 'membership', params: [notification.memberHandle] },
         text: (
           <>
-            {/*notification.memberHandle*/ 'Someone'} disliked your video: “{notification.videoTitle}”
+            {notification.memberHandle} disliked your video: “{notification.videoTitle}”
           </>
         ),
       }
