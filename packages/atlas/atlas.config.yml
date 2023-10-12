@@ -568,6 +568,8 @@ analytics:
     id: '$VITE_SEGMENT_ID'
 
 legal:
+  crtTnc: |
+    This is a temporary placeholder for the Creator Tokens Terms and Conditions. The final version will be added here soon.
   termsOfService: |
     # Terms of Service
 
