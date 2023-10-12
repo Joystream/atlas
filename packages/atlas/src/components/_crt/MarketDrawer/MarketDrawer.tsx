@@ -59,6 +59,7 @@ export const MarketDrawer = ({ show, onClose, tokenName }: CrtMarketSaleViewProp
             setSecondaryButtonProps={setSecondaryButtonProps}
             tokenName={tokenName}
             onClose={onClose}
+            formDefaultValue={marketData}
             onNextStep={handleNextStep}
           />
         )

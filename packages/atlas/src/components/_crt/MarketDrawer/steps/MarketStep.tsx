@@ -21,6 +21,7 @@ type MarketStepProps = {
   setPrimaryButtonProps: (props: ActionDialogButtonProps) => void
   setSecondaryButtonProps: (props: ActionDialogButtonProps) => void
   tokenName: string
+  formDefaultValue: CrtMarketForm
   onClose: () => void
   onNextStep: (props: CrtMarketForm) => void
 }
@@ -31,6 +32,7 @@ export const MarketStep: FC<MarketStepProps> = ({
   tokenName,
   setPrimaryButtonProps,
   onNextStep,
+  formDefaultValue,
   setSecondaryButtonProps,
   onClose,
 }) => {
@@ -42,11 +44,7 @@ export const MarketStep: FC<MarketStepProps> = ({
     watch,
     formState: { isDirty, errors },
   } = useForm<CrtMarketForm>({
-    defaultValues: {
-      price: DEFAULT_MIN_PRICE,
-      tnc: atlasConfig.legal.crtTnc,
-      isChecked: true,
-    },
+    defaultValues: formDefaultValue,
   })
 
   const [openDialog, closeDialog] = useConfirmationModal({
