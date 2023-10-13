@@ -6,11 +6,8 @@ import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Tabs } from '@/components/Tabs'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
+import { CloseRevenueShareButton } from '@/components/_crt/CloseRevenueShareButton'
 import { StartRevenueShare } from '@/components/_crt/StartRevenueShareModal/StartRevenueShareModal'
-import { atlasConfig } from '@/config'
-import { useJoystream } from '@/providers/joystream'
-import { useSnackbar } from '@/providers/snackbars'
-import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { HeaderContainer, MainContainer, TabsContainer } from '@/views/studio/CrtDashboard/CrtDashboard.styles'
 import { CrtDashboardMainTab } from '@/views/studio/CrtDashboard/tabs/CrtDashboardMainTab'
@@ -22,41 +19,23 @@ const TABS = ['Dashboard', 'Holders', 'Revenue share', 'Settings'] as const
 export const CrtDashboard = () => {
   const [currentTab, setCurrentTab] = useState<number>(0)
   const [openRevenueShareModal, setOpenRevenueShareModal] = useState(false)
-  const { joystream, proxyCallback } = useJoystream()
-  const { channelId, memberId, activeChannel } = useUser()
+  const { activeChannel } = useUser()
   const { data } = useGetFullCreatorTokenQuery({
     variables: {
       id: activeChannel?.creatorToken?.token.id ?? '',
     },
   })
-  const { displaySnackbar } = useSnackbar()
-  const handleTransaction = useTransaction()
   const handleChangeTab = useCallback((idx: number) => {
     setCurrentTab(idx)
   }, [])
 
   const mappedTabs = TABS.map((tab) => ({ name: tab }))
 
-  const finalizeRevenueShare = useCallback(() => {
-    if (!joystream || !memberId || !channelId) {
-      return
-    }
-    handleTransaction({
-      txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).finalizeRevenueSplit(memberId, channelId, proxyCallback(updateStatus)),
-      onTxSync: async (data) => {
-        displaySnackbar({
-          title: 'Revenue share is closed',
-          description: `Remaining unclaimed ${data.amount} ${atlasConfig.joystream.tokenTicker} was transfered back to your channel balance`,
-          iconType: 'info',
-        })
-      },
-    })
-  }, [channelId, displaySnackbar, handleTransaction, joystream, memberId, proxyCallback])
-
   if (!data?.creatorTokenById) {
     return null
   }
+
+  const activeRevenueShare = data.creatorTokenById.revenueShares.find((revenueShare) => !revenueShare.finalized)
 
   return (
     <LimitedWidthContainer>
@@ -83,10 +62,13 @@ export const CrtDashboard = () => {
           )}
           {currentTab === 2 && (
             <>
-              <Button onClick={() => setOpenRevenueShareModal(true)} icon={<SvgActionRevenueShare />}>
-                Start revenue share
-              </Button>
-              <Button onClick={finalizeRevenueShare}>Close revenue share</Button>
+              {!activeRevenueShare ? (
+                <Button onClick={() => setOpenRevenueShareModal(true)} icon={<SvgActionRevenueShare />}>
+                  Start revenue share
+                </Button>
+              ) : (
+                <CloseRevenueShareButton revenueShare={activeRevenueShare} />
+              )}
             </>
           )}
         </TabsContainer>

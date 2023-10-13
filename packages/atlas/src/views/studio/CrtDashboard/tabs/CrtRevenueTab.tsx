@@ -28,6 +28,7 @@ export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
   })
   const memberTokenAccount = data?.tokenAccounts[0]
   const activeRevenueShare = token.revenueShares.find((revenueShare) => !revenueShare.finalized)
+  const finalizedRevenueShares = token.revenueShares.filter((revenueShare) => revenueShare.finalized)
 
   return (
     <LayoutGrid>
@@ -84,10 +85,10 @@ export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
         </GridItem>
       ) : null}
 
-      {token.revenueShares.length ? (
+      {finalizedRevenueShares.length ? (
         <GridItem colSpan={{ base: 12 }}>
           <RevenueShareHistoryTable
-            data={token.revenueShares.map((revenueShare) => ({
+            data={finalizedRevenueShares.map((revenueShare) => ({
               claimed: +(revenueShare.claimed ?? 0),
               stakers: revenueShare.stakers,
               totalParticipants: revenueShare.participantsNum,
