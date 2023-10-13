@@ -3170,6 +3170,7 @@ export type FullCreatorTokenFragment = {
       id: string
       stakedAmount: string
       earnings: string
+      createdIn: number
       account: { __typename?: 'TokenAccount'; member: { __typename?: 'Membership'; id: string } }
     }>
   }>
@@ -3830,6 +3831,7 @@ export const FullCreatorTokenFragmentDoc = gql`
         id
         stakedAmount
         earnings
+        createdIn
         account {
           member {
             id

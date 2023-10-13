@@ -461,6 +461,7 @@ export type GetFullCreatorTokenQuery = {
         id: string
         stakedAmount: string
         earnings: string
+        createdIn: number
         account: { __typename?: 'TokenAccount'; member: { __typename?: 'Membership'; id: string } }
       }>
     }>

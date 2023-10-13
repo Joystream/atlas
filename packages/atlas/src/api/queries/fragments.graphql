@@ -555,6 +555,7 @@ fragment FullCreatorToken on CreatorToken {
       id
       stakedAmount
       earnings
+      createdIn
       account {
         member {
           id

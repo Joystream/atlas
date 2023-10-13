@@ -7,7 +7,7 @@ import { RatioPreview } from '@/components/RatioPreview/RatioPreview'
 import { WidgetTile } from '@/components/WidgetTile'
 import { RevenueShareHistoryTable } from '@/components/_crt/RevenueShareHistoryTable'
 import { RevenueShareParticipationWidget } from '@/components/_crt/RevenueShareParticipationWidget'
-import { RevenueShareStakersTable } from '@/components/_crt/RevenueShareStakersTable/RevenueShareStakersTable'
+import { RevenueShareStakersTable } from '@/components/_crt/RevenueShareStakersTable'
 import { RevenueShareStateWidget } from '@/components/_crt/RevenueShareStateWidget'
 import { useUser } from '@/providers/user/user.hooks'
 
@@ -57,8 +57,8 @@ export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
           customNode={
             <RatioPreview
               ratios={[
-                [20, 'Holders'],
-                [80, 'Channel'],
+                [100 - token.annualCreatorReward, 'Holders'],
+                [token.annualCreatorReward, 'Channel'],
               ]}
             />
           }
@@ -75,7 +75,7 @@ export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
           <RevenueShareStakersTable
             data={activeRevenueShare.stakers.map((staker) => ({
               memberId: staker.account.member.id,
-              stakedAtBlock: 1111, //staker.createdIn,
+              stakedAtBlock: staker.createdIn,
               staked: +(staker.stakedAmount ?? 0),
               earnings: +(staker.earnings ?? 0),
             }))}
