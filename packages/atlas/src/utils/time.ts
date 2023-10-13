@@ -35,6 +35,11 @@ export const daysToMilliseconds = (days: number) => {
   return days * 24 * 60 * 60 * 1000
 }
 
+export const addDaysToDate = (daysToAdd: number, date = new Date()) => {
+  date.setDate(date.getDate() + daysToAdd)
+  return date
+}
+
 export const getTimeDiffInSeconds = (time: Date) => Math.max(0, Math.round((time.getTime() - Date.now()) / 1000))
 
 export const convertDateFormat = (timestamp: Date | string) => {
