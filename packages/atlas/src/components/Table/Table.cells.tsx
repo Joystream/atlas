@@ -15,7 +15,7 @@ import {
   StyledLink,
   StyledNumberFormat,
 } from '@/components/TablePaymentsHistory/TablePaymentsHistory.styles'
-import { Text } from '@/components/Text'
+import { Text, TextVariant } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
@@ -91,7 +91,7 @@ export const LoadingMemberRow = ({ memberId, additionalNode }: { memberId: strin
 
   const member = memberships?.[0]
 
-  return <MemberCell member={member} />
+  return <MemberCell member={member} additionalNode={additionalNode} />
 }
 
 const HandleContainer = styled(FlexBox)`
@@ -102,12 +102,12 @@ const HandleContainer = styled(FlexBox)`
   }
 `
 
-export const TokenAmount = ({ tokenAmount }: { tokenAmount: BN }) => {
-  const isNegative = tokenAmount.isNeg()
+export const TokenAmount = ({ tokenAmount, variant }: { tokenAmount: BN | number; variant?: TextVariant }) => {
+  const isNegative = typeof tokenAmount === 'number' ? tokenAmount < 0 : tokenAmount.isNeg()
   return (
     <StyledNumberFormat
       icon={<StyledJoyTokenIcon variant="gray" error={isNegative} />}
-      variant="t200-strong"
+      variant={variant ?? 't200-strong'}
       as="p"
       value={tokenAmount}
       format="short"

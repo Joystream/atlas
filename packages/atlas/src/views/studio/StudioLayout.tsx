@@ -64,7 +64,7 @@ const StudioLayout = () => {
   const displayedLocation = useVideoWorkspaceRouting()
   const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
-  const { channelId, memberships, membershipsLoading, activeMembership, activeChannel, isLoggedIn } = useUser()
+  const { channelId, memberships, membershipsLoading, activeMembership, activeChannel } = useUser()
   const { isAuthenticating } = useAuth()
   const [openUnsupportedBrowserDialog, closeUnsupportedBrowserDialog] = useConfirmationModal()
   const [enterLocation] = useState(location.pathname)

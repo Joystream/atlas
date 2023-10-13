@@ -5,15 +5,11 @@ import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
 import { RatioPreview } from '@/components/RatioPreview/RatioPreview'
 import { WidgetTile } from '@/components/WidgetTile'
+import { RevenueShareHistoryTable } from '@/components/_crt/RevenueShareHistoryTable'
 import { RevenueShareParticipationWidget } from '@/components/_crt/RevenueShareParticipationWidget'
+import { RevenueShareStakersTable } from '@/components/_crt/RevenueShareStakersTable/RevenueShareStakersTable'
 import { RevenueShareStateWidget } from '@/components/_crt/RevenueShareStateWidget'
 import { useUser } from '@/providers/user/user.hooks'
-
-const DATA = {
-  revenueShare: {
-    endDate: new Date(Date.now() + 1000000),
-  },
-}
 
 type CrtRevenueTabProps = {
   token: FullCreatorTokenFragment
@@ -32,6 +28,7 @@ export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
   })
   const memberTokenAccount = data?.tokenAccounts[0]
   const activeRevenueShare = token.revenueShares.find((revenueShare) => !revenueShare.finalized)
+
   return (
     <LayoutGrid>
       <GridItem colSpan={{ base: 12, sm: 4 }}>
@@ -72,6 +69,33 @@ export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
           <RevenueShareParticipationWidget revenueShare={activeRevenueShare} />
         </GridItem>
       )}
+
+      {activeRevenueShare ? (
+        <GridItem colSpan={{ base: 12 }}>
+          <RevenueShareStakersTable
+            data={activeRevenueShare.stakers.map((staker) => ({
+              memberId: staker.account.member.id,
+              stakedAtBlock: 1111, //staker.createdIn,
+              staked: +(staker.stakedAmount ?? 0),
+              earnings: +(staker.earnings ?? 0),
+            }))}
+            tokenSymbol={token.symbol}
+          />
+        </GridItem>
+      ) : null}
+
+      {token.revenueShares.length ? (
+        <GridItem colSpan={{ base: 12 }}>
+          <RevenueShareHistoryTable
+            data={token.revenueShares.map((revenueShare) => ({
+              claimed: +(revenueShare.claimed ?? 0),
+              stakers: revenueShare.stakers,
+              totalParticipants: revenueShare.participantsNum,
+              endsAtBlock: revenueShare.endsAt,
+            }))}
+          />
+        </GridItem>
+      ) : null}
     </LayoutGrid>
   )
 }

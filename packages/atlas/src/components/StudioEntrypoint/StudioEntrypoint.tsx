@@ -26,11 +26,11 @@ export const StudioEntrypoint: FC<StudioEntrypointProps> = ({ enterLocation }) =
     if (!activeMembership?.channels.length) {
       return <Navigate to={absoluteRoutes.studio.signIn()} replace />
     }
-    return <Navigate to={enterLocation || DEFAULT_ROUTE} replace />
+    return <Navigate to={enterLocation === absoluteRoutes.studio.index() ? DEFAULT_ROUTE : enterLocation} replace />
   }
 
   if (channelSet) {
-    return <Navigate to={enterLocation || DEFAULT_ROUTE} replace />
+    return <Navigate to={enterLocation === absoluteRoutes.studio.index() ? DEFAULT_ROUTE : enterLocation} replace />
   }
 
   return <StudioLoading />
