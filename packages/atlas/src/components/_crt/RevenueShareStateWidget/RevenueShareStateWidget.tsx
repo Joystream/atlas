@@ -1,11 +1,14 @@
 import { FlexBox } from '@/components/FlexBox'
 import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
+import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { formatDateTime, formatDurationShort } from '@/utils/time'
 
-export const RevenueShareStateWidget = ({ end }: { end?: Date }) => {
-  const status: 'active' | 'past' | 'inactive' = !end ? 'inactive' : end.getTime() < Date.now() ? 'past' : 'active'
-
+export const RevenueShareStateWidget = ({ endsAtBlock }: { endsAtBlock?: number }) => {
+  const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
+  const status: 'active' | 'past' | 'inactive' = !endsAtBlock ? 'inactive' : endsAtBlock < 0 ? 'past' : 'active'
+  const endingBlockTimestamp = convertBlockToMsTimestamp(endsAtBlock ?? 0)
+  const endingDate = endingBlockTimestamp ? new Date(endingBlockTimestamp) : new Date()
   return (
     <WidgetTile
       title={
@@ -16,18 +19,18 @@ export const RevenueShareStateWidget = ({ end }: { end?: Date }) => {
           : 'REVENUE SHARE ENDS IN'
       }
       customNode={
-        status !== 'inactive' && end ? (
+        status !== 'inactive' && endsAtBlock ? (
           status === 'past' ? (
             <Text variant="h500" as="h5" margin={{ bottom: 4 }}>
-              {formatDateTime(end).replace(',', ' at')}
+              {formatDateTime(endingDate).replace(',', ' at')}
             </Text>
           ) : (
             <FlexBox flow="column">
               <Text variant="h500" as="h5">
-                {formatDurationShort(Math.round((end.getTime() - Date.now()) / 1000))}
+                {formatDurationShort(Math.round((endingDate.getTime() - Date.now()) / 1000))}
               </Text>
               <Text variant="t100" as="p" color="colorText">
-                {formatDateTime(end).replace(',', ' at')}
+                {formatDateTime(endingDate).replace(',', ' at')}
               </Text>
             </FlexBox>
           )

@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 
+import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgActionCheck, SvgJoyTokenMonochrome16 } from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox'
 import { Pill } from '@/components/Pill'
@@ -7,23 +8,22 @@ import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
 import { WidgetTile } from '@/components/WidgetTile'
 import { Button } from '@/components/_buttons/Button'
+import { useUser } from '@/providers/user/user.hooks'
 import { cVar } from '@/styles'
 
-const data = {
-  userTokensToUnlock: 20,
-  tokensUnlocked: 120,
-  totalTokensToUnlock: 200,
-  holders: 5,
-  holdersUnlocked: 3,
+export type RevenueShareParticipationWidgetProps = {
+  revenueShare: FullCreatorTokenFragment['revenueShares'][number]
 }
-export const RevenueShareParticipationWidget = () => {
-  const { userTokensToUnlock, totalTokensToUnlock, tokensUnlocked, holdersUnlocked, holders } = data
+
+// todo: correct aggregated values
+export const RevenueShareParticipationWidget = ({ revenueShare }: RevenueShareParticipationWidgetProps) => {
+  const { memberId } = useUser()
   return (
     <WidgetTile
       title="Revenue share participation"
       titleVariant="h400"
       customTopRightNode={
-        userTokensToUnlock ? (
+        revenueShare.stakers.find((staker) => staker.account.member.id === memberId) ? (
           <Button size="small">Unlock your tokens</Button>
         ) : (
           <Tooltip
@@ -44,12 +44,12 @@ export const RevenueShareParticipationWidget = () => {
               <FlexBox alignItems="center">
                 <SvgJoyTokenMonochrome16 />
                 <Text variant="h400" as="h4">
-                  {tokensUnlocked}/{totalTokensToUnlock}
+                  {revenueShare.claimed}/{revenueShare.claimed}
                 </Text>
               </FlexBox>
 
               <Text variant="t100" as="p" color="colorText">
-                ${tokensUnlocked}/{totalTokensToUnlock}
+                ${revenueShare.claimed}/{revenueShare.claimed}
               </Text>
             </FlexBox>
 
@@ -58,15 +58,15 @@ export const RevenueShareParticipationWidget = () => {
                 ENDED ON
               </Text>
               <Text variant="h400" as="h4">
-                {holdersUnlocked}/{holders}
+                {revenueShare.stakers.length}/69420
               </Text>
               <Text variant="t100" as="p" color="colorText">
-                {Math.round((holdersUnlocked / holders) * 100)}% holders
+                {Math.round((revenueShare.stakers.length / 69420) * 100)}% holders
               </Text>
             </FlexBox>
           </FlexBox>
 
-          <ProgressBar progress={Math.round((holdersUnlocked / holders) * 100)} />
+          <ProgressBar progress={Math.round((revenueShare.stakers.length / 69420) * 100)} />
         </FlexBox>
       }
     />

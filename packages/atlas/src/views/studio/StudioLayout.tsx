@@ -64,9 +64,8 @@ const StudioLayout = () => {
   const displayedLocation = useVideoWorkspaceRouting()
   const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
-  const { channelId, memberships, membershipsLoading, activeMembership, activeChannel } = useUser()
+  const { channelId, memberships, membershipsLoading, activeMembership, activeChannel, isLoggedIn } = useUser()
   const { isAuthenticating } = useAuth()
-
   const [openUnsupportedBrowserDialog, closeUnsupportedBrowserDialog] = useConfirmationModal()
   const [enterLocation] = useState(location.pathname)
   const isMembershipLoaded = !membershipsLoading && !isAuthenticating
@@ -179,7 +178,7 @@ const StudioLayout = () => {
                     isLoadingAuthData={false}
                     element={<CrtWelcomeView />}
                     isAuth={channelSet && !hasToken}
-                    redirectTo={absoluteRoutes.studio.crtDashboard()}
+                    redirectTo={!channelSet ? ENTRY_POINT_ROUTE : absoluteRoutes.studio.crtDashboard()}
                   />
                 }
               />
@@ -187,10 +186,9 @@ const StudioLayout = () => {
                 path={relativeRoutes.studio.crtDashboard()}
                 element={
                   <PrivateRoute
-                    isLoadingAuthData={false}
                     element={<CrtDashboard />}
                     isAuth={channelSet && hasToken}
-                    redirectTo={absoluteRoutes.studio.crt()}
+                    redirectTo={!channelSet ? ENTRY_POINT_ROUTE : absoluteRoutes.studio.crt()}
                   />
                 }
               />

@@ -3165,7 +3165,13 @@ export type FullCreatorTokenFragment = {
     finalized: boolean
     participantsNum: number
     startingAt: number
-    stakers: Array<{ __typename?: 'RevenueShareParticipation'; id: string; stakedAmount: string; earnings: string }>
+    stakers: Array<{
+      __typename?: 'RevenueShareParticipation'
+      id: string
+      stakedAmount: string
+      earnings: string
+      account: { __typename?: 'TokenAccount'; member: { __typename?: 'Membership'; id: string } }
+    }>
   }>
   channel?: {
     __typename?: 'TokenChannel'
@@ -3824,6 +3830,11 @@ export const FullCreatorTokenFragmentDoc = gql`
         id
         stakedAmount
         earnings
+        account {
+          member {
+            id
+          }
+        }
       }
     }
   }

@@ -2,13 +2,10 @@ import styled from '@emotion/styled'
 import { useMemo } from 'react'
 
 import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
-import { Avatar } from '@/components/Avatar'
-import { FlexBox } from '@/components/FlexBox'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Pill } from '@/components/Pill'
 import { Table, TableProps } from '@/components/Table'
-import { Text } from '@/components/Text'
-import { getMemberAvatar } from '@/providers/assets/assets.helpers'
+import { MemberCell } from '@/components/Table/Table.cells'
 
 const COLUMNS: TableProps['columns'] = [
   { Header: 'Member', accessor: 'member' },
@@ -34,7 +31,12 @@ export const HoldersTable = ({ data, currentMemberId }: HoldersTableProps) => {
   const mappedData = useMemo(
     () =>
       data.map((row) => ({
-        member: <MemberCell member={row.member} isCurrentMember={row.member.id === currentMemberId} />,
+        member: (
+          <MemberCell
+            member={row.member}
+            additionalNode={row.member.id === currentMemberId ? <Pill label="You" /> : null}
+          />
+        ),
         transferable: <NumberFormat value={row.transferable} as="p" withToken customTicker="$JBC" />,
         vested: <NumberFormat value={row.vested} as="p" withToken customTicker="$JBC" />,
         total: <NumberFormat value={row.total} as="p" withToken customTicker="$JBC" />,
@@ -43,25 +45,6 @@ export const HoldersTable = ({ data, currentMemberId }: HoldersTableProps) => {
     [currentMemberId, data]
   )
   return <StyledTable columns={COLUMNS} data={mappedData} />
-}
-
-const MemberCell = ({
-  member,
-  isCurrentMember,
-}: {
-  member: BasicMembershipFieldsFragment
-  isCurrentMember: boolean
-}) => {
-  const { urls } = getMemberAvatar(member)
-  return (
-    <FlexBox alignItems="center" gap={2}>
-      <Avatar assetUrls={urls} />
-      <Text variant="t100" as="p">
-        {member.handle ?? 'Unknown'}
-      </Text>
-      {isCurrentMember && <Pill label="You" />}
-    </FlexBox>
-  )
 }
 
 const StyledTable = styled(Table)`

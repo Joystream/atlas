@@ -555,6 +555,11 @@ fragment FullCreatorToken on CreatorToken {
       id
       stakedAmount
       earnings
+      account {
+        member {
+          id
+        }
+      }
     }
   }
 }

@@ -31,11 +31,11 @@ export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
     },
   })
   const memberTokenAccount = data?.tokenAccounts[0]
-
+  const activeRevenueShare = token.revenueShares.find((revenueShare) => !revenueShare.finalized)
   return (
     <LayoutGrid>
       <GridItem colSpan={{ base: 12, sm: 4 }}>
-        <RevenueShareStateWidget end={DATA.revenueShare.endDate} />
+        <RevenueShareStateWidget endsAtBlock={activeRevenueShare?.endsAt} />
       </GridItem>
       <GridItem colSpan={{ base: 12, sm: 4 }}>
         <WidgetTile
@@ -67,9 +67,11 @@ export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
           }
         />
       </GridItem>
-      <GridItem colSpan={{ base: 12 }}>
-        <RevenueShareParticipationWidget />
-      </GridItem>
+      {activeRevenueShare && (
+        <GridItem colSpan={{ base: 12 }}>
+          <RevenueShareParticipationWidget revenueShare={activeRevenueShare} />
+        </GridItem>
+      )}
     </LayoutGrid>
   )
 }

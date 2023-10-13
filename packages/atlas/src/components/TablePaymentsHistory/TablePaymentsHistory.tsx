@@ -18,9 +18,7 @@ import {
   DialogText,
   JoystreamSvgWrapper,
   SenderItem,
-  StyledJoyTokenIcon,
   StyledLink,
-  StyledNumberFormat,
   TextWrapper,
   TypeIconWrapper,
   TypeWrapper,
@@ -32,6 +30,8 @@ import {
   tableEmptyState,
   tableLoadingData,
 } from './TablePaymentsHistory.utils'
+
+import { TokenAmount } from '../Table/Table.cells'
 
 export type PaymentHistory = {
   type: PaymentType
@@ -151,20 +151,5 @@ const Type = ({ type }: { type: PaymentType }) => {
         {paymentTypeMappings[type].title}
       </Text>
     </TypeWrapper>
-  )
-}
-
-const TokenAmount = ({ tokenAmount }: { tokenAmount: BN }) => {
-  const isNegative = tokenAmount.isNeg()
-  return (
-    <StyledNumberFormat
-      icon={<StyledJoyTokenIcon variant="gray" error={isNegative} />}
-      variant="t200-strong"
-      as="p"
-      value={tokenAmount}
-      format="short"
-      color={isNegative ? 'colorTextError' : 'colorTextStrong'}
-      withDenomination
-    />
   )
 }
