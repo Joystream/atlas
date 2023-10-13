@@ -4,7 +4,6 @@ import { useMemo } from 'react'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Table, TableProps } from '@/components/Table'
 import { DateBlockCell, LoadingMemberRow, TokenAmount } from '@/components/Table/Table.cells'
-import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 
 const COLUMNS: TableProps['columns'] = [
   { Header: 'Date', accessor: 'stakedAt' },
@@ -24,17 +23,16 @@ export type RevenueShareStakersTableProps = {
 }
 
 export const RevenueShareStakersTable = ({ data, tokenSymbol = 'N/A' }: RevenueShareStakersTableProps) => {
-  const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
   const mappedData = useMemo(() => {
     return data.map((row) => {
       return {
-        stakedAt: <DateBlockCell date={new Date(convertBlockToMsTimestamp(row.stakedAtBlock) ?? 0)} />,
+        stakedAt: <DateBlockCell type="block" block={row.stakedAtBlock} />,
         member: <LoadingMemberRow memberId={row.memberId} />,
         staked: <NumberFormat value={row.staked} as="p" variant="t100" withToken customTicker={`$${tokenSymbol}`} />,
         earnings: <TokenAmount variant="t100-strong" tokenAmount={row.earnings} />,
       }
     })
-  }, [convertBlockToMsTimestamp, data, tokenSymbol])
+  }, [data, tokenSymbol])
 
   return <StyledTable columns={COLUMNS} data={mappedData} />
 }

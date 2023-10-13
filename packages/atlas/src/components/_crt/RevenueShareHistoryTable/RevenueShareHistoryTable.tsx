@@ -5,7 +5,6 @@ import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.
 import { Table, TableProps } from '@/components/Table'
 import { DateBlockCell, TokenAmount } from '@/components/Table/Table.cells'
 import { Text } from '@/components/Text'
-import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useUser } from '@/providers/user/user.hooks'
 
 const COLUMNS: TableProps['columns'] = [
@@ -27,14 +26,13 @@ export type RevenueShareHistoryTableProps = {
 }
 
 export const RevenueShareHistoryTable = ({ data }: RevenueShareHistoryTableProps) => {
-  const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
   const { memberId } = useUser()
 
   const mappedData = useMemo(() => {
     return data.map((row) => {
       const memberStake = +(row.stakers.find((staker) => staker.account.member.id === memberId)?.stakedAmount ?? 0)
       return {
-        endDate: <DateBlockCell date={new Date(convertBlockToMsTimestamp(row.endsAtBlock) ?? 0)} />,
+        endDate: <DateBlockCell type="block" block={row.endsAtBlock} />,
         participants: (
           <Text variant="t100" as="span">
             {row.stakers.length}/x
@@ -49,7 +47,7 @@ export const RevenueShareHistoryTable = ({ data }: RevenueShareHistoryTableProps
         unclaimed: 'N/A',
       }
     })
-  }, [convertBlockToMsTimestamp, data, memberId])
+  }, [data, memberId])
 
   return <StyledTable columns={COLUMNS} data={mappedData} />
 }
