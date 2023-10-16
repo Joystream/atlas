@@ -154,7 +154,7 @@ export const StartRevenueShare = ({ tokenId, onClose, show }: StartRevenueShareP
     }
 
     if (value?.type === 'duration') {
-      return addDaysToDate(value.durationDays)
+      return addDaysToDate(value.durationDays, base)
     }
     return undefined
   }, [])

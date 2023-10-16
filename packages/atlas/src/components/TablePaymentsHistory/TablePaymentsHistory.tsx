@@ -4,7 +4,6 @@ import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { useMemberships } from '@/api/hooks/membership'
 import { SvgJoystreamLogoShort } from '@/assets/logos'
 import { Avatar } from '@/components/Avatar'
-import { DateTimeBlock } from '@/components/DateTimeBlock'
 import { Table, TableProps } from '@/components/Table'
 import { Text } from '@/components/Text'
 import { TextButton } from '@/components/_buttons/Button'
@@ -31,7 +30,7 @@ import {
   tableLoadingData,
 } from './TablePaymentsHistory.utils'
 
-import { TokenAmount } from '../Table/Table.cells'
+import { DateBlockCell, TokenAmount } from '../Table/Table.cells'
 
 export type PaymentHistory = {
   type: PaymentType
@@ -52,7 +51,7 @@ export const TablePaymentsHistory: FC<TablePaymentsHistoryProps> = ({ data, isLo
   const mappedData: TableProps['data'] = useMemo(
     () =>
       data.map((data) => ({
-        date: <DateTimeBlock date={data.date} />,
+        date: <DateBlockCell type="date" date={data.date} />,
         type: <Type type={data.type} />,
         amount: <TokenAmount tokenAmount={data.amount} />,
         sender: <Sender sender={data.sender} />,

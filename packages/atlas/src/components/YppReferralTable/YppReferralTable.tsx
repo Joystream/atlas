@@ -24,7 +24,7 @@ export const YppReferralTable = ({ isLoading, data }: YppReferralTableProps) => 
   const mappedData: TableProps['data'] = useMemo(
     () =>
       data.map((entry) => ({
-        date: <DateBlockCell date={entry.date} />,
+        date: <DateBlockCell type="date" date={entry.date} />,
         channel: <LoadingChannelCell channelId={entry.channelId} />,
         tier: <Tier subscribers={entry.subscribers} />,
       })),

@@ -9,7 +9,7 @@ type CrtHoldersTabProps = {
 }
 
 export const CrtHoldersTab = ({ token }: CrtHoldersTabProps) => {
-  const { data } = useGetCreatorTokenHoldersQuery({
+  const { data, loading } = useGetCreatorTokenHoldersQuery({
     variables: {
       where: {
         token: {
@@ -37,5 +37,5 @@ export const CrtHoldersTab = ({ token }: CrtHoldersTabProps) => {
     [data?.tokenAccounts, token.totalSupply]
   )
 
-  return <HoldersTable data={mappedData} isLoading={true} currentMemberId="1" />
+  return <HoldersTable data={mappedData} isLoading={loading} currentMemberId="1" />
 }
