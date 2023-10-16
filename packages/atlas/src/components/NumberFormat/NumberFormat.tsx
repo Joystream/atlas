@@ -230,7 +230,7 @@ const dollarSmallNumberFormatter = new Intl.NumberFormat('en-US', {
   maximumSignificantDigits: 3,
 })
 
-const formatNumberShort = (num: number): string => {
+export const formatNumberShort = (num: number): string => {
   return numberCompactFormatter.format(num).replaceAll(',', ' ')
 }
 

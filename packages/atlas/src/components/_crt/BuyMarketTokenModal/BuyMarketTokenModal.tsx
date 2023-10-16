@@ -1,9 +1,14 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 
 import { BuyMarketTokenSuccess } from '@/components/_crt/BuyMarketTokenModal/steps/BuyMarketTokenSuccess'
 import { DialogProps } from '@/components/_overlays/Dialog'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
+import { useJoystream } from '@/providers/joystream'
+import { useSnackbar } from '@/providers/snackbars'
+import { useTransaction } from '@/providers/transactions/transactions.hooks'
+import { useUser } from '@/providers/user/user.hooks'
 
 import { BuyMarketTokenConditions } from './steps/BuyMarketTokenConditions'
 import { BuySaleTokenForm, getTokenDetails } from './steps/BuyMarketTokenForm'
@@ -23,8 +28,12 @@ export const BuyMarketTokenModal = ({ tokenId, onClose }: BuySaleTokenModalProps
   const { title } = getTokenDetails(tokenId)
   const [activeStep, setActiveStep] = useState(BUY_MARKET_TOKEN_STEPS.form)
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogProps['primaryButton']>()
+  const amountRef = useRef<number | null>(null)
+  const { memberId } = useUser()
   const smMatch = useMediaMatch('sm')
-
+  const { displaySnackbar } = useSnackbar()
+  const { joystream, proxyCallback } = useJoystream()
+  const handleTransaction = useTransaction()
   const secondaryButton = useMemo(() => {
     switch (activeStep) {
       case BUY_MARKET_TOKEN_STEPS.conditions:
@@ -47,7 +56,30 @@ export const BuyMarketTokenModal = ({ tokenId, onClose }: BuySaleTokenModalProps
     setPrimaryButtonProps,
   }
 
-  const onSubmitConditions = useCallback(() => setActiveStep(BUY_MARKET_TOKEN_STEPS.success), [])
+  const onSubmitConditions = useCallback(async () => {
+    if (!joystream || !memberId || !amountRef.current) {
+      return
+    }
+
+    handleTransaction({
+      txFactory: async (updateStatus) =>
+        (await joystream.extrinsics).purchaseTokenOnMarket(
+          tokenId,
+          memberId,
+          tokenNumberToHapiBn(amountRef.current as number).toString(),
+          proxyCallback(updateStatus)
+        ),
+      onTxSync: async () => {
+        setActiveStep(BUY_MARKET_TOKEN_STEPS.success)
+      },
+      onError: () => {
+        setActiveStep(BUY_MARKET_TOKEN_STEPS.form)
+        displaySnackbar({
+          title: 'Something went wrong',
+        })
+      },
+    })
+  }, [displaySnackbar, handleTransaction, joystream, memberId, proxyCallback, tokenId])
 
   return (
     <DialogModal
@@ -63,7 +95,10 @@ export const BuyMarketTokenModal = ({ tokenId, onClose }: BuySaleTokenModalProps
       {activeStep === BUY_MARKET_TOKEN_STEPS.form && (
         <BuySaleTokenForm
           {...commonProps}
-          onSubmit={() => setActiveStep(BUY_MARKET_TOKEN_STEPS.conditions)}
+          onSubmit={(tokens) => {
+            setActiveStep(BUY_MARKET_TOKEN_STEPS.conditions)
+            amountRef.current = tokens
+          }}
           tokenId={tokenId}
         />
       )}
