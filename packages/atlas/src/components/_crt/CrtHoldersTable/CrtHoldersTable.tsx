@@ -1,14 +1,11 @@
 import styled from '@emotion/styled'
 import { useMemo } from 'react'
 
-import { useMemberships } from '@/api/hooks/membership'
-import { Avatar } from '@/components/Avatar'
 import { FlexBox } from '@/components/FlexBox'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Table, TableProps } from '@/components/Table'
+import { LoadingMemberRow } from '@/components/Table/Table.cells'
 import { Text } from '@/components/Text'
-import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 
 const COLUMNS: TableProps['columns'] = [
   { Header: 'Member', accessor: 'member', width: 2 },
@@ -33,7 +30,18 @@ export const CrtHoldersTable = ({ isLoading, data, className, ownerId }: CrtHold
   const mappedData = useMemo(
     () =>
       data.map((row) => ({
-        member: <MemberRow memberId={row.memberId} isOwner={row.memberId === ownerId} />,
+        member: (
+          <LoadingMemberRow
+            memberId={row.memberId}
+            additionalNode={
+              row.memberId === ownerId ? (
+                <Text variant="t100" as="p" color="colorTextMuted">
+                  Creator
+                </Text>
+              ) : undefined
+            }
+          />
+        ),
         total: (
           <RightAlignedCell>
             <FlexBox alignItems="center" gap={1}>
@@ -59,50 +67,6 @@ export const CrtHoldersTable = ({ isLoading, data, className, ownerId }: CrtHold
 
   return <StyledTable columns={COLUMNS} data={mappedData} className={className} />
 }
-
-const MemberRow = ({ memberId, isOwner }: { memberId: string; isOwner: boolean }) => {
-  const { loading, memberships } = useMemberships({
-    where: {
-      id_eq: memberId,
-    },
-  })
-
-  if (loading) {
-    return (
-      <FlexBox alignItems="center" gap={2}>
-        <SkeletonLoader rounded width={32} height={32} />
-        <SkeletonLoader height={16} width="40%" />
-      </FlexBox>
-    )
-  }
-
-  const member = memberships?.[0]
-  const { urls, isLoadingAsset } = getMemberAvatar(member)
-
-  return (
-    <FlexBox alignItems="center" gap={2}>
-      <Avatar loading={isLoadingAsset} assetUrls={urls} />
-      <HandleContainer flow="column" gap={0}>
-        <Text variant="t200-strong" as="p" color="colorText" truncate>
-          {member?.handle ?? 'Unknown'}
-        </Text>
-        {isOwner && (
-          <Text variant="t100" as="p" color="colorTextMuted">
-            Creator
-          </Text>
-        )}
-      </HandleContainer>
-    </FlexBox>
-  )
-}
-
-const HandleContainer = styled(FlexBox)`
-  overflow: hidden;
-
-  > * {
-    width: 100%;
-  }
-`
 
 export const StyledTable = styled(Table)`
   th:nth-child(n + 2) {

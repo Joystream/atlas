@@ -1,3 +1,4 @@
+import { useApolloClient } from '@apollo/client'
 import styled from '@emotion/styled'
 import { useCallback, useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -12,8 +13,14 @@ import { FormField } from '@/components/_inputs/FormField'
 import { TokenInput } from '@/components/_inputs/TokenInput'
 import { DetailsContent } from '@/components/_nft/NftTile'
 import { DialogModal } from '@/components/_overlays/DialogModal'
+import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useJoystream } from '@/providers/joystream'
+import { useSnackbar } from '@/providers/snackbars'
+import { useTransaction } from '@/providers/transactions/transactions.hooks'
+import { useUser } from '@/providers/user/user.hooks'
 import { pluralizeNoun } from '@/utils/misc'
+import { addDaysToDate } from '@/utils/time'
 
 export type StartRevenueShareProps = {
   tokenId: string
@@ -42,15 +49,71 @@ const endDateItems = datePickerItemsFactory([7, 14, 30])
 
 export const StartRevenueShare = ({ tokenId, onClose, show }: StartRevenueShareProps) => {
   const smMatch = useMediaMatch('sm')
+  const { memberId, channelId } = useUser()
   const { patronageRate, userBalance } = getTokenDetails(tokenId)
-
+  const { displaySnackbar } = useSnackbar()
+  const { joystream, proxyCallback } = useJoystream()
+  const handleTransaction = useTransaction()
   const form = useForm<{
     tokens: number | null
     startDate: AuctionDatePickerProps['value'] | null
     endDate: AuctionDatePickerProps['value'] | null
-  }>()
+  }>({
+    defaultValues: {
+      endDate: { type: 'duration', durationDays: 7 },
+    },
+  })
+  const client = useApolloClient()
+  const { convertMsTimestampToBlock } = useBlockTimeEstimation()
   const { trigger, control, watch } = form
   const [startDate, endDate, tokens] = watch(['startDate', 'endDate', 'tokens'])
+
+  const onSubmit = () =>
+    form.handleSubmit((data) => {
+      const rawStartDate = data.startDate?.type === 'date' ? data.startDate.date : new Date()
+      const startBlock = convertMsTimestampToBlock(rawStartDate.getTime())
+      if (!joystream || !memberId || !channelId || !startBlock) {
+        return
+      }
+
+      const duration =
+        data.endDate?.type === 'date'
+          ? convertMsTimestampToBlock(data.endDate.date.getTime())
+          : data.endDate?.durationDays
+          ? (convertMsTimestampToBlock(addDaysToDate(data.endDate.durationDays, rawStartDate).getTime()) ?? 0) -
+            startBlock
+          : null
+
+      if (typeof duration !== 'number' || duration < 0) {
+        displaySnackbar({ title: 'Failed to parse ending date', iconType: 'error', description: 'Please try again.' })
+        return
+      }
+
+      handleTransaction({
+        txFactory: async (updateStatus) =>
+          (await joystream.extrinsics).issueRevenueSplit(
+            memberId,
+            channelId,
+            startBlock,
+            duration,
+            proxyCallback(updateStatus)
+          ),
+        onTxSync: async () => {
+          displaySnackbar({
+            title: 'Success',
+            iconType: 'success',
+          })
+          client.refetchQueries({ include: 'active' })
+          onClose()
+        },
+        onError: () => {
+          displaySnackbar({
+            title: 'Something went wrong',
+          })
+          onClose()
+        },
+      })
+    })()
 
   const details = useMemo(
     () => [
@@ -92,9 +155,7 @@ export const StartRevenueShare = ({ tokenId, onClose, show }: StartRevenueShareP
     }
 
     if (value?.type === 'duration') {
-      const now = base ? new Date(base.getTime()) : new Date()
-      now.setDate(now.getDate() + value.durationDays)
-      return now
+      return addDaysToDate(value.durationDays, base)
     }
     return undefined
   }, [])
@@ -106,6 +167,7 @@ export const StartRevenueShare = ({ tokenId, onClose, show }: StartRevenueShareP
       onExitClick={onClose}
       primaryButton={{
         text: 'Start revenue share',
+        onClick: () => onSubmit(),
       }}
     >
       <FlexBox flow="column" gap={8}>
@@ -162,12 +224,7 @@ export const StartRevenueShare = ({ tokenId, onClose, show }: StartRevenueShareP
             name="startDate"
             control={control}
             render={({ field: { onChange, value }, fieldState: { error } }) => (
-              <FormField
-                error={error?.message}
-                // TODO shake animation on date picker is very glitchy, for now just disable it
-                disableErrorAnimation
-                label="Starts"
-              >
+              <FormField error={error?.message} disableErrorAnimation label="Starts">
                 <OuterBox>
                   <InnerBox>
                     <AuctionDatePicker
@@ -195,12 +252,7 @@ export const StartRevenueShare = ({ tokenId, onClose, show }: StartRevenueShareP
             name="endDate"
             control={control}
             render={({ field: { onChange, value }, fieldState: { error } }) => (
-              <FormField
-                error={error?.message}
-                // TODO shake animation on date picker is very glitchy, for now just disable it
-                disableErrorAnimation
-                label="Ends"
-              >
+              <FormField error={error?.message} disableErrorAnimation label="Ends">
                 <OuterBox>
                   <InnerBox>
                     <AuctionDatePicker

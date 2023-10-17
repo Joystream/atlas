@@ -57,13 +57,13 @@ mutation FollowChannel($channelId: String!) {
   followChannel(channelId: $channelId) {
     channelId
     follows
-    cancelToken
+    #    cancelToken
   }
 }
 
 # CHANGE: `ID` is now `String`
 mutation UnfollowChannel($channelId: String!, $token: String!) {
-  unfollowChannel(channelId: $channelId, token: $token) {
+  unfollowChannel(channelId: $channelId) {
     channelId
     follows
   }

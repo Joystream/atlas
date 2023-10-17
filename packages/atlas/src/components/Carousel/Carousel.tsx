@@ -1,10 +1,10 @@
 import { ReactNode } from 'react'
 import { Pagination } from 'swiper'
 import 'swiper/css'
-import { SwiperProps, SwiperSlide } from 'swiper/react'
+import { SwiperProps } from 'swiper/react'
 import { Swiper as SwiperType } from 'swiper/types'
 
-import { StyledSwiper } from '@/components/Carousel/Carousel.styles'
+import { StyledSwiper, StyledSwiperSlide } from '@/components/Carousel/Carousel.styles'
 
 export type SwiperInstance = SwiperType
 export type CarouselProps = {
@@ -39,7 +39,7 @@ export const Carousel = ({
       spaceBetween={spaceBetween}
     >
       {children?.map((child, idx) => (
-        <SwiperSlide key={idx}>{child}</SwiperSlide>
+        <StyledSwiperSlide key={idx}>{child}</StyledSwiperSlide>
       ))}
     </StyledSwiper>
   )

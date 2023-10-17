@@ -3,10 +3,10 @@ import { FC, useMemo } from 'react'
 
 import { SvgActionArrowBottom, SvgActionArrowTop } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
-import { DateTimeBlock } from '@/components/DateTimeBlock'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { NumberFormat } from '@/components/NumberFormat'
 import { TableProps } from '@/components/Table'
+import { DateBlockCell } from '@/components/Table/Table.cells'
 import { Loader } from '@/components/_loaders/Loader'
 
 import { Badge, MemberRow, StyledTable } from './CrtTransactionsTable.styles'
@@ -40,8 +40,7 @@ export const CrtTransactionsTable: FC<CrtTransactionsTableProps> = ({ ticker, tr
   const data = useMemo(
     () =>
       transactions.map(({ date, member, action, price, qty, amount }) => ({
-        date: <DateTimeBlock date={date} />,
-
+        date: <DateBlockCell type="date" date={date} />,
         member: member.loading ? (
           <Loader variant="small" />
         ) : (

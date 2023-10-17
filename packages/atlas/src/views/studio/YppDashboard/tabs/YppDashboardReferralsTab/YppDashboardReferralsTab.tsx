@@ -18,7 +18,7 @@ export const YppDashboardReferralsTab = () => {
     () =>
       currentChannel?.referredChannels?.map((channelData) => ({
         date: new Date(channelData.createdAt),
-        channel: String(channelData.joystreamChannelId),
+        channelId: String(channelData.joystreamChannelId),
         subscribers: channelData.subscribersCount,
       })) ?? [],
     [currentChannel?.referredChannels]

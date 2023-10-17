@@ -4,6 +4,8 @@ import { useJoystreamStore } from '@/providers/joystream/joystream.store'
 
 export const ESTIMATED_BLOCK_TIME_MS = 6000
 
+// !!!! IMPORTANT currentBlock and its timestamp will change every 6s, so make sure         !!!!
+// !!!! to use this hook as low in component tree as possible to avoid costly re-renders    !!!!
 export const useBlockTimeEstimation = () => {
   const { currentBlock, currentBlockMsTimestamp } = useJoystreamStore()
 

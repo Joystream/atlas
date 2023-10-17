@@ -50,7 +50,7 @@ const studioNavbarItems: NavItemType[] = [
     icon: <SvgSidebarToken />,
     name: 'Token',
     expandedName: 'Creator token',
-    to: absoluteRoutes.studio.crtWelcome(),
+    to: absoluteRoutes.studio.crt(),
   },
   ...(atlasConfig.features.ypp.googleConsoleClientId
     ? [

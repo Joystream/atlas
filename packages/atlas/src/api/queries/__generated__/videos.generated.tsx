@@ -1,5 +1,5 @@
-import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
+import { gql } from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
 import { BasicVideoFieldsFragmentDoc, FullVideoFieldsFragmentDoc } from './fragments.generated'
@@ -162,6 +162,7 @@ export type GetFullVideoQuery = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
       } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
     }
     license?: {
       __typename?: 'License'
@@ -240,6 +241,7 @@ export type GetFullVideoQuery = {
                   | { __typename: 'DataObjectTypeVideoThumbnail' }
                   | null
               } | null
+              creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
             }
           }
         | {
@@ -502,6 +504,7 @@ export type GetBasicVideosConnectionQuery = {
               | { __typename: 'DataObjectTypeVideoThumbnail' }
               | null
           } | null
+          creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
         }
         thumbnailPhoto?: {
           __typename?: 'StorageDataObject'
@@ -590,6 +593,10 @@ export type GetBasicVideosConnectionQuery = {
                       | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                       | null
+                  } | null
+                  creatorToken?: {
+                    __typename?: 'TokenChannel'
+                    token: { __typename?: 'CreatorToken'; id: string }
                   } | null
                 }
               }
@@ -946,6 +953,7 @@ export type GetFullVideosConnectionQuery = {
               | { __typename: 'DataObjectTypeVideoThumbnail' }
               | null
           } | null
+          creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
         }
         license?: {
           __typename?: 'License'
@@ -1023,6 +1031,10 @@ export type GetFullVideosConnectionQuery = {
                       | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                       | null
+                  } | null
+                  creatorToken?: {
+                    __typename?: 'TokenChannel'
+                    token: { __typename?: 'CreatorToken'; id: string }
                   } | null
                 }
               }
@@ -1283,6 +1295,7 @@ export type GetBasicVideosQuery = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
       } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
     }
     thumbnailPhoto?: {
       __typename?: 'StorageDataObject'
@@ -1372,6 +1385,7 @@ export type GetBasicVideosQuery = {
                   | { __typename: 'DataObjectTypeVideoThumbnail' }
                   | null
               } | null
+              creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
             }
           }
         | {
@@ -1718,6 +1732,7 @@ export type GetFullVideosQuery = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
       } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
     }
     license?: {
       __typename?: 'License'
@@ -1796,6 +1811,7 @@ export type GetFullVideosQuery = {
                   | { __typename: 'DataObjectTypeVideoThumbnail' }
                   | null
               } | null
+              creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
             }
           }
         | {
@@ -2060,6 +2076,7 @@ export type GetMostViewedVideosConnectionQuery = {
               | { __typename: 'DataObjectTypeVideoThumbnail' }
               | null
           } | null
+          creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
         }
         thumbnailPhoto?: {
           __typename?: 'StorageDataObject'
@@ -2148,6 +2165,10 @@ export type GetMostViewedVideosConnectionQuery = {
                       | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                       | null
+                  } | null
+                  creatorToken?: {
+                    __typename?: 'TokenChannel'
+                    token: { __typename?: 'CreatorToken'; id: string }
                   } | null
                 }
               }

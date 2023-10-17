@@ -10,16 +10,14 @@ export const useHandleFollowChannel = (id?: string, name?: string | null) => {
   const { followChannel } = useFollowChannel()
   const { unfollowChannel } = useUnfollowChannel()
   const follow = usePersonalDataStore((state) => state.followedChannels.find((channel) => channel.id === id))
-  const { followChannel: followChannelInStore, unfollowChannel: unfollowChannelInStore } = usePersonalDataStore(
-    (state) => state.actions
-  )
+  const { unfollowChannel: unfollowChannelInStore } = usePersonalDataStore((state) => state.actions)
 
   const toggleFollowing = useCallback(async () => {
     if (!id || !name) {
       return
     }
     try {
-      if (follow && follow.cancelToken) {
+      if (follow) {
         openUnfollowDialog({
           type: 'warning',
           title: 'Do you want to unfollow?',
@@ -28,7 +26,7 @@ export const useHandleFollowChannel = (id?: string, name?: string | null) => {
             text: 'Unfollow',
             onClick: () => {
               unfollowChannelInStore(id)
-              unfollowChannel(id, follow.cancelToken)
+              unfollowChannel(id)
               closeUnfollowDialog()
             },
             variant: 'destructive',
@@ -41,11 +39,7 @@ export const useHandleFollowChannel = (id?: string, name?: string | null) => {
           },
         })
       } else {
-        const followResponse = await followChannel(id)
-        const cancelToken = followResponse.data?.followChannel.cancelToken
-        if (cancelToken) {
-          followChannelInStore(id, cancelToken)
-        }
+        await followChannel(id)
       }
     } catch (error) {
       SentryLogger.error('Failed to update channel following', 'useHandleFollowChannel', error, { channel: { id } })
@@ -59,7 +53,6 @@ export const useHandleFollowChannel = (id?: string, name?: string | null) => {
     unfollowChannel,
     closeUnfollowDialog,
     followChannel,
-    followChannelInStore,
   ])
   return {
     toggleFollowing,

@@ -101,6 +101,7 @@ export type GetFullChannelQuery = {
         | { __typename: 'DataObjectTypeVideoThumbnail' }
         | null
     } | null
+    creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
   } | null
 }
 
@@ -142,6 +143,7 @@ export type GetExtendedBasicChannelsQuery = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
       } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
     }
   }>
 }
@@ -240,6 +242,7 @@ export type GetExtendedFullChannelsQuery = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
       } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
     }
   }>
 }
@@ -286,6 +289,7 @@ export type GetBasicChannelsConnectionQuery = {
             | { __typename: 'DataObjectTypeVideoThumbnail' }
             | null
         } | null
+        creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
       }
     }>
     pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor: string }
@@ -298,7 +302,7 @@ export type FollowChannelMutationVariables = Types.Exact<{
 
 export type FollowChannelMutation = {
   __typename?: 'Mutation'
-  followChannel: { __typename?: 'ChannelFollowResult'; channelId: string; follows: number; cancelToken: string }
+  followChannel: { __typename?: 'ChannelFollowResult'; channelId: string; follows: number }
 }
 
 export type UnfollowChannelMutationVariables = Types.Exact<{
@@ -346,6 +350,7 @@ export type GetTop10ChannelsQuery = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
       } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
     }
   }>
 }
@@ -385,6 +390,7 @@ export type GetDiscoverChannelsQuery = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
       } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
     }
   }>
 }
@@ -649,6 +655,7 @@ export type GetTopSellingChannelsFromThreePeriodsQuery = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
       } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
     }
   }>
   topWeekSellingChannels: Array<{
@@ -682,6 +689,7 @@ export type GetTopSellingChannelsFromThreePeriodsQuery = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
       } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
     }
   }>
   topMonthSellingChannels: Array<{
@@ -715,6 +723,7 @@ export type GetTopSellingChannelsFromThreePeriodsQuery = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
       } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
     }
   }>
 }
@@ -941,7 +950,6 @@ export const FollowChannelDocument = gql`
     followChannel(channelId: $channelId) {
       channelId
       follows
-      cancelToken
     }
   }
 `
@@ -978,7 +986,7 @@ export type FollowChannelMutationOptions = Apollo.BaseMutationOptions<
 >
 export const UnfollowChannelDocument = gql`
   mutation UnfollowChannel($channelId: String!, $token: String!) {
-    unfollowChannel(channelId: $channelId, token: $token) {
+    unfollowChannel(channelId: $channelId) {
       channelId
       follows
     }
