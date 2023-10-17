@@ -6,6 +6,7 @@ export default {
   title: 'crt/DateTimeBlock',
   component: _DateTimeBlock,
   args: {
+    type: 'date',
     date: new Date(),
   },
 } as Meta<DateTimeBlockProps>

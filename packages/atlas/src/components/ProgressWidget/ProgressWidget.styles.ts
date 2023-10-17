@@ -91,6 +91,7 @@ export const StepCardContainer = styled.div<{ isActive: boolean }>`
   background-color: ${cVar('colorBackgroundMutedAlpha')};
   border-left: 4px solid ${(props) => (props.isActive ? cVar('colorBackgroundPrimary') : 'transparent')};
   padding: 16px;
+  height: 100%;
 
   .step-number {
     background-color: ${(props) =>

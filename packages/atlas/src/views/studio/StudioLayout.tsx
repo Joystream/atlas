@@ -89,9 +89,8 @@ const _StudioLayout = () => {
   const displayedLocation = useVideoWorkspaceRouting()
   const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
-  const { channelId, memberships, membershipsLoading, activeMembership } = useUser()
+  const { channelId, memberships, membershipsLoading, activeMembership, activeChannel } = useUser()
   const { isAuthenticating } = useAuth()
-
   const [openUnsupportedBrowserDialog, closeUnsupportedBrowserDialog] = useConfirmationModal()
   const [enterLocation] = useState(location.pathname)
   const isMembershipLoaded = !membershipsLoading && !isAuthenticating
@@ -101,6 +100,8 @@ const _StudioLayout = () => {
   const channelSet = !!(channelId && activeMembership?.channels.find((channel) => channel.id === channelId))
   const { isLoading } = useGetYppSyncedChannels()
   const isLoadingYPPData = isLoading || membershipsLoading || isAuthenticating
+  const isYppSigned = !!currentChannel
+  const hasToken = !!(activeChannel && activeChannel.creatorToken?.token.id)
 
   useLayoutEffect(() => {
     if (!isAllowedBrowser()) {
@@ -203,14 +204,25 @@ const _StudioLayout = () => {
                   element={<PrivateRoute element={<MyVideosView />} showWhen={channelSet} redirectTo={SIGN_IN_ROUTE} />}
                 />
                 <Route
-                  path={relativeRoutes.studio.crtWelcome()}
-                  element={
-                    <PrivateRoute element={<CrtWelcomeView />} showWhen={channelSet} redirectTo={SIGN_IN_ROUTE} />
-                  }
+                    path={relativeRoutes.studio.crt()}
+                    element={
+                      <PrivateRoute
+                          isLoadingAuthData={false}
+                          element={<CrtWelcomeView />}
+                          isAuth={channelSet && !hasToken}
+                          redirectTo={!channelSet ? ENTRY_POINT_ROUTE : absoluteRoutes.studio.crtDashboard()}
+                      />
+                    }
                 />
                 <Route
                     path={relativeRoutes.studio.crtDashboard()}
-                    element={<PrivateRoute element={<CrtDashboard />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />}
+                    element={
+                      <PrivateRoute
+                          element={<CrtDashboard />}
+                          isAuth={channelSet && hasToken}
+                          redirectTo={!channelSet ? ENTRY_POINT_ROUTE : absoluteRoutes.studio.crt()}
+                      />
+                    }
                 />
                 <Route
                   path={relativeRoutes.studio.crtTokenPreview()}

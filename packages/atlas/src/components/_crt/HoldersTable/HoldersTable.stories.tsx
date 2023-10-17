@@ -28,21 +28,30 @@ export const Default = Template.bind({})
 Default.args = {
   data: [
     {
-      memberId: '1',
+      member: {
+        id: '1',
+        handle: 'handle1',
+      },
       total: 100,
       vested: 111,
       allocation: 50,
       transferable: 10,
     },
     {
-      memberId: '2',
+      member: {
+        id: '2',
+        handle: 'handle2',
+      },
       total: 122,
       vested: 22,
       allocation: 50,
       transferable: 10,
     },
     {
-      memberId: '3',
+      member: {
+        id: '3',
+        handle: 'handle3',
+      },
       total: 111,
       vested: 333,
       allocation: 50,

@@ -1,5 +1,6 @@
 import { round } from 'lodash-es'
 
+import { SentryLogger } from '@/utils/logs'
 import { createStore } from '@/utils/store'
 
 import { DismissedMessage, RecentSearch, WatchedVideo, WatchedVideoStatus } from './types'

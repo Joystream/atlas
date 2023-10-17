@@ -59,6 +59,10 @@ export type GetVideoHeroQuery = {
             | null
         } | null
       }
+      creatorToken?: {
+        __typename?: 'TokenChannel'
+        token: { __typename?: 'CreatorToken'; id: string }
+      } | null
       nft?: { __typename?: 'OwnedNft'; id: string } | null
       thumbnailPhoto?: {
         __typename?: 'StorageDataObject'
@@ -129,6 +133,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
               | { __typename: 'DataObjectTypeVideoThumbnail' }
               | null
           } | null
+          creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
         }
         thumbnailPhoto?: {
           __typename?: 'StorageDataObject'
@@ -228,6 +233,7 @@ export type GetCategoryFeaturedVideosQuery = {
               | { __typename: 'DataObjectTypeVideoThumbnail' }
               | null
           } | null
+          creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
         }
         thumbnailPhoto?: {
           __typename?: 'StorageDataObject'

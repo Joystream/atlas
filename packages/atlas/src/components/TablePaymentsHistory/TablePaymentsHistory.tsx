@@ -4,7 +4,6 @@ import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { useMemberships } from '@/api/hooks/membership'
 import { SvgJoystreamLogoShort } from '@/assets/logos'
 import { Avatar } from '@/components/Avatar'
-import { DateTimeBlock } from '@/components/DateTimeBlock'
 import { Table, TableProps } from '@/components/Table'
 import { Text } from '@/components/Text'
 import { TextButton } from '@/components/_buttons/Button'
@@ -18,9 +17,7 @@ import {
   DialogText,
   JoystreamSvgWrapper,
   SenderItem,
-  StyledJoyTokenIcon,
   StyledLink,
-  StyledNumberFormat,
   TextWrapper,
   TypeIconWrapper,
   TypeWrapper,
@@ -32,6 +29,8 @@ import {
   tableEmptyState,
   tableLoadingData,
 } from './TablePaymentsHistory.utils'
+
+import { DateBlockCell, TokenAmount } from '../Table/Table.cells'
 
 export type PaymentHistory = {
   type: PaymentType
@@ -52,7 +51,7 @@ export const TablePaymentsHistory: FC<TablePaymentsHistoryProps> = ({ data, isLo
   const mappedData: TableProps['data'] = useMemo(
     () =>
       data.map((data) => ({
-        date: <DateTimeBlock date={data.date} />,
+        date: <DateBlockCell type="date" date={data.date} />,
         type: <Type type={data.type} />,
         amount: <TokenAmount tokenAmount={data.amount} />,
         sender: <Sender sender={data.sender} />,
@@ -151,20 +150,5 @@ const Type = ({ type }: { type: PaymentType }) => {
         {paymentTypeMappings[type].title}
       </Text>
     </TypeWrapper>
-  )
-}
-
-const TokenAmount = ({ tokenAmount }: { tokenAmount: BN }) => {
-  const isNegative = tokenAmount.isNeg()
-  return (
-    <StyledNumberFormat
-      icon={<StyledJoyTokenIcon variant="gray" error={isNegative} />}
-      variant="t200-strong"
-      as="p"
-      value={tokenAmount}
-      format="short"
-      color={isNegative ? 'colorTextError' : 'colorTextStrong'}
-      withDenomination
-    />
   )
 }
