@@ -1053,12 +1053,7 @@ export class JoystreamLibExtrinsics {
     return { block }
   }
 
-  issueRevenueSplitTx = async (
-    memberId: MemberId,
-    channelId: ChannelId,
-    start: StringifiedNumber,
-    duration: number
-  ) => {
+  issueRevenueSplitTx = async (memberId: MemberId, channelId: ChannelId, start: number, duration: number) => {
     const member = createType('PalletContentPermissionsContentActor', { Member: parseInt(memberId) })
     return this.api.tx.content.issueRevenueSplit(
       member,

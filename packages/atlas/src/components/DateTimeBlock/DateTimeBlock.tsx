@@ -5,16 +5,22 @@ import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { formatNumber } from '@/utils/number'
 import { formatDateTime } from '@/utils/time'
 
-export type DateTimeBlockProps = { date: Date }
-export const DateTimeBlock: FC<DateTimeBlockProps> = ({ date }) => {
-  const { convertMsTimestampToBlock } = useBlockTimeEstimation()
+export type DateProps = { type: 'date'; date: Date }
+export type BlocksProps = { type: 'block'; block: number }
+
+export type DateTimeBlockProps = DateProps | BlocksProps
+
+export const DateTimeBlock: FC<DateTimeBlockProps> = (props) => {
+  const { convertMsTimestampToBlock, convertBlockToMsTimestamp } = useBlockTimeEstimation()
   return (
     <>
       <Text as="p" variant="t200-strong">
-        {formatDateTime(date)}
+        {props.type === 'date'
+          ? formatDateTime(props.date)
+          : formatDateTime(new Date(convertBlockToMsTimestamp(props.block) ?? 0))}
       </Text>
       <Text as="p" variant="t100" margin={{ top: 1 }} color="colorText">
-        {formatNumber(convertMsTimestampToBlock(date.getTime()) || 0)} block
+        {props.type === 'date' ? formatNumber(convertMsTimestampToBlock(props.date.getTime()) || 0) : props.block} block
       </Text>
     </>
   )
