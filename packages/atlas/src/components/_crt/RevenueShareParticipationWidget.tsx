@@ -5,9 +5,9 @@ import { SvgActionCheck, SvgJoyTokenMonochrome16 } from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox'
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
-import { Tooltip } from '@/components/Tooltip'
 import { WidgetTile } from '@/components/WidgetTile'
 import { Button } from '@/components/_buttons/Button'
+import { useJoystreamStore } from '@/providers/joystream/joystream.store'
 import { useUser } from '@/providers/user/user.hooks'
 import { cVar } from '@/styles'
 
@@ -18,22 +18,37 @@ export type RevenueShareParticipationWidgetProps = {
 // todo: correct aggregated values
 export const RevenueShareParticipationWidget = ({ revenueShare }: RevenueShareParticipationWidgetProps) => {
   const { memberId } = useUser()
+  const { currentBlock } = useJoystreamStore()
+  const hasEnded = revenueShare.endsAt < currentBlock
+
+  const actionNode = () => {
+    const hasStaked = revenueShare.stakers.some((staker) => staker.account.member.id === memberId)
+    if (!hasEnded) {
+      if (hasStaked) {
+        return <StyledPill icon={<SvgActionCheck />} size="large" label="Staked your tokens" />
+      } else {
+        return (
+          <Button size="small" variant="secondary">
+            Stake your tokens
+          </Button>
+        )
+      }
+    }
+    if (!hasStaked) return null
+
+    const hasClaimed = false
+    if (hasClaimed) {
+      return <StyledPill icon={<SvgActionCheck />} size="large" label="Tokens claimed" />
+    }
+
+    // todo: not sure what transaction should be used to claim staked tokens - maybe exitRevenue split
+    return <Button size="small">Claim tokens</Button>
+  }
   return (
     <WidgetTile
       title="Revenue share participation"
       titleVariant="h400"
-      customTopRightNode={
-        revenueShare.stakers.find((staker) => staker.account.member.id === memberId) ? (
-          <Button size="small">Unlock your tokens</Button>
-        ) : (
-          <Tooltip
-            placement="top-end"
-            text="You already unlocked all of your previously staked tokens. All of your tokens can be found in my portfolio page."
-          >
-            <StyledPill icon={<SvgActionCheck />} size="large" label="Unlocked your tokens" />
-          </Tooltip>
-        )
-      }
+      customTopRightNode={actionNode()}
       customNode={
         <FlexBox flow="column" gap={6} width="100%">
           <FlexBox justifyContent="space-between">
@@ -66,14 +81,17 @@ export const RevenueShareParticipationWidget = ({ revenueShare }: RevenueSharePa
             </FlexBox>
           </FlexBox>
 
-          <ProgressBar progress={Math.round((revenueShare.stakers.length / 69420) * 100)} />
+          <ProgressBar
+            color={hasEnded ? cVar('colorCoreNeutral700Lighten') : cVar('colorBackgroundPrimary')}
+            progress={Math.round((revenueShare.stakers.length / 69420) * 100)}
+          />
         </FlexBox>
       }
     />
   )
 }
 
-const ProgressBar = styled.div<{ progress: number }>`
+const ProgressBar = styled.div<{ progress: number; color: string }>`
   height: 12px;
   width: 100%;
   overflow: hidden;
@@ -86,9 +104,9 @@ const ProgressBar = styled.div<{ progress: number }>`
     position: absolute;
     left: 0;
     border-radius: ${cVar('radiusLarge')};
-    width: ${(props) => `${props.progress}%`};
+    width: max(${(props) => `${props.progress}%`}, 24px);
     content: ' ';
-    background-color: ${cVar('colorCoreNeutral700Lighten')};
+    background-color: ${(props) => props.color};
   }
 `
 
