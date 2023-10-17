@@ -49,7 +49,7 @@ export const YppDashboardReferralsTab = () => {
               icon={<SvgActionLinkUrl />}
               onClick={() =>
                 copyToClipboard(
-                  `${window.location.href}/ypp?referrerId=${channelId}`,
+                  `${window.location.origin}/ypp?referrerId=${channelId}`,
                   'Referral link copied to clipboard'
                 )
               }
