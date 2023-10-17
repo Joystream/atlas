@@ -6,9 +6,14 @@ import { formatDateTime, formatDurationShort } from '@/utils/time'
 
 export const RevenueShareStateWidget = ({ endsAtBlock }: { endsAtBlock?: number }) => {
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
-  const status: 'active' | 'past' | 'inactive' = !endsAtBlock ? 'inactive' : endsAtBlock < 0 ? 'past' : 'active'
   const endingBlockTimestamp = convertBlockToMsTimestamp(endsAtBlock ?? 0)
-  const endingDate = endingBlockTimestamp ? new Date(endingBlockTimestamp) : new Date()
+  const endingDate = endingBlockTimestamp ? new Date(endingBlockTimestamp) : null
+  const status: 'active' | 'past' | 'inactive' = !endingBlockTimestamp
+    ? 'inactive'
+    : endingBlockTimestamp < Date.now()
+    ? 'past'
+    : 'active'
+
   return (
     <WidgetTile
       title={
@@ -22,15 +27,15 @@ export const RevenueShareStateWidget = ({ endsAtBlock }: { endsAtBlock?: number 
         status !== 'inactive' && endsAtBlock ? (
           status === 'past' ? (
             <Text variant="h500" as="h5" margin={{ bottom: 4 }}>
-              {formatDateTime(endingDate).replace(',', ' at')}
+              {endingDate ? formatDateTime(endingDate).replace(',', ' at') : 'N/A'}
             </Text>
           ) : (
             <FlexBox flow="column">
               <Text variant="h500" as="h5">
-                {formatDurationShort(Math.round((endingDate.getTime() - Date.now()) / 1000))}
+                {endingDate ? formatDurationShort(Math.round((endingDate.getTime() - Date.now()) / 1000)) : 'N/A'}
               </Text>
               <Text variant="t100" as="p" color="colorText">
-                {formatDateTime(endingDate).replace(',', ' at')}
+                {endingDate ? formatDateTime(endingDate).replace(',', ' at') : 'N/A'}
               </Text>
             </FlexBox>
           )

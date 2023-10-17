@@ -80,10 +80,11 @@ export const StartRevenueShare = ({ tokenId, onClose, show }: StartRevenueShareP
         data.endDate?.type === 'date'
           ? convertMsTimestampToBlock(data.endDate.date.getTime())
           : data.endDate?.durationDays
-          ? convertMsTimestampToBlock(addDaysToDate(data.endDate.durationDays, rawStartDate).getTime())
+          ? (convertMsTimestampToBlock(addDaysToDate(data.endDate.durationDays, rawStartDate).getTime()) ?? 0) -
+            startBlock
           : null
 
-      if (typeof duration !== 'number') {
+      if (typeof duration !== 'number' || duration < 0) {
         displaySnackbar({ title: 'Failed to parse ending date', iconType: 'error', description: 'Please try again.' })
         return
       }
