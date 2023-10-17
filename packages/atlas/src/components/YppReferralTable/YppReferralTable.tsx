@@ -4,6 +4,7 @@ import { useBasicChannel } from '@/api/hooks/channel'
 import { Avatar } from '@/components/Avatar'
 import { FlexBox } from '@/components/FlexBox'
 import { Table, TableProps } from '@/components/Table'
+import { DateBlockCell, LoadingChannelCell } from '@/components/Table/Table.cells'
 import { OverflowTableWrapper } from '@/components/Table/Table.styles'
 import { SenderItem, StyledLink } from '@/components/TablePaymentsHistory/TablePaymentsHistory.styles'
 import { Text } from '@/components/Text'
@@ -23,7 +24,7 @@ import { COLUMNS, tableLoadingData } from './YppReferralTable.utils'
 
 export type YppReferral = {
   date: Date
-  channel: string
+  channelId: string
   status: YppChannelStatus
 }
 
@@ -36,8 +37,8 @@ export const YppReferralTable = ({ isLoading, data }: YppReferralTableProps) => 
   const mappedData: TableProps['data'] = useMemo(
     () =>
       data.map((entry) => ({
-        date: <RegDate date={entry.date} />,
-        channel: <Channel channel={entry.channel} />,
+          date: <DateBlockCell type="date" date={entry.date} />,
+          channel: <LoadingChannelCell channelId={entry.channelId} />,
         tier: <Tier yppStatus={entry.status} />,
         reward: <Reward yppStatus={entry.status} signupTimestamp={entry.date.getTime()} />,
       })),
@@ -47,36 +48,6 @@ export const YppReferralTable = ({ isLoading, data }: YppReferralTableProps) => 
     <OverflowTableWrapper minWidth={700}>
       <Table title="Channels you referred" columns={COLUMNS} data={isLoading ? tableLoadingData : mappedData} />
     </OverflowTableWrapper>
-  )
-}
-
-const RegDate = ({ date }: { date: Date }) => {
-  const { convertMsTimestampToBlock } = useBlockTimeEstimation()
-  return (
-    <>
-      <Text as="p" variant="t200-strong">
-        {formatDateTime(date)}
-      </Text>
-      <Text as="p" variant="t100" margin={{ top: 1 }} color="colorText">
-        {formatNumber(convertMsTimestampToBlock(date.getTime()) || 0)} block
-      </Text>
-    </>
-  )
-}
-
-const Channel = ({ channel: channelId }: { channel: YppReferral['channel'] }) => {
-  const { channel, loading } = useBasicChannel(channelId, {
-    onError: (error) => SentryLogger.error('Failed to fetch memberships', 'ActiveUserProvider', error),
-  })
-
-  return (
-    <StyledLink to={absoluteRoutes.viewer.channel(channel?.id)}>
-      <SenderItem
-        nodeStart={<Avatar assetUrls={channel?.avatarPhoto?.resolvedUrls} size={32} loading={loading} />}
-        label={channel?.title}
-        isInteractive={false}
-      />
-    </StyledLink>
   )
 }
 

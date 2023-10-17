@@ -28,6 +28,11 @@ fragment BasicChannelFields on Channel {
   avatarPhoto {
     ...StorageDataObjectFields
   }
+  creatorToken {
+    token {
+      id
+    }
+  }
 }
 
 fragment FullChannelFields on Channel {
@@ -471,5 +476,110 @@ fragment BasicVideoActivityFields on Video {
   title
   thumbnailPhoto {
     ...StorageDataObjectFields
+  }
+}
+
+fragment BasicCreatorTokenHolder on TokenAccount {
+  id
+  stakedAmount
+  deleted
+  totalAmount
+  member {
+    ...BasicMembershipFields
+  }
+  vestingSchedules {
+    totalVestingAmount
+    vestingSource {
+      __typename
+    }
+    vesting {
+      endsAt
+      cliffBlock
+      cliffDurationBlocks
+      cliffPercent
+      vestingDurationBlocks
+    }
+  }
+}
+
+fragment BasicCreatorToken on CreatorToken {
+  id
+  accountsNum
+  symbol
+  isInviteOnly
+  deissued
+  status
+  createdAt
+  channel {
+    ... on TokenChannel {
+      channel {
+        ...BasicChannelFields
+      }
+    }
+  }
+  avatar {
+    ... on TokenAvatarObject {
+      avatarObject {
+        ...StorageDataObjectFields
+      }
+    }
+    ... on TokenAvatarUri {
+      avatarUri
+    }
+  }
+}
+
+fragment FullCreatorToken on CreatorToken {
+  ...BasicCreatorToken
+  annualCreatorReward
+  description
+  ammCurves {
+    id
+    finalized
+    ammInitPrice
+    burnedByAmm
+    mintedByAmm
+  }
+  sales {
+    id
+    maxAmountPerMember
+    pricePerUnit
+    tokensSold
+    finalized
+  }
+  benefits {
+    id
+    description
+    title
+    displayOrder
+    emojiCode
+  }
+  totalSupply
+  trailerVideo {
+    id
+    video {
+      ...BasicVideoFields
+    }
+  }
+  revenueShares {
+    id
+    allocation
+    claimed
+    endsAt
+    createdIn
+    finalized
+    participantsNum
+    startingAt
+    stakers {
+      id
+      stakedAmount
+      earnings
+      createdIn
+      account {
+        member {
+          id
+        }
+      }
+    }
   }
 }

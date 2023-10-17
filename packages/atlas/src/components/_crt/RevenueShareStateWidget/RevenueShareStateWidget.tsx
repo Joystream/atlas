@@ -1,10 +1,18 @@
 import { FlexBox } from '@/components/FlexBox'
 import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
+import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { formatDateTime, formatDurationShort } from '@/utils/time'
 
-export const RevenueShareStateWidget = ({ end }: { end?: Date }) => {
-  const status: 'active' | 'past' | 'inactive' = !end ? 'inactive' : end.getTime() < Date.now() ? 'past' : 'active'
+export const RevenueShareStateWidget = ({ endsAtBlock }: { endsAtBlock?: number }) => {
+  const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
+  const endingBlockTimestamp = convertBlockToMsTimestamp(endsAtBlock ?? 0)
+  const endingDate = endingBlockTimestamp ? new Date(endingBlockTimestamp) : null
+  const status: 'active' | 'past' | 'inactive' = !endingBlockTimestamp
+    ? 'inactive'
+    : endingBlockTimestamp < Date.now()
+    ? 'past'
+    : 'active'
 
   return (
     <WidgetTile
@@ -16,18 +24,18 @@ export const RevenueShareStateWidget = ({ end }: { end?: Date }) => {
           : 'REVENUE SHARE ENDS IN'
       }
       customNode={
-        status !== 'inactive' && end ? (
+        status !== 'inactive' && endsAtBlock ? (
           status === 'past' ? (
             <Text variant="h500" as="h5" margin={{ bottom: 4 }}>
-              {formatDateTime(end).replace(',', ' at')}
+              {endingDate ? formatDateTime(endingDate).replace(',', ' at') : 'N/A'}
             </Text>
           ) : (
             <FlexBox flow="column">
               <Text variant="h500" as="h5">
-                {formatDurationShort(Math.round((end.getTime() - Date.now()) / 1000))}
+                {endingDate ? formatDurationShort(Math.round((endingDate.getTime() - Date.now()) / 1000)) : 'N/A'}
               </Text>
               <Text variant="t100" as="p" color="colorText">
-                {formatDateTime(end).replace(',', ' at')}
+                {endingDate ? formatDateTime(endingDate).replace(',', ' at') : 'N/A'}
               </Text>
             </FlexBox>
           )
