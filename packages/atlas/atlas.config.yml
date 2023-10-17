@@ -56,9 +56,9 @@ features:
           - Lower effort production.
           - Growing subscriber base of channel supporters.
         rewards:
-          - 0 # Reward for signup in USD
+          - 2 # Reward for signup in USD
           - 0 # Reward for synced video
-          - 0 # Reward for referral
+          - 1 # Reward for referral
       - tier: 'silver'
         reqs:
           - Original good quality of content.
