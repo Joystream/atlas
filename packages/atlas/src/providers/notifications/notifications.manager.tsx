@@ -5,11 +5,11 @@ import { atlasConfig } from '@/config'
 import { useNotifications } from './notifications.hooks'
 
 export const NotificationsManager: FC = () => {
-  const { fetchMore, fetchMoreUnseen } = useNotifications()
+  const { fetchMore, unseenNotificationsCounts } = useNotifications()
 
   useEffect(() => {
     const id = setInterval(() => {
-      fetchMoreUnseen()
+      unseenNotificationsCounts.fetchMore()
       fetchMore({
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!Object.keys(prev).length) {
@@ -43,7 +43,8 @@ export const NotificationsManager: FC = () => {
     return () => {
       clearInterval(id)
     }
-  }, [fetchMore, fetchMoreUnseen])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetchMore, unseenNotificationsCounts.fetchMore])
 
   return null
 }

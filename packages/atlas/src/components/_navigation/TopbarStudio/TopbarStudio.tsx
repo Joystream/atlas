@@ -31,7 +31,11 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
     actions: { setAuthModalOpenName },
   } = useAuthStore()
   const { isWorkspaceOpen, setIsWorkspaceOpen, uploadVideoButtonProps } = useVideoWorkspace()
-  const { unseenMemberNotifications } = useNotifications()
+  const { unseenNotificationsCounts } = useNotifications()
+  const otherChannelUnseenCount =
+    unseenNotificationsCounts.channels &&
+    unseenNotificationsCounts.channels.total - unseenNotificationsCounts.channels.current
+  const otherUnseenCount = (unseenNotificationsCounts.member ?? 0) + (otherChannelUnseenCount ?? 0)
 
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
 
@@ -74,12 +78,15 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
                   {mdMatch && 'Upload video'}
                 </Button>
               </CSSTransition>
-              <NotificationsWidget type="channel" trigger={<NotificationsButton />} />
+              <NotificationsWidget
+                type="channel"
+                trigger={<NotificationsButton badge={unseenNotificationsCounts.channels?.current} />}
+              />
               <StyledAvatar
                 size={40}
                 assetUrls={activeChannel?.avatarPhoto?.resolvedUrls}
                 onClick={handleDrawerToggle}
-                badge={isMemberDropdownActive ? undefined : unseenMemberNotifications}
+                badge={isMemberDropdownActive ? undefined : otherUnseenCount}
               />
             </StudioTopbarContainer>
           ) : (
@@ -89,6 +96,7 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
           ))}
       </StyledTopbarBase>
       <MemberDropdown
+        unseenNotificationsCounts={unseenNotificationsCounts}
         onChannelChange={handleChannelChange}
         isActive={isMemberDropdownActive}
         publisher={hasAtLeastOneChannel}

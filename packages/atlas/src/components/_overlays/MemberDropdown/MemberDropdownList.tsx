@@ -8,12 +8,14 @@ import { ListItem } from '@/components/ListItem'
 
 import { SectionContainer } from './MemberDropdown.styles'
 import { SwitchMemberItemListContainer } from './MemberDropdownList.styles'
+import { Badge } from './MemberDropdownNav.styles'
 
 type DropdownType = 'member' | 'channel'
 
 type MemberDropdownListProps = {
   type: DropdownType
   activeMembership?: FullMembershipFieldsFragment | null
+  channelNotificationCounts?: Map<string, number>
   channelId: string | null
   onAddNewChannel?: () => void
   onChannelChange?: (channelId: string) => void
@@ -22,6 +24,7 @@ type MemberDropdownListProps = {
 export const MemberDropdownList: FC<MemberDropdownListProps> = ({
   type,
   channelId,
+  channelNotificationCounts,
   activeMembership,
   onAddNewChannel,
   onSwitchToNav,
@@ -44,16 +47,22 @@ export const MemberDropdownList: FC<MemberDropdownListProps> = ({
         />
       </SwitchMemberItemListContainer>
       <SectionContainer>
-        {sortedMemberChannels.map((channel) => (
-          <ListItem
-            key={channel.id}
-            onClick={() => onChannelChange?.(channel.id)}
-            nodeStart={<Avatar assetUrls={channel.avatarPhoto?.resolvedUrls} size={32} />}
-            label={channel?.title ?? ''}
-            caption={channel ? `${channel?.followsNum} followers` : undefined}
-            selected={type === 'channel' ? channel.id === channelId : false}
-          />
-        ))}
+        {sortedMemberChannels.map((channel) => {
+          const isSelected = type === 'channel' ? channel.id === channelId : false
+          return (
+            <ListItem
+              key={channel.id}
+              onClick={() => onChannelChange?.(channel.id)}
+              nodeStart={<Avatar assetUrls={channel.avatarPhoto?.resolvedUrls} size={32} />}
+              label={channel?.title ?? ''}
+              caption={channel ? `${channel?.followsNum} followers` : undefined}
+              selected={isSelected}
+              nodeEnd={
+                type === 'channel' && !isSelected && <Badge data-badge={channelNotificationCounts?.get(channel.id)} />
+              }
+            />
+          )
+        })}
         <ListItem
           nodeStart={<IconWrapper icon={<SvgActionAddChannel />} />}
           onClick={() => onAddNewChannel?.()}

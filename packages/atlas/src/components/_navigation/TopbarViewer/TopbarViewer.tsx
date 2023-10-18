@@ -60,7 +60,7 @@ export const TopbarViewer: FC = () => {
     shallow
   )
 
-  const { unseenChannelNotifications } = useNotifications()
+  const { unseenNotificationsCounts } = useNotifications()
 
   useEffect(() => {
     if (searchOpen) {
@@ -143,23 +143,17 @@ export const TopbarViewer: FC = () => {
                 {!topbarButtonLoading ? (
                   isLoggedIn ? (
                     <SignedButtonsWrapper>
-                      <NotificationsWidget type="member" trigger={<NotificationsButton />} />
-                      {!mdMatch && !searchOpen && (
+                      <NotificationsWidget
+                        type="member"
+                        trigger={<NotificationsButton badge={unseenNotificationsCounts.member} />}
+                      />
+                      {(mdMatch || !searchOpen) && (
                         <StyledAvatar
                           size={40}
                           assetUrls={memberAvatarUrls}
                           loading={memberAvatarLoading}
                           onClick={handleDrawerToggle}
-                          badge={isMemberDropdownActive ? undefined : unseenChannelNotifications}
-                        />
-                      )}
-                      {mdMatch && (
-                        <StyledAvatar
-                          size={40}
-                          assetUrls={memberAvatarUrls}
-                          onClick={handleDrawerToggle}
-                          loading={memberAvatarLoading}
-                          badge={isMemberDropdownActive ? undefined : unseenChannelNotifications}
+                          badge={isMemberDropdownActive ? undefined : unseenNotificationsCounts.channels?.total}
                         />
                       )}
                     </SignedButtonsWrapper>
@@ -196,7 +190,11 @@ export const TopbarViewer: FC = () => {
           <Overlay onClick={onClose} />
         </CSSTransition>
       </StyledTopbarBase>
-      <MemberDropdown isActive={isMemberDropdownActive} closeDropdown={() => setIsMemberDropdownActive(false)} />
+      <MemberDropdown
+        unseenNotificationsCounts={unseenNotificationsCounts}
+        isActive={isMemberDropdownActive}
+        closeDropdown={() => setIsMemberDropdownActive(false)}
+      />
     </>
   )
 }

@@ -1,22 +1,30 @@
-import { QueryHookOptions } from '@apollo/client'
+import { QueryHookOptions, useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'react-router'
 
 import { useRawNotifications } from '@/api/hooks/notifications'
 import { RecipientTypeWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
 import {
   GetNotificationsConnectionQuery,
+  GetNotificationsCountDocument,
+  GetNotificationsCountQuery,
+  GetNotificationsCountQueryVariables,
   useGetNotificationsCountQuery,
 } from '@/api/queries/__generated__/notifications.generated'
 import { absoluteRoutes } from '@/config/routes'
 import { useUser } from '@/providers/user/user.hooks'
 import { whenDefined } from '@/utils/misc'
 
-import { RecipientType, useNotificationStore } from './notifications.store'
+import { NotificationsStoreState, RecipientType, useNotificationStore } from './notifications.store'
 import { NotificationData, NotificationRecord } from './notifications.types'
 
-export type UseNotifications = ReturnType<typeof useNotifications>
+export type UnseenNotificationsCounts = {
+  member?: number
+  channels?: { channels: Map<string, number>; total: number; current: number }
+  fetchMore: () => void
+}
+export type UseNotifications = ReturnType<typeof useNotifications> // TODO manually type this
 export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkStatusChange'>) => {
   const { pathname } = useLocation()
   const isStudio = pathname.search(absoluteRoutes.studio.index()) !== -1
@@ -43,35 +51,23 @@ export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkS
     actions: { setLastSeenNotificationDate: _setLastSeenNotificationDate },
   } = useNotificationStore()
 
-  const unseenMemberNotificationsCount = useGetNotificationsCountQuery({
-    variables: {
-      where: {
-        recipient: { isTypeOf_eq: 'MemberRecipient', membership: { id_eq: memberId } },
-        createdAt_gt: whenDefined(
-          lastSeenNotificationDates.find(({ type }) => type === 'MemberRecipient'),
-          ({ date }) => new Date(date)
-        ),
-      },
-    },
-  })
+  const unseenMemberNotifications = useUnseenMemberNotifications(lastSeenNotificationDates)
+  const unseenChannelNotifications = useUnseenChannelNotifications(lastSeenNotificationDates)
 
-  const channels = channelId ? [channelId] : [] // TODO
-  const unseenChannelNotificationsCount = useGetNotificationsCountQuery({
-    variables: {
-      where: {
-        OR: channels.map((id) => ({
-          recipient: { isTypeOf_eq: 'ChannelRecipient', channel: { id_eq: id } },
-          createdAt_gt: whenDefined(
-            lastSeenNotificationDates.find(({ type }) => type === 'ChannelRecipient'), // TODO There should be one case per channel date pair and one more for non of the channel in lastSeenNotificationDates
-            ({ date }) => new Date(date)
-          ),
-        })),
-      },
-    },
-  })
+  const fetchMoreUnseen = useCallback(() => {
+    unseenMemberNotifications.fetchMore({})
+    unseenChannelNotifications.fetchMore()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [unseenMemberNotifications.fetchMore, unseenChannelNotifications.fetchMore])
 
-  const unseenMemberNotifications = unseenMemberNotificationsCount.data?.notificationsConnection.totalCount
-  const unseenChannelNotifications = unseenChannelNotificationsCount.data?.notificationsConnection.totalCount
+  const unseenNotificationsCounts: UnseenNotificationsCounts = useMemo(
+    () => ({
+      member: unseenMemberNotifications.data,
+      channels: unseenChannelNotifications.data,
+      fetchMore: fetchMoreUnseen,
+    }),
+    [unseenMemberNotifications, unseenChannelNotifications, fetchMoreUnseen]
+  )
 
   const [optimisticRead, setOptimisticRead] = useState<string[]>([])
   const notifications = useMemo(
@@ -108,22 +104,74 @@ export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkS
     },
     [_setLastSeenNotificationDate, recipientType, recipientId]
   )
-  const fetchMoreUnseen = useCallback(() => {
-    unseenMemberNotificationsCount.fetchMore({})
-    unseenChannelNotificationsCount.fetchMore({})
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [unseenChannelNotificationsCount.fetchMore, unseenChannelNotificationsCount.fetchMore])
 
   return {
     notifications,
-    unseenMemberNotifications,
-    unseenChannelNotifications,
-    unseenNotificationsCounts: isStudio ? unseenChannelNotifications : unseenMemberNotifications,
-    fetchMoreUnseen,
+    unseenNotificationsCounts,
     setLastSeenNotificationDate,
     markNotificationsAsRead,
     ...rest,
   }
+}
+
+const useUnseenMemberNotifications = (
+  lastSeenNotificationDates: NotificationsStoreState['lastSeenNotificationDates']
+) => {
+  const { memberId } = useUser()
+
+  const where = useMemo(() => {
+    const recipient = { isTypeOf_eq: 'MemberRecipient', membership: { id_eq: memberId } }
+    const createdAt_gt = whenDefined(
+      lastSeenNotificationDates.find(({ type }) => type === 'MemberRecipient'),
+      ({ date }) => new Date(date)
+    )
+    return { recipient, createdAt_gt }
+  }, [memberId, lastSeenNotificationDates])
+
+  const { data, fetchMore } = useGetNotificationsCountQuery({ variables: { where } })
+
+  return useMemo(() => ({ data: data?.notificationsConnection.totalCount, fetchMore }), [data, fetchMore])
+}
+
+const useUnseenChannelNotifications = (
+  lastSeenNotificationDates: NotificationsStoreState['lastSeenNotificationDates']
+) => {
+  const { activeMembership, channelId } = useUser()
+  const client = useApolloClient()
+
+  const [data, setData] = useState<Map<string, number> | undefined>()
+  const fetchAll = useCallback(() => {
+    if (!activeMembership) return
+
+    Promise.all(
+      activeMembership.channels.map(async (channel): Promise<[string, number] | undefined> => {
+        const recipient = { isTypeOf_eq: 'ChannelRecipient', channel: { id_eq: channel.id } }
+        const createdAt_gt = whenDefined(
+          lastSeenNotificationDates.find(({ type, id }) => type === 'ChannelRecipient' && id === channel.id),
+          ({ date }) => new Date(date)
+        )
+        const { data } = await client.query<GetNotificationsCountQuery, GetNotificationsCountQueryVariables>({
+          query: GetNotificationsCountDocument,
+          variables: { where: { recipient, createdAt_gt } },
+        })
+        return data && [channel.id, data.notificationsConnection.totalCount]
+      })
+    ).then((results) => setData(new Map(results.filter((x): x is [string, number] => !!x))))
+  }, [lastSeenNotificationDates, activeMembership, client])
+
+  useEffect(fetchAll, [fetchAll])
+
+  return useMemo(
+    () => ({
+      data: data && {
+        channels: data,
+        total: Array.from(data.values() ?? []).reduce((a, b) => a + b, 0),
+        current: data.get(channelId ?? '') ?? 0,
+      },
+      fetchMore: fetchAll,
+    }),
+    [data, fetchAll, channelId]
+  )
 }
 
 type NotificationType =
