@@ -8,16 +8,19 @@ import { SaleMarketChoiceDrawer } from '@/components/_crt/SaleMarketChoiceDrawer
 
 type StartSaleOrMarketButtonProps = {
   tokenName: string
+  hasActiveMarket: boolean
 }
 
-export const StartSaleOrMarketButton = ({ tokenName }: StartSaleOrMarketButtonProps) => {
+export const StartSaleOrMarketButton = ({ tokenName, hasActiveMarket }: StartSaleOrMarketButtonProps) => {
   const [showChoiceDrawer, setShowChoiceDrawer] = useState(false)
   const [showMarketDrawer, setShowMarketDrawer] = useState(false)
   return (
     <>
-      <Button onClick={() => setShowChoiceDrawer(true)} icon={<SvgActionSell />}>
-        Start sale or market
-      </Button>
+      {!hasActiveMarket && (
+        <Button onClick={() => setShowChoiceDrawer(true)} icon={<SvgActionSell />}>
+          Start sale or market
+        </Button>
+      )}
       <SaleMarketChoiceDrawer
         isOpen={showChoiceDrawer}
         onClose={() => setShowChoiceDrawer(false)}

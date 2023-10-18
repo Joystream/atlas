@@ -58,7 +58,10 @@ export const CrtDashboard = () => {
               <Button variant="secondary" icon={<SvgActionEdit />}>
                 Edit token page
               </Button>
-              <StartSaleOrMarketButton tokenName={data.creatorTokenById.symbol ?? 'N/A'} />
+              <StartSaleOrMarketButton
+                hasActiveMarket={data.creatorTokenById.ammCurves.some((curve) => !curve.finalized)}
+                tokenName={data.creatorTokenById.symbol ?? 'N/A'}
+              />
             </>
           )}
           {currentTab === 2 && (
