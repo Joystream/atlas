@@ -23,7 +23,7 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
-import { UnseenNotificationsCounts } from '@/providers/notifications/notifications.hooks'
+import { UseNotifications } from '@/providers/notifications/notifications.hooks'
 
 import { BalanceTooltip } from './BalanceTooltip'
 import { SectionContainer } from './MemberDropdown.styles'
@@ -50,7 +50,7 @@ type DropdownType = 'member' | 'channel'
 type MemberDropdownNavProps = {
   type: 'member' | 'channel'
   publisher?: boolean
-  unseenNotificationsCounts?: UnseenNotificationsCounts
+  unseenNotificationsCounts?: UseNotifications['unseenNotificationsCounts']
   containerRefElement: Element | null
   onCloseDropdown?: () => void
   onAddNewChannel?: () => void
@@ -266,7 +266,7 @@ type ListItemOptionsProps = {
   publisher?: boolean
   hasAtLeastOneChannel?: boolean
   closeDropdown?: () => void
-  unseenNotificationsCounts?: UnseenNotificationsCounts
+  unseenNotificationsCounts?: UseNotifications['unseenNotificationsCounts']
   listItems: [ListItemProps, ListItemProps] | [ListItemProps]
 }
 const ListItemOptions: FC<ListItemOptionsProps> = ({

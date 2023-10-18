@@ -10,7 +10,7 @@ import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useAuth } from '@/providers/auth/auth.hooks'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useSubscribeAccountBalance } from '@/providers/joystream'
-import { UnseenNotificationsCounts } from '@/providers/notifications/notifications.hooks'
+import { UseNotifications } from '@/providers/notifications/notifications.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { transitions } from '@/styles'
 
@@ -21,7 +21,7 @@ import { MemberDropdownNav } from './MemberDropdownNav'
 import { SendFundsDialog, WithdrawFundsDialog } from '../SendTransferDialogs'
 
 export type MemberDropdownProps = {
-  unseenNotificationsCounts?: UnseenNotificationsCounts
+  unseenNotificationsCounts?: UseNotifications['unseenNotificationsCounts']
   isActive: boolean
   publisher?: boolean
   closeDropdown?: () => void

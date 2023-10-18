@@ -1,4 +1,4 @@
-import { QueryHookOptions, useApolloClient } from '@apollo/client'
+import { QueryHookOptions, QueryResult, useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'react-router'
@@ -19,13 +19,21 @@ import { whenDefined } from '@/utils/misc'
 import { NotificationsStoreState, RecipientType, useNotificationStore } from './notifications.store'
 import { NotificationData, NotificationRecord } from './notifications.types'
 
-export type UnseenNotificationsCounts = {
+type UnseenNotificationsCounts = {
   member?: number
   channels?: { channels: Map<string, number>; total: number; current: number }
   fetchMore: () => void
 }
-export type UseNotifications = ReturnType<typeof useNotifications> // TODO manually type this
-export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkStatusChange'>) => {
+
+export type UseNotifications = Pick<QueryResult<GetNotificationsConnectionQuery>, 'loading' | 'fetchMore'> & {
+  notifications: NotificationRecord[]
+  unseenNotificationsCounts: UnseenNotificationsCounts
+  setLastSeenNotificationDate: (data: Date) => void
+  markNotificationsAsRead: (notifications: NotificationRecord[]) => void
+  pageInfo?: GetNotificationsConnectionQuery['notificationsConnection']['pageInfo']
+}
+
+export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkStatusChange'>): UseNotifications => {
   const { pathname } = useLocation()
   const isStudio = pathname.search(absoluteRoutes.studio.index()) !== -1
   const { channelId, memberId } = useUser()
@@ -70,7 +78,7 @@ export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkS
   )
 
   const [optimisticRead, setOptimisticRead] = useState<string[]>([])
-  const notifications = useMemo(
+  const notifications: NotificationRecord[] = useMemo(
     () =>
       rawNotifications.map(
         ({ node: { id, createdAt, status, notificationType } }): NotificationRecord => ({
@@ -106,11 +114,11 @@ export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkS
   )
 
   return {
+    ...rest,
     notifications,
     unseenNotificationsCounts,
     setLastSeenNotificationDate,
     markNotificationsAsRead,
-    ...rest,
   }
 }
 
