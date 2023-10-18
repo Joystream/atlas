@@ -2,9 +2,9 @@ import { FC, MouseEvent, memo, useMemo, useState } from 'react'
 
 import { useBasicChannel } from '@/api/hooks/channel'
 import { useChannelPreviewVideos } from '@/api/hooks/video'
+import { ChannelTitle } from '@/components/ChannelTitle'
 import { Grid } from '@/components/Grid'
 import { NumberFormat } from '@/components/NumberFormat'
-import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { absoluteRoutes } from '@/config/routes'
@@ -83,9 +83,9 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = memo(({ channelId }
           {isLoading ? (
             <SkeletonLoader width="120px" height="20px" bottomSpace="4px" />
           ) : (
-            <Text as="h3" variant="h300">
+            <ChannelTitle variant="h300" as="h3">
               {extendedChannel?.channel?.title}
-            </Text>
+            </ChannelTitle>
           )}
           {isLoading ? (
             <SkeletonLoader width="80px" height="20px" bottomSpace="8px" />

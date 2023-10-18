@@ -163,13 +163,7 @@ export const FeaturedNftsSection: FC = () => {
           <Banner
             title="How to get featured?"
             icon={<StyledSvgAlertsInformative24 />}
-            description={`The ${
-              atlasConfig.general.appName
-            } team handpicks featured video NFTs as a way to recognize and promote high-quality content. To increase your chances of getting your NFT featured on the marketplace, ${
-              atlasConfig.general.appContentFocus
-                ? `upload videos related to ${atlasConfig.general.appContentFocus} and `
-                : ''
-            }make sure your NFT is up for sale.`}
+            description={`The ${atlasConfig.general.appName} team handpicks featured video NFTs as a way to recognize and promote high-quality content. To increase your chances of getting your NFT featured on the marketplace, make sure your NFT is up for sale.`}
             actionButton={{
               text: 'Submit your video NFT to be featured',
               onClick: () => {

@@ -6,7 +6,6 @@ import { CSSTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
 import { absoluteRoutes } from '@/config/routes'
-import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useAuth } from '@/providers/auth/auth.hooks'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useSubscribeAccountBalance } from '@/providers/joystream'
@@ -18,7 +17,7 @@ import { Container, InnerContainer, SlideAnimationContainer } from './MemberDrop
 import { MemberDropdownList } from './MemberDropdownList'
 import { MemberDropdownNav } from './MemberDropdownNav'
 
-import { SendFundsDialog, WithdrawFundsDialog } from '../SendTransferDialogs'
+import { SendFundsDialog } from '../SendTransferDialogs'
 
 export type MemberDropdownProps = {
   unseenNotificationsCounts?: UseNotifications['unseenNotificationsCounts']
@@ -31,7 +30,7 @@ export type MemberDropdownProps = {
 export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
   ({ publisher, unseenNotificationsCounts, isActive, closeDropdown, onChannelChange }, ref) => {
     const navigate = useNavigate()
-    const { channelId, activeMembership, memberships, setActiveChannel } = useUser()
+    const { channelId, activeMembership, memberships, setActiveChannel, activeChannel } = useUser()
     const { handleLogout } = useAuth()
     const {
       actions: { setAuthModalOpenName },
@@ -40,13 +39,13 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     const [disableScrollDuringAnimation, setDisableScrollDuringAnimation] = useState(true)
 
     const [showSendDialog, setShowSendDialog] = useState(false)
-    const { urls: memberAvatarUrls } = getMemberAvatar(activeMembership)
     const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
     const memoizedChannelStateBloatBond = useMemo(() => {
       return new BN(selectedChannel?.channelStateBloatBond || 0)
     }, [selectedChannel?.channelStateBloatBond])
 
-    const { accountBalance, lockedAccountBalance, totalBalance, totalInvitationLock } = useSubscribeAccountBalance()
+    const { accountBalance, lockedAccountBalance, totalBalance, debt, totalInvitationLock } =
+      useSubscribeAccountBalance()
     const { accountBalance: channelBalance } =
       useSubscribeAccountBalance(selectedChannel?.rewardAccount, {
         channelStateBloatBond: memoizedChannelStateBloatBond,
@@ -125,16 +124,21 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
 
     return (
       <>
-        <WithdrawFundsDialog
-          avatarUrls={memberAvatarUrls}
+        <SendFundsDialog
           activeMembership={activeMembership}
           show={showWithdrawDialog}
           onExitClick={toggleWithdrawDialog}
-          totalBalance={totalBalance}
           channelBalance={channelBalance}
+          totalBalance={totalBalance}
           channelId={channelId}
+          accountDebt={debt}
         />
-        <SendFundsDialog show={showSendDialog} onExitClick={toggleSendDialog} accountBalance={accountBalance} />
+        <SendFundsDialog
+          show={showSendDialog}
+          onExitClick={toggleSendDialog}
+          accountBalance={accountBalance}
+          accountDebt={debt}
+        />
 
         <CSSTransition classNames={transitions.names.dropdown} in={isActive} timeout={0} mountOnEnter unmountOnExit>
           <Container ref={mergeRefs([ref, containerRef])}>
@@ -172,6 +176,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                       channelBalance={channelBalance}
                       lockedAccountBalance={lockedAccountBalance}
                       activeMembership={activeMembership}
+                      activeChannel={activeChannel}
                       hasOneMember={hasOneMember}
                       onSwitchToList={(type) => handleSwitch(type, true)}
                       onCloseDropdown={closeDropdown}

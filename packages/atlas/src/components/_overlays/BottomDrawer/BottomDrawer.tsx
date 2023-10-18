@@ -1,14 +1,13 @@
 import { FC, PropsWithChildren, useEffect, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
-import useResizeObserver from 'use-resize-observer'
 
-import { ActionBarProps } from '@/components/ActionBar'
+import { ActionBar, ActionBarProps } from '@/components/ActionBar'
 import { DrawerHeader } from '@/components/DrawerHeader'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { cVar } from '@/styles'
 
-import { Container, DrawerOverlay, ScrollContainer, StyledActionBar } from './BottomDrawer.styles'
+import { Container, DrawerOverlay, Inner, Outer } from './BottomDrawer.styles'
 
 export type BottomDrawerProps = PropsWithChildren<{
   isOpen: boolean
@@ -35,10 +34,6 @@ export const BottomDrawer: FC<BottomDrawerProps> = ({
   const [cachedIsOpen, setCachedIsOpen] = useState(false)
   const { lastOverlayId, decrementOverlaysOpenCount, incrementOverlaysOpenCount } = useOverlayManager()
   const [overlayId, setOverlayId] = useState<string | null>(null)
-
-  const actionBarActive = actionBar?.isActive ?? true
-  const { ref: actionBarRef, height: _actionBarHeight } = useResizeObserver({ box: 'border-box' })
-  const actionBarHeight = actionBarActive ? _actionBarHeight : 0
 
   useEffect(() => {
     if (isOpen === cachedIsOpen) return
@@ -92,14 +87,13 @@ export const BottomDrawer: FC<BottomDrawerProps> = ({
       >
         <Container role="dialog">
           <DrawerHeader title={title} label={titleLabel} onCloseClick={onClose} />
-          <ScrollContainer
-            data-scroll-lock-scrollable
-            actionBarHeight={actionBarHeight}
-            fixedScrollbar={fixedScrollbar}
-          >
-            {children}
-          </ScrollContainer>
-          {actionBar ? <StyledActionBar ref={actionBarRef} {...actionBar} /> : null}
+          <Outer>
+            <Inner fixedScrollbar={fixedScrollbar} data-scroll-lock-scrollable>
+              {children}
+            </Inner>
+          </Outer>
+
+          {actionBar ? <ActionBar {...actionBar} /> : null}
         </Container>
       </CSSTransition>
     </>

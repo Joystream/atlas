@@ -2,7 +2,7 @@ import { ChannelId, VideoId } from '@/joystream-lib/types'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { UploadStatus } from '@/types/storage'
 
-type AssetType = 'video' | 'thumbnail' | 'cover' | 'avatar' | 'subtitles'
+export type AssetType = 'video' | 'thumbnail' | 'cover' | 'avatar' | 'subtitles'
 export type AssetParent = 'video' | 'channel'
 
 export type AssetUpload = {

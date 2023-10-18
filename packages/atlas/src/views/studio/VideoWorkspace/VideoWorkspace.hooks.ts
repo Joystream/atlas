@@ -21,7 +21,7 @@ import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import { VideoFormData, VideoWorkspace, useVideoWorkspace, useVideoWorkspaceData } from '@/providers/videoWorkspace'
 import { modifyAssetUrlInCache, writeVideoDataInCache } from '@/utils/cachingAssets'
 import { createLookup } from '@/utils/data'
-import { ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { ConsoleLogger, SentryLogger, UserEventsLogger } from '@/utils/logs'
 
 export const useHandleVideoWorkspaceSubmit = () => {
   const { setIsWorkspaceOpen, editedVideoInfo, setEditedVideo } = useVideoWorkspace()
@@ -162,7 +162,12 @@ export const useHandleVideoWorkspaceSubmit = () => {
           uploadPromises.push(...subtitlesUploadPromises)
         }
 
-        Promise.all(uploadPromises).catch((e) => SentryLogger.error('Unexpected upload failure', 'VideoWorkspace', e))
+        Promise.all(uploadPromises).catch((e) => {
+          if (videoInfo?.mintNft) {
+            UserEventsLogger.logNftMintingFailedEvent(data.nftMetadata, e)
+          }
+          SentryLogger.error('Unexpected upload failure', 'VideoWorkspace', e)
+        })
       }
 
       const refetchDataAndUploadAssets = async (result: VideoExtrinsicResult) => {
@@ -241,7 +246,20 @@ export const useHandleVideoWorkspaceSubmit = () => {
       })
 
       if (completed) {
-        !!data.nftMetadata && trackNftMint(data.metadata.title ?? 'no data', channelId)
+        UserEventsLogger.logUserEvent(isNew ? 'user-action-video-created' : 'user-action-video-updated', {
+          memberId,
+          metadata: data.metadata,
+          nftMetadata: data.nftMetadata,
+        })
+
+        if (data.nftMetadata) {
+          trackNftMint(data.metadata.title ?? 'no data', channelId)
+          UserEventsLogger.logUserEvent('user-action-nft-minted', {
+            memberId,
+            metadata: data.metadata,
+            nftMetadata: data.nftMetadata,
+          })
+        }
 
         assetsToBeRemoved?.forEach((asset) => {
           removeAssetFromUploads(asset)

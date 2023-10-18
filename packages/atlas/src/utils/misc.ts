@@ -83,3 +83,14 @@ export const retryWalletPromise = <T>(
 
 export const whenDefined = <T, R>(x: T | undefined | null, f: (x: T) => R): R | undefined =>
   typeof x === 'undefined' || x === null ? undefined : f(x)
+
+export function convertUpperCamelToSentence(input?: string) {
+  if (!input) return ''
+
+  const words = input.split(/(?=[A-Z])/)
+  return words
+    .map((word, index) => {
+      return index === 0 ? word.charAt(0).toUpperCase() + word.slice(1) : word.toLowerCase()
+    })
+    .join(' ')
+}

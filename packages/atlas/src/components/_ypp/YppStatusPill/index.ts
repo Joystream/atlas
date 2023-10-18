@@ -1,1 +1,1 @@
-export * from './YppStatusPill'
+export * from './YppStatusDot'

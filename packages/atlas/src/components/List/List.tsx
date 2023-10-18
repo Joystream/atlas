@@ -15,7 +15,7 @@ type ListProps = {
 
 export const List: FC<ListProps> = ({ items, size, className, scrollable = false }) => {
   return (
-    <ListWrapper className={className} scrollable={scrollable} size={size}>
+    <ListWrapper data-scroll-lock-scrollable className={className} scrollable={scrollable} size={size}>
       {items.map((item, index) => {
         const component = <ListItem key={index} {...item} size={size} />
 

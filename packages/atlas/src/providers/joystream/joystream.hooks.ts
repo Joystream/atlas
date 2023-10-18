@@ -171,6 +171,7 @@ export const useSubscribeAccountBalance = (
     () => (totalBalanceLoaded ? accountBalance?.add(lockedAccountBalance || new BN(0)) : undefined),
     [accountBalance, lockedAccountBalance, totalBalanceLoaded]
   )
+  const debt = totalInvitationLock && lockedAccountBalance && totalInvitationLock.sub(lockedAccountBalance)
 
   useEffect(() => {
     if (!(controllerAccount || activeMembership?.controllerAccount) || !joystream) {
@@ -207,7 +208,7 @@ export const useSubscribeAccountBalance = (
     proxyCallback,
   ])
 
-  return { accountBalance, lockedAccountBalance, totalBalanceLoaded, totalBalance, totalInvitationLock }
+  return { accountBalance, lockedAccountBalance, totalBalanceLoaded, totalBalance, debt, totalInvitationLock }
 }
 
 export const useBloatFeesAndPerMbFees = (assets?: VideoInputAssets | ChannelInputAssets) => {

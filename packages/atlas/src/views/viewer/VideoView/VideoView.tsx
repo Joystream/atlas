@@ -125,7 +125,7 @@ export const VideoView: FC = () => {
             .filter((subtitle) => !!subtitle.asset && subtitle.asset?.resolvedUrls.length)
             .map(async (subtitle) => {
               const resolvedLanguageName = atlasConfig.derived.languagesLookup[subtitle.language || '']
-              const url = await getSingleAssetUrl(subtitle.asset?.resolvedUrls, 'subtitle')
+              const url = await getSingleAssetUrl(subtitle.asset?.resolvedUrls, subtitle.asset?.id, 'subtitles')
               return {
                 label: subtitle.type === 'subtitles' ? resolvedLanguageName : `${resolvedLanguageName} (CC)`,
                 language: subtitle.type === 'subtitles' ? subtitle.language : `${subtitle.language}-cc`,
@@ -378,10 +378,6 @@ export const VideoView: FC = () => {
                   onClick: () => setShowReportDialog(true),
                   label: 'Report video',
                   nodeStart: <SvgActionFlag />,
-                  protected: {
-                    title: 'You want to report this video?',
-                    description: 'Sign in to report harmful content',
-                  },
                 },
               ]}
               trigger={<Button icon={<SvgActionMore />} variant="tertiary" size="medium" />}

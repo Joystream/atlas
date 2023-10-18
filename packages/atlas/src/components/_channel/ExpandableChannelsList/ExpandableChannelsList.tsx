@@ -4,9 +4,9 @@ import { FC, Fragment, useState } from 'react'
 import { useBasicChannels, useDiscoverChannels } from '@/api/hooks/channel'
 import { ChannelOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { SvgActionChevronR } from '@/assets/icons'
+import { ChannelTitle } from '@/components/ChannelTitle'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { GridHeadingContainer, TitleContainer } from '@/components/GridHeading'
-import { Text } from '@/components/Text'
 import { LoadMoreButton } from '@/components/_buttons/LoadMoreButton'
 import { ChannelWithVideos } from '@/components/_channel/ChannelWithVideos'
 import { Select } from '@/components/_inputs/Select'
@@ -78,9 +78,9 @@ export const ExpandableChannelsList: FC<ExpandableChannelsListProps> = ({
             {loading ? (
               <SkeletonLoader height={23} width={250} />
             ) : (
-              <Text as="h2" variant="h500">
+              <ChannelTitle variant="h500" as="h2">
                 {title}
-              </Text>
+              </ChannelTitle>
             )}
             {languageSelector && (
               <LanguageSelectWrapper>

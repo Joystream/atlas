@@ -7,11 +7,11 @@ import { useParams, useSearchParams } from 'react-router-dom'
 import { useChannelNftCollectors, useFullChannel } from '@/api/hooks/channel'
 import { OwnedNftOrderByInput, VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { SvgActionCheck, SvgActionFilters, SvgActionFlag, SvgActionMore, SvgActionPlus } from '@/assets/icons'
+import { ChannelTitle } from '@/components/ChannelTitle'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { NumberFormat } from '@/components/NumberFormat'
-import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ViewWrapper } from '@/components/ViewWrapper'
 import { ProtectedActionWrapper } from '@/components/_auth/ProtectedActionWrapper'
@@ -130,7 +130,7 @@ export const ChannelView: FC = () => {
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(id, channel?.title)
   const [currentTab, setCurrentTab] = useState<typeof TABS[number]>(TABS[0])
 
-  const { url: avatarPhotoUrl } = useGetAssetUrl(channel?.avatarPhoto?.resolvedUrls, 'image')
+  const { url: avatarPhotoUrl } = useGetAssetUrl(channel?.avatarPhoto?.resolvedUrls, 'avatar')
 
   const [sortNftsBy, setSortNftsBy] = useState<OwnedNftOrderByInput>(OwnedNftOrderByInput.CreatedAtDesc)
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
@@ -280,9 +280,9 @@ export const ChannelView: FC = () => {
           <TitleContainer>
             {channel ? (
               <>
-                <Text as="h1" variant={smMatch ? 'h700' : 'h600'}>
+                <ChannelTitle variant={smMatch ? 'h700' : 'h600'} as="h1">
                   {channel.title}
-                </Text>
+                </ChannelTitle>
                 <ChannelInfoContainer>
                   <SubTitle as="p" variant="t300" color="colorText">
                     {channel.followsNum ? (
@@ -365,10 +365,6 @@ export const ChannelView: FC = () => {
                       onClick: () => setShowReportDialog(true),
                       label: 'Report channel',
                       nodeStart: <SvgActionFlag />,
-                      protected: {
-                        title: 'You want to report this channel?',
-                        description: 'Sign in to report harmful content',
-                      },
                     },
                   ]}
                   trigger={<Button icon={<SvgActionMore />} variant="tertiary" size="large" />}
