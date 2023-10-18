@@ -1210,4 +1210,18 @@ export class JoystreamLibExtrinsics {
     const { block } = await this.sendExtrinsic(tx, cb)
     return { block }
   }
+
+  startAmmTx = async (memberId: MemberId, channelId: ChannelId, tokens: number) => {
+    const member = createType('PalletContentPermissionsContentActor', { Member: parseInt(memberId) })
+    return this.api.tx.content.activateAmm(member, parseInt(channelId), {
+      slope: (createType('Permill', 1) as BN).div(new BN(10000)),
+      intercept: createType('Balance', new BN(tokens).pow(new BN(10))) as number,
+    })
+  }
+
+  startAmm: PublicExtrinsic<typeof this.startAmmTx, ExtrinsicResult> = async (memberId, channelId, tokens, cb) => {
+    const tx = await this.startAmmTx(memberId, channelId, tokens)
+    const { block } = await this.sendExtrinsic(tx, cb)
+    return { block }
+  }
 }

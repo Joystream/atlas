@@ -38,9 +38,10 @@ const MARKET_POINTS = [
 type SaleMarketChoiceDrawerProps = {
   isOpen: boolean
   onClose: () => void
+  onMarketChoice: () => void
 }
 
-export const SaleMarketChoiceDrawer = ({ isOpen, onClose }: SaleMarketChoiceDrawerProps) => {
+export const SaleMarketChoiceDrawer = ({ isOpen, onClose, onMarketChoice }: SaleMarketChoiceDrawerProps) => {
   const smMatch = useMediaMatch('sm')
   return (
     <StyledBottomDrawer isOpen={isOpen} onClose={onClose} title="Start sale or market">
@@ -63,6 +64,7 @@ export const SaleMarketChoiceDrawer = ({ isOpen, onClose }: SaleMarketChoiceDraw
                 actionButton={{
                   text: 'Start sale',
                   onClick: () => undefined,
+                  disabled: true,
                 }}
                 icon={<SvgPatternCircleLines />}
               />
@@ -71,8 +73,8 @@ export const SaleMarketChoiceDrawer = ({ isOpen, onClose }: SaleMarketChoiceDraw
                 description="An automated market maker (AMM) is an algorithm that helps to buy and sell tokens by using price curves which automatically set prices and match buyers and sellers."
                 points={MARKET_POINTS}
                 actionButton={{
-                  text: 'Start sale',
-                  onClick: () => undefined,
+                  text: 'Start market',
+                  onClick: onMarketChoice,
                 }}
                 icon={<SvgPatternAngledLines />}
               />
@@ -94,6 +96,7 @@ type OptionCardProps = {
   actionButton: {
     text: string
     onClick: () => void
+    disabled?: boolean
   }
   icon: ReactElement
 }
@@ -134,7 +137,7 @@ const OptionCard = ({ title, description, points, actionButton, icon }: OptionCa
         ))}
       </FlexBox>
 
-      <Button fullWidth onClick={actionButton.onClick}>
+      <Button fullWidth onClick={actionButton.onClick} disabled={actionButton.disabled}>
         {actionButton.text}
       </Button>
     </OptionCardWrapper>
