@@ -50,7 +50,7 @@ export const useYppGoogleAuth = ({ channelsLoaded }: { channelsLoaded: boolean }
   const setAuthModalOpenName = useAuthStore((state) => state.actions.setAuthModalOpenName)
   const { isLoggedIn, isAuthenticating } = useAuth()
 
-  const { setYtStateParam: setYppAuthState, setSelectedChannelId } = useYppStore((state) => state.actions)
+  const { setSelectedChannelId } = useYppStore((state) => state.actions)
   const [alreadyRegisteredChannel, setAlreadyRegisteredChannel] = useState<AlreadyRegisteredChannel | null>(null)
   const { mutateAsync: authMutation } = useMutation('ypp-auth-post', (authorizationCode: string) =>
     axiosInstance.post<ChannelVerificationSuccessResponse>(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/users`, {
@@ -163,7 +163,7 @@ export const useYppGoogleAuth = ({ channelsLoaded }: { channelsLoaded: boolean }
           setSelectedChannelId(channelId)
         }
 
-        setYppAuthState(null)
+        localStorage.setItem('yppAuthState', '')
         setYppModalOpenName('ypp-fetching-data')
 
         resetSearchParams()
@@ -252,7 +252,6 @@ export const useYppGoogleAuth = ({ channelsLoaded }: { channelsLoaded: boolean }
       }
     },
     [
-      setYppAuthState,
       setYppModalOpenName,
       resetSearchParams,
       authMutation,
