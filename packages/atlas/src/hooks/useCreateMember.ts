@@ -19,7 +19,7 @@ import { useSnackbar } from '@/providers/snackbars'
 import { useTransactionManagerStore } from '@/providers/transactions/transactions.store'
 import { useYppStore } from '@/providers/ypp/ypp.store'
 import { UploadAvatarServiceError, uploadAvatarImage } from '@/utils/image'
-import { ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { ConsoleLogger, SentryLogger, UserEventsLogger } from '@/utils/logs'
 
 export type MemberFormData = {
   handle: string
@@ -29,6 +29,7 @@ export type MemberFormData = {
   authorizationCode?: string
   userId?: string
   confirmedCopy: boolean
+  referrerChannelId?: string
 }
 
 export type AccountFormData = {
@@ -37,6 +38,7 @@ export type AccountFormData = {
   mnemonic: string
   confirmedTerms: boolean
   memberId: string
+  referrerChannelId?: string
 }
 
 type NewMemberResponse = {
@@ -70,6 +72,7 @@ export enum RegisterError {
   EmailAlreadyExists = 'EmailAlreadyExists',
   UnknownError = 'UnknownError',
   MembershipNotFound = 'MembershipNotFound',
+  SessionRequired = 'SessionRequired',
 }
 
 type SignUpParams<T, E> = {
@@ -103,7 +106,7 @@ export const useCreateMember = () => {
 
   const createNewMember = useCallback(
     async (params: CreateNewMemberParams<FaucetError>, onBlockSync?: () => void) => {
-      const { data, onError } = params
+      const { data, onError, onStart } = params
       let fileUrl
       const keypair = keyring.addFromMnemonic(data.mnemonic)
       const address = keypair.address
@@ -121,10 +124,12 @@ export const useCreateMember = () => {
           ? {
               userId: data.userId,
               authorizationCode: data.authorizationCode,
+              ...(data.referrerChannelId ? { referrerChannelId: data.referrerChannelId } : {}),
             }
           : {}),
       }
       try {
+        onStart?.()
         const response = await faucetMutation(body)
         onBlockSync && addBlockAction({ callback: onBlockSync, targetBlock: response.data.block })
 
@@ -137,13 +142,16 @@ export const useCreateMember = () => {
             iconType: 'error',
           })
           onError?.(FaucetError.UploadAvatarServiceError)
+          UserEventsLogger.logUserError('failed-avatar-upload', { message: error.message })
           SentryLogger.error('Failed to upload member avatar', 'SignUpModal', error)
           return
         }
 
         const errorCode = isAxiosError<NewMemberErrorResponse>(error) ? error.response?.data?.error : null
 
-        SentryLogger.error('Failed to create a membership', 'SignUpModal', error, { error: { errorCode } })
+        SentryLogger.error(`Failed to create a membership ${ytResponseData ? 'YPP' : ''}`, 'SignUpModal', error, {
+          parsed: { errorCode },
+        })
 
         switch (errorCode) {
           case 'TooManyRequestsPerIp':
@@ -239,8 +247,12 @@ export const useCreateMember = () => {
                 'To create new membership you need to use an email that is not connected to already existing account.',
             })
             onError?.(RegisterError.EmailAlreadyExists)
+            return
           } else if (errorMessage.startsWith('Membership not found by id')) {
             onError?.(RegisterError.MembershipNotFound)
+            return
+          } else if (errorMessage.startsWith("cookie 'session_id' required")) {
+            onError?.(RegisterError.SessionRequired)
             return
           } else {
             displaySnackbar({

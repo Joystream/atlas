@@ -97,6 +97,7 @@ export const VideoThumbnail = forwardRef<HTMLAnchorElement, VideoThumbnailProps>
           <ThumbnailImage
             isLoading={loading}
             resolvedUrls={thumbnailUrls}
+            type="thumbnail"
             alt={thumbnailAlt || ''}
             imagePlaceholder={<ThumbnailBackground />}
           />

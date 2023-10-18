@@ -3,17 +3,18 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useOverflowDetector } from 'react-detectable-overflow'
 import shallow from 'zustand/shallow'
 
+import { useGetMembershipsLazyQuery } from '@/api/queries/__generated__/memberships.generated'
 import { Button } from '@/components/_buttons/Button'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
 import { DialogModal } from '@/components/_overlays/DialogModal'
-import { AccountFormData, FaucetError, MemberFormData, RegisterError, useCreateMember } from '@/hooks/useCreateMember'
+import { AccountFormData, MemberFormData, RegisterError, useCreateMember } from '@/hooks/useCreateMember'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useUniqueMemberHandle } from '@/hooks/useUniqueMemberHandle'
+import { handleAnonymousAuth } from '@/providers/auth/auth.helpers'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useSnackbar } from '@/providers/snackbars'
 import { useYppStore } from '@/providers/ypp/ypp.store'
-import { media } from '@/styles'
 import { createId } from '@/utils/createId'
 import { imageUrlToBlob } from '@/utils/image'
 import { SentryLogger } from '@/utils/logs'
@@ -39,6 +40,7 @@ const SIGNUP_FORM_DATA_INITIAL_STATE: AccountFormData & MemberFormData = {
   confirmedTerms: false,
   confirmedCopy: false,
   memberId: '',
+  referrerChannelId: undefined,
 }
 
 const stepToPageName: Partial<Record<SignUpSteps, string>> = {
@@ -57,12 +59,13 @@ export const SignUpModal = () => {
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogButtonProps>({ text: 'Continue' })
   const [amountOfTokens, setAmountofTokens] = useState<number>()
   const memberRef = useRef<string | null>(null)
-  const syncState = useRef<'synced' | 'tried' | null>(null)
-  const accountCreationTries = useRef(0)
-  const memberCreationTime = useRef<number | null>(null)
+  const memberPollingTries = useRef(0)
+  const haveTriedCreateSession = useRef(false)
   const ytResponseData = useYppStore((state) => state.ytResponseData)
   const setYppModalOpenName = useYppStore((state) => state.actions.setYppModalOpenName)
   const setYtResponseData = useYppStore((state) => state.actions.setYtResponseData)
+  const referrerChannelId = useYppStore((state) => state.referrerId)
+  const { anonymousUserId } = useAuthStore()
   const { displaySnackbar } = useSnackbar()
 
   const { generateUniqueMemberHandleBasedOnInput } = useUniqueMemberHandle()
@@ -111,11 +114,15 @@ export const SignUpModal = () => {
 
   const handleOrionAccountCreation = useCallback(() => {
     if (!memberRef.current) {
-      throw new Error('MemberID ref is empty, do a check before calling handleOrionAccountCreation function')
+      return
     }
 
     return createNewOrionAccount({
-      data: { ...signUpFormData.current, memberId: memberRef.current },
+      data: {
+        ...signUpFormData.current,
+        memberId: memberRef.current,
+        ...(referrerChannelId ? { referrerChannelId } : {}),
+      },
       onError: (error) => {
         if (error === RegisterError.EmailAlreadyExists) {
           setEmailAlreadyTakenError(true)
@@ -123,33 +130,32 @@ export const SignUpModal = () => {
           return
         }
         if (error === RegisterError.MembershipNotFound) {
-          if (accountCreationTries.current > 5) {
-            const secondsBetweenRequests = memberCreationTime.current
-              ? (performance.now() - memberCreationTime.current) / 1_000
-              : null
-
-            SentryLogger.error('Failed to create an account - missing membership', 'SignUpModal', error, {
-              performance: { secondsBetweenRequests },
+          SentryLogger.error('Failed to create an account - missing membership', 'SignUpModal', error)
+          displaySnackbar({
+            title: 'Something went wrong',
+            description: 'We could not find your membership. Please contact support.',
+            iconType: 'error',
+          })
+          setAuthModalOpenName(undefined)
+        }
+        if (error === RegisterError.SessionRequired) {
+          if (!haveTriedCreateSession.current) {
+            haveTriedCreateSession.current = true
+            handleAnonymousAuth(anonymousUserId).then(() => {
+              handleOrionAccountCreation()
             })
+          } else {
             displaySnackbar({
               title: 'Something went wrong',
-              description: 'We could not find your membership. Please contact support.',
+              description: 'We could not create or find session. Please contact support.',
               iconType: 'error',
             })
             setAuthModalOpenName(undefined)
-            return
           }
-          setTimeout(() => {
-            accountCreationTries.current++
-            handleOrionAccountCreation()
-          }, 10_000)
-          return
         }
-        goToStep(SignUpSteps.CreateMember)
       },
       onStart: () => {
         goToStep(SignUpSteps.Creating)
-        syncState.current = null
       },
       onSuccess: ({ amountOfTokens }) => {
         // if this is ypp flow, overwrite ytResponseData.email
@@ -164,15 +170,30 @@ export const SignUpModal = () => {
       },
     })
   }, [
+    anonymousUserId,
     createNewOrionAccount,
     displaySnackbar,
     goToNextStep,
     goToStep,
+    referrerChannelId,
     setAuthModalOpenName,
     setYppModalOpenName,
     setYtResponseData,
     ytResponseData,
   ])
+
+  const [getMembership, { startPolling }] = useGetMembershipsLazyQuery({
+    onCompleted: (data) => {
+      if (!data.memberships[0].id) {
+        if (memberPollingTries.current > 5) {
+          handleOrionAccountCreation()
+        }
+        memberPollingTries.current++
+        return
+      }
+      handleOrionAccountCreation()
+    },
+  })
 
   const handleEmailStepSubmit = useCallback(
     (email: string, confirmedTerms: boolean) => {
@@ -188,16 +209,42 @@ export const SignUpModal = () => {
   )
 
   const handlePasswordStepSubmit = useCallback(
-    async (password: string) => {
-      signUpFormData.current = { ...signUpFormData.current, password }
-      if (memberRef.current && syncState.current === 'synced') {
-        handleOrionAccountCreation()
-        return
+    async (password: string, captchaToken?: string) => {
+      signUpFormData.current = { ...signUpFormData.current, password, captchaToken }
+      const memberId = await createNewMember({
+        data: {
+          ...signUpFormData.current,
+          authorizationCode: ytResponseData?.authorizationCode,
+          userId: ytResponseData?.userId,
+        },
+        onStart: () => {
+          goToStep(SignUpSteps.Creating)
+        },
+        onError: () => {
+          setAuthModalOpenName(undefined)
+        },
+      })
+      if (memberId) {
+        memberRef.current = memberId ?? null
+        getMembership({
+          variables: {
+            where: {
+              id_eq: memberId,
+            },
+          },
+        })
+        startPolling(10_000)
       }
-      syncState.current = 'tried'
-      goToNextStep()
     },
-    [goToNextStep, handleOrionAccountCreation]
+    [
+      createNewMember,
+      getMembership,
+      goToStep,
+      setAuthModalOpenName,
+      startPolling,
+      ytResponseData?.authorizationCode,
+      ytResponseData?.userId,
+    ]
   )
 
   const handleCreateMemberOnSeedStepSubmit = useCallback(
@@ -229,60 +276,9 @@ export const SignUpModal = () => {
         ...memberData,
       }
 
-      // don't create another member if user already created a member and click back on the password step
-      if (memberRef.current) {
-        goToNextStep()
-        return
-      }
       goToNextStep()
-      const newMemberId = await createNewMember(
-        {
-          data: {
-            ...signUpFormData.current,
-            ...memberData,
-            authorizationCode: ytResponseData?.authorizationCode,
-            userId: ytResponseData?.userId,
-          },
-          onError: (error) => {
-            if (error === FaucetError.MemberAlreadyCreatedForGoogleAccount) {
-              setAuthModalOpenName(undefined)
-            } else {
-              goToStep(SignUpSteps.CreateMember)
-            }
-          },
-        },
-        () => {
-          if (syncState.current === 'tried') {
-            syncState.current = 'synced'
-            handlePasswordStepSubmit(signUpFormData.current.password)
-          }
-          syncState.current = 'synced'
-        }
-      )
-
-      if (newMemberId) {
-        memberRef.current = newMemberId
-        memberCreationTime.current = performance.now()
-      }
-
-      // in case of block sync logic failure assume member is synced after 10s
-      setTimeout(() => {
-        if (syncState.current === 'tried') {
-          syncState.current = 'synced'
-          handlePasswordStepSubmit(signUpFormData.current.password)
-        }
-        syncState.current = 'synced'
-      }, 15_000)
     },
-    [
-      ytResponseData,
-      goToNextStep,
-      createNewMember,
-      generateUniqueMemberHandleBasedOnInput,
-      setAuthModalOpenName,
-      goToStep,
-      handlePasswordStepSubmit,
-    ]
+    [ytResponseData, goToNextStep, generateUniqueMemberHandleBasedOnInput]
   )
 
   const handleMemberStepSubmit = useCallback(
@@ -404,7 +400,7 @@ export const SignUpModal = () => {
           isOverflowing={overflow || !smMatch}
           isEmailAlreadyTakenError={emailAlreadyTakenError}
           onEmailSubmit={handleEmailStepSubmit}
-          email={signUpFormData.current.email || (ytResponseData?.email ?? '')}
+          email={signUpFormData.current.email}
           confirmedTerms={signUpFormData.current.confirmedTerms}
         />
       )}
@@ -418,7 +414,4 @@ export const SignUpModal = () => {
 
 const StyledDialogModal = styled(DialogModal)`
   max-height: calc(100vh - 80px);
-  ${media.sm} {
-    max-height: 576px;
-  }
 `

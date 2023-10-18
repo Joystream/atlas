@@ -80,3 +80,14 @@ export const retryWalletPromise = <T>(
       .catch((error) => reject(error))
   })
 }
+
+export function convertUpperCamelToSentence(input?: string) {
+  if (!input) return ''
+
+  const words = input.split(/(?=[A-Z])/)
+  return words
+    .map((word, index) => {
+      return index === 0 ? word.charAt(0).toUpperCase() + word.slice(1) : word.toLowerCase()
+    })
+    .join(' ')
+}

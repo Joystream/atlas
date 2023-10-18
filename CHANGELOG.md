@@ -5,6 +5,153 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.9.1] - 2023-09-14
+
+### Changed
+
+- Removed YPP email pre-population
+- Minor text changes in signup modal
+
+### Fixed
+
+- Fixed bug with missing anonymousId on signup
+
+## [4.9.0] - 2023-09-08
+
+### Added
+
+- Added new tiers to YPP referrals table
+
+### Changed
+
+- Increased heap size for Atlas docker build
+- Changed YPP email pre-population (from previous change)
+- Removed auth protection from report feature
+
+## [4.8.1] - 2023-09-06
+
+## Changed
+
+- Improved homepage graphQL queries speed
+- Changed YPP email pre-population
+
+## Fixed
+
+- Fixed bug with uploading a video
+- Fixed displaying rewards in YPP cards
+
+## [4.8.0] - 2023-09-01
+
+### Added
+
+- New Tiers for YPP
+
+### Changed
+
+- Removed app focus messages
+- Membership and Orion account are now created simultaneously
+- Increased interval of asset testing
+
+### Fixed
+
+- Fixed handling of Apollo errors
+
+## [4.7.0] - 2023-08-24
+
+### Added
+
+- Added minting NFT to video context menu
+- Added auth cookie for `atlas-meta-server` requests
+
+### Changed
+
+- Limited rendered channels amount for channel carousel
+- Sensitive fields are obfuscated for analytics
+- Changed error handling for sentry
+
+### Fixed
+
+- Fixed errors in signup flow
+- Minor bugfixes
+
+## [4.6.1] - 2023-08-21
+
+### Changed
+
+- Changed retries amount for asset upload
+- Changed copy for Google button
+
+### Fixed
+
+- Fixed double segment call for YPP dashboard
+- Fixed more error with crashes when Google Translate is used
+
+## [4.6.0] - 2023-08-17
+
+### Added
+
+- Added New Segment events
+
+### Changed
+
+- Simplified YPP landing page
+- Changed YPP reward multipliers
+
+### Fixed
+
+- Fixed error with crashes when Google Translate is used
+- Fixed wrong channel balance
+- Minor bugfixes and improvements
+
+## [4.5.1] - 2023-08-14
+
+### Changed
+
+- Changed Creator tokens info
+- Changed YPP video upload rewards
+- Minor YPP dashboard changes
+
+### Fixed
+
+- Various bugfixes
+
+## [4.5.0] - 2023-08-10
+
+### Added
+
+- Added livesession integration for segment
+
+### Fixed
+
+- Fixed bug with infinite loop in studio
+- Fixed error with WASM 
+
+## [4.4.2] - 2023-08-09
+
+### Fixed
+
+- Fixed sentry ignoring some errors
+
+## [4.4.1] - 2023-08-09
+
+### Fixed
+
+- Fixed sentry sourcemaps and removed useless events
+
+## [4.4.0] - 2023-08-08
+
+### Added
+
+- Added upload retry after distributor blacklisting
+
+### Changed
+
+- Adjusted chunks and lazy loading to reduce bundle size
+
+#### Fixed
+
+- Fixed extended delays for YPP sign up
+
 ## [4.3.1] - 2023-08-02
 
 ### Fixed

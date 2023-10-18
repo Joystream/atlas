@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { Avatar } from '@/components/Avatar'
+import { ChannelTitle } from '@/components/ChannelTitle'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { breakpoints, cVar, sizes, square } from '@/styles'
@@ -55,11 +56,8 @@ export const InfoWrapper = styled.div`
   align-items: center;
 `
 
-export const ChannelTitle = styled(Text)`
+export const StyledChannelTitle = styled(ChannelTitle)`
   max-width: 200px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 `
 
 export const ChannelFollows = styled(Text)`

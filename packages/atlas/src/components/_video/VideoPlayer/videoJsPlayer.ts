@@ -41,7 +41,7 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
   const playerRef = useRef<HTMLVideoElement | null>(null)
   const [player, setPlayer] = useState<VideoJsPlayer | null>(null)
   const { url: src } = useGetAssetUrl(videoUrls, 'video')
-  const { url: posterUrl } = useGetAssetUrl(posterUrls, 'image')
+  const { url: posterUrl } = useGetAssetUrl(posterUrls, 'cover')
   useEffect(() => {
     if (!playerRef.current) {
       return

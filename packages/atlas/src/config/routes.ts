@@ -59,7 +59,6 @@ export const relativeRoutes = {
     signIn: () => 'signin',
     channelNotifications: () => 'notifications/channel',
     payments: () => 'payments',
-    ypp: () => 'ypp',
     yppDashboard: () => 'ypp/dashboard',
   },
   playground: {

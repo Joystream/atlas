@@ -52,6 +52,7 @@ export const ContentWrapper = styled.div`
   padding: ${sizes(8)};
   background-color: ${cVar('colorCoreNeutral800')};
   transition: all ${transitions.timings.regular} ${transitions.easing};
+  border-radius: ${cVar('radiusLarge')};
 `
 
 export const StyledContainer = styled('button', { shouldForwardProp: isPropValid })<{ colorVariant: ColorVariants }>`
@@ -63,16 +64,6 @@ export const StyledContainer = styled('button', { shouldForwardProp: isPropValid
   color: ${cVar('colorCoreBaseWhite')};
   text-decoration: none;
   background-color: transparent;
-
-  &:not(:last-child) {
-    margin-bottom: ${sizes(4)};
-  }
-
-  ${media.md} {
-    &:not(:last-child) {
-      margin-bottom: 0;
-    }
-  }
 
   :hover {
     ${ContentWrapper} {

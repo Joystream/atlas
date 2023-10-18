@@ -1,5 +1,7 @@
 import { useMemo } from 'react'
+import { useQuery } from 'react-query'
 
+import { axiosInstance } from '@/api/axios'
 import { SvgActionLinkUrl } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { YppReferral, YppReferralTable } from '@/components/YppReferralTable/YppReferralTable'
@@ -7,36 +9,31 @@ import { Button } from '@/components/_buttons/Button'
 import { atlasConfig } from '@/config'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useUser } from '@/providers/user/user.hooks'
-import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
+import { YppSyncedChannel } from '@/views/global/YppLandingView/YppLandingView.types'
 
-import { TIERS } from '../../YppDashboard.config'
 import { FallbackContainer } from '../YppDashboardTabs.styles'
 
-const BASE_REFERRAL_REWARD = atlasConfig.features.ypp.referralBaseReward ?? 0
+const YPP_SYNC_URL = atlasConfig.features.ypp.youtubeSyncApiUrl
 
 export const YppDashboardReferralsTab = () => {
-  const { currentChannel, isLoading } = useGetYppSyncedChannels()
   const { copyToClipboard } = useClipboard()
   const { channelId } = useUser()
+  const { isLoading, data } = useQuery(
+    ['referralsTable', channelId],
+    () => axiosInstance.get<YppSyncedChannel[]>(`${YPP_SYNC_URL}/channels/${channelId}/referrals`),
+    { enabled: !!channelId }
+  )
+
   const mappedData: YppReferral[] = useMemo(
     () =>
-      currentChannel?.referredChannels?.map((channelData) => {
-        const tier = TIERS.reduce((prev, current, idx) => {
-          if (channelData.subscribersCount >= (current?.subscribers || 0)) {
-            return idx
-          } else {
-            return prev
-          }
-        }, 0)
+      data?.data.map((channelData) => {
         return {
           date: new Date(channelData.createdAt),
           channel: String(channelData.joystreamChannelId),
-          rewardUsd: TIERS[tier].multiplier * BASE_REFERRAL_REWARD,
           status: channelData.yppStatus,
-          tier,
         }
       }) ?? [],
-    [currentChannel?.referredChannels]
+    [data?.data]
   )
 
   if (!isLoading && !mappedData?.length) {
@@ -52,7 +49,7 @@ export const YppDashboardReferralsTab = () => {
               icon={<SvgActionLinkUrl />}
               onClick={() =>
                 copyToClipboard(
-                  `${window.location.host}/ypp?referrerId=${channelId}`,
+                  `${window.location.href}/ypp?referrerId=${channelId}`,
                   'Referral link copied to clipboard'
                 )
               }

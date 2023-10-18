@@ -10,7 +10,7 @@ import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useUser } from '@/providers/user/user.hooks'
 
-import { InlineText, LeftStep, RightStep, StepsContainer, StyledSvgActionChevronR } from './StudioWelcomeView.styles'
+import { LeftStep, RightStep, StepsContainer, StyledSvgActionChevronR } from './StudioWelcomeView.styles'
 
 export type Membership = {
   id: string
@@ -37,19 +37,7 @@ export const StudioWelcomeView: FC = () => {
           color={isLoggedIn || !atlasConfig.general.appContentFocus ? undefined : 'colorTextMuted'}
           margin={{ top: 2 }}
         >
-          {isLoggedIn ? (
-            'Ready to create your channel?'
-          ) : atlasConfig.general.appContentFocus ? (
-            <>
-              Your{' '}
-              <InlineText variant={mdMatch ? 'h700' : 'h600'} as="p">
-                {atlasConfig.general.appContentFocus}
-              </InlineText>{' '}
-              creator journey starts here
-            </>
-          ) : (
-            'Your creator journey starts here'
-          )}
+          {isLoggedIn ? 'Ready to create your channel?' : 'Your creator journey starts here'}
         </Text>
       }
       subtitle={
@@ -62,12 +50,8 @@ export const StudioWelcomeView: FC = () => {
             'Create a channel to upload videos, sell NFTs, make playlists (coming soon), and more!'
           ) : atlasConfig.general.appContentFocus ? (
             <>
-              Welcome to {atlasConfig.general.appName}, a video platform focused on{' '}
-              <InlineText as="p" variant="t300">
-                {atlasConfig.general.appContentFocus}
-              </InlineText>{' '}
-              content. To create a channel, first set up a free Joystream membership with our simple step-by-step
-              wizard.
+              Welcome to {atlasConfig.general.appName}. To create a channel, first set up a free Joystream membership
+              with our simple step-by-step wizard.
             </>
           ) : (
             'To create a channel, first set up a free Joystream membership with our simple step-by-step wizard.'

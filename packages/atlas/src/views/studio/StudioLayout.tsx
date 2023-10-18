@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
-import { FC, Suspense, lazy, useCallback, useEffect, useLayoutEffect, useState } from 'react'
+import { FC, Suspense, lazy, useEffect, useLayoutEffect, useState } from 'react'
 import { Route, Routes } from 'react-router'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
@@ -59,10 +59,6 @@ const StudioWelcomeView = lazy(() =>
 const VideoWorkspace = lazy(() => import('./VideoWorkspace').then((module) => ({ default: module.VideoWorkspace })))
 const YppDashboard = lazy(() => import('./YppDashboard').then((module) => ({ default: module.YppDashboard })))
 
-const YppLandingView = lazy(() =>
-  import('../global/YppLandingView').then((module) => ({ default: module.YppLandingView }))
-)
-
 const NotFoundView = lazy(() => import('../viewer/NotFoundView').then((module) => ({ default: module.NotFoundView })))
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
@@ -98,9 +94,8 @@ const _StudioLayout = () => {
   const hasMembership = !!memberships?.length
 
   const channelSet = !!(channelId && activeMembership?.channels.find((channel) => channel.id === channelId))
-  const { currentChannel, isLoading } = useGetYppSyncedChannels()
+  const { isLoading } = useGetYppSyncedChannels()
   const isLoadingYPPData = isLoading || membershipsLoading || isAuthenticating
-  const isYppSigned = !!currentChannel
 
   useLayoutEffect(() => {
     if (!isAllowedBrowser()) {
@@ -135,15 +130,6 @@ const _StudioLayout = () => {
 
     return () => clearTimeout(trackRequestTimeout)
   }, [location.pathname, trackPageView])
-
-  const yppRedirect = useCallback(() => {
-    if (!channelSet) {
-      return ENTRY_POINT_ROUTE
-    }
-    if (!isYppSigned) {
-      return absoluteRoutes.studio.ypp()
-    }
-  }, [channelSet, isYppSigned])
 
   return (
     <>
@@ -238,30 +224,17 @@ const _StudioLayout = () => {
                   }
                 />
                 {atlasConfig.features.ypp.googleConsoleClientId && (
-                  <>
-                    <Route
-                      path={relativeRoutes.studio.ypp()}
-                      element={
-                        <PrivateRoute
-                          isLoadingAuthData={isLoadingYPPData}
-                          element={<YppLandingView />}
-                          isAuth={channelSet && !isYppSigned}
-                          redirectTo={absoluteRoutes.studio.yppDashboard()}
-                        />
-                      }
-                    />
-                    <Route
-                      path={relativeRoutes.studio.yppDashboard()}
-                      element={
-                        <PrivateRoute
-                          isLoadingAuthData={isLoadingYPPData}
-                          element={<YppDashboard />}
-                          isAuth={channelSet && isYppSigned}
-                          redirectTo={yppRedirect()}
-                        />
-                      }
-                    />
-                  </>
+                  <Route
+                    path={relativeRoutes.studio.yppDashboard()}
+                    element={
+                      <PrivateRoute
+                        isLoadingAuthData={isLoadingYPPData}
+                        element={<YppDashboard />}
+                        isAuth={channelSet}
+                        redirectTo={ENTRY_POINT_ROUTE}
+                      />
+                    }
+                  />
                 )}
                 <Route path="*" element={<NotFoundView />} />
               </Routes>

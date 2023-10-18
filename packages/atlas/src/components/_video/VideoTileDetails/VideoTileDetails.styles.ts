@@ -41,12 +41,6 @@ export const StyledLink = styled(Link)`
   text-decoration: none;
 `
 
-export const ChannelTitle = styled(Text)`
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-`
-
 export const StyledAvatar = styled(Avatar)<{ smallGap: boolean }>`
   margin-right: ${({ smallGap }) => (smallGap ? sizes(3) : sizes(4))};
   cursor: pointer;

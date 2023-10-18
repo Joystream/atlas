@@ -1,4 +1,3 @@
-import { useApolloClient } from '@apollo/client'
 import { u8aToHex } from '@polkadot/util'
 import { cryptoWaitReady } from '@polkadot/util-crypto'
 import { isAxiosError } from 'axios'
@@ -39,7 +38,6 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const [lazyCurrentAccountQuery, { refetch }] = useGetCurrentAccountLazyQuery()
   const { setApiActiveAccount } = useJoystream()
   const { identifyUser, trackLogout } = useSegmentAnalytics()
-  const client = useApolloClient()
   const {
     anonymousUserId,
     encodedSeed,
@@ -56,7 +54,6 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       const { data } = await lazyCurrentAccountQuery()
       if (!data) {
         handleAnonymousAuth(anonymousUserId).then((userId) => {
-          client.refetchQueries({ include: 'active' })
           setAnonymousUserId(userId ?? null)
         })
         setIsAuthenticating(false)
@@ -266,7 +263,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       isWalletUser,
       handleLogout,
       encodedSeed,
-      isLoggedIn: !!currentUser && !isAuthenticating,
+      isLoggedIn: isAuthenticating ? undefined : !!currentUser,
     }),
     [currentUser, encodedSeed, handleLogin, handleLogout, isAuthenticating, isWalletUser, loggedAddress, refetch]
   )

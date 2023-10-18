@@ -49,10 +49,7 @@ export const useInfiniteVideoGrid = <Query extends VideoInfiniteQueries>({
   const firstLoadPlaceholders = firstLoad ? createPlaceholderData(columns * initialRowsToLoad) : []
 
   const displayedItems = dataConnection?.edges.map((edge) => edge.node) || []
-  const itemsLeft = (dataConnection?.totalCount || 0) - (dataConnection?.edges?.length || 0)
-  const itemsToLoad = Math.min(itemsLeft, columns * 4)
-
-  const nextLoadPlaceholders = !dataConnection?.pageInfo.hasNextPage || false ? [] : createPlaceholderData(itemsToLoad)
+  const nextLoadPlaceholders = dataConnection?.pageInfo.hasNextPage ? createPlaceholderData(columns * 4) : []
 
   return {
     tiles: [...firstLoadPlaceholders, ...displayedItems, ...(loading ? nextLoadPlaceholders : [])],

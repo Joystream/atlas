@@ -54,7 +54,7 @@ export const ActivityItem: FC<ActivityItemProps> = ({
   const isImageLoading = loading || thumbnailLoading
   return (
     <ActivityItemContainer loading={loading} onClick={onItemClick}>
-      <Thumbnail resolvedUrls={thumbnailUris} isLoading={isImageLoading} />
+      <Thumbnail resolvedUrls={thumbnailUris} type="thumbnail" isLoading={isImageLoading} />
       <TitleAndDescriptionContainer>
         {loading ? (
           <TitleSkeletonLoader />
