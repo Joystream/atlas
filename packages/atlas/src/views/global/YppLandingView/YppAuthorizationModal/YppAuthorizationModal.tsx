@@ -340,13 +340,6 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     }
   }, [channel, detailsFormMethods, referrerId])
 
-  useEffect(() => {
-    if (yppCurrentChannel) {
-      handleClose()
-      navigate(absoluteRoutes.studio.yppDashboard())
-    }
-  }, [handleClose, navigate, yppCurrentChannel])
-
   const selectedChannel = useMemo(() => {
     if (!unSyncedChannels || !selectedChannelId) {
       return null
@@ -360,6 +353,11 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
         const getPrimaryButton = () => {
           if (isLoading) {
             return <RequirementsButtonSkeleton />
+          }
+
+          if (yppCurrentChannel) {
+            navigate(absoluteRoutes.studio.yppDashboard())
+            handleClose()
           }
 
           if (yppUnsyncedChannels?.length) {
@@ -470,7 +468,10 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     alreadyRegisteredChannel?.channelTitle,
     alreadyRegisteredChannel?.ownerMemberHandle,
     isLoading,
+    yppCurrentChannel,
     yppUnsyncedChannels,
+    navigate,
+    handleClose,
     setSelectedChannelId,
     setYppModalOpenName,
     trackClickAuthModalSignUpButton,
