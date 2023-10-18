@@ -44,7 +44,6 @@ type AlreadyRegisteredChannel = {
 export const useYppGoogleAuth = ({ channelsLoaded }: { channelsLoaded: boolean }) => {
   const {
     actions: { setYtResponseData, setYppModalOpenName },
-    ytStateParam: oldYppAuthState,
     selectedChannelId,
   } = useYppStore((state) => state, shallow)
 
@@ -80,7 +79,9 @@ export const useYppGoogleAuth = ({ channelsLoaded }: { channelsLoaded: boolean }
         channelId: channelId ?? selectedChannelId ?? '',
       })
       const authState = stateParams.toString()
-      setYppAuthState(authState)
+
+      // not using zustand as code was not persisting on mobile browsers
+      localStorage.setItem('yppAuthState', authState)
 
       const authParams = {
         ...GOOGLE_AUTH_PARAMS,
@@ -91,7 +92,7 @@ export const useYppGoogleAuth = ({ channelsLoaded }: { channelsLoaded: boolean }
 
       window.location.assign(authUrl)
     },
-    [selectedChannelId, setYppAuthState]
+    [selectedChannelId]
   )
 
   const handleGoogleAuthError = useCallback(
@@ -141,6 +142,8 @@ export const useYppGoogleAuth = ({ channelsLoaded }: { channelsLoaded: boolean }
         // extract channel ID from state
         const stateParams = new URLSearchParams(state || '')
         const channelId = stateParams.get('channelId')
+
+        const oldYppAuthState = localStorage.getItem('yppAuthState')
 
         // check if the state matches the one we set
         if (state !== oldYppAuthState) {
