@@ -252,7 +252,6 @@ export const useYppGoogleAuth = ({ channelsLoaded }: { channelsLoaded: boolean }
       }
     },
     [
-      oldYppAuthState,
       setYppAuthState,
       setYppModalOpenName,
       resetSearchParams,
