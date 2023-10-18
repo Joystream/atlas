@@ -239,7 +239,7 @@ export const YppDashboardMainTab: FC = () => {
             actionNode={
               <StyledCopyButton
                 fullWidth={!smMatch}
-                textToCopy={`${window.location.href}/ypp?referrerId=${channelId}`}
+                textToCopy={`${window.location.origin}/ypp?referrerId=${channelId}`}
                 copySuccessText="Referral link copied to clipboard"
                 onClick={() => trackReferralLinkGenerated(channelId)}
               >
