@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import BN from 'bn.js'
 import { useMemo } from 'react'
 
 import { FlexBox } from '@/components/FlexBox'
@@ -15,8 +16,8 @@ const COLUMNS: TableProps['columns'] = [
 
 type CrtHolder = {
   memberId: string
-  total: number
-  vested: number
+  total: number | BN
+  vested: number | BN
 }
 
 export type CrtHoldersTableProps = {

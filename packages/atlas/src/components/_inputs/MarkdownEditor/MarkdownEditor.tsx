@@ -69,8 +69,7 @@ export const MarkdownEditor = ({ value = '', onChange, placeholder, maxLength: m
         initSetEditorValue={initSetEditorValue}
       />
       <Text as="span" variant="t100" color="colorTextMuted">
-        {length}
-        {!!maxLength && ` / ${maxLength}`}
+        {!!maxLength && `${length} / ${maxLength}`}
       </Text>
     </EditorWrapper>
   )

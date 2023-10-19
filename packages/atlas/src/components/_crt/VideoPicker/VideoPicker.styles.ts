@@ -6,11 +6,11 @@ export const MainWrapper = styled.div`
   overflow: hidden;
   margin-bottom: 20px;
   position: relative;
-  min-height: 280px;
+  aspect-ratio: 16/9;
+  width: 100%;
 
   ${media.sm} {
     padding-top: 0;
-    aspect-ratio: 16/9;
   }
 `
 

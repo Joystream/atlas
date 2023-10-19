@@ -169,7 +169,7 @@ export const ChannelView: FC = () => {
 
   const handleOnResizeGrid = (sizes: number[]) => setTilesPerRow(sizes.length)
 
-  const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: 0 }))
+  const mappedTabs = TABS.filter((tab) => !!tab).map((tab) => ({ name: tab, badgeNumber: 0 }))
 
   const getChannelContent = (tab: typeof TABS[number]) => {
     switch (tab) {
@@ -366,7 +366,7 @@ export const ChannelView: FC = () => {
               tabs={mappedTabs}
               onSelectTab={handleSetCurrentTab}
             />
-            {currentTab !== 'Information' && (
+            {!['Information', 'Token'].includes(currentTab) && (
               <>
                 {currentTab === 'Videos' && (
                   <ChannelSearch

@@ -1,6 +1,8 @@
 import styled from '@emotion/styled'
+import BN from 'bn.js'
 import { useState } from 'react'
 
+import { useGetCreatorTokenHoldersQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { SvgActionChevronR } from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox'
 import { Text } from '@/components/Text'
@@ -11,34 +13,34 @@ import { cVar, sizes } from '@/styles'
 
 export type HoldersWidgetProps = {
   tokenId: string
+  ownerId: string
 }
 
-const getTokenHolders = (_: string) => {
-  return {
-    holders: [
-      {
-        memberId: '1',
-        vested: 10000,
-        total: 11000,
-      },
-      {
-        memberId: '2',
-        vested: 1000,
-        total: 1000,
-      },
-      {
-        memberId: '3',
-        vested: 100,
-        total: 110,
-      },
-    ],
-    ownerId: '1',
-  }
-}
-
-export const HoldersWidget = ({ tokenId }: HoldersWidgetProps) => {
+export const HoldersWidget = ({ tokenId, ownerId }: HoldersWidgetProps) => {
   const [showModal, setShowModal] = useState(false)
-  const { holders, ownerId } = getTokenHolders(tokenId)
+  const { data } = useGetCreatorTokenHoldersQuery({
+    variables: {
+      where: {
+        token: {
+          id_eq: tokenId,
+        },
+        member: {
+          id_eq: ownerId,
+        },
+      },
+    },
+  })
+
+  if (!data) return null
+
+  const { tokenAccounts } = data
+
+  const holders = tokenAccounts.map((holder) => ({
+    memberId: ownerId,
+    total: new BN(holder.totalAmount),
+    vested: new BN(holder.vestingSchedules[0].totalVestingAmount),
+  }))
+
   return (
     <Box>
       <CrtHoldersTableModal
@@ -52,7 +54,7 @@ export const HoldersWidget = ({ tokenId }: HoldersWidgetProps) => {
         <Text variant="h500" as="span">
           Holders{' '}
           <Text variant="h500" as="span" color="colorText">
-            ({holders.length})
+            ({tokenAccounts.length})
           </Text>
         </Text>
         <TextButton icon={<SvgActionChevronR />} iconPlacement="right" onClick={() => setShowModal(true)}>
