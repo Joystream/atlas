@@ -68,4 +68,6 @@ const IframeVideo = styled.iframe`
   border: none;
   width: 640px;
   height: 364px;
+  max-width: 100%;
+  max-height: 55vw;
 `
