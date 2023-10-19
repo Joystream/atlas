@@ -1,7 +1,9 @@
 import { prepareClaimChannelRewardExtrinsicArgs, verifyChannelPayoutProof } from '@joystream/js/content'
 import {
   ChannelOwnerRemarked,
+  CreatorTokenIssuerRemarked,
   IChannelOwnerRemarked,
+  ICreatorTokenIssuerRemarked,
   IMemberRemarked,
   MemberRemarked,
   ReactVideo,
@@ -983,6 +985,8 @@ export class JoystreamLibExtrinsics {
   }
 
   purchaseTokenOnSaleTx = async (tokenId: TokenId, memberId: MemberId, amount: StringifiedNumber) => {
+    await this.ensureApi()
+
     return this.api.tx.projectToken.purchaseTokensOnSale(
       parseInt(tokenId),
       parseInt(memberId),
@@ -1003,6 +1007,8 @@ export class JoystreamLibExtrinsics {
   }
 
   dustAccountTx = async (tokenId: TokenId, memberId: MemberId) => {
+    await this.ensureApi()
+
     return this.api.tx.projectToken.dustAccount(parseInt(tokenId), parseInt(memberId))
   }
 
@@ -1013,6 +1019,8 @@ export class JoystreamLibExtrinsics {
   }
 
   exitRevenueSplitTx = async (tokenId: TokenId, memberId: MemberId) => {
+    await this.ensureApi()
+
     return this.api.tx.projectToken.exitRevenueSplit(parseInt(tokenId), parseInt(memberId))
   }
 
@@ -1028,6 +1036,8 @@ export class JoystreamLibExtrinsics {
   }
 
   participateInSplitTx = async (tokenId: TokenId, memberId: MemberId, amount: StringifiedNumber) => {
+    await this.ensureApi()
+
     return this.api.tx.projectToken.participateInSplit(
       parseInt(tokenId),
       parseInt(memberId),
@@ -1048,6 +1058,8 @@ export class JoystreamLibExtrinsics {
   }
 
   issueRevenueSplitTx = async (memberId: MemberId, channelId: ChannelId, start: number, duration: number) => {
+    await this.ensureApi()
+
     const member = createType('PalletContentPermissionsContentActor', { Member: parseInt(memberId) })
     return this.api.tx.content.issueRevenueSplit(
       member,
@@ -1070,6 +1082,8 @@ export class JoystreamLibExtrinsics {
   }
 
   finalizeRevenueSplitTx = async (memberId: MemberId, channelId: ChannelId) => {
+    await this.ensureApi()
+
     const member = createType('PalletContentPermissionsContentActor', { Member: parseInt(memberId) })
     return this.api.tx.content.finalizeRevenueSplit(member, parseInt(channelId))
   }
@@ -1086,6 +1100,8 @@ export class JoystreamLibExtrinsics {
   }
 
   deissueCreatorTokenTx = async (memberId: MemberId, channelId: ChannelId) => {
+    await this.ensureApi()
+
     const member = createType('PalletContentPermissionsContentActor', { Member: parseInt(memberId) })
     return this.api.tx.content.deissueCreatorToken(member, parseInt(channelId))
   }
@@ -1113,6 +1129,8 @@ export class JoystreamLibExtrinsics {
       cliffAmountPercentage: number
     }
   ) => {
+    await this.ensureApi()
+
     const member = createType('PalletContentPermissionsContentActor', { Member: parseInt(memberId) })
     const initialAllocation = createType('BTreeMap<u64, PalletProjectTokenTokenAllocation>', new Map())
     initialAllocation.set(
@@ -1163,8 +1181,9 @@ export class JoystreamLibExtrinsics {
   }
 
   purchaseTokenOnMarketTx = async (tokenId: string, memberId: string, amount: string) => {
-    const amountCast = createType('u128', new BN(amount))
+    await this.ensureApi()
 
+    const amountCast = createType('u128', new BN(amount))
     return this.api.tx.projectToken.buyOnAmm(
       parseInt(tokenId),
       parseInt(memberId),
@@ -1188,6 +1207,8 @@ export class JoystreamLibExtrinsics {
   }
 
   sellTokenOnMarketTx = async (tokenId: string, memberId: string, amount: string) => {
+    await this.ensureApi()
+
     const amountCast = createType('u128', new BN(amount))
     return this.api.tx.projectToken.sellOnAmm(
       parseInt(tokenId),
@@ -1207,6 +1228,25 @@ export class JoystreamLibExtrinsics {
     cb
   ) => {
     const tx = await this.sellTokenOnMarketTx(tokenId, memberId, amount)
+    const { block } = await this.sendExtrinsic(tx, cb)
+    return { block }
+  }
+
+  creatorTokenIssuerRemarkTx = async (memberId: MemberId, channelId: ChannelId, msg: ICreatorTokenIssuerRemarked) => {
+    await this.ensureApi()
+
+    const member = createType('PalletContentPermissionsContentActor', { Member: parseInt(memberId) })
+    const metadata = wrapMetadata(CreatorTokenIssuerRemarked.encode(msg).finish()).unwrap()
+    return this.api.tx.content.creatorTokenIssuerRemark(member, parseInt(channelId), metadata)
+  }
+
+  creatorTokenIssuerRemark: PublicExtrinsic<typeof this.creatorTokenIssuerRemarkTx, ExtrinsicResult> = async (
+    memberId,
+    channelId,
+    msg,
+    cb
+  ) => {
+    const tx = await this.creatorTokenIssuerRemarkTx(memberId, channelId, msg)
     const { block } = await this.sendExtrinsic(tx, cb)
     return { block }
   }
