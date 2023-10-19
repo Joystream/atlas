@@ -1,7 +1,8 @@
 import { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { SvgActionClose, SvgActionNewChannel, SvgActionNewTab } from '@/assets/icons'
+import { SvgActionClose, SvgActionNewChannel, SvgActionNewTab, SvgAlertsInformative24 } from '@/assets/icons'
+import { Banner } from '@/components/Banner'
 import { FlexBox } from '@/components/FlexBox'
 import { Information } from '@/components/Information'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
@@ -86,6 +87,15 @@ export const YppDashboardMainTab: FC = () => {
     <>
       <YppAuthorizationModal unSyncedChannels={unsyncedChannels} />
       <LayoutGrid>
+        <GridItem colSpan={{ xxs: 12, md: 12 }}>
+          <Banner
+            dismissibleId="ypp-sync-second-channel"
+            title="Have another YouTube channel?"
+            icon={<SvgAlertsInformative24 />}
+            description="You can apply to the YouTube Partner Program with as many YouTube & Gleev channels as you want. Each YouTube channel can be assigned to only one Gleev channel."
+            actionButton={{ text: 'Add new channel', onClick: handleYppSignUpClick }}
+          />
+        </GridItem>
         <GridItem colSpan={{ xxs: 12, md: 4 }}>
           <YppDashboardTier onSignUp={handleYppSignUpClick} status={currentChannel?.yppStatus} />
         </GridItem>
