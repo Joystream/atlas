@@ -1,10 +1,8 @@
 import styled from '@emotion/styled'
 
-import { useFullVideo } from '@/api/hooks/video'
 import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import {
   BackgroundContainer,
@@ -14,7 +12,6 @@ import {
 import { useSectionTextVariants } from '@/views/global/YppLandingView/sections/useSectionTextVariants'
 
 export const YppSignupVideo = () => {
-  const { video, loading } = useFullVideo('2')
   const mdMatch = useMediaMatch('md')
   const [titleVariant, subtitleVariant] = useSectionTextVariants()
 
@@ -37,23 +34,18 @@ export const YppSignupVideo = () => {
             </Text>
           </GridItem>
           <GridItem colSpan={{ base: 12, sm: 10, md: 8, lg: 6 }} colStart={{ sm: 2, md: 3, lg: 4 }}>
-            {loading && !video ? (
-              <PlayerSkeletonLoader
-                data-aos="fade-up"
-                data-aos-delay="100"
-                data-aos-offset="40"
-                data-aos-easing="atlas-easing"
+            <PlayerContainer
+              data-aos="fade-up"
+              data-aos-delay="100"
+              data-aos-offset="40"
+              data-aos-easing="atlas-easing"
+            >
+              <IframeVideo
+                src="https://player.vimeo.com/video/875953807?badge=0&amp;autopause=0&amp;quality_selector=1&amp;progress_bar=1&amp;player_id=0&amp;app_id=58479"
+                allow="autoplay; fullscreen; picture-in-picture"
+                title="YPP"
               />
-            ) : (
-              <PlayerContainer
-                data-aos="fade-up"
-                data-aos-delay="100"
-                data-aos-offset="40"
-                data-aos-easing="atlas-easing"
-              >
-                <VideoPlayer videoId={video?.id} videoUrls={video?.media?.resolvedUrls} hideCinematic />
-              </PlayerContainer>
-            )}
+            </PlayerContainer>
           </GridItem>
         </CenteredLayoutGrid>
       </StyledLimitedWidthContainerVideo>
@@ -70,4 +62,10 @@ const PlayerContainer = styled.div`
 export const PlayerSkeletonLoader = styled(SkeletonLoader)`
   position: absolute;
   top: 0;
+`
+
+const IframeVideo = styled.iframe`
+  border: none;
+  width: 640px;
+  height: 364px;
 `
