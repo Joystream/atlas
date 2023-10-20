@@ -87,7 +87,7 @@ export const YppDashboardMainTab: FC = () => {
     <>
       <YppAuthorizationModal unSyncedChannels={unsyncedChannels} />
       <LayoutGrid>
-        <GridItem colSpan={{ xxs: 12, md: 12 }}>
+        <GridItem colSpan={{ base: 12 }}>
           <Banner
             dismissibleId="ypp-sync-second-channel"
             title="Have another YouTube channel?"
