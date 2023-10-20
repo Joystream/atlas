@@ -38,7 +38,7 @@ export const CrtTokenEditView = () => {
       id: activeChannel?.creatorToken?.token.id ?? '',
     },
   })
-  console.log(data)
+
   const [mode, setMode] = useState<'edit' | 'preview'>('edit')
   const form = useForm<CrtPageForm>({
     defaultValues: {
@@ -129,12 +129,31 @@ export const CrtTokenEditView = () => {
         }
       />
       <StyledActionBar
-        secondaryButton={{
-          text: mode === 'edit' ? 'Preview' : 'Edit',
-          onClick: () => setMode((prev) => (prev === 'edit' ? 'preview' : 'edit')),
-        }}
-        primaryButton={{ text: 'Publish', onClick: handleSubmit }}
+        tertiaryButton={
+          mode === 'edit'
+            ? {
+                text: 'Preview',
+                onClick: () => setMode('preview'),
+              }
+            : undefined
+        }
+        secondaryButton={
+          mode === 'edit'
+            ? {
+                text: 'Cancel',
+                onClick: () => form.reset(),
+              }
+            : undefined
+        }
         isNoneCrypto
+        primaryButton={
+          mode === 'edit'
+            ? { text: 'Publish', onClick: handleSubmit }
+            : {
+                text: 'Edit',
+                onClick: () => setMode('edit'),
+              }
+        }
       />
     </Wrapper>
   )

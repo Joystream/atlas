@@ -27,10 +27,11 @@ export const ActionBarContainer = styled.div<ActionBarContainerProps>`
 
   grid-template:
     'primary-text badge' auto
-    'secondary-button primary-button' auto / auto 1fr;
+    'secondary-button primary-button' auto
+    'teriary-button teriary-button' auto / auto 1fr;
 
   ${media.sm} {
-    grid-template: 'primary-text badge secondary-button primary-button' auto / 1fr max-content max-content max-content;
+    grid-template: 'primary-text badge teriary-button secondary-button primary-button' auto / 1fr max-content max-content max-content max-content;
   }
 
   ${media.md} {
@@ -45,6 +46,10 @@ export const StyledPrimaryText = styled(Text)`
 
 export const StyledInformation = styled(Information)`
   margin-left: ${sizes(1)};
+`
+
+export const TertiaryButton = styled(Button)`
+  grid-area: teriary-button;
 `
 
 export const SecondaryButton = styled(Button)`
