@@ -17,6 +17,7 @@ import Long from 'long'
 import { SentryLogger } from '@/utils/logs'
 
 import { getClaimableReward } from './channelPayouts'
+import { PERMILL_PER_PERCENT } from './config'
 import { JoystreamLibError } from './errors'
 import {
   createActor,
@@ -72,9 +73,6 @@ type AccountIdAccessor = () => AtlasSigner | null
 type PublicExtrinsic<TxFunction, ReturnValue> = TxFunction extends (...a: infer U) => unknown
   ? (...a: [...U, ExtrinsicStatusCallbackFn | undefined]) => Promise<ReturnValue>
   : never
-
-const PERMILLS_PER_PERCENTAGE = 10
-const PERQUINTILLS_PER_PERCENTAGE = new BN(10).pow(new BN(16))
 
 export class JoystreamLibExtrinsics {
   readonly api: PolkadotApi
@@ -1142,7 +1140,7 @@ export class JoystreamLibExtrinsics {
           linearVestingDuration: createType('u32', new BN(initialCreatorAllocation.vestingDuration)),
           cliffAmountPercentage: createType(
             'Permill',
-            new BN(initialCreatorAllocation.cliffAmountPercentage * PERMILLS_PER_PERCENTAGE)
+            new BN(initialCreatorAllocation.cliffAmountPercentage * PERMILL_PER_PERCENT)
           ) as number,
         }),
       })
@@ -1150,8 +1148,8 @@ export class JoystreamLibExtrinsics {
 
     const params = createType('PalletProjectTokenTokenIssuanceParameters', {
       initialAllocation,
-      patronageRate: createType('Perquintill', PERQUINTILLS_PER_PERCENTAGE.muln(patronageRate)) as number,
-      revenueSplitRate: createType('Permill', revenueSplitRate * PERMILLS_PER_PERCENTAGE) as number,
+      patronageRate: createType('Permill', new BN(patronageRate * PERMILL_PER_PERCENT)) as number,
+      revenueSplitRate: createType('Permill', new BN(revenueSplitRate * PERMILL_PER_PERCENT)) as number,
       transferPolicy: createType('PalletProjectTokenTransferPolicyParams', 'Permissionless'),
       metadata: prepareCreatorTokenMetadata({ symbol }),
     })
@@ -1189,7 +1187,7 @@ export class JoystreamLibExtrinsics {
       parseInt(memberId),
       amountCast,
       createType('Option<ITuple<[Permill, u128]>>', [
-        createType('Permill', new BN(0.5 * PERMILLS_PER_PERCENTAGE)),
+        createType('Permill', new BN(0.5 * PERMILL_PER_PERCENT)),
         amountCast,
       ]) // percent, number of joy user wants to pay --- default on 0.5%
     )
@@ -1215,7 +1213,7 @@ export class JoystreamLibExtrinsics {
       parseInt(memberId),
       amountCast,
       createType('Option<ITuple<[Permill, u128]>>', [
-        createType('Permill', new BN(0.5 * PERMILLS_PER_PERCENTAGE)),
+        createType('Permill', new BN(0.5 * PERMILL_PER_PERCENT)),
         amountCast,
       ]) // percent, number of joy user wants to pay --- default on 0.5%
     )

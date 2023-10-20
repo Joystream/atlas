@@ -155,7 +155,11 @@ Recommended values — Channel: 80%, Holders:20%. "
         }}
         description="Define your own reward for managing the tokens. 10% means that if you have 10000k of tokens exist and this amount does not change, an additional 1k tokens will get minted and added to your wallet gradually over the course of 1 year."
       >
-        <Controller name="creatorReward" control={control} render={({ field }) => <RatioSlider {...field} />} />
+        <Controller
+          name="creatorReward"
+          control={control}
+          render={({ field }) => <RatioSlider {...field} max={30} step={2} />}
+        />
       </FormField>
     </CrtFormWrapper>
   )
