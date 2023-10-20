@@ -2,11 +2,9 @@ import { useApolloClient } from '@apollo/client'
 import haversine from 'haversine-distance'
 import { uniqBy } from 'lodash-es'
 import {
-  Dispatch,
   FC,
   MutableRefObject,
   PropsWithChildren,
-  SetStateAction,
   createContext,
   useCallback,
   useContext,
@@ -41,10 +39,10 @@ type BagOperatorsMapping = Record<string, OperatorInfo[]>
 
 type OperatorsContextValue = {
   storageOperatorsMappingPromiseRef: MutableRefObject<Promise<BagOperatorsMapping> | undefined>
-  failedStorageOperatorIds: string[]
-  setFailedStorageOperatorIds: Dispatch<SetStateAction<string[]>>
+  failedStorageOperatorIds: MutableRefObject<string[]>
+  addFailedStorageOperator: (id: string[]) => void
   fetchStorageOperators: () => Promise<BagOperatorsMapping>
-  userBenchmarkTime: number | null
+  userBenchmarkTime: MutableRefObject<number | null>
 }
 export const OperatorsContext = createContext<OperatorsContextValue | undefined>(undefined)
 OperatorsContext.displayName = 'OperatorsContext'
@@ -52,8 +50,8 @@ OperatorsContext.displayName = 'OperatorsContext'
 export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const storageOperatorsMappingPromiseRef = useRef<Promise<BagOperatorsMapping>>()
   const [storageOperatorsError, setStorageOperatorsError] = useState<unknown>(null)
-  const [failedStorageOperatorIds, setFailedStorageOperatorIds] = useState<string[]>([])
-  const [userBenchmarkTime, setUserBenchmarkTime] = useState<number | null>(null)
+  const failedStorageOperatorIds = useRef<string[]>([])
+  const userBenchmarkTime = useRef<number | null>(null)
   const [getBasicVideoActivity] = useGetBasicVideoActivityLazyQuery()
   const {
     coordinates,
@@ -173,7 +171,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
         const startTime = performance.now()
         await promiseRace
         const msDuration = performance.now() - startTime
-        const previousTimeout = userBenchmarkTime ?? atlasConfig.storage.assetResponseTimeout
+        const previousTimeout = userBenchmarkTime.current ?? atlasConfig.storage.assetResponseTimeout
         if (msDuration > previousTimeout || msDuration < previousTimeout / 2) {
           const newTime = (msDuration + previousTimeout) * 0.75
           if (newTime > 20_000) {
@@ -182,7 +180,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
             })
           }
           UserEventsLogger.logUserBenchmarkTime(newTime)
-          setUserBenchmarkTime((msDuration + previousTimeout) * 0.75)
+          userBenchmarkTime.current = (msDuration + previousTimeout) * 0.75
         }
       }
     }
@@ -193,6 +191,8 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
     }
   })
 
+  const addFailedStorageOperator = useCallback((ids: string[]) => failedStorageOperatorIds.current.push(...ids), [])
+
   if (storageOperatorsError) {
     return <ViewErrorFallback />
   }
@@ -202,7 +202,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
       value={{
         storageOperatorsMappingPromiseRef,
         failedStorageOperatorIds,
-        setFailedStorageOperatorIds,
+        addFailedStorageOperator,
         fetchStorageOperators,
         userBenchmarkTime,
       }}
@@ -224,7 +224,7 @@ export const useOperatorsContext = () => {
 
 export const useStorageOperators = () => {
   const client = useApolloClient()
-  const { storageOperatorsMappingPromiseRef, failedStorageOperatorIds, setFailedStorageOperatorIds } =
+  const { storageOperatorsMappingPromiseRef, failedStorageOperatorIds, addFailedStorageOperator } =
     useOperatorsContext()
 
   const getAllStorageOperatorsForBag = useCallback(
@@ -235,7 +235,9 @@ export const useStorageOperators = () => {
         if (includeFailed) {
           return bagOperators
         }
-        const workingBagOperators = bagOperators.filter((operator) => !failedStorageOperatorIds.includes(operator.id))
+        const workingBagOperators = bagOperators.filter(
+          (operator) => !failedStorageOperatorIds.current.includes(operator.id)
+        )
         if (!workingBagOperators || !workingBagOperators.length) {
           UserEventsLogger.logMissingOperatorsForBag(storageBagId)
           ConsoleLogger.warn('Missing storage operators for storage bag', { storageBagId })
@@ -291,9 +293,9 @@ export const useStorageOperators = () => {
   const markStorageOperatorFailed = useCallback(
     (operatorId: string) => {
       UserEventsLogger.logDistributorBlacklistedEvent({ distributorId: operatorId })
-      setFailedStorageOperatorIds((state) => [...state, operatorId])
+      addFailedStorageOperator([operatorId])
     },
-    [setFailedStorageOperatorIds]
+    [addFailedStorageOperator]
   )
 
   return {

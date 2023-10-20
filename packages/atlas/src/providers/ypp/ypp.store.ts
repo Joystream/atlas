@@ -5,10 +5,6 @@ import { YppModalStep, YtResponseData } from './ypp.types'
 type YppStoreState = {
   referrerId: string | null
   selectedChannelId: string | null
-  /**
-   * 'state' param passed to Google auth URL
-   */
-  ytStateParam: string | null
   utmSource: string | null
   utmCampaign: string | null
   yppModalOpenName: YppModalStep
@@ -20,10 +16,6 @@ type YppStoreState = {
 type YppStoreActions = {
   setReferrerId: (referrerId: string | null) => void
   setSelectedChannelId: (selectedChannelId: string | null) => void
-  /**
-   * sets 'state' param passed to Google auth URL
-   */
-  setYtStateParam: (authState: string | null) => void
   setUtmSource: (utmSource: string | null) => void
   setUtmCampaign: (utmCampaign: string | null) => void
   setYppModalOpenName: (modal: YppModalStep) => void
@@ -37,7 +29,6 @@ export const useYppStore = createStore<YppStoreState, YppStoreActions>(
     state: {
       referrerId: null,
       selectedChannelId: null,
-      ytStateParam: null,
       utmSource: null,
       utmCampaign: null,
       yppModalOpenName: null,
@@ -54,11 +45,6 @@ export const useYppStore = createStore<YppStoreState, YppStoreActions>(
       setSelectedChannelId: (selectedChannelId) => {
         set((state) => {
           state.selectedChannelId = selectedChannelId
-        })
-      },
-      setYtStateParam: (authState) => {
-        set((state) => {
-          state.ytStateParam = authState
         })
       },
       setUtmSource: (utmSource) => {
@@ -96,7 +82,7 @@ export const useYppStore = createStore<YppStoreState, YppStoreActions>(
   {
     persist: {
       key: 'ypp',
-      whitelist: ['referrerId', 'ytStateParam', 'utmSource'],
+      whitelist: ['referrerId', 'utmSource'],
       version: 0,
       migrate: (oldState) => oldState,
     },
