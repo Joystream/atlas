@@ -2728,7 +2728,7 @@ export type BasicCreatorTokenHolderFragment = {
       endsAt: number
       cliffBlock: number
       cliffDurationBlocks: number
-      cliffPercent: number
+      cliffRatioPermill: number
       vestingDurationBlocks: number
     }
   }>
@@ -2803,7 +2803,7 @@ export type BasicCreatorTokenFragment = {
 
 export type FullCreatorTokenFragment = {
   __typename?: 'CreatorToken'
-  annualCreatorReward: number
+  annualCreatorRewardPermill: number
   description?: string | null
   totalSupply: string
   id: string
@@ -3748,7 +3748,7 @@ export const BasicCreatorTokenHolderFragmentDoc = gql`
         endsAt
         cliffBlock
         cliffDurationBlocks
-        cliffPercent
+        cliffRatioPermill
         vestingDurationBlocks
       }
     }
@@ -3788,7 +3788,7 @@ export const BasicCreatorTokenFragmentDoc = gql`
 export const FullCreatorTokenFragmentDoc = gql`
   fragment FullCreatorToken on CreatorToken {
     ...BasicCreatorToken
-    annualCreatorReward
+    annualCreatorRewardPermill
     description
     ammCurves {
       id

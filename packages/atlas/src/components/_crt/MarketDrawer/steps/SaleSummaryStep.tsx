@@ -31,7 +31,8 @@ export const SaleSummaryStep: FC<SaleSummaryProps> = ({
   handleBackClick,
   handleCloseModal,
 }) => {
-  const { fullFee } = useFee('startAmmTx', ['1', '1', price])
+  const { fullFee } = useFee('startAmmTx', ['1', '1', 1, price])
+  const { tokenPrice } = useJoystream()
   const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()
   const { joystream, proxyCallback } = useJoystream()
@@ -42,10 +43,10 @@ export const SaleSummaryStep: FC<SaleSummaryProps> = ({
     setPrimaryButtonProps({
       text: 'Start sale',
       onClick: () => {
-        if (!joystream || !memberId || !channelId) return
+        if (!joystream || !memberId || !channelId || !tokenPrice) return
         handleTransaction({
           txFactory: async (updateStatus) =>
-            (await joystream.extrinsics).startAmm(memberId, channelId, price, proxyCallback(updateStatus)),
+            (await joystream.extrinsics).startAmm(memberId, channelId, tokenPrice, price, proxyCallback(updateStatus)),
           onTxSync: async () => {
             displaySnackbar({
               title: 'Success',
@@ -82,6 +83,7 @@ export const SaleSummaryStep: FC<SaleSummaryProps> = ({
     proxyCallback,
     setPrimaryButtonProps,
     setSecondaryButtonProps,
+    tokenPrice,
   ])
 
   return (

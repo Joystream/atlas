@@ -94,7 +94,7 @@ export type GetFullCreatorTokenQuery = {
   __typename?: 'Query'
   creatorTokenById?: {
     __typename?: 'CreatorToken'
-    annualCreatorReward: number
+    annualCreatorRewardPermill: number
     description?: string | null
     totalSupply: string
     id: string
@@ -584,7 +584,7 @@ export type GetCreatorTokenHoldersQuery = {
         endsAt: number
         cliffBlock: number
         cliffDurationBlocks: number
-        cliffPercent: number
+        cliffRatioPermill: number
         vestingDurationBlocks: number
       }
     }>
