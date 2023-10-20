@@ -1,7 +1,8 @@
 import { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { SvgActionClose, SvgActionNewChannel, SvgActionNewTab } from '@/assets/icons'
+import { SvgActionClose, SvgActionNewChannel, SvgActionNewTab, SvgAlertsInformative24 } from '@/assets/icons'
+import { Banner } from '@/components/Banner'
 import { FlexBox } from '@/components/FlexBox'
 import { Information } from '@/components/Information'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
@@ -10,12 +11,12 @@ import { Tooltip } from '@/components/Tooltip'
 import { WidgetTile } from '@/components/WidgetTile'
 import { Button, TextButton } from '@/components/_buttons/Button'
 import { BenefitCard } from '@/components/_ypp/BenefitCard'
+import { ReferralLinkButton } from '@/components/_ypp/ReferralLinkButton'
 import { ServiceStatusWidget } from '@/components/_ypp/ServiceStatusWidget/ServiceStatusWidget'
 import { YppDashboardTier } from '@/components/_ypp/YppDashboardTier'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useYppAuthorizeHandler } from '@/hooks/useYppAuthorizeHandler'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user/user.hooks'
@@ -29,7 +30,6 @@ import {
   StatusDot,
   StatusDotWrapper,
   StyledCloseButton,
-  StyledCopyButton,
   WidgetTileContent,
   YppSyncStatus,
 } from './YppDashboardTabs.styles'
@@ -41,7 +41,6 @@ const getMessageIdForChannel = (channelId: string) => {
 }
 
 export const YppDashboardMainTab: FC = () => {
-  const { trackReferralLinkGenerated } = useSegmentAnalytics()
   const { channelId } = useUser()
   const navigate = useNavigate()
   const _handleYppSignUpClick = useYppAuthorizeHandler()
@@ -86,6 +85,15 @@ export const YppDashboardMainTab: FC = () => {
     <>
       <YppAuthorizationModal unSyncedChannels={unsyncedChannels} />
       <LayoutGrid>
+        <GridItem colSpan={{ base: 12 }}>
+          <Banner
+            dismissibleId="ypp-sync-second-channel"
+            title="Have another YouTube channel?"
+            icon={<SvgAlertsInformative24 />}
+            description={`You can apply to the YouTube Partner Program with as many YouTube & ${atlasConfig.general.appName} channels as you want. Each YouTube channel can be assigned to only one ${atlasConfig.general.appName} channel.`}
+            actionButton={{ text: 'Add new channel', onClick: handleYppSignUpClick }}
+          />
+        </GridItem>
         <GridItem colSpan={{ xxs: 12, md: 4 }}>
           <YppDashboardTier onSignUp={handleYppSignUpClick} status={currentChannel?.yppStatus} />
         </GridItem>
@@ -236,16 +244,7 @@ export const YppDashboardMainTab: FC = () => {
             dollarAmount={getTierRewards('diamond')?.referral}
             amountTooltip="Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity."
             isRangeAmount
-            actionNode={
-              <StyledCopyButton
-                fullWidth={!smMatch}
-                textToCopy={`${window.location.href}/ypp?referrerId=${channelId}`}
-                copySuccessText="Referral link copied to clipboard"
-                onClick={() => trackReferralLinkGenerated(channelId)}
-              >
-                Copy referral link
-              </StyledCopyButton>
-            }
+            actionNode={<ReferralLinkButton />}
           />
         </GridItem>
       </LayoutGrid>

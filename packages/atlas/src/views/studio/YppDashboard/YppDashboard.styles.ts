@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { cVar, media, sizes } from '@/styles'
+import { breakpoints, media, sizes } from '@/styles'
 
 export const Header = styled.header`
   display: grid;
@@ -62,12 +62,11 @@ export const TierCount = styled.div`
 `
 
 export const TabsWrapper = styled.div`
+  display: grid;
+  gap: ${sizes(6)};
   margin-bottom: ${sizes(6)};
-`
 
-export const Divider = styled.div<{ withMargin?: boolean }>`
-  margin: ${({ withMargin }) => (withMargin ? `${sizes(2)} 0` : '')};
-  background-color: ${cVar('colorBackgroundMutedAlpha')};
-  height: 1px;
-  width: 100%;
+  @media (hover: hover) and (min-width: ${breakpoints.sm}) {
+    grid-template-columns: 1fr auto;
+  }
 `

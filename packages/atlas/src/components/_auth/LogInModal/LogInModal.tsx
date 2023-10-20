@@ -133,6 +133,7 @@ export const LogInModal = () => {
                 {...register('password')}
                 placeholder="Password"
                 {...hidePasswordProps}
+                autoComplete="new-password"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     handleSubmit()
