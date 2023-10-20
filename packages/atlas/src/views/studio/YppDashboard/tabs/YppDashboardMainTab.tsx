@@ -92,7 +92,7 @@ export const YppDashboardMainTab: FC = () => {
             dismissibleId="ypp-sync-second-channel"
             title="Have another YouTube channel?"
             icon={<SvgAlertsInformative24 />}
-            description="You can apply to the YouTube Partner Program with as many YouTube & Gleev channels as you want. Each YouTube channel can be assigned to only one Gleev channel."
+            description={`You can apply to the YouTube Partner Program with as many YouTube & ${atlasConfig.general.appName} channels as you want. Each YouTube channel can be assigned to only one ${atlasConfig.general.appName} channel.`}
             actionButton={{ text: 'Add new channel', onClick: handleYppSignUpClick }}
           />
         </GridItem>
