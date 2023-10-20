@@ -1,6 +1,5 @@
 import { axiosInstance } from '@/api/axios'
 import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
-import { BUILD_ENV } from '@/config/env'
 import { AssetType } from '@/providers/uploads/uploads.types'
 import { ConsoleLogger, DistributorEventEntry, DistributorEventMetric, UserEventsLogger } from '@/utils/logs'
 import { wait } from '@/utils/misc'
@@ -100,7 +99,7 @@ export const logDistributorPerformance = async (assetUrl: string, eventEntry: Di
   const performanceEntries = window.performance.getEntriesByName(assetUrl)
   const performanceEntry = performanceEntries[0] as PerformanceResourceTiming
 
-  if (!performanceEntry && BUILD_ENV === 'production') {
+  if (!performanceEntry) {
     ConsoleLogger.debug('Performance entry not found', { assetUrl })
     return
   }

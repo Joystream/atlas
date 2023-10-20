@@ -89,7 +89,7 @@ export const useGetAssetUrl = (urls: string[] | undefined | null, type: AssetTyp
     const init = async () => {
       setUrl(undefined)
       setIsLoading(true)
-      const resolvedUrl = await getSingleAssetUrl(urls, id, type, userBenchmarkTime ?? undefined)
+      const resolvedUrl = await getSingleAssetUrl(urls, id, type, userBenchmarkTime.current ?? undefined)
       setIsLoading(false)
       if (resolvedUrl) {
         setUrl(resolvedUrl)

@@ -116,7 +116,6 @@ export const useRecentlyPaidChannels = (): { channels: YPPPaidChannels[] | undef
           return 0
         })
         .slice(0, 50)
-        .reverse()
     )
   }, [data])
 
