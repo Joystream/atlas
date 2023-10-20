@@ -26,7 +26,7 @@ export type CrtMarketSaleViewProps = {
 export const MarketDrawer = ({ show, onClose, tokenName }: CrtMarketSaleViewProps) => {
   const [activeStep, setActiveStep] = useState(MARKET_STEPS.market)
   const [marketData, setMarketData] = useState<CrtMarketForm>({
-    price: 100,
+    price: 10,
     tnc: atlasConfig.legal.crtTnc,
     isChecked: true,
   })
