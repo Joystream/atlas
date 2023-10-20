@@ -357,6 +357,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
 
           if (yppCurrentChannel) {
             navigate(absoluteRoutes.studio.yppDashboard())
+            handleClose()
           }
 
           if (yppUnsyncedChannels?.length) {
@@ -470,6 +471,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     yppCurrentChannel,
     yppUnsyncedChannels,
     navigate,
+    handleClose,
     setSelectedChannelId,
     setYppModalOpenName,
     trackClickAuthModalSignUpButton,
