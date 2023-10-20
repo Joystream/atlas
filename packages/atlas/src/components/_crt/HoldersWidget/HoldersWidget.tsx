@@ -1,8 +1,7 @@
 import styled from '@emotion/styled'
-import BN from 'bn.js'
 import { useState } from 'react'
 
-import { useGetCreatorTokenHoldersQuery } from '@/api/queries/__generated__/creatorTokens.generated'
+import { BasicCreatorTokenHolderFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgActionChevronR } from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox'
 import { Text } from '@/components/Text'
@@ -12,33 +11,19 @@ import { DialogModal } from '@/components/_overlays/DialogModal'
 import { cVar, sizes } from '@/styles'
 
 export type HoldersWidgetProps = {
-  tokenId: string
   ownerId: string
+  holders: BasicCreatorTokenHolderFragment[]
+  totalSupply: number
 }
 
-export const HoldersWidget = ({ tokenId, ownerId }: HoldersWidgetProps) => {
+export const HoldersWidget = ({ holders: _holders, ownerId, totalSupply }: HoldersWidgetProps) => {
   const [showModal, setShowModal] = useState(false)
-  const { data } = useGetCreatorTokenHoldersQuery({
-    variables: {
-      where: {
-        token: {
-          id_eq: tokenId,
-        },
-        member: {
-          id_eq: ownerId,
-        },
-      },
-    },
-  })
 
-  if (!data) return null
-
-  const { tokenAccounts } = data
-
-  const holders = tokenAccounts.map((holder) => ({
+  const holders = _holders.map((holder) => ({
     memberId: ownerId,
-    total: new BN(holder.totalAmount),
-    vested: new BN(holder.vestingSchedules[0].totalVestingAmount),
+    total: +holder.totalAmount,
+    allocation: Math.round((+holder.totalAmount / totalSupply) * 100),
+    vested: +holder.vestingSchedules[0].totalVestingAmount,
   }))
 
   return (
@@ -54,7 +39,7 @@ export const HoldersWidget = ({ tokenId, ownerId }: HoldersWidgetProps) => {
         <Text variant="h500" as="span">
           Holders{' '}
           <Text variant="h500" as="span" color="colorText">
-            ({tokenAccounts.length})
+            ({holders.length})
           </Text>
         </Text>
         <TextButton icon={<SvgActionChevronR />} iconPlacement="right" onClick={() => setShowModal(true)}>

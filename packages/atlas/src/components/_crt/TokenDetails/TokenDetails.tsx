@@ -45,7 +45,7 @@ export const TokenDetails = ({ about, videoId, benefits }: TokenDetailsProps) =>
           <PlayerSkeletonLoader />
         )}
       </VideoBox>
-      {benefits && (
+      {benefits?.length ? (
         <FlexBox gap={6} flow="column">
           <Text variant="h500" as="h5">
             Benefits
@@ -64,7 +64,7 @@ export const TokenDetails = ({ about, videoId, benefits }: TokenDetailsProps) =>
             </FlexBox>
           ))}
         </FlexBox>
-      )}
+      ) : null}
       {about && (
         <FlexBox gap={6} flow="column">
           <Text variant="h500" as="h5">

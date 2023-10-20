@@ -1,6 +1,6 @@
-import BN from 'bn.js'
 import { ReactElement, useMemo } from 'react'
 
+import { useGetCreatorTokenHoldersQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgActionChevronL, SvgActionNewTab } from '@/assets/icons'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
@@ -10,9 +10,11 @@ import { Button } from '@/components/_buttons/Button'
 import { CrtBasicInfoWidget } from '@/components/_crt/CrtBasicInfoWidget'
 import { CrtStatusWidget } from '@/components/_crt/CrtStatusWidget'
 import { HoldersWidget } from '@/components/_crt/HoldersWidget'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useUser } from '@/providers/user/user.hooks'
+import { permillToPercentage } from '@/utils/number'
 
 import {
   FirstColumn,
@@ -36,27 +38,40 @@ export const CrtPreviewLayout = ({
 }: CrtPreviewViewProps) => {
   const lgMatch = useMediaMatch('lg')
   const { memberId } = useUser()
+  const { data } = useGetCreatorTokenHoldersQuery({
+    variables: {
+      where: {
+        token: {
+          id_eq: token.id,
+        },
+        member: {
+          id_eq: memberId,
+        },
+      },
+    },
+  })
+
   const basicDetails = useMemo(() => {
     const details = []
     if (token.totalSupply)
       details.push({
         caption: 'TOTAL REV.',
-        content: token.totalSupply,
+        content: +token.totalSupply,
         icon: <JoyTokenIcon size={16} variant="silver" />,
         tooltipText: 'Lorem ipsum',
       })
 
-    if (token.annualCreatorReward)
+    if (token.revenueShareRatioPermill)
       details.push({
         caption: 'REV. SHARE',
-        content: `${token.annualCreatorReward}%`,
+        content: `${permillToPercentage(token.revenueShareRatioPermill)}%`,
         tooltipText: 'Lorem ipsum',
       })
 
-    if (token.annualCreatorReward)
+    if (token.annualCreatorRewardPermill)
       details.push({
         caption: 'AN. REWARD',
-        content: `${token.annualCreatorReward}%`,
+        content: `${permillToPercentage(token.annualCreatorRewardPermill)}%`,
         tooltipText: 'Lorem ipsum',
       })
     return details
@@ -85,13 +100,17 @@ export const CrtPreviewLayout = ({
         <CrtStatusWidget
           name={token.symbol ?? 'N/A'}
           creationDate={new Date(token.createdAt)}
-          supply={new BN(token.totalSupply) ?? 0}
-          marketCap={token.annualCreatorReward}
-          revenue={token.annualCreatorReward}
-          revenueShare={token.annualCreatorReward}
-          transactionVolume={token.annualCreatorReward}
+          supply={+(token.totalSupply ?? 0)}
+          marketCap={token.annualCreatorRewardPermill}
+          revenue={token.annualCreatorRewardPermill}
+          revenueShare={token.annualCreatorRewardPermill}
+          transactionVolume={token.annualCreatorRewardPermill}
         />
-        <HoldersWidget tokenId={token.id} ownerId={memberId ?? ''} />
+        {data ? (
+          <HoldersWidget totalSupply={+token.totalSupply} holders={data.tokenAccounts} ownerId={memberId ?? ''} />
+        ) : (
+          <SkeletonLoader width="100%" height={300} />
+        )}
       </SecondColumn>
     </Wrapper>
   )

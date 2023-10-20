@@ -1,4 +1,7 @@
+import { useApolloClient } from '@apollo/client'
 import styled from '@emotion/styled'
+import { createType } from '@joystream/types'
+import Long from 'long'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
@@ -12,6 +15,9 @@ import { Benefit } from '@/components/_inputs/BenefitInput'
 import { BenefitsInput } from '@/components/_inputs/BenefitsInput'
 import { FormField } from '@/components/_inputs/FormField'
 import { MarkdownEditor } from '@/components/_inputs/MarkdownEditor/MarkdownEditor'
+import { useJoystream } from '@/providers/joystream'
+import { useSnackbar } from '@/providers/snackbars'
+import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { zIndex } from '@/styles'
 
@@ -22,12 +28,17 @@ type CrtPageForm = {
 }
 
 export const CrtTokenEditView = () => {
-  const { activeChannel } = useUser()
+  const { activeChannel, channelId, memberId } = useUser()
+  const { displaySnackbar } = useSnackbar()
+  const { joystream, proxyCallback } = useJoystream()
+  const handleTransaction = useTransaction()
+  const client = useApolloClient()
   const { data } = useGetFullCreatorTokenQuery({
     variables: {
       id: activeChannel?.creatorToken?.token.id ?? '',
     },
   })
+  console.log(data)
   const [mode, setMode] = useState<'edit' | 'preview'>('edit')
   const form = useForm<CrtPageForm>({
     defaultValues: {
@@ -35,6 +46,46 @@ export const CrtTokenEditView = () => {
       benefits: data?.creatorTokenById?.benefits,
       about: data?.creatorTokenById?.description ?? '',
     },
+  })
+
+  const handleSubmit = form.handleSubmit((data) => {
+    if (!joystream || !memberId || !channelId) {
+      return
+    }
+
+    handleTransaction({
+      txFactory: async (updateStatus) =>
+        (await joystream.extrinsics).creatorTokenIssuerRemark(
+          memberId,
+          channelId,
+          {
+            updateTokenMetadata: {
+              newMetadata: {
+                ...(data.about ? { description: data.about } : {}),
+                ...(data.benefits
+                  ? { benefits: data.benefits.map((benefit, idx) => ({ ...benefit, displayOrder: idx })) }
+                  : {}),
+                ...(data.videoId ? { trailerVideoId: createType('Long', +data.videoId) as Long } : {}),
+              },
+            },
+          },
+          proxyCallback(updateStatus)
+        ),
+      onTxSync: async () => {
+        displaySnackbar({
+          title: 'Success',
+          iconType: 'success',
+        })
+        client.refetchQueries({ include: 'active' })
+        // onClose()
+      },
+      onError: () => {
+        displaySnackbar({
+          title: 'Something went wrong',
+        })
+        // onClose()
+      },
+    })
   })
 
   if (!data?.creatorTokenById) return null
@@ -82,7 +133,7 @@ export const CrtTokenEditView = () => {
           text: mode === 'edit' ? 'Preview' : 'Edit',
           onClick: () => setMode((prev) => (prev === 'edit' ? 'preview' : 'edit')),
         }}
-        primaryButton={{ text: 'Publish', onClick: form.handleSubmit((data) => console.log(data)) }}
+        primaryButton={{ text: 'Publish', onClick: handleSubmit }}
         isNoneCrypto
       />
     </Wrapper>
