@@ -4,6 +4,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { SvgActionPlay } from '@/assets/icons'
 import { ActionDialogButtonProps } from '@/components/ActionBar'
 import { FlexBox } from '@/components/FlexBox'
+import { NumberFormat } from '@/components/NumberFormat'
 import { ColumnBox } from '@/components/ProgressWidget/ProgressWidget.styles'
 import { Text } from '@/components/Text'
 import { TextButton } from '@/components/_buttons/Button'
@@ -12,6 +13,7 @@ import { Checkbox } from '@/components/_inputs/Checkbox'
 import { FormField } from '@/components/_inputs/FormField'
 import { TextArea } from '@/components/_inputs/TextArea'
 import { TokenInput } from '@/components/_inputs/TokenInput'
+import { atlasConfig } from '@/config'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useJoystream } from '@/providers/joystream'
 
@@ -23,6 +25,8 @@ type MarketStepProps = {
   onClose: () => void
   onNextStep: (props: CrtMarketForm) => void
 }
+
+const DEFAULT_MIN_PRICE = 0.01
 
 export const MarketStep: FC<MarketStepProps> = ({
   tokenName,
@@ -100,7 +104,15 @@ export const MarketStep: FC<MarketStepProps> = ({
         Automated market maker (AMM) will increase ${tokenName} price after each purchase and decrease its price when
         someone sells it to the AMM.
       </Text>
-      <FormField label="Starting price for token" error={errors.price?.message}>
+      <FormField
+        label="Starting price for token"
+        description={
+          <div>
+            You cannot set price lower than <NumberFormat value={DEFAULT_MIN_PRICE} as="span" withToken />
+          </div>
+        }
+        error={errors.price?.message}
+      >
         <Controller
           control={control}
           render={({ field: { value: price, onChange: setPrice } }) => (
@@ -110,7 +122,7 @@ export const MarketStep: FC<MarketStepProps> = ({
               onChange={setPrice}
               nodeEnd={
                 <Text variant="t300" as="p" color="colorTextMuted">
-                  ${tokenInUsd.toFixed(2)}
+                  ${tokenInUsd.toFixed(price < 1 ? 5 : 2)}
                 </Text>
               }
             />
@@ -120,6 +132,12 @@ export const MarketStep: FC<MarketStepProps> = ({
               price: (value) => {
                 if (!value) {
                   return 'Enter starting token price'
+                }
+                return true
+              },
+              minPrice: (value) => {
+                if (value < DEFAULT_MIN_PRICE) {
+                  return `Price cannot be lower than ${DEFAULT_MIN_PRICE} ${atlasConfig.joystream.tokenTicker}`
                 }
                 return true
               },
