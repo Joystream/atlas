@@ -5,9 +5,8 @@ import { axiosInstance } from '@/api/axios'
 import { SvgActionLinkUrl } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { YppReferral, YppReferralTable } from '@/components/YppReferralTable/YppReferralTable'
-import { Button } from '@/components/_buttons/Button'
+import { ReferralLinkButton } from '@/components/_ypp/ReferralLinkButton'
 import { atlasConfig } from '@/config'
-import { useClipboard } from '@/hooks/useClipboard'
 import { useUser } from '@/providers/user/user.hooks'
 import { YppSyncedChannel } from '@/views/global/YppLandingView/YppLandingView.types'
 
@@ -16,7 +15,6 @@ import { FallbackContainer } from '../YppDashboardTabs.styles'
 const YPP_SYNC_URL = atlasConfig.features.ypp.youtubeSyncApiUrl
 
 export const YppDashboardReferralsTab = () => {
-  const { copyToClipboard } = useClipboard()
   const { channelId } = useUser()
   const { isLoading, data } = useQuery(
     ['referralsTable', channelId],
@@ -43,20 +41,7 @@ export const YppDashboardReferralsTab = () => {
           title="No referred users yet"
           variant="large"
           subtitle="You will see all referred users here once someone uses your link to sign up to the program."
-          button={
-            <Button
-              variant="secondary"
-              icon={<SvgActionLinkUrl />}
-              onClick={() =>
-                copyToClipboard(
-                  `${window.location.origin}/ypp?referrerId=${channelId}`,
-                  'Referral link copied to clipboard'
-                )
-              }
-            >
-              Copy referral link
-            </Button>
-          }
+          button={<ReferralLinkButton variant="secondary" icon={<SvgActionLinkUrl />} />}
         />
       </FallbackContainer>
     )
