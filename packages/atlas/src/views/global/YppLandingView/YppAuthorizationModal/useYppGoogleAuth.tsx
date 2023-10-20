@@ -44,14 +44,13 @@ type AlreadyRegisteredChannel = {
 export const useYppGoogleAuth = ({ channelsLoaded }: { channelsLoaded: boolean }) => {
   const {
     actions: { setYtResponseData, setYppModalOpenName },
-    ytStateParam: oldYppAuthState,
     selectedChannelId,
   } = useYppStore((state) => state, shallow)
 
   const setAuthModalOpenName = useAuthStore((state) => state.actions.setAuthModalOpenName)
   const { isLoggedIn, isAuthenticating } = useAuth()
 
-  const { setYtStateParam: setYppAuthState, setSelectedChannelId } = useYppStore((state) => state.actions)
+  const { setSelectedChannelId } = useYppStore((state) => state.actions)
   const [alreadyRegisteredChannel, setAlreadyRegisteredChannel] = useState<AlreadyRegisteredChannel | null>(null)
   const { mutateAsync: authMutation } = useMutation('ypp-auth-post', (authorizationCode: string) =>
     axiosInstance.post<ChannelVerificationSuccessResponse>(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/users`, {
@@ -80,7 +79,9 @@ export const useYppGoogleAuth = ({ channelsLoaded }: { channelsLoaded: boolean }
         channelId: channelId ?? selectedChannelId ?? '',
       })
       const authState = stateParams.toString()
-      setYppAuthState(authState)
+
+      // not using zustand as code was not persisting on mobile browsers
+      localStorage.setItem('yppAuthState', authState)
 
       const authParams = {
         ...GOOGLE_AUTH_PARAMS,
@@ -91,7 +92,7 @@ export const useYppGoogleAuth = ({ channelsLoaded }: { channelsLoaded: boolean }
 
       window.location.assign(authUrl)
     },
-    [selectedChannelId, setYppAuthState]
+    [selectedChannelId]
   )
 
   const handleGoogleAuthError = useCallback(
@@ -142,6 +143,8 @@ export const useYppGoogleAuth = ({ channelsLoaded }: { channelsLoaded: boolean }
         const stateParams = new URLSearchParams(state || '')
         const channelId = stateParams.get('channelId')
 
+        const oldYppAuthState = localStorage.getItem('yppAuthState')
+
         // check if the state matches the one we set
         if (state !== oldYppAuthState) {
           displaySnackbar({
@@ -160,7 +163,7 @@ export const useYppGoogleAuth = ({ channelsLoaded }: { channelsLoaded: boolean }
           setSelectedChannelId(channelId)
         }
 
-        setYppAuthState(null)
+        localStorage.setItem('yppAuthState', '')
         setYppModalOpenName('ypp-fetching-data')
 
         resetSearchParams()
@@ -249,8 +252,6 @@ export const useYppGoogleAuth = ({ channelsLoaded }: { channelsLoaded: boolean }
       }
     },
     [
-      oldYppAuthState,
-      setYppAuthState,
       setYppModalOpenName,
       resetSearchParams,
       authMutation,
