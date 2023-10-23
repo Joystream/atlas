@@ -2,7 +2,7 @@ import { useApolloClient } from '@apollo/client'
 import styled from '@emotion/styled'
 import { createType } from '@joystream/types'
 import Long from 'long'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { useGetFullCreatorTokenQuery } from '@/api/queries/__generated__/creatorTokens.generated'
@@ -40,13 +40,17 @@ export const CrtTokenEditView = () => {
   })
 
   const [mode, setMode] = useState<'edit' | 'preview'>('edit')
-  const form = useForm<CrtPageForm>({
-    defaultValues: {
-      videoId: data?.creatorTokenById?.trailerVideo[0]?.id,
-      benefits: data?.creatorTokenById?.benefits,
-      about: data?.creatorTokenById?.description ?? '',
-    },
-  })
+  const form = useForm<CrtPageForm>()
+
+  useEffect(() => {
+    if (data?.creatorTokenById) {
+      form.reset({
+        videoId: data?.creatorTokenById?.trailerVideo[0]?.id,
+        benefits: data?.creatorTokenById?.benefits,
+        about: data?.creatorTokenById?.description ?? '',
+      })
+    }
+  }, [data?.creatorTokenById, form])
 
   const handleSubmit = form.handleSubmit((data) => {
     if (!joystream || !memberId || !channelId) {
@@ -77,13 +81,11 @@ export const CrtTokenEditView = () => {
           iconType: 'success',
         })
         client.refetchQueries({ include: 'active' })
-        // onClose()
       },
       onError: () => {
         displaySnackbar({
           title: 'Something went wrong',
         })
-        // onClose()
       },
     })
   })
@@ -94,6 +96,7 @@ export const CrtTokenEditView = () => {
     <Wrapper>
       <CrtPreviewLayout
         mode="preview"
+        isDirty={form.formState.isDirty}
         token={data.creatorTokenById}
         tokenDetails={
           mode === 'edit' ? (
