@@ -151,9 +151,9 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({
             } tokens have been sent over to ${shortenString(data.account, ADDRESS_CHARACTERS_LIMIT)} wallet address`,
           },
           txFactory: async (updateStatus) => {
-            const amount =
-              !isWithdrawalMode &&
-              amountBN.sub(amountBN.add(transferFee).gte(accountBalance) ? transferFee : new BN(0)).sub(accountDebt)
+            const amount = amountBN
+              .sub(amountBN.add(transferFee).gte(accountBalance) ? transferFee : new BN(0))
+              .sub(accountDebt)
             return (await joystream.extrinsics).sendFunds(
               formatJoystreamAddress(data.account || ''),
               amount.toString(),
@@ -174,12 +174,10 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({
               }
             : undefined,
           txFactory: async (updateStatus) => {
-            const fee = isOwnAccount ? withdrawFee : fullFee
-            const amount = amountBN.add(fee).gte(channelBalance) ? amountBN.sub(fee) : amountBN
             return (await joystream.extrinsics).withdrawFromChannelBalance(
               activeMembership!.id,
               channelId as string,
-              amount.toString(),
+              amountBN.toString(),
               proxyCallback(updateStatus)
             )
           },
