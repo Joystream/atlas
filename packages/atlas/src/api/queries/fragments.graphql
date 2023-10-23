@@ -540,7 +540,8 @@ fragment FullCreatorToken on CreatorToken {
   trailerVideo {
     id
     video {
-      ...BasicVideoFields
+      id
+      title
     }
   }
   revenueShares {

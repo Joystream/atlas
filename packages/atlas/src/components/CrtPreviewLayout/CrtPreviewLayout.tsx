@@ -31,6 +31,33 @@ type CrtPreviewViewProps = {
   tokenDetails?: ReactElement
   token: FullCreatorTokenFragment
 }
+
+export const getTokenDetails = (token: FullCreatorTokenFragment) => {
+  const details = []
+  if (token.totalSupply)
+    details.push({
+      caption: 'TOTAL REV.',
+      content: +token.totalSupply,
+      icon: <JoyTokenIcon size={16} variant="silver" />,
+      tooltipText: 'Lorem ipsum',
+    })
+
+  if (token.revenueShareRatioPermill)
+    details.push({
+      caption: 'REV. SHARE',
+      content: `${permillToPercentage(token.revenueShareRatioPermill)}%`,
+      tooltipText: 'Lorem ipsum',
+    })
+
+  if (token.annualCreatorRewardPermill)
+    details.push({
+      caption: 'AN. REWARD',
+      content: `${permillToPercentage(token.annualCreatorRewardPermill)}%`,
+      tooltipText: 'Lorem ipsum',
+    })
+  return details
+}
+
 export const CrtPreviewLayout = ({
   tokenDetails = <Placeholder height={1000}>Token details</Placeholder>,
   mode,
@@ -51,31 +78,7 @@ export const CrtPreviewLayout = ({
     },
   })
 
-  const basicDetails = useMemo(() => {
-    const details = []
-    if (token.totalSupply)
-      details.push({
-        caption: 'TOTAL REV.',
-        content: +token.totalSupply,
-        icon: <JoyTokenIcon size={16} variant="silver" />,
-        tooltipText: 'Lorem ipsum',
-      })
-
-    if (token.revenueShareRatioPermill)
-      details.push({
-        caption: 'REV. SHARE',
-        content: `${permillToPercentage(token.revenueShareRatioPermill)}%`,
-        tooltipText: 'Lorem ipsum',
-      })
-
-    if (token.annualCreatorRewardPermill)
-      details.push({
-        caption: 'AN. REWARD',
-        content: `${permillToPercentage(token.annualCreatorRewardPermill)}%`,
-        tooltipText: 'Lorem ipsum',
-      })
-    return details
-  }, [token])
+  const basicDetails = useMemo(() => getTokenDetails(token), [token])
 
   return (
     <Wrapper>

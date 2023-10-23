@@ -31,6 +31,7 @@ import { useSubscribeAccountBalance } from '@/providers/joystream'
 import { useUser } from '@/providers/user/user.hooks'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
+import { ChannelToken } from '@/views/viewer/ChannelView/ChannelViewTabs/ChannelToken'
 
 import { ChannelSearch } from './ChannelSearch'
 import { useSearchVideos } from './ChannelView.hooks'
@@ -199,6 +200,8 @@ export const ChannelView: FC = () => {
         )
       case 'Information':
         return <ChannelAbout channel={channel} activeVideosCount={activeVideosCount} />
+      case 'Token':
+        return <ChannelToken memberId={channel?.ownerMember?.id} tokenId={channel?.creatorToken?.token.id} />
     }
   }
 

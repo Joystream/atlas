@@ -42,7 +42,7 @@ export const CrtTokenEditView = () => {
   const [mode, setMode] = useState<'edit' | 'preview'>('edit')
   const form = useForm<CrtPageForm>({
     defaultValues: {
-      videoId: data?.creatorTokenById?.trailerVideo?.id,
+      videoId: data?.creatorTokenById?.trailerVideo[0]?.id,
       benefits: data?.creatorTokenById?.benefits,
       about: data?.creatorTokenById?.description ?? '',
     },

@@ -14,9 +14,10 @@ type TokenDetailsProps = {
   videoId?: string
   benefits?: Benefit[]
   about?: string
+  displayEmptyVideoPlaceholder?: boolean
 }
 
-export const TokenDetails = ({ about, videoId, benefits }: TokenDetailsProps) => {
+export const TokenDetails = ({ about, videoId, benefits, displayEmptyVideoPlaceholder = true }: TokenDetailsProps) => {
   const { loading, video } = useFullVideo(
     videoId ?? '',
     {
@@ -38,13 +39,19 @@ export const TokenDetails = ({ about, videoId, benefits }: TokenDetailsProps) =>
   )
   return (
     <FlexBox gap={12} flow="column">
-      <VideoBox>
-        {!loading && video ? (
-          <VideoPlayer videoId={videoId} hideEndOverlay isMinimized={false} videoUrls={video?.media?.resolvedUrls} />
-        ) : (
+      {!loading ? (
+        video ? (
+          <VideoBox>
+            <VideoPlayer videoId={videoId} hideEndOverlay isMinimized={false} videoUrls={video?.media?.resolvedUrls} />
+          </VideoBox>
+        ) : displayEmptyVideoPlaceholder ? (
+          <div>no video</div>
+        ) : null
+      ) : (
+        <VideoBox>
           <PlayerSkeletonLoader />
-        )}
-      </VideoBox>
+        </VideoBox>
+      )}
       {benefits?.length ? (
         <FlexBox gap={6} flow="column">
           <Text variant="h500" as="h5">
