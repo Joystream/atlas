@@ -26,7 +26,7 @@ import { YppRewardSection } from './sections/YppRewardSection'
 import { YppSignupVideo } from './sections/YppSignupVideo'
 import { useGetYppSyncedChannels } from './useGetYppSyncedChannels'
 
-const SINGUP_DAILY_QUOTA = 1000 // 4% of the total daily quota
+const SINGUP_DAILY_QUOTA = 1250 // ~5% of the total daily quota
 
 export const YppLandingView: FC = () => {
   const headTags = useHeadTags('YouTube Partner Program')
