@@ -1,12 +1,14 @@
 import styled from '@emotion/styled'
 
 import { useFullVideo } from '@/api/hooks/video'
+import { SvgEmptyStateIllustration } from '@/assets/illustrations'
 import { FlexBox } from '@/components/FlexBox'
 import { MarkdownPreview } from '@/components/MarkdownPreview'
 import { Text } from '@/components/Text'
 import { Benefit } from '@/components/_inputs/BenefitInput'
 import { EmojiPlaceholder } from '@/components/_inputs/BenefitInput/BenefitInput.styles'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
+import { cVar, sizes } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 import { PlayerSkeletonLoader } from '@/views/viewer/VideoView/VideoView.styles'
 
@@ -14,10 +16,9 @@ type TokenDetailsProps = {
   videoId?: string
   benefits?: Benefit[]
   about?: string
-  displayEmptyVideoPlaceholder?: boolean
 }
 
-export const TokenDetails = ({ about, videoId, benefits, displayEmptyVideoPlaceholder = true }: TokenDetailsProps) => {
+export const TokenDetails = ({ about, videoId, benefits }: TokenDetailsProps) => {
   const { loading, video } = useFullVideo(
     videoId ?? '',
     {
@@ -37,6 +38,22 @@ export const TokenDetails = ({ about, videoId, benefits, displayEmptyVideoPlaceh
       },
     }
   )
+  const isEmpty = !loading && !video && !benefits?.length && !about
+
+  if (isEmpty) {
+    return (
+      <EmptyBox flow="column" alignItems="center">
+        <SvgEmptyStateIllustration />
+        <Text variant="h500" as="h1" margin={{ top: 10 }}>
+          Token description pending
+        </Text>
+        <Text variant="t200" as="p" color="colorText">
+          The creator is yet to provide the overview of their token. Watch this space and check later again.
+        </Text>
+      </EmptyBox>
+    )
+  }
+
   return (
     <FlexBox gap={12} flow="column">
       {!loading ? (
@@ -44,8 +61,6 @@ export const TokenDetails = ({ about, videoId, benefits, displayEmptyVideoPlaceh
           <VideoBox>
             <VideoPlayer videoId={videoId} hideEndOverlay isMinimized={false} videoUrls={video?.media?.resolvedUrls} />
           </VideoBox>
-        ) : displayEmptyVideoPlaceholder ? (
-          <div>no video</div>
         ) : null
       ) : (
         <VideoBox>
@@ -88,4 +103,10 @@ const VideoBox = styled.div`
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
+`
+
+const EmptyBox = styled(FlexBox)`
+  background-color: ${cVar('colorBackgroundMutedAlpha')};
+  padding: ${sizes(14)} ${sizes(14)};
+  text-align: center;
 `

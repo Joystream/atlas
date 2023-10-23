@@ -55,7 +55,6 @@ export const ChannelToken = ({ tokenId, memberId }: ChannelTokenProps) => {
           about={token?.description ?? ''}
           benefits={token?.benefits}
           videoId={token?.trailerVideo?.[0]?.id}
-          displayEmptyVideoPlaceholder={false}
         />
       </GridItem>
       <GridItem colSpan={{ base: 12, sm: 4 }}>
