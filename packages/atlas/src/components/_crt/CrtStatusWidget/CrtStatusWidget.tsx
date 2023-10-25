@@ -6,9 +6,9 @@ import { Information } from '@/components/Information'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { NumberFormat, NumberFormatProps } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
-import { Button } from '@/components/_buttons/Button'
 import { ExpandButton } from '@/components/_buttons/ExpandButton'
 import { BuyFromMarketButton } from '@/components/_crt/BuyFromMarketButton/BuyFromMarketButton'
+import { SellOnMarketButton } from '@/components/_crt/SellOnMarketButton/SellOnMarketButton'
 import { DetailsContent } from '@/components/_nft/NftTile'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { formatDate } from '@/utils/time'
@@ -150,9 +150,7 @@ const MarketDetails = ({
         tooltipText="Lorem ipsum"
       />
       <FlexBox equalChildren width="100%" gap={2}>
-        <Button size="large" variant="secondary">
-          Sell
-        </Button>
+        <SellOnMarketButton tokenId={tokenId} />
         <BuyFromMarketButton tokenId={tokenId} />
       </FlexBox>
 
