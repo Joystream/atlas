@@ -1,11 +1,10 @@
-import { formatDuration } from 'date-fns'
 import { FC, PropsWithChildren } from 'react'
 
 import { SvgActionCheck, SvgActionClose } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
-import { Text } from '@/components/Text'
+import { FlexBox } from '@/components/FlexBox'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
-import { pluralizeNoun } from '@/utils/misc'
 
 import { ListItem, Paragraph, StyledList, TickWrapper } from './YppAuthorizationRequirementsStep.styles'
 import { useGetYppChannelRequirements } from './useGetYppChannelRequirements'
@@ -16,20 +15,10 @@ type YppAuthorizationRequirementsStepProps = {
   requirmentsErrorCodes: YppRequirementsErrorCode[]
 }
 
-const convertHoursRequirementTime = (hours: number) => {
-  if (hours > 24 * 30) {
-    return formatDuration({ months: Math.round(hours / (24 * 30)) })
-  }
-  if (hours > 24) {
-    return formatDuration({ days: Math.round(hours / 24) })
-  }
-  return formatDuration({ hours: hours })
-}
-
 export const YppAuthorizationRequirementsStep: FC<YppAuthorizationRequirementsStepProps> = ({
   requirmentsErrorCodes,
 }) => {
-  const requirements = useGetYppChannelRequirements()
+  const { requirements, isLoading } = useGetYppChannelRequirements()
   const checkRequirmentError = (errorCode: YppAuthorizationErrorCode) =>
     !requirmentsErrorCodes.some((error) => error === errorCode)
   const hasAtLeastOneError = !!requirmentsErrorCodes.length
@@ -42,36 +31,24 @@ export const YppAuthorizationRequirementsStep: FC<YppAuthorizationRequirementsSt
         <SingleRequirement fulfilled={checkRequirmentError(YppAuthorizationErrorCode.CHANNEL_STATUS_SUSPENDED)}>
           Organic audience, without bots, purchased subscribers and fake comments.
         </SingleRequirement>
-        <SingleRequirement
-          fulfilled={checkRequirmentError(YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_CREATION_DATE)}
-        >
-          Channel must be older than {convertHoursRequirementTime(requirements?.MINIMUM_CHANNEL_AGE_HOURS || 0)}.
-        </SingleRequirement>
-        <SingleRequirement
-          fulfilled={checkRequirmentError(YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_SUBSCRIBERS)}
-        >
-          Has at least{' '}
-          <Text variant="t200" as="span" color="colorTextCaution">
-            {pluralizeNoun(requirements?.MINIMUM_SUBSCRIBERS_COUNT ?? 0, 'subscriber', true)}
-          </Text>
-          .
-        </SingleRequirement>
-        <SingleRequirement fulfilled={checkRequirmentError(YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_VIDEOS)}>
-          Has at least{' '}
-          <Text variant="t200" as="span" color="colorTextCaution">
-            {pluralizeNoun(requirements?.MINIMUM_TOTAL_VIDEOS_COUNT ?? 0, 'video', true)}
-          </Text>
-          , all of which are older than {convertHoursRequirementTime(requirements?.MINIMUM_VIDEO_AGE_HOURS || 0)}.
-        </SingleRequirement>
-        <SingleRequirement
-          fulfilled={checkRequirmentError(YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_NEW_VIDEOS_REQUIREMENT)}
-        >
-          Has at least{' '}
-          <Text variant="t200" as="span" color="colorTextCaution">
-            {pluralizeNoun(requirements?.MINIMUM_VIDEOS_PER_MONTH ?? 0, 'video', true)} per month
-          </Text>{' '}
-          posted over the last {pluralizeNoun(requirements?.MONTHS_TO_CONSIDER ?? 0, 'month', true)}.
-        </SingleRequirement>
+        {isLoading ? (
+          <>
+            <FlexBox alignItems="center" gap={2}>
+              <SkeletonLoader width={24} height={24} rounded />
+              <SkeletonLoader width={24 * 3} height={14} />
+            </FlexBox>
+            <FlexBox alignItems="center" gap={2}>
+              <SkeletonLoader width={24} height={24} rounded />
+              <SkeletonLoader width={24 * 3} height={14} />
+            </FlexBox>
+          </>
+        ) : requirements ? (
+          requirements.map((requirement, idx) => (
+            <SingleRequirement key={idx} fulfilled={checkRequirmentError(requirement.errorCode)}>
+              {requirement.text}
+            </SingleRequirement>
+          ))
+        ) : null}
       </StyledList>
       {!hasAtLeastOneError && (
         <Banner
