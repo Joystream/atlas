@@ -327,13 +327,13 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
       }
     }
 
-    // Youtube Partnership Program
+    // YouTube Partnership Program
     // case 'YPP sign up successful': // MISSING
     //   return {
     //     icon: notificationIcon('bell'),
     //     action: { type: 'ypp-dashboard' },
     //     avatar: { type: 'current-channel', value: '' },
-    //     text: <>Your channel was successfully signed up for Youtube Partnership Program</>,
+    //     text: <>Your channel was successfully signed up for YouTube Partnership Program</>,
     //   }
     // case 'Someone signed up using your referral link': // MISSING
     //   return {
@@ -347,7 +347,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         icon: getIcon('bell'),
         link: getLink('ypp-dashboard'),
         avatar: { type: 'active-channel' },
-        text: <>Your channel got verified in our Youtube Partnership Program</>,
+        text: <>Your channel got verified in our YouTube Partnership Program</>,
       }
     }
     case 'ChannelSuspended': {
@@ -355,7 +355,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         icon: getIcon('warning'),
         link: getLink('ypp-dashboard'),
         avatar: { type: 'active-channel' },
-        text: <>Your channel got suspended in our Youtube Partnership Program</>,
+        text: <>Your channel got suspended in our YouTube Partnership Program</>,
       }
     }
 

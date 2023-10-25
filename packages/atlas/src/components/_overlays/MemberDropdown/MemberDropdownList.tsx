@@ -48,7 +48,7 @@ export const MemberDropdownList: FC<MemberDropdownListProps> = ({
       </SwitchMemberItemListContainer>
       <SectionContainer>
         {sortedMemberChannels.map((channel) => {
-          const isSelected = type === 'channel' ? channel.id === channelId : false
+          const isSelected = type === 'channel' && channel.id === channelId
           return (
             <ListItem
               key={channel.id}
