@@ -71,7 +71,7 @@ type PublicExtrinsic<TxFunction, ReturnValue> = TxFunction extends (...a: infer 
   ? (...a: [...U, ExtrinsicStatusCallbackFn | undefined]) => Promise<ReturnValue>
   : never
 
-const PERMILLS_PER_PERCENTAGE = 10
+const PERMILLS_PER_PERCENTAGE = 10_000
 const PERQUINTILLS_PER_PERCENTAGE = new BN(10).pow(new BN(16))
 
 export class JoystreamLibExtrinsics {
@@ -1162,17 +1162,14 @@ export class JoystreamLibExtrinsics {
     return { block }
   }
 
-  purchaseTokenOnMarketTx = async (tokenId: string, memberId: string, amount: string) => {
+  purchaseTokenOnMarketTx = async (tokenId: string, memberId: string, amount: string, slippageAmount: string) => {
     const amountCast = createType('u128', new BN(amount))
 
     return this.api.tx.projectToken.buyOnAmm(
       parseInt(tokenId),
       parseInt(memberId),
       amountCast,
-      createType('Option<ITuple<[Permill, u128]>>', [
-        createType('Permill', new BN(0.5 * PERMILLS_PER_PERCENTAGE)),
-        amountCast,
-      ]) // percent, number of joy user wants to pay --- default on 0.5%
+      [createType('Permill', new BN(0.5 * PERMILLS_PER_PERCENTAGE)), amountCast] // percent, number of joy user wants to pay --- default on 0.5%
     )
   }
 
@@ -1180,9 +1177,10 @@ export class JoystreamLibExtrinsics {
     tokenId,
     memberId,
     amount,
+    slippageAmount,
     cb
   ) => {
-    const tx = await this.purchaseTokenOnMarketTx(tokenId, memberId, amount)
+    const tx = await this.purchaseTokenOnMarketTx(tokenId, memberId, amount, slippageAmount)
     const { block } = await this.sendExtrinsic(tx, cb)
     return { block }
   }
