@@ -1,4 +1,5 @@
-import { useMemo } from 'react'
+import BN from 'bn.js'
+import { useCallback, useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { useGetFullCreatorTokenQuery } from '@/api/queries/__generated__/creatorTokens.generated'
@@ -13,6 +14,7 @@ import { DetailsContent } from '@/components/_nft/NftTile'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { useFee, useJoystream, useTokenPrice } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
@@ -26,7 +28,7 @@ export type SellTokenModalProps = {
 }
 
 export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) => {
-  const { control, watch, handleSubmit } = useForm<{ tokens: number }>()
+  const { control, watch, handleSubmit, formState } = useForm<{ tokens: number }>()
   const { convertTokensToUSD } = useTokenPrice()
   const smMatch = useMediaMatch('sm')
   const { memberId } = useUser()
@@ -34,7 +36,7 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()
-  const { fullFee } = useFee('sellTokenOnMarketTx')
+  const { fullFee } = useFee('sellTokenOnMarketTx', ['1', '1', '2', '10000000'])
   const { data } = useGetFullCreatorTokenQuery({
     variables: {
       id: tokenId,
@@ -52,6 +54,25 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
         currentAmm?.ammInitPrice
       )
     }, [currentAmm?.ammInitPrice, currentAmm?.ammSlopeParameter, data?.creatorTokenById?.totalSupply]) ?? 0
+
+  const calculateSlippageAmount = useCallback(
+    (amount: number) => {
+      const currentAmm = data?.creatorTokenById?.ammCurves.find((amm) => !amm.finalized)
+      if (!currentAmm || !data?.creatorTokenById?.totalSupply) return
+      const { totalSupply: _totalSupply } = data.creatorTokenById
+      const totalSupply = new BN(_totalSupply)
+      const allocation = totalSupply
+        .addn(amount)
+        .pow(new BN(2))
+        .sub(totalSupply.pow(new BN(2)))
+      return new BN(currentAmm.ammSlopeParameter)
+        .muln(0.5)
+        .mul(allocation)
+        .add(new BN(currentAmm.ammInitPrice).addn(amount))
+    },
+    [data?.creatorTokenById]
+  )
+
   const details = useMemo(
     () => [
       {
@@ -71,21 +92,39 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
         title: 'Fee',
         content: <NumberFormat value={fullFee} as="p" variant="t200" withDenomination="before" withToken />,
       },
+      {
+        title: 'You will spend',
+        content: (
+          <NumberFormat
+            value={tokens || 0}
+            as="p"
+            variant="t200"
+            withDenomination="before"
+            customTicker={`$${title}`}
+            denominationMultiplier={pricePerUnit}
+            withToken
+          />
+        ),
+        tooltipText: 'Lorem ipsum',
+      },
     ],
     [fullFee, pricePerUnit, tokens]
   )
 
   const onSubmit = () =>
     handleSubmit((data) => {
-      if (!joystream || !memberId) {
+      const slippageTolerance = calculateSlippageAmount(data.tokens)
+      if (!joystream || !memberId || !slippageTolerance) {
         return
       }
+      const requiredHapi = data.tokens * pricePerUnit
       handleTransaction({
         txFactory: async (updateStatus) =>
           (await joystream.extrinsics).sellTokenOnMarket(
             tokenId,
             memberId,
-            String(data.tokens),
+            tokenNumberToHapiBn(requiredHapi).toString(),
+            slippageTolerance.toString(),
             proxyCallback(updateStatus)
           ),
         onError: () => {
@@ -146,9 +185,17 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
               value: userTokenBalance,
               message: 'Amount exceeds your account balance',
             },
+            validate: {
+              valid: (value) => {
+                if (!value || value < 1) {
+                  return 'You need to sell at least one token'
+                }
+                return true
+              },
+            },
           }}
           render={({ field }) => (
-            <FormField label="Tokens to spend">
+            <FormField label="Tokens to spend" error={formState.errors.tokens?.message}>
               <TokenInput
                 value={field.value}
                 onChange={field.onChange}
