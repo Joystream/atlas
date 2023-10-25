@@ -500,7 +500,6 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     navigate,
     handleClose,
     setSelectedChannelId,
-    handleClose,
     setYppModalOpenName,
     trackClickAuthModalSignUpButton,
     utmSource,
