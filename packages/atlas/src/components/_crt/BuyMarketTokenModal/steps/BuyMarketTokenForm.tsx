@@ -22,7 +22,7 @@ import { CommonProps } from './types'
 type BuyMarketTokenFormProps = {
   token?: FullCreatorTokenFragment | null
   onSubmit: (tokens: number | null) => void
-  pricePerUnit: number | undefined
+  pricePerUnit: number
 } & CommonProps
 
 export const BuyMarketTokenForm = ({
@@ -33,11 +33,11 @@ export const BuyMarketTokenForm = ({
 }: BuyMarketTokenFormProps) => {
   const { control, watch, handleSubmit, formState } = useForm<{ tokens: number | null }>()
   const { accountBalance } = useSubscribeAccountBalance()
-  const tokens = watch('tokens')
+  const tokens = watch('tokens') || 0
   const { fullFee } = useFee('purchaseTokenOnMarketTx', ['1', '1', String(tokens ?? 0), '1000000'])
   const { tokenPrice } = useJoystream()
 
-  const tokenInUsd = (tokens || 0) * (pricePerUnit ?? 0) * (tokenPrice ?? 0)
+  const tokenInUsd = tokens * pricePerUnit * (tokenPrice ?? 0)
   const smMatch = useMediaMatch('sm')
   const details = useMemo(
     () => [
@@ -45,9 +45,9 @@ export const BuyMarketTokenForm = ({
         title: 'You will get',
         content: (
           <NumberFormat
-            value={tokens || 0}
+            value={tokens}
             as="p"
-            format={(tokens || 0) > 1_000_000 ? 'short' : 'full'}
+            format={tokens > 1_000_000 ? 'short' : 'full'}
             variant="t200"
             withDenomination="before"
             withToken
@@ -65,7 +65,7 @@ export const BuyMarketTokenForm = ({
         title: 'You will spend',
         content: (
           <NumberFormat
-            value={hapiBnToTokenNumber(fullFee) + (tokens || 0) * (pricePerUnit ?? 0)}
+            value={hapiBnToTokenNumber(fullFee) + tokens * pricePerUnit}
             as="p"
             variant="t200"
             withDenomination="before"
@@ -93,7 +93,7 @@ export const BuyMarketTokenForm = ({
             avoidIconStyling
             tileSize={smMatch ? 'big' : 'bigSmall'}
             caption="PRICE PER UNIT"
-            content={pricePerUnit ?? 0}
+            content={pricePerUnit}
             icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
             tooltipText="Lorem ipsum"
             withDenomination
@@ -115,7 +115,7 @@ export const BuyMarketTokenForm = ({
             validate: {
               valid: (value) => {
                 if (!value || value < 1) return 'You need to buy at least one token'
-                if (!accountBalance || !pricePerUnit) return true
+                if (!accountBalance) return true
                 const requiredHapi = tokenNumberToHapiBn((value ?? 0) * pricePerUnit)
 
                 return accountBalance.gte(requiredHapi) ? true : "You don't have enough balance to buy this many tokens"
@@ -135,8 +135,7 @@ export const BuyMarketTokenForm = ({
                     </Text>
                     <TextButton
                       onClick={() =>
-                        accountBalance &&
-                        field.onChange(Math.floor(hapiBnToTokenNumber(accountBalance) / (pricePerUnit ?? 0)))
+                        accountBalance && field.onChange(Math.floor(hapiBnToTokenNumber(accountBalance) / pricePerUnit))
                       }
                     >
                       Max

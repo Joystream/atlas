@@ -81,13 +81,14 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
     [data?.creatorTokenById]
   )
 
-  const pricePerUnit = useMemo(() => {
-    return calcMarketPricePerToken(
-      String(+(data?.creatorTokenById?.totalSupply ?? 0) + 1000),
-      currentAmm?.ammSlopeParameter,
-      currentAmm?.ammInitPrice
-    )
-  }, [currentAmm?.ammInitPrice, currentAmm?.ammSlopeParameter, data?.creatorTokenById?.totalSupply])
+  const pricePerUnit =
+    useMemo(() => {
+      return calcMarketPricePerToken(
+        String(+(data?.creatorTokenById?.totalSupply ?? 0) + 1000),
+        currentAmm?.ammSlopeParameter,
+        currentAmm?.ammInitPrice
+      )
+    }, [currentAmm?.ammInitPrice, currentAmm?.ammSlopeParameter, data?.creatorTokenById?.totalSupply]) ?? 0
 
   const commonProps = {
     setPrimaryButtonProps,

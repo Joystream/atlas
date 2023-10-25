@@ -32,7 +32,7 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
   const { convertTokensToUSD } = useTokenPrice()
   const smMatch = useMediaMatch('sm')
   const { memberId } = useUser()
-  const tokens = watch('tokens')
+  const tokens = watch('tokens') || 0
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()
@@ -79,8 +79,8 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
         title: 'You will get',
         content: (
           <NumberFormat
-            value={tokens ? tokens * pricePerUnit : 0}
-            format={(tokens || 0) * pricePerUnit > 1_000_000 ? 'short' : 'full'}
+            value={tokens * pricePerUnit}
+            format={tokens * pricePerUnit > 1_000_000 ? 'short' : 'full'}
             as="p"
             variant="t200-strong"
             withToken
@@ -96,7 +96,7 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
         title: 'You will spend',
         content: (
           <NumberFormat
-            value={tokens || 0}
+            value={tokens}
             as="p"
             variant="t200"
             withDenomination="before"
@@ -108,7 +108,7 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
         tooltipText: 'Lorem ipsum',
       },
     ],
-    [fullFee, pricePerUnit, tokens]
+    [fullFee, pricePerUnit, title, tokens]
   )
 
   const onSubmit = () =>
