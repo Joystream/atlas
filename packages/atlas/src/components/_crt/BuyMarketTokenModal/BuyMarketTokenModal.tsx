@@ -120,7 +120,16 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
         })
       },
     })
-  }, [displaySnackbar, handleTransaction, joystream, memberId, pricePerUnit, proxyCallback, tokenId])
+  }, [
+    calculateSlippageAmount,
+    displaySnackbar,
+    handleTransaction,
+    joystream,
+    memberId,
+    pricePerUnit,
+    proxyCallback,
+    tokenId,
+  ])
 
   if (!currentAmm && show) {
     throw new Error('BuyAmmModal invoked on token without active amm')

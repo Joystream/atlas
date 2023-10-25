@@ -1169,7 +1169,7 @@ export class JoystreamLibExtrinsics {
       parseInt(tokenId),
       parseInt(memberId),
       amountCast,
-      [createType('Permill', new BN(0.5 * PERMILLS_PER_PERCENTAGE)), amountCast] // percent, number of joy user wants to pay --- default on 0.5%
+      [createType('Permill', new BN(0.5 * PERMILLS_PER_PERCENTAGE)), createType('u128', new BN(slippageAmount))] // percent, number of joy user wants to pay --- default on 0.5%
     )
   }
 
