@@ -78,7 +78,7 @@ export const BuyMarketTokenConditions = ({ setPrimaryButtonProps, onSubmit }: Bu
           caption={checkboxError}
           error={!!checkboxError}
           value={isChecked}
-          label="I have saved my wallet seed phrase safely"
+          label="I accept the Terms & Conditions"
         />
       </CheckboxWrapper>
     </Container>

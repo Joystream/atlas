@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
+import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { FlexBox } from '@/components/FlexBox/FlexBox'
 import { Information } from '@/components/Information'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
@@ -13,33 +14,31 @@ import { DetailsContent } from '@/components/_nft/NftTile'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMountEffect } from '@/hooks/useMountEffect'
-import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
-import { useJoystream, useSubscribeAccountBalance } from '@/providers/joystream'
+import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
+import { useFee, useJoystream, useSubscribeAccountBalance } from '@/providers/joystream'
 
 import { CommonProps } from './types'
 
-export const getTokenDetails = (_: string) => ({
-  title: 'JBC',
-  pricePerUnit: 1000,
-  tokensOnSale: 67773,
-  userBalance: 100000,
-})
-
-type BuySaleTokenFormProps = {
-  tokenId: string
+type BuyMarketTokenFormProps = {
+  token?: FullCreatorTokenFragment | null
   onSubmit: (tokens: number | null) => void
+  pricePerUnit: number | undefined
 } & CommonProps
 
-export const BuySaleTokenForm = ({ tokenId, setPrimaryButtonProps, onSubmit }: BuySaleTokenFormProps) => {
-  const { control, watch, handleSubmit } = useForm<{ tokens: number | null }>()
+export const BuyMarketTokenForm = ({
+  token,
+  setPrimaryButtonProps,
+  onSubmit,
+  pricePerUnit,
+}: BuyMarketTokenFormProps) => {
+  const { control, watch, handleSubmit, formState } = useForm<{ tokens: number | null }>()
   const { accountBalance } = useSubscribeAccountBalance()
   const tokens = watch('tokens')
-  const { pricePerUnit, tokensOnSale, userBalance, title } = getTokenDetails(tokenId)
+  const { fullFee } = useFee('purchaseTokenOnMarketTx', ['1', '1', String(tokens ?? 0), '1000000'])
   const { tokenPrice } = useJoystream()
-  const tokenInUsd = (tokens || 0) * pricePerUnit * (tokenPrice ?? 0)
 
+  const tokenInUsd = (tokens || 0) * (pricePerUnit ?? 0) * (tokenPrice ?? 0)
   const smMatch = useMediaMatch('sm')
-
   const details = useMemo(
     () => [
       {
@@ -52,23 +51,31 @@ export const BuySaleTokenForm = ({ tokenId, setPrimaryButtonProps, onSubmit }: B
             variant="t200"
             withDenomination="before"
             withToken
-            customTicker={`$${title}`}
+            customTicker={`$${token?.symbol}`}
           />
         ),
         tooltipText: 'Lorem ipsum',
       },
       {
         title: 'Fee',
-        content: <NumberFormat value={tokensOnSale} as="p" variant="t200" withDenomination="before" withToken />,
+        content: <NumberFormat value={fullFee} as="p" variant="t200" withDenomination="before" withToken />,
         tooltipText: 'Lorem ipsum',
       },
       {
         title: 'You will spend',
-        content: <NumberFormat value={tokensOnSale} as="p" variant="t200" withDenomination="before" withToken />,
+        content: (
+          <NumberFormat
+            value={hapiBnToTokenNumber(fullFee) + (tokens || 0) * (pricePerUnit ?? 0)}
+            as="p"
+            variant="t200"
+            withDenomination="before"
+            withToken
+          />
+        ),
         tooltipText: 'Lorem ipsum',
       },
     ],
-    [title, tokens, tokensOnSale]
+    [fullFee, pricePerUnit, token?.symbol, tokens]
   )
 
   useMountEffect(() => {
@@ -86,7 +93,7 @@ export const BuySaleTokenForm = ({ tokenId, setPrimaryButtonProps, onSubmit }: B
             avoidIconStyling
             tileSize={smMatch ? 'big' : 'bigSmall'}
             caption="PRICE PER UNIT"
-            content={pricePerUnit}
+            content={pricePerUnit ?? 0}
             icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
             tooltipText="Lorem ipsum"
             withDenomination
@@ -95,7 +102,7 @@ export const BuySaleTokenForm = ({ tokenId, setPrimaryButtonProps, onSubmit }: B
             avoidIconStyling
             tileSize={smMatch ? 'big' : 'bigSmall'}
             caption={`YOUR ${atlasConfig.joystream.tokenTicker} BALANCE`}
-            content={userBalance}
+            content={accountBalance ?? 0}
             icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
             tooltipText="Lorem ipsum"
             withDenomination
@@ -105,14 +112,18 @@ export const BuySaleTokenForm = ({ tokenId, setPrimaryButtonProps, onSubmit }: B
           name="tokens"
           control={control}
           rules={{
-            max: {
-              value: accountBalance ? hapiBnToTokenNumber(accountBalance) : 0,
-              message: 'Amount exceeds your account balance',
+            validate: {
+              valid: (value) => {
+                if (!value || value < 1) return 'You need to buy at least one token'
+                if (!accountBalance || !pricePerUnit) return true
+                const requiredHapi = tokenNumberToHapiBn((value ?? 0) * pricePerUnit)
+
+                return accountBalance.gte(requiredHapi) ? true : "You don't have enough balance to buy this many tokens"
+              },
             },
-            required: true,
           }}
           render={({ field }) => (
-            <FormField label="Tokens to spend">
+            <FormField label="Tokens to buy" error={formState.errors['tokens']?.message}>
               <TokenInput
                 value={field.value}
                 onChange={field.onChange}
@@ -124,7 +135,8 @@ export const BuySaleTokenForm = ({ tokenId, setPrimaryButtonProps, onSubmit }: B
                     </Text>
                     <TextButton
                       onClick={() =>
-                        accountBalance && field.onChange(Math.floor(hapiBnToTokenNumber(accountBalance) / pricePerUnit))
+                        accountBalance &&
+                        field.onChange(Math.floor(hapiBnToTokenNumber(accountBalance) / (pricePerUnit ?? 0)))
                       }
                     >
                       Max
