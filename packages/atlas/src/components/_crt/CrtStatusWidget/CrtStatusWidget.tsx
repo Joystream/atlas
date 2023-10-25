@@ -8,6 +8,7 @@ import { NumberFormat, NumberFormatProps } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { ExpandButton } from '@/components/_buttons/ExpandButton'
+import { BuyFromMarketButton } from '@/components/_crt/BuyFromMarketButton/BuyFromMarketButton'
 import { DetailsContent } from '@/components/_nft/NftTile'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { formatDate } from '@/utils/time'
@@ -24,6 +25,7 @@ export type CrtStatusWidgetProps = {
   revenueShare: Amount
   transactionVolume: Amount
   status: 'inactive' | 'sale' | 'market'
+  tokenId: string
 }
 
 export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({
@@ -34,6 +36,7 @@ export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({
   revenue,
   revenueShare,
   transactionVolume,
+  tokenId,
   status,
 }) => {
   const drawer = useRef<HTMLDivElement>(null)
@@ -50,7 +53,7 @@ export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({
           {status === 'inactive' ? (
             <InactiveDetails symbol={ticker} totalSupply={supply} />
           ) : status === 'sale' ? null : (
-            <MarketDetails symbol={ticker} totalSupply={supply} />
+            <MarketDetails tokenId={tokenId} symbol={ticker} totalSupply={supply} />
           )}
 
           <StatisticsContainer>
@@ -128,7 +131,15 @@ const InactiveDetails = ({ symbol, totalSupply }: { symbol: string; totalSupply:
   )
 }
 
-const MarketDetails = ({ symbol, totalSupply }: { symbol: string; totalSupply: number | BN }) => {
+const MarketDetails = ({
+  symbol,
+  totalSupply,
+  tokenId,
+}: {
+  symbol: string
+  totalSupply: number | BN
+  tokenId: string
+}) => {
   return (
     <>
       <DetailsContent
@@ -142,7 +153,7 @@ const MarketDetails = ({ symbol, totalSupply }: { symbol: string; totalSupply: n
         <Button size="large" variant="secondary">
           Sell
         </Button>
-        <Button size="large">Buy</Button>
+        <BuyFromMarketButton tokenId={tokenId} />
       </FlexBox>
 
       <FlexBox width="100%" justifyContent="space-between">
