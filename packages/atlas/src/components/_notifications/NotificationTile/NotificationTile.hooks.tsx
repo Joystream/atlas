@@ -84,7 +84,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         icon: getIcon('bell'),
         link: getLink('channel-page', [channelId]),
         avatar: { type: 'channel', params: [channelId] },
-        text: <>New channel created: “{channelTitle}“</>,
+        text: <div>New channel created: “{channelTitle}“</div>,
       }
     }
 
@@ -96,9 +96,9 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         link: getLink('video-page', [videoId, commentId]),
         avatar: { type: 'membership', params: [memberHandle] },
         text: (
-          <>
+          <div>
             {memberHandle} replied to your comment under the video: “{videoTitle}”
-          </>
+          </div>
         ),
       }
     }
@@ -109,9 +109,9 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         link: getLink('video-page', [videoId, commentId]),
         avatar: { type: 'membership', params: [memberHandle] },
         text: (
-          <>
+          <div>
             {memberHandle} reacted to your comment on the video: “{videoTitle}”
-          </>
+          </div>
         ),
       }
     }
@@ -124,9 +124,9 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         link: getLink('video-page', [videoId]),
         avatar: { type: 'channel', params: [channelId] },
         text: (
-          <>
+          <div>
             {channelTitle} posted a new video: “{videoTitle}”
-          </>
+          </div>
         ),
       }
     }
@@ -137,9 +137,9 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         link: getLink('nft-page', [videoId]),
         avatar: { type: 'channel', params: [channelId] },
         text: (
-          <>
+          <div>
             {channelTitle} started the sale of NFT: “{videoTitle}”
-          </>
+          </div>
         ),
       }
     }
@@ -150,9 +150,9 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         link: getLink('nft-page', [videoId]),
         avatar: { type: 'channel', params: [channelId] },
         text: (
-          <>
+          <div>
             {channelTitle} started an auction for NFT: “{videoTitle}”
-          </>
+          </div>
         ),
       }
     }
@@ -165,9 +165,9 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         link: getLink('nft-page', [videoId]),
         avatar: { type: 'membership', params: [newBidderHandle] },
         text: (
-          <>
+          <div>
             {newBidderHandle} placed a higher bid in the auction for NFT: “{videoTitle}”
-          </>
+          </div>
         ),
       }
     }
@@ -179,9 +179,9 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         link: getLink('nft-page', [videoId]),
         avatar: { type: 'active-membership' },
         text: (
-          <>
+          <div>
             You won {auctionText} auction for NFT: “{videoTitle}”
-          </>
+          </div>
         ),
       }
     }
@@ -193,9 +193,9 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         link: getLink('nft-page', [videoId]),
         avatar: { type: 'active-membership' },
         text: (
-          <>
+          <div>
             You lost {auctionText} auction for NFT: “{videoTitle}”. Withdraw your bid
-          </>
+          </div>
         ),
       }
     }
@@ -204,7 +204,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     //     icon: notificationIcon('nft'),
     //     action: { type: 'video-page-nft', params: [notification.videoId] },
     //     avatar: { type: 'current-membership', value: '' },
-    //     text: <>Your bid is withdrawable for NFT: “{notification.videoTitle}”</>,
+    //     text: <div>Your bid is withdrawable for NFT: “{notification.videoTitle}”</div>,
     //   }
 
     // Payouts
@@ -213,11 +213,11 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     //    icon: notificationIcon('payout'),
     //     avatar: { type: 'channel', params: [notification.channelId] },
     //     text: (
-    //       <>
+    //       <div>
     //         You have received{' '}
     //         <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" />{' '}
     //         for your channel “{notification.channelTitle}” from Council Payout proposal
-    //       </>
+    //       </div>
     //     ),
     //   }
     // case 'Funds sent': // MISSING
@@ -225,11 +225,11 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     //     icon: notificationIcon('payout'),
     //     avatar: { type: 'channel', params: [notification.channelId] },
     //     text: (
-    //       <>
+    //       <div>
     //         You transferred{' '}
     //         <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" />{' '}
     //         from you member wallet to external wallet: {notification.walletaddress}
-    //       </>
+    //       </div>
     //     ),
     //   }
     // case 'Member received transfer from DAO WG': // MISSING
@@ -237,11 +237,11 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     //     icon: notificationIcon('payout'),
     //     avatar: { type: 'channel', params: [notification.channelId] },
     //     text: (
-    //       <>
+    //       <div>
     //         You have received{' '}
     //         <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" />{' '}
     //         from “{notification.group}” working group
-    //       </>
+    //       </div>
     //     ),
     //   }
 
@@ -255,7 +255,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         icon: getIcon('warning'),
         link: getLink('term-of-sevice-page'),
         avatar: { type: 'active-channel' },
-        text: <>Your channel “{channelTitle}” is excluded from App</>,
+        text: <div>Your channel “{channelTitle}” is excluded from App</div>,
       }
     }
     case 'VideoExcluded': {
@@ -264,7 +264,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         icon: getIcon('warning'),
         link: getLink('term-of-sevice-page'),
         avatar: { type: 'active-channel' },
-        text: <>Your video is excluded from App: “{videoTitle}”</>,
+        text: <div>Your video is excluded from App: “{videoTitle}”</div>,
       }
     }
     case 'NftFeaturedOnMarketPlace': {
@@ -273,7 +273,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         icon: getIcon('bell'),
         link: getLink('marketplace-page'),
         avatar: { type: 'active-channel' },
-        text: <>Your NFT was featured in the marketplace featured section: “{videoTitle}”</>,
+        text: <div>Your NFT was featured in the marketplace featured section: “{videoTitle}”</div>,
       }
     }
 
@@ -284,7 +284,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         icon: getIcon('follow'),
         link: getLink('member-page', [followerHandle]),
         avatar: { type: 'membership', params: [followerHandle] },
-        text: <>{followerHandle} followed your channel</>,
+        text: <div>{followerHandle} followed your channel</div>,
       }
     }
     case 'CommentPostedToVideo': {
@@ -294,9 +294,9 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         link: getLink('nft-page', [videoId]),
         avatar: { type: 'membership', params: [memberHandle] },
         text: (
-          <>
+          <div>
             {memberHandle} left a comment on your video: “{videoTitle}”
-          </>
+          </div>
         ),
       }
     }
@@ -307,9 +307,9 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         link: getLink('video-page', [videoId]),
         avatar: { type: 'membership', params: [memberHandle] },
         text: (
-          <>
+          <div>
             {memberHandle} liked your video: “{videoTitle}”
-          </>
+          </div>
         ),
       }
     }
@@ -320,9 +320,9 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         link: getLink('video-page', [videoId]),
         avatar: { type: 'membership', params: [memberHandle] },
         text: (
-          <>
+          <div>
             {memberHandle} disliked your video: “{videoTitle}”
-          </>
+          </div>
         ),
       }
     }
@@ -333,21 +333,21 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     //     icon: notificationIcon('bell'),
     //     action: { type: 'ypp-dashboard' },
     //     avatar: { type: 'current-channel', value: '' },
-    //     text: <>Your channel was successfully signed up for YouTube Partnership Program</>,
+    //     text: <div>Your channel was successfully signed up for YouTube Partnership Program</div>,
     //   }
     // case 'Someone signed up using your referral link': // MISSING
     //   return {
     //     icon: notificationIcon('bell'),
     //     action: { type: 'ypp-dashboard' },
     //     avatar: { type: 'membership', params: [notification.memberHandle] },
-    //     text: <>{notification.memberHandle} signed up for YPP using your referral link</>,
+    //     text: <div>{notification.memberHandle} signed up for YPP using your referral link</div>,
     //   }
     case 'ChannelVerified': {
       return {
         icon: getIcon('bell'),
         link: getLink('ypp-dashboard'),
         avatar: { type: 'active-channel' },
-        text: <>Your channel got verified in our YouTube Partnership Program</>,
+        text: <div>Your channel got verified in our YouTube Partnership Program</div>,
       }
     }
     case 'ChannelSuspended': {
@@ -355,7 +355,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         icon: getIcon('warning'),
         link: getLink('ypp-dashboard'),
         avatar: { type: 'active-channel' },
-        text: <>Your channel got suspended in our YouTube Partnership Program</>,
+        text: <div>Your channel got suspended in our YouTube Partnership Program</div>,
       }
     }
 
@@ -368,9 +368,9 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         link: getLink('nft-page', [videoId]),
         avatar: { type: 'membership', params: [buyerHandle] },
         text: (
-          <>
+          <div>
             {buyerHandle} purchased for {tokenAmount} your NFT: “{videoTitle}”
-          </>
+          </div>
         ),
       }
     }
@@ -382,9 +382,9 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         link: getLink('nft-page', [videoId]),
         avatar: { type: 'active-channel' },
         text: (
-          <>
+          <div>
             You received {tokenAmount} royalties from your NFT: {videoTitle}”
-          </>
+          </div>
         ),
       }
     }
@@ -396,9 +396,9 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         link: getLink('nft-page', [videoId]),
         avatar: { type: 'membership', params: [bidderHandle] },
         text: (
-          <>
+          <div>
             {bidderHandle} placed a bid of {tokenAmount} for your NFT: “{videoTitle}”
-          </>
+          </div>
         ),
       }
     }
@@ -407,7 +407,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     //     icon: notificationIcon('nft'),
     //     action: { type: 'nft-page', [notification.videoId] },
     //     avatar: { type: 'active-channel' },
-    //     text: <>Timed auction expired on your NFT: “{notification.videoTitle}”</>,
+    //     text: <div>Timed auction expired on your NFT: “{notification.videoTitle}”</div>,
     //   }
 
     // Payouts
@@ -419,9 +419,9 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         link: getLink('member-page', [payerHandle]),
         avatar: { type: 'membership', params: [payerHandle] },
         text: (
-          <>
+          <div>
             {payerHandle} transferred {tokenAmount} to your channel
-          </>
+          </div>
         ),
       }
     }
@@ -430,22 +430,22 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     //     icon: notificationIcon('payout'),
     //     avatar: { type: 'current-channel', value: '' },
     //     text: (
-    //       <>
+    //       <div>
     //         You have received{' '}
     //         <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" />{' '}
     //         from “marketing” working group
-    //       </>
+    //       </div>
     //     ),
     //   }
     // case 'New payout is claimable from Council Payout proposal': // MISSING
     //   return {
     //     avatar: { type: 'current-channel', value: '' },
     //     text: (
-    //       <>
+    //       <div>
     //         You have{' '}
     //         <NumberFormat as="span" value={notification.amount} format="short" withToken withDenomination="before" /> to
     //         claim from Council Payout proposal
-    //       </>
+    //       </div>
     //     ),
     //   }
     case 'ChannelFundsWithdrawn': {
@@ -455,7 +455,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         icon: getIcon('payout'),
         link: getLink('payments-page'),
         avatar: { type: 'active-membership' },
-        text: <>{tokenAmount} were withdrawn from your channel account</>,
+        text: <div>{tokenAmount} were withdrawn from your channel account</div>,
       }
     }
   }
