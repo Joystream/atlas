@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
+import { useGetFullCreatorTokenQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { FlexBox } from '@/components/FlexBox/FlexBox'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { NumberFormat } from '@/components/NumberFormat'
@@ -16,79 +17,62 @@ import { useFee, useJoystream, useTokenPrice } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
+import { calcMarketPricePerToken } from '@/utils/crts'
 
 export type SellTokenModalProps = {
   tokenId: string
   onClose: () => void
+  show: boolean
 }
 
-const getTokenDetails = (_: string) => ({
-  title: 'JBC',
-  pricePerUnit: 1000,
-  tokensOnSale: 67773,
-  userBalance: 100000,
-})
-
-export const SellTokenModal = ({ tokenId, onClose }: SellTokenModalProps) => {
+export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) => {
   const { control, watch, handleSubmit } = useForm<{ tokens: number }>()
   const { convertTokensToUSD } = useTokenPrice()
   const smMatch = useMediaMatch('sm')
   const { memberId } = useUser()
-  const { pricePerUnit, tokensOnSale, userBalance, title } = getTokenDetails(tokenId)
   const tokens = watch('tokens')
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()
   const { fullFee } = useFee('sellTokenOnMarketTx')
+  const { data } = useGetFullCreatorTokenQuery({
+    variables: {
+      id: tokenId,
+    },
+  })
+  const currentAmm = data?.creatorTokenById?.ammCurves.find((amm) => !amm.finalized)
+  const title = data?.creatorTokenById?.symbol ?? 'N/A'
+  const userTokenBalance = 0 // todo: this will come from orion
+
+  const pricePerUnit =
+    useMemo(() => {
+      return calcMarketPricePerToken(
+        String(+(data?.creatorTokenById?.totalSupply ?? 0) + 1000),
+        currentAmm?.ammSlopeParameter,
+        currentAmm?.ammInitPrice
+      )
+    }, [currentAmm?.ammInitPrice, currentAmm?.ammSlopeParameter, data?.creatorTokenById?.totalSupply]) ?? 0
   const details = useMemo(
     () => [
       {
-        title: 'You will receive',
+        title: 'You will get',
         content: (
           <NumberFormat
             value={tokens ? tokens * pricePerUnit : 0}
-            format={(tokens || 0) > 1_000_000 ? 'short' : 'full'}
+            format={(tokens || 0) * pricePerUnit > 1_000_000 ? 'short' : 'full'}
             as="p"
             variant="t200-strong"
             withToken
-          />
-        ),
-      },
-      {
-        title: 'Purchase',
-        content: (
-          <NumberFormat
-            value={tokens}
-            as="p"
-            variant="t200"
             withDenomination="before"
-            withToken
-            customTicker={`$${title}`}
           />
         ),
       },
       {
-        title: 'Platform fee', // todo: introduce platform fee
-        content: <NumberFormat value={2} as="p" variant="t200" withDenomination="before" withToken />,
-      },
-      {
-        title: 'Transaction fee',
+        title: 'Fee',
         content: <NumberFormat value={fullFee} as="p" variant="t200" withDenomination="before" withToken />,
       },
-      {
-        title: 'Total',
-        content: (
-          <FlexBox alignItems="start">
-            <NumberFormat value={tokensOnSale} as="p" variant="t200-strong" withToken customTicker={`$${title}`} />
-            <Text variant="t200-strong" as="p" color="colorText">
-              +
-            </Text>
-            <NumberFormat value={fullFee.addn(2)} as="p" variant="t200-strong" withDenomination withToken />
-          </FlexBox>
-        ),
-      },
     ],
-    [fullFee, pricePerUnit, title, tokens, tokensOnSale]
+    [fullFee, pricePerUnit, tokens]
   )
 
   const onSubmit = () =>
@@ -120,10 +104,14 @@ export const SellTokenModal = ({ tokenId, onClose }: SellTokenModalProps) => {
       })
     })()
 
+  if (!currentAmm && show) {
+    throw new Error('BuyAmmModal invoked on token without active amm')
+  }
+
   return (
     <DialogModal
       title={`Sell $${title}`}
-      show
+      show={show}
       onExitClick={onClose}
       primaryButton={{
         text: 'Sell tokens',
@@ -144,9 +132,10 @@ export const SellTokenModal = ({ tokenId, onClose }: SellTokenModalProps) => {
             avoidIconStyling
             tileSize={smMatch ? 'big' : 'bigSmall'}
             caption={`YOUR $${title} BALANCE`}
-            content={userBalance}
+            content={userTokenBalance}
             icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
             withDenomination
+            denominationMultiplier={pricePerUnit}
           />
         </FlexBox>
         <Controller
@@ -154,7 +143,7 @@ export const SellTokenModal = ({ tokenId, onClose }: SellTokenModalProps) => {
           control={control}
           rules={{
             max: {
-              value: userBalance,
+              value: userTokenBalance,
               message: 'Amount exceeds your account balance',
             },
           }}
@@ -167,9 +156,9 @@ export const SellTokenModal = ({ tokenId, onClose }: SellTokenModalProps) => {
                 nodeEnd={
                   <FlexBox gap={2} alignItems="baseline">
                     <Text variant="t300" as="p" color="colorTextMuted">
-                      ${convertTokensToUSD(field.value * pricePerUnit)?.toFixed(2)}
+                      ${convertTokensToUSD((field.value || 0) * pricePerUnit)?.toFixed(2)}
                     </Text>
-                    <TextButton onClick={() => field.onChange(userBalance)}>Max</TextButton>
+                    <TextButton onClick={() => field.onChange(userTokenBalance)}>Max</TextButton>
                   </FlexBox>
                 }
               />
