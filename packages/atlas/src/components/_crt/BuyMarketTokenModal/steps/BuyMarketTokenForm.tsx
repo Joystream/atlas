@@ -8,7 +8,6 @@ import { Information } from '@/components/Information'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
-import { TextButton } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
 import { TokenInput } from '@/components/_inputs/TokenInput'
 import { DetailsContent } from '@/components/_nft/NftTile'
@@ -31,7 +30,6 @@ export const BuyMarketTokenForm = ({
   token,
   setPrimaryButtonProps,
   onSubmit,
-  pricePerUnit,
   calculateRequiredHapi,
 }: BuyMarketTokenFormProps) => {
   const { control, watch, handleSubmit, formState } = useForm<{ tokens: number | null }>()
@@ -39,6 +37,11 @@ export const BuyMarketTokenForm = ({
   const tokens = watch('tokens') || 0
   const { fullFee } = useFee('purchaseTokenOnMarketTx', ['1', '1', String(tokens ?? 0), '1000000'])
   const { tokenPrice } = useJoystream()
+
+  const priceForAllToken = useMemo(() => {
+    return hapiBnToTokenNumber(calculateRequiredHapi(Math.max(tokens, 1)) ?? new BN(0))
+  }, [tokens, calculateRequiredHapi])
+  const pricePerUnit = priceForAllToken / (tokens || 1)
 
   const tokenInUsd = tokens * pricePerUnit * (tokenPrice ?? 0)
   const smMatch = useMediaMatch('sm')
@@ -50,10 +53,10 @@ export const BuyMarketTokenForm = ({
           <NumberFormat
             value={tokens}
             as="p"
-            format={tokens > 1_000_000 ? 'short' : 'full'}
             variant="t200"
             withDenomination="before"
             withToken
+            denominationMultiplier={pricePerUnit}
             customTicker={`$${token?.symbol}`}
           />
         ),
@@ -78,7 +81,7 @@ export const BuyMarketTokenForm = ({
         tooltipText: 'Lorem ipsum',
       },
     ],
-    [calculateRequiredHapi, fullFee, token?.symbol, tokens]
+    [calculateRequiredHapi, fullFee, pricePerUnit, token?.symbol, tokens]
   )
 
   useMountEffect(() => {
@@ -127,25 +130,7 @@ export const BuyMarketTokenForm = ({
           }}
           render={({ field }) => (
             <FormField label="Tokens to buy" error={formState.errors['tokens']?.message}>
-              <TokenInput
-                value={field.value}
-                onChange={field.onChange}
-                placeholder="0"
-                nodeEnd={
-                  <FlexBox gap={2} alignItems="baseline">
-                    <Text variant="t300" as="p" color="colorTextMuted">
-                      ${tokenInUsd.toFixed(2)}
-                    </Text>
-                    <TextButton
-                      onClick={() =>
-                        accountBalance && field.onChange(Math.floor(hapiBnToTokenNumber(accountBalance) / pricePerUnit))
-                      }
-                    >
-                      Max
-                    </TextButton>
-                  </FlexBox>
-                }
-              />
+              <TokenInput value={field.value} onChange={field.onChange} placeholder="0" nodeEnd={<div />} />
             </FormField>
           )}
         />

@@ -14,12 +14,12 @@ import { DetailsContent } from '@/components/_nft/NftTile'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
+import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useFee, useJoystream, useTokenPrice } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
-import { calcMarketPricePerToken } from '@/utils/crts'
+import { calcSellMarketPricePerToken } from '@/utils/crts'
 
 export type SellTokenModalProps = {
   tokenId: string
@@ -45,47 +45,30 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
   const currentAmm = data?.creatorTokenById?.ammCurves.find((amm) => !amm.finalized)
   const title = data?.creatorTokenById?.symbol ?? 'N/A'
   const userTokenBalance = 0 // todo: this will come from orion
-
-  const pricePerUnit =
-    useMemo(() => {
-      return calcMarketPricePerToken(
-        String(+(data?.creatorTokenById?.totalSupply ?? 0) + 1000),
-        currentAmm?.ammSlopeParameter,
-        currentAmm?.ammInitPrice
-      )
-    }, [currentAmm?.ammInitPrice, currentAmm?.ammSlopeParameter, data?.creatorTokenById?.totalSupply]) ?? 0
-
   const calculateSlippageAmount = useCallback(
     (amount: number) => {
       const currentAmm = data?.creatorTokenById?.ammCurves.find((amm) => !amm.finalized)
-      if (!currentAmm || !data?.creatorTokenById?.totalSupply) return
-      const { totalSupply: _totalSupply } = data.creatorTokenById
-      const totalSupply = new BN(_totalSupply)
-      const allocation = totalSupply
-        .addn(amount)
-        .pow(new BN(2))
-        .sub(totalSupply.pow(new BN(2)))
-      return new BN(currentAmm.ammSlopeParameter)
-        .muln(0.5)
-        .mul(allocation)
-        .add(new BN(currentAmm.ammInitPrice).addn(amount))
+      return calcSellMarketPricePerToken(
+        currentAmm?.mintedByAmm,
+        currentAmm?.ammSlopeParameter,
+        currentAmm?.ammInitPrice,
+        amount
+      )
     },
     [data?.creatorTokenById]
   )
+
+  const priceForAllToken = useMemo(() => {
+    return hapiBnToTokenNumber(calculateSlippageAmount(Math.max(tokens, 1)) ?? new BN(0))
+  }, [tokens, calculateSlippageAmount])
+  const pricePerUnit = priceForAllToken / (tokens || 1)
 
   const details = useMemo(
     () => [
       {
         title: 'You will get',
         content: (
-          <NumberFormat
-            value={tokens * pricePerUnit}
-            format={tokens * pricePerUnit > 1_000_000 ? 'short' : 'full'}
-            as="p"
-            variant="t200-strong"
-            withToken
-            withDenomination="before"
-          />
+          <NumberFormat value={priceForAllToken} as="p" variant="t200-strong" withToken withDenomination="before" />
         ),
       },
       {
@@ -108,7 +91,7 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
         tooltipText: 'Lorem ipsum',
       },
     ],
-    [fullFee, pricePerUnit, title, tokens]
+    [fullFee, priceForAllToken, pricePerUnit, title, tokens]
   )
 
   const onSubmit = () =>
@@ -117,13 +100,12 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
       if (!joystream || !memberId || !slippageTolerance) {
         return
       }
-      const requiredHapi = data.tokens * pricePerUnit
       handleTransaction({
         txFactory: async (updateStatus) =>
           (await joystream.extrinsics).sellTokenOnMarket(
             tokenId,
             memberId,
-            tokenNumberToHapiBn(requiredHapi).toString(),
+            String(data.tokens),
             slippageTolerance.toString(),
             proxyCallback(updateStatus)
           ),
@@ -135,7 +117,7 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
         },
         onTxSync: async () => {
           displaySnackbar({
-            title: `${tokens * pricePerUnit} ${atlasConfig.joystream.tokenTicker} received`,
+            title: `${(tokens * priceForAllToken) / data.tokens} ${atlasConfig.joystream.tokenTicker} received`,
             description: `${tokens} $${title} sold`,
           })
           onClose()
@@ -146,6 +128,7 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
   if (!currentAmm && show) {
     throw new Error('BuyAmmModal invoked on token without active amm')
   }
+  console.log(currentAmm?.mintedByAmm)
 
   return (
     <DialogModal
@@ -181,15 +164,13 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
           name="tokens"
           control={control}
           rules={{
-            max: {
-              value: userTokenBalance,
-              message: 'Amount exceeds your account balance',
-            },
             validate: {
               valid: (value) => {
                 if (!value || value < 1) {
                   return 'You need to sell at least one token'
                 }
+                if (value > +(currentAmm?.mintedByAmm ?? 0)) return 'You cannot sell more tokens than minted'
+                if (value > userTokenBalance) return 'Amount exceeds your account balance'
                 return true
               },
             },

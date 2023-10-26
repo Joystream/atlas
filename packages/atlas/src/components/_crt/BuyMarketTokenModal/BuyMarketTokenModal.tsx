@@ -6,11 +6,12 @@ import { BuyMarketTokenSuccess } from '@/components/_crt/BuyMarketTokenModal/ste
 import { DialogProps } from '@/components/_overlays/Dialog'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
-import { calcMarketPricePerToken } from '@/utils/crts'
+import { calcBuyMarketPricePerToken } from '@/utils/crts'
 
 import { BuyMarketTokenConditions } from './steps/BuyMarketTokenConditions'
 import { BuyMarketTokenForm } from './steps/BuyMarketTokenForm'
@@ -69,27 +70,16 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
       if (amount === 0) {
         return new BN(0)
       }
-      const totalSupply = new BN(currentAmm.mintedByAmm)
-      const allocation = totalSupply
-        .addn(amount)
-        .pow(new BN(2))
-        .sub(totalSupply.pow(new BN(2)))
-      return new BN(currentAmm.ammSlopeParameter)
-        .muln(0.5)
-        .mul(allocation)
-        .add(new BN(currentAmm.ammInitPrice).addn(amount))
+
+      return calcBuyMarketPricePerToken(
+        currentAmm.mintedByAmm,
+        currentAmm.ammSlopeParameter,
+        currentAmm.ammInitPrice,
+        amount
+      )
     },
     [data?.creatorTokenById]
   )
-
-  const pricePerUnit =
-    useMemo(() => {
-      return calcMarketPricePerToken(
-        String(+(currentAmm?.mintedByAmm ?? 0)),
-        currentAmm?.ammSlopeParameter,
-        currentAmm?.ammInitPrice
-      )
-    }, [currentAmm?.ammInitPrice, currentAmm?.ammSlopeParameter, currentAmm?.mintedByAmm]) ?? 0
 
   const commonProps = {
     setPrimaryButtonProps,
@@ -97,7 +87,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
 
   const onSubmitConditions = useCallback(async () => {
     const slippageAmount = calculateRequiredHapi(amountRef.current ?? 0)
-    if (!joystream || !memberId || !amountRef.current || !pricePerUnit || !slippageAmount) {
+    if (!joystream || !memberId || !amountRef.current || !slippageAmount) {
       return
     }
 
@@ -120,16 +110,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
         })
       },
     })
-  }, [
-    calculateRequiredHapi,
-    displaySnackbar,
-    handleTransaction,
-    joystream,
-    memberId,
-    pricePerUnit,
-    proxyCallback,
-    tokenId,
-  ])
+  }, [calculateRequiredHapi, displaySnackbar, handleTransaction, joystream, memberId, proxyCallback, tokenId])
 
   if (!currentAmm && show) {
     throw new Error('BuyAmmModal invoked on token without active amm')
@@ -152,7 +133,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
         <BuyMarketTokenForm
           {...commonProps}
           calculateRequiredHapi={calculateRequiredHapi}
-          pricePerUnit={pricePerUnit}
+          pricePerUnit={hapiBnToTokenNumber(calculateRequiredHapi(1) ?? new BN(0))}
           onSubmit={(tokens) => {
             setActiveStep(BUY_MARKET_TOKEN_STEPS.conditions)
             amountRef.current = tokens
