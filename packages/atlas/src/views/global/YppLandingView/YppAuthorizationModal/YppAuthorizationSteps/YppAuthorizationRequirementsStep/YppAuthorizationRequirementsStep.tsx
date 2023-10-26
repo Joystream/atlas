@@ -3,8 +3,10 @@ import { FC, PropsWithChildren } from 'react'
 import { SvgActionCheck, SvgActionClose } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
 import { FlexBox } from '@/components/FlexBox'
+import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
+import { replaceTemplateWithRenderer } from '@/utils/misc'
 
 import { ListItem, Paragraph, StyledList, TickWrapper } from './YppAuthorizationRequirementsStep.styles'
 import { useGetYppChannelRequirements } from './useGetYppChannelRequirements'
@@ -45,7 +47,11 @@ export const YppAuthorizationRequirementsStep: FC<YppAuthorizationRequirementsSt
         ) : requirements ? (
           requirements.map((requirement, idx) => (
             <SingleRequirement key={idx} fulfilled={checkRequirmentError(requirement.errorCode)}>
-              {requirement.text}
+              {replaceTemplateWithRenderer(requirement.template, requirement.variables, (variable) => (
+                <Text variant="t200" as="span" color="colorTextCaution">
+                  {variable}
+                </Text>
+              ))}
             </SingleRequirement>
           ))
         ) : null}

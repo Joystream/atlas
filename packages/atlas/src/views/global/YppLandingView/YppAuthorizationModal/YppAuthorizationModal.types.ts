@@ -38,7 +38,8 @@ export type ChannelVerificationSuccessResponse = {
 export type ChannelRequirements = {
   requirements: {
     errorCode: YppRequirementsErrorCode
-    text: string
+    template: string
+    variables: string[]
   }[]
 }
 
