@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
@@ -23,6 +24,7 @@ type BuyMarketTokenFormProps = {
   token?: FullCreatorTokenFragment | null
   onSubmit: (tokens: number | null) => void
   pricePerUnit: number
+  calculateRequiredHapi: (amount: number) => BN | undefined
 } & CommonProps
 
 export const BuyMarketTokenForm = ({
@@ -30,6 +32,7 @@ export const BuyMarketTokenForm = ({
   setPrimaryButtonProps,
   onSubmit,
   pricePerUnit,
+  calculateRequiredHapi,
 }: BuyMarketTokenFormProps) => {
   const { control, watch, handleSubmit, formState } = useForm<{ tokens: number | null }>()
   const { accountBalance } = useSubscribeAccountBalance()
@@ -65,7 +68,7 @@ export const BuyMarketTokenForm = ({
         title: 'You will spend',
         content: (
           <NumberFormat
-            value={hapiBnToTokenNumber(fullFee) + tokens * pricePerUnit}
+            value={hapiBnToTokenNumber(fullFee.add(calculateRequiredHapi(tokens) ?? new BN(0)))}
             as="p"
             variant="t200"
             withDenomination="before"
@@ -75,7 +78,7 @@ export const BuyMarketTokenForm = ({
         tooltipText: 'Lorem ipsum',
       },
     ],
-    [fullFee, pricePerUnit, token?.symbol, tokens]
+    [calculateRequiredHapi, fullFee, token?.symbol, tokens]
   )
 
   useMountEffect(() => {
