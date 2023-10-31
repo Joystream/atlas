@@ -148,7 +148,7 @@ export const CrtDashboardMainTab = ({ token }: CrtDashboardMainTabProps) => {
           }}
           customNode={
             <Text variant="h400" as="h4">
-              {token.annualCreatorReward}%
+              {token.annualCreatorRewardPermill}%
             </Text>
           }
         />

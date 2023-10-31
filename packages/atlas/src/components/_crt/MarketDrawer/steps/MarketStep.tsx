@@ -26,7 +26,7 @@ type MarketStepProps = {
   onNextStep: (props: CrtMarketForm) => void
 }
 
-const DEFAULT_MIN_PRICE = 100
+const DEFAULT_MIN_PRICE = 0.01
 
 export const MarketStep: FC<MarketStepProps> = ({
   tokenName,
@@ -122,7 +122,7 @@ export const MarketStep: FC<MarketStepProps> = ({
               onChange={setPrice}
               nodeEnd={
                 <Text variant="t300" as="p" color="colorTextMuted">
-                  ${tokenInUsd.toFixed(2)}
+                  ${tokenInUsd.toFixed(price < 1 ? 5 : 2)}
                 </Text>
               }
             />
