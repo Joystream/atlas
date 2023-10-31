@@ -2804,6 +2804,7 @@ export type BasicCreatorTokenFragment = {
 export type FullCreatorTokenFragment = {
   __typename?: 'CreatorToken'
   annualCreatorRewardPermill: number
+  revenueShareRatioPermill: number
   description?: string | null
   totalSupply: string
   id: string
@@ -3476,6 +3477,7 @@ export const FullCreatorTokenFragmentDoc = gql`
   fragment FullCreatorToken on CreatorToken {
     ...BasicCreatorToken
     annualCreatorRewardPermill
+    revenueShareRatioPermill
     description
     ammCurves {
       id

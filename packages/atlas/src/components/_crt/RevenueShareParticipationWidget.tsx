@@ -49,44 +49,7 @@ export const RevenueShareParticipationWidget = ({ revenueShare }: RevenueSharePa
       title="Revenue share participation"
       titleVariant="h400"
       customTopRightNode={actionNode()}
-      customNode={
-        <FlexBox flow="column" gap={6} width="100%">
-          <FlexBox justifyContent="space-between">
-            <FlexBox flow="column">
-              <Text variant="h100" as="h1" color="colorTextMuted">
-                HOLDERS EARNINGS
-              </Text>
-              <FlexBox alignItems="center">
-                <SvgJoyTokenMonochrome16 />
-                <Text variant="h400" as="h4">
-                  {revenueShare.claimed}/{revenueShare.claimed}
-                </Text>
-              </FlexBox>
-
-              <Text variant="t100" as="p" color="colorText">
-                ${revenueShare.claimed}/{revenueShare.claimed}
-              </Text>
-            </FlexBox>
-
-            <FlexBox flow="column" alignItems="end">
-              <Text variant="h100" as="h1" color="colorTextMuted">
-                ENDED ON
-              </Text>
-              <Text variant="h400" as="h4">
-                {revenueShare.stakers.length}/69420
-              </Text>
-              <Text variant="t100" as="p" color="colorText">
-                {Math.round((revenueShare.stakers.length / 69420) * 100)}% holders
-              </Text>
-            </FlexBox>
-          </FlexBox>
-
-          <ProgressBar
-            color={hasEnded ? cVar('colorCoreNeutral700Lighten') : cVar('colorBackgroundPrimary')}
-            progress={Math.round((revenueShare.stakers.length / 69420) * 100)}
-          />
-        </FlexBox>
-      }
+      customNode={<RevenueShareProgress revenueShare={revenueShare} hasEnded={hasEnded} />}
     />
   )
 }
@@ -117,3 +80,49 @@ const StyledPill = styled(Pill)`
     fill: ${cVar('colorTextSuccess')};
   }
 `
+
+type RevenueShareProgressProps = {
+  revenueShare: FullCreatorTokenFragment['revenueShares'][number]
+  hasEnded?: boolean
+}
+
+export const RevenueShareProgress = ({ revenueShare, hasEnded }: RevenueShareProgressProps) => {
+  return (
+    <FlexBox flow="column" gap={6} width="100%">
+      <FlexBox justifyContent="space-between">
+        <FlexBox flow="column">
+          <Text variant="h100" as="h1" color="colorTextMuted">
+            HOLDERS EARNINGS
+          </Text>
+          <FlexBox alignItems="center">
+            <SvgJoyTokenMonochrome16 />
+            <Text variant="h400" as="h4">
+              {revenueShare.claimed}/{revenueShare.claimed}
+            </Text>
+          </FlexBox>
+
+          <Text variant="t100" as="p" color="colorText">
+            ${revenueShare.claimed}/{revenueShare.claimed}
+          </Text>
+        </FlexBox>
+
+        <FlexBox flow="column" alignItems="end">
+          <Text variant="h100" as="h1" color="colorTextMuted">
+            ENDED ON
+          </Text>
+          <Text variant="h400" as="h4">
+            {revenueShare.stakers.length}/69420
+          </Text>
+          <Text variant="t100" as="p" color="colorText">
+            {Math.round((revenueShare.stakers.length / 69420) * 100)}% holders
+          </Text>
+        </FlexBox>
+      </FlexBox>
+
+      <ProgressBar
+        color={hasEnded ? cVar('colorCoreNeutral700Lighten') : cVar('colorBackgroundPrimary')}
+        progress={Math.round((revenueShare.stakers.length / 69420) * 100)}
+      />
+    </FlexBox>
+  )
+}

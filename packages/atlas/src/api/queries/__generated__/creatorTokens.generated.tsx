@@ -95,6 +95,7 @@ export type GetFullCreatorTokenQuery = {
   creatorTokenById?: {
     __typename?: 'CreatorToken'
     annualCreatorRewardPermill: number
+    revenueShareRatioPermill: number
     description?: string | null
     totalSupply: string
     id: string
