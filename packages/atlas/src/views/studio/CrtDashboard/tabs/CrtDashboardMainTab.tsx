@@ -2,17 +2,16 @@ import { useMemo } from 'react'
 
 import { useGetCreatorTokenHoldersQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
-import { SvgActionChevronR } from '@/assets/icons'
 import { NumberFormat } from '@/components/NumberFormat'
 import { ProgressWidget, ProgressWidgetProps } from '@/components/ProgressWidget'
 import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
 import { TextButton } from '@/components/_buttons/Button'
 import { CrtHoldersWidget } from '@/components/_crt/CrtHoldersWidget'
+import { CrtRevenueShareWidget } from '@/components/_crt/CrtRevenueShareWidget'
 import { useUser } from '@/providers/user/user.hooks'
 import {
   BigWidgetContainer,
-  HoldersPlaceholders,
   NoGlobalPaddingWrapper,
   WidgetContainer,
 } from '@/views/studio/CrtDashboard/CrtDashboard.styles'
@@ -155,17 +154,7 @@ export const CrtDashboardMainTab = ({ token }: CrtDashboardMainTabProps) => {
       </WidgetContainer>
       <BigWidgetContainer>
         <CrtHoldersWidget tokenId={token.id} totalSupply={+(token.totalSupply ?? 0)} />
-        <WidgetTile
-          title="Revenue share with holders"
-          titleColor="colorTextStrong"
-          titleVariant="h500"
-          customTopRightNode={
-            <TextButton iconPlacement="right" icon={<SvgActionChevronR />}>
-              Show revenue shares
-            </TextButton>
-          }
-          customNode={<HoldersPlaceholders />}
-        />
+        <CrtRevenueShareWidget token={token} />
       </BigWidgetContainer>
     </>
   )
