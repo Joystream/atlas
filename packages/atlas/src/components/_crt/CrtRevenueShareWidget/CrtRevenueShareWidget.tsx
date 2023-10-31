@@ -18,9 +18,10 @@ import { formatDateTime, formatDurationShort } from '@/utils/time'
 
 export type CrtHoldersWidgetProps = {
   token: FullCreatorTokenFragment
+  onTabSwitch?: () => void
 }
 
-export const CrtRevenueShareWidget = ({ token }: CrtHoldersWidgetProps) => {
+export const CrtRevenueShareWidget = ({ token, onTabSwitch }: CrtHoldersWidgetProps) => {
   const activeRevenueShare = token.revenueShares.find((rS) => !rS.finalized)
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
   const endingBlockTimestamp = convertBlockToMsTimestamp(activeRevenueShare?.endsAt ?? 0)
@@ -30,11 +31,11 @@ export const CrtRevenueShareWidget = ({ token }: CrtHoldersWidgetProps) => {
 
   return (
     <Widget
-      title="Holders"
+      title="Revenue share with holders"
       titleVariant="h500"
       titleColor="colorTextStrong"
       customTopRightNode={
-        <TextButton iconPlacement="right" icon={<SvgActionChevronR />}>
+        <TextButton iconPlacement="right" onClick={onTabSwitch} icon={<SvgActionChevronR />}>
           Show revenue shares
         </TextButton>
       }

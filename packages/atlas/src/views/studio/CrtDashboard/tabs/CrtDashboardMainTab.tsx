@@ -19,6 +19,7 @@ import { StyledSvgJoyTokenMonochrome24 } from '@/views/studio/MyPaymentsView/Pay
 
 type CrtDashboardMainTabProps = {
   token: FullCreatorTokenFragment
+  onRevenueShareDetails: () => void
 }
 
 const steps: ProgressWidgetProps['steps'] = [
@@ -54,7 +55,7 @@ const steps: ProgressWidgetProps['steps'] = [
   },
 ]
 
-export const CrtDashboardMainTab = ({ token }: CrtDashboardMainTabProps) => {
+export const CrtDashboardMainTab = ({ token, onRevenueShareDetails }: CrtDashboardMainTabProps) => {
   const { memberId } = useUser()
   const { data } = useGetCreatorTokenHoldersQuery({
     variables: {
@@ -154,7 +155,7 @@ export const CrtDashboardMainTab = ({ token }: CrtDashboardMainTabProps) => {
       </WidgetContainer>
       <BigWidgetContainer>
         <CrtHoldersWidget tokenId={token.id} totalSupply={+(token.totalSupply ?? 0)} />
-        <CrtRevenueShareWidget token={token} />
+        <CrtRevenueShareWidget token={token} onTabSwitch={onRevenueShareDetails} />
       </BigWidgetContainer>
     </>
   )

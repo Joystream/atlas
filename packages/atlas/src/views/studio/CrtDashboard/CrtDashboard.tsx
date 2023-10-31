@@ -76,7 +76,12 @@ export const CrtDashboard = () => {
             </>
           )}
         </TabsContainer>
-        {currentTab === 0 && <CrtDashboardMainTab token={data.creatorTokenById} />}
+        {currentTab === 0 && (
+          <CrtDashboardMainTab
+            token={data.creatorTokenById}
+            onRevenueShareDetails={() => setCurrentTab(TABS.indexOf('Revenue share'))}
+          />
+        )}
         {currentTab === 1 && <CrtHoldersTab token={data.creatorTokenById} />}
         {currentTab === 2 && <CrtRevenueTab token={data.creatorTokenById} />}
       </MainContainer>
