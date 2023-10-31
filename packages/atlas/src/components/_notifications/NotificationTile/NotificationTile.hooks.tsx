@@ -279,10 +279,10 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
 
     // Engagement
     case 'NewChannelFollower': {
-      const { followerHandle } = notification
+      const { followerId, followerHandle } = notification
       return {
         icon: getIcon('follow'),
-        link: getLink('member-page', [followerHandle]),
+        link: getLink('member-page', [followerId]),
         avatar: { type: 'membership', params: [followerHandle] },
         text: <div>{followerHandle} followed your channel</div>,
       }
@@ -412,11 +412,11 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
 
     // Payouts
     case 'DirectChannelPaymentByMember': {
-      const { amount, payerHandle } = notification
+      const { amount, payerId, payerHandle } = notification
       const tokenAmount = <NumberFormat as="span" value={amount} format="short" withToken withDenomination="before" />
       return {
         icon: getIcon('payout'),
-        link: getLink('member-page', [payerHandle]),
+        link: getLink('member-page', [payerId]),
         avatar: { type: 'membership', params: [payerHandle] },
         text: (
           <div>
@@ -518,7 +518,7 @@ const getLink = (type: LinkType, params: string[] = []): string => {
       return absoluteRoutes.viewer.channel(params[0])
 
     case 'member-page':
-      return absoluteRoutes.viewer.member(params[0])
+      return absoluteRoutes.viewer.memberById(params[0])
 
     case 'category-page':
       return absoluteRoutes.viewer.category(params[0])

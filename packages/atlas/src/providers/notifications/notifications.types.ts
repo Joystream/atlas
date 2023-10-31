@@ -26,9 +26,9 @@ export type NotificationData =
       videoId: string
       videoTitle: string
     }
-  | { type: 'DirectChannelPaymentByMember'; amount: BN; payerHandle: string }
+  | { type: 'DirectChannelPaymentByMember'; amount: BN; payerId: string; payerHandle: string }
   // | { type: 'EnglishAuctionSettled'; price: BN; videoId: string; videoTitle: string }
-  | { type: 'NewChannelFollower'; followerHandle: string }
+  | { type: 'NewChannelFollower'; followerId: string; followerHandle: string }
   | { type: 'NftFeaturedOnMarketPlace'; videoId: string; videoTitle: string }
   | { type: 'NftPurchased'; buyerHandle: string; price: BN; videoTitle: string; videoId: string }
   | { type: 'NftRoyaltyPaid'; amount: BN; videoId: string; videoTitle: string }
