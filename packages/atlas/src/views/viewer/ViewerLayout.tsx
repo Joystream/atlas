@@ -46,6 +46,7 @@ const viewerRoutes = [
   { path: relativeRoutes.viewer.channels(), element: <ChannelsView /> },
   { path: relativeRoutes.viewer.channel(), element: <ChannelView /> },
   { path: relativeRoutes.viewer.category(), element: <CategoryView /> },
+  { path: relativeRoutes.viewer.memberById(), element: <MemberView /> },
   { path: relativeRoutes.viewer.member(), element: <MemberView /> },
   { path: relativeRoutes.viewer.marketplace(), element: <MarketplaceView /> },
   ...(atlasConfig.features.ypp.googleConsoleClientId
