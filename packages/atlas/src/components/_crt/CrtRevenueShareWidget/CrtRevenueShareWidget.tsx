@@ -1,4 +1,3 @@
-import styled from '@emotion/styled'
 import { useMemo } from 'react'
 
 import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
@@ -13,8 +12,9 @@ import { RevenueShareProgress } from '@/components/_crt/RevenueShareParticipatio
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
-import { cVar, sizes } from '@/styles'
 import { formatDateTime, formatDurationShort } from '@/utils/time'
+
+import { CloseRevenueButton, CustomPill, EmptyStateBox, StakersBox, StyledPill } from './CrtRevenueShareWidget.styles'
 
 export type CrtHoldersWidgetProps = {
   token: FullCreatorTokenFragment
@@ -80,7 +80,16 @@ export const CrtRevenueShareWidget = ({ token, onTabSwitch }: CrtHoldersWidgetPr
               STAKED HOLDERS
             </Text>
             {activeRevenueShare?.stakers.length ? (
-              activeRevenueShare.stakers.map((staker) => <StakerPill key={staker.id} id={staker.account.member.id} />)
+              <StakersBox>
+                <FlexBox>
+                  {activeRevenueShare.stakers.slice(0, Math.min(activeRevenueShare.stakers.length, 5)).map((staker) => (
+                    <StakerPill key={staker.id} id={staker.account.member.id} />
+                  ))}
+                  {activeRevenueShare.stakers.length > 5 ? (
+                    <StyledPill label={activeRevenueShare.stakers.length - 5} />
+                  ) : null}
+                </FlexBox>
+              </StakersBox>
             ) : (
               <Text variant="h400" as="p">
                 No holders staked yet
@@ -148,24 +157,3 @@ const StakerPill = ({ id }: { id: string }) => {
     </CustomPill>
   )
 }
-
-const EmptyStateBox = styled(FlexBox)`
-  padding: 0 15%;
-  text-align: center;
-  height: 100%;
-`
-
-const CloseRevenueButton = styled(Button)`
-  margin-left: auto;
-`
-
-const CustomPill = styled.div`
-  background-color: ${cVar('colorBackgroundStrong')};
-  display: flex;
-  align-items: center;
-  max-width: 100px;
-  overflow-x: hidden;
-  gap: ${sizes(1)};
-  border-radius: 2px;
-  padding: ${sizes(1)};
-`
