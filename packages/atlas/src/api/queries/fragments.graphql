@@ -496,7 +496,7 @@ fragment BasicCreatorTokenHolder on TokenAccount {
       endsAt
       cliffBlock
       cliffDurationBlocks
-      cliffPercent
+      cliffRatioPermill
       vestingDurationBlocks
     }
   }
@@ -531,7 +531,7 @@ fragment BasicCreatorToken on CreatorToken {
 
 fragment FullCreatorToken on CreatorToken {
   ...BasicCreatorToken
-  annualCreatorReward
+  annualCreatorRewardPermill
   description
   ammCurves {
     id
@@ -558,7 +558,8 @@ fragment FullCreatorToken on CreatorToken {
   trailerVideo {
     id
     video {
-      ...BasicVideoFields
+      id
+      title
     }
   }
   revenueShares {

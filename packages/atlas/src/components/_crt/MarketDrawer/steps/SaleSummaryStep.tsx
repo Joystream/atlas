@@ -1,3 +1,4 @@
+import { useApolloClient } from '@apollo/client'
 import { FC, useEffect } from 'react'
 
 import { SvgAlertsInformative24 } from '@/assets/icons'
@@ -9,6 +10,10 @@ import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
 import { HDivider } from '@/components/_crt/MarketDrawer/MarketDrawer.styles'
 import { SummaryRow } from '@/components/_overlays/SendTransferDialogs/SendTransferDialogs.styles'
+import { useFee, useJoystream } from '@/providers/joystream'
+import { useSnackbar } from '@/providers/snackbars'
+import { useTransaction } from '@/providers/transactions/transactions.hooks'
+import { useUser } from '@/providers/user/user.hooks'
 
 type SaleSummaryProps = {
   price: number
@@ -16,6 +21,7 @@ type SaleSummaryProps = {
   setPrimaryButtonProps: (props: ActionDialogButtonProps) => void
   setSecondaryButtonProps: (props: ActionDialogButtonProps) => void
   handleBackClick: () => void
+  handleCloseModal: () => void
 }
 
 export const SaleSummaryStep: FC<SaleSummaryProps> = ({
@@ -23,15 +29,39 @@ export const SaleSummaryStep: FC<SaleSummaryProps> = ({
   setSecondaryButtonProps,
   setPrimaryButtonProps,
   handleBackClick,
+  handleCloseModal,
 }) => {
-  // TODO: include fee
-  // const {fullFee, loading: feeLoading} = useFee('startMarketTx')
+  const { fullFee } = useFee('startAmmTx', ['1', '1', 1, price])
+  const { tokenPrice } = useJoystream()
+  const handleTransaction = useTransaction()
+  const { displaySnackbar } = useSnackbar()
+  const { joystream, proxyCallback } = useJoystream()
+  const client = useApolloClient()
+  const { memberId, channelId } = useUser()
 
   useEffect(() => {
     setPrimaryButtonProps({
       text: 'Start sale',
       onClick: () => {
-        // token sale tx
+        if (!joystream || !memberId || !channelId || !tokenPrice) return
+        handleTransaction({
+          txFactory: async (updateStatus) =>
+            (await joystream.extrinsics).startAmm(memberId, channelId, tokenPrice, price, proxyCallback(updateStatus)),
+          onTxSync: async () => {
+            displaySnackbar({
+              title: 'Success',
+              iconType: 'success',
+            })
+            client.refetchQueries({ include: 'active' })
+            handleCloseModal()
+          },
+          onError: () => {
+            displaySnackbar({
+              title: 'Something went wrong',
+            })
+            handleCloseModal()
+          },
+        })
       },
     })
     setSecondaryButtonProps({
@@ -40,7 +70,21 @@ export const SaleSummaryStep: FC<SaleSummaryProps> = ({
         handleBackClick()
       },
     })
-  }, [handleBackClick, setPrimaryButtonProps, setSecondaryButtonProps])
+  }, [
+    channelId,
+    client,
+    displaySnackbar,
+    handleBackClick,
+    handleCloseModal,
+    handleTransaction,
+    joystream,
+    memberId,
+    price,
+    proxyCallback,
+    setPrimaryButtonProps,
+    setSecondaryButtonProps,
+    tokenPrice,
+  ])
 
   return (
     <ColumnBox gap={2}>
@@ -71,7 +115,7 @@ export const SaleSummaryStep: FC<SaleSummaryProps> = ({
             <SvgAlertsInformative24 width={16} height={16} />
           </Tooltip>
         </FlexBox>
-        <NumberFormat variant="h300" withDenomination="before" value={0} withToken as="span" />
+        <NumberFormat variant="h300" withDenomination="before" format="short" value={fullFee} withToken as="span" />
       </SummaryRow>
     </ColumnBox>
   )
