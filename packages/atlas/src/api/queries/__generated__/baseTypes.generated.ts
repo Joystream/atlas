@@ -2422,6 +2422,8 @@ export type CommentPostedToVideo = {
   comentId: Scalars['String']
   /** commenter handle for text */
   memberHandle: Scalars['String']
+  /** commenter id for the avatar */
+  memberId: Scalars['String']
   /** video Id used for link */
   videoId: Scalars['String']
   /** video title used for notification text */
@@ -2589,6 +2591,8 @@ export type CommentReply = {
   commentId: Scalars['String']
   /** member who replied */
   memberHandle: Scalars['String']
+  /** member who replied */
+  memberId: Scalars['String']
   /** video Id used for link */
   videoId: Scalars['String']
   /** video title for notification text */
@@ -2778,6 +2782,8 @@ export type CreatorReceivesAuctionBid = {
   amount: Scalars['BigInt']
   /** bidder handle for notification text */
   bidderHandle: Scalars['String']
+  /** bidder id for notification the avatar */
+  bidderId: Scalars['String']
   /** videoId used for notification link */
   videoId: Scalars['String']
   /** video title used for notification text */
@@ -2963,12 +2969,62 @@ export type DataObjectTypeWhereInput = {
   video_isNull?: InputMaybe<Scalars['Boolean']>
 }
 
+export type DeliveryStatus = EmailFailure | EmailSuccess
+
+export type DeliveryStatusWhereInput = {
+  errorStatus_contains?: InputMaybe<Scalars['String']>
+  errorStatus_containsInsensitive?: InputMaybe<Scalars['String']>
+  errorStatus_endsWith?: InputMaybe<Scalars['String']>
+  errorStatus_eq?: InputMaybe<Scalars['String']>
+  errorStatus_gt?: InputMaybe<Scalars['String']>
+  errorStatus_gte?: InputMaybe<Scalars['String']>
+  errorStatus_in?: InputMaybe<Array<Scalars['String']>>
+  errorStatus_isNull?: InputMaybe<Scalars['Boolean']>
+  errorStatus_lt?: InputMaybe<Scalars['String']>
+  errorStatus_lte?: InputMaybe<Scalars['String']>
+  errorStatus_not_contains?: InputMaybe<Scalars['String']>
+  errorStatus_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  errorStatus_not_endsWith?: InputMaybe<Scalars['String']>
+  errorStatus_not_eq?: InputMaybe<Scalars['String']>
+  errorStatus_not_in?: InputMaybe<Array<Scalars['String']>>
+  errorStatus_not_startsWith?: InputMaybe<Scalars['String']>
+  errorStatus_startsWith?: InputMaybe<Scalars['String']>
+  isTypeOf_contains?: InputMaybe<Scalars['String']>
+  isTypeOf_containsInsensitive?: InputMaybe<Scalars['String']>
+  isTypeOf_endsWith?: InputMaybe<Scalars['String']>
+  isTypeOf_eq?: InputMaybe<Scalars['String']>
+  isTypeOf_gt?: InputMaybe<Scalars['String']>
+  isTypeOf_gte?: InputMaybe<Scalars['String']>
+  isTypeOf_in?: InputMaybe<Array<Scalars['String']>>
+  isTypeOf_isNull?: InputMaybe<Scalars['Boolean']>
+  isTypeOf_lt?: InputMaybe<Scalars['String']>
+  isTypeOf_lte?: InputMaybe<Scalars['String']>
+  isTypeOf_not_contains?: InputMaybe<Scalars['String']>
+  isTypeOf_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  isTypeOf_not_endsWith?: InputMaybe<Scalars['String']>
+  isTypeOf_not_eq?: InputMaybe<Scalars['String']>
+  isTypeOf_not_in?: InputMaybe<Array<Scalars['String']>>
+  isTypeOf_not_startsWith?: InputMaybe<Scalars['String']>
+  isTypeOf_startsWith?: InputMaybe<Scalars['String']>
+  phantom_eq?: InputMaybe<Scalars['Int']>
+  phantom_gt?: InputMaybe<Scalars['Int']>
+  phantom_gte?: InputMaybe<Scalars['Int']>
+  phantom_in?: InputMaybe<Array<Scalars['Int']>>
+  phantom_isNull?: InputMaybe<Scalars['Boolean']>
+  phantom_lt?: InputMaybe<Scalars['Int']>
+  phantom_lte?: InputMaybe<Scalars['Int']>
+  phantom_not_eq?: InputMaybe<Scalars['Int']>
+  phantom_not_in?: InputMaybe<Array<Scalars['Int']>>
+}
+
 export type DirectChannelPaymentByMember = {
   __typename?: 'DirectChannelPaymentByMember'
   /** amount paid */
   amount: Scalars['BigInt']
   /** payer handle */
   payerHandle: Scalars['String']
+  /** payer id */
+  payerId: Scalars['String']
 }
 
 export type DistributionBucket = {
@@ -3506,10 +3562,91 @@ export type DistributionBucketsConnection = {
   totalCount: Scalars['Int']
 }
 
-export enum EmailDeliveryStatus {
-  Failure = 'Failure',
-  Success = 'Success',
-  Unsent = 'Unsent',
+export type EmailDeliveryAttempt = {
+  __typename?: 'EmailDeliveryAttempt'
+  /** UUID */
+  id: Scalars['String']
+  /** notification Fk */
+  notificationDelivery: NotificationEmailDelivery
+  /** delivery status */
+  status: DeliveryStatus
+  /** datetime */
+  timestamp: Scalars['DateTime']
+}
+
+export type EmailDeliveryAttemptEdge = {
+  __typename?: 'EmailDeliveryAttemptEdge'
+  cursor: Scalars['String']
+  node: EmailDeliveryAttempt
+}
+
+export enum EmailDeliveryAttemptOrderByInput {
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  NotificationDeliveryDiscardAsc = 'notificationDelivery_discard_ASC',
+  NotificationDeliveryDiscardDesc = 'notificationDelivery_discard_DESC',
+  NotificationDeliveryIdAsc = 'notificationDelivery_id_ASC',
+  NotificationDeliveryIdDesc = 'notificationDelivery_id_DESC',
+  StatusErrorStatusAsc = 'status_errorStatus_ASC',
+  StatusErrorStatusDesc = 'status_errorStatus_DESC',
+  StatusIsTypeOfAsc = 'status_isTypeOf_ASC',
+  StatusIsTypeOfDesc = 'status_isTypeOf_DESC',
+  StatusPhantomAsc = 'status_phantom_ASC',
+  StatusPhantomDesc = 'status_phantom_DESC',
+  TimestampAsc = 'timestamp_ASC',
+  TimestampDesc = 'timestamp_DESC',
+}
+
+export type EmailDeliveryAttemptWhereInput = {
+  AND?: InputMaybe<Array<EmailDeliveryAttemptWhereInput>>
+  OR?: InputMaybe<Array<EmailDeliveryAttemptWhereInput>>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  notificationDelivery?: InputMaybe<NotificationEmailDeliveryWhereInput>
+  notificationDelivery_isNull?: InputMaybe<Scalars['Boolean']>
+  status?: InputMaybe<DeliveryStatusWhereInput>
+  status_isNull?: InputMaybe<Scalars['Boolean']>
+  timestamp_eq?: InputMaybe<Scalars['DateTime']>
+  timestamp_gt?: InputMaybe<Scalars['DateTime']>
+  timestamp_gte?: InputMaybe<Scalars['DateTime']>
+  timestamp_in?: InputMaybe<Array<Scalars['DateTime']>>
+  timestamp_isNull?: InputMaybe<Scalars['Boolean']>
+  timestamp_lt?: InputMaybe<Scalars['DateTime']>
+  timestamp_lte?: InputMaybe<Scalars['DateTime']>
+  timestamp_not_eq?: InputMaybe<Scalars['DateTime']>
+  timestamp_not_in?: InputMaybe<Array<Scalars['DateTime']>>
+}
+
+export type EmailDeliveryAttemptsConnection = {
+  __typename?: 'EmailDeliveryAttemptsConnection'
+  edges: Array<EmailDeliveryAttemptEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type EmailFailure = {
+  __typename?: 'EmailFailure'
+  errorStatus: Scalars['String']
+}
+
+export type EmailSuccess = {
+  __typename?: 'EmailSuccess'
+  phantom?: Maybe<Scalars['Int']>
 }
 
 export type EncryptionArtifacts = {
@@ -4318,6 +4455,8 @@ export type HigherBidPlaced = {
   __typename?: 'HigherBidPlaced'
   /** new bidder handle  */
   newBidderHandle: Scalars['String']
+  /** new bidder id */
+  newBidderId: Scalars['String']
   /** video Id used for link */
   videoId: Scalars['String']
   /** video title for notification text */
@@ -4433,6 +4572,11 @@ export type LicensesConnection = {
 export type MarkNotificationsAsReadResult = {
   __typename?: 'MarkNotificationsAsReadResult'
   notificationsReadIds: Array<Scalars['String']>
+}
+
+export type MaxAttemptsOnMailDelivery = {
+  __typename?: 'MaxAttemptsOnMailDelivery'
+  maxAttempts: Scalars['Int']
 }
 
 export type MemberBannedFromChannelEventData = {
@@ -4846,7 +4990,7 @@ export type Mutation = {
   setFeaturedNfts: SetFeaturedNftsResult
   setKillSwitch: KillSwitch
   setNewAppRootDomain: AppRootDomain
-  setNewNotificationCenterPath: NotificationCenterPath
+  setNewNotificationCenterPath: Scalars['Int']
   setSupportedCategories: SetSupportedCategoriesResult
   setVideoHero: SetVideoHeroResult
   setVideoViewPerUserTimeLimit: VideoViewPerUserTimeLimit
@@ -4926,7 +5070,7 @@ export type MutationSetNewAppRootDomainArgs = {
 }
 
 export type MutationSetNewNotificationCenterPathArgs = {
-  newPath: Scalars['String']
+  newMaxAttempts: Scalars['Int']
 }
 
 export type MutationSetSupportedCategoriesArgs = {
@@ -4989,8 +5133,10 @@ export type NewAuction = {
 
 export type NewChannelFollower = {
   __typename?: 'NewChannelFollower'
-  /** follower member handle for link */
+  /** follower member handle for the text */
   followerHandle: Scalars['String']
+  /** follower member id for the avatar and the link */
+  followerId: Scalars['String']
 }
 
 export type NewNftOnSale = {
@@ -5349,6 +5495,8 @@ export type NftPurchased = {
   __typename?: 'NftPurchased'
   /** buyer handle for notification text */
   buyerHandle: Scalars['String']
+  /** buyer id for notification the avatar */
+  buyerId: Scalars['String']
   /** price paid */
   price: Scalars['BigInt']
   /** video Id used for link */
@@ -5447,11 +5595,6 @@ export type Notification = {
   status: ReadOrUnread
 }
 
-export type NotificationCenterPath = {
-  __typename?: 'NotificationCenterPath'
-  isApplied: Scalars['Boolean']
-}
-
 export type NotificationEdge = {
   __typename?: 'NotificationEdge'
   cursor: Scalars['String']
@@ -5468,11 +5611,20 @@ export type NotificationEmailDeliveriesConnection = {
 export type NotificationEmailDelivery = {
   __typename?: 'NotificationEmailDelivery'
   /** notification delivery status */
-  deliveryStatus: EmailDeliveryStatus
+  attempts: Array<EmailDeliveryAttempt>
+  /** mark as discard after max attempts or successful attempt */
+  discard: Scalars['Boolean']
   /** Autoincremented */
   id: Scalars['String']
   /** the notification being delivered */
   notification: Notification
+}
+
+export type NotificationEmailDeliveryAttemptsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<EmailDeliveryAttemptOrderByInput>>
+  where?: InputMaybe<EmailDeliveryAttemptWhereInput>
 }
 
 export type NotificationEmailDeliveryEdge = {
@@ -5482,8 +5634,8 @@ export type NotificationEmailDeliveryEdge = {
 }
 
 export enum NotificationEmailDeliveryOrderByInput {
-  DeliveryStatusAsc = 'deliveryStatus_ASC',
-  DeliveryStatusDesc = 'deliveryStatus_DESC',
+  DiscardAsc = 'discard_ASC',
+  DiscardDesc = 'discard_DESC',
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
   NotificationCreatedAtAsc = 'notification_createdAt_ASC',
@@ -5497,11 +5649,12 @@ export enum NotificationEmailDeliveryOrderByInput {
 export type NotificationEmailDeliveryWhereInput = {
   AND?: InputMaybe<Array<NotificationEmailDeliveryWhereInput>>
   OR?: InputMaybe<Array<NotificationEmailDeliveryWhereInput>>
-  deliveryStatus_eq?: InputMaybe<EmailDeliveryStatus>
-  deliveryStatus_in?: InputMaybe<Array<EmailDeliveryStatus>>
-  deliveryStatus_isNull?: InputMaybe<Scalars['Boolean']>
-  deliveryStatus_not_eq?: InputMaybe<EmailDeliveryStatus>
-  deliveryStatus_not_in?: InputMaybe<Array<EmailDeliveryStatus>>
+  attempts_every?: InputMaybe<EmailDeliveryAttemptWhereInput>
+  attempts_none?: InputMaybe<EmailDeliveryAttemptWhereInput>
+  attempts_some?: InputMaybe<EmailDeliveryAttemptWhereInput>
+  discard_eq?: InputMaybe<Scalars['Boolean']>
+  discard_isNull?: InputMaybe<Scalars['Boolean']>
+  discard_not_eq?: InputMaybe<Scalars['Boolean']>
   id_contains?: InputMaybe<Scalars['String']>
   id_containsInsensitive?: InputMaybe<Scalars['String']>
   id_endsWith?: InputMaybe<Scalars['String']>
@@ -5558,8 +5711,12 @@ export enum NotificationOrderByInput {
   NotificationTypeAmountDesc = 'notificationType_amount_DESC',
   NotificationTypeBidderHandleAsc = 'notificationType_bidderHandle_ASC',
   NotificationTypeBidderHandleDesc = 'notificationType_bidderHandle_DESC',
+  NotificationTypeBidderIdAsc = 'notificationType_bidderId_ASC',
+  NotificationTypeBidderIdDesc = 'notificationType_bidderId_DESC',
   NotificationTypeBuyerHandleAsc = 'notificationType_buyerHandle_ASC',
   NotificationTypeBuyerHandleDesc = 'notificationType_buyerHandle_DESC',
+  NotificationTypeBuyerIdAsc = 'notificationType_buyerId_ASC',
+  NotificationTypeBuyerIdDesc = 'notificationType_buyerId_DESC',
   NotificationTypeChannelIdAsc = 'notificationType_channelId_ASC',
   NotificationTypeChannelIdDesc = 'notificationType_channelId_DESC',
   NotificationTypeChannelTitleAsc = 'notificationType_channelTitle_ASC',
@@ -5570,14 +5727,22 @@ export enum NotificationOrderByInput {
   NotificationTypeCommentIdDesc = 'notificationType_commentId_DESC',
   NotificationTypeFollowerHandleAsc = 'notificationType_followerHandle_ASC',
   NotificationTypeFollowerHandleDesc = 'notificationType_followerHandle_DESC',
+  NotificationTypeFollowerIdAsc = 'notificationType_followerId_ASC',
+  NotificationTypeFollowerIdDesc = 'notificationType_followerId_DESC',
   NotificationTypeIsTypeOfAsc = 'notificationType_isTypeOf_ASC',
   NotificationTypeIsTypeOfDesc = 'notificationType_isTypeOf_DESC',
   NotificationTypeMemberHandleAsc = 'notificationType_memberHandle_ASC',
   NotificationTypeMemberHandleDesc = 'notificationType_memberHandle_DESC',
+  NotificationTypeMemberIdAsc = 'notificationType_memberId_ASC',
+  NotificationTypeMemberIdDesc = 'notificationType_memberId_DESC',
   NotificationTypeNewBidderHandleAsc = 'notificationType_newBidderHandle_ASC',
   NotificationTypeNewBidderHandleDesc = 'notificationType_newBidderHandle_DESC',
+  NotificationTypeNewBidderIdAsc = 'notificationType_newBidderId_ASC',
+  NotificationTypeNewBidderIdDesc = 'notificationType_newBidderId_DESC',
   NotificationTypePayerHandleAsc = 'notificationType_payerHandle_ASC',
   NotificationTypePayerHandleDesc = 'notificationType_payerHandle_DESC',
+  NotificationTypePayerIdAsc = 'notificationType_payerId_ASC',
+  NotificationTypePayerIdDesc = 'notificationType_payerId_DESC',
   NotificationTypePhantomAsc = 'notificationType_phantom_ASC',
   NotificationTypePhantomDesc = 'notificationType_phantom_DESC',
   NotificationTypePriceAsc = 'notificationType_price_ASC',
@@ -5676,6 +5841,23 @@ export type NotificationTypeWhereInput = {
   bidderHandle_not_in?: InputMaybe<Array<Scalars['String']>>
   bidderHandle_not_startsWith?: InputMaybe<Scalars['String']>
   bidderHandle_startsWith?: InputMaybe<Scalars['String']>
+  bidderId_contains?: InputMaybe<Scalars['String']>
+  bidderId_containsInsensitive?: InputMaybe<Scalars['String']>
+  bidderId_endsWith?: InputMaybe<Scalars['String']>
+  bidderId_eq?: InputMaybe<Scalars['String']>
+  bidderId_gt?: InputMaybe<Scalars['String']>
+  bidderId_gte?: InputMaybe<Scalars['String']>
+  bidderId_in?: InputMaybe<Array<Scalars['String']>>
+  bidderId_isNull?: InputMaybe<Scalars['Boolean']>
+  bidderId_lt?: InputMaybe<Scalars['String']>
+  bidderId_lte?: InputMaybe<Scalars['String']>
+  bidderId_not_contains?: InputMaybe<Scalars['String']>
+  bidderId_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  bidderId_not_endsWith?: InputMaybe<Scalars['String']>
+  bidderId_not_eq?: InputMaybe<Scalars['String']>
+  bidderId_not_in?: InputMaybe<Array<Scalars['String']>>
+  bidderId_not_startsWith?: InputMaybe<Scalars['String']>
+  bidderId_startsWith?: InputMaybe<Scalars['String']>
   buyerHandle_contains?: InputMaybe<Scalars['String']>
   buyerHandle_containsInsensitive?: InputMaybe<Scalars['String']>
   buyerHandle_endsWith?: InputMaybe<Scalars['String']>
@@ -5693,6 +5875,23 @@ export type NotificationTypeWhereInput = {
   buyerHandle_not_in?: InputMaybe<Array<Scalars['String']>>
   buyerHandle_not_startsWith?: InputMaybe<Scalars['String']>
   buyerHandle_startsWith?: InputMaybe<Scalars['String']>
+  buyerId_contains?: InputMaybe<Scalars['String']>
+  buyerId_containsInsensitive?: InputMaybe<Scalars['String']>
+  buyerId_endsWith?: InputMaybe<Scalars['String']>
+  buyerId_eq?: InputMaybe<Scalars['String']>
+  buyerId_gt?: InputMaybe<Scalars['String']>
+  buyerId_gte?: InputMaybe<Scalars['String']>
+  buyerId_in?: InputMaybe<Array<Scalars['String']>>
+  buyerId_isNull?: InputMaybe<Scalars['Boolean']>
+  buyerId_lt?: InputMaybe<Scalars['String']>
+  buyerId_lte?: InputMaybe<Scalars['String']>
+  buyerId_not_contains?: InputMaybe<Scalars['String']>
+  buyerId_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  buyerId_not_endsWith?: InputMaybe<Scalars['String']>
+  buyerId_not_eq?: InputMaybe<Scalars['String']>
+  buyerId_not_in?: InputMaybe<Array<Scalars['String']>>
+  buyerId_not_startsWith?: InputMaybe<Scalars['String']>
+  buyerId_startsWith?: InputMaybe<Scalars['String']>
   channelId_contains?: InputMaybe<Scalars['String']>
   channelId_containsInsensitive?: InputMaybe<Scalars['String']>
   channelId_endsWith?: InputMaybe<Scalars['String']>
@@ -5778,6 +5977,23 @@ export type NotificationTypeWhereInput = {
   followerHandle_not_in?: InputMaybe<Array<Scalars['String']>>
   followerHandle_not_startsWith?: InputMaybe<Scalars['String']>
   followerHandle_startsWith?: InputMaybe<Scalars['String']>
+  followerId_contains?: InputMaybe<Scalars['String']>
+  followerId_containsInsensitive?: InputMaybe<Scalars['String']>
+  followerId_endsWith?: InputMaybe<Scalars['String']>
+  followerId_eq?: InputMaybe<Scalars['String']>
+  followerId_gt?: InputMaybe<Scalars['String']>
+  followerId_gte?: InputMaybe<Scalars['String']>
+  followerId_in?: InputMaybe<Array<Scalars['String']>>
+  followerId_isNull?: InputMaybe<Scalars['Boolean']>
+  followerId_lt?: InputMaybe<Scalars['String']>
+  followerId_lte?: InputMaybe<Scalars['String']>
+  followerId_not_contains?: InputMaybe<Scalars['String']>
+  followerId_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  followerId_not_endsWith?: InputMaybe<Scalars['String']>
+  followerId_not_eq?: InputMaybe<Scalars['String']>
+  followerId_not_in?: InputMaybe<Array<Scalars['String']>>
+  followerId_not_startsWith?: InputMaybe<Scalars['String']>
+  followerId_startsWith?: InputMaybe<Scalars['String']>
   isTypeOf_contains?: InputMaybe<Scalars['String']>
   isTypeOf_containsInsensitive?: InputMaybe<Scalars['String']>
   isTypeOf_endsWith?: InputMaybe<Scalars['String']>
@@ -5812,6 +6028,23 @@ export type NotificationTypeWhereInput = {
   memberHandle_not_in?: InputMaybe<Array<Scalars['String']>>
   memberHandle_not_startsWith?: InputMaybe<Scalars['String']>
   memberHandle_startsWith?: InputMaybe<Scalars['String']>
+  memberId_contains?: InputMaybe<Scalars['String']>
+  memberId_containsInsensitive?: InputMaybe<Scalars['String']>
+  memberId_endsWith?: InputMaybe<Scalars['String']>
+  memberId_eq?: InputMaybe<Scalars['String']>
+  memberId_gt?: InputMaybe<Scalars['String']>
+  memberId_gte?: InputMaybe<Scalars['String']>
+  memberId_in?: InputMaybe<Array<Scalars['String']>>
+  memberId_isNull?: InputMaybe<Scalars['Boolean']>
+  memberId_lt?: InputMaybe<Scalars['String']>
+  memberId_lte?: InputMaybe<Scalars['String']>
+  memberId_not_contains?: InputMaybe<Scalars['String']>
+  memberId_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  memberId_not_endsWith?: InputMaybe<Scalars['String']>
+  memberId_not_eq?: InputMaybe<Scalars['String']>
+  memberId_not_in?: InputMaybe<Array<Scalars['String']>>
+  memberId_not_startsWith?: InputMaybe<Scalars['String']>
+  memberId_startsWith?: InputMaybe<Scalars['String']>
   newBidderHandle_contains?: InputMaybe<Scalars['String']>
   newBidderHandle_containsInsensitive?: InputMaybe<Scalars['String']>
   newBidderHandle_endsWith?: InputMaybe<Scalars['String']>
@@ -5829,6 +6062,23 @@ export type NotificationTypeWhereInput = {
   newBidderHandle_not_in?: InputMaybe<Array<Scalars['String']>>
   newBidderHandle_not_startsWith?: InputMaybe<Scalars['String']>
   newBidderHandle_startsWith?: InputMaybe<Scalars['String']>
+  newBidderId_contains?: InputMaybe<Scalars['String']>
+  newBidderId_containsInsensitive?: InputMaybe<Scalars['String']>
+  newBidderId_endsWith?: InputMaybe<Scalars['String']>
+  newBidderId_eq?: InputMaybe<Scalars['String']>
+  newBidderId_gt?: InputMaybe<Scalars['String']>
+  newBidderId_gte?: InputMaybe<Scalars['String']>
+  newBidderId_in?: InputMaybe<Array<Scalars['String']>>
+  newBidderId_isNull?: InputMaybe<Scalars['Boolean']>
+  newBidderId_lt?: InputMaybe<Scalars['String']>
+  newBidderId_lte?: InputMaybe<Scalars['String']>
+  newBidderId_not_contains?: InputMaybe<Scalars['String']>
+  newBidderId_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  newBidderId_not_endsWith?: InputMaybe<Scalars['String']>
+  newBidderId_not_eq?: InputMaybe<Scalars['String']>
+  newBidderId_not_in?: InputMaybe<Array<Scalars['String']>>
+  newBidderId_not_startsWith?: InputMaybe<Scalars['String']>
+  newBidderId_startsWith?: InputMaybe<Scalars['String']>
   payerHandle_contains?: InputMaybe<Scalars['String']>
   payerHandle_containsInsensitive?: InputMaybe<Scalars['String']>
   payerHandle_endsWith?: InputMaybe<Scalars['String']>
@@ -5846,6 +6096,23 @@ export type NotificationTypeWhereInput = {
   payerHandle_not_in?: InputMaybe<Array<Scalars['String']>>
   payerHandle_not_startsWith?: InputMaybe<Scalars['String']>
   payerHandle_startsWith?: InputMaybe<Scalars['String']>
+  payerId_contains?: InputMaybe<Scalars['String']>
+  payerId_containsInsensitive?: InputMaybe<Scalars['String']>
+  payerId_endsWith?: InputMaybe<Scalars['String']>
+  payerId_eq?: InputMaybe<Scalars['String']>
+  payerId_gt?: InputMaybe<Scalars['String']>
+  payerId_gte?: InputMaybe<Scalars['String']>
+  payerId_in?: InputMaybe<Array<Scalars['String']>>
+  payerId_isNull?: InputMaybe<Scalars['Boolean']>
+  payerId_lt?: InputMaybe<Scalars['String']>
+  payerId_lte?: InputMaybe<Scalars['String']>
+  payerId_not_contains?: InputMaybe<Scalars['String']>
+  payerId_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  payerId_not_endsWith?: InputMaybe<Scalars['String']>
+  payerId_not_eq?: InputMaybe<Scalars['String']>
+  payerId_not_in?: InputMaybe<Array<Scalars['String']>>
+  payerId_not_startsWith?: InputMaybe<Scalars['String']>
+  payerId_startsWith?: InputMaybe<Scalars['String']>
   phantom_eq?: InputMaybe<Scalars['Int']>
   phantom_gt?: InputMaybe<Scalars['Int']>
   phantom_gte?: InputMaybe<Scalars['Int']>
@@ -6322,6 +6589,11 @@ export type Query = {
   distributionBucketOperatorsConnection: DistributionBucketOperatorsConnection
   distributionBuckets: Array<DistributionBucket>
   distributionBucketsConnection: DistributionBucketsConnection
+  emailDeliveryAttemptById?: Maybe<EmailDeliveryAttempt>
+  /** @deprecated Use emailDeliveryAttemptById */
+  emailDeliveryAttemptByUniqueInput?: Maybe<EmailDeliveryAttempt>
+  emailDeliveryAttempts: Array<EmailDeliveryAttempt>
+  emailDeliveryAttemptsConnection: EmailDeliveryAttemptsConnection
   encryptionArtifacts: Array<EncryptionArtifacts>
   encryptionArtifactsById?: Maybe<EncryptionArtifacts>
   /** @deprecated Use encryptionArtifactsById */
@@ -6937,6 +7209,28 @@ export type QueryDistributionBucketsConnectionArgs = {
   first?: InputMaybe<Scalars['Int']>
   orderBy: Array<DistributionBucketOrderByInput>
   where?: InputMaybe<DistributionBucketWhereInput>
+}
+
+export type QueryEmailDeliveryAttemptByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryEmailDeliveryAttemptByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryEmailDeliveryAttemptsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<EmailDeliveryAttemptOrderByInput>>
+  where?: InputMaybe<EmailDeliveryAttemptWhereInput>
+}
+
+export type QueryEmailDeliveryAttemptsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<EmailDeliveryAttemptOrderByInput>
+  where?: InputMaybe<EmailDeliveryAttemptWhereInput>
 }
 
 export type QueryEncryptionArtifactsArgs = {
@@ -7683,6 +7977,8 @@ export type ReactionToComment = {
   commentId: Scalars['String']
   /** member who replied */
   memberHandle: Scalars['String']
+  /** member who replied */
+  memberId: Scalars['String']
   /** video Id used for link */
   videoId: Scalars['String']
   /** video title for notification text */
@@ -9040,6 +9336,8 @@ export type Subscription = {
   distributionBucketOperatorMetadataById?: Maybe<DistributionBucketOperatorMetadata>
   distributionBucketOperators: Array<DistributionBucketOperator>
   distributionBuckets: Array<DistributionBucket>
+  emailDeliveryAttemptById?: Maybe<EmailDeliveryAttempt>
+  emailDeliveryAttempts: Array<EmailDeliveryAttempt>
   encryptionArtifacts: Array<EncryptionArtifacts>
   encryptionArtifactsById?: Maybe<EncryptionArtifacts>
   eventById?: Maybe<Event>
@@ -9325,6 +9623,17 @@ export type SubscriptionDistributionBucketsArgs = {
   offset?: InputMaybe<Scalars['Int']>
   orderBy?: InputMaybe<Array<DistributionBucketOrderByInput>>
   where?: InputMaybe<DistributionBucketWhereInput>
+}
+
+export type SubscriptionEmailDeliveryAttemptByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionEmailDeliveryAttemptsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<EmailDeliveryAttemptOrderByInput>>
+  where?: InputMaybe<EmailDeliveryAttemptWhereInput>
 }
 
 export type SubscriptionEncryptionArtifactsArgs = {
@@ -10251,6 +10560,8 @@ export type VideoDisliked = {
   __typename?: 'VideoDisliked'
   /** handle for the member that dropped the dislike */
   memberHandle: Scalars['String']
+  /** id for the member that dropped the dislike */
+  memberId: Scalars['String']
   /** video Id used for link */
   videoId: Scalars['String']
   /** video title for notification text */
@@ -10568,6 +10879,8 @@ export type VideoLiked = {
   __typename?: 'VideoLiked'
   /** handle for the member that dropped the like */
   memberHandle: Scalars['String']
+  /** id for the member that dropped the like */
+  memberId: Scalars['String']
   /** video Id used for link */
   videoId: Scalars['String']
   /** video title for notification text */
