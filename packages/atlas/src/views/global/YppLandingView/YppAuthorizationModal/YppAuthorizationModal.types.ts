@@ -36,15 +36,12 @@ export type ChannelVerificationSuccessResponse = {
 }
 
 export type ChannelRequirements = {
-  MINIMUM_SUBSCRIBERS_COUNT: number
-  MINIMUM_TOTAL_VIDEOS_COUNT: number
-  MINIMUM_VIDEO_AGE_HOURS: number
-  MINIMUM_CHANNEL_AGE_HOURS: number
-  MINIMUM_VIDEOS_PER_MONTH: number
-  MONTHS_TO_CONSIDER: number
+  requirements: {
+    errorCode: YppRequirementsErrorCode
+    template: string
+    variables: string[]
+  }[]
 }
-
-export type Requirements = Record<keyof ChannelRequirements, number | undefined>
 
 type ChannelRequirementsFailedError = {
   code: YppRequirementsErrorCode
