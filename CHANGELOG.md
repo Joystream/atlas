@@ -5,13 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.12.0] - 2023-11-01
+
+### Changed
+
+- YPP requirements are now fetched from yt-synch
+- Changed rewards for higher tiers
+- Moved YPP daily quota to config
+
 ## [4.11.0] - 2023-10-20
 
 ### Added
- 
- - Added banner for second channel opt-in
- - Added signup tutorial video on YPP landing page
- - Added permanent referral link btn on YPP referrals tab
+
+- Added banner for second channel opt-in
+- Added signup tutorial video on YPP landing page
+- Added permanent referral link btn on YPP referrals tab
 
 ### Changed
 
@@ -21,9 +29,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
- - Fixed redirect to YPP dashboard after sign in
- - Fixed asset provider incorrect behaviour
- - Fixed issue with GAuth code persistence
+- Fixed redirect to YPP dashboard after sign in
+- Fixed asset provider incorrect behaviour
+- Fixed issue with GAuth code persistence
 
 ## [4.10.2] - 2023-10-12
 
