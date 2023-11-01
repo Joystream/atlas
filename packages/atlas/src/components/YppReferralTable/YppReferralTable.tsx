@@ -15,9 +15,8 @@ import { SentryLogger } from '@/utils/logs'
 import { convertUpperCamelToSentence } from '@/utils/misc'
 import { formatNumber } from '@/utils/number'
 import { formatDateTime } from '@/utils/time'
-import { getTierRewards, yppBackendTierToConfig } from '@/utils/ypp'
+import { BOOST_TIMESTAMP, getTierRewards, yppBackendTierToConfig } from '@/utils/ypp'
 import { YppChannelStatus } from '@/views/global/YppLandingView/YppLandingView.types'
-import { BOOST_TIMESTAMP } from '@/views/studio/YppDashboard'
 
 import { COLUMNS, tableLoadingData } from './YppReferralTable.utils'
 

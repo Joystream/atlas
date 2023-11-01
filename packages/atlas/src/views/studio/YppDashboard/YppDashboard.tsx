@@ -16,7 +16,6 @@ import { Header, TabsWrapper } from './YppDashboard.styles'
 import { YppDashboardMainTab, YppDashboardSettingsTab } from './tabs'
 
 const TABS = ['Dashboard', 'Referrals', 'Settings'] as const
-export const BOOST_TIMESTAMP = 1698796800000 // 2023-11-01T00:00:00.000Z
 
 export const YppDashboard: FC = () => {
   const headTags = useHeadTags('YouTube Partner Program')
