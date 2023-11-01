@@ -85,9 +85,15 @@ export const YppRewardSection: FC = () => {
         </CenteredLayoutGrid>
         <LayoutGrid>
           <TierCardWrapper colSpan={{ base: 12, sm: 10, md: 12, lg: 10 }} colStart={{ sm: 2, md: 1, lg: 2 }}>
-            {[...tiers].map((tier) => {
-              tier.rewards[tier.rewards.length - 1] = getTierRewards('diamond')?.referral || 0
-              return <TierCard key={tier.tier} {...tier} />
+            {tiers.map((tier) => {
+              const signupMultiplier = tier.tier === 'bronze' ? 1 : atlasConfig.features.ypp.tierBoostMultiplier || 1
+              const referralMultiplier = atlasConfig.features.ypp.tierBoostMultiplier || 1
+              const modifiedRewards = [
+                tier.rewards[0] * signupMultiplier,
+                tier.rewards[1],
+                (getTierRewards('diamond')?.referral || 0) * referralMultiplier,
+              ]
+              return <TierCard key={tier.tier} {...tier} rewards={modifiedRewards} />
             })}
           </TierCardWrapper>
           <FlexGridItem

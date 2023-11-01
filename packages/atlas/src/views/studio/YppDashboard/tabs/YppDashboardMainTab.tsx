@@ -21,7 +21,7 @@ import { useYppAuthorizeHandler } from '@/hooks/useYppAuthorizeHandler'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user/user.hooks'
 import { formatDate, getNextFriday } from '@/utils/time'
-import { getTierRewards, yppBackendTierToConfig } from '@/utils/ypp'
+import { BOOST_TIMESTAMP, getTierRewards, yppBackendTierToConfig } from '@/utils/ypp'
 import { YppAuthorizationModal } from '@/views/global/YppLandingView/YppAuthorizationModal'
 import { configYppIconMapper } from '@/views/global/YppLandingView/sections/YppFooter'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
@@ -54,6 +54,10 @@ export const YppDashboardMainTab: FC = () => {
   const smMatch = useMediaMatch('sm')
   const lgMatch = useMediaMatch('lg')
   const nextPayoutDate = getNextFriday()
+  const rewardMultiplier =
+    new Date(currentChannel?.createdAt || 0).getTime() > BOOST_TIMESTAMP
+      ? atlasConfig.features.ypp.tierBoostMultiplier || 1
+      : 1
   const handleYppSignUpClick = () => {
     const success = _handleYppSignUpClick()
     if (success) {
@@ -66,8 +70,8 @@ export const YppDashboardMainTab: FC = () => {
       <Tooltip
         text={
           currentChannel?.shouldBeIngested
-            ? 'Your YouTube channel is being automatically synced with your Gleev channel. You will be rewarded every time a new video gets synced.'
-            : 'Automatic YouTube channel sync with Gleev is disabled. You can enable it again anytime in YPP settings tab.'
+            ? `Your YouTube channel is being automatically synced with your ${atlasConfig.general.appName} channel. You will be rewarded every time a new video gets synced.`
+            : `Automatic YouTube channel sync with ${atlasConfig.general.appName} is disabled. You can enable it again anytime in YPP settings tab.`
         }
         placement="top-start"
       >
@@ -163,7 +167,7 @@ export const YppDashboardMainTab: FC = () => {
               dollarAmount={
                 !currentChannel || !currentChannel.yppStatus.startsWith('Verified')
                   ? 100
-                  : getTierRewards(yppBackendTierToConfig(currentChannel.yppStatus))?.signUp
+                  : (getTierRewards(yppBackendTierToConfig(currentChannel.yppStatus))?.signUp || 0) * rewardMultiplier
               }
               isRangeAmount={!currentChannel || !currentChannel.yppStatus.startsWith('Verified')}
               amountTooltip="Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity."
@@ -207,7 +211,7 @@ export const YppDashboardMainTab: FC = () => {
             amountTooltip={
               !currentChannel?.yppStatus.startsWith('Verified')
                 ? 'Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity.'
-                : 'Your YouTube channel is being automatically synced with your Gleev channel. You will be rewarded every time a new video gets synced.'
+                : `Your YouTube channel is being automatically synced with your ${atlasConfig.general.appName} channel. You will be rewarded every time a new video gets synced.`
             }
             actionNode={
               currentChannel?.yppStatus.startsWith('Verified') ? (
@@ -241,7 +245,7 @@ export const YppDashboardMainTab: FC = () => {
           <BenefitCard
             title="Refer another YouTube creator"
             description="Get rewarded for every new creator who signs up to YPP program using your referral link. Referrals rewards depends on the tier assigned to the invited channel."
-            dollarAmount={getTierRewards('diamond')?.referral}
+            dollarAmount={(getTierRewards('diamond')?.referral || 0) * rewardMultiplier}
             amountTooltip="Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity."
             isRangeAmount
             actionNode={<ReferralLinkButton />}

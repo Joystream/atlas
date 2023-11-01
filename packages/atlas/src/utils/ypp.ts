@@ -34,3 +34,5 @@ export const getTierRewards = (tier?: ConfigTier): YppRewards | undefined => {
     referral: tierRewards[2],
   }
 }
+
+export const BOOST_TIMESTAMP = 1698796800000 // 2023-11-01T00:00:00.000Z
