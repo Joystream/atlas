@@ -8,6 +8,7 @@ import { SenderItem, StyledLink } from '@/components/TablePaymentsHistory/TableP
 import { Text } from '@/components/Text'
 import { RightAlignText, TierWrapper } from '@/components/YppReferralTable/YppReferralTable.styles'
 import { getTierIcon } from '@/components/_ypp/YppDashboardTier'
+import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { SentryLogger } from '@/utils/logs'
@@ -16,6 +17,7 @@ import { formatNumber } from '@/utils/number'
 import { formatDateTime } from '@/utils/time'
 import { getTierRewards, yppBackendTierToConfig } from '@/utils/ypp'
 import { YppChannelStatus } from '@/views/global/YppLandingView/YppLandingView.types'
+import { BOOST_TIMESTAMP } from '@/views/studio/YppDashboard'
 
 import { COLUMNS, tableLoadingData } from './YppReferralTable.utils'
 
@@ -37,7 +39,7 @@ export const YppReferralTable = ({ isLoading, data }: YppReferralTableProps) => 
         date: <RegDate date={entry.date} />,
         channel: <Channel channel={entry.channel} />,
         tier: <Tier yppStatus={entry.status} />,
-        reward: <Reward yppStatus={entry.status} />,
+        reward: <Reward yppStatus={entry.status} signupTimestamp={entry.date.getTime()} />,
       })),
     [data]
   )
@@ -104,7 +106,11 @@ const Tier = ({ yppStatus }: { yppStatus: YppChannelStatus }) => {
   )
 }
 
-const Reward = ({ yppStatus }: { yppStatus: YppChannelStatus }) => {
+const Reward = ({ yppStatus, signupTimestamp }: { yppStatus: YppChannelStatus; signupTimestamp: number }) => {
+  const multiplier =
+    yppBackendTierToConfig(yppStatus) !== 'bronze' && signupTimestamp > BOOST_TIMESTAMP
+      ? atlasConfig.features.ypp.tierBoostMultiplier || 1
+      : 1
   return (
     <RightAlignText as="p" variant="t100-strong">
       {yppStatus.startsWith('Suspended')
@@ -112,7 +118,7 @@ const Reward = ({ yppStatus }: { yppStatus: YppChannelStatus }) => {
         : yppStatus === 'Unverified'
         ? 'Pending'
         : yppStatus.startsWith('Verified')
-        ? `$${getTierRewards(yppBackendTierToConfig(yppStatus))?.referral}`
+        ? `$${(getTierRewards(yppBackendTierToConfig(yppStatus))?.referral || 0) * multiplier}`
         : 'n/a'}
     </RightAlignText>
   )

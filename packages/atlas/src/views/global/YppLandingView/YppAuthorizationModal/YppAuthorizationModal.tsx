@@ -422,7 +422,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
       case 'ypp-sync-options':
         return {
           title: 'YouTube Auto Sync',
-          description: 'Gleev automatically syncs all your YouTube videos.',
+          description: `${APP_NAME} automatically syncs all your YouTube videos.`,
           primaryButton: {
             onClick: () => handleCreateOrUpdateChannel(),
             text: 'Continue',
