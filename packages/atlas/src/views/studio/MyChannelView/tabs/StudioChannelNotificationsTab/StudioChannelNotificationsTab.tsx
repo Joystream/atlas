@@ -8,10 +8,10 @@ import { EntitySettingTemplate } from '@/components/_templates/EntitySettingTemp
 
 import { StyledForm } from './StudioChannelNotificationsTab.styles'
 import { TABLE_STRUCTURE } from './StudioChannelNotificationsTab.utils'
-import { useMemberSettingsData } from './StudioChannelNotificationsTabStudio.hooks'
+import { useChannelSettingsData } from './StudioChannelNotificationsTabStudio.hooks'
 
 export const StudioChannelNotificationsTab = ({ actionBarPortal }: { actionBarPortal: RefObject<HTMLDivElement> }) => {
-  const { data, isLoading, isSubmitting, submit } = useMemberSettingsData()
+  const { data, isLoading, isSubmitting, submit } = useChannelSettingsData()
 
   const form = useForm<NotificationsState>()
   const {

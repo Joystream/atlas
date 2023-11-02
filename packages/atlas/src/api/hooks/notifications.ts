@@ -5,28 +5,30 @@ import {
   GetNftActivitiesCountQueryVariables,
   GetNftActivitiesQuery,
   GetNftActivitiesQueryVariables,
-  GetNotificationsConnectionQuery,
-  GetNotificationsConnectionQueryVariables,
   useGetNftActivitiesCountQuery,
   useGetNftActivitiesQuery,
   useGetNotificationsConnectionQuery,
+  useMarkNotificationsAsReadMutation,
 } from '@/api/queries/__generated__/notifications.generated'
 
-import { NftActivityOrderByInput } from '../queries/__generated__/baseTypes.generated'
+import { NftActivityOrderByInput, RecipientTypeWhereInput } from '../queries/__generated__/baseTypes.generated'
 
 export const useRawNotifications = (
-  accountId: string,
-  opts?: QueryHookOptions<GetNotificationsConnectionQuery, GetNotificationsConnectionQueryVariables>
+  recipient: RecipientTypeWhereInput | undefined,
+  opts?: Pick<QueryHookOptions, 'notifyOnNetworkStatusChange'>
 ) => {
   const { data, ...rest } = useGetNotificationsConnectionQuery({
-    variables: { first: 10, accountId },
-    skip: !accountId,
+    variables: { first: 10, recipient: recipient as RecipientTypeWhereInput },
     ...opts,
+    skip: !recipient,
   })
+
+  const [markNotificationsAsReadMutation] = useMarkNotificationsAsReadMutation()
+
   return {
     notifications: data?.notificationsConnection.edges || [],
-    totalCount: data?.notificationsConnection.totalCount,
     pageInfo: data?.notificationsConnection.pageInfo,
+    markNotificationsAsReadMutation,
     ...rest,
   }
 }

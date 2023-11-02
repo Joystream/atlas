@@ -23,6 +23,7 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
+import { UseNotifications } from '@/providers/notifications/notifications.hooks'
 
 import { BalanceTooltip } from './BalanceTooltip'
 import { SectionContainer } from './MemberDropdown.styles'
@@ -49,6 +50,7 @@ type DropdownType = 'member' | 'channel'
 type MemberDropdownNavProps = {
   type: 'member' | 'channel'
   publisher?: boolean
+  unseenNotificationsCounts?: UseNotifications['unseenNotificationsCounts']
   containerRefElement: Element | null
   onCloseDropdown?: () => void
   onAddNewChannel?: () => void
@@ -68,6 +70,7 @@ type MemberDropdownNavProps = {
 export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
   type,
   publisher,
+  unseenNotificationsCounts,
   containerRefElement,
   onCloseDropdown,
   onSwitchToList,
@@ -99,6 +102,10 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
     avatarLoading: type === 'member' ? memberAvatarLoading : false,
     balance: type === 'member' ? memberAvatarLoading : channelBalance,
   }
+
+  const otherChannelUnseenCount =
+    unseenNotificationsCounts?.channels &&
+    unseenNotificationsCounts.channels.total - unseenNotificationsCounts.channels.current
 
   return (
     <div ref={blockAnimationRef}>
@@ -191,57 +198,59 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
 
       <FixedSizeContainer height={sectionContainerHeight}>
         <AnimatedSectionContainer ref={sectionContainerRef}>
-          {type === 'member' ? (
-            <ListItemOptions
-              publisher={publisher}
-              closeDropdown={onCloseDropdown}
-              hasAtLeastOneChannel={hasAtLeastOneChannel}
-              listItems={[
-                {
-                  asButton: true,
-                  label: 'My profile',
-                  onClick: onCloseDropdown,
-                  nodeStart: <IconWrapper icon={<SvgActionMember />} />,
-                  to: absoluteRoutes.viewer.member(activeMembership?.handle),
-                },
-                {
-                  asButton: true,
-                  label: hasAtLeastOneChannel ? 'My channels' : 'Create channel',
-                  nodeStart: (
-                    <IconWrapper icon={hasAtLeastOneChannel ? <SvgActionChannel /> : <SvgActionAddChannel />} />
-                  ),
-                  nodeEnd: hasAtLeastOneChannel && <SvgActionChevronR />,
-                  onClick: () => (hasAtLeastOneChannel ? onSwitchToList(type) : onAddNewChannel?.()),
-                },
-              ]}
-            />
-          ) : (
-            <ListItemOptions
-              publisher={publisher}
-              closeDropdown={onCloseDropdown}
-              hasAtLeastOneChannel={hasAtLeastOneChannel}
-              listItems={[
-                {
-                  asButton: true,
-                  label: 'View channel',
-                  onClick: onCloseDropdown,
-                  nodeStart: <IconWrapper icon={<SvgActionShow />} />,
-                  to: hasAtLeastOneChannel
-                    ? absoluteRoutes.viewer.channel(channelId ?? undefined)
-                    : absoluteRoutes.studio.signIn(),
-                },
-                {
-                  asButton: true,
-                  label: hasAtleastTwoChannels ? 'Switch channel' : 'Add new channel',
-                  nodeStart: (
-                    <IconWrapper icon={hasAtleastTwoChannels ? <SvgActionChannel /> : <SvgActionAddChannel />} />
-                  ),
-                  nodeEnd: hasAtleastTwoChannels && <SvgActionChevronR />,
-                  onClick: () => (hasAtleastTwoChannels ? onSwitchToList(type) : onAddNewChannel?.()),
-                },
-              ]}
-            />
-          )}
+          <ListItemOptions
+            publisher={publisher}
+            closeDropdown={onCloseDropdown}
+            hasAtLeastOneChannel={hasAtLeastOneChannel}
+            unseenNotificationsCounts={unseenNotificationsCounts}
+            listItems={
+              type === 'member'
+                ? [
+                    {
+                      asButton: true,
+                      label: 'My profile',
+                      onClick: onCloseDropdown,
+                      nodeStart: <IconWrapper icon={<SvgActionMember />} />,
+                      to: absoluteRoutes.viewer.member(activeMembership?.handle),
+                    },
+                    {
+                      asButton: true,
+                      label: hasAtLeastOneChannel ? 'My channels' : 'Create channel',
+                      nodeStart: (
+                        <IconWrapper icon={hasAtLeastOneChannel ? <SvgActionChannel /> : <SvgActionAddChannel />} />
+                      ),
+                      nodeEnd: hasAtLeastOneChannel && <SvgActionChevronR />,
+                      onClick: () => (hasAtLeastOneChannel ? onSwitchToList(type) : onAddNewChannel?.()),
+                    },
+                  ]
+                : [
+                    {
+                      asButton: true,
+                      label: 'View channel',
+                      onClick: onCloseDropdown,
+                      nodeStart: <IconWrapper icon={<SvgActionShow />} />,
+                      to: hasAtLeastOneChannel
+                        ? absoluteRoutes.viewer.channel(channelId ?? undefined)
+                        : absoluteRoutes.studio.signIn(),
+                    },
+                    {
+                      asButton: true,
+                      label: hasAtleastTwoChannels ? 'Switch channel' : 'Add new channel',
+                      nodeStart: (
+                        <IconWrapper icon={hasAtleastTwoChannels ? <SvgActionChannel /> : <SvgActionAddChannel />} />
+                      ),
+                      nodeEnd:
+                        hasAtleastTwoChannels &&
+                        (otherChannelUnseenCount ? (
+                          <Badge data-badge={otherChannelUnseenCount} />
+                        ) : (
+                          <SvgActionChevronR />
+                        )),
+                      onClick: () => (hasAtleastTwoChannels ? onSwitchToList(type) : onAddNewChannel?.()),
+                    },
+                  ]
+            }
+          />
         </AnimatedSectionContainer>
       </FixedSizeContainer>
       <SectionContainer>
@@ -263,12 +272,16 @@ type ListItemOptionsProps = {
   publisher?: boolean
   hasAtLeastOneChannel?: boolean
   closeDropdown?: () => void
+  unseenNotificationsCounts?: UseNotifications['unseenNotificationsCounts']
   listItems: [ListItemProps, ListItemProps] | [ListItemProps]
 }
-const ListItemOptions: FC<ListItemOptionsProps> = ({ publisher, closeDropdown, listItems, hasAtLeastOneChannel }) => {
-  // todo: add logic after orion is done
-  const unseenChannelNotifications = 2
-  const unseenMemberNotifications = 1
+const ListItemOptions: FC<ListItemOptionsProps> = ({
+  publisher,
+  closeDropdown,
+  listItems,
+  hasAtLeastOneChannel,
+  unseenNotificationsCounts,
+}) => {
   return (
     <>
       {listItems.map((listItemsProps, idx) => (
@@ -280,7 +293,7 @@ const ListItemOptions: FC<ListItemOptionsProps> = ({ publisher, closeDropdown, l
           nodeStart={<IconWrapper icon={<SvgActionPlay />} />}
           label={atlasConfig.general.appName}
           to={absoluteRoutes.viewer.index()}
-          nodeEnd={<Badge data-badge={unseenMemberNotifications} />}
+          nodeEnd={<Badge data-badge={unseenNotificationsCounts?.member} />}
         />
       ) : hasAtLeastOneChannel ? (
         <>
@@ -289,7 +302,7 @@ const ListItemOptions: FC<ListItemOptionsProps> = ({ publisher, closeDropdown, l
             nodeStart={<IconWrapper icon={<SvgActionAddVideo />} />}
             label="Studio"
             to={absoluteRoutes.studio.index()}
-            nodeEnd={<Badge data-badge={unseenChannelNotifications} />}
+            nodeEnd={<Badge data-badge={unseenNotificationsCounts?.channels?.total} />}
           />
         </>
       ) : null}

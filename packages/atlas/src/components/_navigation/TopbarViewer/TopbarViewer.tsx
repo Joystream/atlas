@@ -17,6 +17,7 @@ import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
 import { useAuth } from '@/providers/auth/auth.hooks'
 import { useAuthStore } from '@/providers/auth/auth.store'
+import { useNotifications } from '@/providers/notifications/notifications.hooks'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { useSearchStore } from '@/providers/search'
 import { useUser } from '@/providers/user/user.hooks'
@@ -58,6 +59,8 @@ export const TopbarViewer: FC = () => {
     }),
     shallow
   )
+
+  const { unseenNotificationsCounts } = useNotifications()
 
   useEffect(() => {
     if (searchOpen) {
@@ -101,8 +104,6 @@ export const TopbarViewer: FC = () => {
   }
 
   const topbarButtonLoading = isAuthenticating || membershipsLoading
-  // todo: add logic after orion is done
-  const unseenChannelNotifications = 2
 
   if (pathname === absoluteRoutes.viewer.ypp()) {
     return null
@@ -142,23 +143,17 @@ export const TopbarViewer: FC = () => {
                 {!topbarButtonLoading ? (
                   isLoggedIn ? (
                     <SignedButtonsWrapper>
-                      <NotificationsWidget type="member" trigger={<NotificationsButton />} />
-                      {!mdMatch && !searchOpen && (
+                      <NotificationsWidget
+                        type="member"
+                        trigger={<NotificationsButton badge={unseenNotificationsCounts.member} />}
+                      />
+                      {(mdMatch || !searchOpen) && (
                         <StyledAvatar
                           size={40}
                           assetUrls={memberAvatarUrls}
                           loading={memberAvatarLoading}
                           onClick={handleDrawerToggle}
-                          badge={unseenChannelNotifications}
-                        />
-                      )}
-                      {mdMatch && (
-                        <StyledAvatar
-                          size={40}
-                          assetUrls={memberAvatarUrls}
-                          onClick={handleDrawerToggle}
-                          loading={memberAvatarLoading}
-                          badge={unseenChannelNotifications}
+                          badge={isMemberDropdownActive ? undefined : unseenNotificationsCounts.channels?.total}
                         />
                       )}
                     </SignedButtonsWrapper>
@@ -195,7 +190,11 @@ export const TopbarViewer: FC = () => {
           <Overlay onClick={onClose} />
         </CSSTransition>
       </StyledTopbarBase>
-      <MemberDropdown isActive={isMemberDropdownActive} closeDropdown={() => setIsMemberDropdownActive(false)} />
+      <MemberDropdown
+        unseenNotificationsCounts={unseenNotificationsCounts}
+        isActive={isMemberDropdownActive}
+        closeDropdown={() => setIsMemberDropdownActive(false)}
+      />
     </>
   )
 }

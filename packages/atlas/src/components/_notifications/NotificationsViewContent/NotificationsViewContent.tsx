@@ -39,7 +39,6 @@ type NotificationsViewContentProps = {
 export const NotificationsViewContent = ({
   unreadNumber,
   markNotificationsAsRead,
-  markNotificationsAsUnread,
   notifications,
   loading,
   pageInfo,
@@ -81,6 +80,9 @@ export const NotificationsViewContent = ({
               {
                 label: `${isMemberType ? 'Member' : 'Channel'} notification setting`,
                 nodeStart: <SvgActionSettings />,
+                to: isMemberType
+                  ? absoluteRoutes.viewer.memberSettings({ tab: 'Notifications' })
+                  : absoluteRoutes.studio.myChannel({ tab: 'Notifications' }),
               },
               {
                 label: `${isMemberType ? 'Channel' : 'Member'} notification center`,
@@ -111,8 +113,7 @@ export const NotificationsViewContent = ({
                     <StyledNotificationTile
                       key={`notification-${notification.id}-${idx}`}
                       notification={notification}
-                      onMarkAsRead={() => markNotificationsAsRead(notification)}
-                      onMarkAsUnread={() => markNotificationsAsUnread(notification)}
+                      onMarkAsRead={() => markNotificationsAsRead([notification])}
                     />
                   ) : (
                     <StyledNotificationLoader key={idx} />

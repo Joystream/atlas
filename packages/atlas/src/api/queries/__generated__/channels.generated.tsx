@@ -776,6 +776,18 @@ export type GetTopSellingChannelsFromThreePeriodsQuery = {
   }>
 }
 
+export type GetChannelAvatarQueryVariables = Types.Exact<{
+  id: Types.Scalars['String']
+}>
+
+export type GetChannelAvatarQuery = {
+  __typename?: 'Query'
+  channelById?: {
+    __typename?: 'Channel'
+    avatarPhoto?: { __typename?: 'StorageDataObject'; resolvedUrls: Array<string>; isAccepted: boolean } | null
+  } | null
+}
+
 export const GetFullChannelDocument = gql`
   query GetFullChannel($id: String!) {
     channelById(id: $id) {
@@ -1720,3 +1732,45 @@ export type GetTopSellingChannelsFromThreePeriodsQueryResult = Apollo.QueryResul
   GetTopSellingChannelsFromThreePeriodsQuery,
   GetTopSellingChannelsFromThreePeriodsQueryVariables
 >
+export const GetChannelAvatarDocument = gql`
+  query GetChannelAvatar($id: String!) {
+    channelById(id: $id) {
+      avatarPhoto {
+        resolvedUrls
+        isAccepted
+      }
+    }
+  }
+`
+
+/**
+ * __useGetChannelAvatarQuery__
+ *
+ * To run a query within a React component, call `useGetChannelAvatarQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetChannelAvatarQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetChannelAvatarQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetChannelAvatarQuery(
+  baseOptions: Apollo.QueryHookOptions<GetChannelAvatarQuery, GetChannelAvatarQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetChannelAvatarQuery, GetChannelAvatarQueryVariables>(GetChannelAvatarDocument, options)
+}
+export function useGetChannelAvatarLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetChannelAvatarQuery, GetChannelAvatarQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetChannelAvatarQuery, GetChannelAvatarQueryVariables>(GetChannelAvatarDocument, options)
+}
+export type GetChannelAvatarQueryHookResult = ReturnType<typeof useGetChannelAvatarQuery>
+export type GetChannelAvatarLazyQueryHookResult = ReturnType<typeof useGetChannelAvatarLazyQuery>
+export type GetChannelAvatarQueryResult = Apollo.QueryResult<GetChannelAvatarQuery, GetChannelAvatarQueryVariables>

@@ -11,6 +11,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
 import { useAuthStore } from '@/providers/auth/auth.store'
+import { useNotifications } from '@/providers/notifications/notifications.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { transitions } from '@/styles'
@@ -30,6 +31,11 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
     actions: { setAuthModalOpenName },
   } = useAuthStore()
   const { isWorkspaceOpen, setIsWorkspaceOpen, uploadVideoButtonProps } = useVideoWorkspace()
+  const { unseenNotificationsCounts } = useNotifications()
+  const otherChannelUnseenCount =
+    unseenNotificationsCounts.channels &&
+    unseenNotificationsCounts.channels.total - unseenNotificationsCounts.channels.current
+  const otherUnseenCount = (unseenNotificationsCounts.member ?? 0) + (otherChannelUnseenCount ?? 0)
 
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
 
@@ -45,9 +51,6 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
     }
     setIsWorkspaceOpen(false)
   }
-
-  // todo: add logic after orion is done
-  const unseenMemberNotifications = 1
 
   return (
     <>
@@ -75,12 +78,15 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
                   {mdMatch && 'Upload video'}
                 </Button>
               </CSSTransition>
-              <NotificationsWidget type="channel" trigger={<NotificationsButton />} />
+              <NotificationsWidget
+                type="channel"
+                trigger={<NotificationsButton badge={unseenNotificationsCounts.channels?.current} />}
+              />
               <StyledAvatar
                 size={40}
                 assetUrls={activeChannel?.avatarPhoto?.resolvedUrls}
                 onClick={handleDrawerToggle}
-                badge={unseenMemberNotifications}
+                badge={isMemberDropdownActive ? undefined : otherUnseenCount}
               />
             </StudioTopbarContainer>
           ) : (
@@ -90,6 +96,7 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
           ))}
       </StyledTopbarBase>
       <MemberDropdown
+        unseenNotificationsCounts={unseenNotificationsCounts}
         onChannelChange={handleChannelChange}
         isActive={isMemberDropdownActive}
         publisher={hasAtLeastOneChannel}

@@ -30,15 +30,8 @@ type NotificationsWidgetProps = {
 
 export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ type, ...rest }) => {
   const popoverRef = useRef<PopoverImperativeHandle>()
-  const {
-    notifications,
-    markNotificationsAsRead,
-    setLastSeenNotificationBlock,
-    markNotificationsAsUnread,
-    pageInfo,
-    fetchMore,
-    loading,
-  } = useNotifications()
+  const { notifications, markNotificationsAsRead, setLastSeenNotificationDate, pageInfo, fetchMore, loading } =
+    useNotifications()
   const smMatch = useMediaMatch('sm')
   const firstNotification = notifications[0]
   const [ref, setRef] = useState<HTMLButtonElement | null>()
@@ -50,8 +43,8 @@ export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ type, ...res
   // set last seen notification block to first notification to manage the badge for notification button
   useEffect(() => {
     if (!firstNotification || !isOpen) return
-    setLastSeenNotificationBlock(firstNotification.block)
-  }, [firstNotification, isOpen, setLastSeenNotificationBlock])
+    setLastSeenNotificationDate(firstNotification.date)
+  }, [firstNotification, isOpen, setLastSeenNotificationDate])
 
   const handleShow = () => {
     rest.onShow?.()
@@ -110,7 +103,9 @@ export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ type, ...res
                     {
                       label: `${isMemberType ? 'Member' : 'Channel'} notification settings`,
                       nodeStart: <SvgActionSettings />,
-                      onClick: () => markNotificationsAsRead(notifications),
+                      to: isMemberType
+                        ? absoluteRoutes.viewer.memberSettings({ tab: 'Notifications' })
+                        : absoluteRoutes.studio.myChannel({ tab: 'Notifications' }),
                     },
                   ]}
                   trigger={null}
@@ -139,8 +134,7 @@ export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ type, ...res
                               onClick={() => {
                                 popoverRef.current?.hide()
                               }}
-                              onMarkAsRead={() => markNotificationsAsRead(notification)}
-                              onMarkAsUnread={() => markNotificationsAsUnread(notification)}
+                              onMarkAsRead={() => markNotificationsAsRead([notification])}
                             />
                           ) : (
                             <StyledNotificationLoader key={idx} />
