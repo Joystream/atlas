@@ -19,10 +19,10 @@ import {
   UnfollowChannelMutation,
   useFollowChannelMutation,
   useGetChannelNftCollectorsQuery,
-  useGetChannelsPaymentEventsQuery,
   useGetDiscoverChannelsQuery,
   useGetExtendedBasicChannelsQuery,
   useGetExtendedFullChannelsQuery,
+  useGetMostPaidChannelsQuery,
   useGetTop10ChannelsQuery,
   useUnfollowChannelMutation,
 } from '@/api/queries/__generated__/channels.generated'
@@ -87,37 +87,22 @@ export const useBasicChannels = (
 type PayeeChannel = {
   id: string
   title?: string | null
+  cumulativeRewardPaid: BN
   avatarPhoto?: { resolvedUrls: string[] } | null
 }
-export type YPPPaidChannels = { channel: PayeeChannel; amount: BN }
-export const useRecentlyPaidChannels = (): { channels: YPPPaidChannels[] | undefined; loading: boolean } => {
-  const { data, loading } = useGetChannelsPaymentEventsQuery({ variables: { limit: 2000 } })
+export const useMostPaidChannels = (): { channels: PayeeChannel[] | undefined; loading: boolean } => {
+  const { data, loading } = useGetMostPaidChannelsQuery()
 
-  const channels = useMemo<YPPPaidChannels[] | undefined>(() => {
-    type PaymentMap = Map<string, YPPPaidChannels>
-    const paymentMap = data?.events.reduce<PaymentMap>((channels, { data }) => {
-      if (data.__typename !== 'ChannelPaymentMadeEventData' || !data.payeeChannel) return channels
-
-      const exisitng = channels.get(data.payeeChannel.id)
-      const channel = exisitng?.channel ?? data.payeeChannel
-      const amount = new BN(data.amount).add(exisitng?.amount ?? BN_ZERO)
-
-      channels.set(data.payeeChannel.id, { channel, amount })
-
-      return channels
-    }, new Map())
-
-    return (
-      paymentMap &&
-      Array.from(paymentMap.values())
-        .sort((a, b) => {
-          if (a.amount.gt(b.amount)) return -1
-          if (a.amount.lt(b.amount)) return 1
-          return 0
-        })
-        .slice(0, 50)
-    )
-  }, [data])
+  const channels = useMemo<PayeeChannel[] | undefined>(
+    () =>
+      data?.channels.map(({ id, title, cumulativeRewardPaid, avatarPhoto }) => ({
+        id,
+        title: title ?? undefined,
+        cumulativeRewardPaid: cumulativeRewardPaid ? new BN(cumulativeRewardPaid) : BN_ZERO,
+        avatarPhoto: avatarPhoto ?? undefined,
+      })),
+    [data]
+  )
 
   return { channels, loading }
 }
