@@ -23,7 +23,7 @@ export type GetFullChannelQuery = {
     videoViewsNum: number
     description?: string | null
     isPublic?: boolean | null
-    cumulativeRewardClaimed?: string | null
+    cumulativeRewardClaimed: string
     isCensored: boolean
     language?: string | null
     id: string
@@ -162,7 +162,7 @@ export type GetExtendedFullChannelsQuery = {
       videoViewsNum: number
       description?: string | null
       isPublic?: boolean | null
-      cumulativeRewardClaimed?: string | null
+      cumulativeRewardClaimed: string
       isCensored: boolean
       language?: string | null
       id: string

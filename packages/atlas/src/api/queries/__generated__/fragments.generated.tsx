@@ -42,7 +42,7 @@ export type FullChannelFieldsFragment = {
   videoViewsNum: number
   description?: string | null
   isPublic?: boolean | null
-  cumulativeRewardClaimed?: string | null
+  cumulativeRewardClaimed: string
   isCensored: boolean
   language?: string | null
   id: string
@@ -130,7 +130,7 @@ export type ExtendedFullChannelFieldsFragment = {
     videoViewsNum: number
     description?: string | null
     isPublic?: boolean | null
-    cumulativeRewardClaimed?: string | null
+    cumulativeRewardClaimed: string
     isCensored: boolean
     language?: string | null
     id: string
@@ -819,7 +819,7 @@ export type FullVideoFieldsFragment = {
     videoViewsNum: number
     description?: string | null
     isPublic?: boolean | null
-    cumulativeRewardClaimed?: string | null
+    cumulativeRewardClaimed: string
     isCensored: boolean
     language?: string | null
     id: string
