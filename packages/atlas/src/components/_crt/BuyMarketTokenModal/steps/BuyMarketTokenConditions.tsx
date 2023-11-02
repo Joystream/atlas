@@ -37,7 +37,7 @@ export const BuyMarketTokenConditions = ({ setPrimaryButtonProps, onSubmit }: Bu
 
   useEffect(() => {
     setPrimaryButtonProps({
-      text: 'Buy token',
+      text: 'Continue',
       onClick: () => {
         if (isChecked) {
           onSubmit()

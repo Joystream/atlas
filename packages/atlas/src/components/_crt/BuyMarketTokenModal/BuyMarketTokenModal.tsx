@@ -1,20 +1,23 @@
 import BN from 'bn.js'
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useForm } from 'react-hook-form'
 
 import { useGetFullCreatorTokenQuery } from '@/api/queries/__generated__/creatorTokens.generated'
+import { NumberFormat } from '@/components/NumberFormat'
+import { AmmModalFormTemplate } from '@/components/_crt/AmmModalTemplates'
+import { AmmModalSummaryTemplate } from '@/components/_crt/AmmModalTemplates/AmmModalSummaryTemplate'
 import { BuyMarketTokenSuccess } from '@/components/_crt/BuyMarketTokenModal/steps/BuyMarketTokenSuccess'
 import { DialogProps } from '@/components/_overlays/Dialog'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
-import { useJoystream } from '@/providers/joystream'
+import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
+import { useFee, useJoystream, useSubscribeAccountBalance } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { calcBuyMarketPricePerToken } from '@/utils/crts'
 
 import { BuyMarketTokenConditions } from './steps/BuyMarketTokenConditions'
-import { BuyMarketTokenForm } from './steps/BuyMarketTokenForm'
 
 export type BuySaleTokenModalProps = {
   tokenId: string
@@ -25,6 +28,7 @@ export type BuySaleTokenModalProps = {
 enum BUY_MARKET_TOKEN_STEPS {
   form,
   conditions,
+  summary,
   success,
 }
 
@@ -32,11 +36,17 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
   const [activeStep, setActiveStep] = useState(BUY_MARKET_TOKEN_STEPS.form)
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogProps['primaryButton']>()
   const amountRef = useRef<number | null>(null)
+  const { control, watch, handleSubmit, reset, formState } = useForm<{ tokens: number }>()
+  const tokens = watch('tokens') || 0
+  const { fullFee } = useFee('purchaseTokenOnMarketTx', ['1', '1', String(tokens ?? 0), '1000000'])
   const { data } = useGetFullCreatorTokenQuery({
     variables: {
       id: tokenId,
     },
   })
+  const { accountBalance } = useSubscribeAccountBalance()
+  const title = data?.creatorTokenById?.symbol ?? 'N/A'
+
   const currentAmm = data?.creatorTokenById?.ammCurves.find((amm) => !amm.finalized)
 
   const { memberId } = useUser()
@@ -57,6 +67,13 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
         return {
           text: 'Cancel',
           onClick: onClose,
+        }
+      case BUY_MARKET_TOKEN_STEPS.summary:
+        return {
+          text: 'Back',
+          onClick: () => {
+            setActiveStep(BUY_MARKET_TOKEN_STEPS.conditions)
+          },
         }
       default:
         return undefined
@@ -81,11 +98,18 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
     [data?.creatorTokenById]
   )
 
+  const priceForAllToken = useMemo(() => {
+    return hapiBnToTokenNumber(calculateRequiredHapi(Math.max(tokens, 1)) ?? new BN(0))
+  }, [tokens, calculateRequiredHapi])
+  const pricePerUnit = priceForAllToken / (tokens || 1)
+
   const commonProps = {
     setPrimaryButtonProps,
   }
 
-  const onSubmitConditions = useCallback(async () => {
+  const onTermsSubmit = useCallback(() => setActiveStep(BUY_MARKET_TOKEN_STEPS.summary), [])
+
+  const onTransactionSubmit = useCallback(() => {
     const slippageAmount = calculateRequiredHapi(amountRef.current ?? 0)
     if (!joystream || !memberId || !amountRef.current || !slippageAmount) {
       return
@@ -112,6 +136,121 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
     })
   }, [calculateRequiredHapi, displaySnackbar, handleTransaction, joystream, memberId, proxyCallback, tokenId])
 
+  const formDetails = useMemo(
+    () => [
+      {
+        title: 'Available balance',
+        content: <NumberFormat value={accountBalance ?? 0} as="p" variant="t200" withDenomination="before" withToken />,
+        tooltipText: 'Lorem ipsum',
+      },
+      {
+        title: 'You will pay',
+        content: (
+          <NumberFormat
+            value={hapiBnToTokenNumber(calculateRequiredHapi(tokens) ?? new BN(0))}
+            as="p"
+            variant="t200"
+            withDenomination="before"
+            withToken
+          />
+        ),
+        tooltipText: 'Lorem ipsum',
+      },
+    ],
+    [accountBalance, calculateRequiredHapi, tokens]
+  )
+
+  const summaryDetails = useMemo(
+    () => [
+      {
+        title: 'Purchase',
+        content: (
+          <NumberFormat
+            value={calculateRequiredHapi(tokens) ?? 0}
+            as="p"
+            variant="t200"
+            withToken
+            withDenomination="before"
+          />
+        ),
+        tooltipText: 'Lorem ipsum',
+      },
+      {
+        title: 'Price per unit',
+        content: (
+          <NumberFormat
+            value={tokenNumberToHapiBn(pricePerUnit)}
+            as="p"
+            variant="t200"
+            withToken
+            withDenomination="before"
+          />
+        ),
+        tooltipText: 'Lorem ipsum',
+      },
+      {
+        title: 'Fee',
+        content: <NumberFormat value={fullFee} as="p" variant="t200" withToken withDenomination="before" />,
+        tooltipText: 'Lorem ipsum',
+      },
+      {
+        title: 'Total',
+        content: (
+          <NumberFormat
+            value={fullFee.add(calculateRequiredHapi(tokens) ?? new BN(0))}
+            as="p"
+            variant="t200"
+            withToken
+            withDenomination="before"
+          />
+        ),
+        tooltipText: 'Lorem ipsum',
+      },
+      {
+        title: 'You will get',
+        content: (
+          <NumberFormat
+            value={tokens}
+            as="p"
+            variant="t200-strong"
+            withToken
+            withDenomination="before"
+            customTicker={`$${title}`}
+            denominationMultiplier={pricePerUnit}
+          />
+        ),
+        tooltipText: 'Lorem ipsum',
+      },
+    ],
+    [calculateRequiredHapi, fullFee, pricePerUnit, title, tokens]
+  )
+
+  useEffect(() => {
+    if (!show) {
+      reset({ tokens: 0 })
+    }
+  }, [reset, show])
+
+  useEffect(() => {
+    if (activeStep === BUY_MARKET_TOKEN_STEPS.form) {
+      setPrimaryButtonProps({
+        text: 'Continue',
+        onClick: () =>
+          handleSubmit((data) => {
+            amountRef.current = data.tokens
+            setActiveStep(BUY_MARKET_TOKEN_STEPS.conditions)
+          })(),
+      })
+    }
+
+    if (activeStep === BUY_MARKET_TOKEN_STEPS.summary) {
+      setPrimaryButtonProps({
+        text: 'Buy token',
+        onClick: onTransactionSubmit,
+      })
+    }
+  }, [activeStep, handleSubmit, onTransactionSubmit])
+
   if (!currentAmm && show) {
     throw new Error('BuyAmmModal invoked on token without active amm')
   }
@@ -130,20 +269,23 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
       noContentPadding={activeStep === BUY_MARKET_TOKEN_STEPS.conditions}
     >
       {activeStep === BUY_MARKET_TOKEN_STEPS.form && (
-        <BuyMarketTokenForm
-          {...commonProps}
-          calculateRequiredHapi={calculateRequiredHapi}
-          pricePerUnit={hapiBnToTokenNumber(calculateRequiredHapi(1) ?? new BN(0))}
-          onSubmit={(tokens) => {
-            setActiveStep(BUY_MARKET_TOKEN_STEPS.conditions)
-            amountRef.current = tokens
+        <AmmModalFormTemplate
+          control={control}
+          details={formDetails}
+          pricePerUnit={pricePerUnit}
+          error={formState.errors.tokens?.message}
+          validation={(value) => {
+            if (!value || value < 1) return 'You need to buy at least one token'
+            const requiredHapi = calculateRequiredHapi(value ?? 0)
+            if (!accountBalance || !requiredHapi) return true
+            return accountBalance.gte(requiredHapi) ? true : "You don't have enough balance to buy this many tokens"
           }}
-          token={data?.creatorTokenById}
         />
       )}
       {activeStep === BUY_MARKET_TOKEN_STEPS.conditions && (
-        <BuyMarketTokenConditions {...commonProps} onSubmit={onSubmitConditions} />
+        <BuyMarketTokenConditions {...commonProps} onSubmit={onTermsSubmit} />
       )}
+      {activeStep === BUY_MARKET_TOKEN_STEPS.summary && <AmmModalSummaryTemplate details={summaryDetails} />}
       {activeStep === BUY_MARKET_TOKEN_STEPS.success && (
         <BuyMarketTokenSuccess
           {...commonProps}
