@@ -115,6 +115,7 @@ export const configSchema = z.object({
       statusPollingInterval: z.number(),
     }),
     notifications: z.object({ pollingInterval: z.number() }),
+    referrals: z.object({ referrerBonusPercent: z.number().nullable(), signupBonusPercent: z.number().nullable() }),
     members: z.object({
       avatarServiceUrl: z.string(),
       hcaptchaSiteKey: z.string().nullable(),

@@ -38,6 +38,9 @@ const MembershipSettingsView = lazy(() =>
 const NotFoundView = lazy(() => import('./NotFoundView').then((module) => ({ default: module.NotFoundView })))
 const SearchView = lazy(() => import('./SearchView').then((module) => ({ default: module.SearchView })))
 const VideoView = lazy(() => import('./VideoView').then((module) => ({ default: module.VideoView })))
+const ReferralsView = lazy(() =>
+  import('@/views/global/ReferralsView').then((module) => ({ default: module.ReferralsView }))
+)
 
 const viewerRoutes = [
   { path: relativeRoutes.viewer.search(), element: <SearchView /> },
@@ -51,6 +54,7 @@ const viewerRoutes = [
   ...(atlasConfig.features.ypp.googleConsoleClientId
     ? [{ path: relativeRoutes.viewer.ypp(), element: <YppLandingView /> }]
     : []),
+  { path: relativeRoutes.viewer.referrals(), element: <ReferralsView /> },
 ]
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.viewer.index()
@@ -190,7 +194,9 @@ export const ViewerLayout: FC = () => {
 
 const MainContainer = styled.main`
   position: relative;
-  padding: var(--size-topbar-height) var(--size-global-horizontal-padding) 0;
+  padding: ${location.pathname === absoluteRoutes.viewer.referrals()
+    ? 0
+    : 'var(--size-topbar-height) var(--size-global-horizontal-padding) 0'};
   margin-left: var(--size-sidenav-width-collapsed);
   height: 100%;
 `
