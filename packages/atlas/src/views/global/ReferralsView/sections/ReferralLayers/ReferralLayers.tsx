@@ -1,6 +1,6 @@
 import PulseLineCurved from '@/assets/icons/svgs/pulse-line-curved.svg'
 import PulseLineStraight from '@/assets/icons/svgs/pulse-line-straight.svg'
-import card1 from '@/assets/images/referrals-card-1.webp'
+import card1 from '@/assets/images/referrals-landing/referrals-card-1.webp'
 import userAvatar1 from '@/assets/images/referrals-landing/user-avatar-1.webp'
 import userAvatar2 from '@/assets/images/referrals-landing/user-avatar-2.webp'
 import userAvatar3 from '@/assets/images/referrals-landing/user-avatar-3.webp'

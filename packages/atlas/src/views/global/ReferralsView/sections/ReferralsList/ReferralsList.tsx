@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import shallow from 'zustand/shallow'
 
 import { SvgActionAddChannel, SvgActionNewChannel } from '@/assets/icons'
-import ListImage from '@/assets/images/referrals-list.webp'
+import ListImage from '@/assets/images/referrals-landing/referrals-list.webp'
 import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
