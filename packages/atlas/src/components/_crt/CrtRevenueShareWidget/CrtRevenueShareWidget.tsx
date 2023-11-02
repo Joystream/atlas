@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { useGetMembershipsQuery } from '@/api/queries/__generated__/memberships.generated'
 import { SvgActionChevronR, SvgActionRevenueShare } from '@/assets/icons'
+import { SvgRevenueSharePlaceholder } from '@/assets/illustrations'
 import { Avatar } from '@/components/Avatar'
 import { FlexBox } from '@/components/FlexBox'
 import { Text } from '@/components/Text'
@@ -117,7 +118,8 @@ export const CrtRevenueShareWidget = ({ token, onTabSwitch }: CrtHoldersWidgetPr
 const EmptyState = () => {
   return (
     <EmptyStateBox justifyContent="center" alignItems="center" flow="column">
-      <div style={{ height: 100, width: 200, background: 'red' }} />
+      {/*<div style={{ height: 100, width: 200, background: 'red' }} />*/}
+      <SvgRevenueSharePlaceholder />
       <Text variant="t200" as="p" color="colorText" margin={{ top: 6, bottom: 2 }}>
         There is no ongoing share of revenue. Click start revenue share to to withdraw your share and let your tokens
         holders claim their share
