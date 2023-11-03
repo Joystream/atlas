@@ -149,9 +149,14 @@ export const NftWidgetContent: FC<NftWidgetContentProps> = memo(
                   </>
                 ) : (
                   <GridItem colSpan={buttonColumnSpan}>
-                    <Button fullWidth size={buttonSize} onClick={onNftPurchase}>
-                      Buy now
-                    </Button>
+                    <ProtectedActionWrapper
+                      title="You want to buy this NFT?"
+                      description="Sign in to take part in NFT auctions"
+                    >
+                      <Button fullWidth size={buttonSize} onClick={onNftBuyNow}>
+                        Buy now
+                      </Button>
+                    </ProtectedActionWrapper>
                   </GridItem>
                 )}
                 {bidFromPreviousAuction && (
