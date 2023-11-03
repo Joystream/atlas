@@ -39,6 +39,8 @@ export const relativeRoutes = {
       withQueryParameters(`member/settings`, query),
     member: (handle = ':handle', query?: { [QUERY_PARAMS.TAB]?: MemberTabs }) =>
       withQueryParameters(`member/${handle}`, query),
+    memberById: (id = ':id', query?: { [QUERY_PARAMS.TAB]?: MemberTabs }) =>
+      withQueryParameters(`member/id/${id}`, query),
     memberNotifications: () => 'notifications/member',
     marketplace: () => 'marketplace',
     ypp: (query?: { [QUERY_PARAMS.REFERRER_ID]?: string }) => withQueryParameters('ypp', query),

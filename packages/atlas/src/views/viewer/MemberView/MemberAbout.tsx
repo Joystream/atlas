@@ -1,6 +1,4 @@
-import { useParams } from 'react-router'
-
-import { useMemberships } from '@/api/hooks/membership'
+import { GetMembershipsQuery } from '@/api/queries/__generated__/memberships.generated'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { GridItem } from '@/components/LayoutGrid/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
@@ -12,11 +10,11 @@ import { formatDate } from '@/utils/time'
 
 import { Anchor, ChannelsOwnedContainerGrid, Details, StyledLayoutGrid, TextContainer } from './MemberAbout.styles'
 
-export const MemberAbout = () => {
-  const { handle } = useParams()
-  const { memberships, loading } = useMemberships({ where: { handle_eq: handle } })
-  const member = memberships?.find((member) => member.handle === handle)
-
+type MemberAboutProps = {
+  member?: GetMembershipsQuery['memberships'][number]
+  loading: boolean
+}
+export const MemberAbout = ({ member, loading }: MemberAboutProps) => {
   const placeholderItems = createPlaceholderData(2).map((_, idx) => <ChannelCard key={idx} loading={loading} />)
 
   const channels = loading
