@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { AppLogo } from '@/components/AppLogo'
 import { FlexBox } from '@/components/FlexBox'
@@ -28,6 +28,14 @@ export const ReferralsView = () => {
   useEffect(() => {
     updateDismissedMessages('referrals-banner')
   }, [updateDismissedMessages])
+
+  const videoRef = useRef<HTMLVideoElement | null>(null)
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = 2
+    }
+  }, [])
 
   return (
     <FlexBox flow="column" justifyContent="center" alignItems="center" gap={4}>
@@ -73,7 +81,7 @@ export const ReferralsView = () => {
           </GridItem>
         </LayoutGrid>
         <StyledVideoWrapper>
-          <StyledVideo autoPlay loop muted>
+          <StyledVideo ref={videoRef} autoPlay loop muted>
             <source
               src="https://eu-central-1.linodeobjects.com/atlas-assets/categories/gleev/videos/referrals/Referrals_dashboard.mp4"
               type="video/mp4"
