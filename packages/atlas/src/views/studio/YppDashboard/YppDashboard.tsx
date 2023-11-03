@@ -1,8 +1,10 @@
 import { FC, useEffect, useMemo, useState } from 'react'
 
+import { SvgActionLinkUrl } from '@/assets/icons'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Tabs } from '@/components/Tabs'
 import { Text } from '@/components/Text'
+import { ReferralLinkButton } from '@/components/_ypp/ReferralLinkButton'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
@@ -10,7 +12,7 @@ import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
 import { YppDashboardReferralsTab } from '@/views/studio/YppDashboard/tabs/YppDashboardReferralsTab/YppDashboardReferralsTab'
 
-import { Divider, Header, TabsWrapper } from './YppDashboard.styles'
+import { Header, TabsWrapper } from './YppDashboard.styles'
 import { YppDashboardMainTab, YppDashboardSettingsTab } from './tabs'
 
 const TABS = ['Dashboard', 'Referrals', 'Settings'] as const
@@ -58,7 +60,7 @@ export const YppDashboard: FC = () => {
         </Header>
         <TabsWrapper>
           <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={setCurrentVideosTab} />
-          <Divider />
+          {TABS[currentVideosTab] === 'Referrals' && <ReferralLinkButton icon={<SvgActionLinkUrl />} />}
         </TabsWrapper>
         {content}
       </LimitedWidthContainer>

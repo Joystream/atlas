@@ -9,8 +9,6 @@ import { FlexBox } from '@/components/FlexBox'
 import { Button } from '@/components/_buttons/Button'
 import { cVar, media, sizes, square, zIndex } from '@/styles'
 
-export { Divider } from '../YppDashboard.styles'
-
 export const StyledSvgAlertsInformative24 = styled(SvgAlertsInformative24)`
   path {
     fill: ${cVar('colorTextStrong')};
@@ -132,4 +130,11 @@ export const WidgetTileContent = styled(FlexBox)`
     justify-content: space-between;
     align-items: flex-end;
   }
+`
+
+export const Divider = styled.div<{ withMargin?: boolean }>`
+  margin: ${({ withMargin }) => (withMargin ? `${sizes(2)} 0` : '')};
+  background-color: ${cVar('colorBackgroundMutedAlpha')};
+  height: 1px;
+  width: 100%;
 `

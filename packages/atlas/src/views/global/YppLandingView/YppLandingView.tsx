@@ -23,9 +23,8 @@ import { YppCardsSections } from './sections/YppCardsSections'
 import { YppFooter } from './sections/YppFooter'
 import { YppHero } from './sections/YppHero'
 import { YppRewardSection } from './sections/YppRewardSection'
+import { YppSignupVideo } from './sections/YppSignupVideo'
 import { useGetYppSyncedChannels } from './useGetYppSyncedChannels'
-
-const SINGUP_DAILY_QUOTA = 500 // 2% of the total daily quota
 
 export const YppLandingView: FC = () => {
   const headTags = useHeadTags('YouTube Partner Program')
@@ -45,7 +44,8 @@ export const YppLandingView: FC = () => {
       .catch((e) => SentryLogger.error('Quota fetch failed', 'YppLandingView', e))
   )
   const [wasSignInTriggered, setWasSignInTriggered] = useState(false)
-  const isTodaysQuotaReached = data ? data.signupQuotaUsed > SINGUP_DAILY_QUOTA : false
+  const todaysQuota = atlasConfig.features.ypp.dailySignupQuota
+  const isTodaysQuotaReached = data && todaysQuota ? data.signupQuotaUsed > todaysQuota : false
   const shouldContinueYppFlowAfterCreatingChannel = useYppStore(
     (store) => store.shouldContinueYppFlowAfterCreatingChannel
   )
@@ -151,7 +151,7 @@ export const YppLandingView: FC = () => {
           selectedChannelTitle={selectedChannelTitle}
         />
         <YppRewardSection />
-        {/*<YppSignupVideo />*/}
+        <YppSignupVideo />
         <YppConnectionDetails />
         <YppCardsSections />
         <YppFooter onSignUpClick={handleYppSignUpClick} />

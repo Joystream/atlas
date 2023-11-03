@@ -49,6 +49,8 @@ export const configSchema = z.object({
       enrollmentReward: z.number().nullable(),
       enrollmentUsdReward: z.number().nullable(),
       referralBaseReward: z.number().nullable(),
+      dailySignupQuota: z.number().nullable(),
+      tierBoostMultiplier: z.number().nullable(),
       tiersDefinition: z.array(
         z.object({
           tier: YppTierEnum,
