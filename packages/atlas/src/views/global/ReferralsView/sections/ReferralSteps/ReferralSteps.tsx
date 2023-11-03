@@ -6,7 +6,6 @@ import { SvgActionAddChannel, SvgActionNewChannel } from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox'
 import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
-import { Button } from '@/components/_buttons/Button'
 import { Step } from '@/components/_referrals/Step/Step'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
@@ -15,6 +14,7 @@ import { useAuthStore } from '@/providers/auth/auth.store'
 import { useUser } from '@/providers/user/user.hooks'
 import {
   StepVideoContainer,
+  StyledCtaButton,
   StyledLayoutGrid,
   StyledStepVideo,
 } from '@/views/global/ReferralsView/sections/ReferralSteps/ReferralSteps.styles'
@@ -53,7 +53,7 @@ export const ReferralSteps = () => {
 
   useEffect(() => {
     const switchInterval = setInterval(() => {
-      if (shouldSwitch.current && selectedStep > minStep) {
+      if (shouldSwitch.current && selectedStep >= minStep) {
         setSelectedStep(selectedStep === steps.length - 1 ? minStep : selectedStep + 1)
       }
     }, 7000)
@@ -70,11 +70,11 @@ export const ReferralSteps = () => {
   })
   const handleActionButtonClick = () => {
     if (activeChannel?.id) {
-      navigate(absoluteRoutes.studio.yppDashboard())
+      navigate(`${absoluteRoutes.studio.yppDashboard()}?tab=Referrals`)
     } else if (activeMembership?.id) {
       setAuthModalOpenName('createChannel')
     } else {
-      setAuthModalOpenName('createChannel')
+      setAuthModalOpenName('signUp')
     }
   }
 
@@ -119,13 +119,14 @@ export const ReferralSteps = () => {
           </StepVideoContainer>
         </GridItem>
       </StyledLayoutGrid>
-      <Button
+      <StyledCtaButton
         icon={activeChannel?.id ? undefined : activeMembership?.id ? <SvgActionAddChannel /> : <SvgActionNewChannel />}
         onClick={handleActionButtonClick}
+        size="large"
         fullWidth={!smMatch}
       >
         {activeChannel?.id ? 'Open referrals dashboard' : activeMembership?.id ? 'Add new channel' : 'Sign in'}
-      </Button>
+      </StyledCtaButton>
     </FlexBox>
   )
 }

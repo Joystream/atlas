@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 
 import { LayoutGrid } from '@/components/LayoutGrid'
+import { Button } from '@/components/_buttons/Button'
 import { media } from '@/styles'
 import { StyledVideo } from '@/views/global/ReferralsView/ReferralsView.styles'
 
@@ -33,4 +34,8 @@ export const StyledStepVideo = styled(StyledVideo)`
 
 export const StyledLayoutGrid = styled(LayoutGrid)`
   width: 100%;
+`
+
+export const StyledCtaButton = styled(Button)`
+  min-width: 240px;
 `

@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
 
 import { cVar, media } from '@/styles'
 
@@ -45,4 +46,9 @@ export const StyledVideoWrapper = styled.div`
   ${media.lg} {
     height: 680px;
   }
+`
+
+export const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: ${cVar('colorTextPrimary')};
 `

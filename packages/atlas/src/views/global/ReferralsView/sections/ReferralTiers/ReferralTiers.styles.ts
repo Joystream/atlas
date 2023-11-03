@@ -44,7 +44,7 @@ export const StyledSideLine = styled.div<{ isRight?: boolean }>`
     background: ${({ isRight }) =>
       `linear-gradient(${
         isRight ? '120' : '240'
-      }deg, rgba(0 125 255 1) 0%, #007dff 31%, #afd5fc 90%, rgba(175 213 252 0) 100%) `};
+      }deg, rgba(0 125 255 / 1) 0%, #007dff 31%, #afd5fc 90%, rgba(175 213 252 / 0) 100%) `};
   }
 `
 
@@ -73,11 +73,11 @@ export const StyledVertLine = styled.div`
   width: 2px;
   height: 76px;
   background: linear-gradient(
-    rgba(0 125 255 0) 0%,
-    rgba(0 125 255 1) 25%,
-    rgba(175 213 252 1) 50%,
-    rgba(175 213 252 0) 75%,
-    rgba(175 213 252 0) 100%
+    rgba(0 125 255 / 0) 0%,
+    rgba(0 125 255 / 1) 25%,
+    rgba(175 213 252 / 1) 50%,
+    rgba(175 213 252 / 0) 75%,
+    rgba(175 213 252 / 0) 100%
   );
   background-size: 400% 400%;
   margin: 10px auto 0;

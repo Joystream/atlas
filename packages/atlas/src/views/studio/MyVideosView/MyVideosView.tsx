@@ -15,6 +15,7 @@ import { Button } from '@/components/_buttons/Button'
 import { Select } from '@/components/_inputs/Select'
 import { MintNftFirstTimeModal } from '@/components/_overlays/MintNftFirstTimeModal'
 import { MintNftModal } from '@/components/_overlays/MintNftModal'
+import { ReferralsBanner } from '@/components/_referrals/ReferralsBanner/ReferralsBanner'
 import { VideoTileDraft } from '@/components/_video/VideoTileDraft'
 import { VideoTilePublisher } from '@/components/_video/VideoTilePublisher'
 import { atlasConfig } from '@/config'
@@ -354,7 +355,7 @@ export const MyVideosView = () => {
         }}
       />
       <MintNftModal />
-
+      <ReferralsBanner />
       <LimitedWidthContainer>
         {headTags}
         <TitleBox>

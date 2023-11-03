@@ -55,7 +55,7 @@ export const TopReferrals = () => {
         data-aos-offset="40"
         data-aos-easing="atlas-easing"
       >
-        Top Referrals
+        Top Referrers
       </Text>
 
       <StyledTopReferrersGrid>

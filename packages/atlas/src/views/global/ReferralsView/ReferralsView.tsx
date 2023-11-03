@@ -1,11 +1,18 @@
+import { useEffect } from 'react'
+
 import { AppLogo } from '@/components/AppLogo'
 import { FlexBox } from '@/components/FlexBox'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
-import { StyledLink } from '@/components/_comments/Comment/Comment.styles'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
-import { GradientOverlay, StyledVideo, StyledVideoWrapper } from '@/views/global/ReferralsView/ReferralsView.styles'
+import { usePersonalDataStore } from '@/providers/personalData'
+import {
+  GradientOverlay,
+  StyledLink,
+  StyledVideo,
+  StyledVideoWrapper,
+} from '@/views/global/ReferralsView/ReferralsView.styles'
 import { ReferralLayers } from '@/views/global/ReferralsView/sections/ReferralLayers/ReferralLayers'
 import { ReferralSteps } from '@/views/global/ReferralsView/sections/ReferralSteps/ReferralSteps'
 import { ReferralTiers } from '@/views/global/ReferralsView/sections/ReferralTiers/ReferralTiers'
@@ -17,6 +24,11 @@ import { useSectionTextVariants } from '@/views/global/YppLandingView/sections/u
 
 export const ReferralsView = () => {
   const [titleVariant, subtitleVariant, mainTitleVariant] = useSectionTextVariants()
+  const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
+  useEffect(() => {
+    updateDismissedMessages('referrals-banner')
+  }, [updateDismissedMessages])
+
   return (
     <FlexBox flow="column" justifyContent="center" alignItems="center" gap={4}>
       <StyledLimitedWidthContainerHero centerText>
