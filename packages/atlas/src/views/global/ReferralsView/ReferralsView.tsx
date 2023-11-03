@@ -13,7 +13,6 @@ import {
   StyledVideo,
   StyledVideoWrapper,
 } from '@/views/global/ReferralsView/ReferralsView.styles'
-import { ReferralLayers } from '@/views/global/ReferralsView/sections/ReferralLayers/ReferralLayers'
 import { ReferralSteps } from '@/views/global/ReferralsView/sections/ReferralSteps/ReferralSteps'
 import { ReferralTiers } from '@/views/global/ReferralsView/sections/ReferralTiers/ReferralTiers'
 import { ReferralsList } from '@/views/global/ReferralsView/sections/ReferralsList/ReferralsList'
@@ -120,7 +119,7 @@ export const ReferralsView = () => {
           </GridItem>
         </LayoutGrid>
         <ReferralTiers />
-        <ReferralLayers />
+        {/*<ReferralLayers />*/}
         <ReferralSteps />
         <TopReferrals />
         <ReferralsList />
