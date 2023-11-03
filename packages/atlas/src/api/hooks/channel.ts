@@ -84,7 +84,7 @@ export const useBasicChannels = (
   }
 }
 
-type PayeeChannel = {
+export type PayeeChannel = {
   id: string
   title?: string | null
   cumulativeRewardPaid: BN

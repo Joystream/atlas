@@ -65,9 +65,7 @@ export const YppHero: FC<YppHeroProps> = ({
 
   const { channels, loading } = useMostPaidChannels()
   const items = !loading
-    ? channels?.map((channel) => (
-        <PaidChannelCard key={channel.id} amount={channel.cumulativeRewardPaid} channel={channel} />
-      ))
+    ? channels?.map((channel) => <PaidChannelCard key={channel.id} channel={channel} />)
     : Array.from({ length: 30 }).map((_, idx) => <PaidChannelCard key={idx} loading />)
 
   return (
