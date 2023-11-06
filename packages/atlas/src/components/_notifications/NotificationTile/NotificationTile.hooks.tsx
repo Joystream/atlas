@@ -28,10 +28,10 @@ export const useNotificationAvatar = (
 ): { avatarUrls: string[]; isLoading: boolean } => {
   const { activeChannel, activeMembership } = useUser()
 
-  const memberHandle = avatar.type === 'membership' ? avatar.params?.[0] : undefined
+  const memberId = avatar.type === 'membership' ? avatar.params?.[0] : undefined
   const { data: memberData, loading: isMemberLoading } = useGetMembershipsAvatarQuery({
-    variables: { where: { handle_eq: memberHandle }, limit: 1 },
-    skip: !memberHandle,
+    variables: { where: { id_eq: memberId }, limit: 1 },
+    skip: !memberId,
   })
   const member = avatar.type === 'active-membership' ? activeMembership : memberData?.memberships[0]
 
@@ -90,11 +90,11 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
 
     // Engagement
     case 'CommentReply': {
-      const { videoId, videoTitle, commentId, memberHandle } = notification
+      const { videoId, videoTitle, commentId, memberId, memberHandle } = notification
       return {
         icon: getIcon('follow'),
         link: getLink('video-page', [videoId, commentId]),
-        avatar: { type: 'membership', params: [memberHandle] },
+        avatar: { type: 'membership', params: [memberId] },
         text: (
           <div>
             {memberHandle} replied to your comment under the video: “{videoTitle}”
@@ -103,11 +103,11 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
       }
     }
     case 'ReactionToComment': {
-      const { videoId, videoTitle, commentId, memberHandle } = notification
+      const { videoId, videoTitle, commentId, memberId, memberHandle } = notification
       return {
         icon: getIcon('reaction'),
         link: getLink('video-page', [videoId, commentId]),
-        avatar: { type: 'membership', params: [memberHandle] },
+        avatar: { type: 'membership', params: [memberId] },
         text: (
           <div>
             {memberHandle} reacted to your comment on the video: “{videoTitle}”
@@ -159,11 +159,11 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
 
     // NFT
     case 'HigherBidPlaced': {
-      const { videoId, videoTitle, newBidderHandle } = notification
+      const { videoId, videoTitle, newBidderId, newBidderHandle } = notification
       return {
         icon: getIcon('nft-alt'),
         link: getLink('nft-page', [videoId]),
-        avatar: { type: 'membership', params: [newBidderHandle] },
+        avatar: { type: 'membership', params: [newBidderId] },
         text: (
           <div>
             {newBidderHandle} placed a higher bid in the auction for NFT: “{videoTitle}”
@@ -279,20 +279,20 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
 
     // Engagement
     case 'NewChannelFollower': {
-      const { followerHandle } = notification
+      const { followerId, followerHandle } = notification
       return {
         icon: getIcon('follow'),
-        link: getLink('member-page', [followerHandle]),
-        avatar: { type: 'membership', params: [followerHandle] },
+        link: getLink('member-page', [followerId]),
+        avatar: { type: 'membership', params: [followerId] },
         text: <div>{followerHandle} followed your channel</div>,
       }
     }
     case 'CommentPostedToVideo': {
-      const { videoId, videoTitle, memberHandle } = notification
+      const { videoId, videoTitle, memberId, memberHandle } = notification
       return {
         icon: getIcon('follow'),
         link: getLink('nft-page', [videoId]),
-        avatar: { type: 'membership', params: [memberHandle] },
+        avatar: { type: 'membership', params: [memberId] },
         text: (
           <div>
             {memberHandle} left a comment on your video: “{videoTitle}”
@@ -301,11 +301,11 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
       }
     }
     case 'VideoLiked': {
-      const { videoId, videoTitle, memberHandle } = notification
+      const { videoId, videoTitle, memberId, memberHandle } = notification
       return {
         icon: getIcon('like'),
         link: getLink('video-page', [videoId]),
-        avatar: { type: 'membership', params: [memberHandle] },
+        avatar: { type: 'membership', params: [memberId] },
         text: (
           <div>
             {memberHandle} liked your video: “{videoTitle}”
@@ -314,11 +314,11 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
       }
     }
     case 'VideoDisliked': {
-      const { videoId, videoTitle, memberHandle } = notification
+      const { videoId, videoTitle, memberId, memberHandle } = notification
       return {
         icon: getIcon('dislike'),
         link: getLink('video-page', [videoId]),
-        avatar: { type: 'membership', params: [memberHandle] },
+        avatar: { type: 'membership', params: [memberId] },
         text: (
           <div>
             {memberHandle} disliked your video: “{videoTitle}”
@@ -339,7 +339,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     //   return {
     //     icon: notificationIcon('bell'),
     //     action: { type: 'ypp-dashboard' },
-    //     avatar: { type: 'membership', params: [notification.memberHandle] },
+    //     avatar: { type: 'membership', params: [notification.memberId] },
     //     text: <div>{notification.memberHandle} signed up for YPP using your referral link</div>,
     //   }
     case 'ChannelVerified': {
@@ -361,12 +361,12 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
 
     // NFTs Auctions
     case 'NftPurchased': {
-      const { videoId, videoTitle, buyerHandle, price } = notification
+      const { videoId, videoTitle, buyerId, buyerHandle, price } = notification
       const tokenAmount = <NumberFormat as="span" value={price} format="short" withToken withDenomination="before" />
       return {
         icon: getIcon('nft'),
         link: getLink('nft-page', [videoId]),
-        avatar: { type: 'membership', params: [buyerHandle] },
+        avatar: { type: 'membership', params: [buyerId] },
         text: (
           <div>
             {buyerHandle} purchased for {tokenAmount} your NFT: “{videoTitle}”
@@ -389,12 +389,12 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
       }
     }
     case 'CreatorReceivesAuctionBid': {
-      const { videoId, videoTitle, amount, bidderHandle } = notification
+      const { videoId, videoTitle, amount, bidderId, bidderHandle } = notification
       const tokenAmount = <NumberFormat as="span" value={amount} format="short" withToken withDenomination="before" />
       return {
         icon: getIcon('nft'),
         link: getLink('nft-page', [videoId]),
-        avatar: { type: 'membership', params: [bidderHandle] },
+        avatar: { type: 'membership', params: [bidderId] },
         text: (
           <div>
             {bidderHandle} placed a bid of {tokenAmount} for your NFT: “{videoTitle}”
@@ -412,12 +412,12 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
 
     // Payouts
     case 'DirectChannelPaymentByMember': {
-      const { amount, payerHandle } = notification
+      const { amount, payerId, payerHandle } = notification
       const tokenAmount = <NumberFormat as="span" value={amount} format="short" withToken withDenomination="before" />
       return {
         icon: getIcon('payout'),
-        link: getLink('member-page', [payerHandle]),
-        avatar: { type: 'membership', params: [payerHandle] },
+        link: getLink('member-page', [payerId]),
+        avatar: { type: 'membership', params: [payerId] },
         text: (
           <div>
             {payerHandle} transferred {tokenAmount} to your channel
@@ -518,7 +518,7 @@ const getLink = (type: LinkType, params: string[] = []): string => {
       return absoluteRoutes.viewer.channel(params[0])
 
     case 'member-page':
-      return absoluteRoutes.viewer.member(params[0])
+      return absoluteRoutes.viewer.memberById(params[0])
 
     case 'category-page':
       return absoluteRoutes.viewer.category(params[0])
