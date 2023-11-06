@@ -132,15 +132,7 @@ export const CrtPreviewLayout = ({
       <SecondColumn>
         <CrtBasicInfoWidget details={basicDetails} name={token.symbol ?? 'N/A'} />
         {/* todo all props below creationDate are incorrect and should be calucated on orion side */}
-        <CrtStatusWidget
-          name={token.symbol ?? 'N/A'}
-          creationDate={new Date(token.createdAt)}
-          supply={+(token.totalSupply ?? 0)}
-          marketCap={token.annualCreatorRewardPermill}
-          revenue={token.annualCreatorRewardPermill}
-          revenueShare={token.annualCreatorRewardPermill}
-          transactionVolume={token.annualCreatorRewardPermill}
-        />
+        <CrtStatusWidget token={token} />
         {data ? (
           <HoldersWidget totalSupply={+token.totalSupply} holders={data.tokenAccounts} ownerId={memberId ?? ''} />
         ) : (
