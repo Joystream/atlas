@@ -9,6 +9,7 @@ export const BASE_PATHS = {
 
 export type MemberSettingsTabs = 'Public profile' | 'Wallet' | 'Notifications'
 export type MemberTabs = 'NFTs' | 'Activity' | 'About'
+export type ChannelTabs = 'Videos' | 'Token' | 'NFTs' | 'Information'
 export type MyChannelTabs = 'General' | 'Notifications'
 
 const withQueryParameters = (basePath: string, query: Record<string, string | boolean> = {}) => {
@@ -35,7 +36,7 @@ export const relativeRoutes = {
     portfolio: () => 'portfolio',
     category: (id = ':id') => `category/${id}`,
     search: (query?: { [QUERY_PARAMS.SEARCH]?: string }) => withQueryParameters('search', query),
-    channel: (id = ':id') => `channel/${id}`,
+    channel: (id = ':id', query?: { [QUERY_PARAMS.TAB]?: ChannelTabs }) => withQueryParameters(`channel/${id}`, query),
     channels: () => 'channels',
     video: (id = ':id', query?: { [QUERY_PARAMS.COMMENT_ID]?: string; [QUERY_PARAMS.NFT_WIDGET]?: boolean }) =>
       withQueryParameters(`video/${id}`, query),
@@ -63,8 +64,7 @@ export const relativeRoutes = {
     videos: () => 'videos',
     crt: () => 'crt',
     crtDashboard: () => 'crt-dashboard',
-    crtTokenPreview: () => 'crt-preview',
-    crtTokenPreviewEdit: () => 'crt-preview-edit',
+    crtTokenEdit: () => 'crt/edit',
     videoWorkspace: () => 'video-workspace',
     uploads: () => 'uploads',
     signIn: () => 'signin',
