@@ -10,6 +10,7 @@ import { WidgetTile } from '@/components/WidgetTile'
 import { TextButton } from '@/components/_buttons/Button'
 import { CrtHoldersWidget } from '@/components/_crt/CrtHoldersWidget'
 import { useUser } from '@/providers/user/user.hooks'
+import { permillToPercentage } from '@/utils/number'
 import {
   BigWidgetContainer,
   HoldersPlaceholders,
@@ -148,7 +149,7 @@ export const CrtDashboardMainTab = ({ token }: CrtDashboardMainTabProps) => {
           }}
           customNode={
             <Text variant="h400" as="h4">
-              {token.annualCreatorRewardPermill}%
+              {permillToPercentage(token.annualCreatorRewardPermill)}%
             </Text>
           }
         />
