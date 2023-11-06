@@ -27,6 +27,7 @@ export type GetBasicCreatorTokenQuery = {
     deissued: boolean
     status: Types.TokenStatus
     createdAt: Date
+    lastPrice?: string | null
     channel?: {
       __typename?: 'TokenChannel'
       channel: {
@@ -105,6 +106,7 @@ export type GetFullCreatorTokenQuery = {
     deissued: boolean
     status: Types.TokenStatus
     createdAt: Date
+    lastPrice?: string | null
     ammCurves: Array<{
       __typename?: 'AmmCurve'
       id: string
@@ -279,6 +281,42 @@ export type GetCreatorTokenHoldersQuery = {
   }>
 }
 
+export type GetChannelTokenBalanceQueryVariables = Types.Exact<{
+  currentBlockHeight: Types.Scalars['Int']
+  memberId: Types.Scalars['String']
+  tokenId: Types.Scalars['String']
+}>
+
+export type GetChannelTokenBalanceQuery = {
+  __typename?: 'Query'
+  getAccountTransferrableBalance: {
+    __typename?: 'GetAccountTransferrableBalanceResult'
+    transferrableCrtAmount: number
+  }
+}
+
+export type GetRevenueShareDividendQueryVariables = Types.Exact<{
+  stakingAmount: Types.Scalars['Int']
+  tokenId: Types.Scalars['String']
+}>
+
+export type GetRevenueShareDividendQuery = {
+  __typename?: 'Query'
+  getShareDividend: { __typename?: 'GetShareDividendsResult'; dividendJoyAmount: number }
+}
+
+export type GetHistoricalTokenAllocationQueryVariables = Types.Exact<{
+  tokenId: Types.Scalars['String']
+}>
+
+export type GetHistoricalTokenAllocationQuery = {
+  __typename?: 'Query'
+  getCumulativeHistoricalShareAllocation: {
+    __typename?: 'GetCumulativeHistoricalShareAllocationResult'
+    cumulativeHistoricalAllocation: number
+  }
+}
+
 export const GetBasicCreatorTokenDocument = gql`
   query GetBasicCreatorToken(
     $where: CreatorTokenWhereInput
@@ -441,4 +479,156 @@ export type GetCreatorTokenHoldersLazyQueryHookResult = ReturnType<typeof useGet
 export type GetCreatorTokenHoldersQueryResult = Apollo.QueryResult<
   GetCreatorTokenHoldersQuery,
   GetCreatorTokenHoldersQueryVariables
+>
+export const GetChannelTokenBalanceDocument = gql`
+  query GetChannelTokenBalance($currentBlockHeight: Int!, $memberId: String!, $tokenId: String!) {
+    getAccountTransferrableBalance(currentBlockHeight: $currentBlockHeight, memberId: $memberId, tokenId: $tokenId) {
+      transferrableCrtAmount
+    }
+  }
+`
+
+/**
+ * __useGetChannelTokenBalanceQuery__
+ *
+ * To run a query within a React component, call `useGetChannelTokenBalanceQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetChannelTokenBalanceQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetChannelTokenBalanceQuery({
+ *   variables: {
+ *      currentBlockHeight: // value for 'currentBlockHeight'
+ *      memberId: // value for 'memberId'
+ *      tokenId: // value for 'tokenId'
+ *   },
+ * });
+ */
+export function useGetChannelTokenBalanceQuery(
+  baseOptions: Apollo.QueryHookOptions<GetChannelTokenBalanceQuery, GetChannelTokenBalanceQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetChannelTokenBalanceQuery, GetChannelTokenBalanceQueryVariables>(
+    GetChannelTokenBalanceDocument,
+    options
+  )
+}
+export function useGetChannelTokenBalanceLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetChannelTokenBalanceQuery, GetChannelTokenBalanceQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetChannelTokenBalanceQuery, GetChannelTokenBalanceQueryVariables>(
+    GetChannelTokenBalanceDocument,
+    options
+  )
+}
+export type GetChannelTokenBalanceQueryHookResult = ReturnType<typeof useGetChannelTokenBalanceQuery>
+export type GetChannelTokenBalanceLazyQueryHookResult = ReturnType<typeof useGetChannelTokenBalanceLazyQuery>
+export type GetChannelTokenBalanceQueryResult = Apollo.QueryResult<
+  GetChannelTokenBalanceQuery,
+  GetChannelTokenBalanceQueryVariables
+>
+export const GetRevenueShareDividendDocument = gql`
+  query GetRevenueShareDividend($stakingAmount: Int!, $tokenId: String!) {
+    getShareDividend(stakingAmount: $stakingAmount, tokenId: $tokenId) {
+      dividendJoyAmount
+    }
+  }
+`
+
+/**
+ * __useGetRevenueShareDividendQuery__
+ *
+ * To run a query within a React component, call `useGetRevenueShareDividendQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetRevenueShareDividendQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetRevenueShareDividendQuery({
+ *   variables: {
+ *      stakingAmount: // value for 'stakingAmount'
+ *      tokenId: // value for 'tokenId'
+ *   },
+ * });
+ */
+export function useGetRevenueShareDividendQuery(
+  baseOptions: Apollo.QueryHookOptions<GetRevenueShareDividendQuery, GetRevenueShareDividendQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetRevenueShareDividendQuery, GetRevenueShareDividendQueryVariables>(
+    GetRevenueShareDividendDocument,
+    options
+  )
+}
+export function useGetRevenueShareDividendLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetRevenueShareDividendQuery, GetRevenueShareDividendQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetRevenueShareDividendQuery, GetRevenueShareDividendQueryVariables>(
+    GetRevenueShareDividendDocument,
+    options
+  )
+}
+export type GetRevenueShareDividendQueryHookResult = ReturnType<typeof useGetRevenueShareDividendQuery>
+export type GetRevenueShareDividendLazyQueryHookResult = ReturnType<typeof useGetRevenueShareDividendLazyQuery>
+export type GetRevenueShareDividendQueryResult = Apollo.QueryResult<
+  GetRevenueShareDividendQuery,
+  GetRevenueShareDividendQueryVariables
+>
+export const GetHistoricalTokenAllocationDocument = gql`
+  query GetHistoricalTokenAllocation($tokenId: String!) {
+    getCumulativeHistoricalShareAllocation(tokenId: $tokenId) {
+      cumulativeHistoricalAllocation
+    }
+  }
+`
+
+/**
+ * __useGetHistoricalTokenAllocationQuery__
+ *
+ * To run a query within a React component, call `useGetHistoricalTokenAllocationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetHistoricalTokenAllocationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetHistoricalTokenAllocationQuery({
+ *   variables: {
+ *      tokenId: // value for 'tokenId'
+ *   },
+ * });
+ */
+export function useGetHistoricalTokenAllocationQuery(
+  baseOptions: Apollo.QueryHookOptions<GetHistoricalTokenAllocationQuery, GetHistoricalTokenAllocationQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetHistoricalTokenAllocationQuery, GetHistoricalTokenAllocationQueryVariables>(
+    GetHistoricalTokenAllocationDocument,
+    options
+  )
+}
+export function useGetHistoricalTokenAllocationLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetHistoricalTokenAllocationQuery,
+    GetHistoricalTokenAllocationQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetHistoricalTokenAllocationQuery, GetHistoricalTokenAllocationQueryVariables>(
+    GetHistoricalTokenAllocationDocument,
+    options
+  )
+}
+export type GetHistoricalTokenAllocationQueryHookResult = ReturnType<typeof useGetHistoricalTokenAllocationQuery>
+export type GetHistoricalTokenAllocationLazyQueryHookResult = ReturnType<
+  typeof useGetHistoricalTokenAllocationLazyQuery
+>
+export type GetHistoricalTokenAllocationQueryResult = Apollo.QueryResult<
+  GetHistoricalTokenAllocationQuery,
+  GetHistoricalTokenAllocationQueryVariables
 >
