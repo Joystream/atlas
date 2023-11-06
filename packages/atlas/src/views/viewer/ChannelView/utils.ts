@@ -1,1 +1,1 @@
-export const TABS = ['Videos', 'NFTs', 'Information'] as const
+export const TABS = ['Videos', 'Token', 'NFTs', 'Information'] as const

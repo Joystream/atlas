@@ -17,6 +17,7 @@ import {
   PrimaryButtonContainer,
   SecondaryButton,
   StyledInformation,
+  TertiaryButton,
 } from './ActionBar.styles'
 
 export type ActionDialogButtonProps = {
@@ -36,6 +37,7 @@ export type ActionBarProps = {
   primaryButton: ActionDialogButtonProps
   primaryButtonTooltip?: Omit<TooltipProps, 'reference'>
   secondaryButton?: ActionDialogButtonProps
+  tertiaryButton?: ActionDialogButtonProps
   isActive?: boolean
   skipFeeCheck?: boolean
   className?: string
@@ -52,6 +54,7 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
       primaryButton,
       primaryButtonTooltip,
       secondaryButton,
+      tertiaryButton,
       infoBadge,
       skipFeeCheck,
       isNoneCrypto,
@@ -82,6 +85,17 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
             <StyledInformation multiline placement="top-end" {...infoBadge.tooltip} />
           </DraftsBadgeContainer>
         ) : null}
+        <CSSTransition
+          in={!!tertiaryButton}
+          timeout={parseInt(transitions.timings.sharp)}
+          classNames={transitions.names.fade}
+          mountOnEnter
+          unmountOnExit
+        >
+          <TertiaryButton {...tertiaryButton} variant="tertiary" size={smMatch ? 'large' : 'medium'}>
+            {tertiaryButton?.text}
+          </TertiaryButton>
+        </CSSTransition>
         <CSSTransition
           in={!!secondaryButton}
           timeout={parseInt(transitions.timings.sharp)}

@@ -10,6 +10,7 @@ import { RevenueShareParticipationWidget } from '@/components/_crt/RevenueShareP
 import { RevenueShareStakersTable } from '@/components/_crt/RevenueShareStakersTable'
 import { RevenueShareStateWidget } from '@/components/_crt/RevenueShareStateWidget'
 import { useUser } from '@/providers/user/user.hooks'
+import { permillToPercentage } from '@/utils/number'
 
 type CrtRevenueTabProps = {
   token: FullCreatorTokenFragment
@@ -58,8 +59,8 @@ export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
           customNode={
             <RatioPreview
               ratios={[
-                [100 - token.annualCreatorRewardPermill, 'Holders'],
-                [token.annualCreatorRewardPermill, 'Channel'],
+                [100 - permillToPercentage(token.revenueShareRatioPermill), 'Holders'],
+                [permillToPercentage(token.revenueShareRatioPermill), 'Channel'],
               ]}
             />
           }

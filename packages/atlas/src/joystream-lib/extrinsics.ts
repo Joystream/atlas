@@ -1,7 +1,9 @@
 import { prepareClaimChannelRewardExtrinsicArgs, verifyChannelPayoutProof } from '@joystream/js/content'
 import {
   ChannelOwnerRemarked,
+  CreatorTokenIssuerRemarked,
   IChannelOwnerRemarked,
+  ICreatorTokenIssuerRemarked,
   IMemberRemarked,
   MemberRemarked,
   ReactVideo,
@@ -16,6 +18,7 @@ import { AMM_DESCO_CURVE_CONST, HAPI_TO_JOY_RATE } from '@/joystream-lib/config'
 import { SentryLogger } from '@/utils/logs'
 
 import { getClaimableReward } from './channelPayouts'
+import { PERMILL_PER_PERCENT } from './config'
 import { JoystreamLibError } from './errors'
 import {
   createActor,
@@ -71,9 +74,6 @@ type AccountIdAccessor = () => AtlasSigner | null
 type PublicExtrinsic<TxFunction, ReturnValue> = TxFunction extends (...a: infer U) => unknown
   ? (...a: [...U, ExtrinsicStatusCallbackFn | undefined]) => Promise<ReturnValue>
   : never
-
-const PERMILLS_PER_PERCENTAGE = 10
-const PERQUINTILLS_PER_PERCENTAGE = new BN(10).pow(new BN(16))
 
 export class JoystreamLibExtrinsics {
   readonly api: PolkadotApi
@@ -984,6 +984,8 @@ export class JoystreamLibExtrinsics {
   }
 
   purchaseTokenOnSaleTx = async (tokenId: TokenId, memberId: MemberId, amount: StringifiedNumber) => {
+    await this.ensureApi()
+
     return this.api.tx.projectToken.purchaseTokensOnSale(
       parseInt(tokenId),
       parseInt(memberId),
@@ -1004,6 +1006,8 @@ export class JoystreamLibExtrinsics {
   }
 
   dustAccountTx = async (tokenId: TokenId, memberId: MemberId) => {
+    await this.ensureApi()
+
     return this.api.tx.projectToken.dustAccount(parseInt(tokenId), parseInt(memberId))
   }
 
@@ -1014,6 +1018,8 @@ export class JoystreamLibExtrinsics {
   }
 
   exitRevenueSplitTx = async (tokenId: TokenId, memberId: MemberId) => {
+    await this.ensureApi()
+
     return this.api.tx.projectToken.exitRevenueSplit(parseInt(tokenId), parseInt(memberId))
   }
 
@@ -1029,6 +1035,8 @@ export class JoystreamLibExtrinsics {
   }
 
   participateInSplitTx = async (tokenId: TokenId, memberId: MemberId, amount: StringifiedNumber) => {
+    await this.ensureApi()
+
     return this.api.tx.projectToken.participateInSplit(
       parseInt(tokenId),
       parseInt(memberId),
@@ -1049,6 +1057,8 @@ export class JoystreamLibExtrinsics {
   }
 
   issueRevenueSplitTx = async (memberId: MemberId, channelId: ChannelId, start: number, duration: number) => {
+    await this.ensureApi()
+
     const member = createType('PalletContentPermissionsContentActor', { Member: parseInt(memberId) })
     return this.api.tx.content.issueRevenueSplit(
       member,
@@ -1071,6 +1081,8 @@ export class JoystreamLibExtrinsics {
   }
 
   finalizeRevenueSplitTx = async (memberId: MemberId, channelId: ChannelId) => {
+    await this.ensureApi()
+
     const member = createType('PalletContentPermissionsContentActor', { Member: parseInt(memberId) })
     return this.api.tx.content.finalizeRevenueSplit(member, parseInt(channelId))
   }
@@ -1087,6 +1099,8 @@ export class JoystreamLibExtrinsics {
   }
 
   deissueCreatorTokenTx = async (memberId: MemberId, channelId: ChannelId) => {
+    await this.ensureApi()
+
     const member = createType('PalletContentPermissionsContentActor', { Member: parseInt(memberId) })
     return this.api.tx.content.deissueCreatorToken(member, parseInt(channelId))
   }
@@ -1114,6 +1128,8 @@ export class JoystreamLibExtrinsics {
       cliffAmountPercentage: number
     }
   ) => {
+    await this.ensureApi()
+
     const member = createType('PalletContentPermissionsContentActor', { Member: parseInt(memberId) })
     const initialAllocation = createType('BTreeMap<u64, PalletProjectTokenTokenAllocation>', new Map())
     initialAllocation.set(
@@ -1125,7 +1141,7 @@ export class JoystreamLibExtrinsics {
           linearVestingDuration: createType('u32', new BN(initialCreatorAllocation.vestingDuration)),
           cliffAmountPercentage: createType(
             'Permill',
-            new BN(initialCreatorAllocation.cliffAmountPercentage * PERMILLS_PER_PERCENTAGE)
+            new BN(initialCreatorAllocation.cliffAmountPercentage * PERMILL_PER_PERCENT)
           ) as number,
         }),
       })
@@ -1133,8 +1149,8 @@ export class JoystreamLibExtrinsics {
 
     const params = createType('PalletProjectTokenTokenIssuanceParameters', {
       initialAllocation,
-      patronageRate: createType('Perquintill', PERQUINTILLS_PER_PERCENTAGE.muln(patronageRate)) as number,
-      revenueSplitRate: createType('Permill', revenueSplitRate * PERMILLS_PER_PERCENTAGE) as number,
+      patronageRate: createType('Permill', new BN(patronageRate * PERMILL_PER_PERCENT)) as number,
+      revenueSplitRate: createType('Permill', new BN(revenueSplitRate * PERMILL_PER_PERCENT)) as number,
       transferPolicy: createType('PalletProjectTokenTransferPolicyParams', 'Permissionless'),
       metadata: prepareCreatorTokenMetadata({ symbol }),
     })
@@ -1164,14 +1180,15 @@ export class JoystreamLibExtrinsics {
   }
 
   purchaseTokenOnMarketTx = async (tokenId: string, memberId: string, amount: string) => {
-    const amountCast = createType('u128', new BN(amount))
+    await this.ensureApi()
 
+    const amountCast = createType('u128', new BN(amount))
     return this.api.tx.projectToken.buyOnAmm(
       parseInt(tokenId),
       parseInt(memberId),
       amountCast,
       createType('Option<ITuple<[Permill, u128]>>', [
-        createType('Permill', new BN(0.5 * PERMILLS_PER_PERCENTAGE)),
+        createType('Permill', new BN(0.5 * PERMILL_PER_PERCENT)),
         amountCast,
       ]) // percent, number of joy user wants to pay --- default on 0.5%
     )
@@ -1189,13 +1206,15 @@ export class JoystreamLibExtrinsics {
   }
 
   sellTokenOnMarketTx = async (tokenId: string, memberId: string, amount: string) => {
+    await this.ensureApi()
+
     const amountCast = createType('u128', new BN(amount))
     return this.api.tx.projectToken.sellOnAmm(
       parseInt(tokenId),
       parseInt(memberId),
       amountCast,
       createType('Option<ITuple<[Permill, u128]>>', [
-        createType('Permill', new BN(0.5 * PERMILLS_PER_PERCENTAGE)),
+        createType('Permill', new BN(0.5 * PERMILL_PER_PERCENT)),
         amountCast,
       ]) // percent, number of joy user wants to pay --- default on 0.5%
     )
@@ -1229,6 +1248,25 @@ export class JoystreamLibExtrinsics {
     cb
   ) => {
     const tx = await this.startAmmTx(memberId, channelId, joyUsdRate, tokens)
+    const { block } = await this.sendExtrinsic(tx, cb)
+    return { block }
+  }
+
+  creatorTokenIssuerRemarkTx = async (memberId: MemberId, channelId: ChannelId, msg: ICreatorTokenIssuerRemarked) => {
+    await this.ensureApi()
+
+    const member = createType('PalletContentPermissionsContentActor', { Member: parseInt(memberId) })
+    const metadata = wrapMetadata(CreatorTokenIssuerRemarked.encode(msg).finish()).unwrap()
+    return this.api.tx.content.creatorTokenIssuerRemark(member, parseInt(channelId), metadata)
+  }
+
+  creatorTokenIssuerRemark: PublicExtrinsic<typeof this.creatorTokenIssuerRemarkTx, ExtrinsicResult> = async (
+    memberId,
+    channelId,
+    msg,
+    cb
+  ) => {
+    const tx = await this.creatorTokenIssuerRemarkTx(memberId, channelId, msg)
     const { block } = await this.sendExtrinsic(tx, cb)
     return { block }
   }
