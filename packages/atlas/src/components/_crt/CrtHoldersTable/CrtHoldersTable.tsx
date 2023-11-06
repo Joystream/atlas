@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import BN from 'bn.js'
 import { useMemo } from 'react'
 
 import { FlexBox } from '@/components/FlexBox'
@@ -15,8 +16,9 @@ const COLUMNS: TableProps['columns'] = [
 
 type CrtHolder = {
   memberId: string
-  total: number
-  vested: number
+  total: number | BN
+  vested: number | BN
+  allocation: number
 }
 
 export type CrtHoldersTableProps = {
@@ -45,9 +47,9 @@ export const CrtHoldersTable = ({ isLoading, data, className, ownerId }: CrtHold
         total: (
           <RightAlignedCell>
             <FlexBox alignItems="center" gap={1}>
-              <NumberFormat format="short" value={row.vested} as="p" variant="t200-strong" />
+              <NumberFormat format="short" value={row.total} as="p" variant="t200-strong" />
               <Text variant="t200" as="p" color="colorText">
-                (20%)
+                ({row.allocation}%)
               </Text>
             </FlexBox>
           </RightAlignedCell>

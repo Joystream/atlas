@@ -32,7 +32,7 @@ export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({
   transactionVolume,
 }) => {
   const drawer = useRef<HTMLDivElement>(null)
-  const [isExpanded, expand] = useState(true)
+  const [isExpanded, expand] = useState(false)
   const smMatch = useMediaMatch('sm')
 
   const ticker = `$${name}`
