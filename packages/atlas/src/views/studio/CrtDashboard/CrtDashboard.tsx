@@ -9,6 +9,7 @@ import { Button } from '@/components/_buttons/Button'
 import { CloseRevenueShareButton } from '@/components/_crt/CloseRevenueShareButton'
 import { StartRevenueShare } from '@/components/_crt/StartRevenueShareModal/StartRevenueShareModal'
 import { StartSaleOrMarketButton } from '@/components/_crt/StartSaleOrMarketButton/StartSaleOrMarketButton'
+import { absoluteRoutes } from '@/config/routes'
 import { useUser } from '@/providers/user/user.hooks'
 import { HeaderContainer, MainContainer, TabsContainer } from '@/views/studio/CrtDashboard/CrtDashboard.styles'
 import { CrtDashboardMainTab } from '@/views/studio/CrtDashboard/tabs/CrtDashboardMainTab'
@@ -55,7 +56,7 @@ export const CrtDashboard = () => {
           <Tabs initialIndex={0} selected={currentTab} tabs={mappedTabs} onSelectTab={handleChangeTab} />
           {currentTab === 0 && (
             <>
-              <Button variant="secondary" icon={<SvgActionEdit />}>
+              <Button to={absoluteRoutes.studio.crtTokenEdit()} variant="secondary" icon={<SvgActionEdit />}>
                 Edit token page
               </Button>
               <StartSaleOrMarketButton

@@ -45,7 +45,7 @@ export const BenefitInput = ({
       <FlexBox gap={2}>
         <EmojiPlaceholder />
       </FlexBox>
-      <FlexBox gap={2} flow="column">
+      <FlexBox gap={2} alignItems="strech" flow="column">
         <Input placeholder="Add benefit title" value={title} onChange={onTitleChange} />
         <TextArea placeholder="Add benefit description" value={description} onChange={onDescriptionChange} />
       </FlexBox>

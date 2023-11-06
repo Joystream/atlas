@@ -22,7 +22,6 @@ export const HeaderContainer = styled.div`
 
   svg {
     cursor: pointer;
-    margin-right: ${sizes(4)};
   }
 
   ${media.md} {
