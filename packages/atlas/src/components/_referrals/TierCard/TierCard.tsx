@@ -7,7 +7,13 @@ import {
 } from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox'
 import { Text } from '@/components/Text'
-import { ContentWrapper, RewardWrapper, TierBanner, Wrapper } from '@/components/_referrals/TierCard/TierCard.styles'
+import {
+  ContentWrapper,
+  RewardWrapper,
+  StyledPriceWrapper,
+  TierBanner,
+  Wrapper,
+} from '@/components/_referrals/TierCard/TierCard.styles'
 import { capitalizeFirstLetter } from '@/utils/misc'
 import { getTierRewards } from '@/utils/ypp'
 import { TickWrapper } from '@/views/global/YppLandingView/YppAuthorizationModal/YppAuthorizationSteps/YppAuthorizationRequirementsStep/YppAuthorizationRequirementsStep.styles'
@@ -55,7 +61,7 @@ export const TierCard = ({ reqs, tier }: TierCardProps) => {
       <ContentWrapper gap={2} flow="column">
         <FlexBox flow="column" gap={2} width="100%">
           {reqs.map((req, idx) => (
-            <FlexBox key={idx} gap={1}>
+            <FlexBox key={idx} gap={2}>
               <TickWrapper fulfilled>
                 <SvgActionCheck />
               </TickWrapper>
@@ -66,12 +72,12 @@ export const TierCard = ({ reqs, tier }: TierCardProps) => {
           ))}
         </FlexBox>
         <RewardWrapper>
-          <Text variant="t200" as="p" color="colorText">
+          <Text variant="t200" align="left" as="p" color="colorText">
             Earn for Referring
           </Text>
-          <Text variant="t200-strong" as="p">
+          <StyledPriceWrapper variant="t200-strong" as="p">
             +${referralReward} USD
-          </Text>
+          </StyledPriceWrapper>
         </RewardWrapper>
       </ContentWrapper>
     </Wrapper>

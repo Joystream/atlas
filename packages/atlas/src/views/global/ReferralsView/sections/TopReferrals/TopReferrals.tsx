@@ -35,6 +35,7 @@ export const TopReferrals = () => {
   const { extendedChannels: topReferrersChannels } = useBasicChannels(
     {
       where: { channel: { id_in: data?.slice(0, 5).map((channel) => channel.referrerChannelId.toString()) || [] } },
+      limit: 5,
     },
     {
       skip: isLoadingTopReferrers || !data?.length,
@@ -49,7 +50,6 @@ export const TopReferrals = () => {
         as="h2"
         variant={titleVariant}
         color="colorTextStrong"
-        margin={{ top: 24 }}
         data-aos="fade-up"
         data-aos-delay="350"
         data-aos-offset="40"

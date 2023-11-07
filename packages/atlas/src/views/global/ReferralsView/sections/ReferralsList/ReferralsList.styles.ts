@@ -6,10 +6,9 @@ import { LayoutGrid } from '@/components/LayoutGrid'
 import { cVar, media, sizes } from '@/styles'
 
 export const StyledListContainer = styled(FlexBox)`
-  margin-top: ${sizes(24)};
-  padding: ${sizes(8)};
+  padding: ${sizes(6)};
   border-radius: calc(4 * ${cVar('radiusLarge')});
-  background: ${`linear-gradient(to bottom, ${cVar('colorCoreBaseBlack')} 0%, ${cVar('colorBackgroundPrimary')} 60%) `};
+  background: radial-gradient(163.28% 100% at 50% 0%, rgba(0 0 0 / 0) 0%, rgba(64 56 255 / 0.6) 100%);
   width: 100%;
 
   ${media.sm} {

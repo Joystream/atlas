@@ -102,7 +102,7 @@ export const TopbarViewer: FC = () => {
 
   const topbarButtonLoading = isAuthenticating || membershipsLoading
 
-  if ([absoluteRoutes.viewer.referrals(), absoluteRoutes.viewer.ypp()].includes(pathname)) {
+  if ((pathname === absoluteRoutes.viewer.referrals() && mdMatch) || pathname === absoluteRoutes.viewer.ypp()) {
     return null
   }
 

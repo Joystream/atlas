@@ -1,7 +1,8 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { cVar, media } from '@/styles'
+import { FlexBox } from '@/components/FlexBox'
+import { cVar, media, sizes } from '@/styles'
 
 export const StyledVideo = styled.video`
   width: 100%;
@@ -51,4 +52,12 @@ export const StyledVideoWrapper = styled.div`
 export const StyledLink = styled(Link)`
   text-decoration: none;
   color: ${cVar('colorTextPrimary')};
+`
+
+export const StyledLimitedWidthWrapper = styled(FlexBox)`
+  text-align: center;
+  width: fit-content;
+  margin: auto;
+  padding-top: ${sizes(14)};
+  max-width: 1368px;
 `

@@ -2,6 +2,7 @@ import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { FlexBox } from '@/components/FlexBox'
+import { GridItem } from '@/components/LayoutGrid'
 import { TierBanner } from '@/components/_referrals/TierCard/TierCard.styles'
 import { cVar, media, sizes } from '@/styles'
 
@@ -15,17 +16,15 @@ const spin = keyframes`
  `
 
 const spinAnimation = css`
-  animation: ${`${spin} 3s linear infinite`};
+  animation: ${spin} 3s linear infinite;
 `
-export const StyledContainer = styled(FlexBox)<{ mostEarned: boolean }>`
+export const StyledContainer = styled(GridItem)<{ mostEarned: boolean }>`
   padding: ${sizes(4)};
-  min-width: 230px;
 
   ${media.lg} {
     padding: ${sizes(6)};
   }
 
-  grid-column: ${({ mostEarned }) => (mostEarned ? '1 / 2' : 'span 1')};
   grid-row: ${({ mostEarned }) => (mostEarned ? '1 / 3' : '')};
   position: relative;
   overflow: hidden;

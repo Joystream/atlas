@@ -21,6 +21,9 @@ import {
 import { useSectionTextVariants } from '@/views/global/YppLandingView/sections/useSectionTextVariants'
 
 export const ReferralSteps = () => {
+  const xsMatch = useMediaMatch('xs')
+  const mdMatch = useMediaMatch('md')
+  const lgMatch = useMediaMatch('lg')
   const navigate = useNavigate()
   const { setAuthModalOpenName } = useAuthStore(
     (state) => ({
@@ -79,12 +82,11 @@ export const ReferralSteps = () => {
   }
 
   return (
-    <FlexBox flow="column" alignItems="center" gap={18}>
+    <FlexBox flow="column" alignItems="center" gap={lgMatch ? 18 : mdMatch ? 14 : 12}>
       <Text
         as="h2"
         variant={titleVariant}
         color="colorTextStrong"
-        margin={{ top: 24 }}
         data-aos="fade-up"
         data-aos-delay="350"
         data-aos-offset="40"
@@ -93,8 +95,8 @@ export const ReferralSteps = () => {
         How to start
       </Text>
       <StyledLayoutGrid as="article">
-        <GridItem colSpan={{ base: 12, md: 4 }}>
-          <FlexBox flow="column" gap={6}>
+        <GridItem colSpan={{ base: 12, md: 5, lg: 4 }} colStart={{ lg: 2 }}>
+          <FlexBox flow="column" gap={xsMatch ? 6 : 4}>
             {steps.map((step, idx) => (
               <Step
                 key={idx}
@@ -107,8 +109,8 @@ export const ReferralSteps = () => {
           </FlexBox>
         </GridItem>
         <GridItem
-          colSpan={{ base: 12, md: 8 }}
-          colStart={{ base: 1, md: 5 }}
+          colSpan={{ base: 12, md: 7, lg: 6 }}
+          colStart={{ base: 1, md: 6 }}
           onMouseEnter={() => (shouldSwitch.current = false)}
           onMouseLeave={() => (shouldSwitch.current = true)}
         >

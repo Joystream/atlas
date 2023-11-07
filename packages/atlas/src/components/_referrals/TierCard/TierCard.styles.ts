@@ -2,7 +2,8 @@ import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { FlexBox } from '@/components/FlexBox'
-import { cVar, sizes, square } from '@/styles'
+import { Text } from '@/components/Text'
+import { cVar, media, sizes, square } from '@/styles'
 
 export const Wrapper = styled.div`
   display: flex;
@@ -11,7 +12,10 @@ export const Wrapper = styled.div`
   background-color: ${cVar('colorBackgroundStrong')};
   border-radius: calc(1.5 * ${cVar('radiusLarge')});
   width: 100%;
-  min-height: 272px;
+
+  ${media.sm} {
+    min-height: 272px;
+  }
 `
 
 export const ContentWrapper = styled(FlexBox)`
@@ -116,4 +120,9 @@ export const TierBanner = styled.div<{ tier: 'bronze' | 'silver' | 'gold' | 'dia
         animation: ${pulse} 8.5s ease-out infinite;
       }
     `}
+`
+
+export const StyledPriceWrapper = styled(Text)`
+  min-width: 80px;
+  white-space: nowrap;
 `

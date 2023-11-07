@@ -17,7 +17,7 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useSearchStore } from '@/providers/search'
 import { useUser } from '@/providers/user/user.hooks'
-import { transitions } from '@/styles'
+import { media, transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
 
 const YppLandingView = lazy(() =>
@@ -194,9 +194,13 @@ export const ViewerLayout: FC = () => {
 
 const MainContainer = styled.main`
   position: relative;
-  padding: ${location.pathname === absoluteRoutes.viewer.referrals()
-    ? 0
-    : 'var(--size-topbar-height) var(--size-global-horizontal-padding) 0'};
+  padding: var(--size-topbar-height) var(--size-global-horizontal-padding) 0;
   margin-left: var(--size-sidenav-width-collapsed);
   height: 100%;
+
+  ${media.md} {
+    padding: ${location.pathname === absoluteRoutes.viewer.referrals()
+      ? 'var(--size-global-horizontal-padding)'
+      : 'var(--size-topbar-height) var(--size-global-horizontal-padding) 0'};
+  }
 `

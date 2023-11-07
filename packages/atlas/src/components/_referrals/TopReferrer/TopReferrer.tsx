@@ -30,7 +30,11 @@ export const TopReferrer = ({
   mostEarned,
 }: TopReferrerProps) => {
   return (
-    <StyledContainer mostEarned={mostEarned}>
+    <StyledContainer
+      colStart={{ lg: mostEarned ? 2 : undefined }}
+      colSpan={{ base: 12, sm: 4, lg: mostEarned ? 4 : 3 }}
+      mostEarned={mostEarned}
+    >
       <StyledContentWrapper justifyContent="space-between" flow="column">
         <FlexBox flow="column">
           <StyledChannelInfo flow="column" gap={2} alignItems="center">

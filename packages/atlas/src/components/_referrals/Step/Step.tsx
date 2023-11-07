@@ -9,7 +9,7 @@ type StepProps = {
 }
 export const Step = ({ isSelected, stepIdx, title, onClick }: StepProps) => {
   return (
-    <StyledStepContainer isSelected={isSelected} flow="row" onClick={() => onClick(stepIdx)}>
+    <StyledStepContainer gap={6} isSelected={isSelected} flow="row" onClick={() => onClick(stepIdx)}>
       <StyledStepNumberWrapper justifyContent="center">
         <Text as="div" variant="t300">
           {stepIdx}
