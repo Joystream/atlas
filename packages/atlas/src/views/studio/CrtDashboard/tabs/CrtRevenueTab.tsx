@@ -1,4 +1,6 @@
-import { useGetCreatorTokenHoldersQuery } from '@/api/queries/__generated__/creatorTokens.generated'
+import { BN } from 'bn.js'
+import { useMemo } from 'react'
+
 import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgJoyTokenMonochrome24 } from '@/assets/icons'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
@@ -9,6 +11,7 @@ import { RevenueShareHistoryTable } from '@/components/_crt/RevenueShareHistoryT
 import { RevenueShareParticipationWidget } from '@/components/_crt/RevenueShareParticipationWidget'
 import { RevenueShareStakersTable } from '@/components/_crt/RevenueShareStakersTable'
 import { RevenueShareStateWidget } from '@/components/_crt/RevenueShareStateWidget'
+import { useSubscribeAccountBalance } from '@/providers/joystream'
 import { useUser } from '@/providers/user/user.hooks'
 import { permillToPercentage } from '@/utils/number'
 
@@ -17,17 +20,13 @@ type CrtRevenueTabProps = {
 }
 
 export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
-  const { memberId } = useUser()
-  const { data } = useGetCreatorTokenHoldersQuery({
-    variables: {
-      where: {
-        member: {
-          id_eq: memberId,
-        },
-      },
-    },
+  const { activeChannel } = useUser()
+  const memoizedChannelStateBloatBond = useMemo(() => {
+    return new BN(activeChannel?.channelStateBloatBond || 0)
+  }, [activeChannel?.channelStateBloatBond])
+  const { accountBalance: channelBalance } = useSubscribeAccountBalance(activeChannel?.rewardAccount, {
+    channelStateBloatBond: memoizedChannelStateBloatBond,
   })
-  const memberTokenAccount = data?.tokenAccounts[0]
   const activeRevenueShare = token.revenueShares.find((revenueShare) => !revenueShare.finalized)
   const finalizedRevenueShares = token.revenueShares.filter((revenueShare) => revenueShare.finalized)
 
@@ -41,7 +40,7 @@ export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
           title="CHANNEL BALANCE"
           customNode={
             <NumberFormat
-              value={+(memberTokenAccount?.totalAmount ?? 0)}
+              value={channelBalance ?? 0}
               icon={<SvgJoyTokenMonochrome24 />}
               variant="h500"
               as="p"
