@@ -64,3 +64,14 @@ export const StyledContentGrid = styled(LayoutGrid)`
   min-height: 100%;
   width: 100%;
 `
+
+export const ListContainer = styled(FlexBox)`
+  margin-bottom: ${sizes(14)};
+
+  ${media.xs} {
+    margin-bottom: ${sizes(16)};
+  }
+  ${media.md} {
+    margin-bottom: ${sizes(18)};
+  }
+`

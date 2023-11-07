@@ -12,6 +12,7 @@ import { useAuthStore } from '@/providers/auth/auth.store'
 import { useUser } from '@/providers/user/user.hooks'
 import {
   ImageContainer,
+  ListContainer,
   StyledContentGrid,
   StyledListContainer,
   StyledScrollingListImage,
@@ -30,7 +31,9 @@ export const ReferralsList = () => {
     }),
     shallow
   )
+  const xsMatch = useMediaMatch('xs')
   const smMatch = useMediaMatch('sm')
+  const mdMatch = useMediaMatch('md')
 
   const handleActionButtonClick = () => {
     if (activeChannel?.id) {
@@ -43,46 +46,48 @@ export const ReferralsList = () => {
   }
 
   return (
-    <LayoutGrid as="section">
-      <GridItem colSpan={{ base: 12, lg: 10 }} colStart={{ lg: 2 }}>
-        <StyledListContainer>
-          <StyledContentGrid>
-            <GridItem colSpan={{ base: 12, sm: 5 }} colStart={{ base: 1 }}>
-              <ImageContainer>
-                <StyledScrollingListImage src={ListImage} />
-              </ImageContainer>
-            </GridItem>
-            <GridItem colSpan={{ base: 12, sm: 6 }} colStart={{ base: 1, sm: 7 }}>
-              <TextContainer justifyContent="center" flow="column" gap={6}>
-                <Text color="colorTextStrong" variant={titleVariant} as="h2">
-                  Ready to start?
-                </Text>
-                <Text align="left" color="colorText" variant={subtitleVariant} as="h2">
-                  Sign in or create an account to start referring creators.
-                </Text>
-                <Button
-                  icon={
-                    activeChannel?.id ? undefined : activeMembership?.id ? (
-                      <SvgActionAddChannel />
-                    ) : (
-                      <SvgActionNewChannel />
-                    )
-                  }
-                  onClick={handleActionButtonClick}
-                  variant="secondary"
-                  fullWidth={!smMatch}
-                >
-                  {activeChannel?.id
-                    ? 'Open referrals dashboard'
-                    : activeMembership?.id
-                    ? 'Add new channel'
-                    : 'Sign in'}
-                </Button>
-              </TextContainer>
-            </GridItem>
-          </StyledContentGrid>
-        </StyledListContainer>
-      </GridItem>
-    </LayoutGrid>
+    <ListContainer flow="column" marginTop={mdMatch ? 24 : xsMatch ? 16 : 14}>
+      <LayoutGrid as="section">
+        <GridItem colSpan={{ base: 12, lg: 10 }} colStart={{ lg: 2 }}>
+          <StyledListContainer>
+            <StyledContentGrid>
+              <GridItem colSpan={{ base: 12, sm: 5 }} colStart={{ base: 1 }}>
+                <ImageContainer>
+                  <StyledScrollingListImage src={ListImage} />
+                </ImageContainer>
+              </GridItem>
+              <GridItem colSpan={{ base: 12, sm: 6 }} colStart={{ base: 1, sm: 7 }}>
+                <TextContainer justifyContent="center" flow="column" gap={6}>
+                  <Text color="colorTextStrong" variant={titleVariant} as="h2">
+                    Ready to start?
+                  </Text>
+                  <Text align="left" color="colorText" variant={subtitleVariant} as="h2">
+                    Sign in or create an account to start referring creators.
+                  </Text>
+                  <Button
+                    icon={
+                      activeChannel?.id ? undefined : activeMembership?.id ? (
+                        <SvgActionAddChannel />
+                      ) : (
+                        <SvgActionNewChannel />
+                      )
+                    }
+                    onClick={handleActionButtonClick}
+                    variant="secondary"
+                    fullWidth={!smMatch}
+                  >
+                    {activeChannel?.id
+                      ? 'Open referrals dashboard'
+                      : activeMembership?.id
+                      ? 'Add new channel'
+                      : 'Sign in'}
+                  </Button>
+                </TextContainer>
+              </GridItem>
+            </StyledContentGrid>
+          </StyledListContainer>
+        </GridItem>
+      </LayoutGrid>
+    </ListContainer>
   )
 }

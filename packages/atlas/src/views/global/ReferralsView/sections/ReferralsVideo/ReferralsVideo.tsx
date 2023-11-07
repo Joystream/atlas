@@ -18,6 +18,8 @@ import { useSectionTextVariants } from '@/views/global/YppLandingView/sections/u
 
 export const ReferralsVideo = () => {
   const [_, subtitleVariant, mainTitleVariant] = useSectionTextVariants()
+  const mdMatch = useMediaMatch('md')
+  const xsMatch = useMediaMatch('xs')
 
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const smMatch = useMediaMatch('sm')
@@ -28,7 +30,7 @@ export const ReferralsVideo = () => {
     }
   }, [])
   return (
-    <FlexBox flow="column" gap={smMatch ? 14 : 12}>
+    <FlexBox flow="column" marginTop={mdMatch ? 24 : xsMatch ? 16 : 14} gap={smMatch ? 14 : 12}>
       <LayoutGrid as="header">
         <GridItem colSpan={{ base: 12, lg: 8 }} colStart={{ lg: 3 }}>
           <LogosContainer>

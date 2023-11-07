@@ -16,12 +16,14 @@ import { useSectionTextVariants } from '@/views/global/YppLandingView/sections/u
 
 export const ReferralTiers = () => {
   const [titleVariant, subtitleVariant, _] = useSectionTextVariants()
+  const xsMatch = useMediaMatch('xs')
   const smMatch = useMediaMatch('sm')
+  const mdMatch = useMediaMatch('md')
   const lgMatch = useMediaMatch('lg')
 
   const tiers = atlasConfig.features.ypp.tiersDefinition
   return (
-    <FlexBox flow="column">
+    <FlexBox flow="column" marginTop={mdMatch ? 24 : xsMatch ? 16 : 14}>
       <LayoutGrid as="header">
         <GridItem colSpan={{ base: 12, sm: 8, md: 12, lg: 8 }} colStart={{ sm: 3, md: 1, lg: 3 }}>
           <Text

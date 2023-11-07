@@ -6,6 +6,7 @@ import { FlexBox } from '@/components/FlexBox'
 import { Text } from '@/components/Text'
 import { TopReferrer } from '@/components/_referrals/TopReferrer/TopReferrer'
 import { atlasConfig } from '@/config'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { SentryLogger } from '@/utils/logs'
 import { StyledTopReferrersGrid } from '@/views/global/ReferralsView/sections/TopReferrals/TopReferrals.styles'
 import { useSectionTextVariants } from '@/views/global/YppLandingView/sections/useSectionTextVariants'
@@ -32,6 +33,9 @@ export const TopReferrals = () => {
       .catch((e) => SentryLogger.error('Top referrals fetch failed', 'TopReferralsLanding', e))
   )
 
+  const xsMatch = useMediaMatch('xs')
+  const mdMatch = useMediaMatch('md')
+
   const { extendedChannels: topReferrersChannels } = useBasicChannels(
     {
       where: { channel: { id_in: data?.slice(0, 5).map((channel) => channel.referrerChannelId.toString()) || [] } },
@@ -45,7 +49,7 @@ export const TopReferrals = () => {
   const channelById = (id: string) => topReferrersChannels?.find((channel) => channel.channel.id === id)?.channel
 
   return (
-    <FlexBox flow="column" gap={18} alignItems="center">
+    <FlexBox flow="column" marginTop={mdMatch ? 24 : xsMatch ? 16 : 14} gap={18} alignItems="center">
       <Text
         as="h2"
         variant={titleVariant}

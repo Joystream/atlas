@@ -83,7 +83,12 @@ export const ReferralSteps = () => {
   }
 
   return (
-    <FlexBox flow="column" alignItems="center" gap={lgMatch ? 18 : mdMatch ? 14 : 12}>
+    <FlexBox
+      flow="column"
+      marginTop={mdMatch ? 24 : xsMatch ? 16 : 14}
+      alignItems="center"
+      gap={lgMatch ? 18 : mdMatch ? 14 : 12}
+    >
       <Text
         as="h2"
         variant={titleVariant}

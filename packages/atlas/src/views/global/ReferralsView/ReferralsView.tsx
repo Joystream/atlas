@@ -23,7 +23,7 @@ export const ReferralsView = () => {
       flow="column"
       justifyContent="center"
       alignItems="center"
-      gap={mdMatch ? 48 : xsMatch ? 32 : 14}
+      gap={mdMatch ? 24 : xsMatch ? 16 : 14}
     >
       <ReferralsVideo />
       <ReferralTiers />
@@ -31,7 +31,6 @@ export const ReferralsView = () => {
       <ReferralSteps />
       <TopReferrals />
       <ReferralsList />
-      <div />
     </StyledLimitedWidthWrapper>
   )
 }
