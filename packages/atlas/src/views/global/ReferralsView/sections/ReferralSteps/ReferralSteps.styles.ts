@@ -17,7 +17,6 @@ export const StepVideoContainer = styled.div`
 export const StyledStepVideo = styled(StyledVideo)`
   object-fit: contain;
   position: absolute;
-  aspect-ratio: 16 / 9;
 `
 
 export const StyledLayoutGrid = styled(LayoutGrid)`

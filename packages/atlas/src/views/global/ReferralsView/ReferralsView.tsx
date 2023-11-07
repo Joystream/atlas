@@ -23,7 +23,7 @@ export const ReferralsView = () => {
       flow="column"
       justifyContent="center"
       alignItems="center"
-      gap={mdMatch ? 24 : xsMatch ? 18 : 14}
+      gap={mdMatch ? 48 : xsMatch ? 32 : 14}
     >
       <ReferralsVideo />
       <ReferralTiers />
