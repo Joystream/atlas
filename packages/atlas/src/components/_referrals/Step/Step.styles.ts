@@ -25,6 +25,8 @@ export const StyledStepContainer = styled(FlexBox)<{ isSelected: boolean }>`
         )} 50%, ${cVar('colorCoreNeutral900')} 100%) `
       : `${cVar('colorCoreNeutral900')}`};
   opacity: ${({ isSelected }) => (isSelected ? '1' : '0.5')};
+  flex: 1;
+  background-size: 200% 100%;
 
   &:hover {
     border: 1px solid ${cVar('colorCoreNeutral600Lighten')};
@@ -32,8 +34,6 @@ export const StyledStepContainer = styled(FlexBox)<{ isSelected: boolean }>`
     box-sizing: border-box;
     cursor: pointer;
   }
-
-  background-size: 200% 100%;
 
   ${media.md} {
     padding: ${sizes(6)};
@@ -45,7 +45,7 @@ export const StyledStepContainer = styled(FlexBox)<{ isSelected: boolean }>`
   ${({ isSelected }) =>
     isSelected &&
     css`
-      animation: ${loading} 7s linear infinite;
+      animation: ${loading} 7s linear;
     `};
 `
 

@@ -1,35 +1,23 @@
 import styled from '@emotion/styled'
 
+import { FlexBox } from '@/components/FlexBox'
 import { LayoutGrid } from '@/components/LayoutGrid'
 import { Button } from '@/components/_buttons/Button'
-import { media } from '@/styles'
 import { StyledVideo } from '@/views/global/ReferralsView/ReferralsView.styles'
 
 export const StepVideoContainer = styled.div`
   width: 100%;
   max-width: 100%;
-  height: 280px;
+  height: 100%;
   position: relative;
-  ${media.xs} {
-    height: 400px;
-  }
-
-  ${media.sm} {
-    height: 550px;
-  }
-
-  ${media.md} {
-    height: 346px;
-  }
-
-  ${media.lg} {
-    height: 420px;
-  }
+  padding-top: 62.25%;
+  object-fit: fill;
 `
 
 export const StyledStepVideo = styled(StyledVideo)`
   object-fit: contain;
   position: absolute;
+  aspect-ratio: 16 / 9;
 `
 
 export const StyledLayoutGrid = styled(LayoutGrid)`
@@ -38,4 +26,8 @@ export const StyledLayoutGrid = styled(LayoutGrid)`
 
 export const StyledCtaButton = styled(Button)`
   min-width: 240px;
+`
+
+export const StyledStepsContainer = styled(FlexBox)`
+  height: 100%;
 `

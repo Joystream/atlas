@@ -1,4 +1,3 @@
-import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { AvatarSize } from '@/components/Avatar'
@@ -57,31 +56,16 @@ export const AvatarWrapper = styled.div<{ size: AvatarSize }>`
   box-shadow: 0 0 80px 10px rgba(2 127 255 1);
 `
 
-const rot = keyframes`
-  0% {
-        background-position: 0 100%;
-  }
-  80% {
-        background-position: 0 100%; 
-  }
-  100% {
-        background-position: 0 -20%; 
-  }
-`
-
 export const StyledVertLine = styled.div`
   width: 2px;
   height: 76px;
   background: linear-gradient(
     rgba(0 125 255 / 0) 0%,
     rgba(0 125 255 / 1) 25%,
-    rgba(175 213 252 / 1) 50%,
-    rgba(175 213 252 / 0) 75%,
+    rgba(175 213 252 / 1) 75%,
     rgba(175 213 252 / 0) 100%
   );
-  background-size: 400% 400%;
   margin: 10px auto 0;
-  animation: ${rot} 3s linear infinite;
 `
 
 export const StyledTierCardsWrapper = styled.div`

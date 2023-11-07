@@ -17,6 +17,7 @@ import {
   StyledCtaButton,
   StyledLayoutGrid,
   StyledStepVideo,
+  StyledStepsContainer,
 } from '@/views/global/ReferralsView/sections/ReferralSteps/ReferralSteps.styles'
 import { useSectionTextVariants } from '@/views/global/YppLandingView/sections/useSectionTextVariants'
 
@@ -95,8 +96,13 @@ export const ReferralSteps = () => {
         How to start
       </Text>
       <StyledLayoutGrid as="article">
-        <GridItem colSpan={{ base: 12, md: 5, lg: 4 }} colStart={{ lg: 2 }}>
-          <FlexBox flow="column" gap={xsMatch ? 6 : 4}>
+        <GridItem
+          colSpan={{ base: 12, md: 5, lg: 4 }}
+          onMouseEnter={() => (shouldSwitch.current = false)}
+          onMouseLeave={() => (shouldSwitch.current = true)}
+          colStart={{ lg: 2 }}
+        >
+          <StyledStepsContainer flow="column" gap={xsMatch ? 6 : 4}>
             {steps.map((step, idx) => (
               <Step
                 key={idx}
@@ -106,7 +112,7 @@ export const ReferralSteps = () => {
                 onClick={() => setSelectedStep(idx)}
               />
             ))}
-          </FlexBox>
+          </StyledStepsContainer>
         </GridItem>
         <GridItem
           colSpan={{ base: 12, md: 7, lg: 6 }}
