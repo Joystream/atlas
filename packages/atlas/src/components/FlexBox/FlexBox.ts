@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 
 import { sizes } from '@/styles'
 
-type FlexBoxProps = {
+export type FlexBoxProps = {
   gap?: number
   flow?: 'row' | 'column' | 'column-reverse' | 'row-reverse'
   alignItems?: string

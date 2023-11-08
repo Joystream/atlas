@@ -88,7 +88,7 @@ export type GetFullVideoQuery = {
       videoViewsNum: number
       description?: string | null
       isPublic?: boolean | null
-      cumulativeRewardClaimed?: string | null
+      cumulativeRewardClaimed: string
       isCensored: boolean
       language?: string | null
       id: string
@@ -1200,7 +1200,7 @@ export type GetFullVideosConnectionQuery = {
           videoViewsNum: number
           description?: string | null
           isPublic?: boolean | null
-          cumulativeRewardClaimed?: string | null
+          cumulativeRewardClaimed: string
           isCensored: boolean
           language?: string | null
           id: string
@@ -2006,7 +2006,7 @@ export type GetFullVideosQuery = {
       videoViewsNum: number
       description?: string | null
       isPublic?: boolean | null
-      cumulativeRewardClaimed?: string | null
+      cumulativeRewardClaimed: string
       isCensored: boolean
       language?: string | null
       id: string

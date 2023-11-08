@@ -1,4 +1,5 @@
 import { FC, useEffect, useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
 import { SvgActionLinkUrl } from '@/assets/icons'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
@@ -16,12 +17,15 @@ import { Header, TabsWrapper } from './YppDashboard.styles'
 import { YppDashboardMainTab, YppDashboardSettingsTab } from './tabs'
 
 const TABS = ['Dashboard', 'Referrals', 'Settings'] as const
+type Tab = typeof TABS[number]
 
 export const YppDashboard: FC = () => {
   const headTags = useHeadTags('YouTube Partner Program')
   const mdMatch = useMediaMatch('md')
   const xsMatch = useMediaMatch('xs')
-  const [currentVideosTab, setCurrentVideosTab] = useState(0)
+  const [searchParams] = useSearchParams()
+  const tab = searchParams.get('tab') as Tab | null
+  const [currentVideosTab, setCurrentVideosTab] = useState(TABS.indexOf(tab || 'Dashboard'))
   const { trackPageView } = useSegmentAnalytics()
   const { processingAssets, uploads } = useUploadsStore()
   const { currentChannel } = useGetYppSyncedChannels()
