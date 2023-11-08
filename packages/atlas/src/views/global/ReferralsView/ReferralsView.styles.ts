@@ -58,6 +58,6 @@ export const StyledLimitedWidthWrapper = styled(FlexBox)`
   text-align: center;
   width: fit-content;
   margin: auto;
-  padding-top: ${sizes(14)};
+  padding-top: ${sizes(8)};
   max-width: 1368px;
 `

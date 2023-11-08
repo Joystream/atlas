@@ -67,7 +67,7 @@ export const ReferralSteps = () => {
     }
   }, [minStep, selectedStep, shouldSwitch, steps.length])
 
-  const [titleVariant, _, __] = useSectionTextVariants()
+  const [titleVariant] = useSectionTextVariants()
 
   useEffect(() => {
     videoRef?.current?.load()

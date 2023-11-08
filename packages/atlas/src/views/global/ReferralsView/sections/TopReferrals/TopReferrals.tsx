@@ -24,7 +24,7 @@ type TopReferrerDTO = {
 }
 
 export const TopReferrals = () => {
-  const [titleVariant, _, __] = useSectionTextVariants()
+  const [titleVariant] = useSectionTextVariants()
 
   const { data, isLoading: isLoadingTopReferrers } = useQuery('top-referrals-fetch', () =>
     axiosInstance
@@ -32,13 +32,14 @@ export const TopReferrals = () => {
       .then((res) => res.data)
       .catch((e) => SentryLogger.error('Top referrals fetch failed', 'TopReferralsLanding', e))
   )
+  const topChannels = data?.slice(0, 5)
 
   const xsMatch = useMediaMatch('xs')
   const mdMatch = useMediaMatch('md')
 
   const { extendedChannels: topReferrersChannels } = useBasicChannels(
     {
-      where: { channel: { id_in: data?.slice(0, 5).map((channel) => channel.referrerChannelId.toString()) || [] } },
+      where: { channel: { id_in: topChannels?.map((channel) => channel.referrerChannelId.toString()) || [] } },
       limit: 5,
     },
     {
@@ -63,7 +64,7 @@ export const TopReferrals = () => {
       </Text>
 
       <StyledTopReferrersGrid>
-        {data?.slice(0, 5).map(({ referrerChannelId, totalReferredChannels, referredByTier, totalEarnings }, idx) => {
+        {topChannels?.map(({ referrerChannelId, totalReferredChannels, referredByTier, totalEarnings }, idx) => {
           const channel = channelById(referrerChannelId.toString())
           return (
             <TopReferrer

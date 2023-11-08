@@ -23,7 +23,7 @@ export const YppDashboard: FC = () => {
   const headTags = useHeadTags('YouTube Partner Program')
   const mdMatch = useMediaMatch('md')
   const xsMatch = useMediaMatch('xs')
-  const [searchParams, _] = useSearchParams()
+  const [searchParams] = useSearchParams()
   const tab = searchParams.get('tab') as Tab | null
   const [currentVideosTab, setCurrentVideosTab] = useState(TABS.indexOf(tab || 'Dashboard'))
   const { trackPageView } = useSegmentAnalytics()
