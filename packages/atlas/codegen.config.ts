@@ -1,13 +1,10 @@
 import { CodegenConfig } from '@graphql-codegen/cli'
-import * as assert from 'assert'
 
 import { customSchemaLoader } from './scripts/customSchemaLoader'
 
-const NODE_ENV = process.env.NODE_ENV?.toUpperCase() ?? 'PRODUCTION'
-const schemaUrl = process.env[`VITE_${NODE_ENV}_ORION_URL`]
-const authUrl = process.env[`VITE_${NODE_ENV}_ORION_AUTH_URL`]
-assert(schemaUrl)
-assert(authUrl)
+const ENV = process.env.VITE_DEFAULT_DATA_ENV?.toUpperCase() ?? 'PRODUCTION'
+const schemaUrl = process.env[`VITE_${ENV}_ORION_URL`]
+if (!schemaUrl) throw new Error(`VITE_${ENV}_ORION_URL is not defined`)
 
 const config: CodegenConfig = {
   overwrite: true,
