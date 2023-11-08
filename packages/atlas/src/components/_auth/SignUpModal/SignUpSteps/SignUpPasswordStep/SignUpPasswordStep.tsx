@@ -94,7 +94,6 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
               placeholder="Password"
               {...register('password')}
               {...hidePasswordProps}
-              autoComplete="new-password"
               onClick={() => {
                 if (hasDoneInitialScroll.current || !dialogContentRef?.current) return
                 hasDoneInitialScroll.current = true

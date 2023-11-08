@@ -10,6 +10,7 @@ export const LayoutGrid = styled.div<{ gap?: number }>`
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-gap: 16px;
+  width: 100%;
 
   ${media.md} {
     grid-gap: 24px;
