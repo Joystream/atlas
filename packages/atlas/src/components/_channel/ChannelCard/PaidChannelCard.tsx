@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { YPPPaidChannels } from '@/api/hooks/channel'
+import { PayeeChannel } from '@/api/hooks/channel'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -16,12 +16,13 @@ import {
   StyledAvatar,
 } from './PaidChannelCard.styles'
 
-export type PaidChannelCardProps = Partial<YPPPaidChannels> & {
+export type PaidChannelCardProps = {
+  channel?: PayeeChannel
   onClick?: () => void
   loading?: boolean
 }
 
-export const PaidChannelCard: FC<PaidChannelCardProps> = ({ onClick, channel, amount, loading }) => {
+export const PaidChannelCard: FC<PaidChannelCardProps> = ({ onClick, channel, loading }) => {
   const mdMatch = useMediaMatch('md')
 
   return (
@@ -44,7 +45,7 @@ export const PaidChannelCard: FC<PaidChannelCardProps> = ({ onClick, channel, am
               ) : (
                 <>
                   <Amount
-                    value={amount ?? 0}
+                    value={channel.cumulativeRewardPaid}
                     as="span"
                     withToken="small"
                     withTooltip

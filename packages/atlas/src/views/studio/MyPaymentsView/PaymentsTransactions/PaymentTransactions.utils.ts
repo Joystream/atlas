@@ -108,7 +108,7 @@ export const mapEventToPaymentHistory =
     const eventData = { ...event.data, nftPlatformFeePercentage }
     return {
       type: getType(eventData),
-      block: inBlock + 1,
+      block: inBlock,
       amount: getAmount(eventData),
       date: new Date(timestamp),
       description: getDescription(eventData) || '-',

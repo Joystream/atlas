@@ -25,7 +25,7 @@ export const LogInModal = () => {
   const [isLoading, setIsLoading] = useState(false)
   const { handleLogin, refetchCurrentUser } = useAuth()
   const { displaySnackbar } = useSnackbar()
-  const [hidePasswordProps] = useHidePasswordInInput()
+  const [hidePasswordProps] = useHidePasswordInInput(false)
   const { trackPageView } = useSegmentAnalytics()
 
   const setYppModalOpenName = useYppStore((state) => state.actions.setYppModalOpenName)

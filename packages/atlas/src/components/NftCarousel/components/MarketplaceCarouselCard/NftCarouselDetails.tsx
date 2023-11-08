@@ -43,7 +43,7 @@ export const NftCarouselDetails = ({
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
   const nftStatus = getNftStatus(nft, nft?.video)
 
-  const creatorAvatarUrls =
+  const ownerAvatarUrls =
     nft.owner.__typename === 'NftOwnerChannel'
       ? nft.owner.channel.avatarPhoto?.resolvedUrls
       : getMemberAvatar(nft.owner.member).urls
@@ -60,17 +60,17 @@ export const NftCarouselDetails = ({
       nft?.owner.__typename === 'NftOwnerChannel'
         ? {
             name,
-            assetUrls: creatorAvatarUrls,
+            assetUrls: ownerAvatarUrls,
             onClick: () => navigate(absoluteRoutes.viewer.channel(nft.video.channel.id)),
           }
         : nft?.owner.__typename === 'NftOwnerMember'
         ? {
             name,
-            assetUrls: creatorAvatarUrls,
+            assetUrls: ownerAvatarUrls,
             onClick: () => name && navigate(absoluteRoutes.viewer.member(name)),
           }
         : undefined,
-    [creatorAvatarUrls, name, navigate, nft]
+    [ownerAvatarUrls, name, navigate, nft]
   )
 
   const nftDetails = useMemo(
@@ -83,7 +83,7 @@ export const NftCarouselDetails = ({
           : undefined,
       creator: {
         name: nft?.video.channel.title || undefined,
-        assetUrl: creatorAvatarUrls,
+        assetUrl: nft?.video.channel.avatarPhoto?.resolvedUrls,
         onClick: () => navigate(absoluteRoutes.viewer.channel(nft?.video.channel.id)),
       },
       title: nft.video.title,
@@ -97,7 +97,7 @@ export const NftCarouselDetails = ({
           ? hapiBnToTokenNumber(nftStatus.startingPrice)
           : undefined,
     }),
-    [creatorAvatarUrls, navigate, nft, nftStatus]
+    [navigate, nft, nftStatus]
   )
 
   const avatars = useMemo(

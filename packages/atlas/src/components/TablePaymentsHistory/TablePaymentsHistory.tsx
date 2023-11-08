@@ -9,7 +9,6 @@ import { Text } from '@/components/Text'
 import { TextButton } from '@/components/_buttons/Button'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { absoluteRoutes } from '@/config/routes'
-import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { SentryLogger } from '@/utils/logs'
 import { shortenString } from '@/utils/misc'
@@ -54,7 +53,7 @@ export const TablePaymentsHistory: FC<TablePaymentsHistoryProps> = ({ data, isLo
   const mappedData: TableProps['data'] = useMemo(
     () =>
       data.map((data) => ({
-        date: <Date date={data.date} />,
+        date: <Date date={data.date} block={data.block} />,
         type: <Type type={data.type} />,
         amount: <TokenAmount tokenAmount={data.amount} />,
         sender: <Sender sender={data.sender} />,
@@ -145,15 +144,14 @@ const Sender = ({ sender }: { sender: PaymentHistory['sender'] }) => {
   }
 }
 
-const Date = ({ date }: { date: Date }) => {
-  const { convertMsTimestampToBlock } = useBlockTimeEstimation()
+const Date = ({ date, block }: { date: Date; block: number }) => {
   return (
     <>
       <Text as="p" variant="t200-strong">
         {formatDateTime(date)}
       </Text>
       <Text as="p" variant="t100" margin={{ top: 1 }} color="colorText">
-        {formatNumber(convertMsTimestampToBlock(date.getTime()) || 0)} block
+        {formatNumber(block || 0)} block
       </Text>
     </>
   )

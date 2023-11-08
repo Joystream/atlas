@@ -1,8 +1,9 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { cVar, sizes } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 export const BannerHeader = styled.div`
   width: 100%;
@@ -20,9 +21,18 @@ export const BannerText = styled(Text)`
   flex: 1;
 `
 
-export const CloseButton = styled(Button)`
+export const CloseButton = styled(Button)<{ rightActionButton?: boolean }>`
   margin-left: ${sizes(4)};
   align-self: start;
+
+  ${({ rightActionButton }) =>
+    rightActionButton &&
+    css`
+      align-self: start;
+      ${media.sm} {
+        align-self: center;
+      }
+    `}
 `
 
 export const BannerDescription = styled.div<{ withTitle?: boolean }>`
@@ -43,8 +53,8 @@ export const BannerWrapper = styled.div<{ size: 'small' | 'medium'; borderColor?
   border-left: 2px solid ${({ borderColor }) => borderColor ?? cVar('colorBorderPrimary')};
 `
 
-export const ActionButton = styled(Button)`
-  margin-top: ${sizes(2)};
+export const ActionButton = styled(Button)<{ rightActionButton?: boolean }>`
+  margin-top: ${({ rightActionButton }) => (rightActionButton ? 0 : sizes(2))};
 `
 
 export const Container = styled.div`
