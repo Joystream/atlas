@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 
 import { AppLogo } from '@/components/AppLogo'
 import { FlexBox } from '@/components/FlexBox'
@@ -22,11 +22,6 @@ export const ReferralsVideo = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const smMatch = useMediaMatch('sm')
 
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.playbackRate = 2
-    }
-  }, [])
   return (
     <FlexBox flow="column" gap={smMatch ? 14 : 12}>
       <LayoutGrid as="header">

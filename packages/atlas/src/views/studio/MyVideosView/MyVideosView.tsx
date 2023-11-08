@@ -355,8 +355,8 @@ export const MyVideosView = () => {
         }}
       />
       <MintNftModal />
-      <ReferralsBanner />
       <LimitedWidthContainer>
+        <ReferralsBanner />
         {headTags}
         <TitleBox>
           <Text as="h1" variant="h700">
