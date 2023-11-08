@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { FlexBox } from '@/components/FlexBox'
-import { cVar, media, sizes } from '@/styles'
+import { cVar, sizes } from '@/styles'
 
 export const StyledVideo = styled.video`
   width: 100%;
@@ -28,25 +28,8 @@ export const GradientOverlay = styled.div`
 export const StyledVideoWrapper = styled.div`
   position: relative;
   width: 100%;
-  height: 100%;
+  padding-top: 63%;
   max-width: 100%;
-  min-height: 182px;
-
-  ${media.xs} {
-    min-height: 250px;
-  }
-
-  ${media.sm} {
-    height: 462px;
-  }
-
-  ${media.md} {
-    height: 558px;
-  }
-
-  ${media.lg} {
-    height: 680px;
-  }
 `
 
 export const StyledLink = styled(Link)`
