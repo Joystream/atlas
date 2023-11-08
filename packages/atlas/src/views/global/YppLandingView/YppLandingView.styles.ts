@@ -100,12 +100,13 @@ export const CenteredLayoutFlex = styled(FlexBox)`
 
 export const TierCardWrapper = styled(GridItem)`
   width: 100%;
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-direction: column-reverse;
   gap: ${sizes(4)};
-  justify-content: center;
 
   ${media.sm} {
+    display: grid;
+    justify-content: center;
     grid-template-columns: repeat(2, auto);
   }
 

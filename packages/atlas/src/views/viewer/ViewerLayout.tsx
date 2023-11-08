@@ -17,7 +17,7 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useSearchStore } from '@/providers/search'
 import { useUser } from '@/providers/user/user.hooks'
-import { transitions } from '@/styles'
+import { media, transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
 
 const YppLandingView = lazy(() =>
@@ -38,6 +38,9 @@ const MembershipSettingsView = lazy(() =>
 const NotFoundView = lazy(() => import('./NotFoundView').then((module) => ({ default: module.NotFoundView })))
 const SearchView = lazy(() => import('./SearchView').then((module) => ({ default: module.SearchView })))
 const VideoView = lazy(() => import('./VideoView').then((module) => ({ default: module.VideoView })))
+const ReferralsView = lazy(() =>
+  import('@/views/global/ReferralsView').then((module) => ({ default: module.ReferralsView }))
+)
 
 const viewerRoutes = [
   { path: relativeRoutes.viewer.search(), element: <SearchView /> },
@@ -51,6 +54,7 @@ const viewerRoutes = [
   ...(atlasConfig.features.ypp.googleConsoleClientId
     ? [{ path: relativeRoutes.viewer.ypp(), element: <YppLandingView /> }]
     : []),
+  { path: relativeRoutes.viewer.referrals(), element: <ReferralsView /> },
 ]
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.viewer.index()
@@ -193,4 +197,10 @@ const MainContainer = styled.main`
   padding: var(--size-topbar-height) var(--size-global-horizontal-padding) 0;
   margin-left: var(--size-sidenav-width-collapsed);
   height: 100%;
+
+  ${media.md} {
+    padding: ${location.pathname === absoluteRoutes.viewer.referrals()
+      ? 'var(--size-global-horizontal-padding)'
+      : 'var(--size-topbar-height) var(--size-global-horizontal-padding) 0'};
+  }
 `

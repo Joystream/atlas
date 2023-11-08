@@ -291,7 +291,18 @@ export const useChannelForm = (props: FormType) => {
           fee: newChannel ? createChannelFee : updateChannelFee,
         },
         onTxSync: (result) => {
-          reset(getValues())
+          const values = getValues()
+          reset({
+            ...values,
+            avatar: {
+              ...values.avatar,
+              contentId: result.assetsIds.avatarPhoto ?? values.avatar.contentId,
+            },
+            cover: {
+              ...values.cover,
+              contentId: result.assetsIds.coverPhoto ?? values.cover.contentId,
+            },
+          })
           channelId = result.channelId
           refetchUserMemberships()
         },

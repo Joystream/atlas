@@ -6,6 +6,7 @@ import {
   SvgActionNewTab,
   SvgSidebarHome,
   SvgSidebarMarketplace,
+  SvgSidebarReferrals,
   SvgSidebarYpp,
 } from '@/assets/icons'
 import { AppLogo } from '@/components/AppLogo'
@@ -47,6 +48,12 @@ export const viewerNavItems = [
         },
       ]
     : []),
+  {
+    icon: <SvgSidebarReferrals />,
+    name: 'Referrals',
+    expandedName: 'Referrals program',
+    to: absoluteRoutes.viewer.referrals(),
+  },
 ]
 export const SidenavViewer: FC = () => {
   const [expanded, setExpanded] = useState(false)

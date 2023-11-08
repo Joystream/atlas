@@ -1,5 +1,5 @@
 general:
-  appName: Gleev # Application name - used in the copy throughout the app, in index.html, open graph meta tags, etc. Don't use env variables here
+  appName: Atlas # Application name - used in the copy throughout the app, in index.html, open graph meta tags, etc. Don't use env variables here
   appDescription: 'The streaming platform empowering viewers, creators, and builders. Built on and operated by the Joystream blockchain and DAO.' # Application description - used in index.html meta tags
   appTagline: 'The streaming platform empowering viewers, creators, and builders. Built on and operated by the Joystream blockchain and DAO.'
   appId: '$VITE_APP_ID' # App ID for Apps as first-class citizens
@@ -38,7 +38,6 @@ joystream:
 features:
   ypp:
     yppDelayThreshold: 300 # When the YPP sync backlog exceeds the threshold, Atlas will consider the YPP sync delayed.
-    dailySignupQuota: 1000 # Daily quota for YPP signups. Leave null for unlimited quota.
     landingPageOgTitle: null # Open graph title for YPP landing page - used in open graph meta tags in HTML
     landingPageOgDescription: null # Open graph description for YPP landing page - used in open graph meta tags in HTML
     landingPageOgImgPath: null # Path to the open graph image for the YPP landing page - if not set, the default image will be used
@@ -264,6 +263,9 @@ features:
     statusPollingInterval: 20000 # Interval for polling NFT status on VideoView in ms
   notifications:
     pollingInterval: 10000 # Interval for polling notifications in ms
+  referrals:
+    referrerBonusPercent: 5 # How much referrer would get from the invitee reward
+    signupBonusPercent: 5 # How much invitee would get from the referral link signup
   members:
     avatarServiceUrl: '$VITE_AVATAR_SERVICE_URL' # URL for avatar service - used to upload member's avatar
     hcaptchaSiteKey: '$VITE_HCAPTCHA_SITE_KEY' # Site key for hCaptcha - used to verify users are not bots when creating memberships - depends on hCaptcha being enabled in the faucet

@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.13.0] - 2023-11-08
+
+### Added
+
+- new Referrals page
+
+### Changed
+
+- YPP channel carousel is now showing most paid channels
+- Removed YPP signup quota check
+
+### Fixed
+
+- Fixed password suggestion being shown in the wrong places
+- Fixed issue with channel asset upload
+- Fixed NFT button being available for unauthorized users
+- Fixed incorrect block number in payments table
+- Fixed avatars on NFT carousel
+
 ## [4.12.0] - 2023-11-01
 
 ### Changed

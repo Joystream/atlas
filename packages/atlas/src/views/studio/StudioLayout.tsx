@@ -75,6 +75,7 @@ const locationToPageName = {
   '/payments': 'Payments',
   '/ypp': 'YPP',
   '/ypp-dashboard': 'YPP Dashboard',
+  '/referrals': 'Referrals',
 }
 
 const _StudioLayout = () => {

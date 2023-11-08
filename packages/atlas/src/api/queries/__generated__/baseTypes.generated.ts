@@ -66,6 +66,8 @@ export enum AccountOrderByInput {
   MembershipControllerAccountDesc = 'membership_controllerAccount_DESC',
   MembershipCreatedAtAsc = 'membership_createdAt_ASC',
   MembershipCreatedAtDesc = 'membership_createdAt_DESC',
+  MembershipHandleRawAsc = 'membership_handleRaw_ASC',
+  MembershipHandleRawDesc = 'membership_handleRaw_DESC',
   MembershipHandleAsc = 'membership_handle_ASC',
   MembershipHandleDesc = 'membership_handle_DESC',
   MembershipIdAsc = 'membership_id_ASC',
@@ -243,6 +245,8 @@ export enum AppOrderByInput {
   OwnerMemberControllerAccountDesc = 'ownerMember_controllerAccount_DESC',
   OwnerMemberCreatedAtAsc = 'ownerMember_createdAt_ASC',
   OwnerMemberCreatedAtDesc = 'ownerMember_createdAt_DESC',
+  OwnerMemberHandleRawAsc = 'ownerMember_handleRaw_ASC',
+  OwnerMemberHandleRawDesc = 'ownerMember_handleRaw_DESC',
   OwnerMemberHandleAsc = 'ownerMember_handle_ASC',
   OwnerMemberHandleDesc = 'ownerMember_handle_DESC',
   OwnerMemberIdAsc = 'ownerMember_id_ASC',
@@ -623,6 +627,8 @@ export enum AuctionOrderByInput {
   WinningMemberControllerAccountDesc = 'winningMember_controllerAccount_DESC',
   WinningMemberCreatedAtAsc = 'winningMember_createdAt_ASC',
   WinningMemberCreatedAtDesc = 'winningMember_createdAt_DESC',
+  WinningMemberHandleRawAsc = 'winningMember_handleRaw_ASC',
+  WinningMemberHandleRawDesc = 'winningMember_handleRaw_DESC',
   WinningMemberHandleAsc = 'winningMember_handle_ASC',
   WinningMemberHandleDesc = 'winningMember_handle_DESC',
   WinningMemberIdAsc = 'winningMember_id_ASC',
@@ -832,6 +838,8 @@ export enum AuctionWhitelistedMemberOrderByInput {
   MemberControllerAccountDesc = 'member_controllerAccount_DESC',
   MemberCreatedAtAsc = 'member_createdAt_ASC',
   MemberCreatedAtDesc = 'member_createdAt_DESC',
+  MemberHandleRawAsc = 'member_handleRaw_ASC',
+  MemberHandleRawDesc = 'member_handleRaw_DESC',
   MemberHandleAsc = 'member_handle_ASC',
   MemberHandleDesc = 'member_handle_DESC',
   MemberIdAsc = 'member_id_ASC',
@@ -956,6 +964,8 @@ export enum BannedMemberOrderByInput {
   ChannelCreatedInBlockDesc = 'channel_createdInBlock_DESC',
   ChannelCumulativeRewardClaimedAsc = 'channel_cumulativeRewardClaimed_ASC',
   ChannelCumulativeRewardClaimedDesc = 'channel_cumulativeRewardClaimed_DESC',
+  ChannelCumulativeRewardPaidAsc = 'channel_cumulativeRewardPaid_ASC',
+  ChannelCumulativeRewardPaidDesc = 'channel_cumulativeRewardPaid_DESC',
   ChannelDescriptionAsc = 'channel_description_ASC',
   ChannelDescriptionDesc = 'channel_description_DESC',
   ChannelFollowsNumAsc = 'channel_followsNum_ASC',
@@ -984,6 +994,8 @@ export enum BannedMemberOrderByInput {
   MemberControllerAccountDesc = 'member_controllerAccount_DESC',
   MemberCreatedAtAsc = 'member_createdAt_ASC',
   MemberCreatedAtDesc = 'member_createdAt_DESC',
+  MemberHandleRawAsc = 'member_handleRaw_ASC',
+  MemberHandleRawDesc = 'member_handleRaw_DESC',
   MemberHandleAsc = 'member_handle_ASC',
   MemberHandleDesc = 'member_handle_DESC',
   MemberIdAsc = 'member_id_ASC',
@@ -1085,6 +1097,8 @@ export enum BidOrderByInput {
   BidderControllerAccountDesc = 'bidder_controllerAccount_DESC',
   BidderCreatedAtAsc = 'bidder_createdAt_ASC',
   BidderCreatedAtDesc = 'bidder_createdAt_DESC',
+  BidderHandleRawAsc = 'bidder_handleRaw_ASC',
+  BidderHandleRawDesc = 'bidder_handleRaw_DESC',
   BidderHandleAsc = 'bidder_handle_ASC',
   BidderHandleDesc = 'bidder_handle_DESC',
   BidderIdAsc = 'bidder_id_ASC',
@@ -1240,7 +1254,9 @@ export type Channel = {
   /** Number of the block the channel was created in */
   createdInBlock: Scalars['Int']
   /** Cumulative rewards claimed by this channel */
-  cumulativeRewardClaimed?: Maybe<Scalars['BigInt']>
+  cumulativeRewardClaimed: Scalars['BigInt']
+  /** Cumulative rewards paid to this channel */
+  cumulativeRewardPaid: Scalars['BigInt']
   /** The description of a Channel */
   description?: Maybe<Scalars['String']>
   /** Application used for channel creation */
@@ -1447,6 +1463,8 @@ export enum ChannelOrderByInput {
   CreatedInBlockDesc = 'createdInBlock_DESC',
   CumulativeRewardClaimedAsc = 'cumulativeRewardClaimed_ASC',
   CumulativeRewardClaimedDesc = 'cumulativeRewardClaimed_DESC',
+  CumulativeRewardPaidAsc = 'cumulativeRewardPaid_ASC',
+  CumulativeRewardPaidDesc = 'cumulativeRewardPaid_DESC',
   DescriptionAsc = 'description_ASC',
   DescriptionDesc = 'description_DESC',
   EntryAppAuthKeyAsc = 'entryApp_authKey_ASC',
@@ -1489,6 +1507,8 @@ export enum ChannelOrderByInput {
   OwnerMemberControllerAccountDesc = 'ownerMember_controllerAccount_DESC',
   OwnerMemberCreatedAtAsc = 'ownerMember_createdAt_ASC',
   OwnerMemberCreatedAtDesc = 'ownerMember_createdAt_DESC',
+  OwnerMemberHandleRawAsc = 'ownerMember_handleRaw_ASC',
+  OwnerMemberHandleRawDesc = 'ownerMember_handleRaw_DESC',
   OwnerMemberHandleAsc = 'ownerMember_handle_ASC',
   OwnerMemberHandleDesc = 'ownerMember_handle_DESC',
   OwnerMemberIdAsc = 'ownerMember_id_ASC',
@@ -1616,6 +1636,15 @@ export type ChannelWhereInput = {
   cumulativeRewardClaimed_lte?: InputMaybe<Scalars['BigInt']>
   cumulativeRewardClaimed_not_eq?: InputMaybe<Scalars['BigInt']>
   cumulativeRewardClaimed_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  cumulativeRewardPaid_eq?: InputMaybe<Scalars['BigInt']>
+  cumulativeRewardPaid_gt?: InputMaybe<Scalars['BigInt']>
+  cumulativeRewardPaid_gte?: InputMaybe<Scalars['BigInt']>
+  cumulativeRewardPaid_in?: InputMaybe<Array<Scalars['BigInt']>>
+  cumulativeRewardPaid_isNull?: InputMaybe<Scalars['Boolean']>
+  cumulativeRewardPaid_lt?: InputMaybe<Scalars['BigInt']>
+  cumulativeRewardPaid_lte?: InputMaybe<Scalars['BigInt']>
+  cumulativeRewardPaid_not_eq?: InputMaybe<Scalars['BigInt']>
+  cumulativeRewardPaid_not_in?: InputMaybe<Array<Scalars['BigInt']>>
   description_contains?: InputMaybe<Scalars['String']>
   description_containsInsensitive?: InputMaybe<Scalars['String']>
   description_endsWith?: InputMaybe<Scalars['String']>
@@ -1817,6 +1846,8 @@ export enum CommentOrderByInput {
   AuthorControllerAccountDesc = 'author_controllerAccount_DESC',
   AuthorCreatedAtAsc = 'author_createdAt_ASC',
   AuthorCreatedAtDesc = 'author_createdAt_DESC',
+  AuthorHandleRawAsc = 'author_handleRaw_ASC',
+  AuthorHandleRawDesc = 'author_handleRaw_DESC',
   AuthorHandleAsc = 'author_handle_ASC',
   AuthorHandleDesc = 'author_handle_DESC',
   AuthorIdAsc = 'author_id_ASC',
@@ -1948,6 +1979,8 @@ export enum CommentReactionOrderByInput {
   MemberControllerAccountDesc = 'member_controllerAccount_DESC',
   MemberCreatedAtAsc = 'member_createdAt_ASC',
   MemberCreatedAtDesc = 'member_createdAt_DESC',
+  MemberHandleRawAsc = 'member_handleRaw_ASC',
+  MemberHandleRawDesc = 'member_handleRaw_DESC',
   MemberHandleAsc = 'member_handle_ASC',
   MemberHandleDesc = 'member_handle_DESC',
   MemberIdAsc = 'member_id_ASC',
@@ -3746,6 +3779,8 @@ export enum MemberMetadataOrderByInput {
   MemberControllerAccountDesc = 'member_controllerAccount_DESC',
   MemberCreatedAtAsc = 'member_createdAt_ASC',
   MemberCreatedAtDesc = 'member_createdAt_DESC',
+  MemberHandleRawAsc = 'member_handleRaw_ASC',
+  MemberHandleRawDesc = 'member_handleRaw_DESC',
   MemberHandleAsc = 'member_handle_ASC',
   MemberHandleDesc = 'member_handle_DESC',
   MemberIdAsc = 'member_id_ASC',
@@ -3827,8 +3862,10 @@ export type Membership = {
   controllerAccount: Scalars['String']
   /** Timestamp of the block the membership was created at */
   createdAt: Scalars['DateTime']
-  /** The unique handle chosen by member */
+  /** The handle coming from decoded handleRaw if possible */
   handle: Scalars['String']
+  /** The handle chosen by member coming from event deposit */
+  handleRaw: Scalars['String']
   /** MemberId: runtime identifier for a user */
   id: Scalars['String']
   /** Member's metadata */
@@ -3874,6 +3911,8 @@ export enum MembershipOrderByInput {
   ControllerAccountDesc = 'controllerAccount_DESC',
   CreatedAtAsc = 'createdAt_ASC',
   CreatedAtDesc = 'createdAt_DESC',
+  HandleRawAsc = 'handleRaw_ASC',
+  HandleRawDesc = 'handleRaw_DESC',
   HandleAsc = 'handle_ASC',
   HandleDesc = 'handle_DESC',
   IdAsc = 'id_ASC',
@@ -3923,6 +3962,23 @@ export type MembershipWhereInput = {
   createdAt_lte?: InputMaybe<Scalars['DateTime']>
   createdAt_not_eq?: InputMaybe<Scalars['DateTime']>
   createdAt_not_in?: InputMaybe<Array<Scalars['DateTime']>>
+  handleRaw_contains?: InputMaybe<Scalars['String']>
+  handleRaw_containsInsensitive?: InputMaybe<Scalars['String']>
+  handleRaw_endsWith?: InputMaybe<Scalars['String']>
+  handleRaw_eq?: InputMaybe<Scalars['String']>
+  handleRaw_gt?: InputMaybe<Scalars['String']>
+  handleRaw_gte?: InputMaybe<Scalars['String']>
+  handleRaw_in?: InputMaybe<Array<Scalars['String']>>
+  handleRaw_isNull?: InputMaybe<Scalars['Boolean']>
+  handleRaw_lt?: InputMaybe<Scalars['String']>
+  handleRaw_lte?: InputMaybe<Scalars['String']>
+  handleRaw_not_contains?: InputMaybe<Scalars['String']>
+  handleRaw_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  handleRaw_not_endsWith?: InputMaybe<Scalars['String']>
+  handleRaw_not_eq?: InputMaybe<Scalars['String']>
+  handleRaw_not_in?: InputMaybe<Array<Scalars['String']>>
+  handleRaw_not_startsWith?: InputMaybe<Scalars['String']>
+  handleRaw_startsWith?: InputMaybe<Scalars['String']>
   handle_contains?: InputMaybe<Scalars['String']>
   handle_containsInsensitive?: InputMaybe<Scalars['String']>
   handle_endsWith?: InputMaybe<Scalars['String']>
@@ -4230,6 +4286,8 @@ export enum NftActivityOrderByInput {
   MemberControllerAccountDesc = 'member_controllerAccount_DESC',
   MemberCreatedAtAsc = 'member_createdAt_ASC',
   MemberCreatedAtDesc = 'member_createdAt_DESC',
+  MemberHandleRawAsc = 'member_handleRaw_ASC',
+  MemberHandleRawDesc = 'member_handleRaw_DESC',
   MemberHandleAsc = 'member_handle_ASC',
   MemberHandleDesc = 'member_handle_DESC',
   MemberIdAsc = 'member_id_ASC',
@@ -4610,6 +4668,8 @@ export enum NotificationOrderByInput {
   MemberControllerAccountDesc = 'member_controllerAccount_DESC',
   MemberCreatedAtAsc = 'member_createdAt_ASC',
   MemberCreatedAtDesc = 'member_createdAt_DESC',
+  MemberHandleRawAsc = 'member_handleRaw_ASC',
+  MemberHandleRawDesc = 'member_handleRaw_DESC',
   MemberHandleAsc = 'member_handle_ASC',
   MemberHandleDesc = 'member_handle_DESC',
   MemberIdAsc = 'member_id_ASC',
@@ -9250,6 +9310,8 @@ export enum VideoOrderByInput {
   ChannelCreatedInBlockDesc = 'channel_createdInBlock_DESC',
   ChannelCumulativeRewardClaimedAsc = 'channel_cumulativeRewardClaimed_ASC',
   ChannelCumulativeRewardClaimedDesc = 'channel_cumulativeRewardClaimed_DESC',
+  ChannelCumulativeRewardPaidAsc = 'channel_cumulativeRewardPaid_ASC',
+  ChannelCumulativeRewardPaidDesc = 'channel_cumulativeRewardPaid_DESC',
   ChannelDescriptionAsc = 'channel_description_ASC',
   ChannelDescriptionDesc = 'channel_description_DESC',
   ChannelFollowsNumAsc = 'channel_followsNum_ASC',
@@ -9450,6 +9512,8 @@ export enum VideoReactionOrderByInput {
   MemberControllerAccountDesc = 'member_controllerAccount_DESC',
   MemberCreatedAtAsc = 'member_createdAt_ASC',
   MemberCreatedAtDesc = 'member_createdAt_DESC',
+  MemberHandleRawAsc = 'member_handleRaw_ASC',
+  MemberHandleRawDesc = 'member_handleRaw_DESC',
   MemberHandleAsc = 'member_handle_ASC',
   MemberHandleDesc = 'member_handle_DESC',
   MemberIdAsc = 'member_id_ASC',
