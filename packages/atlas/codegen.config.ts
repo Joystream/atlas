@@ -18,7 +18,7 @@ const config: CodegenConfig = {
       [schemaUrl]: {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        loader: customSchemaLoader(schemaUrl, `${authUrl}/anonymous-auth`),
+        loader: customSchemaLoader(schemaUrl),
       },
     },
   ],
