@@ -6,10 +6,17 @@ type StepProps = {
   isSelected: boolean
   title: string
   onClick: (idx: number) => void
+  disabled: boolean
 }
-export const Step = ({ isSelected, stepIdx, title, onClick }: StepProps) => {
+export const Step = ({ isSelected, stepIdx, title, onClick, disabled }: StepProps) => {
   return (
-    <StyledStepContainer gap={6} isSelected={isSelected} flow="row" onClick={() => onClick(stepIdx)}>
+    <StyledStepContainer
+      gap={6}
+      disabled={disabled}
+      isSelected={isSelected}
+      flow="row"
+      onClick={() => onClick(stepIdx)}
+    >
       <StyledStepNumberWrapper justifyContent="center">
         <Text as="div" variant="t300">
           {stepIdx}

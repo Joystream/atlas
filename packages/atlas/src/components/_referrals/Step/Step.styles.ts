@@ -14,7 +14,7 @@ const loading = keyframes`
   }
 `
 
-export const StyledStepContainer = styled(FlexBox)<{ isSelected: boolean }>`
+export const StyledStepContainer = styled(FlexBox)<{ isSelected: boolean; disabled: boolean }>`
   border-radius: calc(1.5 * ${cVar('radiusLarge')});
   padding: ${sizes(2.5)} ${sizes(3)};
   align-items: center;
@@ -28,12 +28,15 @@ export const StyledStepContainer = styled(FlexBox)<{ isSelected: boolean }>`
   flex: 1;
   background-size: 200% 100%;
 
-  &:hover {
-    border: 1px solid ${cVar('colorCoreNeutral600Lighten')};
-    opacity: 1;
-    box-sizing: border-box;
-    cursor: pointer;
-  }
+  ${({ disabled }) =>
+    !disabled &&
+    css`
+      &:hover {
+        box-shadow: 0 0 0 1px ${cVar('colorCoreNeutral600Lighten')};
+        opacity: 1;
+        cursor: pointer;
+      }
+    `}
 
   ${media.md} {
     padding: ${sizes(6)};

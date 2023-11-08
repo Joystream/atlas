@@ -114,7 +114,11 @@ export const ReferralSteps = () => {
                 stepIdx={idx + 1}
                 isSelected={selectedStep === idx}
                 title={step}
-                onClick={() => setSelectedStep(idx)}
+                disabled={idx < minStep}
+                onClick={() => {
+                  if (idx < minStep) return
+                  setSelectedStep(idx)
+                }}
               />
             ))}
           </StyledStepsContainer>
