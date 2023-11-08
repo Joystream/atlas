@@ -41,7 +41,11 @@ export const CrtDashboard = () => {
 
   return (
     <LimitedWidthContainer>
-      <StartRevenueShare show={openRevenueShareModal} tokenId="1" onClose={() => setOpenRevenueShareModal(false)} />
+      <StartRevenueShare
+        show={openRevenueShareModal}
+        token={data.creatorTokenById}
+        onClose={() => setOpenRevenueShareModal(false)}
+      />
       <MainContainer>
         <HeaderContainer>
           <Text variant="h700" as="h1">
