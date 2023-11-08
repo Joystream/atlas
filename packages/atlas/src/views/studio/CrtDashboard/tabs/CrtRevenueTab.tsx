@@ -62,8 +62,8 @@ export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
             customNode={
               <RatioPreview
                 ratios={[
-                  [100 - permillToPercentage(token.revenueShareRatioPermill), 'Holders'],
-                  [permillToPercentage(token.revenueShareRatioPermill), 'Channel'],
+                  [permillToPercentage(token.revenueShareRatioPermill), 'Holders'],
+                  [100 - permillToPercentage(token.revenueShareRatioPermill), 'Channel'],
                 ]}
               />
             }

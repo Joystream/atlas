@@ -32,8 +32,8 @@ export const RatioPreview = ({ ratios }: RatioPreviewProps) => {
         </FlexBox>
       </FlexBox>
       <FlexBox>
-        <SingleRatio ratio={20} color={cVar('colorBackgroundStrongAlpha')} />
-        <SingleRatio ratio={80} color={cVar('colorTextPrimary')} />
+        <SingleRatio ratio={firstRatio[0]} color={cVar('colorBackgroundStrongAlpha')} />
+        <SingleRatio ratio={secondRatio[0]} color={cVar('colorTextPrimary')} />
       </FlexBox>
     </FlexBox>
   )
