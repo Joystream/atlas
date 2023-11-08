@@ -264,6 +264,9 @@ features:
     statusPollingInterval: 20000 # Interval for polling NFT status on VideoView in ms
   notifications:
     pollingInterval: 10000 # Interval for polling notifications in ms
+  referrals:
+    referrerBonusPercent: 5 # How much referrer would get from the invitee reward
+    signupBonusPercent: 5 # How much invitee would get from the referral link signup
   members:
     avatarServiceUrl: '$VITE_AVATAR_SERVICE_URL' # URL for avatar service - used to upload member's avatar
     hcaptchaSiteKey: '$VITE_HCAPTCHA_SITE_KEY' # Site key for hCaptcha - used to verify users are not bots when creating memberships - depends on hCaptcha being enabled in the faucet

@@ -1,7 +1,9 @@
 import { FC, ReactNode } from 'react'
 
 import { SvgActionClose } from '@/assets/icons'
+import { FlexBox } from '@/components/FlexBox'
 import { ButtonProps } from '@/components/_buttons/Button'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { usePersonalDataStore } from '@/providers/personalData'
 
 import {
@@ -29,6 +31,8 @@ export type BannerProps = {
   icon?: ReactNode
   size?: 'small' | 'medium'
   actionButton?: ActionButtonProps
+  rightActionButton?: boolean
+  children?: ReactNode
 }
 
 export const Banner: FC<BannerProps> = ({
@@ -40,12 +44,14 @@ export const Banner: FC<BannerProps> = ({
   dismissibleId,
   size = 'small',
   actionButton,
+  rightActionButton,
+  children,
 }) => {
   const isDismissedMessage =
     usePersonalDataStore((state) => state.dismissedMessages.some((message) => message.id === dismissibleId)) &&
     !!dismissibleId
   const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
-
+  const smMatch = useMediaMatch('sm')
   if (isDismissedMessage) {
     return null
   }
@@ -53,7 +59,7 @@ export const Banner: FC<BannerProps> = ({
   return (
     <BannerWrapper size={size} className={className} borderColor={borderColor}>
       <Container>
-        <div>
+        <FlexBox flow="column">
           {title && (
             <BannerHeader>
               {icon && <IconWrapper>{icon}</IconWrapper>}
@@ -70,21 +76,30 @@ export const Banner: FC<BannerProps> = ({
               </BannerText>
             </BannerDescription>
           )}
-          {actionButton && (
-            <ActionButton {...actionButton} variant="primary" _textOnly>
+          {actionButton && (!rightActionButton || !smMatch) && (
+            <ActionButton variant="primary" _textOnly {...actionButton}>
               {actionButton.text}
             </ActionButton>
           )}
-        </div>
-        {dismissibleId && (
-          <CloseButton
-            icon={<SvgActionClose />}
-            aria-label="close dialog"
-            onClick={() => updateDismissedMessages(dismissibleId)}
-            variant="tertiary"
-            size="small"
-          />
-        )}
+        </FlexBox>
+        <FlexBox flow="row" justifyContent="end" alignItems="center">
+          {actionButton && rightActionButton && smMatch && (
+            <ActionButton variant="primary" rightActionButton _textOnly {...actionButton}>
+              {actionButton.text}
+            </ActionButton>
+          )}
+          {dismissibleId && (
+            <CloseButton
+              icon={<SvgActionClose />}
+              aria-label="close dialog"
+              rightActionButton
+              onClick={() => updateDismissedMessages(dismissibleId)}
+              variant="tertiary"
+              size="small"
+            />
+          )}
+        </FlexBox>
+        {children}
       </Container>
     </BannerWrapper>
   )
