@@ -1,5 +1,5 @@
 import { BN } from 'bn.js'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 
 import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgJoyTokenMonochrome24 } from '@/assets/icons'
@@ -22,6 +22,7 @@ type CrtRevenueTabProps = {
 
 export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
   const { activeChannel } = useUser()
+  const [openClaimShareModal, setOpenClaimShareModal] = useState(false)
   const memoizedChannelStateBloatBond = useMemo(() => {
     return new BN(activeChannel?.channelStateBloatBond || 0)
   }, [activeChannel?.channelStateBloatBond])
@@ -33,7 +34,7 @@ export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
 
   return (
     <>
-      <ClaimShareModal onClose={() => undefined} show={true} token={token} />
+      <ClaimShareModal onClose={() => setOpenClaimShareModal(false)} show={openClaimShareModal} token={token} />
       <LayoutGrid>
         <GridItem colSpan={{ base: 12, sm: 4 }}>
           <RevenueShareStateWidget endsAtBlock={activeRevenueShare?.endsAt} />
@@ -70,7 +71,11 @@ export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
         </GridItem>
         {activeRevenueShare && (
           <GridItem colSpan={{ base: 12 }}>
-            <RevenueShareParticipationWidget revenueShare={activeRevenueShare} />
+            <RevenueShareParticipationWidget
+              token={token}
+              revenueShare={activeRevenueShare}
+              onClaimShare={() => setOpenClaimShareModal(true)}
+            />
           </GridItem>
         )}
 
@@ -81,7 +86,7 @@ export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
                 memberId: staker.account.member.id,
                 stakedAtBlock: staker.createdIn,
                 staked: +(staker.stakedAmount ?? 0),
-                earnings: +(staker.earnings ?? 0),
+                earnings: new BN(staker.earnings ?? 0),
               }))}
               tokenSymbol={token.symbol}
             />

@@ -1,4 +1,6 @@
 import styled from '@emotion/styled'
+import BN from 'bn.js'
+import { useNavigate } from 'react-router'
 
 import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgActionCheck, SvgJoyTokenMonochrome16 } from '@/assets/icons'
@@ -7,19 +9,50 @@ import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
 import { Button } from '@/components/_buttons/Button'
+import { absoluteRoutes } from '@/config/routes'
+import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
+import { useJoystream } from '@/providers/joystream'
 import { useJoystreamStore } from '@/providers/joystream/joystream.store'
+import { useSnackbar } from '@/providers/snackbars'
+import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { cVar } from '@/styles'
 
 export type RevenueShareParticipationWidgetProps = {
   revenueShare: FullCreatorTokenFragment['revenueShares'][number]
+  token: FullCreatorTokenFragment
+  onClaimShare: () => void
 }
 
-// todo: correct aggregated values
-export const RevenueShareParticipationWidget = ({ revenueShare }: RevenueShareParticipationWidgetProps) => {
+export const RevenueShareParticipationWidget = ({
+  revenueShare,
+  onClaimShare,
+  token,
+}: RevenueShareParticipationWidgetProps) => {
   const { memberId } = useUser()
   const { currentBlock } = useJoystreamStore()
+  const tokenPrice = useJoystream().tokenPrice ?? 0
   const hasEnded = revenueShare.endsAt < currentBlock
+  const { joystream, proxyCallback } = useJoystream()
+  const { displaySnackbar } = useSnackbar()
+  const handleTransaction = useTransaction()
+  const navigate = useNavigate()
+
+  const handleExitRevenueShare = async () => {
+    if (!joystream || !token || !memberId) return
+    handleTransaction({
+      txFactory: async (updateStatus) =>
+        (await joystream.extrinsics).exitRevenueSplit(token.id, memberId, proxyCallback(updateStatus)),
+      onTxSync: async (data) => {
+        displaySnackbar({
+          title: `${data.amount} $${token.symbol} unlocked`,
+          iconType: 'success',
+          actionText: 'Go to my portfolio',
+          onActionClick: () => navigate(absoluteRoutes.viewer.portfolio()),
+        })
+      },
+    })
+  }
 
   const actionNode = () => {
     const hasStaked = revenueShare.stakers.some((staker) => staker.account.member.id === memberId)
@@ -28,7 +61,7 @@ export const RevenueShareParticipationWidget = ({ revenueShare }: RevenueSharePa
         return <StyledPill icon={<SvgActionCheck />} size="large" label="Staked your tokens" />
       } else {
         return (
-          <Button size="small" variant="secondary">
+          <Button size="small" variant="secondary" onClick={onClaimShare}>
             Stake your tokens
           </Button>
         )
@@ -41,9 +74,13 @@ export const RevenueShareParticipationWidget = ({ revenueShare }: RevenueSharePa
       return <StyledPill icon={<SvgActionCheck />} size="large" label="Tokens claimed" />
     }
 
-    // todo: not sure what transaction should be used to claim staked tokens - maybe exitRevenue split
-    return <Button size="small">Claim tokens</Button>
+    return (
+      <Button size="small" onClick={handleExitRevenueShare}>
+        Claim tokens
+      </Button>
+    )
   }
+
   return (
     <WidgetTile
       title="Revenue share participation"
@@ -59,12 +96,14 @@ export const RevenueShareParticipationWidget = ({ revenueShare }: RevenueSharePa
               <FlexBox alignItems="center">
                 <SvgJoyTokenMonochrome16 />
                 <Text variant="h400" as="h4">
-                  {revenueShare.claimed}/{revenueShare.claimed}
+                  {hapiBnToTokenNumber(new BN(revenueShare.claimed))}/
+                  {hapiBnToTokenNumber(new BN(revenueShare.allocation))}
                 </Text>
               </FlexBox>
 
               <Text variant="t100" as="p" color="colorText">
-                ${revenueShare.claimed}/{revenueShare.claimed}
+                ${(hapiBnToTokenNumber(new BN(revenueShare.claimed)) * tokenPrice).toFixed(2)}/
+                {(hapiBnToTokenNumber(new BN(revenueShare.allocation)) * tokenPrice).toFixed(2)}
               </Text>
             </FlexBox>
 
@@ -73,17 +112,17 @@ export const RevenueShareParticipationWidget = ({ revenueShare }: RevenueSharePa
                 ENDED ON
               </Text>
               <Text variant="h400" as="h4">
-                {revenueShare.stakers.length}/69420
+                {revenueShare.stakers.length}/{token.accountsNum}
               </Text>
               <Text variant="t100" as="p" color="colorText">
-                {Math.round((revenueShare.stakers.length / 69420) * 100)}% holders
+                {Math.round((revenueShare.stakers.length / token.accountsNum) * 100)}% holders
               </Text>
             </FlexBox>
           </FlexBox>
 
           <ProgressBar
             color={hasEnded ? cVar('colorCoreNeutral700Lighten') : cVar('colorBackgroundPrimary')}
-            progress={Math.round((revenueShare.stakers.length / 69420) * 100)}
+            progress={Math.round((revenueShare.stakers.length / token.accountsNum) * 100)}
           />
         </FlexBox>
       }

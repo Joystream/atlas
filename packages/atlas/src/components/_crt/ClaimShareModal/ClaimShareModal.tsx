@@ -82,6 +82,7 @@ export const ClaimShareModal = ({ onClose, token, show }: ClaimShareModalProps) 
       }}
       secondaryButton={{
         text: 'Cancel',
+        onClick: onClose,
       }}
     >
       <FlexBox flow="column" gap={6}>
