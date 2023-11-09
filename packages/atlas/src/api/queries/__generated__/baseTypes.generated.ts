@@ -964,8 +964,8 @@ export enum BannedMemberOrderByInput {
   ChannelCreatedInBlockDesc = 'channel_createdInBlock_DESC',
   ChannelCumulativeRewardClaimedAsc = 'channel_cumulativeRewardClaimed_ASC',
   ChannelCumulativeRewardClaimedDesc = 'channel_cumulativeRewardClaimed_DESC',
-  ChannelCumulativeRewardPaidAsc = 'channel_cumulativeRewardPaid_ASC',
-  ChannelCumulativeRewardPaidDesc = 'channel_cumulativeRewardPaid_DESC',
+  ChannelCumulativeRewardAsc = 'channel_cumulativeReward_ASC',
+  ChannelCumulativeRewardDesc = 'channel_cumulativeReward_DESC',
   ChannelDescriptionAsc = 'channel_description_ASC',
   ChannelDescriptionDesc = 'channel_description_DESC',
   ChannelFollowsNumAsc = 'channel_followsNum_ASC',
@@ -1253,10 +1253,10 @@ export type Channel = {
   createdAt: Scalars['DateTime']
   /** Number of the block the channel was created in */
   createdInBlock: Scalars['Int']
+  /** Cumulative rewards paid to this channel */
+  cumulativeReward: Scalars['BigInt']
   /** Cumulative rewards claimed by this channel */
   cumulativeRewardClaimed: Scalars['BigInt']
-  /** Cumulative rewards paid to this channel */
-  cumulativeRewardPaid: Scalars['BigInt']
   /** The description of a Channel */
   description?: Maybe<Scalars['String']>
   /** Application used for channel creation */
@@ -1463,8 +1463,8 @@ export enum ChannelOrderByInput {
   CreatedInBlockDesc = 'createdInBlock_DESC',
   CumulativeRewardClaimedAsc = 'cumulativeRewardClaimed_ASC',
   CumulativeRewardClaimedDesc = 'cumulativeRewardClaimed_DESC',
-  CumulativeRewardPaidAsc = 'cumulativeRewardPaid_ASC',
-  CumulativeRewardPaidDesc = 'cumulativeRewardPaid_DESC',
+  CumulativeRewardAsc = 'cumulativeReward_ASC',
+  CumulativeRewardDesc = 'cumulativeReward_DESC',
   DescriptionAsc = 'description_ASC',
   DescriptionDesc = 'description_DESC',
   EntryAppAuthKeyAsc = 'entryApp_authKey_ASC',
@@ -1636,15 +1636,15 @@ export type ChannelWhereInput = {
   cumulativeRewardClaimed_lte?: InputMaybe<Scalars['BigInt']>
   cumulativeRewardClaimed_not_eq?: InputMaybe<Scalars['BigInt']>
   cumulativeRewardClaimed_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-  cumulativeRewardPaid_eq?: InputMaybe<Scalars['BigInt']>
-  cumulativeRewardPaid_gt?: InputMaybe<Scalars['BigInt']>
-  cumulativeRewardPaid_gte?: InputMaybe<Scalars['BigInt']>
-  cumulativeRewardPaid_in?: InputMaybe<Array<Scalars['BigInt']>>
-  cumulativeRewardPaid_isNull?: InputMaybe<Scalars['Boolean']>
-  cumulativeRewardPaid_lt?: InputMaybe<Scalars['BigInt']>
-  cumulativeRewardPaid_lte?: InputMaybe<Scalars['BigInt']>
-  cumulativeRewardPaid_not_eq?: InputMaybe<Scalars['BigInt']>
-  cumulativeRewardPaid_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  cumulativeReward_eq?: InputMaybe<Scalars['BigInt']>
+  cumulativeReward_gt?: InputMaybe<Scalars['BigInt']>
+  cumulativeReward_gte?: InputMaybe<Scalars['BigInt']>
+  cumulativeReward_in?: InputMaybe<Array<Scalars['BigInt']>>
+  cumulativeReward_isNull?: InputMaybe<Scalars['Boolean']>
+  cumulativeReward_lt?: InputMaybe<Scalars['BigInt']>
+  cumulativeReward_lte?: InputMaybe<Scalars['BigInt']>
+  cumulativeReward_not_eq?: InputMaybe<Scalars['BigInt']>
+  cumulativeReward_not_in?: InputMaybe<Array<Scalars['BigInt']>>
   description_contains?: InputMaybe<Scalars['String']>
   description_containsInsensitive?: InputMaybe<Scalars['String']>
   description_endsWith?: InputMaybe<Scalars['String']>
@@ -9310,8 +9310,8 @@ export enum VideoOrderByInput {
   ChannelCreatedInBlockDesc = 'channel_createdInBlock_DESC',
   ChannelCumulativeRewardClaimedAsc = 'channel_cumulativeRewardClaimed_ASC',
   ChannelCumulativeRewardClaimedDesc = 'channel_cumulativeRewardClaimed_DESC',
-  ChannelCumulativeRewardPaidAsc = 'channel_cumulativeRewardPaid_ASC',
-  ChannelCumulativeRewardPaidDesc = 'channel_cumulativeRewardPaid_DESC',
+  ChannelCumulativeRewardAsc = 'channel_cumulativeReward_ASC',
+  ChannelCumulativeRewardDesc = 'channel_cumulativeReward_DESC',
   ChannelDescriptionAsc = 'channel_description_ASC',
   ChannelDescriptionDesc = 'channel_description_DESC',
   ChannelFollowsNumAsc = 'channel_followsNum_ASC',
