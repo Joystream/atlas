@@ -23,16 +23,16 @@ export default {
     channel: {
       title: 'my channel',
       id: '3',
-      cumulativeRewardPaid: 123_456,
+      cumulativeReward: 123_456,
       avatarPhoto: { id: '1' },
     },
   },
 
   render: (args) => {
-    const amount = (args.channel?.cumulativeRewardPaid as number) ?? 0
+    const amount = (args.channel?.cumulativeReward as number) ?? 0
     const channel = args.channel && {
       ...args.channel,
-      cumulativeRewardPaid: new BN(`${Math.trunc(amount)}${(amount % 1).toFixed(10).substring(2)}`),
+      cumulativeReward: new BN(`${Math.trunc(amount)}${(amount % 1).toFixed(10).substring(2)}`),
     }
     return (
       <Grid>

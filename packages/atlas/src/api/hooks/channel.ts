@@ -87,7 +87,7 @@ export const useBasicChannels = (
 export type PayeeChannel = {
   id: string
   title?: string | null
-  cumulativeRewardPaid: BN
+  cumulativeReward: BN
   avatarPhoto?: { resolvedUrls: string[] } | null
 }
 export const useMostPaidChannels = (): { channels: PayeeChannel[] | undefined; loading: boolean } => {
@@ -95,10 +95,10 @@ export const useMostPaidChannels = (): { channels: PayeeChannel[] | undefined; l
 
   const channels = useMemo<PayeeChannel[] | undefined>(
     () =>
-      data?.channels.map(({ id, title, cumulativeRewardPaid, avatarPhoto }) => ({
+      data?.channels.map(({ id, title, cumulativeReward, avatarPhoto }) => ({
         id,
         title: title ?? undefined,
-        cumulativeRewardPaid: cumulativeRewardPaid ? new BN(cumulativeRewardPaid) : BN_ZERO,
+        cumulativeReward: cumulativeReward ? new BN(cumulativeReward) : BN_ZERO,
         avatarPhoto: avatarPhoto ?? undefined,
       })),
     [data]
