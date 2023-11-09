@@ -3,7 +3,7 @@ import { useParallax } from 'react-scroll-parallax'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
-import { useRecentlyPaidChannels } from '@/api/hooks/channel'
+import { useMostPaidChannels } from '@/api/hooks/channel'
 import { SvgActionChevronR, SvgLogoGoogleWhiteFull, SvgLogoYoutubeWhiteFull } from '@/assets/icons'
 import hero from '@/assets/images/ypp-hero/hero.webp'
 import yt from '@/assets/images/ypp-hero/yt.webp'
@@ -63,15 +63,9 @@ export const YppHero: FC<YppHeroProps> = ({
     translateY: [0, -15],
   })
 
-  const { channels, loading } = useRecentlyPaidChannels()
+  const { channels, loading } = useMostPaidChannels()
   const items = !loading
-    ? channels?.map((extendedChannels) => (
-        <PaidChannelCard
-          key={extendedChannels.channel.id}
-          amount={extendedChannels.amount}
-          channel={extendedChannels.channel}
-        />
-      ))
+    ? channels?.map((channel) => <PaidChannelCard key={channel.id} channel={channel} />)
     : Array.from({ length: 30 }).map((_, idx) => <PaidChannelCard key={idx} loading />)
 
   return (

@@ -1,3 +1,5 @@
+import { ReactNode } from 'react'
+
 import { formatNumber } from '@/utils/number'
 
 export class TimeoutError<T> extends Error {
@@ -93,4 +95,20 @@ export function convertUpperCamelToSentence(input?: string) {
       return index === 0 ? word.charAt(0).toUpperCase() + word.slice(1) : word.toLowerCase()
     })
     .join(' ')
+}
+
+export function replaceTemplateWithRenderer(
+  template: string,
+  variables: string[],
+  render: (variable: string) => ReactNode
+) {
+  const splitArray = template.split('{}')
+  const result: ReactNode[] = []
+  splitArray.forEach((part, idx) => {
+    result.push(part)
+    if (variables[idx]) {
+      result.push(render(variables[idx]))
+    }
+  })
+  return result
 }

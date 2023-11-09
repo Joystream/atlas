@@ -23,7 +23,7 @@ export type GetFullChannelQuery = {
     videoViewsNum: number
     description?: string | null
     isPublic?: boolean | null
-    cumulativeRewardClaimed?: string | null
+    cumulativeRewardClaimed: string
     isCensored: boolean
     language?: string | null
     id: string
@@ -162,7 +162,7 @@ export type GetExtendedFullChannelsQuery = {
       videoViewsNum: number
       description?: string | null
       isPublic?: boolean | null
-      cumulativeRewardClaimed?: string | null
+      cumulativeRewardClaimed: string
       isCensored: boolean
       language?: string | null
       id: string
@@ -620,51 +620,21 @@ export type GetChannelPaymentEventsQuery = {
   }>
 }
 
-export type GetChannelsPaymentEventsQueryVariables = Types.Exact<{
-  limit?: Types.InputMaybe<Types.Scalars['Int']>
-}>
+export type GetMostPaidChannelsQueryVariables = Types.Exact<{ [key: string]: never }>
 
-export type GetChannelsPaymentEventsQuery = {
+export type GetMostPaidChannelsQuery = {
   __typename?: 'Query'
-  events: Array<{
-    __typename?: 'Event'
-    data:
-      | { __typename?: 'AuctionBidCanceledEventData' }
-      | { __typename?: 'AuctionBidMadeEventData' }
-      | { __typename?: 'AuctionCanceledEventData' }
-      | { __typename?: 'BidMadeCompletingAuctionEventData' }
-      | { __typename?: 'BuyNowCanceledEventData' }
-      | { __typename?: 'BuyNowPriceUpdatedEventData' }
-      | { __typename?: 'ChannelCreatedEventData' }
-      | { __typename?: 'ChannelFundsWithdrawnEventData' }
-      | {
-          __typename?: 'ChannelPaymentMadeEventData'
-          amount: string
-          payeeChannel?: {
-            __typename?: 'Channel'
-            id: string
-            title?: string | null
-            avatarPhoto?: { __typename?: 'StorageDataObject'; resolvedUrls: Array<string>; isAccepted: boolean } | null
-          } | null
-        }
-      | { __typename?: 'ChannelPayoutsUpdatedEventData' }
-      | { __typename?: 'ChannelRewardClaimedAndWithdrawnEventData' }
-      | { __typename?: 'ChannelRewardClaimedEventData' }
-      | { __typename?: 'CommentCreatedEventData' }
-      | { __typename?: 'CommentReactionEventData' }
-      | { __typename?: 'CommentTextUpdatedEventData' }
-      | { __typename?: 'EnglishAuctionSettledEventData' }
-      | { __typename?: 'EnglishAuctionStartedEventData' }
-      | { __typename?: 'MemberBannedFromChannelEventData' }
-      | { __typename?: 'MetaprotocolTransactionStatusEventData' }
-      | { __typename?: 'NftBoughtEventData' }
-      | { __typename?: 'NftIssuedEventData' }
-      | { __typename?: 'NftOfferedEventData' }
-      | { __typename?: 'NftSellOrderMadeEventData' }
-      | { __typename?: 'OpenAuctionBidAcceptedEventData' }
-      | { __typename?: 'OpenAuctionStartedEventData' }
-      | { __typename?: 'VideoCreatedEventData' }
-      | { __typename?: 'VideoReactionEventData' }
+  channels: Array<{
+    __typename?: 'Channel'
+    id: string
+    title?: string | null
+    cumulativeReward: string
+    avatarPhoto?: {
+      __typename?: 'StorageDataObject'
+      resolvedUrls: Array<string>
+      isAccepted: boolean
+      storageBag: { __typename?: 'StorageBag'; id: string }
+    } | null
   }>
 }
 
@@ -1594,20 +1564,17 @@ export type GetChannelPaymentEventsQueryResult = Apollo.QueryResult<
   GetChannelPaymentEventsQuery,
   GetChannelPaymentEventsQueryVariables
 >
-export const GetChannelsPaymentEventsDocument = gql`
-  query GetChannelsPaymentEvents($limit: Int = 500) {
-    events(where: { data: { isTypeOf_eq: "ChannelPaymentMadeEventData" } }, orderBy: inBlock_DESC, limit: $limit) {
-      data {
-        ... on ChannelPaymentMadeEventData {
-          amount
-          payeeChannel {
-            id
-            title
-            avatarPhoto {
-              resolvedUrls
-              isAccepted
-            }
-          }
+export const GetMostPaidChannelsDocument = gql`
+  query GetMostPaidChannels {
+    channels(orderBy: cumulativeReward_DESC, limit: 50) {
+      id
+      title
+      cumulativeReward
+      avatarPhoto {
+        resolvedUrls
+        isAccepted
+        storageBag {
+          id
         }
       }
     }
@@ -1615,44 +1582,43 @@ export const GetChannelsPaymentEventsDocument = gql`
 `
 
 /**
- * __useGetChannelsPaymentEventsQuery__
+ * __useGetMostPaidChannelsQuery__
  *
- * To run a query within a React component, call `useGetChannelsPaymentEventsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetChannelsPaymentEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetMostPaidChannelsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMostPaidChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetChannelsPaymentEventsQuery({
+ * const { data, loading, error } = useGetMostPaidChannelsQuery({
  *   variables: {
- *      limit: // value for 'limit'
  *   },
  * });
  */
-export function useGetChannelsPaymentEventsQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetChannelsPaymentEventsQuery, GetChannelsPaymentEventsQueryVariables>
+export function useGetMostPaidChannelsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetMostPaidChannelsQuery, GetMostPaidChannelsQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetChannelsPaymentEventsQuery, GetChannelsPaymentEventsQueryVariables>(
-    GetChannelsPaymentEventsDocument,
+  return Apollo.useQuery<GetMostPaidChannelsQuery, GetMostPaidChannelsQueryVariables>(
+    GetMostPaidChannelsDocument,
     options
   )
 }
-export function useGetChannelsPaymentEventsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetChannelsPaymentEventsQuery, GetChannelsPaymentEventsQueryVariables>
+export function useGetMostPaidChannelsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetMostPaidChannelsQuery, GetMostPaidChannelsQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetChannelsPaymentEventsQuery, GetChannelsPaymentEventsQueryVariables>(
-    GetChannelsPaymentEventsDocument,
+  return Apollo.useLazyQuery<GetMostPaidChannelsQuery, GetMostPaidChannelsQueryVariables>(
+    GetMostPaidChannelsDocument,
     options
   )
 }
-export type GetChannelsPaymentEventsQueryHookResult = ReturnType<typeof useGetChannelsPaymentEventsQuery>
-export type GetChannelsPaymentEventsLazyQueryHookResult = ReturnType<typeof useGetChannelsPaymentEventsLazyQuery>
-export type GetChannelsPaymentEventsQueryResult = Apollo.QueryResult<
-  GetChannelsPaymentEventsQuery,
-  GetChannelsPaymentEventsQueryVariables
+export type GetMostPaidChannelsQueryHookResult = ReturnType<typeof useGetMostPaidChannelsQuery>
+export type GetMostPaidChannelsLazyQueryHookResult = ReturnType<typeof useGetMostPaidChannelsLazyQuery>
+export type GetMostPaidChannelsQueryResult = Apollo.QueryResult<
+  GetMostPaidChannelsQuery,
+  GetMostPaidChannelsQueryVariables
 >
 export const GetTopSellingChannelsFromThreePeriodsDocument = gql`
   query GetTopSellingChannelsFromThreePeriods($limit: Int!, $where: ExtendedChannelWhereInput) {

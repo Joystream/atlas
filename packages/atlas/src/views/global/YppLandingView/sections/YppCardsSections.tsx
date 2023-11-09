@@ -58,7 +58,7 @@ export const YppCardsSections: FC = () => {
                 data-aos-easing="atlas-easing"
               >
                 <Text variant={titleVariant} as="h2">
-                  Monetize your Gleev channel
+                  Monetize your ${appName} channel
                 </Text>
               </HeaderGridItem>
               <GridItem colSpan={{ base: 12, sm: 10, md: 8, lg: 6 }} colStart={{ sm: 2, md: 3, lg: 4 }}>

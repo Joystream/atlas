@@ -296,19 +296,16 @@ query GetChannelPaymentEvents($channelId: String) {
   }
 }
 
-query GetChannelsPaymentEvents($limit: Int = 500) {
-  events(where: { data: { isTypeOf_eq: "ChannelPaymentMadeEventData" } }, orderBy: inBlock_DESC, limit: $limit) {
-    data {
-      ... on ChannelPaymentMadeEventData {
-        amount
-        payeeChannel {
-          id
-          title
-          avatarPhoto {
-            resolvedUrls
-            isAccepted
-          }
-        }
+query GetMostPaidChannels {
+  channels(orderBy: cumulativeReward_DESC, limit: 50) {
+    id
+    title
+    cumulativeReward
+    avatarPhoto {
+      resolvedUrls
+      isAccepted
+      storageBag {
+        id
       }
     }
   }

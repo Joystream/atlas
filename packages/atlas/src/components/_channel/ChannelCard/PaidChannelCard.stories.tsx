@@ -23,17 +23,22 @@ export default {
     channel: {
       title: 'my channel',
       id: '3',
+      cumulativeReward: 123_456,
       avatarPhoto: { id: '1' },
     },
   },
 
   render: (args) => {
-    const amount = new BN(args.amount && `${Math.trunc(args.amount)}${(args.amount % 1).toFixed(10).substring(2)}`)
+    const amount = (args.channel?.cumulativeReward as number) ?? 0
+    const channel = args.channel && {
+      ...args.channel,
+      cumulativeReward: new BN(`${Math.trunc(amount)}${(amount % 1).toFixed(10).substring(2)}`),
+    }
     return (
       <Grid>
-        <Component {...args} amount={amount} />
-        <Component {...args} amount={amount} />
-        <Component {...args} amount={amount} />
+        <Component {...args} channel={channel} />
+        <Component {...args} channel={channel} />
+        <Component {...args} channel={channel} />
       </Grid>
     )
   },

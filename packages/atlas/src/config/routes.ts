@@ -45,6 +45,7 @@ export const relativeRoutes = {
     marketplace: () => 'marketplace',
     ypp: (query?: { [QUERY_PARAMS.REFERRER_ID]?: string }) => withQueryParameters('ypp', query),
     yppDashboard: () => 'ypp-dashboard',
+    referrals: () => 'referrals',
   },
   legal: {
     index: () => '',

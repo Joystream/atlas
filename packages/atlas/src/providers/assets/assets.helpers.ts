@@ -1,6 +1,5 @@
 import { axiosInstance } from '@/api/axios'
 import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
-import { BUILD_ENV } from '@/config/env'
 import { AssetType } from '@/providers/uploads/uploads.types'
 import { ConsoleLogger, DistributorEventEntry, DistributorEventMetric, UserEventsLogger } from '@/utils/logs'
 import { wait } from '@/utils/misc'
@@ -49,7 +48,6 @@ export const testAssetDownload = (url: string, type: AssetType | null): Promise<
 
     const reject = (err?: unknown) => {
       cleanup()
-      UserEventsLogger.logAssetUploadFailedEvent({ resolvedUrl: url }, err as Error)
       _reject(err)
     }
 
@@ -77,10 +75,7 @@ export const testAssetDownload = (url: string, type: AssetType | null): Promise<
       video.src = url
     } else if (type === 'subtitles') {
       fetch(url, { method: 'HEAD', mode: 'cors', cache: 'no-store' })
-        .then((response) => {
-          if (!response.ok) {
-            UserEventsLogger.logAssetUploadFailedEvent({ resolvedUrl: url }, new Error(response.statusText))
-          }
+        .then(() => {
           resolve()
         })
         .catch(reject)
@@ -100,7 +95,7 @@ export const logDistributorPerformance = async (assetUrl: string, eventEntry: Di
   const performanceEntries = window.performance.getEntriesByName(assetUrl)
   const performanceEntry = performanceEntries[0] as PerformanceResourceTiming
 
-  if (!performanceEntry && BUILD_ENV === 'production') {
+  if (!performanceEntry) {
     ConsoleLogger.debug('Performance entry not found', { assetUrl })
     return
   }

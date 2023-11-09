@@ -26,6 +26,7 @@ export const NewPasswordStep = () => {
             placeholder="Password"
             {...register(`${ForgotPasswordStep.NewPasswordStep}.password`)}
             {...hidePasswordProps}
+            autoComplete="new-password"
           />
         </FormField>
         <FormField label="Repeat password" error={formState.errors.NewPasswordStep?.confirmPassword?.message}>
@@ -34,6 +35,7 @@ export const NewPasswordStep = () => {
             placeholder="Confirm password"
             {...register(`${ForgotPasswordStep.NewPasswordStep}.confirmPassword`)}
             {...hideConfirmPasswordProps}
+            autoComplete="off"
           />
         </FormField>
         <PasswordCriterias path={`${ForgotPasswordStep.NewPasswordStep}.password`} />

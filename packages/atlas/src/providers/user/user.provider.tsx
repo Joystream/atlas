@@ -35,7 +35,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
           (currentUser?.membershipId &&
             data.memberships?.find((membership) => membership.id === currentUser?.membershipId)) ||
           null
-        if (activeMembership) {
+        if (activeMembership && !activeMembership.channels.some((channel) => channel.id === channelId)) {
           setChannelId(activeMembership.channels[0].id)
         }
       },

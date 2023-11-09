@@ -1,5 +1,5 @@
 general:
-  appName: Gleev # Application name - used in the copy throughout the app, in index.html, open graph meta tags, etc. Don't use env variables here
+  appName: Atlas # Application name - used in the copy throughout the app, in index.html, open graph meta tags, etc. Don't use env variables here
   appDescription: 'The streaming platform empowering viewers, creators, and builders. Built on and operated by the Joystream blockchain and DAO.' # Application description - used in index.html meta tags
   appTagline: 'The streaming platform empowering viewers, creators, and builders. Built on and operated by the Joystream blockchain and DAO.'
   appId: '$VITE_APP_ID' # App ID for Apps as first-class citizens
@@ -50,6 +50,7 @@ features:
     enrollmentReward: 5000 # Amount for successful enrollment in YPP in joystream.tokenTicker units.
     enrollmentUsdReward: 5 # Amount for successful enrollment in YPP in USD.
     referralBaseReward: 2.5 # Self-explanatory, it should match `baseUsdAmount.min` value in last `rewards` entry
+    tierBoostMultiplier: 2 # Multiplier to boost specific tiers for certain conditions
     tiersDefinition: # Tiers for YouTube partner program rewards. You can provide maximum three tiers. Each tier should has own multiplier.
       - tier: 'bronze'
         reqs:
@@ -262,6 +263,9 @@ features:
     statusPollingInterval: 20000 # Interval for polling NFT status on VideoView in ms
   notifications:
     pollingInterval: 10000 # Interval for polling notifications in ms
+  referrals:
+    referrerBonusPercent: 5 # How much referrer would get from the invitee reward
+    signupBonusPercent: 5 # How much invitee would get from the referral link signup
   members:
     avatarServiceUrl: '$VITE_AVATAR_SERVICE_URL' # URL for avatar service - used to upload member's avatar
     hcaptchaSiteKey: '$VITE_HCAPTCHA_SITE_KEY' # Site key for hCaptcha - used to verify users are not bots when creating memberships - depends on hCaptcha being enabled in the faucet

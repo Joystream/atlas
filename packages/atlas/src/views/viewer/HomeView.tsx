@@ -4,6 +4,7 @@ import { FC } from 'react'
 import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { GetBasicVideosConnectionLightweightDocument } from '@/api/queries/__generated__/videos.generated'
 import { Section } from '@/components/Section/Section'
+import { ReferralsBanner } from '@/components/_referrals/ReferralsBanner/ReferralsBanner'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { publicCryptoVideoFilter } from '@/config/contentFilter'
@@ -24,6 +25,7 @@ export const HomeView: FC = () => {
 
   return (
     <VideoContentTemplate>
+      <ReferralsBanner />
       {headTags}
       <StyledSection
         contentProps={{

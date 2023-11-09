@@ -1,7 +1,8 @@
 import { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { SvgActionClose, SvgActionNewChannel, SvgActionNewTab } from '@/assets/icons'
+import { SvgActionClose, SvgActionNewChannel, SvgActionNewTab, SvgAlertsInformative24 } from '@/assets/icons'
+import { Banner } from '@/components/Banner'
 import { FlexBox } from '@/components/FlexBox'
 import { Information } from '@/components/Information'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
@@ -10,17 +11,17 @@ import { Tooltip } from '@/components/Tooltip'
 import { WidgetTile } from '@/components/WidgetTile'
 import { Button, TextButton } from '@/components/_buttons/Button'
 import { BenefitCard } from '@/components/_ypp/BenefitCard'
+import { ReferralLinkButton } from '@/components/_ypp/ReferralLinkButton'
 import { ServiceStatusWidget } from '@/components/_ypp/ServiceStatusWidget/ServiceStatusWidget'
 import { YppDashboardTier } from '@/components/_ypp/YppDashboardTier'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useYppAuthorizeHandler } from '@/hooks/useYppAuthorizeHandler'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user/user.hooks'
 import { formatDate, getNextFriday } from '@/utils/time'
-import { getTierRewards, yppBackendTierToConfig } from '@/utils/ypp'
+import { BOOST_TIMESTAMP, getTierRewards, yppBackendTierToConfig } from '@/utils/ypp'
 import { YppAuthorizationModal } from '@/views/global/YppLandingView/YppAuthorizationModal'
 import { configYppIconMapper } from '@/views/global/YppLandingView/sections/YppFooter'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
@@ -29,7 +30,6 @@ import {
   StatusDot,
   StatusDotWrapper,
   StyledCloseButton,
-  StyledCopyButton,
   WidgetTileContent,
   YppSyncStatus,
 } from './YppDashboardTabs.styles'
@@ -41,7 +41,6 @@ const getMessageIdForChannel = (channelId: string) => {
 }
 
 export const YppDashboardMainTab: FC = () => {
-  const { trackReferralLinkGenerated } = useSegmentAnalytics()
   const { channelId } = useUser()
   const navigate = useNavigate()
   const _handleYppSignUpClick = useYppAuthorizeHandler()
@@ -55,6 +54,10 @@ export const YppDashboardMainTab: FC = () => {
   const smMatch = useMediaMatch('sm')
   const lgMatch = useMediaMatch('lg')
   const nextPayoutDate = getNextFriday()
+  const rewardMultiplier =
+    new Date(currentChannel?.createdAt || 0).getTime() > BOOST_TIMESTAMP
+      ? atlasConfig.features.ypp.tierBoostMultiplier || 1
+      : 1
   const handleYppSignUpClick = () => {
     const success = _handleYppSignUpClick()
     if (success) {
@@ -67,8 +70,8 @@ export const YppDashboardMainTab: FC = () => {
       <Tooltip
         text={
           currentChannel?.shouldBeIngested
-            ? 'Your YouTube channel is being automatically synced with your Gleev channel. You will be rewarded every time a new video gets synced.'
-            : 'Automatic YouTube channel sync with Gleev is disabled. You can enable it again anytime in YPP settings tab.'
+            ? `Your YouTube channel is being automatically synced with your ${atlasConfig.general.appName} channel. You will be rewarded every time a new video gets synced.`
+            : `Automatic YouTube channel sync with ${atlasConfig.general.appName} is disabled. You can enable it again anytime in YPP settings tab.`
         }
         placement="top-start"
       >
@@ -86,6 +89,15 @@ export const YppDashboardMainTab: FC = () => {
     <>
       <YppAuthorizationModal unSyncedChannels={unsyncedChannels} />
       <LayoutGrid>
+        <GridItem colSpan={{ base: 12 }}>
+          <Banner
+            dismissibleId="ypp-sync-second-channel"
+            title="Have another YouTube channel?"
+            icon={<SvgAlertsInformative24 />}
+            description={`You can apply to the YouTube Partner Program with as many YouTube & ${atlasConfig.general.appName} channels as you want. Each YouTube channel can be assigned to only one ${atlasConfig.general.appName} channel.`}
+            actionButton={{ text: 'Add new channel', onClick: handleYppSignUpClick }}
+          />
+        </GridItem>
         <GridItem colSpan={{ xxs: 12, md: 4 }}>
           <YppDashboardTier onSignUp={handleYppSignUpClick} status={currentChannel?.yppStatus} />
         </GridItem>
@@ -155,7 +167,7 @@ export const YppDashboardMainTab: FC = () => {
               dollarAmount={
                 !currentChannel || !currentChannel.yppStatus.startsWith('Verified')
                   ? 100
-                  : getTierRewards(yppBackendTierToConfig(currentChannel.yppStatus))?.signUp
+                  : (getTierRewards(yppBackendTierToConfig(currentChannel.yppStatus))?.signUp || 0) * rewardMultiplier
               }
               isRangeAmount={!currentChannel || !currentChannel.yppStatus.startsWith('Verified')}
               amountTooltip="Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity."
@@ -199,7 +211,7 @@ export const YppDashboardMainTab: FC = () => {
             amountTooltip={
               !currentChannel?.yppStatus.startsWith('Verified')
                 ? 'Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity.'
-                : 'Your YouTube channel is being automatically synced with your Gleev channel. You will be rewarded every time a new video gets synced.'
+                : `Your YouTube channel is being automatically synced with your ${atlasConfig.general.appName} channel. You will be rewarded every time a new video gets synced.`
             }
             actionNode={
               currentChannel?.yppStatus.startsWith('Verified') ? (
@@ -233,19 +245,10 @@ export const YppDashboardMainTab: FC = () => {
           <BenefitCard
             title="Refer another YouTube creator"
             description="Get rewarded for every new creator who signs up to YPP program using your referral link. Referrals rewards depends on the tier assigned to the invited channel."
-            dollarAmount={getTierRewards('diamond')?.referral}
+            dollarAmount={(getTierRewards('diamond')?.referral || 0) * rewardMultiplier}
             amountTooltip="Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity."
             isRangeAmount
-            actionNode={
-              <StyledCopyButton
-                fullWidth={!smMatch}
-                textToCopy={`${window.location.href}/ypp?referrerId=${channelId}`}
-                copySuccessText="Referral link copied to clipboard"
-                onClick={() => trackReferralLinkGenerated(channelId)}
-              >
-                Copy referral link
-              </StyledCopyButton>
-            }
+            actionNode={<ReferralLinkButton />}
           />
         </GridItem>
       </LayoutGrid>

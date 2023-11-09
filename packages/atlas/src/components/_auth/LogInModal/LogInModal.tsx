@@ -25,7 +25,7 @@ export const LogInModal = () => {
   const [isLoading, setIsLoading] = useState(false)
   const { handleLogin, refetchCurrentUser } = useAuth()
   const { displaySnackbar } = useSnackbar()
-  const [hidePasswordProps] = useHidePasswordInInput()
+  const [hidePasswordProps] = useHidePasswordInInput(false)
   const { trackPageView } = useSegmentAnalytics()
 
   const setYppModalOpenName = useYppStore((state) => state.actions.setYppModalOpenName)
@@ -133,6 +133,7 @@ export const LogInModal = () => {
                 {...register('password')}
                 placeholder="Password"
                 {...hidePasswordProps}
+                autoComplete="new-password"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     handleSubmit()

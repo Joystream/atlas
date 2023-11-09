@@ -49,6 +49,7 @@ export const configSchema = z.object({
       enrollmentReward: z.number().nullable(),
       enrollmentUsdReward: z.number().nullable(),
       referralBaseReward: z.number().nullable(),
+      tierBoostMultiplier: z.number().nullable(),
       tiersDefinition: z.array(
         z.object({
           tier: YppTierEnum,
@@ -115,6 +116,7 @@ export const configSchema = z.object({
       statusPollingInterval: z.number(),
     }),
     notifications: z.object({ pollingInterval: z.number() }),
+    referrals: z.object({ referrerBonusPercent: z.number().nullable(), signupBonusPercent: z.number().nullable() }),
     members: z.object({
       avatarServiceUrl: z.string(),
       hcaptchaSiteKey: z.string().nullable(),

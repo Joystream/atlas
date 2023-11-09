@@ -2,11 +2,9 @@ import { CodegenConfig } from '@graphql-codegen/cli'
 
 import { customSchemaLoader } from './scripts/customSchemaLoader'
 
-const NODE_ENV = process.env.NODE_ENV?.toUpperCase() ?? 'PRODUCTION'
-const schemaUrl = process.env[`VITE_${NODE_ENV}_ORION_URL`]
-const authUrl = process.env[`VITE_${NODE_ENV}_ORION_AUTH_URL`]
-if (!schemaUrl) throw new Error(`VITE_${NODE_ENV}_ORION_URL is not defined`)
-if (!authUrl) throw new Error(`VITE_${NODE_ENV}_ORION_AUTH_URL is not defined`)
+const ENV = process.env.VITE_DEFAULT_DATA_ENV?.toUpperCase() || process.env.VITE_ENV?.toUpperCase() || 'PRODUCTION'
+const schemaUrl = process.env[`VITE_${ENV}_ORION_URL`]
+if (!schemaUrl) throw new Error(`VITE_${ENV}_ORION_URL is not defined`)
 
 const config: CodegenConfig = {
   overwrite: true,
@@ -17,7 +15,7 @@ const config: CodegenConfig = {
       [schemaUrl]: {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        loader: customSchemaLoader(schemaUrl, `${authUrl}/anonymous-auth`),
+        loader: customSchemaLoader(schemaUrl),
       },
     },
   ],

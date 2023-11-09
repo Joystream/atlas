@@ -21,7 +21,7 @@ type MarginProps =
     }
   | number
 
-type AlignProps = 'left' | 'center' | 'right' | 'justify' | 'end'
+export type AlignProps = 'left' | 'center' | 'right' | 'justify' | 'end'
 
 const alignStyles = ({ align }: TextBaseProps) =>
   !!align &&

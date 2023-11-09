@@ -9,7 +9,7 @@ import { smallBadgeStyles } from '@/components/Badge'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, square, zIndex } from '@/styles'
 
-export type AvatarSize = 136 | 104 | 88 | 40 | 32 | 24
+export type AvatarSize = 136 | 104 | 88 | 56 | 40 | 32 | 24
 
 type ContainerProps = {
   size: AvatarSize
