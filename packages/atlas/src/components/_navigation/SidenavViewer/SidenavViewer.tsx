@@ -53,6 +53,7 @@ export const viewerNavItems = [
     name: 'Referrals',
     expandedName: 'Referrals program',
     to: absoluteRoutes.viewer.referrals(),
+    bottomNav: true,
   },
 ]
 export const SidenavViewer: FC = () => {

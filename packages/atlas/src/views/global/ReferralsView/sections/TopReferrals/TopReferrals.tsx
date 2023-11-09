@@ -50,7 +50,7 @@ export const TopReferrals = () => {
   const channelById = (id: string) => topReferrersChannels?.find((channel) => channel.channel.id === id)?.channel
 
   return (
-    <FlexBox flow="column" marginTop={mdMatch ? 24 : xsMatch ? 16 : 14} gap={18} alignItems="center">
+    <FlexBox flow="column" marginTop={mdMatch ? 24 : xsMatch ? 16 : 14} gap={xsMatch ? 18 : 12} alignItems="center">
       <Text
         as="h2"
         variant={titleVariant}

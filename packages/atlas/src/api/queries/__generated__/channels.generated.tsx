@@ -618,8 +618,13 @@ export type GetMostPaidChannelsQuery = {
     __typename?: 'Channel'
     id: string
     title?: string | null
-    cumulativeRewardPaid: string
-    avatarPhoto?: { __typename?: 'StorageDataObject'; resolvedUrls: Array<string>; isAccepted: boolean } | null
+    cumulativeReward: string
+    avatarPhoto?: {
+      __typename?: 'StorageDataObject'
+      resolvedUrls: Array<string>
+      isAccepted: boolean
+      storageBag: { __typename?: 'StorageBag'; id: string }
+    } | null
   }>
 }
 
@@ -1539,13 +1544,16 @@ export type GetChannelPaymentEventsQueryResult = Apollo.QueryResult<
 >
 export const GetMostPaidChannelsDocument = gql`
   query GetMostPaidChannels {
-    channels(orderBy: cumulativeRewardPaid_DESC, limit: 50) {
+    channels(orderBy: cumulativeReward_DESC, limit: 50) {
       id
       title
-      cumulativeRewardPaid
+      cumulativeReward
       avatarPhoto {
         resolvedUrls
         isAccepted
+        storageBag {
+          id
+        }
       }
     }
   }

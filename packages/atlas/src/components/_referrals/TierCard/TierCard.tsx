@@ -14,6 +14,7 @@ import {
   TierBanner,
   Wrapper,
 } from '@/components/_referrals/TierCard/TierCard.styles'
+import { atlasConfig } from '@/config'
 import { capitalizeFirstLetter } from '@/utils/misc'
 import { getTierRewards } from '@/utils/ypp'
 import { TickWrapper } from '@/views/global/YppLandingView/YppAuthorizationModal/YppAuthorizationSteps/YppAuthorizationRequirementsStep/YppAuthorizationRequirementsStep.styles'
@@ -40,7 +41,8 @@ export const getTierIcon = (tier: TierCardProps['tier']) => {
 }
 
 export const TierCard = ({ reqs, tier }: TierCardProps) => {
-  const referralReward = getTierRewards(tier)?.referral
+  const signupMultiplier = tier === 'bronze' ? 1 : atlasConfig.features.ypp.tierBoostMultiplier || 1
+  const referralReward = (getTierRewards(tier)?.referral || 0) * signupMultiplier
   return (
     <Wrapper>
       <TierBanner tier={tier}>
@@ -50,12 +52,14 @@ export const TierCard = ({ reqs, tier }: TierCardProps) => {
             {capitalizeFirstLetter(tier)}
           </Text>
         </FlexBox>
-        <svg>
-          <filter id="noise">
-            <feTurbulence type="fractalNoise" baseFrequency="1" numOctaves="1" stitchTiles="stitch" />
-            <feBlend in="SourceGraphic" in2="colorNoise" mode="multiply" />
-          </filter>
-        </svg>
+        <div className="absolute-container">
+          <svg>
+            <filter id="noise">
+              <feTurbulence type="fractalNoise" baseFrequency="1" numOctaves="1" stitchTiles="stitch" />
+              <feBlend in="SourceGraphic" in2="colorNoise" mode="multiply" />
+            </filter>
+          </svg>
+        </div>
       </TierBanner>
 
       <ContentWrapper gap={2} flow="column">
