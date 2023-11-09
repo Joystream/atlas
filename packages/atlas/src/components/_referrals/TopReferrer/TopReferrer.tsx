@@ -63,12 +63,14 @@ export const TopReferrer = ({
                           {count}
                         </Text>
                       </StyledBadgeContentWrapper>
-                      <svg>
-                        <filter id="noise">
-                          <feTurbulence type="fractalNoise" baseFrequency="1" numOctaves="1" stitchTiles="stitch" />
-                          <feBlend in="SourceGraphic" in2="colorNoise" mode="multiply" />
-                        </filter>
-                      </svg>
+                      <div className="absolute-container">
+                        <svg>
+                          <filter id="noise">
+                            <feTurbulence type="fractalNoise" baseFrequency="1" numOctaves="1" stitchTiles="stitch" />
+                            <feBlend in="SourceGraphic" in2="colorNoise" mode="multiply" />
+                          </filter>
+                        </svg>
+                      </div>
                     </StyledTierBadge>
                   ))}
                 </FlexBox>
