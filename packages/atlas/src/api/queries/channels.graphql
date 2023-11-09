@@ -304,6 +304,9 @@ query GetMostPaidChannels {
     avatarPhoto {
       resolvedUrls
       isAccepted
+      storageBag {
+        id
+      }
     }
   }
 }

@@ -619,7 +619,12 @@ export type GetMostPaidChannelsQuery = {
     id: string
     title?: string | null
     cumulativeReward: string
-    avatarPhoto?: { __typename?: 'StorageDataObject'; resolvedUrls: Array<string>; isAccepted: boolean } | null
+    avatarPhoto?: {
+      __typename?: 'StorageDataObject'
+      resolvedUrls: Array<string>
+      isAccepted: boolean
+      storageBag: { __typename?: 'StorageBag'; id: string }
+    } | null
   }>
 }
 
@@ -1546,6 +1551,9 @@ export const GetMostPaidChannelsDocument = gql`
       avatarPhoto {
         resolvedUrls
         isAccepted
+        storageBag {
+          id
+        }
       }
     }
   }
