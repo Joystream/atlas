@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 
 import { FlexBox } from '@/components/FlexBox'
 import { GridItem } from '@/components/LayoutGrid'
+import { Text } from '@/components/Text'
 import { TierBanner } from '@/components/_referrals/TierCard/TierCard.styles'
 import { cVar, media, sizes } from '@/styles'
 
@@ -84,6 +85,11 @@ export const StyledEarnedWrapper = styled(FlexBox)`
 
 export const StyledChannelInfo = styled(FlexBox)`
   padding: ${sizes(6)};
+`
+
+export const StyledHandle = styled(Text)`
+  max-height: 1.3em;
+  line-height: 1.3em;
 `
 
 export const StyledTiersWrapper = styled(FlexBox)`

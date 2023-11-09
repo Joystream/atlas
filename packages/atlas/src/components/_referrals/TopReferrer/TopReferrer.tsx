@@ -8,6 +8,7 @@ import {
   StyledContainer,
   StyledContentWrapper,
   StyledEarnedWrapper,
+  StyledHandle,
   StyledTierBadge,
   StyledTiersWrapper,
 } from '@/components/_referrals/TopReferrer/TopReferrer.styles'
@@ -36,12 +37,16 @@ export const TopReferrer = ({
       mostEarned={mostEarned}
     >
       <StyledContentWrapper justifyContent="space-between" flow="column">
-        <FlexBox flow="column">
+        <StyledContentWrapper flow="column" justifyContent="space-between">
           <StyledChannelInfo flow="column" gap={2} alignItems="center">
             <Avatar assetUrls={avatarUrls} size={mostEarned ? 104 : 56} />
-            <Text as="div" variant={mostEarned ? 'h500' : 't300'} color={mostEarned ? 'colorTextStrong' : 'colorText'}>
+            <StyledHandle
+              as="div"
+              variant={mostEarned ? 'h500' : 't300'}
+              color={mostEarned ? 'colorTextStrong' : 'colorText'}
+            >
               {handle}
-            </Text>
+            </StyledHandle>
           </StyledChannelInfo>
           {mostEarned && (
             <StyledTiersWrapper flow="column" gap={2} alignItems="center">
@@ -77,7 +82,7 @@ export const TopReferrer = ({
               )}
             </StyledTiersWrapper>
           )}
-        </FlexBox>
+        </StyledContentWrapper>
 
         <StyledEarnedWrapper justifyContent="space-between">
           <Text as="div" variant="t300">
