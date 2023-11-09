@@ -50,12 +50,14 @@ export const TierCard = ({ reqs, tier }: TierCardProps) => {
             {capitalizeFirstLetter(tier)}
           </Text>
         </FlexBox>
-        <svg>
-          <filter id="noise">
-            <feTurbulence type="fractalNoise" baseFrequency="1" numOctaves="1" stitchTiles="stitch" />
-            <feBlend in="SourceGraphic" in2="colorNoise" mode="multiply" />
-          </filter>
-        </svg>
+        <div className="absolute-container">
+          <svg>
+            <filter id="noise">
+              <feTurbulence type="fractalNoise" baseFrequency="1" numOctaves="1" stitchTiles="stitch" />
+              <feBlend in="SourceGraphic" in2="colorNoise" mode="multiply" />
+            </filter>
+          </svg>
+        </div>
       </TierBanner>
 
       <ContentWrapper gap={2} flow="column">
