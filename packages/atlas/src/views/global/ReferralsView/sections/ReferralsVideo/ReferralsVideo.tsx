@@ -39,7 +39,7 @@ export const ReferralsVideo = () => {
           </LogosContainer>
           <Text
             as="h1"
-            margin={{ top: 14 }}
+            margin={{ top: smMatch ? 14 : 8 }}
             variant={mainTitleVariant}
             data-aos="fade-up"
             data-aos-delay="250"

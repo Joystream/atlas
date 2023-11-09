@@ -5,6 +5,7 @@ import { media, sizes, square } from '@/styles'
 
 export const TiersGraphicWrapper = styled.div`
   display: grid;
+  justify-content: center;
   grid-template-rows: 1fr 1fr;
   grid-template-columns: 2fr 1fr 2fr;
   gap: 0;

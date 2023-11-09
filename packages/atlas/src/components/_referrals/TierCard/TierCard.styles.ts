@@ -51,7 +51,6 @@ const pulse = keyframes`
 `
 export const TierBanner = styled.div<{ tier: 'bronze' | 'silver' | 'gold' | 'diamond' }>`
   width: 100%;
-  max-height: 80px;
   border-radius: calc(1.5 * ${cVar('radiusLarge')}) calc(1.5 * ${cVar('radiusLarge')}) 0 0;
   overflow: hidden;
   display: flex;
@@ -59,6 +58,7 @@ export const TierBanner = styled.div<{ tier: 'bronze' | 'silver' | 'gold' | 'dia
   align-items: center;
   position: relative;
   padding: ${sizes(2.5)};
+  padding-bottom: ${sizes(6)};
   background: ${(props) => {
     switch (props.tier) {
       case 'diamond':
@@ -81,6 +81,10 @@ export const TierBanner = styled.div<{ tier: 'bronze' | 'silver' | 'gold' | 'dia
 
   svg {
     ${square(36)}
+  }
+
+  .absolute-container {
+    position: absolute;
   }
 
   ::before {

@@ -48,7 +48,6 @@ export const testAssetDownload = (url: string, type: AssetType | null): Promise<
 
     const reject = (err?: unknown) => {
       cleanup()
-      UserEventsLogger.logAssetUploadFailedEvent({ resolvedUrl: url }, err as Error)
       _reject(err)
     }
 
@@ -76,10 +75,7 @@ export const testAssetDownload = (url: string, type: AssetType | null): Promise<
       video.src = url
     } else if (type === 'subtitles') {
       fetch(url, { method: 'HEAD', mode: 'cors', cache: 'no-store' })
-        .then((response) => {
-          if (!response.ok) {
-            UserEventsLogger.logAssetUploadFailedEvent({ resolvedUrl: url }, new Error(response.statusText))
-          }
+        .then(() => {
           resolve()
         })
         .catch(reject)

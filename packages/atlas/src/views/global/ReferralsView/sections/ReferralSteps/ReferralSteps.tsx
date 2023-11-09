@@ -130,7 +130,7 @@ export const ReferralSteps = () => {
           onMouseLeave={() => (shouldSwitch.current = true)}
         >
           <StepVideoContainer>
-            <StyledStepVideo ref={videoRef} autoPlay loop muted>
+            <StyledStepVideo ref={videoRef} playsInline autoPlay loop muted>
               <source src={videoSrcs[selectedStep]} type="video/mp4" />
             </StyledStepVideo>
           </StepVideoContainer>
