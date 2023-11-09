@@ -297,10 +297,10 @@ query GetChannelPaymentEvents($channelId: String) {
 }
 
 query GetMostPaidChannels {
-  channels(orderBy: cumulativeRewardPaid_DESC, limit: 50) {
+  channels(orderBy: cumulativeReward_DESC, limit: 50) {
     id
     title
-    cumulativeRewardPaid
+    cumulativeReward
     avatarPhoto {
       resolvedUrls
       isAccepted
