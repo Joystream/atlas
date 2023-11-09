@@ -67,7 +67,7 @@ features:
         rewards:
           - 25
           - 1
-          - 10
+          - 12.5
       - tier: 'gold'
         reqs:
           - Great quality of content.
