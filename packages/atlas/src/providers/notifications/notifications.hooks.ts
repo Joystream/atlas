@@ -229,5 +229,5 @@ const toNotificationData = <T extends NotificationType, R extends NotifDataOfTyp
   data: Partial<R>
 ) => {
   const { __typename, ...rest } = notificationType
-  return { type: __typename as T['__typename'], ...rest, ...data } as unknown as R
+  return { ...rest, ...data, type: __typename as T['__typename'] } as unknown as R
 }
