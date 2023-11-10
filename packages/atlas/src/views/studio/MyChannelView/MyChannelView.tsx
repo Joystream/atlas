@@ -14,8 +14,9 @@ import {
   StyledLimitedWidthContainer,
 } from './MyChannelView.styles'
 import { StudioChannelGeneralTab } from './tabs/StudioChannelGeneralTab'
+import { StudioChannelNotificationsTab } from './tabs/StudioChannelNotificationsTab'
 
-const TABS = ['General'] as const
+const TABS = ['General', 'Notifications'] as const
 
 export const MyChannelView = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -56,6 +57,7 @@ export const MyChannelView = () => {
             {currentTabName === 'General' && (
               <StudioChannelGeneralTab setTrailingContent={setTrailingContent} actionBarPortal={actionBarPortal} />
             )}
+            {currentTabName === 'Notifications' && <StudioChannelNotificationsTab actionBarPortal={actionBarPortal} />}
           </StyledLimitedWidthContainer>
         </ScrollWrapper>
         <BottomContainer ref={actionBarPortal} />

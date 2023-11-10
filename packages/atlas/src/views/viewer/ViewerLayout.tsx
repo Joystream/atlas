@@ -23,8 +23,8 @@ import { RoutingState } from '@/types/routing'
 const YppLandingView = lazy(() =>
   import('@/views/global/YppLandingView').then((module) => ({ default: module.YppLandingView }))
 )
-const NotificationsView = lazy(() =>
-  import('@/views/notifications').then((module) => ({ default: module.NotificationsView }))
+const MemberNotificationsView = lazy(() =>
+  import('@/views/notifications').then((module) => ({ default: module.MemberNotificationsView }))
 )
 const CategoryView = lazy(() => import('./CategoryView').then((module) => ({ default: module.CategoryView })))
 const ChannelView = lazy(() => import('./ChannelView').then((module) => ({ default: module.ChannelView })))
@@ -49,6 +49,7 @@ const viewerRoutes = [
   { path: relativeRoutes.viewer.channels(), element: <ChannelsView /> },
   { path: relativeRoutes.viewer.channel(), element: <ChannelView /> },
   { path: relativeRoutes.viewer.category(), element: <CategoryView /> },
+  { path: relativeRoutes.viewer.memberById(), element: <MemberView /> },
   { path: relativeRoutes.viewer.member(), element: <MemberView /> },
   { path: relativeRoutes.viewer.marketplace(), element: <MarketplaceView /> },
   ...(atlasConfig.features.ypp.googleConsoleClientId
@@ -171,11 +172,11 @@ export const ViewerLayout: FC = () => {
                     }
                   />
                   <Route
-                    path={absoluteRoutes.viewer.notifications()}
+                    path={absoluteRoutes.viewer.memberNotifications()}
                     element={
                       <PrivateRoute
                         isAuth={isLoggedIn}
-                        element={<NotificationsView />}
+                        element={<MemberNotificationsView />}
                         redirectTo={ENTRY_POINT_ROUTE}
                       />
                     }

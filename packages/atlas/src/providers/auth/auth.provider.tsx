@@ -28,7 +28,7 @@ import {
 } from './auth.helpers'
 import { AuthContextValue, LogInErrors } from './auth.types'
 
-const AuthContext = createContext<undefined | AuthContextValue>(undefined)
+export const AuthContext = createContext<undefined | AuthContextValue>(undefined)
 AuthContext.displayName = 'AuthContext'
 
 export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {

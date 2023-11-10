@@ -1,48 +1,28 @@
 import { createStore } from '@/utils/store'
 
-export type NotificationsStoreState = {
-  // block number of lastly seen (not read) notification
-  lastSeenNotificationBlock: number
+export type RecipientType = 'ChannelRecipient' | 'MemberRecipient'
 
-  // list of notification IDs that were already read
-  readNotificationsIdsMap: Record<string, boolean>
+export type NotificationsStoreState = {
+  // Lists of lasts seen notifications for the various type and channel ids
+  lastSeenNotificationDates: { type: RecipientType; id: string; date: number }[]
 }
 
 export type NotificationsStoreActions = {
-  markNotificationsAsRead: (ids: { id: string }[] | { id: string }, asRead?: boolean) => void
-  markNotificationsAsUnread: (ids: { id: string }[] | { id: string }) => void
-
-  setLastSeenNotificationBlock: (block: number) => void
+  setLastSeenNotificationDate: (type: RecipientType, id: string, date: Date) => void
 }
 
 export const useNotificationStore = createStore<NotificationsStoreState, NotificationsStoreActions>(
   {
     state: {
-      lastSeenNotificationBlock: 0,
-      readNotificationsIdsMap: {},
+      lastSeenNotificationDates: [],
     },
     actionsFactory: (set) => ({
-      markNotificationsAsRead: (ids) => {
-        const _ids = Array.isArray(ids) ? ids : [ids]
-
+      setLastSeenNotificationDate: (type, id, date) => {
         set((state) => {
-          _ids.forEach(({ id }) => {
-            state.readNotificationsIdsMap[id] = true
-          })
-        })
-      },
-      markNotificationsAsUnread: (ids) => {
-        const _ids = Array.isArray(ids) ? ids : [ids]
-
-        set((state) => {
-          _ids.forEach(({ id }) => {
-            state.readNotificationsIdsMap[id] = false
-          })
-        })
-      },
-      setLastSeenNotificationBlock: (block) => {
-        set((state) => {
-          state.lastSeenNotificationBlock = block
+          state.lastSeenNotificationDates = [
+            ...state.lastSeenNotificationDates.filter((record) => record.type !== type && record.id !== id),
+            { id, type, date: date.getTime() },
+          ]
         })
       },
     }),
@@ -50,7 +30,7 @@ export const useNotificationStore = createStore<NotificationsStoreState, Notific
   {
     persist: {
       key: 'notifications',
-      whitelist: ['lastSeenNotificationBlock', 'readNotificationsIdsMap'],
+      whitelist: ['lastSeenNotificationDates'],
       version: 0,
       migrate: (state) => {
         return {
