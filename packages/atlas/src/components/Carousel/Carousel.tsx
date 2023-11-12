@@ -33,6 +33,7 @@ export const Carousel = ({
   return (
     <StyledSwiper
       navigation
+      // cssMode
       minSlideWidth={minSlideWidth}
       {...(dotsVisible ? dotsProps : {})}
       {...swiperOptions}
