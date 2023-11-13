@@ -539,6 +539,7 @@ fragment FullCreatorToken on CreatorToken {
     ammInitPrice
     burnedByAmm
     mintedByAmm
+    ammSlopeParameter
   }
   sales {
     id
