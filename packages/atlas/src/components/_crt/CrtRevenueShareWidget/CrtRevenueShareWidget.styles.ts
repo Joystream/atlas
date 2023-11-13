@@ -22,7 +22,7 @@ export const CustomPill = styled.div`
   max-width: 100px;
   overflow-x: hidden;
   gap: ${sizes(1)};
-  border-radius: 2px;
+  border-radius: ${cVar('radiusSmall')};
   padding: ${sizes(1)};
 `
 

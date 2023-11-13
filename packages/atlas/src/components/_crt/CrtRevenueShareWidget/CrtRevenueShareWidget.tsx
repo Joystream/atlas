@@ -120,8 +120,7 @@ const EmptyState = () => {
     <EmptyStateBox justifyContent="center" alignItems="center" flow="column">
       <SvgRevenueSharePlaceholder />
       <Text variant="t200" as="p" color="colorText" margin={{ top: 6, bottom: 2 }}>
-        There is no ongoing share of revenue. Click start revenue share to to withdraw your share and let your tokens
-        holders claim their share
+        There is no ongoing share of revenue. Click start revenue share to withdraw your share and get your tokens.
       </Text>
       <Button variant="secondary" icon={<SvgActionRevenueShare />}>
         Start revenue share
