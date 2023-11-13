@@ -69,6 +69,8 @@ export const ChannelToken = ({ tokenId, memberId }: ChannelTokenProps) => {
             revenue={token.annualCreatorRewardPermill}
             revenueShare={token.annualCreatorRewardPermill}
             transactionVolume={token.annualCreatorRewardPermill}
+            tokenId={token.id}
+            status="inactive"
           />
           {holdersData ? (
             <HoldersWidget
