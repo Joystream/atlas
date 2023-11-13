@@ -2341,6 +2341,7 @@ export type FullCreatorTokenFragment = {
     ammInitPrice: string
     burnedByAmm: string
     mintedByAmm: string
+    ammSlopeParameter: string
   }>
   sales: Array<{
     __typename?: 'Sale'
@@ -3024,6 +3025,7 @@ export const FullCreatorTokenFragmentDoc = gql`
       ammInitPrice
       burnedByAmm
       mintedByAmm
+      ammSlopeParameter
     }
     sales {
       id

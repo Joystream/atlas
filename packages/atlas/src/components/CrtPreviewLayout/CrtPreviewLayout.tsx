@@ -140,6 +140,8 @@ export const CrtPreviewLayout = ({
           revenue={token.annualCreatorRewardPermill}
           revenueShare={token.annualCreatorRewardPermill}
           transactionVolume={token.annualCreatorRewardPermill}
+          tokenId={token.id}
+          status="inactive"
         />
         {data ? (
           <HoldersWidget totalSupply={+token.totalSupply} holders={data.tokenAccounts} ownerId={memberId ?? ''} />
