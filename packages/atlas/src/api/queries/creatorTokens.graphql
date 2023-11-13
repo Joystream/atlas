@@ -25,3 +25,21 @@ query GetCreatorTokenHolders(
     ...BasicCreatorTokenHolder
   }
 }
+
+query GetChannelTokenBalance($currentBlockHeight: Int!, $memberId: String!, $tokenId: String!) {
+  getAccountTransferrableBalance(currentBlockHeight: $currentBlockHeight, memberId: $memberId, tokenId: $tokenId) {
+    transferrableCrtAmount
+  }
+}
+
+query GetRevenueShareDividend($stakingAmount: Int!, $tokenId: String!) {
+  getShareDividend(stakingAmount: $stakingAmount, tokenId: $tokenId) {
+    dividendJoyAmount
+  }
+}
+
+query GetHistoricalTokenAllocation($tokenId: String!) {
+  getCumulativeHistoricalShareAllocation(tokenId: $tokenId) {
+    cumulativeHistoricalAllocation
+  }
+}

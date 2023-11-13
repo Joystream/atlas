@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { useState } from 'react'
 
+import { BasicCreatorTokenHolderFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgActionChevronR } from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox'
 import { Text } from '@/components/Text'
@@ -10,35 +11,21 @@ import { DialogModal } from '@/components/_overlays/DialogModal'
 import { cVar, sizes } from '@/styles'
 
 export type HoldersWidgetProps = {
-  tokenId: string
+  ownerId: string
+  holders: BasicCreatorTokenHolderFragment[]
+  totalSupply: number
 }
 
-const getTokenHolders = (_: string) => {
-  return {
-    holders: [
-      {
-        memberId: '1',
-        vested: 10000,
-        total: 11000,
-      },
-      {
-        memberId: '2',
-        vested: 1000,
-        total: 1000,
-      },
-      {
-        memberId: '3',
-        vested: 100,
-        total: 110,
-      },
-    ],
-    ownerId: '1',
-  }
-}
-
-export const HoldersWidget = ({ tokenId }: HoldersWidgetProps) => {
+export const HoldersWidget = ({ holders: _holders, ownerId, totalSupply }: HoldersWidgetProps) => {
   const [showModal, setShowModal] = useState(false)
-  const { holders, ownerId } = getTokenHolders(tokenId)
+
+  const holders = _holders.map((holder) => ({
+    memberId: ownerId,
+    total: +holder.totalAmount,
+    allocation: Math.round((+holder.totalAmount / totalSupply) * 100),
+    vested: +holder.vestingSchedules[0].totalVestingAmount,
+  }))
+
   return (
     <Box>
       <CrtHoldersTableModal

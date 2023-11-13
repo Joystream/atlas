@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 
 import { useGetCreatorTokenHoldersQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
@@ -6,10 +6,14 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { ProgressWidget, ProgressWidgetProps } from '@/components/ProgressWidget'
 import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
-import { TextButton } from '@/components/_buttons/Button'
+import { Button, ButtonProps, TextButton } from '@/components/_buttons/Button'
 import { CrtHoldersWidget } from '@/components/_crt/CrtHoldersWidget'
 import { CrtRevenueShareWidget } from '@/components/_crt/CrtRevenueShareWidget'
+import { StartSaleOrMarketButton } from '@/components/_crt/StartSaleOrMarketButton/StartSaleOrMarketButton'
+import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useUser } from '@/providers/user/user.hooks'
+import { permillToPercentage } from '@/utils/number'
 import {
   BigWidgetContainer,
   NoGlobalPaddingWrapper,
@@ -26,46 +30,39 @@ const steps: ProgressWidgetProps['steps'] = [
   {
     title: 'Create token',
     description: 'Create own token and share it with your viewers!',
-    primaryButton: {
-      text: 'Create token',
-    },
   },
   {
     title: 'Write your token description',
     description: 'Help your buyers understand your token purpose and value by customising the public token page.',
-    primaryButton: {
-      text: 'Edit token page',
-    },
   },
   {
     title: 'Start a sale or market',
     description:
       'Selling your tokens will allow you to raise funds for your project and share your revenue with your followers.',
-    primaryButton: {
-      text: 'Start sale or market',
-    },
   },
   {
     title: 'Start your first revenue share',
     description:
       'This way you will be able to access your own channel earnings and share a part of it with your followers.',
-    primaryButton: {
-      text: 'Start sale or market',
-    },
   },
 ]
 
 export const CrtDashboardMainTab = ({ token, onRevenueShareDetails }: CrtDashboardMainTabProps) => {
   const { memberId } = useUser()
+  const smMatch = useMediaMatch('sm')
   const { data } = useGetCreatorTokenHoldersQuery({
     variables: {
       where: {
         member: {
           id_eq: memberId,
         },
+        token: {
+          id_eq: token.id,
+        },
       },
     },
   })
+  const { tokenBalance } = useGetTokenBalance(token.id)
   const memberTokenAccount = data?.tokenAccounts[0]
 
   const currentMemberStep = useMemo((): number => {
@@ -75,6 +72,30 @@ export const CrtDashboardMainTab = ({ token, onRevenueShareDetails }: CrtDashboa
     return -1
   }, [token.description, token.ammCurves.length, token.sales.length, token.revenueShares.length])
 
+  const getButtonForStep = useCallback(
+    (stepNo: number) => {
+      const commonProps: ButtonProps = {
+        variant: stepNo === currentMemberStep ? 'primary' : 'secondary',
+        disabled: stepNo < currentMemberStep,
+        fullWidth: !smMatch,
+      }
+
+      switch (stepNo) {
+        case 0:
+          return <Button {...commonProps}>Create token</Button>
+        case 1:
+          return <Button {...commonProps}>Edit token page</Button>
+        case 2:
+          return <StartSaleOrMarketButton {...commonProps} tokenName={token.symbol ?? 'N/A'} />
+        case 3:
+          return <Button {...commonProps}>Start revenue share</Button>
+        default:
+          return null
+      }
+    },
+    [currentMemberStep, smMatch, token.symbol]
+  )
+
   return (
     <>
       {currentMemberStep !== -1 && (
@@ -82,6 +103,7 @@ export const CrtDashboardMainTab = ({ token, onRevenueShareDetails }: CrtDashboa
           <ProgressWidget
             steps={steps}
             activeStep={currentMemberStep}
+            renderCurrentStepActionButton={getButtonForStep}
             goalComponent={
               <Text variant="t200" as="p">
                 Complete {steps.length - currentMemberStep} more step{steps.length - currentMemberStep > 1 ? 's' : ''}{' '}
@@ -97,7 +119,7 @@ export const CrtDashboardMainTab = ({ token, onRevenueShareDetails }: CrtDashboa
           title="Transferable"
           customNode={
             <NumberFormat
-              value={+(memberTokenAccount?.totalAmount ?? 0) - +(memberTokenAccount?.stakedAmount ?? 0)}
+              value={tokenBalance}
               as="span"
               icon={<StyledSvgJoyTokenMonochrome24 />}
               withDenomination
@@ -148,7 +170,7 @@ export const CrtDashboardMainTab = ({ token, onRevenueShareDetails }: CrtDashboa
           }}
           customNode={
             <Text variant="h400" as="h4">
-              {token.annualCreatorRewardPermill}%
+              {permillToPercentage(token.annualCreatorRewardPermill)}%
             </Text>
           }
         />

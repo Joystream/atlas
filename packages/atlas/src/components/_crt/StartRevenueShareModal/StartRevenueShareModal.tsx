@@ -1,40 +1,33 @@
 import { useApolloClient } from '@apollo/client'
 import styled from '@emotion/styled'
+import { BN } from 'bn.js'
 import { useCallback, useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
+import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { FlexBox } from '@/components/FlexBox/FlexBox'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
-import { TextButton } from '@/components/_buttons/Button'
 import { AuctionDatePicker, AuctionDatePickerProps } from '@/components/_inputs/AuctionDatePicker'
 import { FormField } from '@/components/_inputs/FormField'
-import { TokenInput } from '@/components/_inputs/TokenInput'
 import { DetailsContent } from '@/components/_nft/NftTile'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useJoystream } from '@/providers/joystream'
+import { useJoystream, useSubscribeAccountBalance } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { pluralizeNoun } from '@/utils/misc'
+import { permillToPercentage } from '@/utils/number'
 import { addDaysToDate } from '@/utils/time'
 
 export type StartRevenueShareProps = {
-  tokenId: string
+  token: FullCreatorTokenFragment
   onClose: () => void
   show: boolean
 }
-
-const getTokenDetails = (_: string) => ({
-  title: 'JBC',
-  pricePerUnit: 1000,
-  tokensOnSale: 67773,
-  userBalance: 100000,
-  patronageRate: 0.8,
-})
 
 const datePickerItemsFactory = (days: number[]) =>
   days.map((value) => ({
@@ -47,15 +40,19 @@ const datePickerItemsFactory = (days: number[]) =>
 
 const endDateItems = datePickerItemsFactory([7, 14, 30])
 
-export const StartRevenueShare = ({ tokenId, onClose, show }: StartRevenueShareProps) => {
+export const StartRevenueShare = ({ token, onClose, show }: StartRevenueShareProps) => {
   const smMatch = useMediaMatch('sm')
-  const { memberId, channelId } = useUser()
-  const { patronageRate, userBalance } = getTokenDetails(tokenId)
+  const { memberId, channelId, activeChannel } = useUser()
   const { displaySnackbar } = useSnackbar()
+  const memoizedChannelStateBloatBond = useMemo(() => {
+    return new BN(activeChannel?.channelStateBloatBond || 0)
+  }, [activeChannel?.channelStateBloatBond])
+  const { accountBalance: channelBalance } = useSubscribeAccountBalance(activeChannel?.rewardAccount, {
+    channelStateBloatBond: memoizedChannelStateBloatBond,
+  })
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const form = useForm<{
-    tokens: number | null
     startDate: AuctionDatePickerProps['value'] | null
     endDate: AuctionDatePickerProps['value'] | null
   }>({
@@ -66,7 +63,7 @@ export const StartRevenueShare = ({ tokenId, onClose, show }: StartRevenueShareP
   const client = useApolloClient()
   const { convertMsTimestampToBlock } = useBlockTimeEstimation()
   const { trigger, control, watch } = form
-  const [startDate, endDate, tokens] = watch(['startDate', 'endDate', 'tokens'])
+  const [startDate, endDate] = watch(['startDate', 'endDate'])
 
   const onSubmit = () =>
     form.handleSubmit((data) => {
@@ -114,14 +111,34 @@ export const StartRevenueShare = ({ tokenId, onClose, show }: StartRevenueShareP
         },
       })
     })()
+  const patronageRate = permillToPercentage(token.revenueShareRatioPermill) / 100
 
   const details = useMemo(
     () => [
       {
+        title: 'You will share',
+        content: (
+          <NumberFormat
+            value={channelBalance ?? 0}
+            as="p"
+            variant="t100"
+            color="colorText"
+            withDenomination="before"
+            withToken
+          />
+        ),
+      },
+      {
         title: 'You will receive',
         content: (
           <FlexBox alignItems="baseline" width="fit-content">
-            <NumberFormat value={(tokens || 0) * patronageRate} as="p" variant="t100" color="colorText" withToken />
+            <NumberFormat
+              value={channelBalance?.muln(patronageRate) ?? 0}
+              as="p"
+              variant="t100"
+              color="colorText"
+              withToken
+            />
             <Text variant="t100" as="p" color="colorText">
               ({Math.round(patronageRate * 100)}%)
             </Text>
@@ -133,20 +150,20 @@ export const StartRevenueShare = ({ tokenId, onClose, show }: StartRevenueShareP
         content: (
           <FlexBox alignItems="baseline" width="fit-content">
             <NumberFormat
-              value={(tokens || 0) * (1 - patronageRate)}
+              value={channelBalance?.muln(1 - patronageRate) ?? 0}
               as="p"
               variant="t100"
               color="colorText"
               withToken
             />
             <Text variant="t100" as="p" color="colorText">
-              ( {Math.round((1 - patronageRate) * 100)}%)
+              ({Math.round((1 - patronageRate) * 100)}%)
             </Text>
           </FlexBox>
         ),
       },
     ],
-    [patronageRate, tokens]
+    [channelBalance, patronageRate]
   )
 
   const selectDurationToDate = useCallback((value: AuctionDatePickerProps['value'], base?: Date) => {
@@ -176,35 +193,11 @@ export const StartRevenueShare = ({ tokenId, onClose, show }: StartRevenueShareP
             avoidIconStyling
             tileSize={smMatch ? 'big' : 'bigSmall'}
             caption="YOUR CHANNEL BALANCE"
-            content={userBalance}
+            content={channelBalance ?? 0}
             icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
             withDenomination
           />
         </FlexBox>
-        <Controller
-          name="tokens"
-          control={control}
-          render={({ field: { onChange, value } }) => (
-            <FormField
-              label="Amount to share"
-              description="Those tokens will be withdrawn from your channel balance and divided between you and your token holders."
-            >
-              <TokenInput
-                value={value}
-                onChange={onChange}
-                placeholder="0"
-                nodeEnd={
-                  <FlexBox gap={2} alignItems="baseline">
-                    <Text variant="t300" as="p" color="colorTextMuted">
-                      $0.00
-                    </Text>
-                    <TextButton>Max</TextButton>
-                  </FlexBox>
-                }
-              />
-            </FormField>
-          )}
-        />
 
         <FlexBox flow="column" gap={2}>
           {details.map((row) => (

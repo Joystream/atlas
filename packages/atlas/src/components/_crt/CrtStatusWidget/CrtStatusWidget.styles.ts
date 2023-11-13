@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 
-import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
 import { cVar, sizes, transitions } from '@/styles'
 
@@ -48,10 +47,6 @@ export const SupplyLine = styled.div`
   display: flex;
   align-items: center;
   gap: ${sizes(1)};
-`
-
-export const LabelText = styled(Text)`
-  color: ${cVar('colorText')};
 `
 
 export const Widget = styled(WidgetTile)`

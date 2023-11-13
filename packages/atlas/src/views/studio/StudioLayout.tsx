@@ -25,8 +25,7 @@ import { transitions } from '@/styles'
 import { isAllowedBrowser } from '@/utils/browser'
 import { NotificationsView } from '@/views/notifications'
 import { CrtDashboard } from '@/views/studio/CrtDashboard'
-import { CrtPreviewEditView } from '@/views/studio/CrtPreviewEditView'
-import { CrtPreviewView } from '@/views/studio/CrtPreviewView'
+import { CrtTokenEditView } from '@/views/studio/CrtTokenEditView'
 import { CrtWelcomeView } from '@/views/studio/CrtWelcomeView/CrtWelcomeView'
 import { MyChannelView } from '@/views/studio/MyChannelView'
 import { MyPaymentsView } from '@/views/studio/MyPaymentsView'
@@ -193,15 +192,13 @@ const StudioLayout = () => {
                 }
               />
               <Route
-                path={relativeRoutes.studio.crtTokenPreview()}
+                path={relativeRoutes.studio.crtTokenEdit()}
                 element={
-                  <PrivateRoute element={<CrtPreviewView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
-                }
-              />
-              <Route
-                path={relativeRoutes.studio.crtTokenPreviewEdit()}
-                element={
-                  <PrivateRoute element={<CrtPreviewEditView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                  <PrivateRoute
+                    element={<CrtTokenEditView />}
+                    isAuth={channelSet && hasToken}
+                    redirectTo={!channelSet ? ENTRY_POINT_ROUTE : absoluteRoutes.studio.crt()}
+                  />
                 }
               />
               <Route

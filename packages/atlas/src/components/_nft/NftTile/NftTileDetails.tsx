@@ -263,10 +263,21 @@ type DetailsContentProps = {
   secondary?: boolean
   tileSize: TileSize | undefined
   withDenomination?: boolean
+  denominationMultiplier?: number
   tooltipText?: string
 }
 export const DetailsContent: FC<DetailsContentProps> = memo(
-  ({ tileSize, caption, icon, content, secondary, avoidIconStyling, withDenomination, tooltipText }) => {
+  ({
+    tileSize,
+    denominationMultiplier,
+    caption,
+    icon,
+    content,
+    secondary,
+    avoidIconStyling,
+    withDenomination,
+    tooltipText,
+  }) => {
     const getSize = () => {
       switch (tileSize) {
         case 'small':
@@ -304,6 +315,7 @@ export const DetailsContent: FC<DetailsContentProps> = memo(
               variant={getSize().content}
               color={secondary ? 'colorText' : undefined}
               withDenomination={withDenomination}
+              denominationMultiplier={denominationMultiplier}
             />
           ) : (
             content

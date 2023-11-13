@@ -491,6 +491,7 @@ fragment BasicCreatorToken on CreatorToken {
   deissued
   status
   createdAt
+  lastPrice
   channel {
     ... on TokenChannel {
       channel {
@@ -515,12 +516,14 @@ fragment FullCreatorToken on CreatorToken {
   annualCreatorRewardPermill
   revenueShareRatioPermill
   description
+  revenueShareRatioPermill
   ammCurves {
     id
     finalized
     ammInitPrice
     burnedByAmm
     mintedByAmm
+    ammSlopeParameter
   }
   sales {
     id

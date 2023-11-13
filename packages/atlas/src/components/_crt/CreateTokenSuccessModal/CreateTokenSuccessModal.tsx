@@ -1,3 +1,4 @@
+import { useApolloClient } from '@apollo/client'
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import { useNavigate } from 'react-router-dom'
@@ -17,6 +18,8 @@ export type CreateTokenSuccessModalProps = {
 }
 export const CreateTokenSuccessModal = ({ tokenName, show }: CreateTokenSuccessModalProps) => {
   const navigate = useNavigate()
+  const client = useApolloClient()
+
   return (
     <DialogModal
       show={show}
@@ -29,7 +32,11 @@ export const CreateTokenSuccessModal = ({ tokenName, show }: CreateTokenSuccessM
           variant="secondary"
           icon={<SvgActionNewTab />}
           iconPlacement="right"
-          onClick={() => navigate(absoluteRoutes.studio.crtDashboard())} // todo add correct route
+          onClick={() => {
+            client.refetchQueries({ include: 'active' }).then(() => {
+              navigate(absoluteRoutes.studio.crtDashboard())
+            })
+          }}
         >
           View your token page
         </TextButton>

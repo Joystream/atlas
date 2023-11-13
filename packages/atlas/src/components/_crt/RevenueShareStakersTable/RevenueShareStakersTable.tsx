@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import BN from 'bn.js'
 import { useMemo } from 'react'
 
 import { NumberFormat } from '@/components/NumberFormat'
@@ -17,7 +18,7 @@ export type RevenueShareStakersTableProps = {
     stakedAtBlock: number
     memberId: string
     staked: number
-    earnings: number
+    earnings: BN
   }[]
   tokenSymbol?: string | null
 }

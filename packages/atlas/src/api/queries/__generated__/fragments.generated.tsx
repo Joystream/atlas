@@ -2743,6 +2743,7 @@ export type BasicCreatorTokenFragment = {
   deissued: boolean
   status: Types.TokenStatus
   createdAt: Date
+  lastPrice?: string | null
   channel?: {
     __typename?: 'TokenChannel'
     channel: {
@@ -2806,6 +2807,7 @@ export type FullCreatorTokenFragment = {
   annualCreatorRewardPermill: number
   revenueShareRatioPermill: number
   description?: string | null
+  revenueShareRatioPermill: number
   totalSupply: string
   id: string
   accountsNum: number
@@ -2814,6 +2816,7 @@ export type FullCreatorTokenFragment = {
   deissued: boolean
   status: Types.TokenStatus
   createdAt: Date
+  lastPrice?: string | null
   ammCurves: Array<{
     __typename?: 'AmmCurve'
     id: string
@@ -2821,6 +2824,7 @@ export type FullCreatorTokenFragment = {
     ammInitPrice: string
     burnedByAmm: string
     mintedByAmm: string
+    ammSlopeParameter: string
   }>
   sales: Array<{
     __typename?: 'Sale'
@@ -3452,6 +3456,7 @@ export const BasicCreatorTokenFragmentDoc = gql`
     deissued
     status
     createdAt
+    lastPrice
     channel {
       ... on TokenChannel {
         channel {
@@ -3479,12 +3484,14 @@ export const FullCreatorTokenFragmentDoc = gql`
     annualCreatorRewardPermill
     revenueShareRatioPermill
     description
+    revenueShareRatioPermill
     ammCurves {
       id
       finalized
       ammInitPrice
       burnedByAmm
       mintedByAmm
+      ammSlopeParameter
     }
     sales {
       id

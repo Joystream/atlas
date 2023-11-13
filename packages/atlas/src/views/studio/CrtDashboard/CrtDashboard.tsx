@@ -9,6 +9,7 @@ import { Button } from '@/components/_buttons/Button'
 import { CloseRevenueShareButton } from '@/components/_crt/CloseRevenueShareButton'
 import { StartRevenueShare } from '@/components/_crt/StartRevenueShareModal/StartRevenueShareModal'
 import { StartSaleOrMarketButton } from '@/components/_crt/StartSaleOrMarketButton/StartSaleOrMarketButton'
+import { absoluteRoutes } from '@/config/routes'
 import { useUser } from '@/providers/user/user.hooks'
 import { HeaderContainer, MainContainer, TabsContainer } from '@/views/studio/CrtDashboard/CrtDashboard.styles'
 import { CrtDashboardMainTab } from '@/views/studio/CrtDashboard/tabs/CrtDashboardMainTab'
@@ -40,13 +41,22 @@ export const CrtDashboard = () => {
 
   return (
     <LimitedWidthContainer>
-      <StartRevenueShare show={openRevenueShareModal} tokenId="1" onClose={() => setOpenRevenueShareModal(false)} />
+      <StartRevenueShare
+        show={openRevenueShareModal}
+        token={data.creatorTokenById}
+        onClose={() => setOpenRevenueShareModal(false)}
+      />
       <MainContainer>
         <HeaderContainer>
           <Text variant="h700" as="h1">
             ${data.creatorTokenById.symbol ?? 'N/A'}
           </Text>
-          <Button variant="tertiary" icon={<SvgActionLinkUrl />} iconPlacement="right">
+          <Button
+            to={absoluteRoutes.viewer.channel(data.creatorTokenById.channel?.channel.id, { tab: 'Token' })}
+            variant="tertiary"
+            icon={<SvgActionLinkUrl />}
+            iconPlacement="right"
+          >
             See your token
           </Button>
         </HeaderContainer>
@@ -55,13 +65,12 @@ export const CrtDashboard = () => {
           <Tabs initialIndex={0} selected={currentTab} tabs={mappedTabs} onSelectTab={handleChangeTab} />
           {currentTab === 0 && (
             <>
-              <Button variant="secondary" icon={<SvgActionEdit />}>
+              <Button to={absoluteRoutes.studio.crtTokenEdit()} variant="secondary" icon={<SvgActionEdit />}>
                 Edit token page
               </Button>
-              <StartSaleOrMarketButton
-                hasActiveMarket={data.creatorTokenById.ammCurves.some((curve) => !curve.finalized)}
-                tokenName={data.creatorTokenById.symbol ?? 'N/A'}
-              />
+              {!data.creatorTokenById.ammCurves.some((curve) => !curve.finalized) && (
+                <StartSaleOrMarketButton tokenName={data.creatorTokenById.symbol ?? 'N/A'} />
+              )}
             </>
           )}
           {currentTab === 2 && (
