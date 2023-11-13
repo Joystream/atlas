@@ -2261,6 +2261,7 @@ export type BasicCreatorTokenFragment = {
   deissued: boolean
   status: Types.TokenStatus
   createdAt: Date
+  lastPrice?: string | null
   channel?: {
     __typename?: 'TokenChannel'
     channel: {
@@ -2332,6 +2333,7 @@ export type FullCreatorTokenFragment = {
   deissued: boolean
   status: Types.TokenStatus
   createdAt: Date
+  lastPrice?: string | null
   ammCurves: Array<{
     __typename?: 'AmmCurve'
     id: string
@@ -2989,6 +2991,7 @@ export const BasicCreatorTokenFragmentDoc = gql`
     deissued
     status
     createdAt
+    lastPrice
     channel {
       ... on TokenChannel {
         channel {

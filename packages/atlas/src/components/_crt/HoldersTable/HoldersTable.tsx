@@ -6,6 +6,7 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { Pill } from '@/components/Pill'
 import { Table, TableProps } from '@/components/Table'
 import { MemberCell } from '@/components/Table/Table.cells'
+import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
 
 const COLUMNS: TableProps['columns'] = [
   { Header: 'Member', accessor: 'member' },
@@ -18,16 +19,17 @@ const COLUMNS: TableProps['columns'] = [
 export type HoldersTableProps = {
   data: {
     member: BasicMembershipFieldsFragment
-    transferable: number
+    tokenId: string
     vested: number
     total: number
     allocation: number
   }[]
   isLoading: boolean
   currentMemberId: string
+  symbol?: string
 }
 
-export const HoldersTable = ({ data, currentMemberId }: HoldersTableProps) => {
+export const HoldersTable = ({ data, currentMemberId, symbol }: HoldersTableProps) => {
   const mappedData = useMemo(
     () =>
       data.map((row) => ({
@@ -37,14 +39,19 @@ export const HoldersTable = ({ data, currentMemberId }: HoldersTableProps) => {
             additionalNode={row.member.id === currentMemberId ? <Pill label="You" /> : null}
           />
         ),
-        transferable: <NumberFormat value={row.transferable} as="p" withToken customTicker="$JBC" />,
-        vested: <NumberFormat value={row.vested} as="p" withToken customTicker="$JBC" />,
-        total: <NumberFormat value={row.total} as="p" withToken customTicker="$JBC" />,
+        transferable: <TransferableBalance memberId={row.member.id} tokenId={row.tokenId} ticker={symbol} />,
+        vested: <NumberFormat value={row.vested} as="p" withToken customTicker={`$${symbol}`} />,
+        total: <NumberFormat value={row.total} as="p" withToken customTicker={`$${symbol}`} />,
         allocation: <NumberFormat value={row.allocation} as="p" format="short" withToken customTicker="%" />,
       })),
-    [currentMemberId, data]
+    [currentMemberId, data, symbol]
   )
   return <StyledTable columns={COLUMNS} data={mappedData} />
+}
+
+const TransferableBalance = ({ memberId, tokenId, ticker }: { memberId: string; tokenId: string; ticker?: string }) => {
+  const { tokenBalance } = useGetTokenBalance(tokenId, memberId)
+  return <NumberFormat value={tokenBalance} as="p" withToken customTicker={`$${ticker}`} />
 }
 
 const StyledTable = styled(Table)`
