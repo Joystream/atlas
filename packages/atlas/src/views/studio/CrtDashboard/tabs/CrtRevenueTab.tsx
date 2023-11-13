@@ -12,6 +12,7 @@ import { RevenueShareHistoryTable } from '@/components/_crt/RevenueShareHistoryT
 import { RevenueShareParticipationWidget } from '@/components/_crt/RevenueShareParticipationWidget'
 import { RevenueShareStakersTable } from '@/components/_crt/RevenueShareStakersTable'
 import { RevenueShareStateWidget } from '@/components/_crt/RevenueShareStateWidget'
+import { atlasConfig } from '@/config'
 import { useSubscribeAccountBalance } from '@/providers/joystream'
 import { useUser } from '@/providers/user/user.hooks'
 import { permillToPercentage } from '@/utils/number'
@@ -52,7 +53,7 @@ export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
               />
             }
             tooltip={{
-              text: 'Lorem ipsum',
+              text: `This is the amount of ${atlasConfig.joystream.tokenTicker} that is currently stored on your channel balance. To withdraw it you have to create a revenue share.`,
             }}
           />
         </GridItem>
