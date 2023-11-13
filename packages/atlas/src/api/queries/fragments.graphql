@@ -491,6 +491,7 @@ fragment BasicCreatorToken on CreatorToken {
   deissued
   status
   createdAt
+  lastPrice
   channel {
     ... on TokenChannel {
       channel {
