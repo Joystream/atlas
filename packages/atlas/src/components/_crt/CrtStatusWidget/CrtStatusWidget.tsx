@@ -1,49 +1,44 @@
 import BN from 'bn.js'
-import { FC, useRef, useState } from 'react'
+import { FC, useMemo, useRef, useState } from 'react'
 
+import { useGetHistoricalTokenAllocationQuery } from '@/api/queries/__generated__/creatorTokens.generated'
+import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { FlexBox } from '@/components/FlexBox'
 import { Information } from '@/components/Information'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
-import { NumberFormat, NumberFormatProps } from '@/components/NumberFormat'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { ExpandButton } from '@/components/_buttons/ExpandButton'
 import { BuyFromMarketButton } from '@/components/_crt/BuyFromMarketButton/BuyFromMarketButton'
 import { SellOnMarketButton } from '@/components/_crt/SellOnMarketButton/SellOnMarketButton'
 import { DetailsContent } from '@/components/_nft/NftTile'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { formatDate } from '@/utils/time'
 
 import { Drawer, StatisticsContainer, SupplyLine, ToggleContainer, Widget } from './CrtStatusWidget.styles'
 
-type Amount = NumberFormatProps['value']
 export type CrtStatusWidgetProps = {
-  name: string
-  creationDate: Date
-  supply: Amount
-  marketCap: Amount
-  revenue: Amount
-  revenueShare: Amount
-  transactionVolume: Amount
-  status: 'inactive' | 'sale' | 'market'
-  tokenId: string
+  token: FullCreatorTokenFragment
 }
-
-export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({
-  name,
-  creationDate,
-  supply,
-  marketCap,
-  revenue,
-  revenueShare,
-  transactionVolume,
-  tokenId,
-  status,
-}) => {
+// todo: total revenue
+export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({ token }) => {
   const drawer = useRef<HTMLDivElement>(null)
   const [isExpanded, expand] = useState(false)
   const smMatch = useMediaMatch('sm')
+  const { data } = useGetHistoricalTokenAllocationQuery({
+    variables: {
+      tokenId: token.id,
+    },
+    skip: !token.id,
+  })
+
+  const totalVolume = useMemo(() => {
+    return token.ammCurves.reduce((prev, next) => prev + Number(next.mintedByAmm) + Number(next.burnedByAmm), 0)
+  }, [token.ammCurves])
 
   const ticker = `$${name}`
+  const status = 'inactive'
 
   return (
     <Widget
@@ -51,9 +46,9 @@ export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({
       customNode={
         <>
           {status === 'inactive' ? (
-            <InactiveDetails symbol={ticker} totalSupply={supply} />
+            <InactiveDetails symbol={ticker} totalSupply={+token.totalSupply} />
           ) : status === 'sale' ? null : (
-            <MarketDetails tokenId={tokenId} symbol={ticker} totalSupply={supply} />
+            <MarketDetails tokenId={token.id} symbol={ticker} totalSupply={+token.totalSupply} />
           )}
 
           <StatisticsContainer>
@@ -72,13 +67,17 @@ export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({
                 avoidIconStyling
                 tileSize={smMatch ? 'big' : 'bigSmall'}
                 caption="Token creation date"
-                content={formatDate(creationDate)}
+                content={formatDate(new Date(token.createdAt))}
               />
               <DetailsContent
                 avoidIconStyling
                 tileSize={smMatch ? 'big' : 'bigSmall'}
                 caption="Market cap"
-                content={marketCap}
+                content={
+                  token.lastPrice && token.totalSupply
+                    ? hapiBnToTokenNumber(new BN(token.lastPrice).muln(+token.totalSupply))
+                    : 0
+                }
                 icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
                 withDenomination
               />
@@ -86,7 +85,7 @@ export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({
                 avoidIconStyling
                 tileSize={smMatch ? 'big' : 'bigSmall'}
                 caption="Total revenue"
-                content={revenue}
+                content={0}
                 icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
                 withDenomination
               />
@@ -94,7 +93,7 @@ export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({
                 avoidIconStyling
                 tileSize={smMatch ? 'big' : 'bigSmall'}
                 caption="Total revenue Shares"
-                content={revenueShare}
+                content={data?.getCumulativeHistoricalShareAllocation.cumulativeHistoricalAllocation ?? 0}
                 icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
                 withDenomination
               />
@@ -102,7 +101,7 @@ export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({
                 avoidIconStyling
                 tileSize={smMatch ? 'big' : 'bigSmall'}
                 caption="Total Transaction volume"
-                content={transactionVolume}
+                content={token.lastPrice ? hapiBnToTokenNumber(new BN(token.lastPrice).muln(totalVolume)) : 0}
                 icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
                 withDenomination
               />

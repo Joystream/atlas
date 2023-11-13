@@ -63,7 +63,7 @@ export const MemberCell = ({
   return (
     <FlexBox alignItems="center" gap={2}>
       <Avatar assetUrls={urls} />
-      <HandleContainer flow="column" gap={0}>
+      <HandleContainer flow="row" justifyContent="start" gap={2}>
         <Text variant="t200-strong" as="p" color="colorText" truncate>
           {member?.handle ?? 'Unknown'}
         </Text>
@@ -96,10 +96,6 @@ export const LoadingMemberRow = ({ memberId, additionalNode }: { memberId: strin
 
 const HandleContainer = styled(FlexBox)`
   overflow: hidden;
-
-  > * {
-    width: 100%;
-  }
 `
 
 export const TokenAmount = ({ tokenAmount, variant }: { tokenAmount: BN | number; variant?: TextVariant }) => {

@@ -97,6 +97,10 @@ export const StepCardContainer = styled.div<{ isActive: boolean }>`
     background-color: ${(props) =>
       props.isActive ? cVar('colorBackgroundPrimary') : cVar('colorBackgroundStrongAlpha')};
   }
+
+  > *:nth-of-type(3) {
+    margin-top: auto;
+  }
 `
 
 export const StepNumber = styled.div`
