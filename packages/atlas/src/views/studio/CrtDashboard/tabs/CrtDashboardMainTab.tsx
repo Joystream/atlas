@@ -56,6 +56,9 @@ export const CrtDashboardMainTab = ({ token }: CrtDashboardMainTabProps) => {
         member: {
           id_eq: memberId,
         },
+        token: {
+          id_eq: token.id,
+        },
       },
     },
   })

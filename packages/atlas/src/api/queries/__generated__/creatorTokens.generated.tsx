@@ -114,6 +114,7 @@ export type GetFullCreatorTokenQuery = {
       ammInitPrice: string
       burnedByAmm: string
       mintedByAmm: string
+      ammSlopeParameter: string
     }>
     sales: Array<{
       __typename?: 'Sale'

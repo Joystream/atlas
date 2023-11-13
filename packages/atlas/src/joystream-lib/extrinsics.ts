@@ -1179,18 +1179,14 @@ export class JoystreamLibExtrinsics {
     return { block }
   }
 
-  purchaseTokenOnMarketTx = async (tokenId: string, memberId: string, amount: string) => {
+  purchaseTokenOnMarketTx = async (tokenId: string, memberId: string, amount: string, slippageAmount: string) => {
     await this.ensureApi()
-
     const amountCast = createType('u128', new BN(amount))
     return this.api.tx.projectToken.buyOnAmm(
       parseInt(tokenId),
       parseInt(memberId),
       amountCast,
-      createType('Option<ITuple<[Permill, u128]>>', [
-        createType('Permill', new BN(0.5 * PERMILL_PER_PERCENT)),
-        amountCast,
-      ]) // percent, number of joy user wants to pay --- default on 0.5%
+      [createType('Permill', new BN(0.5 * PERMILL_PER_PERCENT)), createType('u128', new BN(slippageAmount))] // percent, number of joy user wants to pay --- default on 0.5%
     )
   }
 
@@ -1198,14 +1194,15 @@ export class JoystreamLibExtrinsics {
     tokenId,
     memberId,
     amount,
+    slippageAmount,
     cb
   ) => {
-    const tx = await this.purchaseTokenOnMarketTx(tokenId, memberId, amount)
+    const tx = await this.purchaseTokenOnMarketTx(tokenId, memberId, amount, slippageAmount)
     const { block } = await this.sendExtrinsic(tx, cb)
     return { block }
   }
 
-  sellTokenOnMarketTx = async (tokenId: string, memberId: string, amount: string) => {
+  sellTokenOnMarketTx = async (tokenId: string, memberId: string, amount: string, slippageAmount: string) => {
     await this.ensureApi()
 
     const amountCast = createType('u128', new BN(amount))
@@ -1213,10 +1210,7 @@ export class JoystreamLibExtrinsics {
       parseInt(tokenId),
       parseInt(memberId),
       amountCast,
-      createType('Option<ITuple<[Permill, u128]>>', [
-        createType('Permill', new BN(0.5 * PERMILL_PER_PERCENT)),
-        amountCast,
-      ]) // percent, number of joy user wants to pay --- default on 0.5%
+      [createType('Permill', new BN(0.5 * PERMILL_PER_PERCENT)), createType('u128', new BN(slippageAmount))] // percent, number of joy user wants to pay --- default on 0.5%
     )
   }
 
@@ -1224,9 +1218,10 @@ export class JoystreamLibExtrinsics {
     tokenId,
     memberId,
     amount,
+    slippageAmount,
     cb
   ) => {
-    const tx = await this.sellTokenOnMarketTx(tokenId, memberId, amount)
+    const tx = await this.sellTokenOnMarketTx(tokenId, memberId, amount, slippageAmount)
     const { block } = await this.sendExtrinsic(tx, cb)
     return { block }
   }
