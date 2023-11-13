@@ -101,7 +101,7 @@ export const CrtRevenueShareWidget = ({ token, onTabSwitch }: CrtHoldersWidgetPr
           {status === 'inactive' || !activeRevenueShare ? (
             <EmptyState />
           ) : (
-            <RevenueShareProgress revenueShare={activeRevenueShare} hasEnded={status === 'past'} />
+            <RevenueShareProgress token={token} revenueShare={activeRevenueShare} hasEnded={status === 'past'} />
           )}
 
           {status !== 'inactive' && (

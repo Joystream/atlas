@@ -98,7 +98,6 @@ export type GetFullCreatorTokenQuery = {
     annualCreatorRewardPermill: number
     revenueShareRatioPermill: number
     description?: string | null
-    revenueShareRatioPermill: number
     totalSupply: string
     id: string
     accountsNum: number
