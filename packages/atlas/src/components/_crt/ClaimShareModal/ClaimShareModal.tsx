@@ -1,3 +1,7 @@
+import BN from 'bn.js'
+
+import { useGetRevenueShareDividendQuery } from '@/api/queries/__generated__/creatorTokens.generated'
+import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgAlertsInformative24 } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
 import { FlexBox } from '@/components/FlexBox'
@@ -5,6 +9,9 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
+import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
+import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
+import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useFee, useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
@@ -15,38 +22,45 @@ type ClaimShareModalProps = {
   show?: boolean
   onClose: () => void
   tokenId?: string
+  token: FullCreatorTokenFragment
 }
 
-const getTokenDetails = (_?: string) => ({
-  tokenPrice: 100,
-  userProjectToken: 200,
-  revenueShareEnd: new Date(),
-})
-export const ClaimShareModal = ({ onClose, tokenId, show }: ClaimShareModalProps) => {
-  const tokenName = 'JBC'
+export const ClaimShareModal = ({ onClose, token, show }: ClaimShareModalProps) => {
+  const tokenName = token.symbol ?? 'N/A'
   const { joystream, proxyCallback } = useJoystream()
   const { memberId } = useUser()
   const { displaySnackbar } = useSnackbar()
   const handleTransaction = useTransaction()
+  const { tokenBalance } = useGetTokenBalance(token.id, memberId ?? '')
   const { fullFee } = useFee('participateInSplitTx')
-  const { tokenPrice, userProjectToken, revenueShareEnd } = getTokenDetails(tokenId)
+  const activeRevenueShare = token.revenueShares.find((rS) => !rS.finalized)
+  const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
+  const { data: dividedData } = useGetRevenueShareDividendQuery({
+    variables: {
+      tokenId: token.id,
+      stakingAmount: tokenBalance,
+    },
+    skip: !tokenBalance,
+  })
 
   const onSubmit = async () => {
-    if (!joystream || !tokenId || !memberId) return
+    if (!joystream || !token || !memberId || !tokenBalance || !activeRevenueShare) return
     handleTransaction({
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).participateInSplit(
-          tokenId,
+          token.id,
           memberId,
-          String(userProjectToken),
+          String(tokenBalance),
           proxyCallback(updateStatus)
         ),
       fee: fullFee,
       onTxSync: async () => {
         displaySnackbar({
-          title: `${tokenPrice * userProjectToken} ${atlasConfig.joystream.tokenTicker} received`,
-          description: `${userProjectToken} $${tokenName} is locked until the end of revenue share. (${formatDateTime(
-            revenueShareEnd
+          title: `${token.lastPrice ? hapiBnToTokenNumber(new BN(token.lastPrice).muln(tokenBalance)) : '-'} ${
+            atlasConfig.joystream.tokenTicker
+          } received`,
+          description: `${tokenBalance} $${tokenName} is locked until the end of revenue share. (${formatDateTime(
+            new Date(convertBlockToMsTimestamp(activeRevenueShare.endsAt) ?? 0)
           )
             .split(',')
             .join(' at')})`,
@@ -68,6 +82,7 @@ export const ClaimShareModal = ({ onClose, tokenId, show }: ClaimShareModalProps
       }}
       secondaryButton={{
         text: 'Cancel',
+        onClick: onClose,
       }}
     >
       <FlexBox flow="column" gap={6}>
@@ -83,7 +98,7 @@ export const ClaimShareModal = ({ onClose, tokenId, show }: ClaimShareModalProps
               You will lock
             </Text>
             <NumberFormat
-              value={userProjectToken}
+              value={tokenBalance}
               variant="t100"
               as="p"
               color="colorText"
@@ -96,14 +111,24 @@ export const ClaimShareModal = ({ onClose, tokenId, show }: ClaimShareModalProps
               Revenue share ends on
             </Text>
             <Text variant="t100" as="p" color="colorText">
-              {formatDateTime(revenueShareEnd).split(',').join(' at')}
+              {activeRevenueShare
+                ? formatDateTime(new Date(convertBlockToMsTimestamp(activeRevenueShare?.endsAt) ?? 0))
+                    .split(',')
+                    .join(' at')
+                : '-'}
             </Text>
           </FlexBox>
           <FlexBox justifyContent="space-between" alignItems="baseline">
             <Text variant="h300" as="h1" color="colorText">
               You will receive
             </Text>
-            <NumberFormat value={tokenPrice * userProjectToken} variant="h300" as="p" withDenomination withToken />
+            <NumberFormat
+              value={dividedData?.getShareDividend.dividendJoyAmount ?? 0}
+              variant="h300"
+              as="p"
+              withDenomination="before"
+              withToken
+            />
           </FlexBox>
         </FlexBox>
       </FlexBox>

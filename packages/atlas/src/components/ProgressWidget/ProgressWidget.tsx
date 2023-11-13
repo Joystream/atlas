@@ -21,28 +21,29 @@ import {
   StepNumber,
 } from '@/components/ProgressWidget/ProgressWidget.styles'
 import { Text } from '@/components/Text'
-import { Button, ButtonProps } from '@/components/_buttons/Button'
+import { Button } from '@/components/_buttons/Button'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { getProgressPercentage, responsive } from './ProgressWidget.utils'
 
-type StepButtonProps = {
-  text: string
-} & Omit<ButtonProps, 'children'>
-
 type StepProps = {
   title: string
   description: string
-  primaryButton: StepButtonProps
 }
 
 export type ProgressWidgetProps = {
   steps: StepProps[]
   activeStep: number
   goalComponent: ReactNode
+  renderCurrentStepActionButton: (step: number) => ReactNode
 }
 
-export const ProgressWidget = ({ steps, activeStep, goalComponent }: ProgressWidgetProps) => {
+export const ProgressWidget = ({
+  steps,
+  activeStep,
+  goalComponent,
+  renderCurrentStepActionButton,
+}: ProgressWidgetProps) => {
   const [isVisible, setIsVisible] = useState(false)
   const [glider, setGlider] = useState<SwiperInstance | null>(null)
   const drawer = useRef<HTMLDivElement>(null)
@@ -103,6 +104,7 @@ export const ProgressWidget = ({ steps, activeStep, goalComponent }: ProgressWid
                 step={step}
                 status={idx === activeStep ? 'active' : idx < activeStep ? 'done' : 'next'}
                 stepNumber={idx + 1}
+                button={renderCurrentStepActionButton(idx)}
               />
             ))}
           </Carousel>
@@ -140,9 +142,10 @@ type StepCardProps = {
   step: StepProps
   status: 'active' | 'done' | 'next'
   stepNumber: number
+  button: ReactNode
 }
 
-const StepCard = ({ step, status, stepNumber }: StepCardProps) => {
+const StepCard = ({ step, status, stepNumber, button }: StepCardProps) => {
   const smMatch = useMediaMatch('xs')
 
   return (
@@ -162,14 +165,7 @@ const StepCard = ({ step, status, stepNumber }: StepCardProps) => {
       </ColumnBox>
 
       <RowBox gap={4} wrap>
-        <Button
-          {...step.primaryButton}
-          variant={status === 'active' ? 'primary' : 'secondary'}
-          disabled={status === 'done'}
-          fullWidth={!smMatch}
-        >
-          {step.primaryButton.text}
-        </Button>
+        {button}
         <Button variant="tertiary" fullWidth={!smMatch} _textOnly icon={<SvgActionPlay />} iconPlacement="right">
           Learn more
         </Button>

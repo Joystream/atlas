@@ -35,7 +35,7 @@ Default.args = {
       total: 100,
       vested: 111,
       allocation: 50,
-      transferable: 10,
+      tokenId: '1',
     },
     {
       member: {
@@ -45,7 +45,7 @@ Default.args = {
       total: 122,
       vested: 22,
       allocation: 50,
-      transferable: 10,
+      tokenId: '1',
     },
     {
       member: {
@@ -55,7 +55,7 @@ Default.args = {
       total: 111,
       vested: 333,
       allocation: 50,
-      transferable: 10,
+      tokenId: '1',
     },
   ],
   isLoading: false,
