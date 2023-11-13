@@ -514,6 +514,7 @@ fragment FullCreatorToken on CreatorToken {
   ...BasicCreatorToken
   annualCreatorRewardPermill
   description
+  revenueShareRatioPermill
   ammCurves {
     id
     finalized

@@ -16,9 +16,10 @@ export type CrtBasicInfoWidgetProps = {
     icon?: ReactNode
     tooltipText?: string
   }[]
+  flow?: 'column' | 'row'
 }
 
-export const CrtBasicInfoWidget = ({ name, details, titleColor }: CrtBasicInfoWidgetProps) => {
+export const CrtBasicInfoWidget = ({ name, details, titleColor, flow = 'row' }: CrtBasicInfoWidgetProps) => {
   const [titleRef, setTitleRef] = useState<HTMLSpanElement | null>(null)
   const smMatch = useMediaMatch('sm')
   return (
@@ -27,7 +28,7 @@ export const CrtBasicInfoWidget = ({ name, details, titleColor }: CrtBasicInfoWi
       titleVariant="h700"
       titleColor={titleColor ?? 'colorTextStrong'}
       customNode={
-        <FlexBox gap={5}>
+        <FlexBox flow={flow} gap={5}>
           <Tooltip reference={titleRef} text="Token name" placement="top-start" />
           {details.map((detail, idx) => (
             <DetailsContent

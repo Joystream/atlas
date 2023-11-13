@@ -1,18 +1,20 @@
 import styled from '@emotion/styled'
-import { Control, Controller, useFieldArray } from 'react-hook-form'
+import { Control, Controller, FieldValues, Path, useFieldArray } from 'react-hook-form'
+import { FieldArray } from 'react-hook-form/dist/types/fieldArray'
+import { FieldArrayPath } from 'react-hook-form/dist/types/path'
 
 import { SvgActionPlus } from '@/assets/icons'
 import { Button } from '@/components/_buttons/Button'
 import { BenefitInput } from '@/components/_inputs/BenefitInput'
 import { sizes } from '@/styles'
 
-type BenefitsInputProps = {
-  name: string
-  control: Control
+type BenefitsInputProps<T extends FieldValues> = {
+  name: FieldArrayPath<T>
+  control: Control<T>
 }
 
-export const BenefitsInput = ({ control, name }: BenefitsInputProps) => {
-  const { fields, move, remove, append } = useFieldArray({
+export const BenefitsInput = <T extends FieldValues>({ control, name }: BenefitsInputProps<T>) => {
+  const { fields, move, remove, append } = useFieldArray<T>({
     control: control,
     name: name,
   })
@@ -23,7 +25,7 @@ export const BenefitsInput = ({ control, name }: BenefitsInputProps) => {
         return (
           <Controller
             key={field.id}
-            name={`${name}.${index}`}
+            name={`${name}.${index}` as Path<T>}
             control={control}
             render={({ field: { value, onChange } }) => (
               <BenefitInput
@@ -40,7 +42,11 @@ export const BenefitsInput = ({ control, name }: BenefitsInputProps) => {
           />
         )
       })}
-      <Button variant="tertiary" icon={<SvgActionPlus />} onClick={() => append({ title: '', description: '' })}>
+      <Button
+        variant="tertiary"
+        icon={<SvgActionPlus />}
+        onClick={() => append({ title: '', description: '' } as FieldArray<T, FieldArrayPath<T>>)}
+      >
         Add benefit
       </Button>
     </Container>
