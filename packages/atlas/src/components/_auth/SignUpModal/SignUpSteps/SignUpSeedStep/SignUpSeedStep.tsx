@@ -2,21 +2,20 @@ import { mnemonicGenerate } from '@polkadot/util-crypto'
 import { FC, useCallback, useEffect, useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
-import { SvgActionCopy } from '@/assets/icons'
 import { AuthenticationModalStepTemplate } from '@/components/_auth/AuthenticationModalStepTemplate'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { FormField } from '@/components/_inputs/FormField'
 import { MemberFormData } from '@/hooks/useCreateMember'
 
-import { StyledTextArea, StyledTextButton } from './SignupSeedStep.styles'
+import { StyledTextArea } from './SignupSeedStep.styles'
 
-import { CheckboxWrapper, StyledSignUpForm } from '../SignUpSteps.styles'
+import { StyledSignUpForm } from '../SignUpSteps.styles'
 import { SignUpStepsCommonProps } from '../SignUpSteps.types'
 
-type FormData = Pick<MemberFormData, 'confirmedCopy' | 'mnemonic'>
+type FormData = Pick<MemberFormData, 'allowDownload' | 'mnemonic'>
 
 type SignUpSeedStepProps = {
-  onSeedSubmit: (mnemonic: string, confirmedCopy: boolean) => void
+  onSeedSubmit: (mnemonic: string, allowDownload: boolean) => void
 } & SignUpStepsCommonProps &
   FormData
 
@@ -24,20 +23,12 @@ export const SignUpSeedStep: FC<SignUpSeedStepProps> = ({
   hasNavigatedBack,
   setPrimaryButtonProps,
   mnemonic,
-  confirmedCopy,
   onSeedSubmit,
 }) => {
-  const {
-    control,
-    register,
-    getValues,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm<FormData>({
+  const { control, register, getValues, handleSubmit, setValue } = useForm<FormData>({
     shouldFocusError: true,
     defaultValues: {
-      confirmedCopy: confirmedCopy,
+      allowDownload: true,
       mnemonic,
     },
   })
@@ -51,22 +42,25 @@ export const SignUpSeedStep: FC<SignUpSeedStepProps> = ({
   }, [mnemonic, setValue])
 
   const handleGoToNextStep = useCallback(() => {
+    const downloadSeed = () => {
+      const blobText = new Blob([getValues('mnemonic')], { type: 'text/plain' })
+      const url = URL.createObjectURL(blobText)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = 'mnemonic.txt'
+      link.click()
+
+      link.remove()
+      URL.revokeObjectURL(url)
+    }
+
     handleSubmit((data) => {
-      onSeedSubmit(data.mnemonic, data.confirmedCopy)
+      onSeedSubmit(data.mnemonic, data.allowDownload)
+      if (data.allowDownload) {
+        downloadSeed()
+      }
     })()
-  }, [handleSubmit, onSeedSubmit])
-
-  const downloadSeed = () => {
-    const blobText = new Blob([getValues('mnemonic')], { type: 'text/plain' })
-    const url = URL.createObjectURL(blobText)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = 'mnemonic.txt'
-    link.click()
-
-    link.remove()
-    URL.revokeObjectURL(url)
-  }
+  }, [getValues, handleSubmit, onSeedSubmit])
 
   useEffect(() => {
     setPrimaryButtonProps({
@@ -77,7 +71,6 @@ export const SignUpSeedStep: FC<SignUpSeedStepProps> = ({
 
   return (
     <AuthenticationModalStepTemplate
-      hasNegativeBottomMargin
       title="Write down your seed"
       hasNavigatedBack={hasNavigatedBack}
       subtitle="Please write down your password recovery seed and keep it in a safe place. It's the only way to recover your password if you forget it."
@@ -86,33 +79,16 @@ export const SignUpSeedStep: FC<SignUpSeedStepProps> = ({
         <FormField label="Password recovery seed">
           <StyledTextArea data-ls-disabled {...register('mnemonic')} disabled />
         </FormField>
-        <StyledTextButton variant="secondary" icon={<SvgActionCopy />} iconPlacement="left" onClick={downloadSeed}>
-          Download as text file
-        </StyledTextButton>
         <Controller
           control={control}
-          name="confirmedCopy"
-          rules={{
-            validate: {
-              valid: (value) => {
-                if (!value) {
-                  return 'Agree that you saved your wallet seed phrase safely.'
-                } else {
-                  return value
-                }
-              },
-            },
-          }}
+          name="allowDownload"
           render={({ field: { onChange, value } }) => (
-            <CheckboxWrapper isAccepted={value}>
-              <Checkbox
-                onChange={(val) => onChange(val)}
-                caption={errors.confirmedCopy?.message}
-                error={!!errors.confirmedCopy}
-                value={value}
-                label="I have saved my wallet seed phrase safely"
-              />
-            </CheckboxWrapper>
+            <Checkbox
+              onChange={(val) => onChange(val)}
+              value={value}
+              label="Download the wallet seed as txt file"
+              caption="Download will start after clicking continue"
+            />
           )}
         />
       </StyledSignUpForm>
