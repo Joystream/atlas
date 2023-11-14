@@ -173,8 +173,8 @@ export const StyledSvgIllustrativeFileFailed = styled(SvgIllustrativeFileFailed)
   }
 `
 
-export const BadgeContainer = styled.div<{ hideBadge?: boolean }>`
-  position: ${({ hideBadge }) => (hideBadge ? 'absolute' : 'relative')};
+export const BadgeContainer = styled.div<{ 'data-badge': string | number | boolean | undefined }>`
+  position: ${(props) => (props['data-badge'] ? 'relative' : 'absolute')};
   ${smallBadgeStyles}
 
   &[data-badge]::after {

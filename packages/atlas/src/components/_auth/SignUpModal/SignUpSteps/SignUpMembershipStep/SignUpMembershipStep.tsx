@@ -107,7 +107,6 @@ export const SignUpMembershipStep: FC<SignInModalMembershipStepProps> = ({
                     }
                     assetUrls={imageInputFile?.url ? [imageInputFile.url] : []}
                     editable
-                    hideBadge={true}
                   />
                   <ImageCropModal
                     imageType="avatar"

@@ -35,7 +35,6 @@ export type AvatarProps = PropsWithChildren<{
   clickable?: boolean
   disableHoverDimm?: boolean
   badge?: boolean | string | number
-  hideBadge?: boolean
 }>
 
 export const Avatar: FC<AvatarProps> = ({
@@ -53,7 +52,6 @@ export const Avatar: FC<AvatarProps> = ({
   onImageValidation,
   disableHoverDimm,
   badge,
-  hideBadge,
 }) => {
   const isEditable = !loading && editable && size !== 32 && size !== 24
 
@@ -87,7 +85,7 @@ export const Avatar: FC<AvatarProps> = ({
   }, [size])
 
   return (
-    <BadgeContainer data-badge={badge} hideBadge={hideBadge}>
+    <BadgeContainer data-badge={badge}>
       <Container
         as={onClick ? 'button' : 'div'}
         type={onClick ? 'button' : undefined}
