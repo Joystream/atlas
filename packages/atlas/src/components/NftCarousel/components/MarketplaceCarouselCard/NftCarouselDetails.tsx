@@ -20,8 +20,10 @@ import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { DetailsContent } from '@/components/_nft/NftTile'
 import { BackgroundVideoPlayer } from '@/components/_video/BackgroundVideoPlayer'
+import { VideoPoster, VideoWrapper } from '@/components/_video/BackgroundVideoPlayer/BackgroundVideoPlayer.styles'
 import { absoluteRoutes } from '@/config/routes'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
+import { useDebounceValue } from '@/hooks/useDebounceValue'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
@@ -42,6 +44,7 @@ export const NftCarouselDetails = ({
   const [isPaused, setIsPaused] = useState(!active)
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
   const nftStatus = getNftStatus(nft, nft?.video)
+  const debouncedActive = useDebounceValue(active, 500)
 
   const ownerAvatarUrls =
     nft.owner.__typename === 'NftOwnerChannel'
@@ -157,97 +160,101 @@ export const NftCarouselDetails = ({
   }
 
   return (
-    <Container isActive={active}>
+    <Container>
       <VideoContainer>
-        <BackgroundVideoPlayer
-          videoId={nft.video.id}
-          withFade={active}
-          playing={active}
-          muted={true}
-          onPause={() => setIsPaused(true)}
-          onPlay={() => setIsPaused(false)}
-          preload="auto"
-          src={mediaUrls ?? undefined}
-          poster={thumbnailUrls ?? undefined}
-          handleActions={active}
-          videoPlaytime={30}
-          onEnded={slideNext}
-        />
+        {!active ? (
+          <VideoWrapper>
+            <VideoPoster resolvedUrls={thumbnailUrls ?? undefined} type="cover" alt="" />
+          </VideoWrapper>
+        ) : (
+          <BackgroundVideoPlayer
+            videoId={nft.video.id}
+            withFade={active ? debouncedActive : active}
+            playing={active ? debouncedActive : active}
+            muted={true}
+            onPause={() => setIsPaused(true)}
+            onPlay={() => setIsPaused(false)}
+            preload="auto"
+            src={mediaUrls ?? undefined}
+            poster={thumbnailUrls ?? undefined}
+            handleActions={active ? debouncedActive : active}
+            videoPlaytime={30}
+            onEnded={slideNext}
+          />
+        )}
       </VideoContainer>
-      {active && (
-        <CSSTransition in={active} timeout={100} classNames={transitions.names.fade} unmountOnExit>
-          <InformationContainer isPaused={isPaused}>
-            <DetailsContainer>
-              <AvatarGroup spreadAvatars avatarStrokeColor="transparent" avatars={avatars} />
-              <Text variant={smMatch ? 'h500' : 'h400'} as={smMatch ? 'h5' : 'h4'}>
-                <StyledLink to={absoluteRoutes.viewer.video(nft.video.id)}>{nftDetails.title}</StyledLink>
-              </Text>
-              <StatsContainer>
-                {nftDetails.buyNow && (
-                  <DetailsContent
-                    avoidIconStyling
-                    tileSize={smMatch ? 'big' : 'bigSmall'}
-                    caption="BUY NOW"
-                    content={nftDetails.buyNow}
-                    icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
-                    withDenomination
-                  />
-                )}
-                {nftDetails.topBid && (
-                  <DetailsContent
-                    avoidIconStyling
-                    tileSize={smMatch ? 'big' : 'bigSmall'}
-                    caption="TOP BID"
-                    content={nftDetails.topBid}
-                    icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
-                    withDenomination
-                  />
-                )}
-                {nftDetails.minBid && (
-                  <DetailsContent
-                    avoidIconStyling
-                    tileSize={smMatch ? 'big' : 'bigSmall'}
-                    caption="MIN BID"
-                    content={nftDetails.minBid}
-                    icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
-                    withDenomination
-                  />
-                )}
-                {nftStatus?.status === 'idle' && (
-                  <DetailsContent
-                    tileSize={smMatch ? 'big' : 'bigSmall'}
-                    caption="STATUS"
-                    content="Not for sale"
-                    secondary
-                    icon={<SvgActionNotForSale width={smMatch ? 24 : 16} height={smMatch ? 24 : 16} />}
-                  />
-                )}
+      <CSSTransition in={active} timeout={100} classNames={transitions.names.fade} unmountOnExit>
+        <InformationContainer isPaused={isPaused}>
+          <DetailsContainer>
+            <AvatarGroup spreadAvatars avatarStrokeColor="transparent" avatars={avatars} />
+            <Text variant={smMatch ? 'h500' : 'h400'} as={smMatch ? 'h5' : 'h4'}>
+              <StyledLink to={absoluteRoutes.viewer.video(nft.video.id)}>{nftDetails.title}</StyledLink>
+            </Text>
+            <StatsContainer>
+              {nftDetails.buyNow && (
+                <DetailsContent
+                  avoidIconStyling
+                  tileSize={smMatch ? 'big' : 'bigSmall'}
+                  caption="BUY NOW"
+                  content={nftDetails.buyNow}
+                  icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
+                  withDenomination
+                />
+              )}
+              {nftDetails.topBid && (
+                <DetailsContent
+                  avoidIconStyling
+                  tileSize={smMatch ? 'big' : 'bigSmall'}
+                  caption="TOP BID"
+                  content={nftDetails.topBid}
+                  icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
+                  withDenomination
+                />
+              )}
+              {nftDetails.minBid && (
+                <DetailsContent
+                  avoidIconStyling
+                  tileSize={smMatch ? 'big' : 'bigSmall'}
+                  caption="MIN BID"
+                  content={nftDetails.minBid}
+                  icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
+                  withDenomination
+                />
+              )}
+              {nftStatus?.status === 'idle' && (
+                <DetailsContent
+                  tileSize={smMatch ? 'big' : 'bigSmall'}
+                  caption="STATUS"
+                  content="Not for sale"
+                  secondary
+                  icon={<SvgActionNotForSale width={smMatch ? 24 : 16} height={smMatch ? 24 : 16} />}
+                />
+              )}
 
-                {timeLeft && (
-                  <DetailsContent
-                    tileSize={smMatch ? 'big' : 'bigSmall'}
-                    caption="AUCTION ENDS IN"
-                    content={timeLeft.split(':').map((tick, i) => {
-                      return (
-                        <>
-                          {i !== 0 ? (
-                            <Text as="span" color="colorText" variant={smMatch ? 'h500' : 'h400'}>
-                              :
-                            </Text>
-                          ) : null}
-                          <Text as="span" variant={smMatch ? 'h500' : 'h400'}>
-                            {tick}
+              {timeLeft && (
+                <DetailsContent
+                  tileSize={smMatch ? 'big' : 'bigSmall'}
+                  caption="AUCTION ENDS IN"
+                  content={timeLeft.split(':').map((tick, i) => {
+                    return (
+                      <>
+                        {i !== 0 ? (
+                          <Text as="span" color="colorText" variant={smMatch ? 'h500' : 'h400'}>
+                            :
                           </Text>
-                        </>
-                      )
-                    })}
-                  />
-                )}
-              </StatsContainer>
-            </DetailsContainer>
-          </InformationContainer>
-        </CSSTransition>
-      )}
+                        ) : null}
+                        <Text as="span" variant={smMatch ? 'h500' : 'h400'}>
+                          {tick}
+                        </Text>
+                      </>
+                    )
+                  })}
+                />
+              )}
+            </StatsContainer>
+          </DetailsContainer>
+        </InformationContainer>
+      </CSSTransition>
     </Container>
   )
 }
