@@ -48,6 +48,7 @@ const getPlayerWrapperCinematicStyles = ({ cinematicView }: CinematicView) =>
       `
 
 export const PlayerWrapper = styled(LayoutGrid)<CinematicView>`
+  width: inherit;
   ${getPlayerWrapperCinematicStyles};
 `
 

@@ -28,7 +28,7 @@ export type MemberFormData = {
   mnemonic: string
   authorizationCode?: string
   userId?: string
-  confirmedCopy: boolean
+  allowDownload: boolean
   referrerChannelId?: string
 }
 
