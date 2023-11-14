@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
-import { Pagination } from 'swiper'
 import 'swiper/css'
+import { Navigation, Pagination } from 'swiper/modules'
 import { SwiperProps, SwiperSlide } from 'swiper/react'
 import { Swiper as SwiperType } from 'swiper/types'
 
@@ -15,7 +15,7 @@ export type CarouselProps = {
 } & SwiperProps
 
 const dotsProps = {
-  modules: [Pagination],
+  modules: [Pagination, Navigation],
   pagination: {
     clickable: true,
     bulletClass: 'bullet',
