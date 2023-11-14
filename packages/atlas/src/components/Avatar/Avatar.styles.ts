@@ -5,6 +5,7 @@ import styled from '@emotion/styled'
 import { SvgActionAddImage, SvgActionEdit, SvgIllustrativeFileFailed } from '@/assets/icons'
 import { SvgAvatarSilhouette } from '@/assets/illustrations'
 import { AssetImage } from '@/components/AssetImage'
+import { smallBadgeStyles } from '@/components/Badge'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, square, zIndex } from '@/styles'
 
