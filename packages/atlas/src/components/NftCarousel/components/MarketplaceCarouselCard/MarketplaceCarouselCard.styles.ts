@@ -20,7 +20,7 @@ export const InformationContainer = styled.div<{ isPaused: boolean }>`
   }
 `
 
-export const Container = styled.div<{ isActive: boolean }>`
+export const Container = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
