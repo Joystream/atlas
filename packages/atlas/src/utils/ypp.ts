@@ -4,7 +4,7 @@ import { YppChannelStatus } from '@/views/global/YppLandingView/YppLandingView.t
 const configTiers = atlasConfig.features.ypp.tiersDefinition
 type ConfigTier = typeof configTiers[number]['tier']
 
-export const yppBackendTierToConfig = (beTier: YppChannelStatus): ConfigTier | undefined => {
+export const yppBackendTierToConfig = (beTier?: YppChannelStatus): ConfigTier | undefined => {
   switch (beTier) {
     case 'Verified::Bronze':
       return 'bronze'

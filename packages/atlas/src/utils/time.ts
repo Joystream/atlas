@@ -71,10 +71,10 @@ export const convertDateFormat = (timestamp: Date | string) => {
   return timestamp instanceof Date ? timestamp : parseISO(timestamp)
 }
 
-export const getNextFriday = (date = new Date()) => {
+export const getNextTuesday = (date = new Date()) => {
   const nextDate = new Date(date)
   const currentDayOfWeek = nextDate.getDay()
-  const daysToAdd = currentDayOfWeek <= 5 ? 5 - currentDayOfWeek : 7 - currentDayOfWeek + 5
+  const daysToAdd = currentDayOfWeek <= 5 ? 2 - currentDayOfWeek : 7 - currentDayOfWeek + 2
   nextDate.setDate(nextDate.getDate() + daysToAdd)
   return nextDate
 }
