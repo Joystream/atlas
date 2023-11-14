@@ -74,7 +74,7 @@ export const convertDateFormat = (timestamp: Date | string) => {
 export const getNextTuesday = (date = new Date()) => {
   const nextDate = new Date(date)
   const currentDayOfWeek = nextDate.getDay()
-  const daysToAdd = currentDayOfWeek <= 5 ? 2 - currentDayOfWeek : 7 - currentDayOfWeek + 2
+  const daysToAdd = currentDayOfWeek <= 2 ? 2 - currentDayOfWeek : 7 - currentDayOfWeek + 2
   nextDate.setDate(nextDate.getDate() + daysToAdd)
   return nextDate
 }
