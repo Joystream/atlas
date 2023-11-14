@@ -86,7 +86,7 @@ export const SignUpSeedStep: FC<SignUpSeedStepProps> = ({
             <Checkbox
               onChange={(val) => onChange(val)}
               value={value}
-              label="Download the wallet seed as txt file"
+              label="Download the wallet seed as .txt file"
               caption="Download will start after clicking continue"
             />
           )}
