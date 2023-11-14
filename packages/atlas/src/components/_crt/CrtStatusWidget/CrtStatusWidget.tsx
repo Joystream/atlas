@@ -7,7 +7,6 @@ import { SvgJoyTokenSilver24 } from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox'
 import { Information } from '@/components/Information'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
-import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { ExpandButton } from '@/components/_buttons/ExpandButton'
 import { BuyFromMarketButton } from '@/components/_crt/BuyFromMarketButton/BuyFromMarketButton'
@@ -48,9 +47,9 @@ export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({ token }) => {
       customNode={
         <>
           {status === 'inactive' ? (
-            <InactiveDetails symbol={ticker} totalSupply={+token.totalSupply} />
+            <InactiveDetails symbol={ticker} />
           ) : status === 'market' ? (
-            <MarketDetails token={token} symbol={ticker} totalSupply={+token.totalSupply} />
+            <MarketDetails token={token} />
           ) : null}
 
           <StatisticsContainer>
@@ -86,14 +85,6 @@ export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({ token }) => {
               <DetailsContent
                 avoidIconStyling
                 tileSize={smMatch ? 'big' : 'bigSmall'}
-                caption="Total revenue"
-                content={0}
-                icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
-                withDenomination
-              />
-              <DetailsContent
-                avoidIconStyling
-                tileSize={smMatch ? 'big' : 'bigSmall'}
                 caption="Total revenue Shares"
                 content={data?.getCumulativeHistoricalShareAllocation.cumulativeHistoricalAllocation ?? 0}
                 icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
@@ -115,32 +106,15 @@ export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({ token }) => {
   )
 }
 
-const InactiveDetails = ({ symbol, totalSupply }: { symbol: string; totalSupply: number | BN }) => {
+const InactiveDetails = (_: { symbol: string }) => {
   return (
-    <>
-      <Text as="h4" variant="h500">
-        No active sale
-      </Text>
-      <SupplyLine>
-        <Text as="span" variant="t100" color="colorText">
-          Total supply:
-        </Text>
-        <NumberFormat as="span" variant="t100" format="short" value={totalSupply} customTicker={symbol} withToken />
-        <Information />
-      </SupplyLine>
-    </>
+    <Text as="h4" variant="h500">
+      No active sale
+    </Text>
   )
 }
 
-const MarketDetails = ({
-  symbol,
-  totalSupply,
-  token,
-}: {
-  symbol: string
-  totalSupply: number | BN
-  token: FullCreatorTokenFragment
-}) => {
+const MarketDetails = ({ token }: { token: FullCreatorTokenFragment }) => {
   const calculateSlippageAmount = useCallback(
     (amount: number) => {
       const currentAmm = token?.ammCurves.find((amm) => !amm.finalized)
@@ -168,24 +142,15 @@ const MarketDetails = ({
         <BuyFromMarketButton tokenId={token.id} />
       </FlexBox>
 
-      <FlexBox width="100%" justifyContent="space-between">
-        <SupplyLine>
-          <Text as="span" variant="t100" color="colorText">
-            Type:
-          </Text>
-          <Text variant="t100" as="p">
-            Market
-          </Text>
-          <Information />
-        </SupplyLine>
-        <SupplyLine>
-          <Text as="span" variant="t100" color="colorText">
-            Total supply:
-          </Text>
-          <NumberFormat as="span" variant="t100" format="short" value={totalSupply} customTicker={symbol} withToken />
-          <Information />
-        </SupplyLine>
-      </FlexBox>
+      <SupplyLine>
+        <Text as="span" variant="t100" color="colorText">
+          Type:
+        </Text>
+        <Text variant="t100" as="p">
+          Market
+        </Text>
+        <Information />
+      </SupplyLine>
     </>
   )
 }
