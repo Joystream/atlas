@@ -171,3 +171,15 @@ export const StyledSvgIllustrativeFileFailed = styled(SvgIllustrativeFileFailed)
     fill: ${cVar('colorCoreNeutral100')};
   }
 `
+
+export const BadgeContainer = styled.div<{ 'data-badge': string | number | boolean | undefined }>`
+  display: ${(props) => (props['data-badge'] ? 'block' : 'contents')};
+  position: relative;
+  ${smallBadgeStyles}
+
+  &[data-badge]::after {
+    position: absolute;
+    right: -6px;
+    top: -6px;
+  }
+`
