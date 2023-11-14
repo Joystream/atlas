@@ -20,7 +20,7 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useYppAuthorizeHandler } from '@/hooks/useYppAuthorizeHandler'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user/user.hooks'
-import { formatDate, getNextFriday } from '@/utils/time'
+import { formatDate, getNextWeekday } from '@/utils/time'
 import { BOOST_TIMESTAMP, getTierRewards, yppBackendTierToConfig } from '@/utils/ypp'
 import { YppAuthorizationModal } from '@/views/global/YppLandingView/YppAuthorizationModal'
 import { configYppIconMapper } from '@/views/global/YppLandingView/sections/YppFooter'
@@ -53,8 +53,9 @@ export const YppDashboardMainTab: FC = () => {
   const mdMatch = useMediaMatch('md')
   const smMatch = useMediaMatch('sm')
   const lgMatch = useMediaMatch('lg')
-  const nextPayoutDate = getNextFriday()
+  const nextPayoutDate = getNextWeekday(new Date(), 2)
   const rewardMultiplier =
+    yppBackendTierToConfig(currentChannel?.yppStatus) !== 'bronze' &&
     new Date(currentChannel?.createdAt || 0).getTime() > BOOST_TIMESTAMP
       ? atlasConfig.features.ypp.tierBoostMultiplier || 1
       : 1
@@ -109,7 +110,7 @@ export const YppDashboardMainTab: FC = () => {
           <WidgetTile
             title="Next payments round"
             tooltip={{
-              text: 'All of the payments are processed every Friday. The hour of payouts may vary.',
+              text: 'All of the payments are processed every Tuesday. The hour of payouts may vary.',
               placement: 'top-start',
             }}
             customNode={
@@ -161,7 +162,7 @@ export const YppDashboardMainTab: FC = () => {
               }
               description={
                 currentChannel?.yppStatus.startsWith('Verified')
-                  ? `You will receive sign up bonus on (Friday) ${formatDate(nextPayoutDate)}`
+                  ? `You will receive sign up bonus on (Tuesday) ${formatDate(nextPayoutDate)}`
                   : 'Connect you YouTube channels via a step-by-step flow and get your first reward. You can sign up with multiple channels!'
               }
               dollarAmount={
