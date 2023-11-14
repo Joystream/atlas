@@ -20,7 +20,7 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useYppAuthorizeHandler } from '@/hooks/useYppAuthorizeHandler'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user/user.hooks'
-import { formatDate, getNextTuesday } from '@/utils/time'
+import { formatDate, getNextWeekday } from '@/utils/time'
 import { BOOST_TIMESTAMP, getTierRewards, yppBackendTierToConfig } from '@/utils/ypp'
 import { YppAuthorizationModal } from '@/views/global/YppLandingView/YppAuthorizationModal'
 import { configYppIconMapper } from '@/views/global/YppLandingView/sections/YppFooter'
@@ -53,7 +53,7 @@ export const YppDashboardMainTab: FC = () => {
   const mdMatch = useMediaMatch('md')
   const smMatch = useMediaMatch('sm')
   const lgMatch = useMediaMatch('lg')
-  const nextPayoutDate = getNextTuesday()
+  const nextPayoutDate = getNextWeekday(new Date(), 2)
   const rewardMultiplier =
     yppBackendTierToConfig(currentChannel?.yppStatus) !== 'bronze' &&
     new Date(currentChannel?.createdAt || 0).getTime() > BOOST_TIMESTAMP

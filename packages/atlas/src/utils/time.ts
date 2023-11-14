@@ -71,10 +71,11 @@ export const convertDateFormat = (timestamp: Date | string) => {
   return timestamp instanceof Date ? timestamp : parseISO(timestamp)
 }
 
-export const getNextTuesday = (date = new Date()) => {
+// weekday: 1 - monday, 2 - tuesday ... 7- sunday
+export const getNextWeekday = (date = new Date(), weekday = 1) => {
   const nextDate = new Date(date)
   const currentDayOfWeek = nextDate.getDay()
-  const daysToAdd = currentDayOfWeek <= 2 ? 2 - currentDayOfWeek : 7 - currentDayOfWeek + 2
+  const daysToAdd = currentDayOfWeek <= weekday ? weekday - currentDayOfWeek : 7 - currentDayOfWeek + weekday
   nextDate.setDate(nextDate.getDate() + daysToAdd)
   return nextDate
 }
