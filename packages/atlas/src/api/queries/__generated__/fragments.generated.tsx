@@ -2742,6 +2742,27 @@ export type BasicCreatorTokenHolderFragment = {
   }>
 }
 
+export type BasicRevenueShareFragment = {
+  __typename?: 'RevenueShare'
+  id: string
+  allocation: string
+  claimed: string
+  endsAt: number
+  createdIn: number
+  finalized: boolean
+  participantsNum: number
+  startingAt: number
+  token: { __typename?: 'CreatorToken'; id: string; symbol?: string | null }
+  stakers: Array<{
+    __typename?: 'RevenueShareParticipation'
+    id: string
+    stakedAmount: string
+    earnings: string
+    createdIn: number
+    account: { __typename?: 'TokenAccount'; member: { __typename?: 'Membership'; id: string } }
+  }>
+}
+
 export type BasicCreatorTokenFragment = {
   __typename?: 'CreatorToken'
   id: string
@@ -2752,6 +2773,7 @@ export type BasicCreatorTokenFragment = {
   status: Types.TokenStatus
   createdAt: Date
   lastPrice?: string | null
+  revenueShares: Array<{ __typename?: 'RevenueShare'; id: string }>
   channel?: {
     __typename?: 'TokenChannel'
     channel: {
@@ -2864,6 +2886,7 @@ export type FullCreatorTokenFragment = {
     finalized: boolean
     participantsNum: number
     startingAt: number
+    token: { __typename?: 'CreatorToken'; id: string; symbol?: string | null }
     stakers: Array<{
       __typename?: 'RevenueShareParticipation'
       id: string
@@ -3473,6 +3496,9 @@ export const BasicCreatorTokenFragmentDoc = gql`
     status
     createdAt
     lastPrice
+    revenueShares {
+      id
+    }
     channel {
       ... on TokenChannel {
         channel {
@@ -3493,6 +3519,33 @@ export const BasicCreatorTokenFragmentDoc = gql`
   }
   ${BasicChannelFieldsFragmentDoc}
   ${StorageDataObjectFieldsFragmentDoc}
+`
+export const BasicRevenueShareFragmentDoc = gql`
+  fragment BasicRevenueShare on RevenueShare {
+    id
+    allocation
+    claimed
+    endsAt
+    createdIn
+    finalized
+    participantsNum
+    startingAt
+    token {
+      id
+      symbol
+    }
+    stakers {
+      id
+      stakedAmount
+      earnings
+      createdIn
+      account {
+        member {
+          id
+        }
+      }
+    }
+  }
 `
 export const FullCreatorTokenFragmentDoc = gql`
   fragment FullCreatorToken on CreatorToken {
@@ -3531,26 +3584,9 @@ export const FullCreatorTokenFragmentDoc = gql`
       }
     }
     revenueShares {
-      id
-      allocation
-      claimed
-      endsAt
-      createdIn
-      finalized
-      participantsNum
-      startingAt
-      stakers {
-        id
-        stakedAmount
-        earnings
-        createdIn
-        account {
-          member {
-            id
-          }
-        }
-      }
+      ...BasicRevenueShare
     }
   }
   ${BasicCreatorTokenFragmentDoc}
+  ${BasicRevenueShareFragmentDoc}
 `

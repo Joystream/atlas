@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   useGetChannelTokenBalanceLazyQuery,
   useGetCreatorTokenHoldersQuery,
+  useGetTokenRevenueSharesQuery,
 } from '@/api/queries/__generated__/creatorTokens.generated'
 import { FlexBox } from '@/components/FlexBox'
 import { NumberFormat } from '@/components/NumberFormat'
@@ -16,6 +17,7 @@ import {
   TokenInfo,
   TokenPortfolioUtils,
 } from '@/components/_crt/CrtPortfolioTable/CrtPortfolioTable'
+import { RevenueShareWidget } from '@/components/_crt/RevenueShareWidget/RevenueShareWidget'
 import { SendFundsDialog } from '@/components/_overlays/SendTransferDialogs'
 import { useSubscribeAccountBalance, useTokenPrice } from '@/providers/joystream'
 import { useJoystreamStore } from '@/providers/joystream/joystream.store'
@@ -49,6 +51,16 @@ export const PortfolioTokenTab = () => {
       },
     },
     skip: !memberId,
+  })
+  const { data: memberTokenRevenueShareData } = useGetTokenRevenueSharesQuery({
+    variables: {
+      where: {
+        token: {
+          id_in: data?.tokenAccounts.map(({ token }) => token.id),
+        },
+      },
+    },
+    skip: !data?.tokenAccounts || !memberId,
   })
 
   const mappedData = useMemo(
@@ -131,6 +143,25 @@ export const PortfolioTokenTab = () => {
           }
         />
       </FlexBox>
+
+      {memberTokenRevenueShareData && (
+        <FlexBox flow="column" gap={6}>
+          <Text variant="h500" as="h3">
+            Revenue shares
+          </Text>
+          <FlexBox flow="column" gap={2}>
+            {memberTokenRevenueShareData?.revenueShares.map((revenueShare) => (
+              <RevenueShareWidget
+                key={revenueShare.id}
+                tokenId={revenueShare.token.id}
+                tokenName={revenueShare.token.symbol ?? ''}
+                revenueShare={revenueShare}
+                memberId={memberId ?? ''}
+              />
+            ))}
+          </FlexBox>
+        </FlexBox>
+      )}
 
       <FlexBox flow="column" gap={6}>
         <Text variant="h500" as="h3">

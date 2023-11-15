@@ -5,6 +5,7 @@ import * as Types from './baseTypes.generated'
 import {
   BasicCreatorTokenFragmentDoc,
   BasicCreatorTokenHolderFragmentDoc,
+  BasicRevenueShareFragmentDoc,
   FullCreatorTokenFragmentDoc,
 } from './fragments.generated'
 
@@ -28,6 +29,7 @@ export type GetBasicCreatorTokenQuery = {
     status: Types.TokenStatus
     createdAt: Date
     lastPrice?: string | null
+    revenueShares: Array<{ __typename?: 'RevenueShare'; id: string }>
     channel?: {
       __typename?: 'TokenChannel'
       channel: {
@@ -147,6 +149,7 @@ export type GetFullCreatorTokenQuery = {
       finalized: boolean
       participantsNum: number
       startingAt: number
+      token: { __typename?: 'CreatorToken'; id: string; symbol?: string | null }
       stakers: Array<{
         __typename?: 'RevenueShareParticipation'
         id: string
@@ -324,6 +327,36 @@ export type GetHistoricalTokenAllocationQuery = {
     __typename?: 'GetCumulativeHistoricalShareAllocationResult'
     cumulativeHistoricalAllocation: number
   }
+}
+
+export type GetTokenRevenueSharesQueryVariables = Types.Exact<{
+  where?: Types.InputMaybe<Types.RevenueShareWhereInput>
+  limit?: Types.InputMaybe<Types.Scalars['Int']>
+  offset?: Types.InputMaybe<Types.Scalars['Int']>
+}>
+
+export type GetTokenRevenueSharesQuery = {
+  __typename?: 'Query'
+  revenueShares: Array<{
+    __typename?: 'RevenueShare'
+    id: string
+    allocation: string
+    claimed: string
+    endsAt: number
+    createdIn: number
+    finalized: boolean
+    participantsNum: number
+    startingAt: number
+    token: { __typename?: 'CreatorToken'; id: string; symbol?: string | null }
+    stakers: Array<{
+      __typename?: 'RevenueShareParticipation'
+      id: string
+      stakedAmount: string
+      earnings: string
+      createdIn: number
+      account: { __typename?: 'TokenAccount'; member: { __typename?: 'Membership'; id: string } }
+    }>
+  }>
 }
 
 export const GetBasicCreatorTokenDocument = gql`
@@ -640,4 +673,55 @@ export type GetHistoricalTokenAllocationLazyQueryHookResult = ReturnType<
 export type GetHistoricalTokenAllocationQueryResult = Apollo.QueryResult<
   GetHistoricalTokenAllocationQuery,
   GetHistoricalTokenAllocationQueryVariables
+>
+export const GetTokenRevenueSharesDocument = gql`
+  query GetTokenRevenueShares($where: RevenueShareWhereInput, $limit: Int, $offset: Int) {
+    revenueShares(where: $where, limit: $limit, offset: $offset) {
+      ...BasicRevenueShare
+    }
+  }
+  ${BasicRevenueShareFragmentDoc}
+`
+
+/**
+ * __useGetTokenRevenueSharesQuery__
+ *
+ * To run a query within a React component, call `useGetTokenRevenueSharesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTokenRevenueSharesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTokenRevenueSharesQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *   },
+ * });
+ */
+export function useGetTokenRevenueSharesQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetTokenRevenueSharesQuery, GetTokenRevenueSharesQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetTokenRevenueSharesQuery, GetTokenRevenueSharesQueryVariables>(
+    GetTokenRevenueSharesDocument,
+    options
+  )
+}
+export function useGetTokenRevenueSharesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetTokenRevenueSharesQuery, GetTokenRevenueSharesQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetTokenRevenueSharesQuery, GetTokenRevenueSharesQueryVariables>(
+    GetTokenRevenueSharesDocument,
+    options
+  )
+}
+export type GetTokenRevenueSharesQueryHookResult = ReturnType<typeof useGetTokenRevenueSharesQuery>
+export type GetTokenRevenueSharesLazyQueryHookResult = ReturnType<typeof useGetTokenRevenueSharesLazyQuery>
+export type GetTokenRevenueSharesQueryResult = Apollo.QueryResult<
+  GetTokenRevenueSharesQuery,
+  GetTokenRevenueSharesQueryVariables
 >

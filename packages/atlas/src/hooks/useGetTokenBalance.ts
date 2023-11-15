@@ -24,7 +24,7 @@ export const useGetTokenBalance = (tokenId?: string, memberId?: string) => {
   })
 
   return {
-    tokenBalance,
+    tokenBalance: tokenBalance ?? 0,
     isLoading: loading,
   }
 }

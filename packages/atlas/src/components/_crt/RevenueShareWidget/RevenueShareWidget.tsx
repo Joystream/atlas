@@ -1,5 +1,7 @@
+import BN from 'bn.js'
 import { ReactElement, useCallback } from 'react'
 
+import { GetTokenRevenueSharesQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { SvgActionCalendar, SvgJoyTokenMonochrome16 } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
 import { FlexBox } from '@/components/FlexBox'
@@ -8,34 +10,32 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { InfoBox, Wrapper } from '@/components/_crt/RevenueShareWidget/RevenueShareWidget.styles'
+import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
-import { useUser } from '@/providers/user/user.hooks'
 import { formatDateTime } from '@/utils/time'
 
 export type RevenueShareWidgetProps = {
   tokenId: string
   tokenName: string
-  userShare: number
-  userTokens: number
-  shareEndDate: Date
-  onClaimShare?: () => void
-  status: 'active' | 'upcoming' | 'locked' | 'unlocked'
+  revenueShare: GetTokenRevenueSharesQuery['revenueShares'][number]
+  memberId: string
 }
-export const RevenueShareWidget = ({
-  userShare,
-  userTokens,
-  tokenName,
-  onClaimShare,
-  shareEndDate,
-  status,
-  tokenId,
-}: RevenueShareWidgetProps) => {
+export const RevenueShareWidget = ({ tokenName, tokenId, revenueShare, memberId }: RevenueShareWidgetProps) => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-  const { memberId } = useUser()
   const { displaySnackbar } = useSnackbar()
+  const { convertBlockToMsTimestamp, currentBlock } = useBlockTimeEstimation()
+  const memberStake = revenueShare.stakers.find((stakers) => stakers.account.member.id === memberId)
+  const status =
+    revenueShare.createdIn > currentBlock
+      ? 'upcoming'
+      : revenueShare.endsAt < currentBlock && memberStake
+      ? 'unlocked'
+      : memberStake
+      ? 'locked'
+      : 'active'
   const unlockStake = useCallback(async () => {
     if (!joystream || !memberId) {
       return
@@ -55,11 +55,7 @@ export const RevenueShareWidget = ({
   const actionNode = () => {
     switch (status) {
       case 'active':
-        return (
-          <Button fullWidth onClick={onClaimShare}>
-            Claim your share
-          </Button>
-        )
+        return <Button fullWidth>Claim your share</Button>
       case 'unlocked':
         return (
           <Button fullWidth onClick={unlockStake}>
@@ -88,6 +84,12 @@ export const RevenueShareWidget = ({
         )
     }
   }
+
+  // don't show widget if a member didn't stake and revenue already ended
+  if (!memberStake && currentBlock > revenueShare.endsAt) {
+    return null
+  }
+
   return (
     <Wrapper isActive={['active', 'unlocked'].includes(status)} gap={2} alignItems="center">
       <InfoBox>
@@ -102,7 +104,7 @@ export const RevenueShareWidget = ({
 
         <Detail title="YOUR SHARE">
           <NumberFormat
-            value={userShare}
+            value={new BN(memberStake?.earnings ?? 0)}
             as="p"
             variant="t300"
             withDenomination="after"
@@ -111,12 +113,31 @@ export const RevenueShareWidget = ({
         </Detail>
 
         <Detail title="YOUR TOKENS">
-          <NumberFormat value={userTokens} as="p" variant="t300" withToken customTicker={`$${tokenName}`} />
+          <NumberFormat
+            value={+(memberStake?.stakedAmount ?? 0)}
+            as="p"
+            variant="t300"
+            withToken
+            customTicker={`$${tokenName}`}
+          />
         </Detail>
 
-        <Detail title="SHARE ENDS ON">
+        <Detail
+          title={
+            revenueShare.startingAt > currentBlock
+              ? 'SHARE STARTS AT'
+              : revenueShare.endsAt < currentBlock
+              ? 'SHARE ENDED ON'
+              : 'SHARE ENDS ON'
+          }
+        >
           <Text variant="t300" as="p">
-            {formatDateTime(shareEndDate).replace(',', ' at')}
+            {formatDateTime(
+              new Date(
+                convertBlockToMsTimestamp(status === 'upcoming' ? revenueShare.startingAt : revenueShare.endsAt) ??
+                  Date.now()
+              )
+            ).replace(',', ' at')}
           </Text>
         </Detail>
       </InfoBox>
