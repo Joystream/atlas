@@ -263,6 +263,14 @@ export type GetCreatorTokenHoldersQuery = {
           | null
       } | null
     }
+    token: {
+      __typename?: 'CreatorToken'
+      id: string
+      symbol?: string | null
+      status: Types.TokenStatus
+      lastPrice?: string | null
+      channel?: { __typename?: 'TokenChannel'; id: string } | null
+    }
     vestingSchedules: Array<{
       __typename?: 'VestedAccount'
       totalVestingAmount: string

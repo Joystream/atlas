@@ -2716,6 +2716,14 @@ export type BasicCreatorTokenHolderFragment = {
         | null
     } | null
   }
+  token: {
+    __typename?: 'CreatorToken'
+    id: string
+    symbol?: string | null
+    status: Types.TokenStatus
+    lastPrice?: string | null
+    channel?: { __typename?: 'TokenChannel'; id: string } | null
+  }
   vestingSchedules: Array<{
     __typename?: 'VestedAccount'
     totalVestingAmount: string
@@ -3429,6 +3437,15 @@ export const BasicCreatorTokenHolderFragmentDoc = gql`
     totalAmount
     member {
       ...BasicMembershipFields
+    }
+    token {
+      id
+      symbol
+      status
+      lastPrice
+      channel {
+        id
+      }
     }
     vestingSchedules {
       totalVestingAmount

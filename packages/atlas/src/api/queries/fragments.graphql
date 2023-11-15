@@ -468,6 +468,15 @@ fragment BasicCreatorTokenHolder on TokenAccount {
   member {
     ...BasicMembershipFields
   }
+  token {
+    id
+    symbol
+    status
+    lastPrice
+    channel {
+      id
+    }
+  }
   vestingSchedules {
     totalVestingAmount
     vestingSource {
