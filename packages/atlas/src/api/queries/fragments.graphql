@@ -155,11 +155,11 @@ fragment BasicVideoFields on Video {
   channel {
     ...BasicChannelFields
   }
+  nft {
+    id
+  }
   thumbnailPhoto {
     ...StorageDataObjectFields
-  }
-  nft {
-    ...BasicNftFields
   }
 }
 

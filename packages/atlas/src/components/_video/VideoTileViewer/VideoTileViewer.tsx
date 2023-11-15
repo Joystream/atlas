@@ -1,17 +1,12 @@
-import { FC, MouseEvent } from 'react'
+import { FC, useCallback } from 'react'
 import { useNavigate } from 'react-router'
 
-import { getNftStatus } from '@/api/hooks/nfts'
 import { useBasicVideo } from '@/api/hooks/video'
-import { SvgIllustrativePlay } from '@/assets/icons'
+import { SvgActionLinkUrl, SvgIllustrativePlay } from '@/assets/icons'
 import { Pill } from '@/components/Pill'
 import { absoluteRoutes } from '@/config/routes'
-import { useNftState } from '@/hooks/useNftState'
-import { useNftTransactions } from '@/hooks/useNftTransactions'
-import { useVideoContextMenu } from '@/hooks/useVideoContextMenu'
+import { useClipboard } from '@/hooks/useClipboard'
 import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
-import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
-import { useUser } from '@/providers/user/user.hooks'
 import { SentryLogger } from '@/utils/logs'
 import { formatDurationShort } from '@/utils/time'
 
@@ -32,55 +27,24 @@ export const VideoTileViewer: FC<VideoTileViewerProps> = ({ id, onClick, details
     skip: !id,
     onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTile', error, { video: { id } }),
   })
-  const { setNftToMint } = useNftActions()
+  const { copyToClipboard } = useClipboard()
 
-  const nftStatus = getNftStatus(video?.nft, video)
-  const nftState = useNftState(video?.nft)
   const { avatarPhotoUrls, isLoadingAvatar, isLoadingThumbnail, thumbnailPhotoUrls, videoHref } =
     useVideoTileSharedLogic(video)
-  const { setActiveChannel, activeMembership } = useUser()
-
-  const handleWithdrawBid = () => {
-    if (!video?.id || !nftState.userBidAmount || !nftState.userBidCreatedAt) {
-      return
-    }
-    withdrawBid(video?.id, nftState.userBidAmount, nftState.userBidCreatedAt)
-  }
 
   const channelHref = absoluteRoutes.viewer.channel(video?.channel.id)
-  const nftActions = useNftActions()
-  const { withdrawBid } = useNftTransactions()
-  const auction =
-    video?.nft?.transactionalStatus?.__typename === 'TransactionalStatusAuction' &&
-    video.nft.transactionalStatus.auction
-  const isAuction = nftStatus?.status === 'auction'
 
-  const onMintNftClick = (e?: MouseEvent<Element>) => {
-    e?.stopPropagation()
-    e?.preventDefault()
-    if (video) {
-      setNftToMint(video.id)
-      setActiveChannel(video.channel.id)
-      navigate(absoluteRoutes.studio.videos())
-    }
-  }
+  const handleCopyVideoURLClick = useCallback(() => {
+    copyToClipboard(videoHref ? location.origin + videoHref : '', 'Video URL copied to clipboard')
+  }, [videoHref, copyToClipboard])
 
-  const contextMenuItems = useVideoContextMenu({
-    publisher: false,
-    isOwner: activeMembership?.channels.some((channel) => channel.id === video?.channel.id),
-    nftState,
-    hasNft: !!video?.nft,
-    nftActions,
-    videoId: video?.id,
-    videoHref,
-    buyNowPrice: isAuction || nftStatus?.status === 'buy-now' ? nftStatus.buyNowPrice : undefined,
-    topBid: isAuction ? nftStatus.topBidAmount : undefined,
-    startingPrice: isAuction ? nftStatus.startingPrice : undefined,
-    onWithdrawBid: handleWithdrawBid,
-    onMintNftClick,
-    hasBids:
-      !!auction && !!auction.topBid?.bidder && !!(auction && !auction.topBid?.isCanceled && auction.topBid.amount),
-  })
+  const contextMenuItems = [
+    {
+      nodeStart: <SvgActionLinkUrl />,
+      onClick: handleCopyVideoURLClick,
+      label: 'Copy video URL',
+    },
+  ]
 
   return (
     <VideoTile
