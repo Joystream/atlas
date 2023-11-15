@@ -8,6 +8,7 @@ import { AmmModalFormTemplate } from '@/components/_crt/AmmModalTemplates'
 import { AmmModalSummaryTemplate } from '@/components/_crt/AmmModalTemplates/AmmModalSummaryTemplate'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
+import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { useFee, useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
@@ -38,7 +39,7 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
 
   const currentAmm = data?.creatorTokenById?.ammCurves.find((amm) => !amm.finalized)
   const title = data?.creatorTokenById?.symbol ?? 'N/A'
-  const userTokenBalance = 0 // todo: this will come from orion
+  const { tokenBalance: userTokenBalance } = useGetTokenBalance(tokenId)
 
   const calculateSlippageAmount = useCallback(
     (amount: number) => {
@@ -89,7 +90,7 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
         tooltipText: 'Lorem ipsum',
       },
     ],
-    [priceForAllToken, pricePerUnit, title, tokens]
+    [priceForAllToken, pricePerUnit, title, tokens, userTokenBalance]
   )
 
   const summaryDetails = useMemo(
@@ -128,14 +129,20 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
         tooltipText: 'Lorem ipsum',
       },
       {
-        title: 'You will receive',
+        title: 'You will get',
         content: (
-          <NumberFormat value={priceForAllToken} as="p" variant="t200-strong" withToken withDenomination="before" />
+          <NumberFormat
+            value={calculateSlippageAmount(Math.max(tokens, 1))?.sub(fullFee) ?? 0}
+            as="p"
+            variant="h300"
+            withToken
+            withDenomination="before"
+          />
         ),
         tooltipText: 'Lorem ipsum',
       },
     ],
-    [fullFee, priceForAllToken, pricePerUnit, title, tokens]
+    [calculateSlippageAmount, fullFee, pricePerUnit, title, tokens]
   )
 
   const onFormSubmit = () =>
@@ -187,10 +194,10 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
       onExitClick={onClose}
       secondaryButton={{
         text: isFormStep ? 'Cancel' : 'Back',
-        onClick: isFormStep ? onClose : () => setStep('summary'),
+        onClick: isFormStep ? onClose : () => setStep('form'),
       }}
       primaryButton={{
-        text: isFormStep ? 'Continue' : 'Sell tokens',
+        text: isFormStep ? 'Continue' : `Sell $${title}`,
         onClick: isFormStep ? onFormSubmit : onTransactionSubmit,
       }}
     >
@@ -199,7 +206,7 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
           control={control}
           error={formState.errors.tokens?.message}
           pricePerUnit={pricePerUnit}
-          maxValue={userTokenBalance}
+          maxValue={Math.min(+(currentAmm?.mintedByAmm ?? 0), userTokenBalance)}
           details={formDetails}
           validation={(value) => {
             if (!value || value < 1) {
