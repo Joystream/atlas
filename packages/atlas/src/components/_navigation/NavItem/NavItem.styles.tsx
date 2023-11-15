@@ -53,7 +53,7 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
   }
 
   > span {
-    margin-left: ${sizes(6)};
+    margin-left: ${sizes(7)};
     font: ${cVar('typographyDesktopH400')};
     letter-spacing: ${cVar('typographyDesktopH400LetterSpacing')};
     text-transform: ${cVar('typographyDesktopH400TextTransform')};

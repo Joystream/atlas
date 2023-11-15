@@ -27,6 +27,7 @@ export const StyledStepContainer = styled(FlexBox)<{ isSelected: boolean; disabl
   opacity: ${({ isSelected }) => (isSelected ? '1' : '0.5')};
   flex: 1;
   background-size: 200% 100%;
+  text-align: left;
 
   ${({ disabled }) =>
     !disabled &&

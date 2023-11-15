@@ -7,11 +7,12 @@ import { MemberSettingsTabs, QUERY_PARAMS, absoluteRoutes } from '@/config/route
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUser } from '@/providers/user/user.hooks'
 
+import { MembershipNotifications } from './MembershipNotifications'
 import { MembershipPublicProfile } from './MembershipPublicProfile'
 import { NoGlobalPaddingWrapper, ScrollWrapper, StyledLimitedWidthContainer } from './MembershipSettingsView.styles'
 import { MembershipWallet } from './MembershipWallet'
 
-const TABS: MemberSettingsTabs[] = ['Public profile', 'Wallet']
+const TABS: MemberSettingsTabs[] = ['Public profile', 'Wallet', 'Notifications']
 
 export const MembershipSettingsView: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -24,9 +25,12 @@ export const MembershipSettingsView: FC = () => {
   const initialRender = useRef(true)
   useEffect(() => {
     if (initialRender.current) {
-      const tabIndex = TABS.findIndex((t) => t === currentTabName)
-      if (tabIndex === -1) setSearchParams({ tab: TABS[0] }, { replace: true })
       initialRender.current = false
+      const tabIndex = TABS.findIndex((t) => t === currentTabName)
+      if (tabIndex >= 0) return setCurrentTab(tabIndex)
+
+      setSearchParams({ tab: TABS[0] }, { replace: true })
+      setCurrentTab(0)
     }
   }, [currentTabName, setSearchParams])
 
@@ -97,6 +101,7 @@ export const MembershipSettingsView: FC = () => {
             />
           )}
           {currentTab === 1 && <MembershipWallet />}
+          {currentTab === 2 && <MembershipNotifications />}
         </StyledLimitedWidthContainer>
       </ScrollWrapper>
     </NoGlobalPaddingWrapper>

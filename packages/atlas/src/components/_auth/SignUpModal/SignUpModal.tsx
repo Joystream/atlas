@@ -38,7 +38,7 @@ const SIGNUP_FORM_DATA_INITIAL_STATE: AccountFormData & MemberFormData = {
   avatar: undefined,
   captchaToken: undefined,
   confirmedTerms: false,
-  confirmedCopy: false,
+  allowDownload: true,
   memberId: '',
   referrerChannelId: undefined,
 }
@@ -248,7 +248,7 @@ export const SignUpModal = () => {
   )
 
   const handleCreateMemberOnSeedStepSubmit = useCallback(
-    async (mnemonic: string, confirmedCopy: boolean) => {
+    async (mnemonic: string, allowDownload: boolean) => {
       let handle = signUpFormData.current.handle
       let blob = signUpFormData.current.avatar?.blob
 
@@ -266,8 +266,8 @@ export const SignUpModal = () => {
 
       const memberData = {
         mnemonic,
+        allowDownload,
         handle,
-        confirmedCopy,
         avatar: blob ? { blob } : undefined,
       }
 
@@ -383,7 +383,7 @@ export const SignUpModal = () => {
           {...commonProps}
           onSeedSubmit={handleCreateMemberOnSeedStepSubmit}
           mnemonic={signUpFormData.current.mnemonic}
-          confirmedCopy={signUpFormData.current.confirmedCopy}
+          allowDownload={signUpFormData.current.allowDownload}
         />
       )}
       {currentStep === SignUpSteps.SignUpPassword && (

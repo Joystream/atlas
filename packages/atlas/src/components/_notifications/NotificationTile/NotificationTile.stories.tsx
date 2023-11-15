@@ -1,8 +1,13 @@
+import { MockedProvider } from '@apollo/client/testing'
 import { Meta, StoryFn } from '@storybook/react'
-import { useState } from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
+import { GetMembershipsAvatarDocument } from '@/api/queries/__generated__/memberships.generated'
+import { AuthContext } from '@/providers/auth/auth.provider'
+import { AuthContextValue } from '@/providers/auth/auth.types'
 import { NotificationRecord } from '@/providers/notifications/notifications.types'
+import { UserContext } from '@/providers/user/user.provider'
+import { Membership, UserContextValue } from '@/providers/user/user.types'
 
 import { NotificationProps, NotificationTile } from './NotificationTile'
 
@@ -14,12 +19,12 @@ export default {
     id: { table: { disable: true } },
     selected: { table: { disable: true } },
     date: { control: { type: 'date' } },
-    type: { options: ['bid-made', 'bought', 'open-auction-ended'], control: { type: 'radio' } },
+    type: { options: ['CreatorReceivesAuctionBid'], control: { type: 'radio' } }, // TODO add more options
   },
   args: {
     read: false,
-    type: 'bid-made',
-    bidAmount: 32000,
+    type: 'CreatorReceivesAuctionBid',
+    amount: 32000,
     memberHandle: 'member',
     memberAvatarUrl: 'https://placedog.net/400/400?random&1',
     videoTitle: 'Video title',
@@ -37,38 +42,64 @@ export default {
   ],
 } as Meta<NotificationProps>
 
+const AuthCtxValue: AuthContextValue = {
+  handleLogin: () => Promise.resolve('alice'),
+  isWalletUser: true,
+  isAuthenticating: false,
+  loggedAddress: '01234',
+  refetchCurrentUser: (() => Promise.resolve({})) as AuthContextValue['refetchCurrentUser'],
+  handleLogout: () => Promise.resolve(undefined),
+  isLoggedIn: true,
+  encodedSeed: null,
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Template: StoryFn<any> = (args) => {
-  const [selected, setSelected] = useState(false)
   const notification: NotificationRecord = {
     id: 'id',
-    date: new Date(Date.now() - 10000000),
-    block: 10000,
-    read: args.read,
     type: args.type,
-    bidAmount: args.bidAmount,
-    member: {
-      id: 'member',
-      handle: args.memberHandle,
-      metadata: {
-        avatar: {
-          __typename: 'AvatarUri',
-          avatarUri: args.memberAvatarUrl,
-        },
-      },
-    },
-    video: {
-      id: 'video',
-      title: args.videoTitle,
-    },
+    date: new Date(Date.now() - 10000000),
+    read: args.read,
+    amount: args.amount,
+    price: args.amount,
+    bidderHandle: args.memberHandle,
+    memberHandle: args.memberHandle,
+    videoId: 'video',
+    videoTitle: args.videoTitle,
   }
+
+  const member = { metadata: { avatar: { __typename: 'AvatarUri', avatarUri: args.memberAvatarUrl } } } as Membership
+
+  const UserCtxValue: UserContextValue = {
+    memberships: [member],
+    membershipsLoading: false,
+    activeMembership: member,
+    activeChannel: null, // as Membership['channels'][number]
+    setActiveChannel: () => undefined,
+    refetchUserMemberships: {} as UserContextValue['refetchUserMemberships'],
+    memberId: '0',
+    accountId: '0',
+    channelId: '0',
+  }
+
+  const mocks = [
+    {
+      request: {
+        query: GetMembershipsAvatarDocument,
+        variables: { where: { handle_eq: args.memberHandle }, limit: 1 },
+      },
+      result: { data: { memberships: [member] } },
+    },
+  ]
+
   return (
-    <NotificationTile
-      {...args}
-      notification={notification}
-      selected={selected}
-      onSelect={() => setSelected(!selected)}
-    />
+    <MockedProvider mocks={mocks} addTypename={false}>
+      <UserContext.Provider value={UserCtxValue}>
+        <AuthContext.Provider value={AuthCtxValue}>
+          <NotificationTile {...args} notification={notification} />
+        </AuthContext.Provider>
+      </UserContext.Provider>
+    </MockedProvider>
   )
 }
 

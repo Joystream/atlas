@@ -45,7 +45,7 @@ export const PaidChannelCard: FC<PaidChannelCardProps> = ({ onClick, channel, lo
               ) : (
                 <>
                   <Amount
-                    value={channel.cumulativeRewardPaid}
+                    value={channel.cumulativeReward}
                     as="span"
                     withToken="small"
                     withTooltip

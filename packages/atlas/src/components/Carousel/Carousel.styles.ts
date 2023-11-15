@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
-import { SwiperOptions } from 'swiper'
 import { Swiper } from 'swiper/react'
+import { SwiperOptions } from 'swiper/types'
 
 import { Button } from '@/components/_buttons/Button'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'

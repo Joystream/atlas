@@ -20,11 +20,7 @@ export type SectionContentProps = {
 
 export const SectionContent: FC<SectionContentProps> = (props) => {
   if (props.type === 'grid') {
-    return (
-      <GridWrapper grid={props.grid} className={props.className}>
-        {props.children}
-      </GridWrapper>
-    )
+    return <GridWrapper {...props}>{props.children}</GridWrapper>
   }
 
   return <Carousel {...props}>{props.children}</Carousel>

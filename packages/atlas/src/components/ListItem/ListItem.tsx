@@ -114,7 +114,7 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
                 {label}
               </LabelText>
             </LabelContainer>
-            <Caption as="span" captionPosition={captionPosition} color="colorText" variant="t100">
+            <Caption as="span" captionPosition={captionPosition} color="colorTextMuted" variant="t100">
               {caption}
             </Caption>
           </LabelCaptionContainer>

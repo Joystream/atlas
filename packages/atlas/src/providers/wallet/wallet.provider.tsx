@@ -89,7 +89,7 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
       try {
         const initializedAccounts = await (!invokedAutomatically
           ? initSignerWallet(walletName)
-          : retryWalletPromise(() => initSignerWallet(walletName), 500, 2000))
+          : retryWalletPromise(() => initSignerWallet(walletName), 1000, 5000))
         if (initializedAccounts === null) {
           SentryLogger.error('Selected wallet not found or not installed', 'UserProvider')
         }

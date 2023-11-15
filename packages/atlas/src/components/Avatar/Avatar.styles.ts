@@ -5,6 +5,7 @@ import styled from '@emotion/styled'
 import { SvgActionAddImage, SvgActionEdit, SvgIllustrativeFileFailed } from '@/assets/icons'
 import { SvgAvatarSilhouette } from '@/assets/illustrations'
 import { AssetImage } from '@/components/AssetImage'
+import { smallBadgeStyles } from '@/components/Badge'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, square, zIndex } from '@/styles'
 
@@ -169,5 +170,17 @@ export const ChildrenWrapper = styled.div`
 export const StyledSvgIllustrativeFileFailed = styled(SvgIllustrativeFileFailed)`
   path {
     fill: ${cVar('colorCoreNeutral100')};
+  }
+`
+
+export const BadgeContainer = styled.div<{ 'data-badge': string | number | boolean | undefined }>`
+  display: ${(props) => (props['data-badge'] ? 'block' : 'contents')};
+  position: relative;
+  ${smallBadgeStyles}
+
+  &[data-badge]::after {
+    position: absolute;
+    right: -6px;
+    top: -6px;
   }
 `
