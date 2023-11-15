@@ -45,9 +45,10 @@ export type PortfolioToken = {
 export type CrtPortfolioTableProps = {
   data: PortfolioToken[]
   isLoading: boolean
+  emptyState?: TableProps['emptyState']
 }
 
-export const CrtPortfolioTable = ({ data }: CrtPortfolioTableProps) => {
+export const CrtPortfolioTable = ({ data, emptyState }: CrtPortfolioTableProps) => {
   const [showModal, setShowModal] = useState(false)
   const [tokenId, setTokenId] = useState<string | null>(null)
 
@@ -87,7 +88,7 @@ export const CrtPortfolioTable = ({ data }: CrtPortfolioTableProps) => {
   return (
     <>
       {tokenId && <BuyMarketTokenModal tokenId={tokenId} show={showModal} onClose={() => setShowModal(false)} />}
-      <StyledTable columns={COLUMNS} data={mappingData} />
+      <StyledTable isEmpty={!mappingData.length} columns={COLUMNS} data={mappingData} emptyState={emptyState} />
     </>
   )
 }
@@ -181,7 +182,10 @@ const TransferableBalance = ({ memberId, tokenId, ticker }: { memberId: string; 
   return <NumberFormat value={tokenBalance} as="p" withToken customTicker={`$${ticker}`} />
 }
 
-const StyledTable = styled(Table)`
+const StyledTable = styled(Table)<{ isEmpty?: boolean }>`
+  width: 100%;
+  background-color: ${({ isEmpty }) => (isEmpty ? 'transparent' : '')};
+
   th:nth-child(n + 3),
   th:nth-child(n + 4),
   th:nth-child(n + 5) {

@@ -7,6 +7,7 @@ import {
   useGetCreatorTokenHoldersQuery,
   useGetTokenRevenueSharesQuery,
 } from '@/api/queries/__generated__/creatorTokens.generated'
+import { SvgEmptyStateIllustration } from '@/assets/illustrations'
 import { FlexBox } from '@/components/FlexBox'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Table, TableProps } from '@/components/Table'
@@ -23,6 +24,7 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSubscribeAccountBalance, useTokenPrice } from '@/providers/joystream'
 import { useJoystreamStore } from '@/providers/joystream/joystream.store'
 import { useUser } from '@/providers/user/user.hooks'
+import { formatNumber } from '@/utils/number'
 import { StyledSvgJoyTokenMonochrome24 } from '@/views/studio/MyPaymentsView/PaymentsOverview/PaymentsOverview.styles'
 
 const JOY_COLUMNS: TableProps['columns'] = [
@@ -44,7 +46,7 @@ export const PortfolioTokenTab = () => {
   const [liquidCrtValue, setLiquidCrtValue] = useState<BN | null>(null)
   const toggleSendDialog = () => setShowSendDialog((prevState) => !prevState)
 
-  const { data } = useGetCreatorTokenHoldersQuery({
+  const { data, loading } = useGetCreatorTokenHoldersQuery({
     variables: {
       where: {
         member: {
@@ -70,8 +72,8 @@ export const PortfolioTokenTab = () => {
       data?.tokenAccounts.map((tokenAccount) => ({
         tokenTitle: tokenAccount.token.symbol ?? 'N/A',
         tokenName: tokenAccount.token.symbol ?? 'N/A',
-        isVerified: true,
         status: tokenAccount.token.status,
+        isVerified: false,
         tokenId: tokenAccount.token.id,
         memberId: memberId ?? '',
         vested: tokenAccount.vestingSchedules.reduce((prev, next) => prev + Number(next.totalVestingAmount), 0),
@@ -111,6 +113,8 @@ export const PortfolioTokenTab = () => {
         value.iadd(lastPrice.muln(singleBalance.getAccountTransferrableBalance.transferrableCrtAmount))
       }
     }
+
+    value.iadd(accountBalance)
 
     setLiquidCrtValue(value)
     return value
@@ -180,10 +184,10 @@ export const PortfolioTokenTab = () => {
               ),
               balanceValue: (
                 <Text variant="t100" as="p">
-                  ${accountBalance ? convertHapiToUSD(accountBalance)?.toFixed(2) : 0}
+                  ${accountBalance ? formatNumber(convertHapiToUSD(accountBalance) ?? 0) : 0}
                 </Text>
               ),
-              balance: <NumberFormat variant="t100" value={accountBalance ?? 0} as="p" />,
+              balance: <NumberFormat variant="t100" value={accountBalance ?? 0} as="p" withToken />,
               utils: (
                 <TokenPortfolioUtils
                   onBuy={() => window.open('https://www.joystream.org/token/', '_blank')}
@@ -200,7 +204,15 @@ export const PortfolioTokenTab = () => {
         <Text variant="h500" as="h3">
           My tokens
         </Text>
-        <CrtPortfolioTable data={mappedData ?? []} isLoading={false} />
+        <CrtPortfolioTable
+          data={mappedData ?? []}
+          isLoading={loading}
+          emptyState={{
+            icon: <SvgEmptyStateIllustration />,
+            title: 'You don’t own any creator tokens yet',
+            description: 'When you buy any creator tokens you will be able to manage them and view from this page.',
+          }}
+        />
       </FlexBox>
     </>
   )

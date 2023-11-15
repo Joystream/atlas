@@ -6,6 +6,7 @@ import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { PageTabs } from '@/components/PageTabs'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { sizes } from '@/styles'
+import { PortfolioNftTab } from '@/views/viewer/PortfolioView/tabs/PortfolioNftTab'
 import { PortfolioTokenTab } from '@/views/viewer/PortfolioView/tabs/PortfolioTokenTab'
 
 const TABS = [
@@ -34,7 +35,10 @@ export const PortfolioView = () => {
         selected={tab}
       />
 
-      <StyledLimitedWidthContainer>{tab === 0 && <PortfolioTokenTab />}</StyledLimitedWidthContainer>
+      <StyledLimitedWidthContainer>
+        {tab === 0 && <PortfolioTokenTab />}
+        {tab === 1 && <PortfolioNftTab />}
+      </StyledLimitedWidthContainer>
     </>
   )
 }
