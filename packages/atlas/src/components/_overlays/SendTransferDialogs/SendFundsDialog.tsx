@@ -1,4 +1,5 @@
 import { useApolloClient } from '@apollo/client'
+import { BN_ZERO } from '@polkadot/util'
 import debouncePromise from 'awesome-debounce-promise'
 import BN from 'bn.js'
 import { FC, useEffect, useRef, useState } from 'react'
@@ -151,9 +152,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({
             } tokens have been sent over to ${shortenString(data.account, ADDRESS_CHARACTERS_LIMIT)} wallet address`,
           },
           txFactory: async (updateStatus) => {
-            const amount = amountBN
-              .sub(amountBN.add(transferFee).gte(accountBalance) ? transferFee : new BN(0))
-              .sub(accountDebt)
+            const amount = amountBN.sub(amountBN.add(fullFee).gt(accountBalance) ? fullFee : BN_ZERO).sub(accountDebt)
             return (await joystream.extrinsics).sendFunds(
               formatJoystreamAddress(data.account || ''),
               amount.toString(),
