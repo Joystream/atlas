@@ -69,7 +69,7 @@ export const CrtPortfolioTable = ({ data }: CrtPortfolioTableProps) => {
   return <StyledTable columns={COLUMNS} data={mappingData} />
 }
 
-const TokenInfo = ({
+export const TokenInfo = ({
   tokenTitle,
   tokenName,
   isVerified,
@@ -79,7 +79,7 @@ const TokenInfo = ({
       <Avatar />
       <FlexBox flow="column" gap={0}>
         <Text variant="h200" as="h1">
-          ${tokenTitle}
+          {tokenTitle}
         </Text>
         <FlexBox alignItems="center" gap={1}>
           <Text variant="t100" as="span" color="colorText">
@@ -119,7 +119,7 @@ type TokenPortfolioUtilsProps = {
   onTransfer: () => void
 }
 
-const TokenPortfolioUtils = ({ onBuy, onTransfer }: TokenPortfolioUtilsProps) => {
+export const TokenPortfolioUtils = ({ onBuy, onTransfer }: TokenPortfolioUtilsProps) => {
   const [ref, setRef] = useState<HTMLButtonElement | null>(null)
 
   return (

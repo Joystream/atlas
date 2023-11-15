@@ -1,45 +1,104 @@
 import styled from '@emotion/styled'
 import { useState } from 'react'
 
-import { SvgJoyTokenSilver24 } from '@/assets/icons'
+import { SvgActionCreatorToken, SvgActionPlay } from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-import { Tabs } from '@/components/Tabs'
+import { NumberFormat } from '@/components/NumberFormat'
+import { PageTabs } from '@/components/PageTabs'
+import { Table, TableProps } from '@/components/Table'
 import { Text } from '@/components/Text'
-import { CrtPortfolioTable } from '@/components/_crt/CrtPortfolioTable/CrtPortfolioTable'
-import { DetailsContent } from '@/components/_nft/NftTile'
+import { WidgetTile } from '@/components/WidgetTile'
+import {
+  CrtPortfolioTable,
+  TokenInfo,
+  TokenPortfolioUtils,
+} from '@/components/_crt/CrtPortfolioTable/CrtPortfolioTable'
+import { useSubscribeAccountBalance, useTokenPrice } from '@/providers/joystream'
 import { sizes } from '@/styles'
+import { StyledSvgJoyTokenMonochrome24 } from '@/views/studio/MyPaymentsView/PaymentsOverview/PaymentsOverview.styles'
 
-const TABS = ['Creator token', 'NFTs']
+const emptySpace = Array.from({ length: 20 }, () => ' ').join('')
 
-const mappedTabs = TABS.map((tab) => ({
-  name: tab,
-}))
+const JOY_COLUMNS: TableProps['columns'] = [
+  { Header: 'Name', accessor: 'name', width: 110 },
+  { Header: 'Current price', accessor: 'price', width: 100 },
+  { Header: 'Balance value', accessor: 'balanceValue', width: 100 },
+  { Header: 'Your balance', accessor: 'balance', width: 100 },
+  { Header: '', accessor: 'utils', width: 50 },
+]
+
+const TABS = [
+  {
+    name: 'Tokens',
+    description: 'Manage & collect your funds' + emptySpace,
+    icon: <SvgActionCreatorToken />,
+  },
+  {
+    name: 'Video NFTs',
+    description: 'Browse your NFT collection' + emptySpace,
+    icon: <SvgActionPlay />,
+  },
+]
 
 export const PortfolioView = () => {
   const [tab, setTab] = useState(0)
+  const { tokenPrice, convertHapiToUSD } = useTokenPrice()
+  const { accountBalance } = useSubscribeAccountBalance()
   return (
-    <LimitedWidthContainer>
-      <TitleBox alignItems="center" justifyContent="space-between">
-        <Text variant="h700" as="h1">
-          Portfolio
-        </Text>
-        <DetailsContent
-          caption="PORTFOLIO TOTAL VALUE"
-          tooltipText="Lorem ipsum"
-          content={2300}
-          withDenomination
-          tileSize="big"
-          icon={<SvgJoyTokenSilver24 />}
-        />
-      </TitleBox>
-      <FlexBox flow="column" gap={6}>
-        <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={setTab} />
-        {tab === 0 && (
+    <>
+      <StyledPageTabs isBig tabs={TABS} onSelectTab={setTab} selected={tab} />
+
+      <StyledLimitedWidthContainer>
+        <FlexBox width="100%" gap={4} equalChildren>
+          <WidgetTile
+            title="Liquid tokens value"
+            customNode={
+              <NumberFormat value={913981} as="span" icon={<StyledSvgJoyTokenMonochrome24 />} withDenomination />
+            }
+          />
+          <WidgetTile
+            title="Total tokens value"
+            customNode={
+              <NumberFormat value={913981} as="span" icon={<StyledSvgJoyTokenMonochrome24 />} withDenomination />
+            }
+          />
+        </FlexBox>
+
+        <FlexBox flow="column" gap={6}>
+          <Text variant="h500" as="h3">
+            JOY balance
+          </Text>
+          <StyledTable
+            data={[
+              {
+                name: <TokenInfo tokenName="Joystream" tokenTitle="JOY" isVerified={false} />,
+                price: (
+                  <Text variant="t100" as="p">
+                    ${tokenPrice?.toFixed(6)}
+                  </Text>
+                ),
+                balanceValue: (
+                  <Text variant="t100" as="p">
+                    ${accountBalance ? convertHapiToUSD(accountBalance)?.toFixed(2) : 0}
+                  </Text>
+                ),
+                balance: <NumberFormat variant="t100" value={accountBalance ?? 0} as="p" />,
+                utils: <TokenPortfolioUtils onBuy={() => undefined} onTransfer={() => undefined} />,
+              },
+            ]}
+            columns={JOY_COLUMNS}
+          />
+        </FlexBox>
+
+        <FlexBox flow="column" gap={6}>
+          <Text variant="h500" as="h3">
+            My tokens
+          </Text>
           <CrtPortfolioTable
             data={[
               {
-                tokenTitle: 'JBC',
+                tokenTitle: '$JBC',
                 tokenName: 'Joyblocks',
                 isVerified: true,
                 status: 'idle',
@@ -50,12 +109,37 @@ export const PortfolioView = () => {
             ]}
             isLoading={false}
           />
-        )}
-      </FlexBox>
-    </LimitedWidthContainer>
+        </FlexBox>
+      </StyledLimitedWidthContainer>
+    </>
   )
 }
 
-export const TitleBox = styled(FlexBox)`
+export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)`
   padding: ${sizes(12)} 0;
+  display: flex;
+  flex-direction: column;
+  gap: ${sizes(12)};
+`
+export const StyledPageTabs = styled(PageTabs)`
+  margin: 0 calc(-1 * var(--size-global-horizontal-padding));
+`
+
+const StyledTable = styled(Table)`
+  td:nth-child(n + 2),
+  td:nth-child(n + 3),
+  td:nth-child(n + 4) {
+    align-items: end;
+  }
+
+  th:nth-child(n + 2),
+  th:nth-child(n + 3),
+  th:nth-child(n + 4) {
+    align-items: end;
+    justify-content: end;
+
+    > div {
+      align-items: end;
+    }
+  }
 `
