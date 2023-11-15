@@ -149,7 +149,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
           <NumberFormat
             value={hapiBnToTokenNumber(calculateRequiredHapi(tokens) ?? new BN(0))}
             as="p"
-            variant="t200"
+            variant="h300"
             withDenomination="before"
             withToken
           />
@@ -212,7 +212,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
           <NumberFormat
             value={tokens}
             as="p"
-            variant="t200-strong"
+            variant="h300"
             withToken
             withDenomination="before"
             customTicker={`$${title}`}
@@ -245,11 +245,11 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
 
     if (activeStep === BUY_MARKET_TOKEN_STEPS.summary) {
       setPrimaryButtonProps({
-        text: 'Buy token',
+        text: `Buy $${data?.creatorTokenById?.symbol ?? 'N/A'}`,
         onClick: onTransactionSubmit,
       })
     }
-  }, [activeStep, handleSubmit, onTransactionSubmit])
+  }, [activeStep, data?.creatorTokenById?.symbol, handleSubmit, onTransactionSubmit])
 
   if (!currentAmm && show) {
     throw new Error('BuyAmmModal invoked on token without active amm')

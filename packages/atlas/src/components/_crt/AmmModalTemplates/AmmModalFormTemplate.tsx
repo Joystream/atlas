@@ -4,7 +4,7 @@ import { Control, Controller, Validate } from 'react-hook-form'
 import { FlexBox } from '@/components/FlexBox'
 import { Information } from '@/components/Information'
 import { Text } from '@/components/Text'
-import { TextButton } from '@/components/_buttons/Button'
+import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
 import { TokenInput } from '@/components/_inputs/TokenInput'
 import { useTokenPrice } from '@/providers/joystream'
@@ -43,30 +43,46 @@ export const AmmModalFormTemplate = ({
           },
         }}
         render={({ field }) => (
-          <FormField error={error}>
-            <TokenInput
-              value={field.value}
-              onChange={field.onChange}
-              placeholder="0"
-              nodeEnd={
-                <FlexBox gap={2} alignItems="baseline">
-                  {pricePerUnit ? (
+          <FlexBox gap={2} flow="column" width="100%">
+            <FormField error={error}>
+              <TokenInput
+                value={field.value}
+                onChange={field.onChange}
+                placeholder="0"
+                nodeEnd={
+                  pricePerUnit ? (
                     <Text variant="t300" as="p" color="colorTextMuted">
                       ${convertTokensToUSD((field.value || 0) * pricePerUnit)?.toFixed(2)}
                     </Text>
-                  ) : null}
-                  {maxValue ? <TextButton onClick={() => field.onChange(maxValue)}>Max</TextButton> : null}
-                </FlexBox>
-              }
-            />
-          </FormField>
+                  ) : null
+                }
+              />
+            </FormField>
+            {typeof maxValue === 'number' ? (
+              <FlexBox gap={2} width="100%" equalChildren>
+                <Button size="small" variant="secondary" onClick={() => field.onChange(Math.round(maxValue * 0.25))}>
+                  25%
+                </Button>
+                <Button size="small" variant="secondary" onClick={() => field.onChange(Math.round(maxValue * 0.5))}>
+                  50%
+                </Button>
+                <Button size="small" variant="secondary" onClick={() => field.onChange(Math.round(maxValue * 0.75))}>
+                  75%
+                </Button>
+                <Button size="small" variant="secondary" onClick={() => field.onChange(maxValue)}>
+                  100%
+                </Button>
+              </FlexBox>
+            ) : null}
+          </FlexBox>
         )}
       />
+
       <FlexBox flow="column" gap={2}>
         {details?.map((row, i) => (
           <FlexBox key={row.title} alignItems="center" justifyContent="space-between">
             <FlexBox width="auto" alignItems="center">
-              <Text variant={i + 1 === details.length ? 't200-strong' : 't200'} as="span" color="colorText">
+              <Text variant={i + 1 === details.length ? 'h300' : 't200'} as="span" color="colorText">
                 {row.title}
               </Text>
               {row.tooltipText ? <Information text={row.tooltipText} /> : null}
