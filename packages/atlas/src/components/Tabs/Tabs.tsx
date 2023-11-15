@@ -5,6 +5,7 @@ import { FlexBox } from '@/components/FlexBox'
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { useHorizonthalFade } from '@/hooks/useHorizonthalFade'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { transitions } from '@/styles'
 
 import { ButtonWrapper, StyledButton, StyledPill, Tab, TabsGroup, TabsWrapper } from './Tabs.styles'
@@ -30,6 +31,7 @@ export type TabsProps = {
 
 export const Tabs: FC<TabsProps> = memo(
   ({ tabs, onSelectTab, initialIndex = -1, selected: paramsSelected, underline, className, isBig }) => {
+    const smMatch = useMediaMatch('sm')
     const [_selected, setSelected] = useState(initialIndex)
     const selected = paramsSelected ?? _selected
     const tabsGroupRef = useRef<HTMLDivElement>(null)
@@ -91,6 +93,7 @@ export const Tabs: FC<TabsProps> = memo(
                 color={selected !== idx ? 'colorText' : undefined}
                 variant={isBig ? 'h400' : selected === idx ? 't200-strong' : 't200'}
                 align="center"
+                margin={{ bottom: isBig && !tab.description ? 6 : 0 }}
                 data-badge={tab.badgeNumber}
               >
                 {tab.name}
@@ -106,20 +109,22 @@ export const Tabs: FC<TabsProps> = memo(
                 isBig={isBig}
               >
                 {isBig ? (
-                  <FlexBox gap={3}>
+                  <FlexBox flow={smMatch ? 'row' : 'column'} gap={3}>
                     <Pill round size="large" icon={tab.icon} />
                     <FlexBox flow="column">
                       {tabComponent}
-                      <Text
-                        as="span"
-                        margin={{ bottom: 8 }}
-                        color="colorText"
-                        variant="t100"
-                        align="center"
-                        data-badge={tab.badgeNumber}
-                      >
-                        {tab.description}
-                      </Text>
+                      {tab.description && (
+                        <Text
+                          as="span"
+                          margin={{ bottom: 8 }}
+                          color="colorText"
+                          variant="t100"
+                          align="center"
+                          data-badge={tab.badgeNumber}
+                        >
+                          {tab.description}
+                        </Text>
+                      )}
                     </FlexBox>
                   </FlexBox>
                 ) : (

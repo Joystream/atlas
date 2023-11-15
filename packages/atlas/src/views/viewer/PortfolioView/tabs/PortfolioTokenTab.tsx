@@ -19,6 +19,7 @@ import {
 } from '@/components/_crt/CrtPortfolioTable/CrtPortfolioTable'
 import { RevenueShareWidget } from '@/components/_crt/RevenueShareWidget/RevenueShareWidget'
 import { SendFundsDialog } from '@/components/_overlays/SendTransferDialogs'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSubscribeAccountBalance, useTokenPrice } from '@/providers/joystream'
 import { useJoystreamStore } from '@/providers/joystream/joystream.store'
 import { useUser } from '@/providers/user/user.hooks'
@@ -37,6 +38,7 @@ export const PortfolioTokenTab = () => {
   const { tokenPrice, convertHapiToUSD } = useTokenPrice()
   const { accountBalance } = useSubscribeAccountBalance()
   const { currentBlock } = useJoystreamStore()
+  const smMatch = useMediaMatch('sm')
   const [fetchChannelTokenBalance] = useGetChannelTokenBalanceLazyQuery()
   const [showSendDialog, setShowSendDialog] = useState(false)
   const [liquidCrtValue, setLiquidCrtValue] = useState<BN | null>(null)
@@ -124,7 +126,7 @@ export const PortfolioTokenTab = () => {
     <>
       <SendFundsDialog show={showSendDialog} onExitClick={toggleSendDialog} accountBalance={accountBalance} />
 
-      <FlexBox width="100%" gap={4} equalChildren>
+      <FlexBox flow={smMatch ? 'row' : 'column'} width="100%" gap={4} alignItems="strech" equalChildren>
         <WidgetTile
           title="Liquid tokens value"
           customNode={

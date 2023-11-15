@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { smallBadgeStyles } from '@/components/Badge'
-import { cVar, sizes, zIndex } from '@/styles'
+import { cVar, media, sizes, zIndex } from '@/styles'
 import { MaskProps, getMaskImage } from '@/utils/styles'
 
 import { Pill } from '../Pill'
@@ -16,7 +16,7 @@ export const TabsGroup = styled.div<{ isBig?: boolean } & MaskProps>`
   display: flex;
   position: relative;
   overflow: auto;
-  padding: ${({ isBig }) => (isBig ? sizes(8) : 'unset')};
+  padding: ${({ isBig }) => (isBig ? `${sizes(4)} 0` : 'unset')};
   padding-bottom: 0;
 
   ${getMaskImage}
@@ -29,6 +29,11 @@ export const TabsGroup = styled.div<{ isBig?: boolean } & MaskProps>`
 
   &[data-underline='true'] {
     box-shadow: ${cVar('effectDividersBottom')};
+  }
+
+  ${media.md} {
+    padding: ${({ isBig }) => (isBig ? sizes(8) : 'unset')};
+    padding-bottom: 0;
   }
 `
 
