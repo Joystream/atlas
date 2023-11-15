@@ -12,10 +12,13 @@ export const TabsWrapper = styled.div`
   min-width: 0;
 `
 
-export const TabsGroup = styled.div<MaskProps>`
+export const TabsGroup = styled.div<{ isBig?: boolean } & MaskProps>`
   display: flex;
   position: relative;
   overflow: auto;
+  padding: ${({ isBig }) => (isBig ? sizes(8) : 'unset')};
+  padding-bottom: 0;
+
   ${getMaskImage}
 
   ::-webkit-scrollbar {
@@ -31,12 +34,13 @@ export const TabsGroup = styled.div<MaskProps>`
 
 type TabProps = {
   selected: boolean
+  isBig?: boolean
 }
 
 export const Tab = styled.div<TabProps>`
   transition: box-shadow ${cVar('animationTransitionFast')}, color ${cVar('animationTransitionFast')};
   padding: ${sizes(2.5)} ${sizes(4)} 0 ${sizes(4)};
-  height: 56px;
+  height: ${({ isBig = false }) => (isBig ? 'fit-content' : '56px')};
   display: flex;
   box-shadow: ${({ selected }) => (selected ? `inset 0 -4px 0 ${cVar('colorBackgroundPrimary')};` : 'none')};
   flex-shrink: 0;
