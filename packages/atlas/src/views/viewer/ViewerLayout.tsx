@@ -29,7 +29,7 @@ import { MarketplaceView } from './MarketplaceView'
 import { MemberView } from './MemberView'
 import { MembershipSettingsView } from './MembershipSettingsView'
 import { NotFoundView } from './NotFoundView'
-import { PortfolioView } from './Portfolio'
+import { PortfolioView } from './PortfolioView'
 import { SearchView } from './SearchView'
 import { VideoView } from './VideoView'
 
@@ -42,7 +42,6 @@ const viewerRoutes = [
   { path: relativeRoutes.viewer.channel(), element: <ChannelView /> },
   { path: relativeRoutes.viewer.category(), element: <CategoryView /> },
   { path: relativeRoutes.viewer.member(), element: <MemberView /> },
-  { path: relativeRoutes.viewer.portfolio(), element: <PortfolioView /> },
   { path: relativeRoutes.viewer.marketplace(), element: <MarketplaceView /> },
   ...(atlasConfig.features.ypp.googleConsoleClientId
     ? [{ path: relativeRoutes.viewer.ypp(), element: <YppLandingView /> }]
@@ -154,6 +153,12 @@ export const ViewerLayout: FC = () => {
                   path={absoluteRoutes.viewer.notifications()}
                   element={
                     <PrivateRoute isAuth={isLoggedIn} element={<NotificationsView />} redirectTo={ENTRY_POINT_ROUTE} />
+                  }
+                />
+                <Route
+                  path={absoluteRoutes.viewer.portfolio()}
+                  element={
+                    <PrivateRoute isAuth={isLoggedIn} element={<PortfolioView />} redirectTo={ENTRY_POINT_ROUTE} />
                   }
                 />
                 <Route path="*" element={<NotFoundView />} />

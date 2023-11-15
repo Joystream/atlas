@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { useMemo, useState } from 'react'
 
+import { TokenStatus } from '@/api/queries/__generated__/baseTypes.generated'
 import {
   SvgActionBuyNow,
   SvgActionMarket,
@@ -16,7 +17,9 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { Table, TableProps } from '@/components/Table'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
+import { BuyMarketTokenModal } from '@/components/_crt/BuyMarketTokenModal'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
+import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
 
 const COLUMNS: TableProps['columns'] = [
   { Header: 'Token', accessor: 'token', width: 150 },
@@ -31,10 +34,12 @@ export type PortfolioToken = {
   tokenTitle: string
   tokenName: string
   isVerified: boolean
-  status: 'market' | 'sale' | 'idle'
+  status: TokenStatus
   vested: number
   total: number
-  transferable: number
+  tokenId: string
+  memberId: string
+  channelId: string
 }
 
 export type CrtPortfolioTableProps = {
@@ -43,30 +48,48 @@ export type CrtPortfolioTableProps = {
 }
 
 export const CrtPortfolioTable = ({ data }: CrtPortfolioTableProps) => {
+  const [showModal, setShowModal] = useState(false)
+  const [tokenId, setTokenId] = useState<string | null>(null)
+
   const mappingData = useMemo(() => {
     return data.map((row) => ({
       token: <TokenInfo {...row} />,
       status: <Status status={row.status} />,
       transferable: (
         <RightAlignedCell>
-          <NumberFormat value={row.transferable} as="p" withToken customTicker="$JBC" />
+          <TransferableBalance memberId={row.memberId} tokenId={row.tokenId} ticker={`$${row.tokenTitle}`} />
         </RightAlignedCell>
       ),
       vested: (
         <RightAlignedCell>
-          <NumberFormat value={row.vested} as="p" withToken customTicker="$JBC" />
+          <NumberFormat value={row.vested} as="p" withToken customTicker={`$${row.tokenTitle}`} />
         </RightAlignedCell>
       ),
       total: (
         <RightAlignedCell>
-          <NumberFormat value={row.total} as="p" withToken customTicker="$JBC" />
+          <NumberFormat value={row.total} as="p" withToken customTicker={`$${row.tokenTitle}`} />
         </RightAlignedCell>
       ),
-      utils: <TokenPortfolioUtils onTransfer={() => undefined} onBuy={() => undefined} />,
+      utils: (
+        <TokenPortfolioUtils
+          onTransfer={() => undefined}
+          disableTransfer
+          onBuy={() => {
+            setTokenId(row.tokenId)
+            setShowModal(true)
+          }}
+          disableBuy={row.status === TokenStatus.Idle}
+        />
+      ),
     }))
   }, [data])
 
-  return <StyledTable columns={COLUMNS} data={mappingData} />
+  return (
+    <>
+      {tokenId && <BuyMarketTokenModal tokenId={tokenId} show={showModal} onClose={() => setShowModal(false)} />}
+      <StyledTable columns={COLUMNS} data={mappingData} />
+    </>
+  )
 }
 
 export const TokenInfo = ({
@@ -92,14 +115,14 @@ export const TokenInfo = ({
   )
 }
 
-const Status = ({ status }: { status: 'market' | 'sale' | 'idle' }) => {
+const Status = ({ status }: { status: TokenStatus }) => {
   const [icon, text] = useMemo(() => {
     switch (status) {
-      case 'market':
+      case TokenStatus.Market:
         return [<SvgActionMarket key={1} />, 'On market']
-      case 'sale':
+      case TokenStatus.Sale:
         return [<SvgActionBuyNow key={1} />, 'On sale']
-      case 'idle':
+      case TokenStatus.Idle:
       default:
         return [<SvgActionNotForSale key={1} />, 'No active sale']
     }
@@ -117,9 +140,11 @@ const Status = ({ status }: { status: 'market' | 'sale' | 'idle' }) => {
 type TokenPortfolioUtilsProps = {
   onBuy?: () => void
   onTransfer: () => void
+  disableTransfer?: boolean
+  disableBuy?: boolean
 }
 
-export const TokenPortfolioUtils = ({ onBuy, onTransfer }: TokenPortfolioUtilsProps) => {
+export const TokenPortfolioUtils = ({ onBuy, onTransfer, disableTransfer, disableBuy }: TokenPortfolioUtilsProps) => {
   const [ref, setRef] = useState<HTMLButtonElement | null>(null)
 
   return (
@@ -134,12 +159,14 @@ export const TokenPortfolioUtils = ({ onBuy, onTransfer }: TokenPortfolioUtilsPr
             label: 'Buy',
             onClick: onBuy,
             nodeStart: <SvgActionShoppingCart />,
+            disabled: disableBuy,
           },
           {
             asButton: true,
             label: 'Transfer',
             onClick: onTransfer,
             nodeStart: <SvgActionTransfer />,
+            disabled: disableTransfer,
           },
         ]}
         trigger={null}
@@ -147,6 +174,11 @@ export const TokenPortfolioUtils = ({ onBuy, onTransfer }: TokenPortfolioUtilsPr
       />
     </RightAlignedCell>
   )
+}
+
+const TransferableBalance = ({ memberId, tokenId, ticker }: { memberId: string; tokenId: string; ticker?: string }) => {
+  const { tokenBalance } = useGetTokenBalance(tokenId, memberId)
+  return <NumberFormat value={tokenBalance} as="p" withToken customTicker={`$${ticker}`} />
 }
 
 const StyledTable = styled(Table)`

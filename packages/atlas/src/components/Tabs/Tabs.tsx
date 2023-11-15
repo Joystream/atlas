@@ -25,7 +25,7 @@ export type TabsProps = {
   selected?: number
   underline?: boolean
   className?: string
-  isBig: boolean
+  isBig?: boolean
 }
 
 export const Tabs: FC<TabsProps> = memo(
