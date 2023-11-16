@@ -83,7 +83,7 @@ export const CrtRevenueShareWidget = ({ token, onTabSwitch }: CrtHoldersWidgetPr
             {activeRevenueShare?.stakers.length ? (
               <StakersBox>
                 <FlexBox>
-                  {activeRevenueShare.stakers.slice(0, Math.min(activeRevenueShare.stakers.length, 5)).map((staker) => (
+                  {activeRevenueShare.stakers.slice(0, 5).map((staker) => (
                     <StakerPill key={staker.id} id={staker.account.member.id} />
                   ))}
                   {activeRevenueShare.stakers.length > 5 ? (
