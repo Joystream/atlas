@@ -194,6 +194,9 @@ export const useFeaturedNftsVideos = () => {
     variables: {
       limit: 10,
       orderBy: [OwnedNftOrderByInput.VideoViewsNumDesc],
+      where: {
+        isFeatured_eq: true,
+      },
     },
   })
 
