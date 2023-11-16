@@ -38,7 +38,6 @@ export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({ token }) => {
     return token.ammCurves.reduce((prev, next) => prev + Number(next.mintedByAmm) + Number(next.burnedByAmm), 0)
   }, [token.ammCurves])
 
-  const ticker = `$${name}`
   const status = token.ammCurves.some((curve) => !curve.finalized) ? 'market' : 'inactive'
 
   return (
@@ -46,11 +45,7 @@ export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({ token }) => {
       title={status === 'inactive' ? 'Status' : ''}
       customNode={
         <>
-          {status === 'inactive' ? (
-            <InactiveDetails symbol={ticker} />
-          ) : status === 'market' ? (
-            <MarketDetails token={token} />
-          ) : null}
+          {status === 'inactive' ? <InactiveDetails /> : status === 'market' ? <MarketDetails token={token} /> : null}
 
           <StatisticsContainer>
             <ToggleContainer onClick={() => expand(!isExpanded)}>
@@ -106,7 +101,7 @@ export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({ token }) => {
   )
 }
 
-const InactiveDetails = (_: { symbol: string }) => {
+const InactiveDetails = () => {
   return (
     <Text as="h4" variant="h500">
       No active sale

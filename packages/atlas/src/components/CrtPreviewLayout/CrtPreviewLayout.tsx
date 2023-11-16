@@ -54,7 +54,7 @@ export const getTokenDetails = (token: FullCreatorTokenFragment) => {
       content: `${permillToPercentage(token.revenueShareRatioPermill)}%`,
       tooltipText: `This is a percentage of revenue that creator claims after each revenue share - Channel: ${permillToPercentage(
         token.revenueShareRatioPermill
-      )}%, Holders: ${100 - permillToPercentage(token.revenueShareRatioPermill)}%`,
+      )}%, Holders: ${100 - permillToPercentage(token.revenueShareRatioPermill)}%.`,
     })
 
   if (token.annualCreatorRewardPermill)
@@ -69,7 +69,7 @@ export const getTokenDetails = (token: FullCreatorTokenFragment) => {
     details.push({
       caption: 'TOTAL SUPPLY',
       content: +token.totalSupply,
-      tooltipText: 'This is a total supply of all $JBC tokens owned by token holders. ',
+      tooltipText: `This is a total supply of all $${token.symbol} tokens owned by token holders. `,
       withToken: true,
       customTicker: `$${token.symbol}`,
     })
