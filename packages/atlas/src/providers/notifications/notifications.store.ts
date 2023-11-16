@@ -20,7 +20,7 @@ export const useNotificationStore = createStore<NotificationsStoreState, Notific
       setLastSeenNotificationDate: (type, id, date) => {
         set((state) => {
           state.lastSeenNotificationDates = [
-            ...state.lastSeenNotificationDates.filter((record) => record.type !== type && record.id !== id),
+            ...state.lastSeenNotificationDates.filter((record) => record.type !== type || record.id !== id),
             { id, type, date: date.getTime() },
           ]
         })
