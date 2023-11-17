@@ -78,8 +78,7 @@ export const DetailsWrapper = styled.div<{ size: CrtBasicInfoWidgetProps['size']
   grid-template-columns: ${({ size }) => (size === 'small' ? '1fr' : '1fr 1fr')};
   padding: ${sizes(6)};
   background-color: ${cVar('colorBackgroundMuted')};
-  grid-column-gap: ${sizes(4)};
-  grid-row-gap: ${({ size }) => sizes(size === 'small' ? 4 : 6)};
+  grid-gap: ${({ size }) => sizes(size === 'small' ? 4 : 6)} ${sizes(4)};
 `
 
 export const TopSection = styled.div`
