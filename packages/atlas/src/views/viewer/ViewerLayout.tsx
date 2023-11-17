@@ -165,7 +165,7 @@ export const ViewerLayout: FC = () => {
                     path={relativeRoutes.viewer.memberSettings()}
                     element={
                       <PrivateRoute
-                        isAuth={isLoggedIn}
+                        showWhen={isLoggedIn}
                         element={<MembershipSettingsView />}
                         redirectTo={ENTRY_POINT_ROUTE}
                       />
@@ -175,7 +175,7 @@ export const ViewerLayout: FC = () => {
                     path={absoluteRoutes.viewer.memberNotifications()}
                     element={
                       <PrivateRoute
-                        isAuth={isLoggedIn}
+                        showWhen={isLoggedIn}
                         element={<MemberNotificationsView />}
                         redirectTo={ENTRY_POINT_ROUTE}
                       />
