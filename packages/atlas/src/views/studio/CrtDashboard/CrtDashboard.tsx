@@ -6,6 +6,7 @@ import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Tabs } from '@/components/Tabs'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
+import { CloseMarketButton } from '@/components/_crt/CloseMarketButton'
 import { CloseRevenueShareButton } from '@/components/_crt/CloseRevenueShareButton'
 import { StartRevenueShare } from '@/components/_crt/StartRevenueShareModal/StartRevenueShareModal'
 import { StartSaleOrMarketButton } from '@/components/_crt/StartSaleOrMarketButton/StartSaleOrMarketButton'
@@ -38,6 +39,7 @@ export const CrtDashboard = () => {
   }
 
   const activeRevenueShare = data.creatorTokenById.revenueShares.find((revenueShare) => !revenueShare.finalized)
+  const hasOpenMarket = data.creatorTokenById.ammCurves.some((curve) => !curve.finalized)
 
   return (
     <LimitedWidthContainer>
@@ -68,8 +70,10 @@ export const CrtDashboard = () => {
               <Button to={absoluteRoutes.studio.crtTokenEdit()} variant="secondary" icon={<SvgActionEdit />}>
                 Edit token page
               </Button>
-              {!data.creatorTokenById.ammCurves.some((curve) => !curve.finalized) && (
+              {!hasOpenMarket ? (
                 <StartSaleOrMarketButton tokenName={data.creatorTokenById.symbol ?? 'N/A'} />
+              ) : (
+                <CloseMarketButton channelId={activeChannel?.id ?? '-1'} />
               )}
             </>
           )}

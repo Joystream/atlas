@@ -1,3 +1,6 @@
+import { useApolloClient } from '@apollo/client'
+import { useCallback } from 'react'
+
 import { SvgActionPlay, SvgAlertsWarning24 } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
 import { FlexBox } from '@/components/FlexBox'
@@ -5,6 +8,10 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { TextButton } from '@/components/_buttons/Button'
 import { DialogModal } from '@/components/_overlays/DialogModal'
+import { useJoystream } from '@/providers/joystream'
+import { useSnackbar } from '@/providers/snackbars'
+import { useTransaction } from '@/providers/transactions/transactions.hooks'
+import { useUser } from '@/providers/user/user.hooks'
 import { cVar } from '@/styles'
 
 const getTokenDetails = (id: string) => ({
@@ -15,26 +22,58 @@ const getTokenDetails = (id: string) => ({
 })
 
 export type CloseMarketModalProps = {
-  tokenId: string
+  channelId: string
+  show: boolean
+  onClose: () => void
 }
 
-export const CloseMarketModal = ({ tokenId }: CloseMarketModalProps) => {
-  const { title, pricePerUnit, userCrtToken, tokenRequiredToSell } = getTokenDetails(tokenId)
+export const CloseMarketModal = ({ onClose, show, channelId }: CloseMarketModalProps) => {
+  const { title, pricePerUnit, userCrtToken, tokenRequiredToSell } = getTokenDetails('1')
+  const { joystream, proxyCallback } = useJoystream()
+  const { displaySnackbar } = useSnackbar()
+  const { memberId } = useUser()
+  const handleTransaction = useTransaction()
+  const client = useApolloClient()
 
   const hasInsufficientTokens = userCrtToken < tokenRequiredToSell
 
+  const handleCloseAmm = useCallback(async () => {
+    if (!joystream || !channelId || !memberId) {
+      return
+    }
+    handleTransaction({
+      txFactory: async (updateStatus) =>
+        (await joystream.extrinsics).closeAmm(memberId, channelId, proxyCallback(updateStatus)),
+      onTxSync: async (data) => {
+        client.refetchQueries({ include: 'active' }).then(() => {
+          displaySnackbar({
+            title: 'Market closed successfuly',
+          })
+          onClose()
+        })
+      },
+      onError: () => {
+        displaySnackbar({
+          iconType: 'error',
+          title: 'Something went wrong',
+        })
+      },
+    })
+  }, [joystream, channelId, memberId, handleTransaction, proxyCallback, onClose, displaySnackbar])
+
   return (
     <DialogModal
-      show
+      show={show}
       title="Close market"
-      onExitClick={() => undefined}
+      onExitClick={onClose}
       primaryButton={{
         text: 'Close market',
         variant: 'warning',
-        onClick: () => null,
+        onClick: () => handleCloseAmm(),
       }}
       secondaryButton={{
         text: 'Cancel',
+        onClick: onClose,
       }}
     >
       <FlexBox flow="column" gap={6}>

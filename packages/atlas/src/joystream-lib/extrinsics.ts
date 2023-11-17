@@ -1247,6 +1247,17 @@ export class JoystreamLibExtrinsics {
     return { block }
   }
 
+  closeAmmTx = async (memberId: MemberId, channelId: ChannelId) => {
+    const member = createType('PalletContentPermissionsContentActor', { Member: parseInt(memberId) })
+    return this.api.tx.content.deactivateAmm(member, parseInt(channelId))
+  }
+
+  closeAmm: PublicExtrinsic<typeof this.closeAmmTx, ExtrinsicResult> = async (memberId, channelId, cb) => {
+    const tx = await this.closeAmmTx(memberId, channelId)
+    const { block } = await this.sendExtrinsic(tx, cb)
+    return { block }
+  }
+
   creatorTokenIssuerRemarkTx = async (memberId: MemberId, channelId: ChannelId, msg: ICreatorTokenIssuerRemarked) => {
     await this.ensureApi()
 
