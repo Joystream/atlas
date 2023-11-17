@@ -1,4 +1,5 @@
 import { useApolloClient } from '@apollo/client'
+import { BN_ZERO } from '@polkadot/util'
 import debouncePromise from 'awesome-debounce-promise'
 import BN from 'bn.js'
 import { FC, useEffect, useRef, useState } from 'react'
@@ -27,7 +28,7 @@ import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
-import { useFee, useJoystream, useTokenPrice } from '@/providers/joystream'
+import { useFee, useJoystream, useSubscribeAccountBalance, useTokenPrice } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { cVar } from '@/styles'
 import { formatJoystreamAddress, isValidAddressPolkadotAddress } from '@/utils/address'
@@ -48,7 +49,6 @@ type SendFundsDialogProps = {
   channelBalance?: BN
   accountBalance?: BN
   totalBalance?: BN
-  accountDebt?: BN
   channelId?: string | null
   show: boolean
 }
@@ -58,7 +58,6 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({
   accountBalance = new BN(0),
   channelBalance,
   totalBalance = new BN(0),
-  accountDebt = new BN(0),
   channelId,
   activeMembership,
   show,
@@ -79,6 +78,10 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({
   } = useForm<{ amount: number | null; account: string | null }>()
   const convertedAmount = convertHapiToUSD(tokenNumberToHapiBn(watch('amount') || 0))
   const account = watch('account') || ''
+  const { accountBalance: hookAccountBalance } = useSubscribeAccountBalance()
+  const balanceRef = useRef<BN>(BN_ZERO)
+  balanceRef.current = hookAccountBalance || BN_ZERO
+
   const amountBN = tokenNumberToHapiBn(watch('amount') || 0)
   const { fullFee: transferFee, loading: feeLoading } = useFee(
     'sendFundsTx',
@@ -128,7 +131,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({
   )
 
   const handleSendFunds = async () => {
-    const handler = await handleSubmit(async (data) => {
+    const handler = handleSubmit(async (data) => {
       if (!joystream || !data.account || !data.amount || (isWithdrawalMode && (!activeMembership || !channelId))) {
         SentryLogger.error('Failed to send funds', 'SendFundsDialog', {
           isWithdrawalMode,
@@ -151,9 +154,11 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({
             } tokens have been sent over to ${shortenString(data.account, ADDRESS_CHARACTERS_LIMIT)} wallet address`,
           },
           txFactory: async (updateStatus) => {
-            const amount =
-              !isWithdrawalMode &&
-              amountBN.sub(amountBN.add(transferFee).gte(accountBalance) ? transferFee : new BN(0)).sub(accountDebt)
+            const safeTransferableValue = BN.min(amountBN, balanceRef.current)
+            const amount = safeTransferableValue.sub(
+              safeTransferableValue.add(transferFee).gt(balanceRef.current) ? transferFee : BN_ZERO
+            )
+
             return (await joystream.extrinsics).sendFunds(
               formatJoystreamAddress(data.account || ''),
               amount.toString(),
@@ -174,12 +179,10 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({
               }
             : undefined,
           txFactory: async (updateStatus) => {
-            const fee = isOwnAccount ? withdrawFee : fullFee
-            const amount = amountBN.add(fee).gte(channelBalance) ? amountBN.sub(fee) : amountBN
             return (await joystream.extrinsics).withdrawFromChannelBalance(
               activeMembership!.id,
               channelId as string,
-              amount.toString(),
+              amountBN.toString(),
               proxyCallback(updateStatus)
             )
           },

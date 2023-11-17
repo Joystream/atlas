@@ -44,8 +44,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
       return new BN(selectedChannel?.channelStateBloatBond || 0)
     }, [selectedChannel?.channelStateBloatBond])
 
-    const { accountBalance, lockedAccountBalance, totalBalance, debt, totalInvitationLock } =
-      useSubscribeAccountBalance()
+    const { accountBalance, lockedAccountBalance, totalBalance, totalInvitationLock } = useSubscribeAccountBalance()
     const { accountBalance: channelBalance } =
       useSubscribeAccountBalance(selectedChannel?.rewardAccount, {
         channelStateBloatBond: memoizedChannelStateBloatBond,
@@ -131,14 +130,8 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
           channelBalance={channelBalance}
           totalBalance={totalBalance}
           channelId={channelId}
-          accountDebt={debt}
         />
-        <SendFundsDialog
-          show={showSendDialog}
-          onExitClick={toggleSendDialog}
-          accountBalance={accountBalance}
-          accountDebt={debt}
-        />
+        <SendFundsDialog show={showSendDialog} onExitClick={toggleSendDialog} accountBalance={accountBalance} />
 
         <CSSTransition classNames={transitions.names.dropdown} in={isActive} timeout={0} mountOnEnter unmountOnExit>
           <Container ref={mergeRefs([ref, containerRef])}>
