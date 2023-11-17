@@ -29,7 +29,7 @@ export const RevenueShareWidget = ({ tokenName, tokenId, revenueShare, memberId 
   const { convertBlockToMsTimestamp, currentBlock } = useBlockTimeEstimation()
   const memberStake = revenueShare.stakers.find((stakers) => stakers.account.member.id === memberId)
   const status =
-    revenueShare.createdIn > currentBlock
+    revenueShare.startingAt > currentBlock
       ? 'upcoming'
       : revenueShare.endsAt < currentBlock && memberStake
       ? 'unlocked'

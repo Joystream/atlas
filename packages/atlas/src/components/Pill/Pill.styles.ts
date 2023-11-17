@@ -67,7 +67,7 @@ const variantStyles = ({ variant }: PillProps) => {
 export const StyledPill = styled.div<PillProps & { hasLabel: boolean }>`
   display: inline-flex;
   align-items: center;
-  border-radius: ${(props) => (props.round ? '50%' : '2px')};
+  border-radius: ${(props) => (props.round ? '50%' : cVar('radiusSmall'))};
 
   svg {
     > * {

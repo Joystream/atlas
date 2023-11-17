@@ -16,8 +16,7 @@ export const TabsGroup = styled.div<{ isBig?: boolean } & MaskProps>`
   display: flex;
   position: relative;
   overflow: auto;
-  padding: ${({ isBig }) => (isBig ? `${sizes(4)} 0` : 'unset')};
-  padding-bottom: 0;
+  padding: ${({ isBig }) => (isBig ? `${sizes(4)} ${sizes(4)} 0` : 'unset')};
 
   ${getMaskImage}
 
@@ -32,8 +31,7 @@ export const TabsGroup = styled.div<{ isBig?: boolean } & MaskProps>`
   }
 
   ${media.md} {
-    padding: ${({ isBig }) => (isBig ? sizes(8) : 'unset')};
-    padding-bottom: 0;
+    padding: ${({ isBig }) => (isBig ? `${sizes(8)} ${sizes(8)} 0` : 'unset')};
   }
 `
 

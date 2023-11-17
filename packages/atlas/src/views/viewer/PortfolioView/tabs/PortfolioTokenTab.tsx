@@ -20,6 +20,7 @@ import {
 } from '@/components/_crt/CrtPortfolioTable/CrtPortfolioTable'
 import { RevenueShareWidget } from '@/components/_crt/RevenueShareWidget/RevenueShareWidget'
 import { SendFundsDialog } from '@/components/_overlays/SendTransferDialogs'
+import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSubscribeAccountBalance, useTokenPrice } from '@/providers/joystream'
 import { useJoystreamStore } from '@/providers/joystream/joystream.store'
@@ -171,12 +172,14 @@ export const PortfolioTokenTab = () => {
 
       <FlexBox flow="column" gap={6}>
         <Text variant="h500" as="h3">
-          JOY balance
+          {atlasConfig.joystream.tokenTicker} balance
         </Text>
         <StyledTable
           data={[
             {
-              name: <TokenInfo tokenName="Joystream" tokenTitle="JOY" isVerified={false} />,
+              name: (
+                <TokenInfo tokenName="Joystream" tokenTitle={atlasConfig.joystream.tokenTicker} isVerified={false} />
+              ),
               price: (
                 <Text variant="t100" as="p">
                   ${tokenPrice?.toFixed(6)}
