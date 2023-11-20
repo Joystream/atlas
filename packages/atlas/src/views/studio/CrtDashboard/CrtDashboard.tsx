@@ -14,9 +14,10 @@ import { useUser } from '@/providers/user/user.hooks'
 import { HeaderContainer, MainContainer, TabsContainer } from '@/views/studio/CrtDashboard/CrtDashboard.styles'
 import { CrtDashboardMainTab } from '@/views/studio/CrtDashboard/tabs/CrtDashboardMainTab'
 import { CrtHoldersTab } from '@/views/studio/CrtDashboard/tabs/CrtHoldersTab'
+import { CrtMarketTab } from '@/views/studio/CrtDashboard/tabs/CrtMarketTab'
 import { CrtRevenueTab } from '@/views/studio/CrtDashboard/tabs/CrtRevenueTab'
 
-const TABS = ['Dashboard', 'Holders', 'Revenue share', 'Settings'] as const
+const TABS = ['Dashboard', 'Market', 'Holders', 'Revenue share', 'Settings'] as const
 
 export const CrtDashboard = () => {
   const [currentTab, setCurrentTab] = useState<number>(0)
@@ -30,8 +31,8 @@ export const CrtDashboard = () => {
   const handleChangeTab = useCallback((idx: number) => {
     setCurrentTab(idx)
   }, [])
-
-  const mappedTabs = TABS.map((tab) => ({ name: tab }))
+  const hasOpenMarket = data?.creatorTokenById?.ammCurves.some((curve) => !curve.finalized)
+  const mappedTabs = TABS.filter((tab) => (hasOpenMarket ? true : tab != 'Market')).map((tab) => ({ name: tab }))
 
   if (!data?.creatorTokenById) {
     return null
@@ -68,9 +69,7 @@ export const CrtDashboard = () => {
               <Button to={absoluteRoutes.studio.crtTokenEdit()} variant="secondary" icon={<SvgActionEdit />}>
                 Edit token page
               </Button>
-              {!data.creatorTokenById.ammCurves.some((curve) => !curve.finalized) && (
-                <StartSaleOrMarketButton tokenName={data.creatorTokenById.symbol ?? 'N/A'} />
-              )}
+              {!hasOpenMarket && <StartSaleOrMarketButton tokenName={data.creatorTokenById.symbol ?? 'N/A'} />}
             </>
           )}
           {currentTab === 2 && (
@@ -86,8 +85,9 @@ export const CrtDashboard = () => {
           )}
         </TabsContainer>
         {currentTab === 0 && <CrtDashboardMainTab token={data.creatorTokenById} />}
-        {currentTab === 1 && <CrtHoldersTab token={data.creatorTokenById} />}
-        {currentTab === 2 && <CrtRevenueTab token={data.creatorTokenById} />}
+        {currentTab === 1 && <CrtMarketTab token={data.creatorTokenById} />}
+        {currentTab === 2 && <CrtHoldersTab token={data.creatorTokenById} />}
+        {currentTab === 3 && <CrtRevenueTab token={data.creatorTokenById} />}
       </MainContainer>
     </LimitedWidthContainer>
   )
