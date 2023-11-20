@@ -24,7 +24,6 @@ export const PrivateRoute: FC<PrivateRouteProps> = ({ redirectTo, showWhen, elem
   }
 
   if (showWhen === false && redirectTo) {
-    console.log('redirectTo', redirectTo, 'and then', location.pathname)
     return <Navigate to={redirectTo} state={{ redirectTo: location.pathname }} />
   }
   return element
