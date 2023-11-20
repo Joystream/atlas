@@ -10,6 +10,7 @@ import { WidgetTile } from '@/components/WidgetTile'
 import { Button, ButtonProps, TextButton } from '@/components/_buttons/Button'
 import { CrtHoldersWidget } from '@/components/_crt/CrtHoldersWidget'
 import { StartSaleOrMarketButton } from '@/components/_crt/StartSaleOrMarketButton/StartSaleOrMarketButton'
+import { absoluteRoutes } from '@/config/routes'
 import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useUser } from '@/providers/user/user.hooks'
@@ -84,7 +85,11 @@ export const CrtDashboardMainTab = ({ token }: CrtDashboardMainTabProps) => {
         case 0:
           return <Button {...commonProps}>Create token</Button>
         case 1:
-          return <Button {...commonProps}>Edit token page</Button>
+          return (
+            <Button {...commonProps} to={absoluteRoutes.studio.crtTokenEdit()}>
+              Edit token page
+            </Button>
+          )
         case 2:
           return <StartSaleOrMarketButton {...commonProps} tokenName={token.symbol ?? 'N/A'} />
         case 3:

@@ -16,7 +16,7 @@ import { CrtDashboardMainTab } from '@/views/studio/CrtDashboard/tabs/CrtDashboa
 import { CrtHoldersTab } from '@/views/studio/CrtDashboard/tabs/CrtHoldersTab'
 import { CrtRevenueTab } from '@/views/studio/CrtDashboard/tabs/CrtRevenueTab'
 
-const TABS = ['Dashboard', 'Holders', 'Revenue share', 'Settings'] as const
+const TABS = ['Dashboard', 'Holders', 'Revenue share'] as const
 
 export const CrtDashboard = () => {
   const [currentTab, setCurrentTab] = useState<number>(0)
@@ -40,7 +40,7 @@ export const CrtDashboard = () => {
   const activeRevenueShare = data.creatorTokenById.revenueShares.find((revenueShare) => !revenueShare.finalized)
 
   return (
-    <LimitedWidthContainer>
+    <LimitedWidthContainer big>
       <StartRevenueShare
         show={openRevenueShareModal}
         token={data.creatorTokenById}
