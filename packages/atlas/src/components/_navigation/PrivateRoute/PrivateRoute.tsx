@@ -1,5 +1,5 @@
 import { FC, ReactElement } from 'react'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useLocation } from 'react-router-dom'
 
 import { Loader } from '@/components/_loaders/Loader'
 
@@ -8,11 +8,13 @@ import { LoaderContainer } from './PrivteRoute.styles'
 type PrivateRouteProps = {
   element: ReactElement
   redirectTo?: string
-  isAuth?: boolean
+  showWhen?: boolean
   isLoadingAuthData?: boolean
 }
 
-export const PrivateRoute: FC<PrivateRouteProps> = ({ redirectTo, isAuth, element, isLoadingAuthData }) => {
+export const PrivateRoute: FC<PrivateRouteProps> = ({ redirectTo, showWhen, element, isLoadingAuthData }) => {
+  const location = useLocation()
+
   if (isLoadingAuthData) {
     return (
       <LoaderContainer>
@@ -21,8 +23,8 @@ export const PrivateRoute: FC<PrivateRouteProps> = ({ redirectTo, isAuth, elemen
     )
   }
 
-  if (isAuth === false && redirectTo) {
-    return <Navigate to={redirectTo} />
+  if (showWhen === false && redirectTo) {
+    return <Navigate to={redirectTo} state={{ redirectTo: location.pathname }} />
   }
   return element
 }

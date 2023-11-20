@@ -28,6 +28,7 @@ export const relativeRoutes = {
   },
   viewer: {
     index: () => '',
+    signin: () => 'signin',
     discover: () => 'discover',
     category: (id = ':id') => `category/${id}`,
     search: (query?: { [QUERY_PARAMS.SEARCH]?: string }) => withQueryParameters('search', query),

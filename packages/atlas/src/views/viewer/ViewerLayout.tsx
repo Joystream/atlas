@@ -59,6 +59,7 @@ const viewerRoutes = [
 ]
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.viewer.index()
+const SIGN_IN_ROUTE = absoluteRoutes.viewer.signin()
 
 const locationToPageName = {
   '/discover': 'Discover',
@@ -162,12 +163,22 @@ export const ViewerLayout: FC = () => {
                     <Route key={route.path} {...route} />
                   ))}
                   <Route
+                    path={relativeRoutes.viewer.signin()}
+                    element={
+                      <PrivateRoute
+                        element={<HomeView />}
+                        showWhen={!isLoggedIn}
+                        redirectTo={location.state?.redirectTo ?? ENTRY_POINT_ROUTE}
+                      />
+                    }
+                  />
+                  <Route
                     path={relativeRoutes.viewer.memberSettings()}
                     element={
                       <PrivateRoute
-                        isAuth={isLoggedIn}
+                        showWhen={isLoggedIn}
                         element={<MembershipSettingsView />}
-                        redirectTo={ENTRY_POINT_ROUTE}
+                        redirectTo={SIGN_IN_ROUTE}
                       />
                     }
                   />
@@ -175,9 +186,9 @@ export const ViewerLayout: FC = () => {
                     path={absoluteRoutes.viewer.memberNotifications()}
                     element={
                       <PrivateRoute
-                        isAuth={isLoggedIn}
+                        showWhen={isLoggedIn}
                         element={<MemberNotificationsView />}
-                        redirectTo={ENTRY_POINT_ROUTE}
+                        redirectTo={SIGN_IN_ROUTE}
                       />
                     }
                   />
