@@ -43,3 +43,9 @@ query GetHistoricalTokenAllocation($tokenId: String!) {
     cumulativeHistoricalAllocation
   }
 }
+
+query GetFullAmmCurve($where: AmmCurveWhereInput, $orderBy: [AmmCurveOrderByInput!], $limit: Int, $offset: Int) {
+  ammCurves(where: $where, orderBy: $orderBy, offset: $offset, limit: $limit) {
+    ...FullAmmCurve
+  }
+}

@@ -5,6 +5,7 @@ import * as Types from './baseTypes.generated'
 import {
   BasicCreatorTokenFragmentDoc,
   BasicCreatorTokenHolderFragmentDoc,
+  FullAmmCurveFragmentDoc,
   FullCreatorTokenFragmentDoc,
 } from './fragments.generated'
 
@@ -316,6 +317,36 @@ export type GetHistoricalTokenAllocationQuery = {
     __typename?: 'GetCumulativeHistoricalShareAllocationResult'
     cumulativeHistoricalAllocation: number
   }
+}
+
+export type GetFullAmmCurveQueryVariables = Types.Exact<{
+  where?: Types.InputMaybe<Types.AmmCurveWhereInput>
+  orderBy?: Types.InputMaybe<Array<Types.AmmCurveOrderByInput> | Types.AmmCurveOrderByInput>
+  limit?: Types.InputMaybe<Types.Scalars['Int']>
+  offset?: Types.InputMaybe<Types.Scalars['Int']>
+}>
+
+export type GetFullAmmCurveQuery = {
+  __typename?: 'Query'
+  ammCurves: Array<{
+    __typename?: 'AmmCurve'
+    id: string
+    ammSlopeParameter: string
+    mintedByAmm: string
+    burnedByAmm: string
+    ammInitPrice: string
+    finalized: boolean
+    transactions: Array<{
+      __typename?: 'AmmTransaction'
+      id: string
+      createdIn: number
+      pricePaid: string
+      pricePerUnit: string
+      transactionType: Types.AmmTransactionType
+      quantity: string
+      account: { __typename?: 'TokenAccount'; member: { __typename?: 'Membership'; id: string } }
+    }>
+  }>
 }
 
 export const GetBasicCreatorTokenDocument = gql`
@@ -633,3 +664,46 @@ export type GetHistoricalTokenAllocationQueryResult = Apollo.QueryResult<
   GetHistoricalTokenAllocationQuery,
   GetHistoricalTokenAllocationQueryVariables
 >
+export const GetFullAmmCurveDocument = gql`
+  query GetFullAmmCurve($where: AmmCurveWhereInput, $orderBy: [AmmCurveOrderByInput!], $limit: Int, $offset: Int) {
+    ammCurves(where: $where, orderBy: $orderBy, offset: $offset, limit: $limit) {
+      ...FullAmmCurve
+    }
+  }
+  ${FullAmmCurveFragmentDoc}
+`
+
+/**
+ * __useGetFullAmmCurveQuery__
+ *
+ * To run a query within a React component, call `useGetFullAmmCurveQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFullAmmCurveQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetFullAmmCurveQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *   },
+ * });
+ */
+export function useGetFullAmmCurveQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetFullAmmCurveQuery, GetFullAmmCurveQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetFullAmmCurveQuery, GetFullAmmCurveQueryVariables>(GetFullAmmCurveDocument, options)
+}
+export function useGetFullAmmCurveLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetFullAmmCurveQuery, GetFullAmmCurveQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetFullAmmCurveQuery, GetFullAmmCurveQueryVariables>(GetFullAmmCurveDocument, options)
+}
+export type GetFullAmmCurveQueryHookResult = ReturnType<typeof useGetFullAmmCurveQuery>
+export type GetFullAmmCurveLazyQueryHookResult = ReturnType<typeof useGetFullAmmCurveLazyQuery>
+export type GetFullAmmCurveQueryResult = Apollo.QueryResult<GetFullAmmCurveQuery, GetFullAmmCurveQueryVariables>
