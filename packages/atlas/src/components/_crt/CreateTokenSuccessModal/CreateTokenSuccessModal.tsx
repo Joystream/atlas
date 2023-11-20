@@ -9,6 +9,7 @@ import { Text } from '@/components/Text'
 import { TextButton } from '@/components/_buttons/Button'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { absoluteRoutes } from '@/config/routes'
+import { useUser } from '@/providers/user/user.hooks'
 import { cVar, media, sizes } from '@/styles'
 
 export type CreateTokenSuccessModalProps = {
@@ -19,6 +20,7 @@ export type CreateTokenSuccessModalProps = {
 export const CreateTokenSuccessModal = ({ tokenName, show }: CreateTokenSuccessModalProps) => {
   const navigate = useNavigate()
   const client = useApolloClient()
+  const { channelId } = useUser()
 
   return (
     <DialogModal
@@ -34,7 +36,7 @@ export const CreateTokenSuccessModal = ({ tokenName, show }: CreateTokenSuccessM
           iconPlacement="right"
           onClick={() => {
             client.refetchQueries({ include: 'active' }).then(() => {
-              navigate(absoluteRoutes.studio.crtDashboard())
+              navigate(absoluteRoutes.viewer.channel(channelId ?? '-1', { tab: 'Token' }))
             })
           }}
         >
