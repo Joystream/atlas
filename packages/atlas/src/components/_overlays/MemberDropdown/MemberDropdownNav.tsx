@@ -1,5 +1,6 @@
 import BN from 'bn.js'
 import { FC, useRef } from 'react'
+import { useNavigate } from 'react-router'
 import useResizeObserver from 'use-resize-observer'
 
 import { FullMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
@@ -85,6 +86,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
   isInDebt,
   activeChannel,
 }) => {
+  const navigate = useNavigate()
   const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
   const { urls: memberAvatarUrls, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(activeMembership)
   const channelAvatarUrls = selectedChannel?.avatarPhoto?.resolvedUrls
@@ -261,6 +263,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
           onClick={() => {
             onCloseDropdown?.()
             onSignOut()
+            navigate(absoluteRoutes.viewer.index())
           }}
         />
       </SectionContainer>

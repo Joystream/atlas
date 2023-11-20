@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 
 import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { GetBasicVideosConnectionLightweightDocument } from '@/api/queries/__generated__/videos.generated'
@@ -10,10 +11,17 @@ import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { publicCryptoVideoFilter } from '@/config/contentFilter'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useInfiniteVideoGrid } from '@/hooks/useInfiniteVideoGrid'
+import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
+import { useAuthStore } from '@/providers/auth/auth.store'
 import { DEFAULT_VIDEO_GRID, sizes } from '@/styles'
 import { InfiniteLoadingOffsets } from '@/utils/loading.contants'
 
 export const HomeView: FC = () => {
+  const location = useLocation()
+  const {
+    actions: { setAuthModalOpenName },
+  } = useAuthStore()
+
   const headTags = useHeadTags()
   const { columns, fetchMore, pageInfo, tiles } = useInfiniteVideoGrid({
     query: GetBasicVideosConnectionLightweightDocument,
@@ -22,6 +30,13 @@ export const HomeView: FC = () => {
       orderBy: VideoOrderByInput.VideoRelevanceDesc,
     },
   })
+
+  useEffect(() => {
+    if (location.state?.['redirectTo']) {
+      setAuthModalOpenName(getCorrectLoginModal())
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <VideoContentTemplate>
