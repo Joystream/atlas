@@ -43,11 +43,6 @@ export const CrtDashboard = () => {
 
   return (
     <LimitedWidthContainer>
-      <StartRevenueShare
-        show={openRevenueShareModal}
-        token={data.creatorTokenById}
-        onClose={() => setOpenRevenueShareModal(false)}
-      />
       <MainContainer>
         <HeaderContainer>
           <Text variant="h700" as="h1">
@@ -80,9 +75,16 @@ export const CrtDashboard = () => {
           {currentTab === 2 && (
             <>
               {!activeRevenueShare ? (
-                <Button onClick={() => setOpenRevenueShareModal(true)} icon={<SvgActionRevenueShare />}>
-                  Start revenue share
-                </Button>
+                <>
+                  <Button onClick={() => setOpenRevenueShareModal(true)} icon={<SvgActionRevenueShare />}>
+                    Start revenue share
+                  </Button>
+                  <StartRevenueShare
+                    show={openRevenueShareModal}
+                    token={data.creatorTokenById}
+                    onClose={() => setOpenRevenueShareModal(false)}
+                  />
+                </>
               ) : (
                 <CloseRevenueShareButton revenueShare={activeRevenueShare} />
               )}

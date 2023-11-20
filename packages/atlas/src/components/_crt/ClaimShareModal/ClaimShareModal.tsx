@@ -1,3 +1,4 @@
+import { useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
 
 import { useGetRevenueShareDividendQuery } from '@/api/queries/__generated__/creatorTokens.generated'
@@ -35,6 +36,7 @@ export const ClaimShareModal = ({ onClose, token, show }: ClaimShareModalProps) 
   const { fullFee } = useFee('participateInSplitTx')
   const activeRevenueShare = token.revenueShares.find((rS) => !rS.finalized)
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
+  const client = useApolloClient()
   const { data: dividedData } = useGetRevenueShareDividendQuery({
     variables: {
       tokenId: token.id,
@@ -54,12 +56,10 @@ export const ClaimShareModal = ({ onClose, token, show }: ClaimShareModalProps) 
           proxyCallback(updateStatus)
         ),
       fee: fullFee,
-      onTxSync: async () => {
+      onTxSync: async (data) => {
         displaySnackbar({
-          title: `${token.lastPrice ? hapiBnToTokenNumber(new BN(token.lastPrice).muln(tokenBalance)) : '-'} ${
-            atlasConfig.joystream.tokenTicker
-          } received`,
-          description: `${tokenBalance} $${tokenName} is locked until the end of revenue share. (${formatDateTime(
+          title: `${hapiBnToTokenNumber(new BN(data.dividendAmount))} ${atlasConfig.joystream.tokenTicker} received`,
+          description: `${data.stakedAmount} $${tokenName} is locked until the end of revenue share. (${formatDateTime(
             new Date(convertBlockToMsTimestamp(activeRevenueShare.endsAt) ?? 0)
           )
             .split(',')
@@ -67,6 +67,7 @@ export const ClaimShareModal = ({ onClose, token, show }: ClaimShareModalProps) 
           iconType: 'success',
         })
         onClose()
+        client.refetchQueries({ include: 'active' })
       },
     })
   }

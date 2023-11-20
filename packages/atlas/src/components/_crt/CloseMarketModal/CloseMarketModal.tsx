@@ -44,7 +44,7 @@ export const CloseMarketModal = ({ onClose, show, channelId }: CloseMarketModalP
     handleTransaction({
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).closeAmm(memberId, channelId, proxyCallback(updateStatus)),
-      onTxSync: async (data) => {
+      onTxSync: async () => {
         client.refetchQueries({ include: 'active' }).then(() => {
           displaySnackbar({
             title: 'Market closed successfuly',
@@ -59,7 +59,7 @@ export const CloseMarketModal = ({ onClose, show, channelId }: CloseMarketModalP
         })
       },
     })
-  }, [joystream, channelId, memberId, handleTransaction, proxyCallback, onClose, displaySnackbar])
+  }, [joystream, channelId, memberId, handleTransaction, proxyCallback, client, displaySnackbar, onClose])
 
   return (
     <DialogModal

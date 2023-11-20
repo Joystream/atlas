@@ -38,7 +38,19 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: Tok
   const { joystream, proxyCallback } = useJoystream()
   const { channelId, memberId } = useUser()
   const handleTransaction = useTransaction()
-  const { fullFee } = useFee('issueCreatorTokenTx')
+  const { fullFee } = useFee('issueCreatorTokenTx', [
+    memberId ?? '1',
+    channelId ?? '1',
+    form.name,
+    form.creatorReward,
+    form.revenueShare,
+    {
+      amount: String(form.creatorIssueAmount ?? 0),
+      cliffAmountPercentage: 50,
+      blocksBeforeCliff: 123123,
+      vestingDuration: 123123,
+    },
+  ])
   const handleSubmitTx = async () => {
     if (!joystream || !channelId || !memberId) return
     const [cliff, vesting, payout] = getDataBasedOnType(form.assuranceType) ?? [

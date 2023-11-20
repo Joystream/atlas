@@ -49,6 +49,7 @@ import {
   ExtrinsicStatus,
   ExtrinsicStatusCallbackFn,
   GetEventDataFn,
+  JoinRevenueSplitResult,
   MemberExtrinsicResult,
   MemberId,
   MemberInputMetadata,
@@ -1044,16 +1045,17 @@ export class JoystreamLibExtrinsics {
     )
   }
 
-  participateInSplit: PublicExtrinsic<typeof this.participateInSplitTx, ExtrinsicResult> = async (
+  participateInSplit: PublicExtrinsic<typeof this.participateInSplitTx, JoinRevenueSplitResult> = async (
     tokenId,
     memberId,
     amount,
     cb
   ) => {
     const tx = await this.participateInSplitTx(tokenId, memberId, amount)
-    const { block } = await this.sendExtrinsic(tx, cb)
+    const { block, getEventData } = await this.sendExtrinsic(tx, cb)
+    const [, , stakedAmount, dividendAmount] = getEventData('projectToken', 'UserParticipatedInSplit')
 
-    return { block }
+    return { block, dividendAmount: dividendAmount.toString(), stakedAmount: stakedAmount.toString() }
   }
 
   issueRevenueSplitTx = async (memberId: MemberId, channelId: ChannelId, start: number, duration: number) => {
