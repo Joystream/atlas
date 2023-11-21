@@ -72,6 +72,7 @@ const locationToPageName = {
   '/marketplace': 'Marketplace',
   '/ypp': 'YPP landing page',
   '/ypp-dashboard': 'YPP Dashboard',
+  '/referrals': 'Referrals Landing page',
 }
 
 export const ViewerLayout: FC = () => {
