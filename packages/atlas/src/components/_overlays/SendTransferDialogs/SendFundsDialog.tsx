@@ -167,7 +167,14 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({
               proxyCallback(updateStatus)
             )
           },
-          onTxSync: async () => onExitClick(),
+          onTxSync: async () => {
+            trackWithdrawnFunds(
+              (isWithdrawalMode ? channelId : activeMembership?.controllerAccount) || undefined,
+              rawAmount?.toString(),
+              isOwnAccount
+            )
+            onExitClick()
+          },
         })
       }
 
@@ -195,11 +202,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({
         transferTransaction()
       }
     })
-    trackWithdrawnFunds(
-      (isWithdrawalMode ? channelId : activeMembership?.controllerAccount) || undefined,
-      rawAmount?.toString(),
-      isOwnAccount
-    )
+
     return handler()
   }
 
