@@ -5,6 +5,123 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.13.2] - 2023-11-14
+
+### Changed
+
+- YPP payout date is moved to Tuesday
+- Account seed is now downloaded by default
+- Changed referrals list on referrals page
+
+### Fixed
+
+- Fixed performance issues on mobile devices
+- Fixed player styling on mobile devices
+- Fixed incorrect rewards on YPP dashboard tab
+
+## [4.13.1] - 2023-11-09
+
+### Fixed
+
+- Minor markup fixes on referrals page
+- Fixed issue with YPP landing page carousel
+- Fixed user logs
+
+## [4.13.0] - 2023-11-08
+
+### Added
+
+- new Referrals page
+
+### Changed
+
+- YPP channel carousel is now showing most paid channels
+- Removed YPP signup quota check
+
+### Fixed
+
+- Fixed password suggestion being shown in the wrong places
+- Fixed issue with channel asset upload
+- Fixed NFT button being available for unauthorized users
+- Fixed incorrect block number in payments table
+- Fixed avatars on NFT carousel
+
+## [4.12.0] - 2023-11-01
+
+### Changed
+
+- YPP requirements are now fetched from yt-synch
+- Changed rewards for higher tiers
+- Moved YPP daily quota to config
+
+## [4.11.0] - 2023-10-20
+
+### Added
+
+- Added banner for second channel opt-in
+- Added signup tutorial video on YPP landing page
+- Added permanent referral link btn on YPP referrals tab
+
+### Changed
+
+- Password fields autocomplete was removed
+- Adjusted YPP referral link
+- Changed sort algorithm for YPP channels carousel
+
+### Fixed
+
+- Fixed redirect to YPP dashboard after sign in
+- Fixed asset provider incorrect behaviour
+- Fixed issue with GAuth code persistence
+
+## [4.10.2] - 2023-10-12
+
+### Fixed
+
+- Fixed issues with channel funds withdrawal
+
+## [4.10.1] - 2023-10-11
+
+### Changed
+
+- Removed YPP channel requirements
+
+### Fixed
+
+- Fixed issue with failing funds withdrawal
+- Fixed crashes on ypp dashboard and referrals page
+- Fixed channel assets modification
+- Fixed referral link generation
+
+## [4.10.0] - 2023-10-06
+
+### Added
+
+- Introduced new categories
+- YPP was updated to v2.0: updated landing page, new tiers system; rewards, referrals and dashboard changes
+
+### Changed
+
+- Changed channel tokens withdrawal from membership account to any Joystream account
+
+### Fixed
+
+- Fixed bug with slow loading of a homepage
+- Fixed bug with bid withdrawal from an auction
+- Minor markup fixes
+
+## [4.9.2] - 2023-09-22
+
+### Changed
+
+- Captcha was moved to the last signup step
+
+### Fixed
+
+- Fixed bug with checking the encoding for non-video assets
+- Fixed bug with missing upload button for mobile devices
+- Fixed bug with infinite modal on signup
+
 ## [4.9.1] - 2023-09-14
 
 ### Changed
@@ -124,7 +241,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed bug with infinite loop in studio
-- Fixed error with WASM 
+- Fixed error with WASM
 
 ## [4.4.2] - 2023-08-09
 
