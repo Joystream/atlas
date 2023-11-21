@@ -21,6 +21,13 @@ const Template: StoryFn<CrtBasicInfoWidgetProps> = (args) => <CrtBasicInfoWidget
 export const Default = Template.bind({})
 Default.args = {
   name: 'CRT',
+  symbol: 'Creatortoken',
+  size: 'large',
+  avatar: 'https://picsum.photos/200/300',
+  description:
+    'Unlock the joy of web3 development. Support the channel for exclusive access to expert blockchain content.',
+  isVerified: true,
+  accountsNum: 20,
   details: [
     {
       caption: 'TOTAL REV.',
