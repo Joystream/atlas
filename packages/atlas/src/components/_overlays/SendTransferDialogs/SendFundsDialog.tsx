@@ -26,6 +26,7 @@ import { Input } from '@/components/_inputs/Input'
 import { TokenInput } from '@/components/_inputs/TokenInput'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useFee, useJoystream, useSubscribeAccountBalance, useTokenPrice } from '@/providers/joystream'
@@ -79,10 +80,11 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({
   const convertedAmount = convertHapiToUSD(tokenNumberToHapiBn(watch('amount') || 0))
   const account = watch('account') || ''
   const { accountBalance: hookAccountBalance } = useSubscribeAccountBalance()
+  const { trackWithdrawnFunds } = useSegmentAnalytics()
   const balanceRef = useRef<BN>(BN_ZERO)
   balanceRef.current = hookAccountBalance || BN_ZERO
-
-  const amountBN = tokenNumberToHapiBn(watch('amount') || 0)
+  const rawAmount = watch('amount')
+  const amountBN = tokenNumberToHapiBn(rawAmount || 0)
   const { fullFee: transferFee, loading: feeLoading } = useFee(
     'sendFundsTx',
     show && amountBN ? [isValidAddressPolkadotAddress(account) ? account : '', amountBN.toString()] : undefined
@@ -193,6 +195,11 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({
         transferTransaction()
       }
     })
+    trackWithdrawnFunds(
+      (isWithdrawalMode ? channelId : activeMembership?.controllerAccount) || undefined,
+      rawAmount?.toString(),
+      isOwnAccount
+    )
     return handler()
   }
 
