@@ -55,15 +55,17 @@ export const LoadingChannelCell = ({ channelId }: { channelId: string }) => {
 export const MemberCell = ({
   member,
   additionalNode,
+  flow = 'row',
 }: {
   member?: BasicMembershipFieldsFragment
   additionalNode?: ReactNode
+  flow?: 'row' | 'column'
 }) => {
   const { urls } = getMemberAvatar(member)
   return (
     <FlexBox alignItems="center" gap={2}>
       <Avatar assetUrls={urls} />
-      <HandleContainer flow="row" justifyContent="start" gap={2}>
+      <HandleContainer flow={flow} justifyContent="start" gap={flow === 'row' ? 2 : 0}>
         <Text variant="t200-strong" as="p" color="colorText" truncate>
           {member?.handle ?? 'Unknown'}
         </Text>
@@ -73,7 +75,15 @@ export const MemberCell = ({
   )
 }
 
-export const LoadingMemberRow = ({ memberId, additionalNode }: { memberId: string; additionalNode?: ReactNode }) => {
+export const LoadingMemberRow = ({
+  memberId,
+  additionalNode,
+  flow,
+}: {
+  memberId: string
+  additionalNode?: ReactNode
+  flow?: 'row' | 'column'
+}) => {
   const { loading, memberships } = useMemberships({
     where: {
       id_eq: memberId,
@@ -91,7 +101,7 @@ export const LoadingMemberRow = ({ memberId, additionalNode }: { memberId: strin
 
   const member = memberships?.[0]
 
-  return <MemberCell member={member} additionalNode={additionalNode} />
+  return <MemberCell member={member} additionalNode={additionalNode} flow={flow} />
 }
 
 const HandleContainer = styled(FlexBox)`
