@@ -173,17 +173,20 @@ export const useStartFileUpload = () => {
         assetsNotificationsCount.current.uploaded[assetKey] =
           (assetsNotificationsCount.current.uploaded[assetKey] || 0) + 1
       } catch (e) {
-        SentryLogger.error('Failed to upload asset', 'uploadsHooks', e, {
-          asset: { dataObjectId: asset.id, uploadOperator },
-        })
         setAssetStatus({ lastStatus: 'error', progress: 0 })
 
         const axiosError = e as AxiosError
-        const networkFailure =
+        const networkFailure = axiosError.isAxiosError && !axiosError.response?.status
+        const providerFailure =
           axiosError.isAxiosError &&
-          (!axiosError.response?.status || (axiosError.response.status >= 400 && axiosError.response.status <= 500))
-        UserEventsLogger.logDistributorError({ dataObjectId: asset.id, distributorId: uploadOperator.id }, e)
-        if (networkFailure) {
+          axiosError.response &&
+          axiosError.response.status >= 400 &&
+          axiosError.response.status <= 500
+        if (providerFailure) {
+          SentryLogger.error('Failed to upload asset: provider failure', 'uploadsHooks', e, {
+            asset: { dataObjectId: asset.id, uploadOperator },
+          })
+          UserEventsLogger.logDistributorError({ dataObjectId: asset.id, distributorId: uploadOperator.id }, e)
           markStorageOperatorFailed(uploadOperator.id)
         }
 
@@ -191,6 +194,10 @@ export const useStartFileUpload = () => {
         if (networkFailure && retry < MAX_BUCKET_RETRY) {
           return startFileUpload(file, asset, { ...opts, retry: retry + 1 })
         }
+
+        SentryLogger.error('Failed to upload asset: user network failure', 'uploadsHooks', e, {
+          asset: { dataObjectId: asset.id, uploadOperator },
+        })
 
         const snackbarDescription = networkFailure ? 'Host is not responding' : 'Unexpected error occurred'
 
