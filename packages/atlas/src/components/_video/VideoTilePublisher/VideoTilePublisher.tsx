@@ -331,6 +331,7 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
         videoTitle={video?.title}
         views={video?.viewsNum}
         kebabMenuItems={getPublisherKebabMenuItems()}
+        isPublisher
       />
     )
   }
