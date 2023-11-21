@@ -4,7 +4,7 @@ import { WidgetTile } from '@/components/WidgetTile'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { formatDateTime, formatDurationShort } from '@/utils/time'
 
-export const RevenueShareStateWidget = ({ endsAtBlock }: { endsAtBlock?: number }) => {
+export const RevenueShareStateWidget = ({ endsAtBlock, className }: { endsAtBlock?: number; className?: string }) => {
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
   const endingBlockTimestamp = convertBlockToMsTimestamp(endsAtBlock ?? 0)
   const endingDate = endingBlockTimestamp ? new Date(endingBlockTimestamp) : null
@@ -16,6 +16,7 @@ export const RevenueShareStateWidget = ({ endsAtBlock }: { endsAtBlock?: number 
 
   return (
     <WidgetTile
+      className={className}
       title={
         status === 'inactive'
           ? 'REVENUE SHARE STATE'

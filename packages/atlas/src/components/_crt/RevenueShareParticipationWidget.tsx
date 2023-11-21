@@ -31,7 +31,6 @@ export const RevenueShareParticipationWidget = ({
 }: RevenueShareParticipationWidgetProps) => {
   const { memberId } = useUser()
   const { currentBlock } = useJoystreamStore()
-  const tokenPrice = useJoystream().tokenPrice ?? 0
   const hasEnded = revenueShare.endsAt < currentBlock
   const { joystream, proxyCallback } = useJoystream()
   const { displaySnackbar } = useSnackbar()
@@ -86,46 +85,7 @@ export const RevenueShareParticipationWidget = ({
       title="Revenue share participation"
       titleVariant="h400"
       customTopRightNode={actionNode()}
-      customNode={
-        <FlexBox flow="column" gap={6} width="100%">
-          <FlexBox justifyContent="space-between">
-            <FlexBox flow="column">
-              <Text variant="h100" as="h1" color="colorTextMuted">
-                HOLDERS EARNINGS
-              </Text>
-              <FlexBox alignItems="center">
-                <SvgJoyTokenMonochrome16 />
-                <Text variant="h400" as="h4">
-                  {hapiBnToTokenNumber(new BN(revenueShare.claimed))}/
-                  {hapiBnToTokenNumber(new BN(revenueShare.allocation))}
-                </Text>
-              </FlexBox>
-
-              <Text variant="t100" as="p" color="colorText">
-                ${(hapiBnToTokenNumber(new BN(revenueShare.claimed)) * tokenPrice).toFixed(2)}/
-                {(hapiBnToTokenNumber(new BN(revenueShare.allocation)) * tokenPrice).toFixed(2)}
-              </Text>
-            </FlexBox>
-
-            <FlexBox flow="column" alignItems="end">
-              <Text variant="h100" as="h1" color="colorTextMuted">
-                ENDED ON
-              </Text>
-              <Text variant="h400" as="h4">
-                {revenueShare.stakers.length}/{token.accountsNum}
-              </Text>
-              <Text variant="t100" as="p" color="colorText">
-                {Math.round((revenueShare.stakers.length / token.accountsNum) * 100)}% holders
-              </Text>
-            </FlexBox>
-          </FlexBox>
-
-          <ProgressBar
-            color={hasEnded ? cVar('colorCoreNeutral700Lighten') : cVar('colorBackgroundPrimary')}
-            progress={Math.round((revenueShare.stakers.length / token.accountsNum) * 100)}
-          />
-        </FlexBox>
-      }
+      customNode={<RevenueShareProgress token={token} revenueShare={revenueShare} hasEnded={hasEnded} />}
     />
   )
 }
@@ -156,3 +116,53 @@ const StyledPill = styled(Pill)`
     fill: ${cVar('colorTextSuccess')};
   }
 `
+
+type RevenueShareProgressProps = {
+  revenueShare: FullCreatorTokenFragment['revenueShares'][number]
+  token: FullCreatorTokenFragment
+  hasEnded?: boolean
+}
+
+export const RevenueShareProgress = ({ revenueShare, hasEnded, token }: RevenueShareProgressProps) => {
+  const tokenPrice = useJoystream().tokenPrice ?? 0
+
+  return (
+    <FlexBox flow="column" gap={6} width="100%">
+      <FlexBox justifyContent="space-between">
+        <FlexBox flow="column">
+          <Text variant="h100" as="h1" color="colorTextMuted">
+            HOLDERS EARNINGS
+          </Text>
+          <FlexBox alignItems="center">
+            <SvgJoyTokenMonochrome16 />
+            <Text variant="h400" as="h4">
+              {hapiBnToTokenNumber(new BN(revenueShare.claimed))}/{hapiBnToTokenNumber(new BN(revenueShare.allocation))}
+            </Text>
+          </FlexBox>
+
+          <Text variant="t100" as="p" color="colorText">
+            ${(hapiBnToTokenNumber(new BN(revenueShare.claimed)) * tokenPrice).toFixed(2)}/
+            {(hapiBnToTokenNumber(new BN(revenueShare.allocation)) * tokenPrice).toFixed(2)}
+          </Text>
+        </FlexBox>
+
+        <FlexBox flow="column" alignItems="end">
+          <Text variant="h100" as="h1" color="colorTextMuted">
+            ENDED ON
+          </Text>
+          <Text variant="h400" as="h4">
+            {revenueShare.stakers.length}/{token.accountsNum}
+          </Text>
+          <Text variant="t100" as="p" color="colorText">
+            {Math.round((revenueShare.stakers.length / token.accountsNum) * 100)}% holders
+          </Text>
+        </FlexBox>
+      </FlexBox>
+
+      <ProgressBar
+        color={hasEnded ? cVar('colorCoreNeutral700Lighten') : cVar('colorBackgroundPrimary')}
+        progress={Math.round((revenueShare.stakers.length / token.accountsNum) * 100)}
+      />
+    </FlexBox>
+  )
+}
