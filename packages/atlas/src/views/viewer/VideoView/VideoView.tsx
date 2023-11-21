@@ -61,6 +61,8 @@ import {
   VideoUtils,
 } from './VideoView.styles'
 
+const DISABLE_VIEWS = true
+
 export const VideoView: FC = () => {
   const { id } = useParams()
   const { memberId, isLoggedIn } = useUser()
@@ -351,8 +353,13 @@ export const VideoView: FC = () => {
                   text={`${formatDate(new Date(video.createdAt))} at ${format(new Date(video.createdAt), 'HH:mm')}`}
                 >
                   {formatDate(new Date(video.createdAt))}
-                </Tooltip>{' '}
-                • <NumberFormat as="span" format="full" value={video.viewsNum} color="colorText" /> views
+                </Tooltip>
+                {!DISABLE_VIEWS && (
+                  <>
+                    {' '}
+                    • <NumberFormat as="span" format="full" value={video.viewsNum} color="colorText" /> views
+                  </>
+                )}
               </>
             ) : (
               <SkeletonLoader height={24} width={200} />

@@ -45,6 +45,7 @@ export type VideoTileDetailsProps = {
   variant?: VideoDetailsVariant
   type?: 'video' | 'playlist'
   playlistUrl?: string
+  isPublisher?: boolean
 }
 
 export const VideoTileDetails: FC<VideoTileDetailsProps> = ({
@@ -66,6 +67,7 @@ export const VideoTileDetails: FC<VideoTileDetailsProps> = ({
   variant = 'withChannelNameAndAvatar',
   type = 'playlist',
   playlistUrl,
+  isPublisher,
 }) => {
   return (
     <VideoDetailsContainer>
@@ -115,9 +117,14 @@ export const VideoTileDetails: FC<VideoTileDetailsProps> = ({
                         ? videoSubTitle
                         : createdAt && (
                             <>
-                              {formatVideoDate(createdAt)} •{' '}
-                              <Views as="span" value={views ?? 0} format="short" color="colorText" />
-                              &nbsp;views
+                              {formatVideoDate(createdAt)}
+                              {isPublisher && (
+                                <>
+                                  {' '}
+                                  • <Views as="span" value={views ?? 0} format="short" color="colorText" />
+                                  &nbsp;views
+                                </>
+                              )}
                             </>
                           )}
                     </Text>

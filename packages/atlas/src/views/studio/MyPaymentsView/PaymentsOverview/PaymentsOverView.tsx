@@ -21,7 +21,7 @@ export const PaymentsOverView = () => {
   const [showClaimDialog, setShowClaimDialog] = useState<boolean>(false)
   const { channel, loading } = useFullChannel(channelId || '')
   const { availableAward, isAwardLoading } = useChannelPayout()
-  const { totalBalance, debt } = useSubscribeAccountBalance()
+  const { totalBalance } = useSubscribeAccountBalance()
 
   const memoizedChannelStateBloatBond = useMemo(() => {
     return new BN(channel?.channelStateBloatBond || 0)
@@ -43,7 +43,6 @@ export const PaymentsOverView = () => {
         channelBalance={channelBalance}
         channelId={channelId}
         totalBalance={totalBalance}
-        accountDebt={debt}
       />
       <ClaimChannelPaymentsDialog show={showClaimDialog} onExit={() => setShowClaimDialog(false)} />
       <TilesWrapper>

@@ -82,7 +82,7 @@ export const Banner: FC<BannerProps> = ({
             </ActionButton>
           )}
         </FlexBox>
-        <FlexBox flow="row" justifyContent="end" alignItems="center">
+        <FlexBox width="auto" flow="row" justifyContent="end" alignItems="center">
           {actionButton && rightActionButton && smMatch && (
             <ActionButton variant="primary" rightActionButton _textOnly {...actionButton}>
               {actionButton.text}

@@ -309,10 +309,11 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackWithdrawnFunds = useCallback(
-    (channelId?: string, amount?: string) => {
-      analytics.track('Channel Funds Withdrawn', {
+    (channelId?: string, amount?: string, toOwnMembership?: boolean) => {
+      analytics.track('Funds withdrawal', {
         channelId,
         amount,
+        toOwnMembership,
       })
     },
     [analytics]
