@@ -23,6 +23,7 @@ export const Content = styled.div<{ withButton?: boolean }>`
   display: grid;
   align-self: flex-end;
   gap: ${sizes(4)};
+  height: 100%;
   padding-right: ${sizes(2)};
 
   ${media.md} {
@@ -30,6 +31,7 @@ export const Content = styled.div<{ withButton?: boolean }>`
     align-items: center;
     ${(props) => (props.withButton ? 'grid-template-columns: 1fr auto;' : '')}
   }
+  
   ${media.lg} {
     gap: 0;
   }
