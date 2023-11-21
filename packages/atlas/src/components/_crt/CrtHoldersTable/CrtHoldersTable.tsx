@@ -1,12 +1,14 @@
 import styled from '@emotion/styled'
 import BN from 'bn.js'
 import { useMemo } from 'react'
+import { useNavigate } from 'react-router'
 
 import { FlexBox } from '@/components/FlexBox'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Table, TableProps } from '@/components/Table'
 import { LoadingMemberRow } from '@/components/Table/Table.cells'
 import { Text } from '@/components/Text'
+import { absoluteRoutes } from '@/config/routes'
 
 const COLUMNS: TableProps['columns'] = [
   { Header: 'Member', accessor: 'member', width: 2 },
@@ -29,12 +31,14 @@ export type CrtHoldersTableProps = {
 }
 
 export const CrtHoldersTable = ({ isLoading, data, className, ownerId }: CrtHoldersTableProps) => {
+  const navigate = useNavigate()
   const mappedData = useMemo(
     () =>
       data.map((row) => ({
         member: (
           <LoadingMemberRow
             memberId={row.memberId}
+            flow="column"
             additionalNode={
               row.memberId === ownerId ? (
                 <Text variant="t100" as="p" color="colorTextMuted">
@@ -67,10 +71,23 @@ export const CrtHoldersTable = ({ isLoading, data, className, ownerId }: CrtHold
     return null
   }
 
-  return <StyledTable columns={COLUMNS} data={mappedData} className={className} />
+  return (
+    <StyledTable
+      onRowClick={(rowIdx) => {
+        navigate(absoluteRoutes.viewer.member(data[rowIdx].memberId))
+      }}
+      columns={COLUMNS}
+      data={mappedData}
+      className={className}
+    />
+  )
 }
 
 export const StyledTable = styled(Table)`
+  tr {
+    cursor: pointer;
+  }
+
   th:nth-child(n + 2) {
     justify-content: end;
     align-items: end;
