@@ -191,13 +191,14 @@ export const useStartFileUpload = () => {
         }
 
         const retry = opts?.retry ?? 0
-        if (networkFailure && retry < MAX_BUCKET_RETRY) {
+        if (retry < MAX_BUCKET_RETRY) {
           return startFileUpload(file, asset, { ...opts, retry: retry + 1 })
         }
 
-        SentryLogger.error('Failed to upload asset: user network failure', 'uploadsHooks', e, {
-          asset: { dataObjectId: asset.id, uploadOperator },
-        })
+        networkFailure &&
+          SentryLogger.error('Failed to upload asset: user network failure', 'uploadsHooks', e, {
+            asset: { dataObjectId: asset.id, uploadOperator },
+          })
 
         const snackbarDescription = networkFailure ? 'Host is not responding' : 'Unexpected error occurred'
 
