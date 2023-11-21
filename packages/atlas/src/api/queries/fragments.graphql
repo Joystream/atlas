@@ -532,6 +532,7 @@ fragment BasicCreatorToken on CreatorToken {
 fragment FullCreatorToken on CreatorToken {
   ...BasicCreatorToken
   annualCreatorRewardPermill
+  revenueShareRatioPermill
   description
   revenueShareRatioPermill
   ammCurves {
