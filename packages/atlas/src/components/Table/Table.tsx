@@ -19,6 +19,7 @@ import {
 
 export type TableProps<T = object> = {
   columns: Column[]
+  onRowClick?: (rowIdx: number) => void
   data: T[]
   title?: string
   pageSize?: number
@@ -38,6 +39,7 @@ export const Table = <T extends object>({
   pageSize = 20,
   emptyState,
   doubleColumn,
+  onRowClick,
   className,
 }: TableProps<T>) => {
   const {
@@ -93,10 +95,15 @@ export const Table = <T extends object>({
                 ))}
               </Thead>
               <tbody {...getTableBodyProps()}>
-                {subpage.map((row) => {
+                {subpage.map((row, idx) => {
                   prepareRow(row)
                   return (
-                    <tr className="table-row" {...row.getRowProps()} key={row.getRowProps().key}>
+                    <tr
+                      className="table-row"
+                      {...row.getRowProps()}
+                      onClick={() => onRowClick?.(idx)}
+                      key={row.getRowProps().key}
+                    >
                       {row.cells.map((cell) => (
                         <Td
                           variant="t100"
