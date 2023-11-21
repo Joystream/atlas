@@ -4,6 +4,7 @@ import { useBasicChannel } from '@/api/hooks/channel'
 import { Avatar } from '@/components/Avatar'
 import { FlexBox } from '@/components/FlexBox'
 import { Table, TableProps } from '@/components/Table'
+import { OverflowTableWrapper } from '@/components/Table/Table.styles'
 import { SenderItem, StyledLink } from '@/components/TablePaymentsHistory/TablePaymentsHistory.styles'
 import { Text } from '@/components/Text'
 import { RightAlignText, TierWrapper } from '@/components/YppReferralTable/YppReferralTable.styles'
@@ -42,7 +43,11 @@ export const YppReferralTable = ({ isLoading, data }: YppReferralTableProps) => 
       })),
     [data]
   )
-  return <Table title="Channels you referred" columns={COLUMNS} data={isLoading ? tableLoadingData : mappedData} />
+  return (
+    <OverflowTableWrapper minWidth={700}>
+      <Table title="Channels you referred" columns={COLUMNS} data={isLoading ? tableLoadingData : mappedData} />
+    </OverflowTableWrapper>
+  )
 }
 
 const RegDate = ({ date }: { date: Date }) => {

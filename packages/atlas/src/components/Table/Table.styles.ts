@@ -96,3 +96,15 @@ export const ColumnBox = styled.div`
   width: 100%;
   align-items: center;
 `
+
+export const OverflowTableWrapper = styled.div<{ minWidth: number }>`
+  > * {
+    min-width: ${(props) => `${props.minWidth}px`};
+  }
+
+  overflow-x: auto;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`
