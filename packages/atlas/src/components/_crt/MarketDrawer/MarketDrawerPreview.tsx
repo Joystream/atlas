@@ -1,4 +1,5 @@
 import { Datum } from '@nivo/line'
+import BN from 'bn.js'
 
 import { SvgJoyTokenMonochrome16 } from '@/assets/icons'
 import { NumberFormat, formatNumberShort } from '@/components/NumberFormat'
@@ -6,26 +7,44 @@ import { Text } from '@/components/Text'
 import { LineChart, defaultChartTheme } from '@/components/_charts/LineChart'
 import { TooltipBox } from '@/components/_crt/CreateTokenDrawer/steps/styles'
 import { ChartBox } from '@/components/_crt/MarketDrawer/MarketDrawer.styles'
+import { useDebounceValue } from '@/hooks/useDebounceValue'
+import { AMM_DESCO_CURVE_CONST, HAPI_TO_JOY_RATE } from '@/joystream-lib/config'
+import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
+import { useTokenPrice } from '@/providers/joystream'
 import { cVar } from '@/styles'
+import { calcBuyMarketPricePerToken } from '@/utils/crts'
 
 type MarketDrawerPreviewProps = {
   tokenName: string
   startingPrice: number
 }
 
-const DEFAULT_AMM_SENSIVITY = 1
-export const MarketDrawerPreview = ({ tokenName, startingPrice }: MarketDrawerPreviewProps) => {
-  const issuedTokens = [10 ** 3, 10 ** 4, 5 * 10 ** 4, 10 ** 5, 5 * 10 ** 5, 10 ** 6, 10 ** 7]
+const issuedTokens = [1, 10, 10 ** 2, 10 ** 3, 10 ** 4, 10 ** 5]
 
+export const MarketDrawerPreview = ({ tokenName, startingPrice }: MarketDrawerPreviewProps) => {
+  const { tokenPrice } = useTokenPrice()
+  const debouncedStartingPrice = useDebounceValue(startingPrice, 500)
   const chartData: Datum[] = issuedTokens.map((num) => ({
     x: formatNumberShort(num),
-    y: DEFAULT_AMM_SENSIVITY * num + startingPrice,
+    y: hapiBnToTokenNumber(
+      calcBuyMarketPricePerToken(
+        String(num),
+        new BN(HAPI_TO_JOY_RATE).muln(AMM_DESCO_CURVE_CONST / (tokenPrice ?? 1)).toString(),
+        String(tokenNumberToHapiBn(debouncedStartingPrice))
+      ) ?? new BN(0)
+    ),
   }))
 
   const getTickValues = () => [
     ...new Set(
       issuedTokens.map((elem) => {
-        const floor = Math.pow(10, Math.round(Math.log10(DEFAULT_AMM_SENSIVITY * elem + startingPrice)))
+        const floor = hapiBnToTokenNumber(
+          calcBuyMarketPricePerToken(
+            String(elem),
+            new BN(HAPI_TO_JOY_RATE).muln(AMM_DESCO_CURVE_CONST / (tokenPrice ?? 1)).toString(),
+            String(tokenNumberToHapiBn(debouncedStartingPrice))
+          ) ?? new BN(0)
+        )
         return Math.max(Math.floor(elem / floor), 1) * floor
       })
     ),
@@ -58,7 +77,7 @@ export const MarketDrawerPreview = ({ tokenName, startingPrice }: MarketDrawerPr
           axisLeft={{
             tickSize: 5,
             tickPadding: 5,
-            tickValues: getTickValues(),
+            tickValues: 5,
             ticksPosition: 'before',
             format: (tick) => formatNumberShort(tick),
             // eslint-disable-next-line

@@ -21,10 +21,12 @@ import {
   NoGlobalPaddingWrapper,
   WidgetContainer,
 } from '@/views/studio/CrtDashboard/CrtDashboard.styles'
+import { CrtTabs } from '@/views/studio/CrtDashboard/CrtDashboard.types'
 import { StyledSvgJoyTokenMonochrome24 } from '@/views/studio/MyPaymentsView/PaymentsOverview/PaymentsOverview.styles'
 
 type CrtDashboardMainTabProps = {
   token: FullCreatorTokenFragment
+  onTabChange: (tab: CrtTabs) => void
 }
 
 const steps: ProgressWidgetProps['steps'] = [
@@ -48,7 +50,7 @@ const steps: ProgressWidgetProps['steps'] = [
   },
 ]
 
-export const CrtDashboardMainTab = ({ token }: CrtDashboardMainTabProps) => {
+export const CrtDashboardMainTab = ({ token, onTabChange }: CrtDashboardMainTabProps) => {
   const { memberId } = useUser()
   const smMatch = useMediaMatch('sm')
   const { data } = useGetCreatorTokenHoldersQuery({
@@ -181,13 +183,17 @@ export const CrtDashboardMainTab = ({ token }: CrtDashboardMainTabProps) => {
         />
       </WidgetContainer>
       <BigWidgetContainer>
-        <CrtHoldersWidget tokenId={token.id} totalSupply={+(token.totalSupply ?? 0)} />
+        <CrtHoldersWidget
+          onShowMore={() => onTabChange('Holders')}
+          tokenId={token.id}
+          totalSupply={+(token.totalSupply ?? 0)}
+        />
         <WidgetTile
           title="Revenue share with holders"
           titleColor="colorTextStrong"
           titleVariant="h500"
           customTopRightNode={
-            <TextButton iconPlacement="right" icon={<SvgActionChevronR />}>
+            <TextButton onClick={() => onTabChange('Revenue share')} iconPlacement="right" icon={<SvgActionChevronR />}>
               Show revenue shares
             </TextButton>
           }

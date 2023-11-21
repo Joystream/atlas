@@ -48,7 +48,6 @@ export const ChannelToken = ({ tokenId, memberId }: ChannelTokenProps) => {
   }
 
   const { creatorTokenById: token } = data
-  console.log(token?.trailerVideo?.[0]?.video.id)
 
   return (
     <LayoutGrid>
