@@ -44,7 +44,7 @@ export const ProgressWidget = ({
   goalComponent,
   renderCurrentStepActionButton,
 }: ProgressWidgetProps) => {
-  const [isVisible, setIsVisible] = useState(false)
+  const [isVisible, setIsVisible] = useState(true)
   const [glider, setGlider] = useState<SwiperInstance | null>(null)
   const drawer = useRef<HTMLDivElement>(null)
   const xsMatch = useMediaMatch('xs')

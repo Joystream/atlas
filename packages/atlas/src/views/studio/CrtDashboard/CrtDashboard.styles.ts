@@ -10,10 +10,6 @@ export const NoGlobalPaddingWrapper = styled.div`
   ${media.md} {
     margin: 0 calc(-2 * var(--size-global-horizontal-padding));
   }
-
-  ${media.lg} {
-    margin: 0 calc(-1 * var(--size-global-horizontal-padding));
-  }
 `
 
 export const MainContainer = styled.div`

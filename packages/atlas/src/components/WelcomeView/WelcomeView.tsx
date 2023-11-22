@@ -181,7 +181,7 @@ export const WelcomeView = ({
             )}
             <ImageGridItem
               colSpan={{ xxs: 12, sm: 8, md: 6 }}
-              colStart={{ sm: 3, md: 6 }}
+              colStart={{ sm: 3, md: 7 }}
               rowStart={{ base: 3, md: 1 }}
               rowSpan={{ md: 2 }}
             >
