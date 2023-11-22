@@ -15,7 +15,6 @@ import { cVar, media, sizes } from '@/styles'
 export type CreateTokenSuccessModalProps = {
   show: boolean
   tokenName: string
-  tokenId: string
 }
 export const CreateTokenSuccessModal = ({ tokenName, show }: CreateTokenSuccessModalProps) => {
   const navigate = useNavigate()
@@ -27,13 +26,18 @@ export const CreateTokenSuccessModal = ({ tokenName, show }: CreateTokenSuccessM
       show={show}
       primaryButton={{
         text: 'Go to dashboard',
-        onClick: () => navigate(absoluteRoutes.studio.crtDashboard()),
+        onClick: () => {
+          client.refetchQueries({ include: 'active' }).then(() => {
+            navigate(absoluteRoutes.studio.crtDashboard())
+          })
+        },
       }}
       additionalActionsNode={
         <TextButton
           variant="secondary"
           icon={<SvgActionNewTab />}
           iconPlacement="right"
+          disabled={!channelId}
           onClick={() => {
             client.refetchQueries({ include: 'active' }).then(() => {
               navigate(absoluteRoutes.viewer.channel(channelId ?? '-1', { tab: 'Token' }))

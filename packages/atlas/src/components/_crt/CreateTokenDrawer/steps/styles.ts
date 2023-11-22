@@ -31,14 +31,16 @@ export const BottomPlaceholder = styled.div`
 `
 
 export const PreviewContainer = styled.div`
-  height: 300px;
   margin: 100px 0;
   display: flex;
   flex-direction: column;
   width: 100%;
+  padding: ${sizes(8)};
 
-  h1 {
-    padding: 0 60px;
+  .chart-box {
+    margin: -20px 0 0 -20px;
+    width: calc(100% + 125px);
+    height: 300px;
   }
 `
 

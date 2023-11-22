@@ -14,7 +14,7 @@ import { SellOnMarketButton } from '@/components/_crt/SellOnMarketButton/SellOnM
 import { DetailsContent } from '@/components/_nft/NftTile'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
-import { calcSellMarketPricePerToken } from '@/utils/crts'
+import { calcBuyMarketPricePerToken } from '@/utils/crts'
 import { formatDate } from '@/utils/time'
 
 import { Drawer, StatisticsContainer, SupplyLine, ToggleContainer, Widget } from './CrtStatusWidget.styles'
@@ -113,7 +113,7 @@ const MarketDetails = ({ token }: { token: FullCreatorTokenFragment }) => {
   const calculateSlippageAmount = useCallback(
     (amount: number) => {
       const currentAmm = token?.ammCurves.find((amm) => !amm.finalized)
-      return calcSellMarketPricePerToken(
+      return calcBuyMarketPricePerToken(
         currentAmm?.mintedByAmm,
         currentAmm?.ammSlopeParameter,
         currentAmm?.ammInitPrice,

@@ -1,14 +1,21 @@
-import { useCallback, useRef, useState } from 'react'
+import { useApolloClient } from '@apollo/client'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { SvgActionLinkUrl, SvgActionMarket, SvgActionShoppingCart, SvgActionWarning } from '@/assets/icons'
 import { ActionDialogButtonProps } from '@/components/ActionBar'
 import { CrtDrawer } from '@/components/CrtDrawer'
+import { TextButton } from '@/components/_buttons/Button'
 import { CrtMarketForm } from '@/components/_crt/MarketDrawer/MarketDrawer.types'
 import { MarketDrawerPreview } from '@/components/_crt/MarketDrawer/MarketDrawerPreview'
 import { MarketStep } from '@/components/_crt/MarketDrawer/steps/MarketStep'
 import { SaleSummaryStep } from '@/components/_crt/MarketDrawer/steps/SaleSummaryStep'
+import { SuccessActionModalTemplate } from '@/components/_crt/SuccessActionModalTemplate'
 import { atlasConfig } from '@/config'
+import { absoluteRoutes } from '@/config/routes'
+import { useClipboard } from '@/hooks/useClipboard'
+import { useUser } from '@/providers/user/user.hooks'
 import { transitions } from '@/styles'
 
 enum MARKET_STEPS {
@@ -25,6 +32,7 @@ export type CrtMarketSaleViewProps = {
 
 export const MarketDrawer = ({ show, onClose, tokenName }: CrtMarketSaleViewProps) => {
   const [activeStep, setActiveStep] = useState(MARKET_STEPS.market)
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [marketData, setMarketData] = useState<CrtMarketForm>({
     price: 1,
     tnc: atlasConfig.legal.crtTnc,
@@ -34,6 +42,9 @@ export const MarketDrawer = ({ show, onClose, tokenName }: CrtMarketSaleViewProp
   const [secondaryButtonProps, setSecondaryButtonProps] = useState<ActionDialogButtonProps>({ text: 'Back' })
   const [isGoingBack, setIsGoingBack] = useState(false)
   const nodeRef = useRef<HTMLDivElement>(null)
+  const { channelId } = useUser()
+  const client = useApolloClient()
+  const { copyToClipboard } = useClipboard()
 
   const handleNextStep = useCallback(
     ({ price, tnc }: CrtMarketForm) => {
@@ -77,38 +88,85 @@ export const MarketDrawer = ({ show, onClose, tokenName }: CrtMarketSaleViewProp
             setSecondaryButtonProps={setSecondaryButtonProps}
             handleBackClick={handleBackClick}
             handleCloseModal={onClose}
+            onSuccess={() => {
+              setShowSuccessModal(true)
+              onClose()
+            }}
           />
         )
     }
   }
 
+  const successDetails = useMemo(
+    () => [
+      {
+        text: 'You can buy and sell your own tokens on the token market too!',
+        icon: <SvgActionMarket />,
+      },
+      {
+        text: 'You don’t earn any royalties from the transactions of other members on the market.',
+        icon: <SvgActionWarning />,
+      },
+      {
+        text: 'Members can now buy and sale your tokens on your token page. Share the link to the market with them to let everyone know about it.',
+        icon: <SvgActionShoppingCart />,
+        actionNode: (
+          <TextButton
+            onClick={() => copyToClipboard(absoluteRoutes.viewer.channel(channelId ?? '-1', { tab: 'Token' }))}
+            icon={<SvgActionLinkUrl />}
+          >
+            Copy link to market
+          </TextButton>
+        ),
+      },
+    ],
+    [channelId, copyToClipboard]
+  )
+
   return (
-    <CrtDrawer
-      steps={marketStepsNames}
-      activeStep={activeStep}
-      actionBar={{
-        isNoneCrypto: true,
-        primaryButton: primaryButtonProps,
-        secondaryButton: secondaryButtonProps,
-      }}
-      isOpen={show}
-      onClose={onClose}
-      preview={<MarketDrawerPreview startingPrice={marketData.price || 1} tokenName={tokenName} />}
-    >
-      <SwitchTransition mode="out-in">
-        <CSSTransition
-          key={activeStep}
-          nodeRef={nodeRef}
-          timeout={100}
-          addEndListener={(done) => {
-            nodeRef.current?.addEventListener('transitionend', done, false)
-          }}
-          onEntered={() => setIsGoingBack(false)}
-          classNames={isGoingBack ? transitions.names.backwardSlideSwitch : transitions.names.forwardSlideSwitch}
-        >
-          <div ref={nodeRef}>{stepContent()}</div>
-        </CSSTransition>
-      </SwitchTransition>
-    </CrtDrawer>
+    <>
+      <SuccessActionModalTemplate
+        title="Market started!"
+        description="There are few things you should know:"
+        details={successDetails}
+        show={showSuccessModal}
+        primaryButton={{
+          text: 'Continue',
+          onClick: () => {
+            client.refetchQueries({ include: 'active' }).then(() => {
+              setShowSuccessModal(false)
+            })
+          },
+        }}
+      />
+
+      <CrtDrawer
+        steps={marketStepsNames}
+        activeStep={activeStep}
+        actionBar={{
+          isNoneCrypto: true,
+          primaryButton: primaryButtonProps,
+          secondaryButton: secondaryButtonProps,
+        }}
+        isOpen={show}
+        onClose={onClose}
+        preview={<MarketDrawerPreview startingPrice={marketData.price || 1} tokenName={tokenName} />}
+      >
+        <SwitchTransition mode="out-in">
+          <CSSTransition
+            key={activeStep}
+            nodeRef={nodeRef}
+            timeout={100}
+            addEndListener={(done) => {
+              nodeRef.current?.addEventListener('transitionend', done, false)
+            }}
+            onEntered={() => setIsGoingBack(false)}
+            classNames={isGoingBack ? transitions.names.backwardSlideSwitch : transitions.names.forwardSlideSwitch}
+          >
+            <div ref={nodeRef}>{stepContent()}</div>
+          </CSSTransition>
+        </SwitchTransition>
+      </CrtDrawer>
+    </>
   )
 }

@@ -35,7 +35,6 @@ export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
 
   return (
     <>
-      <ClaimShareModal onClose={() => setOpenClaimShareModal(false)} show={openClaimShareModal} token={token} />
       <LayoutGrid>
         <GridItem colSpan={{ base: 12, sm: 4 }}>
           <RevenueShareStateWidget endsAtBlock={activeRevenueShare?.endsAt} />
@@ -77,6 +76,7 @@ export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
               revenueShare={activeRevenueShare}
               onClaimShare={() => setOpenClaimShareModal(true)}
             />
+            <ClaimShareModal onClose={() => setOpenClaimShareModal(false)} show={openClaimShareModal} token={token} />
           </GridItem>
         )}
 

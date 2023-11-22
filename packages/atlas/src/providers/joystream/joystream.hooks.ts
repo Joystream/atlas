@@ -58,6 +58,7 @@ export const useTokenPrice = () => {
     convertHapiToUSD,
     convertTokensToUSD,
     convertUSDToHapi,
+    tokenPrice,
     isLoadingPrice,
     tokenPrice,
   }
