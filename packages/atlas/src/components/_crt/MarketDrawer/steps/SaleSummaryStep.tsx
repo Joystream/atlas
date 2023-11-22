@@ -1,4 +1,3 @@
-import { useApolloClient } from '@apollo/client'
 import { FC, useEffect } from 'react'
 
 import { SvgAlertsInformative24 } from '@/assets/icons'
@@ -22,6 +21,7 @@ type SaleSummaryProps = {
   setSecondaryButtonProps: (props: ActionDialogButtonProps) => void
   handleBackClick: () => void
   handleCloseModal: () => void
+  onSuccess: () => void
 }
 
 export const SaleSummaryStep: FC<SaleSummaryProps> = ({
@@ -30,13 +30,13 @@ export const SaleSummaryStep: FC<SaleSummaryProps> = ({
   setPrimaryButtonProps,
   handleBackClick,
   handleCloseModal,
+  onSuccess,
 }) => {
   const { fullFee } = useFee('startAmmTx', ['1', '1', 1, price])
   const { tokenPrice } = useJoystream()
   const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()
   const { joystream, proxyCallback } = useJoystream()
-  const client = useApolloClient()
   const { memberId, channelId } = useUser()
 
   useEffect(() => {
@@ -48,12 +48,7 @@ export const SaleSummaryStep: FC<SaleSummaryProps> = ({
           txFactory: async (updateStatus) =>
             (await joystream.extrinsics).startAmm(memberId, channelId, tokenPrice, price, proxyCallback(updateStatus)),
           onTxSync: async () => {
-            displaySnackbar({
-              title: 'Success',
-              iconType: 'success',
-            })
-            client.refetchQueries({ include: 'active' })
-            handleCloseModal()
+            onSuccess()
           },
           onError: () => {
             displaySnackbar({
@@ -72,13 +67,13 @@ export const SaleSummaryStep: FC<SaleSummaryProps> = ({
     })
   }, [
     channelId,
-    client,
     displaySnackbar,
     handleBackClick,
     handleCloseModal,
     handleTransaction,
     joystream,
     memberId,
+    onSuccess,
     price,
     proxyCallback,
     setPrimaryButtonProps,
