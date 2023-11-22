@@ -5,6 +5,7 @@ import { Controller, useForm } from 'react-hook-form'
 
 import { SvgAlertsInformative24 } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
+import { FlexBox } from '@/components/FlexBox'
 import { Text } from '@/components/Text'
 import { LineChart } from '@/components/_charts/LineChart'
 import { IssuanceStepForm } from '@/components/_crt/CreateTokenDrawer/CreateTokenDrawer.types'
@@ -179,49 +180,56 @@ export const TokenIssuanceStep = ({
         : generateChartData(...(getDataBasedOnType(assuranceType) as [number, number, number]))
     setPreview(
       <PreviewContainer>
-        <Text variant="h100" as="h1" color="colorTextMuted">
-          How your tokens will unlock over time
-        </Text>
-        <LineChart
-          enablePointLabel
-          tooltip={(point) => {
-            const currentDate = new Date()
-            const timeInMonths = point.data.x === 'Now' ? 0 : +(point.data.x as string).split('M')[0]
-            return (
-              <TooltipBox>
-                <Text variant="t300" as="p">
-                  {formatNumber(((creatorIssueAmount ?? 0) * (point.data.y as number)) / 100)} ${form.name}
-                </Text>
-                <Text variant="t100" as="p" color="colorTextMuted">
-                  {point.data.x !== 'Now'
-                    ? formatDate(new Date(currentDate.setMonth(currentDate.getMonth() + timeInMonths)))
-                    : 'Now'}
-                </Text>
-              </TooltipBox>
-            )
-          }}
-          yScale={{
-            type: 'linear',
-            min: 0,
-            max: 'auto',
-            stacked: false,
-            reverse: false,
-          }}
-          axisLeft={{
-            tickSize: 5,
-            tickPadding: 5,
-            tickValues: [0, 25, 50, 75, 100],
-            format: (tick) => `${tick}%`,
-          }}
-          gridYValues={[0, 25, 50, 75, 100]}
-          data={[
-            {
-              id: 1,
-              color: cVar('colorTextPrimary'),
-              data,
-            },
-          ]}
-        />
+        <FlexBox gap={2} flow="column">
+          <Text variant="h100" as="h1">
+            How your tokens will unlock over time
+          </Text>
+          <Text variant="t200" as="p" color="colorTextMuted">
+            You will get a part of your tokens now and get full amount by the end of the vesting duration.
+          </Text>
+        </FlexBox>
+        <div className="chart-box">
+          <LineChart
+            enablePointLabel
+            tooltip={(point) => {
+              const currentDate = new Date()
+              const timeInMonths = point.data.x === 'Now' ? 0 : +(point.data.x as string).split('M')[0]
+              return (
+                <TooltipBox>
+                  <Text variant="t300" as="p">
+                    {formatNumber(((creatorIssueAmount ?? 0) * (point.data.y as number)) / 100)} ${form.name}
+                  </Text>
+                  <Text variant="t100" as="p" color="colorTextMuted">
+                    {point.data.x !== 'Now'
+                      ? formatDate(new Date(currentDate.setMonth(currentDate.getMonth() + timeInMonths)))
+                      : 'Now'}
+                  </Text>
+                </TooltipBox>
+              )
+            }}
+            yScale={{
+              type: 'linear',
+              min: 0,
+              max: 'auto',
+              stacked: false,
+              reverse: false,
+            }}
+            axisLeft={{
+              tickSize: 5,
+              tickPadding: 5,
+              tickValues: [0, 25, 50, 75, 100],
+              format: (tick) => `${tick}%`,
+            }}
+            gridYValues={[0, 25, 50, 75, 100]}
+            data={[
+              {
+                id: 1,
+                color: cVar('colorTextPrimary'),
+                data,
+              },
+            ]}
+          />
+        </div>
       </PreviewContainer>
     )
   }, [assuranceType, creatorIssueAmount, customCliff, customVesting, firstPayout, form.name, setPreview])

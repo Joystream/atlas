@@ -17,7 +17,7 @@ const SALE_POINTS = [
     description: 'Earn money directly from your sale.',
   },
   {
-    title: 'Urgency',
+    title: 'Clear end date',
     description:
       'Create an event with a clear end date to get everyone focused on one big event, get greater participation and excitement.',
   },
@@ -25,13 +25,12 @@ const SALE_POINTS = [
 
 const MARKET_POINTS = [
   {
-    title: 'Liquidity',
-    description: 'You, and everyone else, can buy and sell at any time.',
+    title: 'Market revenue',
+    description: 'You, and everyone else, can buy and sell at any time',
   },
   {
-    title: 'Urgency',
-    description:
-      'Your AMM will be open all the time until you close it manually - this will be possible only if you have enough of your own tokens to do it.',
+    title: 'Always open',
+    description: "You don't need to figure out how high to price your token - just set it and forget it.",
   },
 ]
 
