@@ -40,7 +40,7 @@ export const CreateTokenSuccessModal = ({ tokenName, show }: CreateTokenSuccessM
           disabled={!channelId}
           onClick={() => {
             client.refetchQueries({ include: 'active' }).then(() => {
-              navigate(absoluteRoutes.viewer.channel(channelId ?? '', { tab: 'Token' }))
+              navigate(absoluteRoutes.viewer.channel(channelId ?? '-1', { tab: 'Token' }))
             })
           }}
         >

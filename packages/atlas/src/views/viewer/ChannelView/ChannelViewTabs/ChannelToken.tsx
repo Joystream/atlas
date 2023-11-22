@@ -48,13 +48,14 @@ export const ChannelToken = ({ tokenId, memberId }: ChannelTokenProps) => {
   }
 
   const { creatorTokenById: token } = data
+
   return (
     <LayoutGrid>
       <GridItem colSpan={{ base: 12, sm: 8 }}>
         <TokenDetails
           about={token?.description ?? ''}
           benefits={token?.benefits}
-          videoId={token?.trailerVideo?.[0]?.id}
+          videoId={token?.trailerVideo?.[0]?.video.id}
         />
       </GridItem>
       <GridItem colSpan={{ base: 12, sm: 4 }}>

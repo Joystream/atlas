@@ -157,9 +157,37 @@ export const SetupTokenStep = ({ setPrimaryButtonProps, onSubmit, form, setPrevi
       <FormField
         label="Revenue share with holders"
         description="Define the share of your channel revenue that goes to yourself vs shared with your token holders.
-Recommended values — Channel: 80%, Holders:20%. "
+Recommended values — Holders:20%, Channel: 80%."
       >
-        <Controller name="revenueShare" control={control} render={({ field }) => <RatioSlider {...field} />} />
+        <Controller
+          name="revenueShare"
+          control={control}
+          render={({ field }) => (
+            <RatioSlider
+              {...field}
+              description={
+                <FlexBox gap={2}>
+                  <FlexBox width="auto" gap={1}>
+                    <Text variant="t100" as="span" color="colorText">
+                      Holders:
+                    </Text>
+                    <Text variant="t100" as="p" color="colorTextStrong">
+                      {field.value}%
+                    </Text>
+                  </FlexBox>
+                  <FlexBox gap={1}>
+                    <Text variant="t100" as="span" color="colorText">
+                      Channel:
+                    </Text>
+                    <Text variant="t100" as="p" color="colorTextStrong">
+                      {100 - field.value}%
+                    </Text>
+                  </FlexBox>
+                </FlexBox>
+              }
+            />
+          )}
+        />
       </FormField>
       <FormField
         label="Annual creator reward"
@@ -174,7 +202,7 @@ Recommended values — Channel: 80%, Holders:20%. "
         <Controller
           name="creatorReward"
           control={control}
-          render={({ field }) => <RatioSlider {...field} max={30} step={2} />}
+          render={({ field }) => <RatioSlider {...field} max={20} step={2} />}
         />
       </FormField>
     </CrtFormWrapper>

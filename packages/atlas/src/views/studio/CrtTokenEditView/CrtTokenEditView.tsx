@@ -1,6 +1,5 @@
 import { useApolloClient } from '@apollo/client'
 import styled from '@emotion/styled'
-import { createType } from '@joystream/types'
 import Long from 'long'
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -45,7 +44,7 @@ export const CrtTokenEditView = () => {
   useEffect(() => {
     if (data?.creatorTokenById) {
       form.reset({
-        videoId: data?.creatorTokenById?.trailerVideo[0]?.id,
+        videoId: data?.creatorTokenById?.trailerVideo[0]?.video.id,
         benefits: data?.creatorTokenById?.benefits,
         about: data?.creatorTokenById?.description ?? '',
       })
@@ -65,11 +64,11 @@ export const CrtTokenEditView = () => {
           {
             updateTokenMetadata: {
               newMetadata: {
-                ...(data.about ? { description: data.about } : {}),
+                description: data.about,
                 ...(data.benefits
                   ? { benefits: data.benefits.map((benefit, idx) => ({ ...benefit, displayOrder: idx })) }
                   : {}),
-                ...(data.videoId ? { trailerVideoId: createType('Long', +data.videoId) as Long } : {}),
+                ...(data.videoId ? { trailerVideoId: +data.videoId as unknown as Long } : {}),
               },
             },
           },

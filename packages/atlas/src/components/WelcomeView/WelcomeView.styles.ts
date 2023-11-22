@@ -158,6 +158,11 @@ export const ImageGridItem = styled(GridItem)`
   ${media.md} {
     flex-direction: column-reverse;
     height: calc(100vh - 80px);
+    transform: scale(1.2);
+  }
+
+  ${media.lg} {
+    transform: scale(1);
   }
 `
 
