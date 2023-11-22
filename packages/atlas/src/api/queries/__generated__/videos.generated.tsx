@@ -1630,7 +1630,6 @@ export type GetMostViewedVideosConnectionQuery = {
   __typename?: 'Query'
   mostViewedVideosConnection: {
     __typename?: 'VideosConnection'
-    totalCount: number
     edges: Array<{
       __typename?: 'VideoEdge'
       cursor: string
@@ -1768,7 +1767,7 @@ export const GetBasicVideosConnectionDocument = gql`
   query GetBasicVideosConnection(
     $first: Int
     $after: String
-    $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
+    $orderBy: [VideoOrderByInput!] = [id_DESC]
     $where: VideoWhereInput
   ) {
     videosConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
@@ -1835,7 +1834,7 @@ export const GetBasicVideosConnectionLightweightDocument = gql`
   query GetBasicVideosConnectionLightweight(
     $first: Int
     $after: String
-    $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
+    $orderBy: [VideoOrderByInput!] = [id_DESC]
     $where: VideoWhereInput
   ) {
     videosConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
@@ -1911,7 +1910,7 @@ export const GetFullVideosConnectionDocument = gql`
   query GetFullVideosConnection(
     $first: Int
     $after: String
-    $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
+    $orderBy: [VideoOrderByInput!] = [id_DESC]
     $where: VideoWhereInput
   ) {
     videosConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
@@ -1975,12 +1974,7 @@ export type GetFullVideosConnectionQueryResult = Apollo.QueryResult<
   GetFullVideosConnectionQueryVariables
 >
 export const GetBasicVideosDocument = gql`
-  query GetBasicVideos(
-    $offset: Int
-    $limit: Int
-    $where: VideoWhereInput
-    $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
-  ) {
+  query GetBasicVideos($offset: Int, $limit: Int, $where: VideoWhereInput, $orderBy: [VideoOrderByInput!]) {
     videos(offset: $offset, limit: $limit, where: $where, orderBy: $orderBy) {
       ...BasicVideoFields
     }
@@ -2023,12 +2017,7 @@ export type GetBasicVideosQueryHookResult = ReturnType<typeof useGetBasicVideosQ
 export type GetBasicVideosLazyQueryHookResult = ReturnType<typeof useGetBasicVideosLazyQuery>
 export type GetBasicVideosQueryResult = Apollo.QueryResult<GetBasicVideosQuery, GetBasicVideosQueryVariables>
 export const GetBasicVideoActivityDocument = gql`
-  query GetBasicVideoActivity(
-    $offset: Int
-    $limit: Int
-    $where: VideoWhereInput
-    $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
-  ) {
+  query GetBasicVideoActivity($offset: Int, $limit: Int, $where: VideoWhereInput, $orderBy: [VideoOrderByInput!]) {
     videos(offset: $offset, limit: $limit, where: $where, orderBy: $orderBy) {
       ...BasicVideoActivityFields
     }
@@ -2080,12 +2069,7 @@ export type GetBasicVideoActivityQueryResult = Apollo.QueryResult<
   GetBasicVideoActivityQueryVariables
 >
 export const GetFullVideosDocument = gql`
-  query GetFullVideos(
-    $offset: Int
-    $limit: Int
-    $where: VideoWhereInput
-    $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
-  ) {
+  query GetFullVideos($offset: Int, $limit: Int, $where: VideoWhereInput, $orderBy: [VideoOrderByInput!]) {
     videos(offset: $offset, limit: $limit, where: $where, orderBy: $orderBy) {
       ...FullVideoFields
     }
@@ -2133,7 +2117,7 @@ export const GetMostViewedVideosConnectionDocument = gql`
     $periodDays: Int
     $first: Int
     $after: String
-    $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
+    $orderBy: [VideoOrderByInput!] = [id_DESC]
     $where: VideoWhereInput
   ) {
     mostViewedVideosConnection(
@@ -2154,7 +2138,6 @@ export const GetMostViewedVideosConnectionDocument = gql`
         hasNextPage
         endCursor
       }
-      totalCount
     }
   }
   ${BasicVideoFieldsFragmentDoc}
@@ -2212,7 +2195,7 @@ export type GetMostViewedVideosConnectionQueryResult = Apollo.QueryResult<
 >
 export const GetVideosCountDocument = gql`
   query GetVideosCount($where: VideoWhereInput) {
-    videosConnection(where: $where, orderBy: [createdAt_ASC]) {
+    videosConnection(where: $where, orderBy: [id_DESC]) {
       totalCount
     }
   }
