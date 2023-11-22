@@ -1,5 +1,6 @@
 import { QueryHookOptions, QueryResult, useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
+import { sum } from 'lodash-es'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'react-router'
 
@@ -147,11 +148,12 @@ const useUnseenChannelNotifications = (
   const { activeMembership, channelId } = useUser()
   const client = useApolloClient()
 
-  const [data, setData] = useState<Map<string, number> | undefined>()
-  const fetchAll = useCallback(() => {
+  const [unseenByChannel, setUnseenByChannel] = useState<Map<string, number> | undefined>()
+
+  const fetchAll = useCallback(async () => {
     if (!activeMembership) return
 
-    Promise.all(
+    const unseenByChannelPairs = await Promise.all(
       activeMembership.channels.map(async (channel): Promise<[string, number] | undefined> => {
         const recipient = { isTypeOf_eq: 'ChannelRecipient', channel: { id_eq: channel.id } }
         const createdAt_gt = whenDefined(
@@ -164,21 +166,25 @@ const useUnseenChannelNotifications = (
         })
         return data && [channel.id, data.notificationsConnection.totalCount]
       })
-    ).then((results) => setData(new Map(results.filter((x): x is [string, number] => !!x))))
+    )
+
+    setUnseenByChannel(new Map(unseenByChannelPairs.filter((x): x is [string, number] => !!x)))
   }, [lastSeenNotificationDates, activeMembership, client])
 
-  useEffect(fetchAll, [fetchAll])
+  useEffect(() => {
+    fetchAll()
+  }, [fetchAll])
 
   return useMemo(
     () => ({
-      data: data && {
-        channels: data,
-        total: Array.from(data.values() ?? []).reduce((a, b) => a + b, 0),
-        current: data.get(channelId ?? '') ?? 0,
+      data: unseenByChannel && {
+        channels: unseenByChannel,
+        total: sum(Array.from(unseenByChannel.values() ?? [])),
+        current: unseenByChannel.get(channelId ?? '') ?? 0,
       },
       fetchMore: fetchAll,
     }),
-    [data, fetchAll, channelId]
+    [unseenByChannel, fetchAll, channelId]
   )
 }
 
