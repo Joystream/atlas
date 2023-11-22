@@ -24,6 +24,7 @@ type MarketStepProps = {
   formDefaultValue: CrtMarketForm
   onClose: () => void
   onNextStep: (props: CrtMarketForm) => void
+  handlePriceChange: (val: number) => void
 }
 
 const DEFAULT_MIN_PRICE = 0.01
@@ -35,6 +36,7 @@ export const MarketStep: FC<MarketStepProps> = ({
   formDefaultValue,
   setSecondaryButtonProps,
   onClose,
+  handlePriceChange,
 }) => {
   const { tokenPrice } = useJoystream()
   const {
@@ -46,6 +48,12 @@ export const MarketStep: FC<MarketStepProps> = ({
   } = useForm<CrtMarketForm>({
     defaultValues: formDefaultValue,
   })
+
+  const priceWatch = watch('price')
+
+  useEffect(() => {
+    handlePriceChange(priceWatch)
+  }, [handlePriceChange, priceWatch])
 
   const [openDialog, closeDialog] = useConfirmationModal({
     type: 'warning',
