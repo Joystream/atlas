@@ -6,23 +6,17 @@ export default {
   title: 'crt/RevenueShareWidget',
   component: RevenueShareWidget,
   args: {
-    tokenName: 'CBC',
-    userShare: 200,
-    userTokens: 150,
-    shareEndDate: new Date(),
-    onAction: () => undefined,
-    status: 'active',
-  },
+    tokenName: 'JBC',
+    memberId: '1',
+    revenueShare: {
+      startingAt: 10,
+      endsAt: 12,
+      stakers: [],
+    },
+    tokenId: '1',
+  } as unknown as RevenueShareWidgetProps,
 } as Meta<RevenueShareWidgetProps>
 
 const Template: StoryFn<RevenueShareWidgetProps> = (args) => <RevenueShareWidget {...args} />
 
-export const Active = Template.bind({})
-Active.args = {
-  status: 'active',
-}
-
-export const Upcoming = Template.bind({})
-Upcoming.args = {
-  status: 'upcoming',
-}
+export const Default = Template.bind({})

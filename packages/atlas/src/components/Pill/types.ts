@@ -11,4 +11,5 @@ export type PillProps = {
   variant?: Variants
   title?: string
   withTooltip?: boolean
+  round?: boolean
 }
