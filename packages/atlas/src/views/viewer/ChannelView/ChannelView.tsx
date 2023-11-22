@@ -132,8 +132,8 @@ export const ChannelView: FC = () => {
 
   const { url: avatarPhotoUrl } = useGetAssetUrl(channel?.avatarPhoto?.resolvedUrls, 'avatar')
 
-  const [sortNftsBy, setSortNftsBy] = useState<OwnedNftOrderByInput>(OwnedNftOrderByInput.CreatedAtDesc)
-  const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
+  const [sortNftsBy, setSortNftsBy] = useState<OwnedNftOrderByInput>(OwnedNftOrderByInput.IdDesc)
+  const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.IdDesc)
 
   const handleVideoSorting = (value?: unknown) => {
     if (value) {

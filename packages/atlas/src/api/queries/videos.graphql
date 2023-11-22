@@ -12,7 +12,7 @@ query GetFullVideo($id: String!) {
 query GetBasicVideosConnection(
   $first: Int
   $after: String
-  $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
+  $orderBy: [VideoOrderByInput!]
   $where: VideoWhereInput
 ) {
   videosConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
@@ -33,7 +33,7 @@ query GetBasicVideosConnection(
 query GetBasicVideosConnectionLightweight(
   $first: Int
   $after: String
-  $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
+  $orderBy: [VideoOrderByInput!]
   $where: VideoWhereInput
 ) {
   videosConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
@@ -54,7 +54,7 @@ query GetBasicVideosConnectionLightweight(
 query GetFullVideosConnection(
   $first: Int
   $after: String
-  $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
+  $orderBy: [VideoOrderByInput!]
   $where: VideoWhereInput
 ) {
   videosConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
@@ -77,7 +77,7 @@ query GetBasicVideos(
   $offset: Int
   $limit: Int
   $where: VideoWhereInput
-  $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
+  $orderBy: [VideoOrderByInput!]
 ) {
   videos(offset: $offset, limit: $limit, where: $where, orderBy: $orderBy) {
     ...BasicVideoFields
@@ -88,7 +88,7 @@ query GetBasicVideoActivity(
   $offset: Int
   $limit: Int
   $where: VideoWhereInput
-  $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
+  $orderBy: [VideoOrderByInput!]
 ) {
   videos(offset: $offset, limit: $limit, where: $where, orderBy: $orderBy) {
     ...BasicVideoActivityFields
@@ -100,7 +100,7 @@ query GetFullVideos(
   $offset: Int
   $limit: Int
   $where: VideoWhereInput
-  $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
+  $orderBy: [VideoOrderByInput!]
 ) {
   videos(offset: $offset, limit: $limit, where: $where, orderBy: $orderBy) {
     ...FullVideoFields
@@ -113,7 +113,7 @@ query GetMostViewedVideosConnection(
   $periodDays: Int
   $first: Int
   $after: String
-  $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
+  $orderBy: [VideoOrderByInput!]
   $where: VideoWhereInput
 ) {
   mostViewedVideosConnection(
@@ -139,7 +139,7 @@ query GetMostViewedVideosConnection(
 }
 
 query GetVideosCount($where: VideoWhereInput) {
-  videosConnection(where: $where, orderBy: [createdAt_ASC]) {
+  videosConnection(where: $where) {
     totalCount
   }
 }

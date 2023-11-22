@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
+import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { useGetBasicVideosConnectionLazyQuery } from '@/api/queries/__generated__/videos.generated'
 
 export const usePagination = (currentTab: number) => {
@@ -45,6 +46,7 @@ export const useSearchVideos = ({ id, onError }: UseSearchVideosParams) => {
               isAccepted_eq: true,
             },
           },
+          orderBy: [VideoOrderByInput.IdDesc],
         },
       })
     },

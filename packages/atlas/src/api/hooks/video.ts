@@ -49,7 +49,7 @@ export const useChannelPreviewVideos = (
     ...opts,
     variables: {
       where: { ...publicCryptoVideoFilter, channel: { id_eq: channelId } },
-      orderBy: VideoOrderByInput.CreatedAtDesc,
+      orderBy: VideoOrderByInput.IdDesc,
       offset: 0,
       limit: 10,
     },
