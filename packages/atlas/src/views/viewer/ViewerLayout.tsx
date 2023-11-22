@@ -42,7 +42,7 @@ const SearchView = lazy(() => import('./SearchView').then((module) => ({ default
 const CuratorView = lazy(() => import('./CuratorView').then((module) => ({ default: module.CuratorView })))
 const CuratorHomepage = lazy(() => import('./CuratorHomepage').then((module) => ({ default: module.CuratorView })))
 const VideoView = lazy(() => import('./VideoView').then((module) => ({ default: module.VideoView })))
-const PortfolioView = lazy(() => import('./Portfolio').then((module) => ({ default: module.VideoView })))
+const PortfolioView = lazy(() => import('./PortfolioView').then((module) => ({ default: module.VideoView })))
 const ReferralsView = lazy(() =>
   import('@/views/global/ReferralsView').then((module) => ({ default: module.ReferralsView }))
 )
@@ -58,7 +58,6 @@ const viewerRoutes = [
   { path: relativeRoutes.viewer.category(), element: <CategoryView /> },
   { path: relativeRoutes.viewer.memberById(), element: <MemberView /> },
   { path: relativeRoutes.viewer.member(), element: <MemberView /> },
-  { path: relativeRoutes.viewer.portfolio(), element: <PortfolioView /> },
   { path: relativeRoutes.viewer.marketplace(), element: <MarketplaceView /> },
   ...(atlasConfig.features.ypp.googleConsoleClientId
     ? [{ path: relativeRoutes.viewer.ypp(), element: <YppLandingView /> }]
@@ -149,6 +148,12 @@ export const ViewerLayout: FC = () => {
                         redirectTo={SIGN_IN_ROUTE}
                       />
                     }
+                  />
+                  <Route
+                      path={absoluteRoutes.viewer.portfolio()}
+                      element={
+                        <PrivateRoute showWhen={isLoggedIn} element={<PortfolioView />} redirectTo={ENTRY_POINT_ROUTE} />
+                      }
                   />
                   <Route path="*" element={<NotFoundView />} />
                 </Routes>
