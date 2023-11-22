@@ -18,7 +18,7 @@ export const AmmModalSummaryTemplate = ({ details }: AmmModalSummaryTemplateProp
       {details?.map((row, i) => (
         <FlexBox key={row.title} alignItems="center" justifyContent="space-between">
           <FlexBox width="auto" alignItems="center">
-            <Text variant={i + 1 === details.length ? 't200-strong' : 't200'} as="span" color="colorText">
+            <Text variant={i + 1 === details.length ? 'h300' : 't200'} as="span" color="colorText">
               {row.title}
             </Text>
             {row.tooltipText ? <Information text={row.tooltipText} /> : null}

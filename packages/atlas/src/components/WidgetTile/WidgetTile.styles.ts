@@ -23,6 +23,7 @@ export const Content = styled.div<{ withButton?: boolean }>`
   display: grid;
   align-self: flex-end;
   gap: ${sizes(4)};
+  height: 100%;
 
   ${media.md} {
     gap: ${sizes(6)};
