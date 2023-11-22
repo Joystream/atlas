@@ -9,9 +9,12 @@ import { Button, ButtonProps } from '../_buttons/Button'
 
 type BackAction = Pick<ButtonProps, 'to' | 'onClick'>
 
-type PageTabsProps = Omit<TabsProps, 'underline'> & {
+type PageTabsProps = Omit<TabsProps, 'underline' | 'tabs'> & {
   backAction?: BackAction
   trailingContent?: ReactNode
+  tabs: {
+    description?: string
+  } & TabsProps['tabs']
 }
 
 export const PageTabs: FC<PageTabsProps> = ({ className, backAction, trailingContent, ...tabsProps }) => {
