@@ -802,7 +802,7 @@ export const GetExtendedBasicChannelsDocument = gql`
   query GetExtendedBasicChannels(
     $where: ExtendedChannelWhereInput
     $limit: Int = 50
-    $orderBy: [ChannelOrderByInput!] = [createdAt_DESC]
+    $orderBy: [ChannelOrderByInput!]
   ) {
     extendedChannels(where: $where, orderBy: $orderBy, limit: $limit) {
       ...ExtendedBasicChannelFields
@@ -854,11 +854,7 @@ export type GetExtendedBasicChannelsQueryResult = Apollo.QueryResult<
   GetExtendedBasicChannelsQueryVariables
 >
 export const GetExtendedFullChannelsDocument = gql`
-  query GetExtendedFullChannels(
-    $where: ExtendedChannelWhereInput
-    $limit: Int = 50
-    $orderBy: [ChannelOrderByInput!] = [createdAt_DESC]
-  ) {
+  query GetExtendedFullChannels($where: ExtendedChannelWhereInput, $limit: Int = 50, $orderBy: [ChannelOrderByInput!]) {
     extendedChannels(where: $where, orderBy: $orderBy, limit: $limit) {
       ...ExtendedFullChannelFields
     }
@@ -913,7 +909,7 @@ export const GetBasicChannelsConnectionDocument = gql`
     $first: Int
     $after: String
     $where: ChannelWhereInput
-    $orderBy: [ChannelOrderByInput!] = [createdAt_DESC]
+    $orderBy: [ChannelOrderByInput!] = [id_DESC]
   ) {
     channelsConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
       edges {

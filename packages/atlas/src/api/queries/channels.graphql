@@ -9,22 +9,14 @@ query GetFullChannel($id: String!) {
 }
 
 # CHANGE: `channels` replaced with `extendedChannels` (which include `activeVideosCount`)
-query GetExtendedBasicChannels(
-  $where: ExtendedChannelWhereInput
-  $limit: Int = 50
-  $orderBy: [ChannelOrderByInput!] = [createdAt_DESC]
-) {
+query GetExtendedBasicChannels($where: ExtendedChannelWhereInput, $limit: Int = 50, $orderBy: [ChannelOrderByInput!]) {
   extendedChannels(where: $where, orderBy: $orderBy, limit: $limit) {
     ...ExtendedBasicChannelFields
   }
 }
 
 # CHANGE: `channels` replaced with `extendedChannels` (which include `activeVideosCount`)
-query GetExtendedFullChannels(
-  $where: ExtendedChannelWhereInput
-  $limit: Int = 50
-  $orderBy: [ChannelOrderByInput!] = [createdAt_DESC]
-) {
+query GetExtendedFullChannels($where: ExtendedChannelWhereInput, $limit: Int = 50, $orderBy: [ChannelOrderByInput!]) {
   extendedChannels(where: $where, orderBy: $orderBy, limit: $limit) {
     ...ExtendedFullChannelFields
   }
@@ -35,7 +27,7 @@ query GetBasicChannelsConnection(
   $first: Int
   $after: String
   $where: ChannelWhereInput
-  $orderBy: [ChannelOrderByInput!] = [createdAt_DESC]
+  $orderBy: [ChannelOrderByInput!] = [id_DESC]
 ) {
   channelsConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
     edges {

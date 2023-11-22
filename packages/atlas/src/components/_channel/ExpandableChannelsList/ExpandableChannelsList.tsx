@@ -157,7 +157,7 @@ const useChannelsListData = (queryType: ChannelsQueryType, selectedLanguage: str
   const regular = useBasicChannels(
     {
       limit: 15,
-      orderBy: ChannelOrderByInput.CreatedAtAsc,
+      orderBy: ChannelOrderByInput.IdDesc,
       where: {
         activeVideosCount_gt: 0,
         channel: {
