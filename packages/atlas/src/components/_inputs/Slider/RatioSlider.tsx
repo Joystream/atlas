@@ -1,4 +1,4 @@
-import { ChangeEventHandler, forwardRef, useMemo, useState } from 'react'
+import { ChangeEventHandler, ReactNode, forwardRef, useMemo, useState } from 'react'
 
 import { sizes } from '@/styles'
 import { createId } from '@/utils/createId'
@@ -13,10 +13,11 @@ type RatioSliderProps = {
   defaultValue?: number
   value?: number
   onChange?: (value: number) => void
+  description?: ReactNode
 }
 
 export const RatioSlider = forwardRef<HTMLInputElement, RatioSliderProps>(
-  ({ min = 0, max = 100, step = 10, defaultValue = 50, value: controlledValue, onChange, id }, ref) => {
+  ({ min = 0, max = 100, step = 10, defaultValue = 50, value: controlledValue, onChange, description, id }, ref) => {
     const [internalValue, setInternalValue] = useState<number>(defaultValue)
     const value = controlledValue ?? internalValue
 
@@ -43,7 +44,6 @@ export const RatioSlider = forwardRef<HTMLInputElement, RatioSliderProps>(
     return (
       <Wrapper>
         <Range ref={ref} type="range" min={min} max={max} step={step} value={value} onChange={handleChange} />
-
         <Track xmlns="http://www.w3.org/2000/svg">
           <circle className="knob" cx={valuePercent} cy={sizes(3)} r={sizes(2)} />
 
@@ -74,6 +74,7 @@ export const RatioSlider = forwardRef<HTMLInputElement, RatioSliderProps>(
             {max}%
           </text>
         </Track>
+        {description}
       </Wrapper>
     )
   }

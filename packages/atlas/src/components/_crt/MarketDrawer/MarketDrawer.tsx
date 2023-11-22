@@ -34,7 +34,7 @@ export const MarketDrawer = ({ show, onClose, tokenName }: CrtMarketSaleViewProp
   const [activeStep, setActiveStep] = useState(MARKET_STEPS.market)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [marketData, setMarketData] = useState<CrtMarketForm>({
-    price: 10,
+    price: 1,
     tnc: atlasConfig.legal.crtTnc,
     isChecked: true,
   })
@@ -54,6 +54,10 @@ export const MarketDrawer = ({ show, onClose, tokenName }: CrtMarketSaleViewProp
     [marketData]
   )
 
+  const handlePriceChange = useCallback((value: number) => {
+    setMarketData((prev) => ({ ...prev, price: value }))
+  }, [])
+
   const handleBackClick = useCallback(() => {
     flushSync(() => {
       setIsGoingBack(true)
@@ -72,6 +76,7 @@ export const MarketDrawer = ({ show, onClose, tokenName }: CrtMarketSaleViewProp
             onClose={onClose}
             formDefaultValue={marketData}
             onNextStep={handleNextStep}
+            handlePriceChange={handlePriceChange}
           />
         )
       case MARKET_STEPS.saleSummary:
@@ -145,7 +150,7 @@ export const MarketDrawer = ({ show, onClose, tokenName }: CrtMarketSaleViewProp
         }}
         isOpen={show}
         onClose={onClose}
-        preview={<MarketDrawerPreview startingPrice={marketData.price || 0} tokenName={tokenName} />}
+        preview={<MarketDrawerPreview startingPrice={marketData.price || 1} tokenName={tokenName} />}
       >
         <SwitchTransition mode="out-in">
           <CSSTransition
