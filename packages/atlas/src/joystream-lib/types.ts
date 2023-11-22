@@ -156,6 +156,10 @@ export type MetaprotcolExtrinsicResult = ExtrinsicResult<{ metaprotocol: true; t
 export type ExitRevenueSplitResult = {
   amount: string
 } & ExtrinsicResult
+export type JoinRevenueSplitResult = {
+  dividendAmount: string
+  stakedAmount: string
+} & ExtrinsicResult
 
 type TxMethodsFromClass<T> = T extends `${infer _}Tx` ? T : never
 
