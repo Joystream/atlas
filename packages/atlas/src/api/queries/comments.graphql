@@ -10,7 +10,7 @@ query GetCommentRepliesConnection(
   $first: Int
   $after: String
   $parentCommentId: String! # CHANGE: ID is now `String`
-  $orderBy: [CommentOrderByInput!] = [createdAt_ASC]
+  $orderBy: [CommentOrderByInput!] = [id_ASC]
 ) {
   commentsConnection(
     first: $first
@@ -28,7 +28,6 @@ query GetCommentRepliesConnection(
       hasNextPage
       endCursor
     }
-    totalCount
   }
 }
 
@@ -37,7 +36,7 @@ query GetUserCommentsAndVideoCommentsConnection(
   $after: String
   $memberId: String # CHANGE: ID is now `String`
   $videoId: String # CHANGE: ID is now `String`
-  $orderBy: [CommentOrderByInput!] = [createdAt_DESC]
+  $orderBy: [CommentOrderByInput!] = [id_DESC]
 ) {
   userComments: comments(
     where: {
@@ -51,7 +50,7 @@ query GetUserCommentsAndVideoCommentsConnection(
         { OR: [{ status_eq: VISIBLE }, { repliesCount_gt: 0 }] }
       ]
     }
-    orderBy: [createdAt_DESC]
+    orderBy: [id_DESC]
   ) {
     ...CommentFields
   }
@@ -79,7 +78,6 @@ query GetUserCommentsAndVideoCommentsConnection(
       hasNextPage
       endCursor
     }
-    totalCount
   }
 }
 

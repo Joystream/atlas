@@ -33,7 +33,7 @@ const _CommentThread: FC<CommentThreadProps> = ({
   const [repliesOpen, setRepliesOpen] = useState(false)
   const [newReplyId, setNewReplyId] = useState<string | null>(null)
 
-  const { replies, totalCount, loading, fetchMore, pageInfo } = useCommentRepliesConnection({
+  const { replies, loading, fetchMore, pageInfo } = useCommentRepliesConnection({
     skip: !commentId || !video?.id || !repliesOpen || !hasAnyReplies,
     variables: {
       first: INITIAL_REPLIES_COUNT,
@@ -44,24 +44,9 @@ const _CommentThread: FC<CommentThreadProps> = ({
 
   const { comment: newReply } = useComment({ commentId: newReplyId || '' }, { skip: !newReplyId })
 
-  const allRepliesCount = replies.length
-  const repliesLeftToLoadCount = totalCount - allRepliesCount
   const allRepliesContainNewReply = !!replies.find((r) => r.id === newReplyId)
 
-  const getPlaceholderCount = () => {
-    if (repliesLeftToLoadCount) {
-      if (repliesLeftToLoadCount > LOAD_MORE_REPLIES_COUNT) {
-        return LOAD_MORE_REPLIES_COUNT
-      }
-      return repliesLeftToLoadCount
-    }
-    if (repliesCount > INITIAL_REPLIES_COUNT) {
-      return INITIAL_REPLIES_COUNT
-    }
-    return repliesCount
-  }
-
-  const placeholderItems = loading ? createPlaceholderData(getPlaceholderCount()) : []
+  const placeholderItems = loading ? createPlaceholderData(LOAD_MORE_REPLIES_COUNT) : []
 
   const handleLoadMore = () => {
     fetchMore({
@@ -115,14 +100,14 @@ const _CommentThread: FC<CommentThreadProps> = ({
           {placeholderItems.map((_, idx) => (
             <Comment key={idx} indented />
           ))}
-          {repliesLeftToLoadCount > 0 ? (
+          {pageInfo?.hasNextPage ? (
             <LoadMoreRepliesButton
               variant="tertiary"
               onClick={handleLoadMore}
               icon={<SvgActionChevronB />}
               iconPlacement="right"
             >
-              Load more replies ({repliesLeftToLoadCount})
+              Load more replies
             </LoadMoreRepliesButton>
           ) : null}
           {newReplyId && !allRepliesContainNewReply ? (

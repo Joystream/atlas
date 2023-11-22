@@ -73,7 +73,6 @@ export type GetCommentRepliesConnectionQuery = {
   __typename?: 'Query'
   commentsConnection: {
     __typename?: 'CommentsConnection'
-    totalCount: number
     edges: Array<{
       __typename?: 'CommentEdge'
       cursor: string
@@ -192,7 +191,6 @@ export type GetUserCommentsAndVideoCommentsConnectionQuery = {
   }>
   videoCommentsConnection: {
     __typename?: 'CommentsConnection'
-    totalCount: number
     edges: Array<{
       __typename?: 'CommentEdge'
       cursor: string
@@ -348,7 +346,7 @@ export const GetCommentRepliesConnectionDocument = gql`
     $first: Int
     $after: String
     $parentCommentId: String!
-    $orderBy: [CommentOrderByInput!] = [createdAt_ASC]
+    $orderBy: [CommentOrderByInput!] = [id_ASC]
   ) {
     commentsConnection(
       first: $first
@@ -366,7 +364,6 @@ export const GetCommentRepliesConnectionDocument = gql`
         hasNextPage
         endCursor
       }
-      totalCount
     }
   }
   ${CommentFieldsFragmentDoc}
@@ -421,7 +418,7 @@ export const GetUserCommentsAndVideoCommentsConnectionDocument = gql`
     $after: String
     $memberId: String
     $videoId: String
-    $orderBy: [CommentOrderByInput!] = [createdAt_DESC]
+    $orderBy: [CommentOrderByInput!] = [id_DESC]
   ) {
     userComments: comments(
       where: {
@@ -433,7 +430,7 @@ export const GetUserCommentsAndVideoCommentsConnectionDocument = gql`
           { OR: [{ status_eq: VISIBLE }, { repliesCount_gt: 0 }] }
         ]
       }
-      orderBy: [createdAt_DESC]
+      orderBy: [id_DESC]
     ) {
       ...CommentFields
     }
@@ -460,7 +457,6 @@ export const GetUserCommentsAndVideoCommentsConnectionDocument = gql`
         hasNextPage
         endCursor
       }
-      totalCount
     }
   }
   ${CommentFieldsFragmentDoc}
