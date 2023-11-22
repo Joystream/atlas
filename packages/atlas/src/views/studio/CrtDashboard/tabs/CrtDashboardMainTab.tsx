@@ -2,13 +2,13 @@ import { useCallback, useMemo } from 'react'
 
 import { useGetCreatorTokenHoldersQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
-import { SvgActionChevronR } from '@/assets/icons'
 import { NumberFormat } from '@/components/NumberFormat'
 import { ProgressWidget, ProgressWidgetProps } from '@/components/ProgressWidget'
 import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
 import { Button, ButtonProps, TextButton } from '@/components/_buttons/Button'
 import { CrtHoldersWidget } from '@/components/_crt/CrtHoldersWidget'
+import { CrtRevenueShareWidget } from '@/components/_crt/CrtRevenueShareWidget'
 import { StartSaleOrMarketButton } from '@/components/_crt/StartSaleOrMarketButton/StartSaleOrMarketButton'
 import { absoluteRoutes } from '@/config/routes'
 import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
@@ -17,7 +17,6 @@ import { useUser } from '@/providers/user/user.hooks'
 import { permillToPercentage } from '@/utils/number'
 import {
   BigWidgetContainer,
-  HoldersPlaceholders,
   NoGlobalPaddingWrapper,
   WidgetContainer,
 } from '@/views/studio/CrtDashboard/CrtDashboard.styles'
@@ -188,17 +187,7 @@ export const CrtDashboardMainTab = ({ token, onTabChange }: CrtDashboardMainTabP
           tokenId={token.id}
           totalSupply={+(token.totalSupply ?? 0)}
         />
-        <WidgetTile
-          title="Revenue share with holders"
-          titleColor="colorTextStrong"
-          titleVariant="h500"
-          customTopRightNode={
-            <TextButton onClick={() => onTabChange('Revenue share')} iconPlacement="right" icon={<SvgActionChevronR />}>
-              Show revenue shares
-            </TextButton>
-          }
-          customNode={<HoldersPlaceholders />}
-        />
+        <CrtRevenueShareWidget token={token} onTabSwitch={() => onTabChange('Revenue share')} />
       </BigWidgetContainer>
     </>
   )

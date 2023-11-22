@@ -1,21 +1,24 @@
-import { useLayoutEffect } from 'react'
+import { useLayoutEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { SvgActionLock, SvgActionUnlocked } from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox'
 import { Text } from '@/components/Text'
+import { Tooltip } from '@/components/Tooltip'
+import { WidgetTile } from '@/components/WidgetTile'
 import { SetupStepForm } from '@/components/_crt/CreateTokenDrawer/CreateTokenDrawer.types'
 import {
   BottomPlaceholder,
   LeftPlaceholder,
   WidgetPreviewContainer,
 } from '@/components/_crt/CreateTokenDrawer/steps/styles'
-import { CrtBasicInfoWidget } from '@/components/_crt/CrtBasicInfoWidget'
 import { CrtFormWrapper } from '@/components/_crt/CrtFormWrapper'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { OptionCardGroupRadio } from '@/components/_inputs/OptionCardGroup'
 import { RatioSlider } from '@/components/_inputs/Slider'
+import { DetailsContent } from '@/components/_nft/NftTile'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMountEffect } from '@/hooks/useMountEffect'
 
 import { CommonStepProps } from './types'
@@ -50,6 +53,8 @@ export const SetupTokenStep = ({ setPrimaryButtonProps, onSubmit, form, setPrevi
   } = useForm<SetupStepForm>({
     defaultValues: form,
   })
+  const [titleRef, setTitleRef] = useState<HTMLSpanElement | null>(null)
+  const smMatch = useMediaMatch('sm')
 
   const watchedForm = watch()
 
@@ -64,21 +69,31 @@ export const SetupTokenStep = ({ setPrimaryButtonProps, onSubmit, form, setPrevi
     setPreview(
       <WidgetPreviewContainer>
         <LeftPlaceholder />
-        <CrtBasicInfoWidget
-          name={watchedForm.name}
+        <WidgetTile
+          title={<span ref={setTitleRef}>${watchedForm.name ?? 'ABC'}</span>}
+          titleVariant="h700"
           titleColor="colorText"
-          details={[
-            {
-              caption: 'REVENUE SHARE',
-              content: `${watchedForm.revenueShare}%`,
-              tooltipText: 'Lorem ipsum',
-            },
-            {
-              caption: 'CREATOR REWARD',
-              content: `${watchedForm.creatorReward}%`,
-              tooltipText: 'Lorem ipsum',
-            },
-          ]}
+          customNode={
+            <FlexBox gap={5}>
+              <Tooltip reference={titleRef} text="Token name" placement="top-start" />
+              <DetailsContent
+                avoidIconStyling
+                caption="REVENUE SHARE"
+                content={`${watchedForm.revenueShare}%`}
+                tooltipText="Loremp ipsum"
+                tileSize={smMatch ? 'big' : 'bigSmall'}
+                withDenomination
+              />
+              <DetailsContent
+                avoidIconStyling
+                caption="CREATOR REWARD"
+                content={`${watchedForm.creatorReward}%`}
+                tooltipText="Loremp ipsum"
+                tileSize={smMatch ? 'big' : 'bigSmall'}
+                withDenomination
+              />
+            </FlexBox>
+          }
         />
         <BottomPlaceholder>
           <svg xmlns="http://www.w3.org/2000/svg" width="371" height="163" viewBox="0 0 371 163" fill="none">
@@ -94,7 +109,7 @@ export const SetupTokenStep = ({ setPrimaryButtonProps, onSubmit, form, setPrevi
         </BottomPlaceholder>
       </WidgetPreviewContainer>
     )
-  }, [setPreview, watchedForm.creatorReward, watchedForm.name, watchedForm.revenueShare])
+  }, [setPreview, smMatch, titleRef, watchedForm.creatorReward, watchedForm.name, watchedForm.revenueShare])
 
   return (
     <CrtFormWrapper title="Set up your token" subtitle="Enter basic token information and settings." learnMoreLink="">
