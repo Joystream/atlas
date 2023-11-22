@@ -130,7 +130,7 @@ const useUnseenMemberNotifications = (
   const where = useMemo(() => {
     const recipient = { isTypeOf_eq: 'MemberRecipient', membership: { id_eq: memberId } }
     const createdAt_gt = whenDefined(
-      lastSeenNotificationDates.find(({ type }) => type === 'MemberRecipient'),
+      lastSeenNotificationDates.find(({ type, id }) => type === 'MemberRecipient' && id === memberId),
       ({ date }) => new Date(date)
     )
     return { recipient, createdAt_gt }
