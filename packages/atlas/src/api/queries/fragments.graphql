@@ -486,6 +486,15 @@ fragment BasicCreatorTokenHolder on TokenAccount {
   member {
     ...BasicMembershipFields
   }
+  token {
+    id
+    symbol
+    status
+    lastPrice
+    channel {
+      id
+    }
+  }
   vestingSchedules {
     totalVestingAmount
     vestingSource {
@@ -501,6 +510,32 @@ fragment BasicCreatorTokenHolder on TokenAccount {
   }
 }
 
+fragment BasicRevenueShare on RevenueShare {
+  id
+  allocation
+  claimed
+  endsAt
+  createdIn
+  finalized
+  participantsNum
+  startingAt
+  token {
+    id
+    symbol
+  }
+  stakers {
+    id
+    stakedAmount
+    earnings
+    createdIn
+    account {
+      member {
+        id
+      }
+    }
+  }
+}
+
 fragment BasicCreatorToken on CreatorToken {
   id
   accountsNum
@@ -510,6 +545,9 @@ fragment BasicCreatorToken on CreatorToken {
   status
   createdAt
   lastPrice
+  revenueShares {
+    id
+  }
   channel {
     ... on TokenChannel {
       channel {
@@ -566,24 +604,6 @@ fragment FullCreatorToken on CreatorToken {
     }
   }
   revenueShares {
-    id
-    allocation
-    claimed
-    endsAt
-    createdIn
-    finalized
-    participantsNum
-    startingAt
-    stakers {
-      id
-      stakedAmount
-      earnings
-      createdIn
-      account {
-        member {
-          id
-        }
-      }
-    }
+    ...BasicRevenueShare
   }
 }

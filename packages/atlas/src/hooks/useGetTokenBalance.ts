@@ -7,7 +7,7 @@ import { useUser } from '@/providers/user/user.hooks'
 export const useGetTokenBalance = (tokenId?: string, memberId?: string) => {
   const { memberId: currentMemberId } = useUser()
   const { currentBlock } = useJoystreamStore()
-  const [tokenBalance, setTokenBalance] = useState(0)
+  const [tokenBalance, setTokenBalance] = useState<number | null>(null)
 
   const { loading } = useGetChannelTokenBalanceQuery({
     variables: {
@@ -15,7 +15,7 @@ export const useGetTokenBalance = (tokenId?: string, memberId?: string) => {
       memberId: memberId ?? currentMemberId ?? '',
       currentBlockHeight: currentBlock,
     },
-    skip: !tokenId || !(memberId || currentMemberId),
+    skip: !!tokenBalance || !tokenId || !(memberId || currentMemberId),
     onCompleted: (data) => {
       if (data.getAccountTransferrableBalance.transferrableCrtAmount !== tokenBalance) {
         setTokenBalance(data.getAccountTransferrableBalance.transferrableCrtAmount)
@@ -24,7 +24,7 @@ export const useGetTokenBalance = (tokenId?: string, memberId?: string) => {
   })
 
   return {
-    tokenBalance,
+    tokenBalance: tokenBalance ?? 0,
     isLoading: loading,
   }
 }

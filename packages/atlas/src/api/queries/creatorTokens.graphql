@@ -43,3 +43,9 @@ query GetHistoricalTokenAllocation($tokenId: String!) {
     cumulativeHistoricalAllocation
   }
 }
+
+query GetTokenRevenueShares($where: RevenueShareWhereInput, $limit: Int, $offset: Int) {
+  revenueShares(where: $where, limit: $limit, offset: $offset) {
+    ...BasicRevenueShare
+  }
+}
