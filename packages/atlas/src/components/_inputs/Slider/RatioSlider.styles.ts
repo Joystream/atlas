@@ -14,7 +14,7 @@ export const Track = styled.svg`
   overflow: visible;
   height: ${sizes(6)};
   width: calc(100% - ${sizes(5)});
-  margin: 0 ${sizes(5 / 2)} ${sizes(6)};
+  margin: 0 ${sizes(1 / 2)} ${sizes(6)};
 
   .rail {
     stroke-width: ${sizes(1 / 2)};
@@ -70,6 +70,7 @@ export const Track = styled.svg`
 export const Range = styled.input`
   position: absolute;
   width: 100%;
+  left: 0;
   opacity: 0;
   height: ${sizes(8)};
   cursor: grab;

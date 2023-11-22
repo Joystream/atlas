@@ -17,7 +17,7 @@ import { CrtDashboardMainTab } from '@/views/studio/CrtDashboard/tabs/CrtDashboa
 import { CrtHoldersTab } from '@/views/studio/CrtDashboard/tabs/CrtHoldersTab'
 import { CrtRevenueTab } from '@/views/studio/CrtDashboard/tabs/CrtRevenueTab'
 
-const TABS = ['Dashboard', 'Holders', 'Revenue share', 'Settings'] as const
+import { TABS } from './CrtDashboard.types'
 
 export const CrtDashboard = () => {
   const [currentTab, setCurrentTab] = useState<number>(0)
@@ -42,7 +42,7 @@ export const CrtDashboard = () => {
   const hasOpenMarket = data.creatorTokenById.ammCurves.some((curve) => !curve.finalized)
 
   return (
-    <LimitedWidthContainer>
+    <LimitedWidthContainer big>
       <MainContainer>
         <HeaderContainer>
           <Text variant="h700" as="h1">
@@ -94,7 +94,7 @@ export const CrtDashboard = () => {
         {currentTab === 0 && (
           <CrtDashboardMainTab
             token={data.creatorTokenById}
-            onRevenueShareDetails={() => setCurrentTab(TABS.indexOf('Revenue share'))}
+            onTabChange={(tabName) => setCurrentTab(mappedTabs.findIndex((tab) => tab.name === tabName))}
           />
         )}
         {currentTab === 1 && <CrtHoldersTab token={data.creatorTokenById} />}
