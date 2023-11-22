@@ -34,12 +34,14 @@ query GetNotificationsConnection($recipient: RecipientTypeWhereInput!, $first: I
             channelTitle
           }
           ... on CommentReply {
+            memberId
             memberHandle
             commentId
             videoId
             videoTitle
           }
           ... on ReactionToComment {
+            memberId
             memberHandle
             commentId
             videoId
@@ -64,6 +66,7 @@ query GetNotificationsConnection($recipient: RecipientTypeWhereInput!, $first: I
             videoTitle
           }
           ... on HigherBidPlaced {
+            newBidderId
             newBidderHandle
             videoId
             videoTitle
@@ -97,20 +100,24 @@ query GetNotificationsConnection($recipient: RecipientTypeWhereInput!, $first: I
             videoTitle
           }
           ... on NewChannelFollower {
+            followerId
             followerHandle
           }
           ... on CommentPostedToVideo {
+            memberId
             memberHandle
             videoId
             videoTitle
             comentId
           }
           ... on VideoLiked {
+            memberId
             memberHandle
             videoId
             videoTitle
           }
           ... on VideoDisliked {
+            memberId
             memberHandle
             videoId
             videoTitle
@@ -122,6 +129,7 @@ query GetNotificationsConnection($recipient: RecipientTypeWhereInput!, $first: I
             __typename
           }
           ... on NftPurchased {
+            buyerId
             buyerHandle
             price
             videoTitle
@@ -130,6 +138,7 @@ query GetNotificationsConnection($recipient: RecipientTypeWhereInput!, $first: I
           # Add NewAuctionBid too ?
           ... on CreatorReceivesAuctionBid {
             amount
+            bidderId
             bidderHandle
             videoId
             videoTitle
@@ -146,6 +155,7 @@ query GetNotificationsConnection($recipient: RecipientTypeWhereInput!, $first: I
           # }
           ... on DirectChannelPaymentByMember {
             amount
+            payerId
             payerHandle
           }
           ... on ChannelFundsWithdrawn {

@@ -1201,6 +1201,8 @@ export type BannedMemberEdge = {
 export enum BannedMemberOrderByInput {
   ChannelChannelStateBloatBondAsc = 'channel_channelStateBloatBond_ASC',
   ChannelChannelStateBloatBondDesc = 'channel_channelStateBloatBond_DESC',
+  ChannelChannelWeightAsc = 'channel_channelWeight_ASC',
+  ChannelChannelWeightDesc = 'channel_channelWeight_DESC',
   ChannelCreatedAtAsc = 'channel_createdAt_ASC',
   ChannelCreatedAtDesc = 'channel_createdAt_DESC',
   ChannelCreatedInBlockAsc = 'channel_createdInBlock_ASC',
@@ -1490,6 +1492,8 @@ export type Channel = {
   bannedMembers: Array<BannedMember>
   /** Value of channel state bloat bond fee paid by channel creator */
   channelStateBloatBond: Scalars['BigInt']
+  /** Weight/Bias of the channel affecting video relevance in the Homepage */
+  channelWeight?: Maybe<Scalars['Float']>
   /** Channel's cover (background) photo asset. Recommended ratio: 16:9. */
   coverPhoto?: Maybe<StorageDataObject>
   /** Timestamp of the block the channel was created at */
@@ -1568,7 +1572,8 @@ export type ChannelEdge = {
 
 export type ChannelExcluded = {
   __typename?: 'ChannelExcluded'
-  phantom?: Maybe<Scalars['Int']>
+  /** title for the channel used for notification text */
+  channelTitle: Scalars['String']
 }
 
 export type ChannelFollow = {
@@ -1713,6 +1718,8 @@ export enum ChannelOrderByInput {
   AvatarPhotoUnsetAtDesc = 'avatarPhoto_unsetAt_DESC',
   ChannelStateBloatBondAsc = 'channelStateBloatBond_ASC',
   ChannelStateBloatBondDesc = 'channelStateBloatBond_DESC',
+  ChannelWeightAsc = 'channelWeight_ASC',
+  ChannelWeightDesc = 'channelWeight_DESC',
   CoverPhotoCreatedAtAsc = 'coverPhoto_createdAt_ASC',
   CoverPhotoCreatedAtDesc = 'coverPhoto_createdAt_DESC',
   CoverPhotoIdAsc = 'coverPhoto_id_ASC',
@@ -1887,6 +1894,8 @@ export type ChannelSuspensionEdge = {
 export enum ChannelSuspensionOrderByInput {
   ChannelChannelStateBloatBondAsc = 'channel_channelStateBloatBond_ASC',
   ChannelChannelStateBloatBondDesc = 'channel_channelStateBloatBond_DESC',
+  ChannelChannelWeightAsc = 'channel_channelWeight_ASC',
+  ChannelChannelWeightDesc = 'channel_channelWeight_DESC',
   ChannelCreatedAtAsc = 'channel_createdAt_ASC',
   ChannelCreatedAtDesc = 'channel_createdAt_DESC',
   ChannelCreatedInBlockAsc = 'channel_createdInBlock_ASC',
@@ -1989,6 +1998,8 @@ export type ChannelVerificationEdge = {
 export enum ChannelVerificationOrderByInput {
   ChannelChannelStateBloatBondAsc = 'channel_channelStateBloatBond_ASC',
   ChannelChannelStateBloatBondDesc = 'channel_channelStateBloatBond_DESC',
+  ChannelChannelWeightAsc = 'channel_channelWeight_ASC',
+  ChannelChannelWeightDesc = 'channel_channelWeight_DESC',
   ChannelCreatedAtAsc = 'channel_createdAt_ASC',
   ChannelCreatedAtDesc = 'channel_createdAt_DESC',
   ChannelCreatedInBlockAsc = 'channel_createdInBlock_ASC',
@@ -2067,7 +2078,19 @@ export type ChannelVerificationsConnection = {
 
 export type ChannelVerified = {
   __typename?: 'ChannelVerified'
+  /** no data needed as recipient is channel */
   phantom?: Maybe<Scalars['Int']>
+}
+
+export type ChannelWeight = {
+  __typename?: 'ChannelWeight'
+  channelId: Scalars['String']
+  isApplied: Scalars['Boolean']
+}
+
+export type ChannelWeightInput = {
+  channelId: Scalars['String']
+  weight: Scalars['Float']
 }
 
 export type ChannelWhereInput = {
@@ -2087,6 +2110,15 @@ export type ChannelWhereInput = {
   channelStateBloatBond_lte?: InputMaybe<Scalars['BigInt']>
   channelStateBloatBond_not_eq?: InputMaybe<Scalars['BigInt']>
   channelStateBloatBond_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  channelWeight_eq?: InputMaybe<Scalars['Float']>
+  channelWeight_gt?: InputMaybe<Scalars['Float']>
+  channelWeight_gte?: InputMaybe<Scalars['Float']>
+  channelWeight_in?: InputMaybe<Array<Scalars['Float']>>
+  channelWeight_isNull?: InputMaybe<Scalars['Boolean']>
+  channelWeight_lt?: InputMaybe<Scalars['Float']>
+  channelWeight_lte?: InputMaybe<Scalars['Float']>
+  channelWeight_not_eq?: InputMaybe<Scalars['Float']>
+  channelWeight_not_in?: InputMaybe<Array<Scalars['Float']>>
   coverPhoto?: InputMaybe<StorageDataObjectWhereInput>
   coverPhoto_isNull?: InputMaybe<Scalars['Boolean']>
   createdAt_eq?: InputMaybe<Scalars['DateTime']>
@@ -4488,6 +4520,11 @@ export type GeographicalAreaSubdivistion = {
   subdivisionCode?: Maybe<Scalars['String']>
 }
 
+export type GrantOrRevokeOperatorPermissionsResult = {
+  __typename?: 'GrantOrRevokeOperatorPermissionsResult'
+  newPermissions: Array<OperatorPermission>
+}
+
 export type HigherBidPlaced = {
   __typename?: 'HigherBidPlaced'
   /** new bidder handle  */
@@ -5040,20 +5077,24 @@ export type Mutation = {
   excludeContent: ExcludeContentResult
   excludeVideo: ExcludeVideoInfo
   followChannel: ChannelFollowResult
+  grantPermissions: GrantOrRevokeOperatorPermissionsResult
   markNotificationsAsRead: MarkNotificationsAsReadResult
   reportChannel: ChannelReportInfo
   reportVideo: VideoReportInfo
   requestNftFeatured: NftFeaturedRequstInfo
   restoreContent: RestoreContentResult
+  revokePermission: GrantOrRevokeOperatorPermissionsResult
   setAccountNotificationPreferences: AccountNotificationPreferencesOutput
   setAppAssetStorage: SetNewAppAssetStorageResult
   setAppNameAlt: SetNewAppNameAltResult
   setCategoryFeaturedVideos: SetCategoryFeaturedVideosResult
+  setChannelsWeights: Array<ChannelWeight>
   setFeaturedNfts: SetFeaturedNftsResult
   setKillSwitch: KillSwitch
+  setMaxAttemptsOnMailDelivery: Scalars['Int']
   setNewAppRootDomain: AppRootDomain
   setNewNotificationAssetRoot: SetNewNotificationAssetRootResult
-  setNewNotificationCenterPath: Scalars['Int']
+  setNewNotificationCenterPath: AppRootDomain
   setSupportedCategories: SetSupportedCategoriesResult
   setVideoHero: SetVideoHeroResult
   setVideoViewPerUserTimeLimit: VideoViewPerUserTimeLimit
@@ -5087,6 +5128,11 @@ export type MutationFollowChannelArgs = {
   channelId: Scalars['String']
 }
 
+export type MutationGrantPermissionsArgs = {
+  permissions?: InputMaybe<Array<OperatorPermission>>
+  userId?: InputMaybe<Scalars['String']>
+}
+
 export type MutationMarkNotificationsAsReadArgs = {
   notificationIds: Array<Scalars['String']>
 }
@@ -5111,6 +5157,11 @@ export type MutationRestoreContentArgs = {
   type: ExcludableContentType
 }
 
+export type MutationRevokePermissionArgs = {
+  permissions?: InputMaybe<Array<OperatorPermission>>
+  userId?: InputMaybe<Scalars['String']>
+}
+
 export type MutationSetAccountNotificationPreferencesArgs = {
   notificationPreferences: AccountNotificationPreferencesInput
 }
@@ -5128,12 +5179,20 @@ export type MutationSetCategoryFeaturedVideosArgs = {
   videos: Array<FeaturedVideoInput>
 }
 
+export type MutationSetChannelsWeightsArgs = {
+  inputs: Array<ChannelWeightInput>
+}
+
 export type MutationSetFeaturedNftsArgs = {
   featuredNftsIds: Array<Scalars['String']>
 }
 
 export type MutationSetKillSwitchArgs = {
   isKilled: Scalars['Boolean']
+}
+
+export type MutationSetMaxAttemptsOnMailDeliveryArgs = {
+  newMaxAttempts: Scalars['Int']
 }
 
 export type MutationSetNewAppRootDomainArgs = {
@@ -5167,6 +5226,7 @@ export type MutationSetVideoViewPerUserTimeLimitArgs = {
 
 export type MutationSetVideoWeightsArgs = {
   commentsWeight: Scalars['Float']
+  defaultChannelWeight: Scalars['Float']
   joysteamTimestampSubWeight: Scalars['Float']
   newnessWeight: Scalars['Float']
   reactionsWeight: Scalars['Float']
@@ -6315,6 +6375,21 @@ export type OpenAuctionStartedEventData = {
   auction: Auction
   /** owner of the NFT being auctioned */
   nftOwner: NftOwner
+}
+
+export enum OperatorPermission {
+  ExcludeContent = 'EXCLUDE_CONTENT',
+  GrantOperatorPermissions = 'GRANT_OPERATOR_PERMISSIONS',
+  RestoreContent = 'RESTORE_CONTENT',
+  RevokeOperatorPermissions = 'REVOKE_OPERATOR_PERMISSIONS',
+  SetCategoryFeaturedVideos = 'SET_CATEGORY_FEATURED_VIDEOS',
+  SetChannelWeights = 'SET_CHANNEL_WEIGHTS',
+  SetFeaturedNfts = 'SET_FEATURED_NFTS',
+  SetKillSwitch = 'SET_KILL_SWITCH',
+  SetSupportedCategories = 'SET_SUPPORTED_CATEGORIES',
+  SetVideoHero = 'SET_VIDEO_HERO',
+  SetVideoViewPerUserTimeLimit = 'SET_VIDEO_VIEW_PER_USER_TIME_LIMIT',
+  SetVideoWeights = 'SET_VIDEO_WEIGHTS',
 }
 
 /** Represents NFT details */
@@ -10293,6 +10368,8 @@ export type User = {
   isRoot: Scalars['Boolean']
   /** NFT featuring requests associated with the user */
   nftFeaturingRequests: Array<NftFeaturingRequest>
+  /** List of all the gateway operator permissions that this user has */
+  permissions?: Maybe<Array<OperatorPermission>>
   /** Reports associated with the user */
   reports: Array<Report>
   /** Video views associated with the user */
@@ -10385,6 +10462,10 @@ export type UserWhereInput = {
   nftFeaturingRequests_every?: InputMaybe<NftFeaturingRequestWhereInput>
   nftFeaturingRequests_none?: InputMaybe<NftFeaturingRequestWhereInput>
   nftFeaturingRequests_some?: InputMaybe<NftFeaturingRequestWhereInput>
+  permissions_containsAll?: InputMaybe<Array<OperatorPermission>>
+  permissions_containsAny?: InputMaybe<Array<OperatorPermission>>
+  permissions_containsNone?: InputMaybe<Array<OperatorPermission>>
+  permissions_isNull?: InputMaybe<Scalars['Boolean']>
   reports_every?: InputMaybe<ReportWhereInput>
   reports_none?: InputMaybe<ReportWhereInput>
   reports_some?: InputMaybe<ReportWhereInput>
@@ -11257,6 +11338,8 @@ export enum VideoOrderByInput {
   CategoryNameDesc = 'category_name_DESC',
   ChannelChannelStateBloatBondAsc = 'channel_channelStateBloatBond_ASC',
   ChannelChannelStateBloatBondDesc = 'channel_channelStateBloatBond_DESC',
+  ChannelChannelWeightAsc = 'channel_channelWeight_ASC',
+  ChannelChannelWeightDesc = 'channel_channelWeight_DESC',
   ChannelCreatedAtAsc = 'channel_createdAt_ASC',
   ChannelCreatedAtDesc = 'channel_createdAt_DESC',
   ChannelCreatedInBlockAsc = 'channel_createdInBlock_ASC',

@@ -57,37 +57,60 @@ export type GetNotificationsConnectionQuery = {
           | { __typename: 'ChannelVerified' }
           | {
               __typename: 'CommentPostedToVideo'
+              memberId: string
               memberHandle: string
               videoId: string
               videoTitle: string
               comentId: string
             }
-          | { __typename: 'CommentReply'; memberHandle: string; commentId: string; videoId: string; videoTitle: string }
           | {
-              __typename: 'CreatorReceivesAuctionBid'
-              amount: string
-              bidderHandle: string
-              videoId: string
-              videoTitle: string
-            }
-          | { __typename: 'DirectChannelPaymentByMember'; amount: string; payerHandle: string }
-          | { __typename: 'HigherBidPlaced'; newBidderHandle: string; videoId: string; videoTitle: string }
-          | { __typename: 'NewAuction'; channelId: string; channelTitle: string; videoId: string; videoTitle: string }
-          | { __typename: 'NewChannelFollower'; followerHandle: string }
-          | { __typename: 'NewNftOnSale'; channelId: string; channelTitle: string; videoId: string; videoTitle: string }
-          | { __typename: 'NftFeaturedOnMarketPlace'; videoId: string; videoTitle: string }
-          | { __typename: 'NftPurchased'; buyerHandle: string; price: string; videoTitle: string; videoId: string }
-          | { __typename: 'NftRoyaltyPaid'; amount: string; videoId: string; videoTitle: string }
-          | {
-              __typename: 'ReactionToComment'
+              __typename: 'CommentReply'
+              memberId: string
               memberHandle: string
               commentId: string
               videoId: string
               videoTitle: string
             }
-          | { __typename: 'VideoDisliked'; memberHandle: string; videoId: string; videoTitle: string }
+          | {
+              __typename: 'CreatorReceivesAuctionBid'
+              amount: string
+              bidderId: string
+              bidderHandle: string
+              videoId: string
+              videoTitle: string
+            }
+          | { __typename: 'DirectChannelPaymentByMember'; amount: string; payerId: string; payerHandle: string }
+          | {
+              __typename: 'HigherBidPlaced'
+              newBidderId: string
+              newBidderHandle: string
+              videoId: string
+              videoTitle: string
+            }
+          | { __typename: 'NewAuction'; channelId: string; channelTitle: string; videoId: string; videoTitle: string }
+          | { __typename: 'NewChannelFollower'; followerId: string; followerHandle: string }
+          | { __typename: 'NewNftOnSale'; channelId: string; channelTitle: string; videoId: string; videoTitle: string }
+          | { __typename: 'NftFeaturedOnMarketPlace'; videoId: string; videoTitle: string }
+          | {
+              __typename: 'NftPurchased'
+              buyerId: string
+              buyerHandle: string
+              price: string
+              videoTitle: string
+              videoId: string
+            }
+          | { __typename: 'NftRoyaltyPaid'; amount: string; videoId: string; videoTitle: string }
+          | {
+              __typename: 'ReactionToComment'
+              memberId: string
+              memberHandle: string
+              commentId: string
+              videoId: string
+              videoTitle: string
+            }
+          | { __typename: 'VideoDisliked'; memberId: string; memberHandle: string; videoId: string; videoTitle: string }
           | { __typename: 'VideoExcluded'; videoTitle: string }
-          | { __typename: 'VideoLiked'; memberHandle: string; videoId: string; videoTitle: string }
+          | { __typename: 'VideoLiked'; memberId: string; memberHandle: string; videoId: string; videoTitle: string }
           | { __typename: 'VideoPosted'; channelId: string; channelTitle: string; videoId: string; videoTitle: string }
       }
     }>
@@ -3098,12 +3121,14 @@ export const GetNotificationsConnectionDocument = gql`
               channelTitle
             }
             ... on CommentReply {
+              memberId
               memberHandle
               commentId
               videoId
               videoTitle
             }
             ... on ReactionToComment {
+              memberId
               memberHandle
               commentId
               videoId
@@ -3128,6 +3153,7 @@ export const GetNotificationsConnectionDocument = gql`
               videoTitle
             }
             ... on HigherBidPlaced {
+              newBidderId
               newBidderHandle
               videoId
               videoTitle
@@ -3157,20 +3183,24 @@ export const GetNotificationsConnectionDocument = gql`
               videoTitle
             }
             ... on NewChannelFollower {
+              followerId
               followerHandle
             }
             ... on CommentPostedToVideo {
+              memberId
               memberHandle
               videoId
               videoTitle
               comentId
             }
             ... on VideoLiked {
+              memberId
               memberHandle
               videoId
               videoTitle
             }
             ... on VideoDisliked {
+              memberId
               memberHandle
               videoId
               videoTitle
@@ -3182,6 +3212,7 @@ export const GetNotificationsConnectionDocument = gql`
               __typename
             }
             ... on NftPurchased {
+              buyerId
               buyerHandle
               price
               videoTitle
@@ -3189,6 +3220,7 @@ export const GetNotificationsConnectionDocument = gql`
             }
             ... on CreatorReceivesAuctionBid {
               amount
+              bidderId
               bidderHandle
               videoId
               videoTitle
@@ -3200,6 +3232,7 @@ export const GetNotificationsConnectionDocument = gql`
             }
             ... on DirectChannelPaymentByMember {
               amount
+              payerId
               payerHandle
             }
             ... on ChannelFundsWithdrawn {
