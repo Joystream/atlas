@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { smallBadgeStyles } from '@/components/Badge'
-import { cVar, sizes, zIndex } from '@/styles'
+import { cVar, media, sizes, zIndex } from '@/styles'
 import { MaskProps, getMaskImage } from '@/utils/styles'
 
 import { Pill } from '../Pill'
@@ -12,10 +12,12 @@ export const TabsWrapper = styled.div`
   min-width: 0;
 `
 
-export const TabsGroup = styled.div<MaskProps>`
+export const TabsGroup = styled.div<{ isBig?: boolean } & MaskProps>`
   display: flex;
   position: relative;
   overflow: auto;
+  padding: ${({ isBig }) => (isBig ? `${sizes(4)} ${sizes(4)} 0` : 'unset')};
+
   ${getMaskImage}
 
   ::-webkit-scrollbar {
@@ -27,16 +29,21 @@ export const TabsGroup = styled.div<MaskProps>`
   &[data-underline='true'] {
     box-shadow: ${cVar('effectDividersBottom')};
   }
+
+  ${media.md} {
+    padding: ${({ isBig }) => (isBig ? `${sizes(8)} ${sizes(8)} 0` : 'unset')};
+  }
 `
 
 type TabProps = {
   selected: boolean
+  isBig?: boolean
 }
 
 export const Tab = styled.div<TabProps>`
   transition: box-shadow ${cVar('animationTransitionFast')}, color ${cVar('animationTransitionFast')};
   padding: ${sizes(2.5)} ${sizes(4)} 0 ${sizes(4)};
-  height: 56px;
+  height: ${({ isBig = false }) => (isBig ? 'fit-content' : '56px')};
   display: flex;
   box-shadow: ${({ selected }) => (selected ? `inset 0 -4px 0 ${cVar('colorBackgroundPrimary')};` : 'none')};
   flex-shrink: 0;

@@ -54,5 +54,6 @@ export const useBlockTimeEstimation = () => {
     convertMsTimestampToBlock,
     convertDurationToBlocks,
     convertBlocksToDuration,
+    currentBlock,
   }
 }
