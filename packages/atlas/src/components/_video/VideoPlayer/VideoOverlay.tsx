@@ -40,7 +40,7 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
   const [randomNextVideo, setRandomNextVideo] = useState<BasicVideoFieldsFragment | null>(null)
   const commonFiltersFactory = (where?: VideoWhereInput) => ({
     limit: 1,
-    orderBy: VideoOrderByInput.IdAsc,
+    orderBy: VideoOrderByInput.CreatedAtAsc,
     where: {
       ...publicCryptoVideoFilter,
       channel: {

@@ -46,7 +46,7 @@ export const useSearchVideos = ({ id, onError }: UseSearchVideosParams) => {
               isAccepted_eq: true,
             },
           },
-          orderBy: [VideoOrderByInput.IdDesc],
+          orderBy: [VideoOrderByInput.CreatedAtDesc],
         },
       })
     },

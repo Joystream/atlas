@@ -121,7 +121,7 @@ export const MyVideosView = () => {
 
   const drafts = [
     ...(_drafts.length ? ['new-video-tile' as const] : []),
-    ...(sortVideosBy === VideoOrderByInput.IdDesc
+    ...(sortVideosBy === VideoOrderByInput.CreatedAtDesc
       ? _drafts.slice().sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
       : _drafts.slice().sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime())),
   ]

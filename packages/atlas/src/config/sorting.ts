@@ -5,20 +5,20 @@ import {
 } from '@/api/queries/__generated__/baseTypes.generated'
 
 export const VIDEO_SORT_OPTIONS = [
-  { name: 'Newest', value: VideoOrderByInput.IdDesc },
-  { name: 'Oldest', value: VideoOrderByInput.IdAsc },
+  { name: 'Newest', value: VideoOrderByInput.CreatedAtDesc },
+  { name: 'Oldest', value: VideoOrderByInput.CreatedAtAsc },
 ]
 
 export const NFT_SORT_OPTIONS = [
-  { name: 'Newest', value: OwnedNftOrderByInput.IdDesc },
-  { name: 'Oldest', value: OwnedNftOrderByInput.IdAsc },
+  { name: 'Newest', value: OwnedNftOrderByInput.CreatedAtDesc },
+  { name: 'Oldest', value: OwnedNftOrderByInput.CreatedAtAsc },
 ]
 
 export const COMMENTS_SORT_OPTIONS = [
   {
     name: 'Most popular',
-    value: [CommentOrderByInput.ReactionsAndRepliesCountDesc, CommentOrderByInput.IdDesc],
+    value: [CommentOrderByInput.ReactionsAndRepliesCountDesc, CommentOrderByInput.CreatedAtDesc],
   },
-  { name: 'Newest', value: [CommentOrderByInput.IdDesc] },
-  { name: 'Oldest', value: [CommentOrderByInput.IdAsc] },
+  { name: 'Newest', value: [CommentOrderByInput.CreatedAtDesc] },
+  { name: 'Oldest', value: [CommentOrderByInput.CreatedAtAsc] },
 ]
