@@ -466,7 +466,6 @@ export type GetBasicVideosConnectionQuery = {
   __typename?: 'Query'
   videosConnection: {
     __typename?: 'VideosConnection'
-    totalCount: number
     edges: Array<{
       __typename?: 'VideoEdge'
       cursor: string
@@ -619,7 +618,6 @@ export type GetFullVideosConnectionQuery = {
   __typename?: 'Query'
   videosConnection: {
     __typename?: 'VideosConnection'
-    totalCount: number
     edges: Array<{
       __typename?: 'VideoEdge'
       cursor: string
@@ -1781,7 +1779,6 @@ export const GetBasicVideosConnectionDocument = gql`
         hasNextPage
         endCursor
       }
-      totalCount
     }
   }
   ${BasicVideoFieldsFragmentDoc}
@@ -1924,7 +1921,6 @@ export const GetFullVideosConnectionDocument = gql`
         hasNextPage
         endCursor
       }
-      totalCount
     }
   }
   ${FullVideoFieldsFragmentDoc}

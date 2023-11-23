@@ -26,7 +26,6 @@ query GetBasicVideosConnection(
       hasNextPage
       endCursor
     }
-    totalCount
   }
 }
 
@@ -68,7 +67,6 @@ query GetFullVideosConnection(
       hasNextPage
       endCursor
     }
-    totalCount
   }
 }
 
