@@ -36,7 +36,7 @@ query GetUserCommentsAndVideoCommentsConnection(
   $after: String
   $memberId: String # CHANGE: ID is now `String`
   $videoId: String # CHANGE: ID is now `String`
-  $orderBy: [CommentOrderByInput!] = [id_DESC]
+  $orderBy: [CommentOrderByInput!] = [createdAt_DESC]
 ) {
   userComments: comments(
     where: {
@@ -50,7 +50,7 @@ query GetUserCommentsAndVideoCommentsConnection(
         { OR: [{ status_eq: VISIBLE }, { repliesCount_gt: 0 }] }
       ]
     }
-    orderBy: [id_DESC]
+    orderBy: [createdAt_DESC]
   ) {
     ...CommentFields
   }

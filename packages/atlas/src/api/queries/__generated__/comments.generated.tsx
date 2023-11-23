@@ -418,7 +418,7 @@ export const GetUserCommentsAndVideoCommentsConnectionDocument = gql`
     $after: String
     $memberId: String
     $videoId: String
-    $orderBy: [CommentOrderByInput!] = [id_DESC]
+    $orderBy: [CommentOrderByInput!] = [createdAt_DESC]
   ) {
     userComments: comments(
       where: {
@@ -430,7 +430,7 @@ export const GetUserCommentsAndVideoCommentsConnectionDocument = gql`
           { OR: [{ status_eq: VISIBLE }, { repliesCount_gt: 0 }] }
         ]
       }
-      orderBy: [id_DESC]
+      orderBy: [createdAt_DESC]
     ) {
       ...CommentFields
     }

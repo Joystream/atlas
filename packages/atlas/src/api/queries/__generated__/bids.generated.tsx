@@ -63,7 +63,7 @@ export type GetBidsQuery = {
 
 export const GetBidsDocument = gql`
   query GetBids($where: BidWhereInput!) {
-    bids(where: $where, orderBy: [id_DESC]) {
+    bids(where: $where, orderBy: [createdAt_DESC]) {
       ...FullBidFields
     }
   }
