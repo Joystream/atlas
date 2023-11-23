@@ -146,7 +146,7 @@ export type GetChannelCountQuery = {
 
 export const GetMembershipsDocument = gql`
   query GetMemberships($where: MembershipWhereInput!) {
-    memberships(where: $where, orderBy: [createdAt_ASC]) {
+    memberships(where: $where) {
       ...FullMembershipFields
     }
   }
@@ -248,7 +248,7 @@ export type GetMembershipsAvatarQueryResult = Apollo.QueryResult<
 >
 export const GetChannelCountDocument = gql`
   query GetChannelCount($where: ChannelWhereInput) {
-    channelsConnection(where: $where, orderBy: [createdAt_ASC]) {
+    channelsConnection(where: $where, orderBy: [id_ASC]) {
       totalCount
     }
   }
