@@ -3048,7 +3048,7 @@ export type GetNftActivitiesQuery = {
 
 export const GetNotificationsCountDocument = gql`
   query GetNotificationsCount($where: NotificationWhereInput!) {
-    notificationsConnection(orderBy: createdAt_DESC, where: $where) {
+    notificationsConnection(orderBy: id_DESC, where: $where) {
       totalCount
     }
   }
@@ -3099,7 +3099,7 @@ export const GetNotificationsConnectionDocument = gql`
     notificationsConnection(
       first: $first
       after: $after
-      orderBy: createdAt_DESC
+      orderBy: id_DESC
       where: { inApp_eq: true, recipient: $recipient }
     ) {
       pageInfo {
