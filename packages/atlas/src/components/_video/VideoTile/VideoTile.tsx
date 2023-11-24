@@ -65,7 +65,7 @@ export const VideoTile: FC<VideoTileProps> = memo(
     return (
       <VideoTileContainer direction={direction} className={className}>
         <VideoThumbnail
-          type="video"
+          type="thumbnail"
           ref={thumbnailRef}
           videoHref={videoHref}
           linkState={linkState}

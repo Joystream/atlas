@@ -302,7 +302,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
 
   const nftTileProps: NftTileProps = {
     status: getNftStatus(),
-    thumbnail: { thumbnailUrls: thumbnailPhotoUrls, type: 'video' },
+    thumbnail: { thumbnailUrls: thumbnailPhotoUrls, type: 'thumbnail' },
     title: video?.title,
     owner: { assetUrls: memberAvatarUris, name: activeMembership?.handle },
     creator: { assetUrls: channelAvatarUrls, name: video?.channel.title ?? '' },

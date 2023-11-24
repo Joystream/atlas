@@ -86,7 +86,7 @@ export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId, isInCarousel }) =
       thumbnailUrls: thumbnailUrls,
       loading: loading,
       thumbnailAlt: `${nft?.video?.title} video thumbnail`,
-      type: 'video',
+      type: 'thumbnail',
     },
     owner,
     creator: {
