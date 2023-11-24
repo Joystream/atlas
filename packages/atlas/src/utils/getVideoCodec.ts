@@ -24,18 +24,13 @@ export const getVideoCodec = async (url: string): string => {
   const fetchRange = { start: 0, end: 8192 }
   const arrayBuffer = await fetchPartialContent(url, fetchRange)
   if (arrayBuffer) {
-    try {
-      arrayBuffer.fileStart = 0
-      const mp4boxFile = mp4box.createFile()
-      mp4boxFile.appendBuffer(arrayBuffer)
-      mp4boxFile.flush()
+    arrayBuffer.fileStart = 0
+    const mp4boxFile = mp4box.createFile()
+    mp4boxFile.appendBuffer(arrayBuffer)
+    mp4boxFile.flush()
 
-      const codec = mp4boxFile.getInfo()?.videoTracks[0]?.codec
-      return codec
-    } catch (error) {
-      ConsoleLogger.warn('Error getting video codec:', error)
-      return 'no data'
-    }
+    const codec = mp4boxFile.getInfo()?.videoTracks[0]?.codec
+    return codec
   }
   return ''
 }

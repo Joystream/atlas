@@ -27,7 +27,7 @@ export default {
     loading: false,
     thumbnailUrl: 'https://picsum.photos/320/180',
     thumbnailAlt: 'This person does not exist',
-    type: 'thumbnail',
+    type: 'video',
     slots: {
       bottomLeft: {
         element: (
@@ -135,7 +135,7 @@ UploadProgress.args = {
 export const FailedUpload = Template.bind({})
 FailedUpload.args = {
   ...FailedUpload.args,
-  type: 'thumbnail',
+  type: 'video',
   slots: {
     bottomRight: {
       element: <Pill label="Failed upload" variant="danger" icon={<SvgAlertsWarning24 />} size="medium" />,
@@ -150,7 +150,7 @@ FailedUpload.args = {
 export const Draft = Template.bind({})
 Draft.args = {
   ...Draft.args,
-  type: 'thumbnail',
+  type: 'video',
 
   slots: {
     topRight: {
@@ -176,7 +176,7 @@ Draft.args = {
 export const CustomContent = Template.bind({})
 CustomContent.args = {
   ...CustomContent.args,
-  type: 'thumbnail',
+  type: 'video',
   contentSlot: (
     <div
       style={{

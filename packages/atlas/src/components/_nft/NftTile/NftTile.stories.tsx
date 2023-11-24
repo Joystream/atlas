@@ -22,7 +22,7 @@ export default {
     startingPrice: new BN(100000000000),
     buyNowPrice: new BN(0),
     topBidAmount: new BN(123000000000),
-    thumbnail: { type: 'thumbnail', thumbnailUrl: 'https://placedog.net/360/203' },
+    thumbnail: { type: 'video', thumbnailUrl: 'https://placedog.net/360/203' },
     creator: { assetUrl: 'https://placedog.net/100/100?random=1', name: 'Jane' },
     owner: { assetUrl: 'https://placedog.net/100/100?random=2', name: 'Kate' },
     duration: 120,

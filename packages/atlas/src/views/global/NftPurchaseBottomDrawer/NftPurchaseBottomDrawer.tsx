@@ -318,7 +318,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
             thumbnail={{
               loading: loading || !nft,
               thumbnailUrls: thumbnailUrls,
-              type: 'thumbnail',
+              type: 'video',
             }}
             creator={{ name: nft?.video.channel.title, assetUrls: creatorAvatarUrls }}
             owner={{

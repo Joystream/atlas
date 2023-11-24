@@ -308,7 +308,7 @@ const CarouselTemplate: StoryFn<SectionProps<unknown>> = () => {
           children: placeholderItems.map((_, idx) => (
             <NftTile
               key={idx}
-              thumbnail={{ type: 'thumbnail', thumbnailUrls: [`https://place.dog/${320 + idx}/180`] }}
+              thumbnail={{ type: 'video', thumbnailUrls: [`https://place.dog/${320 + idx}/180`] }}
               title={`Nft number ${idx}`}
             />
           )),

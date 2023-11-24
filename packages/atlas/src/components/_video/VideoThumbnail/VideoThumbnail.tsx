@@ -34,7 +34,7 @@ type PlaylistVideoThumbnailProps = {
   slots?: Pick<SlotsObject, 'bottomLeft' | 'topLeft' | 'center'>
 }
 type RegularVideoThumbnailProps = {
-  type: 'thumbnail'
+  type: 'video'
   slots?: SlotsObject
 }
 
