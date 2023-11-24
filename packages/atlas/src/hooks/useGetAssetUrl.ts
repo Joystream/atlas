@@ -26,10 +26,6 @@ export const getSingleAssetUrl = async (
       dataObjectType: type || undefined,
       resolvedUrl: distributionAssetUrl,
     }
-    if (type === 'video') {
-      const codec = await getVideoCodec(distributionAssetUrl)
-      console.log('video codec: ', codec)
-    }
     const assetTestPromise = testAssetDownload(distributionAssetUrl, type)
     const assetTestPromiseWithTimeout = withTimeout(
       assetTestPromise,
