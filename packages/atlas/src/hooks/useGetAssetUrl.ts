@@ -4,6 +4,7 @@ import { atlasConfig } from '@/config'
 import { logDistributorPerformance, testAssetDownload } from '@/providers/assets/assets.helpers'
 import { useOperatorsContext } from '@/providers/assets/assets.provider'
 import { AssetType } from '@/providers/uploads/uploads.types'
+import { isMobile } from '@/utils/browser'
 import { getVideoCodec } from '@/utils/getVideoCodec'
 import { ConsoleLogger, DistributorEventEntry, SentryLogger, UserEventsLogger } from '@/utils/logs'
 import { withTimeout } from '@/utils/misc'
@@ -17,6 +18,7 @@ export const getSingleAssetUrl = async (
   if (!urls || !urls.length) {
     return
   }
+  const mobile = isMobile()
 
   for (const distributionAssetUrl of urls) {
     const eventEntry: DistributorEventEntry = {
@@ -24,7 +26,10 @@ export const getSingleAssetUrl = async (
       dataObjectType: type || undefined,
       resolvedUrl: distributionAssetUrl,
     }
-
+    if (type === 'video') {
+      const codec = await getVideoCodec(distributionAssetUrl)
+      console.log('video codec: ', codec)
+    }
     const assetTestPromise = testAssetDownload(distributionAssetUrl, type)
     const assetTestPromiseWithTimeout = withTimeout(
       assetTestPromise,
@@ -40,7 +45,7 @@ export const getSingleAssetUrl = async (
     } catch (err) {
       if (err instanceof MediaError) {
         let codec = ''
-        if (type === 'video') {
+        if (type === 'video' && !mobile) {
           codec = getVideoCodec(distributionAssetUrl)
         }
         UserEventsLogger.logWrongCodecEvent(eventEntry, { assetType: type, ...(type === 'video' ? { codec } : {}) })
