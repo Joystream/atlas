@@ -30,6 +30,7 @@ export type HolderDatum = {
 export type CrtHoldersWidgetProps = {
   tokenId: string
   totalSupply: number
+  onShowMore: () => void
 }
 
 export const holdersToDatum = (accounts: BasicCreatorTokenHolderFragment[], totalSupply: number): HolderDatum[] =>
@@ -46,7 +47,7 @@ export const holdersToDatum = (accounts: BasicCreatorTokenHolderFragment[], tota
     index,
   }))
 
-export const CrtHoldersWidget = ({ tokenId, totalSupply }: CrtHoldersWidgetProps) => {
+export const CrtHoldersWidget = ({ tokenId, totalSupply, onShowMore }: CrtHoldersWidgetProps) => {
   const { activeMembership } = useUser()
   const [hoveredHolder, setHoveredHolder] = useState<PieDatum | null>(null)
   const { data } = useGetCreatorTokenHoldersQuery({
@@ -95,7 +96,7 @@ export const CrtHoldersWidget = ({ tokenId, totalSupply }: CrtHoldersWidgetProps
       titleVariant="h500"
       titleColor="colorTextStrong"
       customTopRightNode={
-        <TextButton icon={<SvgActionChevronR />} iconPlacement="right">
+        <TextButton onClick={onShowMore} icon={<SvgActionChevronR />} iconPlacement="right">
           Show more
         </TextButton>
       }

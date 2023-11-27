@@ -2716,6 +2716,14 @@ export type BasicCreatorTokenHolderFragment = {
         | null
     } | null
   }
+  token: {
+    __typename?: 'CreatorToken'
+    id: string
+    symbol?: string | null
+    status: Types.TokenStatus
+    lastPrice?: string | null
+    channel?: { __typename?: 'TokenChannel'; id: string } | null
+  }
   vestingSchedules: Array<{
     __typename?: 'VestedAccount'
     totalVestingAmount: string
@@ -2734,6 +2742,27 @@ export type BasicCreatorTokenHolderFragment = {
   }>
 }
 
+export type BasicRevenueShareFragment = {
+  __typename?: 'RevenueShare'
+  id: string
+  allocation: string
+  claimed: string
+  endsAt: number
+  createdIn: number
+  finalized: boolean
+  participantsNum: number
+  startingAt: number
+  token: { __typename?: 'CreatorToken'; id: string; symbol?: string | null }
+  stakers: Array<{
+    __typename?: 'RevenueShareParticipation'
+    id: string
+    stakedAmount: string
+    earnings: string
+    createdIn: number
+    account: { __typename?: 'TokenAccount'; member: { __typename?: 'Membership'; id: string } }
+  }>
+}
+
 export type BasicCreatorTokenFragment = {
   __typename?: 'CreatorToken'
   id: string
@@ -2744,6 +2773,7 @@ export type BasicCreatorTokenFragment = {
   status: Types.TokenStatus
   createdAt: Date
   lastPrice?: string | null
+  revenueShares: Array<{ __typename?: 'RevenueShare'; id: string }>
   channel?: {
     __typename?: 'TokenChannel'
     channel: {
@@ -2805,8 +2835,8 @@ export type BasicCreatorTokenFragment = {
 export type FullCreatorTokenFragment = {
   __typename?: 'CreatorToken'
   annualCreatorRewardPermill: number
-  description?: string | null
   revenueShareRatioPermill: number
+  description?: string | null
   totalSupply: string
   id: string
   accountsNum: number
@@ -2856,6 +2886,7 @@ export type FullCreatorTokenFragment = {
     finalized: boolean
     participantsNum: number
     startingAt: number
+    token: { __typename?: 'CreatorToken'; id: string; symbol?: string | null }
     stakers: Array<{
       __typename?: 'RevenueShareParticipation'
       id: string
@@ -3450,6 +3481,15 @@ export const BasicCreatorTokenHolderFragmentDoc = gql`
     member {
       ...BasicMembershipFields
     }
+    token {
+      id
+      symbol
+      status
+      lastPrice
+      channel {
+        id
+      }
+    }
     vestingSchedules {
       totalVestingAmount
       vestingSource {
@@ -3476,6 +3516,9 @@ export const BasicCreatorTokenFragmentDoc = gql`
     status
     createdAt
     lastPrice
+    revenueShares {
+      id
+    }
     channel {
       ... on TokenChannel {
         channel {
@@ -3497,10 +3540,38 @@ export const BasicCreatorTokenFragmentDoc = gql`
   ${BasicChannelFieldsFragmentDoc}
   ${StorageDataObjectFieldsFragmentDoc}
 `
+export const BasicRevenueShareFragmentDoc = gql`
+  fragment BasicRevenueShare on RevenueShare {
+    id
+    allocation
+    claimed
+    endsAt
+    createdIn
+    finalized
+    participantsNum
+    startingAt
+    token {
+      id
+      symbol
+    }
+    stakers {
+      id
+      stakedAmount
+      earnings
+      createdIn
+      account {
+        member {
+          id
+        }
+      }
+    }
+  }
+`
 export const FullCreatorTokenFragmentDoc = gql`
   fragment FullCreatorToken on CreatorToken {
     ...BasicCreatorToken
     annualCreatorRewardPermill
+    revenueShareRatioPermill
     description
     revenueShareRatioPermill
     ammCurves {
@@ -3534,28 +3605,11 @@ export const FullCreatorTokenFragmentDoc = gql`
       }
     }
     revenueShares {
-      id
-      allocation
-      claimed
-      endsAt
-      createdIn
-      finalized
-      participantsNum
-      startingAt
-      stakers {
-        id
-        stakedAmount
-        earnings
-        createdIn
-        account {
-          member {
-            id
-          }
-        }
-      }
+      ...BasicRevenueShare
     }
   }
   ${BasicCreatorTokenFragmentDoc}
+  ${BasicRevenueShareFragmentDoc}
 `
 export const FullAmmCurveFragmentDoc = gql`
   fragment FullAmmCurve on AmmCurve {

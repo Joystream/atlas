@@ -2,28 +2,30 @@ import { useCallback, useMemo } from 'react'
 
 import { useGetCreatorTokenHoldersQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
-import { SvgActionChevronR } from '@/assets/icons'
 import { NumberFormat } from '@/components/NumberFormat'
 import { ProgressWidget, ProgressWidgetProps } from '@/components/ProgressWidget'
 import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
 import { Button, ButtonProps, TextButton } from '@/components/_buttons/Button'
 import { CrtHoldersWidget } from '@/components/_crt/CrtHoldersWidget'
+import { CrtRevenueShareWidget } from '@/components/_crt/CrtRevenueShareWidget'
 import { StartSaleOrMarketButton } from '@/components/_crt/StartSaleOrMarketButton/StartSaleOrMarketButton'
+import { absoluteRoutes } from '@/config/routes'
 import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useUser } from '@/providers/user/user.hooks'
 import { permillToPercentage } from '@/utils/number'
 import {
   BigWidgetContainer,
-  HoldersPlaceholders,
   NoGlobalPaddingWrapper,
   WidgetContainer,
 } from '@/views/studio/CrtDashboard/CrtDashboard.styles'
+import { CrtTabs } from '@/views/studio/CrtDashboard/CrtDashboard.types'
 import { StyledSvgJoyTokenMonochrome24 } from '@/views/studio/MyPaymentsView/PaymentsOverview/PaymentsOverview.styles'
 
 type CrtDashboardMainTabProps = {
   token: FullCreatorTokenFragment
+  onTabChange: (tab: CrtTabs) => void
 }
 
 const steps: ProgressWidgetProps['steps'] = [
@@ -47,7 +49,7 @@ const steps: ProgressWidgetProps['steps'] = [
   },
 ]
 
-export const CrtDashboardMainTab = ({ token }: CrtDashboardMainTabProps) => {
+export const CrtDashboardMainTab = ({ token, onTabChange }: CrtDashboardMainTabProps) => {
   const { memberId } = useUser()
   const smMatch = useMediaMatch('sm')
   const { data } = useGetCreatorTokenHoldersQuery({
@@ -84,7 +86,11 @@ export const CrtDashboardMainTab = ({ token }: CrtDashboardMainTabProps) => {
         case 0:
           return <Button {...commonProps}>Create token</Button>
         case 1:
-          return <Button {...commonProps}>Edit token page</Button>
+          return (
+            <Button {...commonProps} to={absoluteRoutes.studio.crtTokenEdit()}>
+              Edit token page
+            </Button>
+          )
         case 2:
           return <StartSaleOrMarketButton {...commonProps} tokenName={token.symbol ?? 'N/A'} />
         case 3:
@@ -176,18 +182,12 @@ export const CrtDashboardMainTab = ({ token }: CrtDashboardMainTabProps) => {
         />
       </WidgetContainer>
       <BigWidgetContainer>
-        <CrtHoldersWidget tokenId={token.id} totalSupply={+(token.totalSupply ?? 0)} />
-        <WidgetTile
-          title="Revenue share with holders"
-          titleColor="colorTextStrong"
-          titleVariant="h500"
-          customTopRightNode={
-            <TextButton iconPlacement="right" icon={<SvgActionChevronR />}>
-              Show revenue shares
-            </TextButton>
-          }
-          customNode={<HoldersPlaceholders />}
+        <CrtHoldersWidget
+          onShowMore={() => onTabChange('Holders')}
+          tokenId={token.id}
+          totalSupply={+(token.totalSupply ?? 0)}
         />
+        <CrtRevenueShareWidget token={token} onTabSwitch={() => onTabChange('Revenue share')} />
       </BigWidgetContainer>
     </>
   )

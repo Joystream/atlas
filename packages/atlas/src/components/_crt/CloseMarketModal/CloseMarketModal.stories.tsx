@@ -20,12 +20,4 @@ export default {
 
 const Template: StoryFn<CloseMarketModalProps> = (args) => <CloseMarketModal {...args} />
 
-export const EnoughFunds = Template.bind({})
-EnoughFunds.args = {
-  tokenId: '40',
-}
-
-export const InsufficientFunds = Template.bind({})
-InsufficientFunds.args = {
-  tokenId: '20',
-}
+export const Default = Template.bind({})

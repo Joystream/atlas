@@ -49,3 +49,9 @@ query GetFullAmmCurve($where: AmmCurveWhereInput, $orderBy: [AmmCurveOrderByInpu
     ...FullAmmCurve
   }
 }
+
+query GetTokenRevenueShares($where: RevenueShareWhereInput, $limit: Int, $offset: Int) {
+  revenueShares(where: $where, limit: $limit, offset: $offset) {
+    ...BasicRevenueShare
+  }
+}

@@ -37,26 +37,41 @@ type CrtPreviewViewProps = {
 
 export const getTokenDetails = (token: FullCreatorTokenFragment) => {
   const details = []
+  // todo: after resolver is done on orion, redo total rev
   if (token.totalSupply)
     details.push({
       caption: 'TOTAL REV.',
       content: +token.totalSupply,
       icon: <JoyTokenIcon size={16} variant="silver" />,
-      tooltipText: 'Lorem ipsum',
+      tooltipText:
+        'This is the total amount of revenue that the channel made from the time it was created. This information can be useful to determine if the creator had high or low income from their content in the past.',
+      withDenomination: true,
     })
 
   if (token.revenueShareRatioPermill)
     details.push({
       caption: 'REV. SHARE',
       content: `${permillToPercentage(token.revenueShareRatioPermill)}%`,
-      tooltipText: 'Lorem ipsum',
+      tooltipText: `This is a percentage of revenue that creator claims after each revenue share - Channel: ${permillToPercentage(
+        token.revenueShareRatioPermill
+      )}%, Holders: ${100 - permillToPercentage(token.revenueShareRatioPermill)}%.`,
     })
 
   if (token.annualCreatorRewardPermill)
     details.push({
       caption: 'AN. REWARD',
       content: `${permillToPercentage(token.annualCreatorRewardPermill)}%`,
-      tooltipText: 'Lorem ipsum',
+      tooltipText:
+        'This is how much creator will be earning annually from their tokens in % terms from the total supply.',
+    })
+
+  if (token.totalSupply)
+    details.push({
+      caption: 'TOTAL SUPPLY',
+      content: +token.totalSupply,
+      tooltipText: `This is a total supply of all $${token.symbol} tokens owned by token holders. `,
+      withToken: true,
+      customTicker: `$${token.symbol}`,
     })
   return details
 }
@@ -130,7 +145,15 @@ export const CrtPreviewLayout = ({
       </HeaderContainer>
       <FirstColumn>{tokenDetails}</FirstColumn>
       <SecondColumn>
-        <CrtBasicInfoWidget details={basicDetails} name={token.symbol ?? 'N/A'} />
+        <CrtBasicInfoWidget
+          details={basicDetails}
+          name={token.symbol ?? 'N/A'}
+          symbol={token.symbol ?? 'N/A'}
+          avatar={token?.channel?.channel.avatarPhoto?.resolvedUrls?.[0]}
+          accountsNum={token?.accountsNum}
+          size={lgMatch ? 'large' : 'small'}
+          description={token?.description ?? ''}
+        />
         {/* todo all props below creationDate are incorrect and should be calucated on orion side */}
         <CrtStatusWidget token={token} />
         {data ? (

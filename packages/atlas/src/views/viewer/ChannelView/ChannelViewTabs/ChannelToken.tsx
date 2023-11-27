@@ -48,19 +48,27 @@ export const ChannelToken = ({ tokenId, memberId }: ChannelTokenProps) => {
   }
 
   const { creatorTokenById: token } = data
+
   return (
     <LayoutGrid>
       <GridItem colSpan={{ base: 12, sm: 8 }}>
         <TokenDetails
           about={token?.description ?? ''}
           benefits={token?.benefits}
-          videoId={token?.trailerVideo?.[0]?.id}
+          videoId={token?.trailerVideo?.[0]?.video.id}
         />
       </GridItem>
       <GridItem colSpan={{ base: 12, sm: 4 }}>
         <FlexBox flow="column" gap={6} alignItems="stretch">
-          <CrtBasicInfoWidget flow={lgMatch ? 'row' : 'column'} details={basicDetails} name={token.symbol ?? 'N/A'} />
-          {/* todo all props below creationDate are incorrect and should be calucated on orion side */}
+          <CrtBasicInfoWidget
+            details={basicDetails}
+            name={token.symbol ?? 'N/A'}
+            symbol={token.symbol ?? 'N/A'}
+            avatar={token?.channel?.channel.avatarPhoto?.resolvedUrls?.[0]}
+            accountsNum={token?.accountsNum}
+            size={lgMatch ? 'large' : 'small'}
+            description={token?.description ?? ''}
+          />
           <CrtStatusWidget token={token} />
           {holdersData ? (
             <HoldersWidget

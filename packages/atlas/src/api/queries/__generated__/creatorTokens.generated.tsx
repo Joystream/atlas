@@ -5,7 +5,7 @@ import * as Types from './baseTypes.generated'
 import {
   BasicCreatorTokenFragmentDoc,
   BasicCreatorTokenHolderFragmentDoc,
-  FullAmmCurveFragmentDoc,
+  BasicRevenueShareFragmentDoc,
   FullCreatorTokenFragmentDoc,
 } from './fragments.generated'
 
@@ -29,6 +29,7 @@ export type GetBasicCreatorTokenQuery = {
     status: Types.TokenStatus
     createdAt: Date
     lastPrice?: string | null
+    revenueShares: Array<{ __typename?: 'RevenueShare'; id: string }>
     channel?: {
       __typename?: 'TokenChannel'
       channel: {
@@ -97,8 +98,8 @@ export type GetFullCreatorTokenQuery = {
   creatorTokenById?: {
     __typename?: 'CreatorToken'
     annualCreatorRewardPermill: number
-    description?: string | null
     revenueShareRatioPermill: number
+    description?: string | null
     totalSupply: string
     id: string
     accountsNum: number
@@ -148,6 +149,7 @@ export type GetFullCreatorTokenQuery = {
       finalized: boolean
       participantsNum: number
       startingAt: number
+      token: { __typename?: 'CreatorToken'; id: string; symbol?: string | null }
       stakers: Array<{
         __typename?: 'RevenueShareParticipation'
         id: string
@@ -264,6 +266,14 @@ export type GetCreatorTokenHoldersQuery = {
           | null
       } | null
     }
+    token: {
+      __typename?: 'CreatorToken'
+      id: string
+      symbol?: string | null
+      status: Types.TokenStatus
+      lastPrice?: string | null
+      channel?: { __typename?: 'TokenChannel'; id: string } | null
+    }
     vestingSchedules: Array<{
       __typename?: 'VestedAccount'
       totalVestingAmount: string
@@ -319,31 +329,31 @@ export type GetHistoricalTokenAllocationQuery = {
   }
 }
 
-export type GetFullAmmCurveQueryVariables = Types.Exact<{
-  where?: Types.InputMaybe<Types.AmmCurveWhereInput>
-  orderBy?: Types.InputMaybe<Array<Types.AmmCurveOrderByInput> | Types.AmmCurveOrderByInput>
+export type GetTokenRevenueSharesQueryVariables = Types.Exact<{
+  where?: Types.InputMaybe<Types.RevenueShareWhereInput>
   limit?: Types.InputMaybe<Types.Scalars['Int']>
   offset?: Types.InputMaybe<Types.Scalars['Int']>
 }>
 
-export type GetFullAmmCurveQuery = {
+export type GetTokenRevenueSharesQuery = {
   __typename?: 'Query'
-  ammCurves: Array<{
-    __typename?: 'AmmCurve'
+  revenueShares: Array<{
+    __typename?: 'RevenueShare'
     id: string
-    ammSlopeParameter: string
-    mintedByAmm: string
-    burnedByAmm: string
-    ammInitPrice: string
+    allocation: string
+    claimed: string
+    endsAt: number
+    createdIn: number
     finalized: boolean
-    transactions: Array<{
-      __typename?: 'AmmTransaction'
+    participantsNum: number
+    startingAt: number
+    token: { __typename?: 'CreatorToken'; id: string; symbol?: string | null }
+    stakers: Array<{
+      __typename?: 'RevenueShareParticipation'
       id: string
+      stakedAmount: string
+      earnings: string
       createdIn: number
-      pricePaid: string
-      pricePerUnit: string
-      transactionType: Types.AmmTransactionType
-      quantity: string
       account: { __typename?: 'TokenAccount'; member: { __typename?: 'Membership'; id: string } }
     }>
   }>
@@ -664,46 +674,54 @@ export type GetHistoricalTokenAllocationQueryResult = Apollo.QueryResult<
   GetHistoricalTokenAllocationQuery,
   GetHistoricalTokenAllocationQueryVariables
 >
-export const GetFullAmmCurveDocument = gql`
-  query GetFullAmmCurve($where: AmmCurveWhereInput, $orderBy: [AmmCurveOrderByInput!], $limit: Int, $offset: Int) {
-    ammCurves(where: $where, orderBy: $orderBy, offset: $offset, limit: $limit) {
-      ...FullAmmCurve
+export const GetTokenRevenueSharesDocument = gql`
+  query GetTokenRevenueShares($where: RevenueShareWhereInput, $limit: Int, $offset: Int) {
+    revenueShares(where: $where, limit: $limit, offset: $offset) {
+      ...BasicRevenueShare
     }
   }
-  ${FullAmmCurveFragmentDoc}
+  ${BasicRevenueShareFragmentDoc}
 `
 
 /**
- * __useGetFullAmmCurveQuery__
+ * __useGetTokenRevenueSharesQuery__
  *
- * To run a query within a React component, call `useGetFullAmmCurveQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetFullAmmCurveQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetTokenRevenueSharesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTokenRevenueSharesQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetFullAmmCurveQuery({
+ * const { data, loading, error } = useGetTokenRevenueSharesQuery({
  *   variables: {
  *      where: // value for 'where'
- *      orderBy: // value for 'orderBy'
  *      limit: // value for 'limit'
  *      offset: // value for 'offset'
  *   },
  * });
  */
-export function useGetFullAmmCurveQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetFullAmmCurveQuery, GetFullAmmCurveQueryVariables>
+export function useGetTokenRevenueSharesQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetTokenRevenueSharesQuery, GetTokenRevenueSharesQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetFullAmmCurveQuery, GetFullAmmCurveQueryVariables>(GetFullAmmCurveDocument, options)
+  return Apollo.useQuery<GetTokenRevenueSharesQuery, GetTokenRevenueSharesQueryVariables>(
+    GetTokenRevenueSharesDocument,
+    options
+  )
 }
-export function useGetFullAmmCurveLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetFullAmmCurveQuery, GetFullAmmCurveQueryVariables>
+export function useGetTokenRevenueSharesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetTokenRevenueSharesQuery, GetTokenRevenueSharesQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetFullAmmCurveQuery, GetFullAmmCurveQueryVariables>(GetFullAmmCurveDocument, options)
+  return Apollo.useLazyQuery<GetTokenRevenueSharesQuery, GetTokenRevenueSharesQueryVariables>(
+    GetTokenRevenueSharesDocument,
+    options
+  )
 }
-export type GetFullAmmCurveQueryHookResult = ReturnType<typeof useGetFullAmmCurveQuery>
-export type GetFullAmmCurveLazyQueryHookResult = ReturnType<typeof useGetFullAmmCurveLazyQuery>
-export type GetFullAmmCurveQueryResult = Apollo.QueryResult<GetFullAmmCurveQuery, GetFullAmmCurveQueryVariables>
+export type GetTokenRevenueSharesQueryHookResult = ReturnType<typeof useGetTokenRevenueSharesQuery>
+export type GetTokenRevenueSharesLazyQueryHookResult = ReturnType<typeof useGetTokenRevenueSharesLazyQuery>
+export type GetTokenRevenueSharesQueryResult = Apollo.QueryResult<
+  GetTokenRevenueSharesQuery,
+  GetTokenRevenueSharesQueryVariables
+>

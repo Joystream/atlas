@@ -112,7 +112,7 @@ export const JoystreamProvider: FC<PropsWithChildren> = ({ children }) => {
 }
 
 const useJoystreamUtilFns = () => {
-  const [tokenPrice, setTokenPrice] = useState<undefined>()
+  const [tokenPrice, setTokenPrice] = useState<number | undefined>()
 
   // fetch token price from the status server
   useEffect(() => {

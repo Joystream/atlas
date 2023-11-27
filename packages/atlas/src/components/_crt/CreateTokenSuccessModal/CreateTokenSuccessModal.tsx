@@ -9,32 +9,38 @@ import { Text } from '@/components/Text'
 import { TextButton } from '@/components/_buttons/Button'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { absoluteRoutes } from '@/config/routes'
+import { useUser } from '@/providers/user/user.hooks'
 import { cVar, media, sizes } from '@/styles'
 
 export type CreateTokenSuccessModalProps = {
   show: boolean
   tokenName: string
-  tokenId: string
 }
 export const CreateTokenSuccessModal = ({ tokenName, show }: CreateTokenSuccessModalProps) => {
   const navigate = useNavigate()
   const client = useApolloClient()
+  const { channelId } = useUser()
 
   return (
     <DialogModal
       show={show}
       primaryButton={{
         text: 'Go to dashboard',
-        onClick: () => navigate(absoluteRoutes.studio.crtDashboard()),
+        onClick: () => {
+          client.refetchQueries({ include: 'active' }).then(() => {
+            navigate(absoluteRoutes.studio.crtDashboard())
+          })
+        },
       }}
       additionalActionsNode={
         <TextButton
           variant="secondary"
           icon={<SvgActionNewTab />}
           iconPlacement="right"
+          disabled={!channelId}
           onClick={() => {
             client.refetchQueries({ include: 'active' }).then(() => {
-              navigate(absoluteRoutes.studio.crtDashboard())
+              navigate(absoluteRoutes.viewer.channel(channelId ?? '-1', { tab: 'Token' }))
             })
           }}
         >

@@ -264,20 +264,12 @@ type DetailsContentProps = {
   tileSize: TileSize | undefined
   withDenomination?: boolean
   denominationMultiplier?: number
+  customTicker?: string
+  withToken?: boolean
   tooltipText?: string
 }
 export const DetailsContent: FC<DetailsContentProps> = memo(
-  ({
-    tileSize,
-    denominationMultiplier,
-    caption,
-    icon,
-    content,
-    secondary,
-    avoidIconStyling,
-    withDenomination,
-    tooltipText,
-  }) => {
+  ({ tileSize, caption, icon, content, secondary, avoidIconStyling, tooltipText, ...numberFormatProps }) => {
     const getSize = () => {
       switch (tileSize) {
         case 'small':
@@ -309,13 +301,12 @@ export const DetailsContent: FC<DetailsContentProps> = memo(
           ) : BN.isBN(content) || typeof content === 'number' ? (
             <NumberFormat
               as="span"
+              {...numberFormatProps}
               icon={icon}
               value={content}
               format="short"
               variant={getSize().content}
               color={secondary ? 'colorText' : undefined}
-              withDenomination={withDenomination}
-              denominationMultiplier={denominationMultiplier}
             />
           ) : (
             content

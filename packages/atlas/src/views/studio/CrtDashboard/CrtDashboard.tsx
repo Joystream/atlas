@@ -6,6 +6,7 @@ import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Tabs } from '@/components/Tabs'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
+import { CloseMarketButton } from '@/components/_crt/CloseMarketButton'
 import { CloseRevenueShareButton } from '@/components/_crt/CloseRevenueShareButton'
 import { StartRevenueShare } from '@/components/_crt/StartRevenueShareModal/StartRevenueShareModal'
 import { StartSaleOrMarketButton } from '@/components/_crt/StartSaleOrMarketButton/StartSaleOrMarketButton'
@@ -17,7 +18,7 @@ import { CrtHoldersTab } from '@/views/studio/CrtDashboard/tabs/CrtHoldersTab'
 import { CrtMarketTab } from '@/views/studio/CrtDashboard/tabs/CrtMarketTab'
 import { CrtRevenueTab } from '@/views/studio/CrtDashboard/tabs/CrtRevenueTab'
 
-const TABS = ['Dashboard', 'Market', 'Holders', 'Revenue share', 'Settings'] as const
+import { TABS } from './CrtDashboard.types'
 
 export const CrtDashboard = () => {
   const [currentTab, setCurrentTab] = useState<number>(0)
@@ -41,12 +42,7 @@ export const CrtDashboard = () => {
   const activeRevenueShare = data.creatorTokenById.revenueShares.find((revenueShare) => !revenueShare.finalized)
 
   return (
-    <LimitedWidthContainer>
-      <StartRevenueShare
-        show={openRevenueShareModal}
-        token={data.creatorTokenById}
-        onClose={() => setOpenRevenueShareModal(false)}
-      />
+    <LimitedWidthContainer big>
       <MainContainer>
         <HeaderContainer>
           <Text variant="h700" as="h1">
@@ -69,22 +65,38 @@ export const CrtDashboard = () => {
               <Button to={absoluteRoutes.studio.crtTokenEdit()} variant="secondary" icon={<SvgActionEdit />}>
                 Edit token page
               </Button>
-              {!hasOpenMarket && <StartSaleOrMarketButton tokenName={data.creatorTokenById.symbol ?? 'N/A'} />}
+              {!hasOpenMarket ? (
+                <StartSaleOrMarketButton tokenName={data.creatorTokenById.symbol ?? 'N/A'} />
+              ) : (
+                <CloseMarketButton channelId={activeChannel?.id ?? '-1'} />
+              )}
             </>
           )}
           {currentTab === 2 && (
             <>
               {!activeRevenueShare ? (
-                <Button onClick={() => setOpenRevenueShareModal(true)} icon={<SvgActionRevenueShare />}>
-                  Start revenue share
-                </Button>
+                <>
+                  <Button onClick={() => setOpenRevenueShareModal(true)} icon={<SvgActionRevenueShare />}>
+                    Start revenue share
+                  </Button>
+                  <StartRevenueShare
+                    show={openRevenueShareModal}
+                    token={data.creatorTokenById}
+                    onClose={() => setOpenRevenueShareModal(false)}
+                  />
+                </>
               ) : (
                 <CloseRevenueShareButton revenueShare={activeRevenueShare} />
               )}
             </>
           )}
         </TabsContainer>
-        {currentTab === 0 && <CrtDashboardMainTab token={data.creatorTokenById} />}
+        {currentTab === 0 && (
+          <CrtDashboardMainTab
+            token={data.creatorTokenById}
+            onTabChange={(tabName) => setCurrentTab(mappedTabs.findIndex((tab) => tab.name === tabName))}
+          />
+        )}
         {currentTab === 1 && <CrtMarketTab token={data.creatorTokenById} />}
         {currentTab === 2 && <CrtHoldersTab token={data.creatorTokenById} />}
         {currentTab === 3 && <CrtRevenueTab token={data.creatorTokenById} />}

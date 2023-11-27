@@ -10,16 +10,20 @@ type FlexBoxProps = {
   justifyContent?: string
   equalChildren?: boolean
   width?: string | number
+  padding?: number
+  height?: string | number
 }
 
 export const FlexBox = styled.div<FlexBoxProps>`
   display: flex;
   ${(props) => css`
     gap: ${sizes(props.gap ?? 1)};
+    padding: ${sizes(props.padding ?? 0)};
     flex-direction: ${props.flow ?? 'row'};
     align-items: ${props.alignItems ?? 'start'};
     justify-content: ${props.justifyContent ?? 'start'};
     width: ${props.width ?? '100%'};
+    height: ${props.height ?? 'initial'};
   `}
 
   ${(props) =>
