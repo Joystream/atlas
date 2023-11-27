@@ -5,6 +5,7 @@ import * as Types from './baseTypes.generated'
 import {
   BasicChannelFieldsFragmentDoc,
   BasicMembershipFieldsFragmentDoc,
+  ChannelAvatarFieldsFragmentDoc,
   ExtendedBasicChannelFieldsFragmentDoc,
   ExtendedFullChannelFieldsFragmentDoc,
   FullChannelFieldsFragmentDoc,
@@ -754,7 +755,12 @@ export type GetChannelAvatarQuery = {
   __typename?: 'Query'
   channelById?: {
     __typename?: 'Channel'
-    avatarPhoto?: { __typename?: 'StorageDataObject'; resolvedUrls: Array<string>; isAccepted: boolean } | null
+    avatarPhoto?: {
+      __typename?: 'StorageDataObject'
+      resolvedUrls: Array<string>
+      isAccepted: boolean
+      storageBag: { __typename?: 'StorageBag'; id: string }
+    } | null
   } | null
 }
 
@@ -1570,15 +1576,10 @@ export const GetMostPaidChannelsDocument = gql`
       id
       title
       cumulativeReward
-      avatarPhoto {
-        resolvedUrls
-        isAccepted
-        storageBag {
-          id
-        }
-      }
+      ...ChannelAvatarFields
     }
   }
+  ${ChannelAvatarFieldsFragmentDoc}
 `
 
 /**
@@ -1701,12 +1702,10 @@ export type GetTopSellingChannelsFromThreePeriodsQueryResult = Apollo.QueryResul
 export const GetChannelAvatarDocument = gql`
   query GetChannelAvatar($id: String!) {
     channelById(id: $id) {
-      avatarPhoto {
-        resolvedUrls
-        isAccepted
-      }
+      ...ChannelAvatarFields
     }
   }
+  ${ChannelAvatarFieldsFragmentDoc}
 `
 
 /**

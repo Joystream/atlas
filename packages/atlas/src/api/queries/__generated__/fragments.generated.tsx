@@ -8,6 +8,16 @@ export type ExtendedVideoCategoryFieldsFragment = {
   category: { __typename?: 'VideoCategory'; id: string; name?: string | null }
 }
 
+export type ChannelAvatarFieldsFragment = {
+  __typename?: 'Channel'
+  avatarPhoto?: {
+    __typename?: 'StorageDataObject'
+    resolvedUrls: Array<string>
+    isAccepted: boolean
+    storageBag: { __typename?: 'StorageBag'; id: string }
+  } | null
+}
+
 export type BasicChannelFieldsFragment = {
   __typename?: 'Channel'
   id: string
@@ -2165,6 +2175,17 @@ export const ExtendedVideoCategoryFieldsFragmentDoc = gql`
       name
     }
     activeVideosCount
+  }
+`
+export const ChannelAvatarFieldsFragmentDoc = gql`
+  fragment ChannelAvatarFields on Channel {
+    avatarPhoto {
+      resolvedUrls
+      isAccepted
+      storageBag {
+        id
+      }
+    }
   }
 `
 export const StorageDataObjectFieldsFragmentDoc = gql`
