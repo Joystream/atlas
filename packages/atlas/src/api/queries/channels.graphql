@@ -301,13 +301,7 @@ query GetMostPaidChannels {
     id
     title
     cumulativeReward
-    avatarPhoto {
-      resolvedUrls
-      isAccepted
-      storageBag {
-        id
-      }
-    }
+    ...ChannelAvatarFields
   }
 }
 
@@ -339,9 +333,6 @@ query GetTopSellingChannelsFromThreePeriods($limit: Int!, $where: ExtendedChanne
 
 query GetChannelAvatar($id: String!) {
   channelById(id: $id) {
-    avatarPhoto {
-      resolvedUrls
-      isAccepted
-    }
+    ...ChannelAvatarFields
   }
 }
