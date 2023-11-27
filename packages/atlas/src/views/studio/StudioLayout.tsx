@@ -30,8 +30,10 @@ const StudioEntrypoint = lazy(() =>
   import('@/components/StudioEntrypoint').then((module) => ({ default: module.StudioEntrypoint }))
 )
 
-const NotificationsView = lazy(() =>
-  import('@/views/notifications').then((module) => ({ default: module.NotificationsView }))
+const ChannelNotificationsView = lazy(() =>
+  import('@/views/notifications/ChannelNotificationsView').then((module) => ({
+    default: module.ChannelNotificationsView,
+  }))
 )
 const CrtPreviewEditView = lazy(() =>
   import('@/views/studio/CrtPreviewEditView').then((module) => ({ default: module.CrtPreviewEditView }))
@@ -60,6 +62,7 @@ const YppDashboard = lazy(() => import('./YppDashboard').then((module) => ({ def
 const NotFoundView = lazy(() => import('../viewer/NotFoundView').then((module) => ({ default: module.NotFoundView })))
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
+const SIGN_IN_ROUTE = absoluteRoutes.studio.signIn()
 
 const locationToPageName = {
   '/channel/new': 'New channel',
@@ -167,55 +170,61 @@ const _StudioLayout = () => {
                 <Route
                   path={relativeRoutes.studio.signIn()}
                   element={
-                    <PrivateRoute element={<StudioWelcomeView />} isAuth={!channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                    <PrivateRoute
+                      element={<StudioWelcomeView />}
+                      showWhen={!channelSet}
+                      redirectTo={location.state?.redirectTo ?? ENTRY_POINT_ROUTE}
+                    />
                   }
                 />
                 <Route
                   path={relativeRoutes.studio.myChannel()}
                   element={
-                    <PrivateRoute element={<MyChannelView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                    <PrivateRoute element={<MyChannelView />} showWhen={channelSet} redirectTo={SIGN_IN_ROUTE} />
                   }
                 />
                 <Route
                   path={relativeRoutes.studio.uploads()}
                   element={
-                    <PrivateRoute element={<MyUploadsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                    <PrivateRoute element={<MyUploadsView />} showWhen={channelSet} redirectTo={SIGN_IN_ROUTE} />
                   }
                 />
                 <Route
                   path={relativeRoutes.studio.payments()}
                   element={
-                    <PrivateRoute element={<MyPaymentsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                    <PrivateRoute element={<MyPaymentsView />} showWhen={channelSet} redirectTo={SIGN_IN_ROUTE} />
                   }
                 />
                 <Route
                   path={relativeRoutes.studio.videos()}
-                  element={
-                    <PrivateRoute element={<MyVideosView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
-                  }
+                  element={<PrivateRoute element={<MyVideosView />} showWhen={channelSet} redirectTo={SIGN_IN_ROUTE} />}
                 />
                 <Route
                   path={relativeRoutes.studio.crtWelcome()}
                   element={
-                    <PrivateRoute element={<CrtWelcomeView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                    <PrivateRoute element={<CrtWelcomeView />} showWhen={channelSet} redirectTo={SIGN_IN_ROUTE} />
                   }
                 />
                 <Route
                   path={relativeRoutes.studio.crtTokenPreview()}
                   element={
-                    <PrivateRoute element={<CrtPreviewView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                    <PrivateRoute element={<CrtPreviewView />} showWhen={channelSet} redirectTo={SIGN_IN_ROUTE} />
                   }
                 />
                 <Route
                   path={relativeRoutes.studio.crtTokenPreviewEdit()}
                   element={
-                    <PrivateRoute element={<CrtPreviewEditView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                    <PrivateRoute element={<CrtPreviewEditView />} showWhen={channelSet} redirectTo={SIGN_IN_ROUTE} />
                   }
                 />
                 <Route
-                  path={relativeRoutes.studio.notifications()}
+                  path={relativeRoutes.studio.channelNotifications()}
                   element={
-                    <PrivateRoute element={<NotificationsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                    <PrivateRoute
+                      element={<ChannelNotificationsView />}
+                      showWhen={channelSet}
+                      redirectTo={SIGN_IN_ROUTE}
+                    />
                   }
                 />
                 {atlasConfig.features.ypp.googleConsoleClientId && (
@@ -225,8 +234,8 @@ const _StudioLayout = () => {
                       <PrivateRoute
                         isLoadingAuthData={isLoadingYPPData}
                         element={<YppDashboard />}
-                        isAuth={channelSet}
-                        redirectTo={ENTRY_POINT_ROUTE}
+                        showWhen={channelSet}
+                        redirectTo={SIGN_IN_ROUTE}
                       />
                     }
                   />

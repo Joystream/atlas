@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import { FullMembershipFieldsFragmentDoc } from './fragments.generated'
+import { FullMembershipFieldsFragmentDoc, StorageDataObjectFieldsFragmentDoc } from './fragments.generated'
 
 const defaultOptions = {} as const
 export type GetMembershipsQueryVariables = Types.Exact<{
@@ -96,6 +96,45 @@ export type GetMembershipsQuery = {
   }>
 }
 
+export type GetMembershipsAvatarQueryVariables = Types.Exact<{
+  where: Types.MembershipWhereInput
+  limit?: Types.InputMaybe<Types.Scalars['Int']>
+}>
+
+export type GetMembershipsAvatarQuery = {
+  __typename?: 'Query'
+  memberships: Array<{
+    __typename?: 'Membership'
+    metadata?: {
+      __typename?: 'MemberMetadata'
+      avatar?:
+        | {
+            __typename: 'AvatarObject'
+            avatarObject: {
+              __typename?: 'StorageDataObject'
+              id: string
+              resolvedUrls: Array<string>
+              createdAt: Date
+              size: string
+              isAccepted: boolean
+              ipfsHash: string
+              storageBag: { __typename?: 'StorageBag'; id: string }
+              type?:
+                | { __typename: 'DataObjectTypeChannelAvatar' }
+                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+                | { __typename: 'DataObjectTypeVideoMedia' }
+                | { __typename: 'DataObjectTypeVideoSubtitle' }
+                | { __typename: 'DataObjectTypeVideoThumbnail' }
+                | null
+            }
+          }
+        | { __typename: 'AvatarUri'; avatarUri: string }
+        | null
+    } | null
+  }>
+}
+
 export type GetChannelCountQueryVariables = Types.Exact<{
   where?: Types.InputMaybe<Types.ChannelWhereInput>
 }>
@@ -107,7 +146,7 @@ export type GetChannelCountQuery = {
 
 export const GetMembershipsDocument = gql`
   query GetMemberships($where: MembershipWhereInput!) {
-    memberships(where: $where, orderBy: [createdAt_ASC]) {
+    memberships(where: $where) {
       ...FullMembershipFields
     }
   }
@@ -145,9 +184,71 @@ export function useGetMembershipsLazyQuery(
 export type GetMembershipsQueryHookResult = ReturnType<typeof useGetMembershipsQuery>
 export type GetMembershipsLazyQueryHookResult = ReturnType<typeof useGetMembershipsLazyQuery>
 export type GetMembershipsQueryResult = Apollo.QueryResult<GetMembershipsQuery, GetMembershipsQueryVariables>
+export const GetMembershipsAvatarDocument = gql`
+  query GetMembershipsAvatar($where: MembershipWhereInput!, $limit: Int) {
+    memberships(where: $where, limit: $limit) {
+      metadata {
+        avatar {
+          __typename
+          ... on AvatarObject {
+            avatarObject {
+              ...StorageDataObjectFields
+            }
+          }
+          ... on AvatarUri {
+            avatarUri
+          }
+        }
+      }
+    }
+  }
+  ${StorageDataObjectFieldsFragmentDoc}
+`
+
+/**
+ * __useGetMembershipsAvatarQuery__
+ *
+ * To run a query within a React component, call `useGetMembershipsAvatarQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMembershipsAvatarQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMembershipsAvatarQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useGetMembershipsAvatarQuery(
+  baseOptions: Apollo.QueryHookOptions<GetMembershipsAvatarQuery, GetMembershipsAvatarQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetMembershipsAvatarQuery, GetMembershipsAvatarQueryVariables>(
+    GetMembershipsAvatarDocument,
+    options
+  )
+}
+export function useGetMembershipsAvatarLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetMembershipsAvatarQuery, GetMembershipsAvatarQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetMembershipsAvatarQuery, GetMembershipsAvatarQueryVariables>(
+    GetMembershipsAvatarDocument,
+    options
+  )
+}
+export type GetMembershipsAvatarQueryHookResult = ReturnType<typeof useGetMembershipsAvatarQuery>
+export type GetMembershipsAvatarLazyQueryHookResult = ReturnType<typeof useGetMembershipsAvatarLazyQuery>
+export type GetMembershipsAvatarQueryResult = Apollo.QueryResult<
+  GetMembershipsAvatarQuery,
+  GetMembershipsAvatarQueryVariables
+>
 export const GetChannelCountDocument = gql`
   query GetChannelCount($where: ChannelWhereInput) {
-    channelsConnection(where: $where, orderBy: [createdAt_ASC]) {
+    channelsConnection(where: $where, orderBy: [id_ASC]) {
       totalCount
     }
   }

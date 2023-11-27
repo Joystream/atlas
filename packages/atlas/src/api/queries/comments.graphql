@@ -10,7 +10,7 @@ query GetCommentRepliesConnection(
   $first: Int
   $after: String
   $parentCommentId: String! # CHANGE: ID is now `String`
-  $orderBy: [CommentOrderByInput!] = [createdAt_ASC]
+  $orderBy: [CommentOrderByInput!] = [id_ASC]
 ) {
   commentsConnection(
     first: $first
@@ -28,7 +28,6 @@ query GetCommentRepliesConnection(
       hasNextPage
       endCursor
     }
-    totalCount
   }
 }
 
@@ -79,7 +78,6 @@ query GetUserCommentsAndVideoCommentsConnection(
       hasNextPage
       endCursor
     }
-    totalCount
   }
 }
 

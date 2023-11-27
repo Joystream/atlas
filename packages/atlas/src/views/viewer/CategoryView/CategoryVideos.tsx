@@ -1,5 +1,6 @@
 import { FC, useRef } from 'react'
 
+import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import {
   GetBasicVideosConnectionDocument,
   GetBasicVideosConnectionQuery,
@@ -32,6 +33,7 @@ export const CategoryVideos: FC<CategoryVideosProps> = ({ categoriesId }) => {
           id_in: categoriesId,
         },
       },
+      orderBy: VideoOrderByInput.VideoRelevanceDesc,
     },
   })
 

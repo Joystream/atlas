@@ -3,13 +3,31 @@
 # query GetMembership(...) { ... }
 
 query GetMemberships($where: MembershipWhereInput!) {
-  memberships(where: $where, orderBy: [createdAt_ASC]) {
+  memberships(where: $where) {
     ...FullMembershipFields
   }
 }
 
+query GetMembershipsAvatar($where: MembershipWhereInput!, $limit: Int) {
+  memberships(where: $where, limit: $limit) {
+    metadata {
+      avatar {
+        __typename
+        ... on AvatarObject {
+          avatarObject {
+            ...StorageDataObjectFields
+          }
+        }
+        ... on AvatarUri {
+          avatarUri
+        }
+      }
+    }
+  }
+}
+
 query GetChannelCount($where: ChannelWhereInput) {
-  channelsConnection(where: $where, orderBy: [createdAt_ASC]) {
+  channelsConnection(where: $where, orderBy: [id_ASC]) {
     totalCount
   }
 }

@@ -1,1 +1,1 @@
-export * from './NotificationsView'
+export * from './MemberNotificationsView'

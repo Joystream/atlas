@@ -11,10 +11,12 @@ export type MemberSettingsTabs = 'Public profile' | 'Wallet' | 'Notifications'
 export type MemberTabs = 'NFTs' | 'Activity' | 'About'
 export type MyChannelTabs = 'General' | 'Notifications'
 
-const withQueryParameters = (basePath: string, query: Record<string, string> = {}) => {
+const withQueryParameters = (basePath: string, query: Record<string, string | boolean> = {}) => {
   if (Object.values(query).length) {
     const queryParams = new URLSearchParams()
-    Object.entries(query).map(([key, value]) => queryParams.set(key, value))
+    Object.entries(query).forEach(([key, value]) => {
+      if (typeof value !== 'undefined') queryParams.set(key, String(value))
+    })
     return `${basePath}?${queryParams.toString()}`
   }
   return basePath
@@ -26,17 +28,21 @@ export const relativeRoutes = {
   },
   viewer: {
     index: () => '',
+    signin: () => 'signin',
     discover: () => 'discover',
     category: (id = ':id') => `category/${id}`,
     search: (query?: { [QUERY_PARAMS.SEARCH]?: string }) => withQueryParameters('search', query),
     channel: (id = ':id') => `channel/${id}`,
     channels: () => 'channels',
-    video: (id = ':id', query?: { [QUERY_PARAMS.COMMENT_ID]?: string }) => withQueryParameters(`video/${id}`, query),
+    video: (id = ':id', query?: { [QUERY_PARAMS.COMMENT_ID]?: string; [QUERY_PARAMS.NFT_WIDGET]?: boolean }) =>
+      withQueryParameters(`video/${id}`, query),
     memberSettings: (query?: { [QUERY_PARAMS.TAB]?: MemberSettingsTabs }) =>
       withQueryParameters(`member/settings`, query),
     member: (handle = ':handle', query?: { [QUERY_PARAMS.TAB]?: MemberTabs }) =>
       withQueryParameters(`member/${handle}`, query),
-    notifications: () => 'notifications',
+    memberById: (id = ':id', query?: { [QUERY_PARAMS.TAB]?: MemberTabs }) =>
+      withQueryParameters(`member/id/${id}`, query),
+    memberNotifications: () => 'notifications/member',
     marketplace: () => 'marketplace',
     ypp: (query?: { [QUERY_PARAMS.REFERRER_ID]?: string }) => withQueryParameters('ypp', query),
     yppDashboard: () => 'ypp-dashboard',
@@ -58,7 +64,7 @@ export const relativeRoutes = {
     videoWorkspace: () => 'video-workspace',
     uploads: () => 'uploads',
     signIn: () => 'signin',
-    notifications: () => 'notifications',
+    channelNotifications: () => 'notifications/channel',
     payments: () => 'payments',
     yppDashboard: () => 'ypp/dashboard',
   },
@@ -91,4 +97,5 @@ export const QUERY_PARAMS = {
   COMMENT_ID: 'commentId',
   REFERRER_ID: 'referrerId',
   TAB: 'tab',
+  NFT_WIDGET: 'nftWidget',
 } as const

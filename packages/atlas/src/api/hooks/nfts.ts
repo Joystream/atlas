@@ -17,6 +17,7 @@ import {
   useGetFeaturedNftsVideosQuery,
   useGetNftQuery,
   useGetNftsConnectionQuery,
+  useGetNftsCountQuery,
   useGetNftsQuery,
 } from '@/api/queries/__generated__/nfts.generated'
 import {
@@ -154,7 +155,6 @@ export const useNftsConnection = (
 
   return {
     nfts: data?.ownedNftsConnection.edges.map(({ node }) => node),
-    totalCount: data?.ownedNftsConnection.totalCount,
     pageInfo: data?.ownedNftsConnection.pageInfo,
     ...rest,
   }
@@ -173,7 +173,7 @@ export const useNftHistory = (
 }
 
 export const useNfts = (baseOptions?: QueryHookOptions<GetNftsQuery, GetNftsQueryVariables>) => {
-  const { data: paginationData } = useGetNftsConnectionQuery({
+  const { data: paginationData } = useGetNftsCountQuery({
     variables: {
       ...baseOptions?.variables,
       where: baseOptions?.variables?.where,

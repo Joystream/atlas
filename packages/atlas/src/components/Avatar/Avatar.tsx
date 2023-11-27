@@ -5,6 +5,7 @@ import { validateImage } from '@/utils/image'
 
 import {
   AvatarSize,
+  BadgeContainer,
   ChildrenWrapper,
   Container,
   IconAndOverlayWrapper,
@@ -33,6 +34,7 @@ export type AvatarProps = PropsWithChildren<{
   editable?: boolean
   clickable?: boolean
   disableHoverDimm?: boolean
+  badge?: boolean | string | number
 }>
 
 export const Avatar: FC<AvatarProps> = ({
@@ -49,6 +51,7 @@ export const Avatar: FC<AvatarProps> = ({
   onClick,
   onImageValidation,
   disableHoverDimm,
+  badge,
 }) => {
   const isEditable = !loading && editable && size !== 32 && size !== 24
 
@@ -82,52 +85,54 @@ export const Avatar: FC<AvatarProps> = ({
   }, [size])
 
   return (
-    <Container
-      as={onClick ? 'button' : 'div'}
-      type={onClick ? 'button' : undefined}
-      onClick={onClick}
-      size={size}
-      className={className}
-      isLoading={loading}
-      disableHoverDimm={disableHoverDimm}
-      isClickable={clickable || (clickable == null && !!onClick)} // default to true if onClick is provided
-    >
-      {(clickable || !!onClick) && (
-        <IconAndOverlayWrapper>
-          <Overlay isEdit={isEditable && !!assetUrls} />
-          {isEditable &&
-            (assetUrls ? (
-              <StyledSvgActionEdit width={getEditableIconSize()} height={getEditableIconSize()} />
-            ) : (
-              <StyledSvgActionAddImage width={getEditableIconSize()} height={getEditableIconSize()} />
-            ))}
-        </IconAndOverlayWrapper>
-      )}
-      {!children &&
-        (newChannel && !isEditable ? (
-          <NewChannelAvatar>
-            <SvgActionNewChannel />
-          </NewChannelAvatar>
-        ) : hasAvatarUploadFailed ? (
-          <NewChannelAvatar>
-            <StyledSvgIllustrativeFileFailed />
-            {size === 136 && (
-              <Text variant="t100" as="span" margin={{ top: 2 }}>
-                Failed upload
-              </Text>
-            )}
-          </NewChannelAvatar>
-        ) : (
-          <StyledImage
-            resolvedUrls={assetUrls}
-            onError={onError}
-            isLoading={loading}
-            imagePlaceholder={<SilhouetteAvatar />}
-            type="avatar"
-          />
-        ))}
-      {children && (loading ? <StyledSkeletonLoader rounded /> : <ChildrenWrapper>{children}</ChildrenWrapper>)}
-    </Container>
+    <BadgeContainer data-badge={badge}>
+      <Container
+        as={onClick ? 'button' : 'div'}
+        type={onClick ? 'button' : undefined}
+        onClick={onClick}
+        size={size}
+        className={className}
+        isLoading={loading}
+        disableHoverDimm={disableHoverDimm}
+        isClickable={clickable || (clickable == null && !!onClick)} // default to true if onClick is provided
+      >
+        {(clickable || !!onClick) && (
+          <IconAndOverlayWrapper>
+            <Overlay isEdit={isEditable && !!assetUrls} />
+            {isEditable &&
+              (assetUrls ? (
+                <StyledSvgActionEdit width={getEditableIconSize()} height={getEditableIconSize()} />
+              ) : (
+                <StyledSvgActionAddImage width={getEditableIconSize()} height={getEditableIconSize()} />
+              ))}
+          </IconAndOverlayWrapper>
+        )}
+        {!children &&
+          (newChannel && !isEditable ? (
+            <NewChannelAvatar>
+              <SvgActionNewChannel />
+            </NewChannelAvatar>
+          ) : hasAvatarUploadFailed ? (
+            <NewChannelAvatar>
+              <StyledSvgIllustrativeFileFailed />
+              {size === 136 && (
+                <Text variant="t100" as="span" margin={{ top: 2 }}>
+                  Failed upload
+                </Text>
+              )}
+            </NewChannelAvatar>
+          ) : (
+            <StyledImage
+              resolvedUrls={assetUrls}
+              onError={onError}
+              isLoading={loading}
+              imagePlaceholder={<SilhouetteAvatar />}
+              type="avatar"
+            />
+          ))}
+        {children && (loading ? <StyledSkeletonLoader rounded /> : <ChildrenWrapper>{children}</ChildrenWrapper>)}
+      </Container>
+    </BadgeContainer>
   )
 }
 

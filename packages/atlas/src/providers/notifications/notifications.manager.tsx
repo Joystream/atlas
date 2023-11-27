@@ -5,36 +5,37 @@ import { atlasConfig } from '@/config'
 import { useNotifications } from './notifications.hooks'
 
 export const NotificationsManager: FC = () => {
-  const { fetchMore } = useNotifications()
+  const { fetchMore, unseenNotificationsCounts } = useNotifications()
 
   useEffect(() => {
     const id = setInterval(() => {
+      unseenNotificationsCounts.fetchMore()
       fetchMore({
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!Object.keys(prev).length) {
             return fetchMoreResult
           }
 
-          if (
-            prev.notificationsConnection.edges[0]?.node.event.id !==
-            fetchMoreResult.notificationsConnection.edges[0]?.node.event.id
-          ) {
-            const numberOfNewNotifications = fetchMoreResult.notificationsConnection.edges.findIndex(
-              (node) => node.node.event.id === prev.notificationsConnection.edges[0]?.node.event.id
-            )
-            return {
-              ...prev,
-              notificationsConnection: {
-                ...prev.notificationsConnection,
-                edges: [
-                  ...fetchMoreResult.notificationsConnection.edges.slice(0, numberOfNewNotifications),
-                  ...prev.notificationsConnection.edges,
-                ],
-              },
-            }
+          const prevNotifs = prev.notificationsConnection.edges
+          const nextNotifs = fetchMoreResult.notificationsConnection.edges
+
+          const prevFirstNotif = prevNotifs[0]?.node
+          if (!prevFirstNotif) {
+            return fetchMoreResult
           }
 
-          return prev
+          if (prevFirstNotif.id === nextNotifs[0]?.node.id) {
+            return prev
+          }
+
+          const indexMatch = nextNotifs.findIndex(({ node }) => node.id === prevFirstNotif.id)
+          const numberOfNewNotifications = indexMatch === -1 ? nextNotifs.length : indexMatch
+          const edges = [...nextNotifs.slice(0, numberOfNewNotifications), ...prevNotifs]
+
+          return {
+            ...prev,
+            notificationsConnection: { ...prev.notificationsConnection, edges },
+          }
         },
       })
     }, atlasConfig.features.notifications.pollingInterval)
@@ -42,7 +43,8 @@ export const NotificationsManager: FC = () => {
     return () => {
       clearInterval(id)
     }
-  }, [fetchMore])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetchMore, unseenNotificationsCounts.fetchMore])
 
   return null
 }

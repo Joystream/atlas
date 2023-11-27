@@ -16,6 +16,7 @@ import { useMutation } from 'react-query'
 import { useLocation } from 'react-router'
 
 import { axiosInstance } from '@/api/axios'
+import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import {
   GetAvailableStorageBucketsForBagDocument,
   GetAvailableStorageBucketsForBagQuery,
@@ -24,7 +25,7 @@ import {
   GetStorageBucketsWithBagsQuery,
   GetStorageBucketsWithBagsQueryVariables,
 } from '@/api/queries/__generated__/storage.generated'
-import { useGetBasicVideoActivityLazyQuery } from '@/api/queries/__generated__/videos.generated'
+import { useGetBasicVideoActivityQuery } from '@/api/queries/__generated__/videos.generated'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
@@ -52,7 +53,17 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
   const [storageOperatorsError, setStorageOperatorsError] = useState<unknown>(null)
   const failedStorageOperatorIds = useRef<string[]>([])
   const userBenchmarkTime = useRef<number | null>(null)
-  const [getBasicVideoActivity] = useGetBasicVideoActivityLazyQuery()
+  const { data: benchmarkData } = useGetBasicVideoActivityQuery({
+    variables: {
+      limit: 20,
+      orderBy: [VideoOrderByInput.VideoRelevanceDesc],
+      where: {
+        thumbnailPhoto: {
+          isAccepted_eq: true,
+        },
+      },
+    },
+  })
   const {
     coordinates,
     expiry,
@@ -151,19 +162,19 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
 
   useMountEffect(() => {
     const initBenchmark = async () => {
-      const { data } = await getBasicVideoActivity({
-        variables: {
-          limit: 20,
-          where: {
-            thumbnailPhoto: {
-              isAccepted_eq: true,
-            },
-          },
-        },
-      })
-
-      const thumbnail = data?.videos
-        ? data?.videos[Math.floor(Math.random() * data.videos.length)].thumbnailPhoto
+      // const { data } = await getBasicVideoActivity({
+      //   variables: {
+      //     limit: 20,
+      //     where: {
+      //       thumbnailPhoto: {
+      //         isAccepted_eq: true,
+      //       },
+      //     },
+      //   },
+      // })
+      //
+      const thumbnail = benchmarkData?.videos
+        ? benchmarkData?.videos[Math.floor(Math.random() * benchmarkData.videos.length)].thumbnailPhoto
         : undefined
 
       if (thumbnail) {

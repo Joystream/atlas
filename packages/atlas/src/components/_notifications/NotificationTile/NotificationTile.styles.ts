@@ -3,7 +3,6 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { ListItem } from '@/components/ListItem'
-import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, sizes } from '@/styles'
 
 type Variant = 'default' | 'compact'
@@ -35,15 +34,11 @@ const getNotificationWrapperStyles = ({ read, selected, loading }: NotificationW
   }
 
   return css`
-    background-color: ${cVar('colorBackgroundMuted')};
-
-    :hover {
-      background-color: ${cVar('colorBackground')};
-    }
+    background-color: ${cVar('colorBackground')};
   `
 }
 
-const getReadNotificationVariant = ({ read, variant, loading }: NotificationWrapperProps) =>
+const getReadNotificationVariant = ({ read, loading }: NotificationWrapperProps) =>
   !read &&
   !loading &&
   css`
@@ -51,11 +46,12 @@ const getReadNotificationVariant = ({ read, variant, loading }: NotificationWrap
       content: '';
       display: block;
       position: absolute;
-      left: 0;
-      top: 0;
-      width: ${variant === 'default' ? 4 : 2}px;
-      height: 100%;
-      background-color: ${cVar('colorBackgroundPrimary')};
+      left: 5px;
+      top: calc(50% - 4px);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: ${cVar('colorBackgroundPrimaryStrong')};
     }
   `
 
@@ -69,7 +65,7 @@ export const Wrapper = styled(Link, { shouldForwardProp: shouldForwardWrapperPro
   text-decoration: none;
   align-items: center;
   position: relative;
-  padding: ${({ variant }) => (variant === 'default' ? sizes(4) : `${sizes(2)} ${sizes(4)}`)};
+  padding: ${sizes(4)};
   padding-left: ${({ variant }) => variant === 'default' && sizes(5)};
   transition: background-color ${cVar('animationTransitionFast')};
 `
@@ -78,16 +74,8 @@ export const Title = styled.div`
   margin-bottom: ${sizes(0.5)};
 `
 
-export const AvatarWrapper = styled.div`
-  margin: 0 ${sizes(4)};
-`
-
 export const Content = styled.div`
   width: 100%;
-`
-
-export const CheckboxSkeleton = styled(SkeletonLoader)`
-  border-radius: 2px;
 `
 
 type StyledListItemProps = {
@@ -96,19 +84,14 @@ type StyledListItemProps = {
   loading?: boolean
 }
 
-const getListItemStyles = ({ read, loading }: StyledListItemProps) => {
+const getListItemStyles = ({ loading }: StyledListItemProps) => {
   if (loading) {
     return
   }
-  if (!read) {
-    return css`
-      background-color: ${cVar('colorBackgroundMutedAlpha')};
-
-      :hover {
-        background-color: ${cVar('colorBackgroundStrong')};
-      }
-    `
-  }
+  return css`
+    background-color: transparent;
+    padding: ${sizes(4)};
+  `
 }
 
 export const StyledListItem = styled(ListItem)<StyledListItemProps>`
@@ -116,8 +99,59 @@ export const StyledListItem = styled(ListItem)<StyledListItemProps>`
   ${getListItemStyles};
 
   position: relative;
+  box-shadow: ${cVar('effectDividersTop')};
+
+  :hover {
+    .kebab-button {
+      opacity: 1;
+    }
+  }
 `
 
 export const StyledLink = styled(Link)`
   text-decoration: none;
+`
+
+export const IconWrapper = styled.div`
+  position: relative;
+  padding-right: ${sizes(2)};
+`
+
+export const IconContainer = styled.div<{ color: 'red' | 'blue' | 'green' | 'gray' }>`
+  position: absolute;
+  width: 24px;
+  border-radius: 50%;
+  height: 24px;
+  bottom: 0;
+  right: 0;
+  box-shadow: 0 0 0 1px ${cVar('colorCoreNeutral700')};
+  display: grid;
+  place-items: center;
+
+  ${(props) => {
+    switch (props.color) {
+      case 'blue':
+        return css`
+          background-color: ${cVar('colorBackgroundPrimaryStrong')};
+        `
+      case 'red':
+        return css`
+          background-color: ${cVar('colorBackgroundError')};
+        `
+      case 'green':
+        return css`
+          background-color: ${cVar('colorBackgroundSuccessStrong')};
+        `
+      case 'gray':
+      default:
+        return css`
+          background-color: ${cVar('colorBorderStrong')};
+        `
+    }
+  }}
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
 `

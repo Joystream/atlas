@@ -62,7 +62,6 @@ export const useCommentRepliesConnection = (
 
   return {
     replies: mappedComments || [],
-    totalCount: data?.commentsConnection.totalCount || 0,
     pageInfo: data?.commentsConnection.pageInfo,
     ...rest,
   }
@@ -88,7 +87,6 @@ export const useCommentSectionComments = (
   return {
     userComments,
     comments: data ? [...(userComments || []), ...(videoComments || [])] : undefined,
-    totalCount: data?.videoCommentsConnection?.totalCount,
     loading: loading,
     pageInfo: data?.videoCommentsConnection?.pageInfo,
     ...rest,
