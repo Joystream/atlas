@@ -476,7 +476,12 @@ analytics:
 
 legal:
   crtTnc: |
-    This is a temporary placeholder for the Creator Tokens Terms and Conditions. The final version will be added here soon.
+    By buying this token:
+    - You have right to own it, hold it, sell it and transfer to any other wallet.
+    - You can sell your token to the AMM if the AMM becomes enabled at any moment. 
+    
+    Holders rights:
+    Proin urna volutpat pharetra, tellus. Quam purus integer tempus habitant volutpat pellentesque.
   termsOfService: |
     # Terms of Service
 

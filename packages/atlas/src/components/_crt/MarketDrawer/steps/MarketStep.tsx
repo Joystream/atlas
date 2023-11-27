@@ -49,7 +49,7 @@ export const MarketStep: FC<MarketStepProps> = ({
     defaultValues: formDefaultValue,
   })
 
-  const priceWatch = watch('price')
+  const priceWatch = Math.max(0, watch('price'))
 
   useEffect(() => {
     handlePriceChange(priceWatch)
@@ -75,9 +75,8 @@ export const MarketStep: FC<MarketStepProps> = ({
   })
 
   const isChecked = watch('isChecked')
-  const price = watch('price')
 
-  const tokenInUsd = (price || 0) * (tokenPrice || 0)
+  const tokenInUsd = (priceWatch || 0) * (tokenPrice || 0)
 
   const handleGoToNextStep = useCallback(() => {
     handleSubmit((data) => {
