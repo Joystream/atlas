@@ -5,9 +5,10 @@ import { BreakpointKey, Grid, media, sizes } from '@/styles'
 
 export type GridWrapperProps = {
   grid?: Grid
+  gap?: number
 }
 
-const createGridBreakpoints = ({ grid = { xxs: { columns: 'auto', minItemWidth: 300 } } }: GridWrapperProps) => {
+const createGridBreakpoints = ({ grid = { xxs: { columns: 'auto', minItemWidth: 300 } }, gap }: GridWrapperProps) => {
   const gridKeys = Object.keys(grid) as Array<BreakpointKey>
 
   const styles = gridKeys.map((key) => {
@@ -20,6 +21,13 @@ const createGridBreakpoints = ({ grid = { xxs: { columns: 'auto', minItemWidth: 
       }
     `
   })
+
+  if (gap) {
+    styles.push(css`
+      gap: ${sizes(gap)}!important;
+    `)
+  }
+
   return styles
 }
 

@@ -5,6 +5,7 @@ import * as Types from './baseTypes.generated'
 import {
   BasicChannelFieldsFragmentDoc,
   BasicMembershipFieldsFragmentDoc,
+  ChannelAvatarFieldsFragmentDoc,
   ExtendedBasicChannelFieldsFragmentDoc,
   ExtendedFullChannelFieldsFragmentDoc,
   FullChannelFieldsFragmentDoc,
@@ -473,6 +474,7 @@ export type GetPayloadDataByCommitmentQuery = {
       | { __typename?: 'BidMadeCompletingAuctionEventData' }
       | { __typename?: 'BuyNowCanceledEventData' }
       | { __typename?: 'BuyNowPriceUpdatedEventData' }
+      | { __typename?: 'ChannelCreatedEventData' }
       | { __typename?: 'ChannelFundsWithdrawnEventData' }
       | { __typename?: 'ChannelPaymentMadeEventData' }
       | {
@@ -499,6 +501,7 @@ export type GetPayloadDataByCommitmentQuery = {
       | { __typename?: 'ChannelRewardClaimedAndWithdrawnEventData' }
       | { __typename?: 'ChannelRewardClaimedEventData' }
       | { __typename?: 'CommentCreatedEventData' }
+      | { __typename?: 'CommentReactionEventData' }
       | { __typename?: 'CommentTextUpdatedEventData' }
       | { __typename?: 'EnglishAuctionSettledEventData' }
       | { __typename?: 'EnglishAuctionStartedEventData' }
@@ -506,9 +509,12 @@ export type GetPayloadDataByCommitmentQuery = {
       | { __typename?: 'MetaprotocolTransactionStatusEventData' }
       | { __typename?: 'NftBoughtEventData' }
       | { __typename?: 'NftIssuedEventData' }
+      | { __typename?: 'NftOfferedEventData' }
       | { __typename?: 'NftSellOrderMadeEventData' }
       | { __typename?: 'OpenAuctionBidAcceptedEventData' }
       | { __typename?: 'OpenAuctionStartedEventData' }
+      | { __typename?: 'VideoCreatedEventData' }
+      | { __typename?: 'VideoReactionEventData' }
   }>
 }
 
@@ -543,6 +549,7 @@ export type GetChannelPaymentEventsQuery = {
         }
       | { __typename: 'BuyNowCanceledEventData' }
       | { __typename: 'BuyNowPriceUpdatedEventData' }
+      | { __typename: 'ChannelCreatedEventData' }
       | {
           __typename: 'ChannelFundsWithdrawnEventData'
           amount: string
@@ -561,6 +568,7 @@ export type GetChannelPaymentEventsQuery = {
       | { __typename: 'ChannelRewardClaimedAndWithdrawnEventData' }
       | { __typename: 'ChannelRewardClaimedEventData'; amount: string }
       | { __typename: 'CommentCreatedEventData' }
+      | { __typename: 'CommentReactionEventData' }
       | { __typename: 'CommentTextUpdatedEventData' }
       | {
           __typename: 'EnglishAuctionSettledEventData'
@@ -591,6 +599,7 @@ export type GetChannelPaymentEventsQuery = {
           previousNftOwner: { __typename: 'NftOwnerChannel' } | { __typename: 'NftOwnerMember' }
         }
       | { __typename: 'NftIssuedEventData' }
+      | { __typename: 'NftOfferedEventData' }
       | { __typename: 'NftSellOrderMadeEventData' }
       | {
           __typename: 'OpenAuctionBidAcceptedEventData'
@@ -607,6 +616,8 @@ export type GetChannelPaymentEventsQuery = {
           previousNftOwner: { __typename: 'NftOwnerChannel' } | { __typename: 'NftOwnerMember' }
         }
       | { __typename: 'OpenAuctionStartedEventData' }
+      | { __typename: 'VideoCreatedEventData' }
+      | { __typename: 'VideoReactionEventData' }
   }>
 }
 
@@ -736,6 +747,23 @@ export type GetTopSellingChannelsFromThreePeriodsQuery = {
   }>
 }
 
+export type GetChannelAvatarQueryVariables = Types.Exact<{
+  id: Types.Scalars['String']
+}>
+
+export type GetChannelAvatarQuery = {
+  __typename?: 'Query'
+  channelById?: {
+    __typename?: 'Channel'
+    avatarPhoto?: {
+      __typename?: 'StorageDataObject'
+      resolvedUrls: Array<string>
+      isAccepted: boolean
+      storageBag: { __typename?: 'StorageBag'; id: string }
+    } | null
+  } | null
+}
+
 export const GetFullChannelDocument = gql`
   query GetFullChannel($id: String!) {
     channelById(id: $id) {
@@ -780,7 +808,7 @@ export const GetExtendedBasicChannelsDocument = gql`
   query GetExtendedBasicChannels(
     $where: ExtendedChannelWhereInput
     $limit: Int = 50
-    $orderBy: [ChannelOrderByInput!] = [createdAt_DESC]
+    $orderBy: [ChannelOrderByInput!]
   ) {
     extendedChannels(where: $where, orderBy: $orderBy, limit: $limit) {
       ...ExtendedBasicChannelFields
@@ -832,11 +860,7 @@ export type GetExtendedBasicChannelsQueryResult = Apollo.QueryResult<
   GetExtendedBasicChannelsQueryVariables
 >
 export const GetExtendedFullChannelsDocument = gql`
-  query GetExtendedFullChannels(
-    $where: ExtendedChannelWhereInput
-    $limit: Int = 50
-    $orderBy: [ChannelOrderByInput!] = [createdAt_DESC]
-  ) {
+  query GetExtendedFullChannels($where: ExtendedChannelWhereInput, $limit: Int = 50, $orderBy: [ChannelOrderByInput!]) {
     extendedChannels(where: $where, orderBy: $orderBy, limit: $limit) {
       ...ExtendedFullChannelFields
     }
@@ -891,7 +915,7 @@ export const GetBasicChannelsConnectionDocument = gql`
     $first: Int
     $after: String
     $where: ChannelWhereInput
-    $orderBy: [ChannelOrderByInput!] = [createdAt_DESC]
+    $orderBy: [ChannelOrderByInput!] = [id_DESC]
   ) {
     channelsConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
       edges {
@@ -1548,15 +1572,10 @@ export const GetMostPaidChannelsDocument = gql`
       id
       title
       cumulativeReward
-      avatarPhoto {
-        resolvedUrls
-        isAccepted
-        storageBag {
-          id
-        }
-      }
+      ...ChannelAvatarFields
     }
   }
+  ${ChannelAvatarFieldsFragmentDoc}
 `
 
 /**
@@ -1676,3 +1695,43 @@ export type GetTopSellingChannelsFromThreePeriodsQueryResult = Apollo.QueryResul
   GetTopSellingChannelsFromThreePeriodsQuery,
   GetTopSellingChannelsFromThreePeriodsQueryVariables
 >
+export const GetChannelAvatarDocument = gql`
+  query GetChannelAvatar($id: String!) {
+    channelById(id: $id) {
+      ...ChannelAvatarFields
+    }
+  }
+  ${ChannelAvatarFieldsFragmentDoc}
+`
+
+/**
+ * __useGetChannelAvatarQuery__
+ *
+ * To run a query within a React component, call `useGetChannelAvatarQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetChannelAvatarQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetChannelAvatarQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetChannelAvatarQuery(
+  baseOptions: Apollo.QueryHookOptions<GetChannelAvatarQuery, GetChannelAvatarQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetChannelAvatarQuery, GetChannelAvatarQueryVariables>(GetChannelAvatarDocument, options)
+}
+export function useGetChannelAvatarLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetChannelAvatarQuery, GetChannelAvatarQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetChannelAvatarQuery, GetChannelAvatarQueryVariables>(GetChannelAvatarDocument, options)
+}
+export type GetChannelAvatarQueryHookResult = ReturnType<typeof useGetChannelAvatarQuery>
+export type GetChannelAvatarLazyQueryHookResult = ReturnType<typeof useGetChannelAvatarLazyQuery>
+export type GetChannelAvatarQueryResult = Apollo.QueryResult<GetChannelAvatarQuery, GetChannelAvatarQueryVariables>

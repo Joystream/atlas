@@ -1,53 +1,61 @@
 import BN from 'bn.js'
 
-import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+export type NotificationRecord = { id: string; date: Date; read: boolean } & NotificationData
+export type NotificationData =
+  // Members
+  | { type: 'ChannelCreated'; channelId: string; channelTitle: string }
+  | {
+      type: 'CommentReply'
+      memberId: string
+      memberHandle: string
+      videoId: string
+      videoTitle: string
+      commentId: string
+    }
+  | {
+      type: 'ReactionToComment'
+      memberId: string
+      memberHandle: string
+      videoId: string
+      videoTitle: string
+      commentId: string
+    }
+  | { type: 'VideoPosted'; channelId: string; channelTitle: string; videoId: string; videoTitle: string }
+  | { type: 'NewNftOnSale'; channelId: string; channelTitle: string; videoId: string; videoTitle: string }
+  | { type: 'NewAuction'; channelId: string; channelTitle: string; videoId: string; videoTitle: string }
+  | { type: 'HigherBidPlaced'; newBidderId: string; newBidderHandle: string; videoId: string; videoTitle: string }
+  | { type: 'AuctionWon'; auction: AuctionType; videoId: string; videoTitle: string }
+  | { type: 'AuctionLost'; auction: AuctionType; videoId: string; videoTitle: string }
 
-export type NftNotificationRecord = {
-  id: string
-  date: Date
-  block: number
-  video: {
-    id: string
-    title: string
-  }
-  member?: BasicMembershipFieldsFragment | null
-}
-export type NotificationRecord = { read?: boolean } & (
-  | ({
-      type: 'bid-made'
-      bidAmount: BN
-      member: BasicMembershipFieldsFragment
-    } & NftNotificationRecord)
-  | ({
-      type: 'bought'
-      price: BN
-      member: BasicMembershipFieldsFragment
-    } & NftNotificationRecord)
-  | ({
-      type: 'bid-accepted'
-      member: BasicMembershipFieldsFragment | null
-      bidAmount: BN
-    } & NftNotificationRecord)
-  | ({
-      type: 'got-outbid'
-      member: BasicMembershipFieldsFragment
-      bidAmount: BN
-    } & NftNotificationRecord)
-  | ({
-      type: 'auction-settled-owner'
-    } & NftNotificationRecord)
-  | ({
-      type: 'auction-settled-winner'
-    } & NftNotificationRecord)
-  | ({
-      type: 'auction-ended'
-    } & NftNotificationRecord)
-  | ({
-      type: 'video-commented'
+  // Channels
+  | { type: 'ChannelExcluded' }
+  | { type: 'ChannelFundsWithdrawn'; amount: BN }
+  | { type: 'ChannelSuspended' }
+  | { type: 'ChannelVerified' }
+  | {
+      type: 'CommentPostedToVideo'
+      memberId: string
+      memberHandle: string
+      videoId: string
+      videoTitle: string
       commentId: string
-    } & NftNotificationRecord)
-  | ({
-      type: 'comment-reply'
-      commentId: string
-    } & NftNotificationRecord)
-)
+    }
+  | {
+      type: 'CreatorReceivesAuctionBid'
+      amount: BN
+      bidderId: string
+      bidderHandle: string
+      videoId: string
+      videoTitle: string
+    }
+  | { type: 'DirectChannelPaymentByMember'; amount: BN; payerId: string; payerHandle: string }
+  // | { type: 'EnglishAuctionSettled'; price: BN; videoId: string; videoTitle: string }
+  | { type: 'NewChannelFollower'; followerId: string; followerHandle: string }
+  | { type: 'NftFeaturedOnMarketPlace'; videoId: string; videoTitle: string }
+  | { type: 'NftPurchased'; buyerId: string; buyerHandle: string; price: BN; videoTitle: string; videoId: string }
+  | { type: 'NftRoyaltyPaid'; amount: BN; videoId: string; videoTitle: string }
+  | { type: 'VideoLiked'; memberId: string; memberHandle: string; videoId: string; videoTitle: string }
+  | { type: 'VideoDisliked'; memberId: string; memberHandle: string; videoId: string; videoTitle: string }
+  | { type: 'VideoExcluded'; videoTitle: string }
+
+type AuctionType = 'AuctionTypeEnglish' | 'AuctionTypeOpen'

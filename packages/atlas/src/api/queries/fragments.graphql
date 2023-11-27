@@ -7,6 +7,16 @@ fragment ExtendedVideoCategoryFields on ExtendedVideoCategory {
   activeVideosCount
 }
 
+fragment ChannelAvatarFields on Channel {
+  avatarPhoto {
+    resolvedUrls
+    isAccepted
+    storageBag {
+      id
+    }
+  }
+}
+
 fragment BasicChannelFields on Channel {
   id
   title

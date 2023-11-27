@@ -1,4 +1,5 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 
 import { SvgActionAddChannel, SvgActionMember, SvgActionPlay } from '@/assets/icons'
 import { Text } from '@/components/Text'
@@ -20,11 +21,19 @@ export type Membership = {
 }
 
 export const StudioWelcomeView: FC = () => {
+  const location = useLocation()
   const { isLoggedIn } = useUser()
   const mdMatch = useMediaMatch('md')
   const {
     actions: { setAuthModalOpenName },
   } = useAuthStore()
+
+  useEffect(() => {
+    if (location.state?.['redirectTo']) {
+      setAuthModalOpenName(getCorrectLoginModal())
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <WelcomeView

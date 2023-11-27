@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { animated } from 'react-spring'
 
 import { Avatar } from '@/components/Avatar'
+import { smallBadgeStyles } from '@/components/Badge'
 import { Text } from '@/components/Text'
 import { cVar, sizes } from '@/styles'
 
@@ -151,4 +152,13 @@ export const AnimatedSectionContainer = styled(animated(SectionContainer))`
 export const MemberHandleText = styled(Text)`
   word-break: break-word;
   display: block;
+`
+
+export const Badge = styled.div`
+  position: relative;
+  ${smallBadgeStyles};
+
+  &[data-badge]::after {
+    position: relative;
+  }
 `

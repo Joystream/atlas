@@ -9,6 +9,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useAuth } from '@/providers/auth/auth.hooks'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useSubscribeAccountBalance } from '@/providers/joystream'
+import { UseNotifications } from '@/providers/notifications/notifications.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { transitions } from '@/styles'
 
@@ -19,6 +20,7 @@ import { MemberDropdownNav } from './MemberDropdownNav'
 import { SendFundsDialog } from '../SendTransferDialogs'
 
 export type MemberDropdownProps = {
+  unseenNotificationsCounts?: UseNotifications['unseenNotificationsCounts']
   isActive: boolean
   publisher?: boolean
   closeDropdown?: () => void
@@ -26,7 +28,7 @@ export type MemberDropdownProps = {
 }
 
 export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
-  ({ publisher, isActive, closeDropdown, onChannelChange }, ref) => {
+  ({ publisher, unseenNotificationsCounts, isActive, closeDropdown, onChannelChange }, ref) => {
     const navigate = useNavigate()
     const { channelId, activeMembership, memberships, setActiveChannel, activeChannel } = useUser()
     const { handleLogout } = useAuth()
@@ -157,6 +159,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                     <MemberDropdownNav
                       containerRefElement={containerRef.current}
                       channelId={channelId}
+                      unseenNotificationsCounts={unseenNotificationsCounts}
                       onSignOut={handleLogout}
                       onShowFundsDialog={() =>
                         dropdownType === 'channel' ? setShowWithdrawDialog(true) : setShowSendDialog(true)
@@ -184,6 +187,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                   >
                     <MemberDropdownList
                       channelId={channelId}
+                      channelNotificationCounts={unseenNotificationsCounts?.channels?.channels}
                       activeMembership={activeMembership}
                       onChannelChange={handleChannelChange}
                       onAddNewChannel={handleAddNewChannel}

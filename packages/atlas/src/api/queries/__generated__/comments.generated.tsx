@@ -73,7 +73,6 @@ export type GetCommentRepliesConnectionQuery = {
   __typename?: 'Query'
   commentsConnection: {
     __typename?: 'CommentsConnection'
-    totalCount: number
     edges: Array<{
       __typename?: 'CommentEdge'
       cursor: string
@@ -192,7 +191,6 @@ export type GetUserCommentsAndVideoCommentsConnectionQuery = {
   }>
   videoCommentsConnection: {
     __typename?: 'CommentsConnection'
-    totalCount: number
     edges: Array<{
       __typename?: 'CommentEdge'
       cursor: string
@@ -281,12 +279,14 @@ export type GetCommentEditsQuery = {
       | { __typename?: 'BidMadeCompletingAuctionEventData' }
       | { __typename?: 'BuyNowCanceledEventData' }
       | { __typename?: 'BuyNowPriceUpdatedEventData' }
+      | { __typename?: 'ChannelCreatedEventData' }
       | { __typename?: 'ChannelFundsWithdrawnEventData' }
       | { __typename?: 'ChannelPaymentMadeEventData' }
       | { __typename?: 'ChannelPayoutsUpdatedEventData' }
       | { __typename?: 'ChannelRewardClaimedAndWithdrawnEventData' }
       | { __typename?: 'ChannelRewardClaimedEventData' }
       | { __typename?: 'CommentCreatedEventData'; text: string }
+      | { __typename?: 'CommentReactionEventData' }
       | { __typename?: 'CommentTextUpdatedEventData'; newText: string }
       | { __typename?: 'EnglishAuctionSettledEventData' }
       | { __typename?: 'EnglishAuctionStartedEventData' }
@@ -294,9 +294,12 @@ export type GetCommentEditsQuery = {
       | { __typename?: 'MetaprotocolTransactionStatusEventData' }
       | { __typename?: 'NftBoughtEventData' }
       | { __typename?: 'NftIssuedEventData' }
+      | { __typename?: 'NftOfferedEventData' }
       | { __typename?: 'NftSellOrderMadeEventData' }
       | { __typename?: 'OpenAuctionBidAcceptedEventData' }
       | { __typename?: 'OpenAuctionStartedEventData' }
+      | { __typename?: 'VideoCreatedEventData' }
+      | { __typename?: 'VideoReactionEventData' }
   }>
 }
 
@@ -343,7 +346,7 @@ export const GetCommentRepliesConnectionDocument = gql`
     $first: Int
     $after: String
     $parentCommentId: String!
-    $orderBy: [CommentOrderByInput!] = [createdAt_ASC]
+    $orderBy: [CommentOrderByInput!] = [id_ASC]
   ) {
     commentsConnection(
       first: $first
@@ -361,7 +364,6 @@ export const GetCommentRepliesConnectionDocument = gql`
         hasNextPage
         endCursor
       }
-      totalCount
     }
   }
   ${CommentFieldsFragmentDoc}
@@ -455,7 +457,6 @@ export const GetUserCommentsAndVideoCommentsConnectionDocument = gql`
         hasNextPage
         endCursor
       }
-      totalCount
     }
   }
   ${CommentFieldsFragmentDoc}

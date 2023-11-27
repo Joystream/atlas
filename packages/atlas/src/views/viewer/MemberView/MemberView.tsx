@@ -3,7 +3,11 @@ import { useNavigate, useParams } from 'react-router'
 import { useSearchParams } from 'react-router-dom'
 
 import { useMemberships } from '@/api/hooks/membership'
-import { NftActivityOrderByInput, OwnedNftOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
+import {
+  MembershipWhereInput,
+  NftActivityOrderByInput,
+  OwnedNftOrderByInput,
+} from '@/api/queries/__generated__/baseTypes.generated'
 import { FallbackContainer } from '@/components/AllNftSection'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
@@ -47,22 +51,23 @@ export const MemberView: FC = () => {
   const navigate = useNavigate()
   const [currentTab, setCurrentTab] = useState<typeof TABS[number] | null>(null)
   const { memberId } = useUser()
-  const { handle } = useParams()
+  const { handle, id } = useParams()
   const headTags = useHeadTags(handle)
 
+  const whereMember: MembershipWhereInput = id ? { id_eq: id } : { handle_eq: handle }
   const {
     memberships,
     error,
     loading: loadingMember,
   } = useMemberships(
-    { where: { handle_eq: handle } },
+    { where: whereMember },
     {
       // We're using network-only here, because for some reason the cache is not returning results after user creates membership.
       fetchPolicy: 'network-only',
       onError: (error) => SentryLogger.error('Failed to fetch memberships', 'ActiveUserProvider', error),
     }
   )
-  const member = memberships?.find((member) => member.handle === handle)
+  const member = handle ? memberships?.find((member) => member.handle === handle) : memberships?.[0]
   const { urls: avatarUrls, isLoadingAsset: avatarLoading } = getMemberAvatar(member)
 
   const {
@@ -82,18 +87,14 @@ export const MemberView: FC = () => {
               owner: {
                 isTypeOf_eq: 'NftOwnerChannel',
                 channel: {
-                  ownerMember: {
-                    handle_eq: handle,
-                  },
+                  ownerMember: whereMember,
                 },
               },
             },
             {
               owner: {
                 isTypeOf_eq: 'NftOwnerMember',
-                member: {
-                  handle_eq: handle,
-                },
+                member: whereMember,
               },
             },
           ],
@@ -104,7 +105,9 @@ export const MemberView: FC = () => {
   })
 
   const handleSetCurrentTab = async (tab: number) => {
-    navigate(absoluteRoutes.viewer.member(handle, { tab: TABS[tab] }))
+    const query = { tab: TABS[tab] }
+    const route = id ? absoluteRoutes.viewer.memberById(id, query) : absoluteRoutes.viewer.member(handle, query)
+    navigate(route)
   }
 
   const mappedTabs = TABS.map((tab) => ({
@@ -135,11 +138,11 @@ export const MemberView: FC = () => {
       case 'Activity':
         return [<MemberActivity key="member-activity" memberId={member?.id} sort={sortByTimestamp} />]
       case 'About':
-        return [<MemberAbout key="member-about" />]
+        return [<MemberAbout key="member-about" member={member} loading={loadingMember} />]
       default:
         return [<div key="empty" />]
     }
-  }, [clearFilters, currentTab, hasAppliedFilters, member?.id, sortByTimestamp, tiles])
+  }, [clearFilters, currentTab, hasAppliedFilters, member, loadingMember, sortByTimestamp, tiles])
 
   const gridColumns = useMemo(() => {
     switch (currentTab) {

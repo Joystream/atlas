@@ -23,8 +23,8 @@ import { RoutingState } from '@/types/routing'
 const YppLandingView = lazy(() =>
   import('@/views/global/YppLandingView').then((module) => ({ default: module.YppLandingView }))
 )
-const NotificationsView = lazy(() =>
-  import('@/views/notifications').then((module) => ({ default: module.NotificationsView }))
+const MemberNotificationsView = lazy(() =>
+  import('@/views/notifications').then((module) => ({ default: module.MemberNotificationsView }))
 )
 const CategoryView = lazy(() => import('./CategoryView').then((module) => ({ default: module.CategoryView })))
 const ChannelView = lazy(() => import('./ChannelView').then((module) => ({ default: module.ChannelView })))
@@ -49,6 +49,7 @@ const viewerRoutes = [
   { path: relativeRoutes.viewer.channels(), element: <ChannelsView /> },
   { path: relativeRoutes.viewer.channel(), element: <ChannelView /> },
   { path: relativeRoutes.viewer.category(), element: <CategoryView /> },
+  { path: relativeRoutes.viewer.memberById(), element: <MemberView /> },
   { path: relativeRoutes.viewer.member(), element: <MemberView /> },
   { path: relativeRoutes.viewer.marketplace(), element: <MarketplaceView /> },
   ...(atlasConfig.features.ypp.googleConsoleClientId
@@ -58,6 +59,7 @@ const viewerRoutes = [
 ]
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.viewer.index()
+const SIGN_IN_ROUTE = absoluteRoutes.viewer.signin()
 
 const locationToPageName = {
   '/discover': 'Discover',
@@ -162,22 +164,32 @@ export const ViewerLayout: FC = () => {
                     <Route key={route.path} {...route} />
                   ))}
                   <Route
-                    path={relativeRoutes.viewer.memberSettings()}
+                    path={relativeRoutes.viewer.signin()}
                     element={
                       <PrivateRoute
-                        isAuth={isLoggedIn}
-                        element={<MembershipSettingsView />}
-                        redirectTo={ENTRY_POINT_ROUTE}
+                        element={<HomeView />}
+                        showWhen={!isLoggedIn}
+                        redirectTo={location.state?.redirectTo ?? ENTRY_POINT_ROUTE}
                       />
                     }
                   />
                   <Route
-                    path={absoluteRoutes.viewer.notifications()}
+                    path={relativeRoutes.viewer.memberSettings()}
                     element={
                       <PrivateRoute
-                        isAuth={isLoggedIn}
-                        element={<NotificationsView />}
-                        redirectTo={ENTRY_POINT_ROUTE}
+                        showWhen={isLoggedIn}
+                        element={<MembershipSettingsView />}
+                        redirectTo={SIGN_IN_ROUTE}
+                      />
+                    }
+                  />
+                  <Route
+                    path={absoluteRoutes.viewer.memberNotifications()}
+                    element={
+                      <PrivateRoute
+                        showWhen={isLoggedIn}
+                        element={<MemberNotificationsView />}
+                        redirectTo={SIGN_IN_ROUTE}
                       />
                     }
                   />

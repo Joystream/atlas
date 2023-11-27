@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
 
 import { LayoutGrid } from '@/components/LayoutGrid'
-import { Pill } from '@/components/Pill'
+import { Button } from '@/components/_buttons/Button'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { NotificationTile } from '@/components/_notifications/NotificationTile'
-import { cVar, media, sizes, zIndex } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 export const StyledLayoutGrid = styled(LayoutGrid)`
   padding-top: ${sizes(12)};
@@ -21,22 +21,15 @@ export const Header = styled.div`
   }
 `
 
-export const StyledPill = styled(Pill)`
-  margin-left: ${sizes(4)};
-`
-
-export const MarkAllReadWrapper = styled.div`
-  flex-basis: 100%;
-  margin-top: ${sizes(6)};
-
-  ${media.sm} {
-    flex-basis: unset;
-    margin-top: 0;
-    margin-left: auto;
-  }
+export const KebabButton = styled(Button)`
+  margin-top: 0;
+  margin-left: auto;
 `
 
 export const StyledNotificationTile = styled(NotificationTile)`
+  background-color: ${cVar('colorBackgroundMuted')};
+  box-shadow: none;
+
   :not(:last-of-type) {
     margin-bottom: ${sizes(2)};
   }
@@ -54,6 +47,19 @@ export const StyledNotificationLoader = styled(SkeletonLoader)`
 
   :not(:last-of-type) {
     margin-bottom: ${sizes(2)};
+  }
+`
+
+export const TitleContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: ${sizes(1)};
+
+  ${media.sm} {
+    align-items: center;
+    flex-direction: row;
+    gap: ${sizes(4)};
   }
 `
 
@@ -76,37 +82,4 @@ export const NotificationEmptyRectangleWithText = styled.div`
   align-items: center;
   position: relative;
   margin-bottom: ${sizes(2)};
-`
-
-export const FloatingActionBar = styled.div<{ 'data-bottom-nav-open'?: boolean }>`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  background: ${cVar('colorBackgroundStrong')};
-  z-index: ${zIndex.overlay};
-  padding: ${sizes(2)};
-  width: 303px;
-  position: fixed;
-  top: calc(100vh - ${sizes(8)});
-  left: 50%;
-  transform: translate(-50%, -100%);
-  transition: all ${cVar('animationTransitionSlow')};
-
-  &[data-bottom-nav-open='true'] {
-    top: calc(100vh - ${sizes(24)});
-  }
-
-  ${media.sm} {
-    justify-content: unset;
-    width: unset;
-    display: grid;
-    grid-auto-columns: max-content;
-    grid-auto-flow: column;
-    padding: ${sizes(4)} ${sizes(8)};
-
-    button:not(:last-child) {
-      margin-right: ${sizes(4)};
-    }
-  }
 `
