@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 
 import { FullAmmCurveFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgActionArrowBottom, SvgActionArrowTop } from '@/assets/icons'
+import { SvgEmptyStateIllustration } from '@/assets/illustrations'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Pill } from '@/components/Pill'
 import { Table, TableProps } from '@/components/Table'
@@ -17,6 +18,12 @@ const COLUMNS: TableProps['columns'] = [
   { Header: 'Quantity', accessor: 'quantity' },
   { Header: 'Amount', accessor: 'amount' },
 ]
+
+const tableEmptyState = {
+  title: 'No transactions made yet',
+  description: 'When any member make a transaction on your market you will see the record here',
+  icon: <SvgEmptyStateIllustration />,
+}
 
 type AmmTransactionsTableProps = {
   data: FullAmmCurveFragment['transactions']
@@ -41,7 +48,9 @@ export const AmmTransactionsTable = ({ data }: AmmTransactionsTableProps) => {
     [data]
   )
 
-  return <StyledTable title="Market transactions" data={mappedData ?? []} columns={COLUMNS} />
+  return (
+    <StyledTable title="Market transactions" data={mappedData ?? []} columns={COLUMNS} emptyState={tableEmptyState} />
+  )
 }
 
 const StyledTable = styled(Table)`

@@ -91,15 +91,21 @@ export const CrtDashboard = () => {
             </>
           )}
         </TabsContainer>
-        {currentTab === 0 && (
+        {currentTab === mappedTabs.findIndex((tab) => tab.name === 'Dashboard') && (
           <CrtDashboardMainTab
             token={data.creatorTokenById}
             onTabChange={(tabName) => setCurrentTab(mappedTabs.findIndex((tab) => tab.name === tabName))}
           />
         )}
-        {currentTab === 1 && <CrtMarketTab token={data.creatorTokenById} />}
-        {currentTab === 2 && <CrtHoldersTab token={data.creatorTokenById} />}
-        {currentTab === 3 && <CrtRevenueTab token={data.creatorTokenById} />}
+        {currentTab === mappedTabs.findIndex((tab) => tab.name === 'Market') && (
+          <CrtMarketTab token={data.creatorTokenById} />
+        )}
+        {currentTab === mappedTabs.findIndex((tab) => tab.name === 'Holders') && (
+          <CrtHoldersTab token={data.creatorTokenById} />
+        )}
+        {currentTab === mappedTabs.findIndex((tab) => tab.name === 'Revenue share') && (
+          <CrtRevenueTab token={data.creatorTokenById} />
+        )}
       </MainContainer>
     </LimitedWidthContainer>
   )
