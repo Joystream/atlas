@@ -124,7 +124,7 @@ export const EndingOverlay: FC<EndingOverlayProps> = ({
               navigate(absoluteRoutes.viewer.video(randomNextVideo.id))
             }}
           >
-            <VideoThumbnail resolvedUrls={thumbnailUrls} type="video" />
+            <VideoThumbnail resolvedUrls={thumbnailUrls} type="thumbnail" />
             <VideoInfo>
               <Text as="span" variant={mdMatch ? 't300' : 't200'} color="colorText">
                 Up next
