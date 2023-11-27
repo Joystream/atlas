@@ -12,9 +12,10 @@ import { useFee, useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { sizes } from '@/styles'
+import { pluralizeNoun } from '@/utils/misc'
 import { formatNumber } from '@/utils/number'
 
-import { cliffOptions, getDataBasedOnType, vestingOptions } from './TokenIssuanceStep/TokenIssuanceStep.utils'
+import { getDataBasedOnType } from './TokenIssuanceStep/TokenIssuanceStep.utils'
 import { CommonStepProps } from './types'
 
 const cliffBanner = (
@@ -151,40 +152,40 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: Tok
             </Text>
           </SectionRow>
         )}
-        {form.cliff && (
+        {typeof cliff !== 'object' && (
           <>
             <SectionRow
               title="Cliff"
               tooltipText="Cliff is a period of time that locks your channel tokens from being sold or transferred."
             >
               <Text variant="h300" as="p" color="colorTextStrong">
-                {cliffOptions.find((opt) => opt.value === form.cliff)?.name}
+                {Number(cliff) === 0 ? 'No vesting' : pluralizeNoun(Number(cliff), 'month')}
               </Text>
             </SectionRow>
             {cliffBanner}
           </>
         )}
-        {form.vesting && (
+        {typeof vesting !== 'object' && (
           <SectionRow
             title="Vesting period"
             tooltipText="All tokens minted that are not part of the first payout get unlocked gradually over the course of the vesting period. Vesting period starts after the cliff has passed."
           >
             <Text variant="h300" as="p" color="colorTextStrong">
-              {vestingOptions.find((opt) => opt.value === form.vesting)?.name}
+              {Number(vesting) === 0 ? 'No vesting' : pluralizeNoun(Number(vesting), 'month')}
             </Text>
           </SectionRow>
         )}
-        {!!(form.creatorIssueAmount && form.firstPayout) && (
+        {!!(form.creatorIssueAmount && payout) && (
           <SectionRow
             title="First payout"
             tooltipText="A portion of your own tokens that will be released to you right after cliff period."
           >
             <RowBox gap={2}>
               <Text variant="h300" as="p" color="colorText">
-                ({formatNumber((form.creatorIssueAmount * form.firstPayout) / 100)} ${form.name})
+                ({formatNumber((form.creatorIssueAmount * payout) / 100)} ${form.name})
               </Text>
               <Text variant="h300" as="p" color="colorTextStrong">
-                {form.firstPayout}%
+                {payout}%
               </Text>
             </RowBox>
           </SectionRow>
