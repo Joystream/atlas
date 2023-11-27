@@ -7,12 +7,7 @@ query GetNft($id: String!) {
 }
 
 # No changes
-query GetNfts(
-  $where: OwnedNftWhereInput
-  $orderBy: [OwnedNftOrderByInput!] = [createdAt_DESC]
-  $limit: Int
-  $offset: Int
-) {
+query GetNfts($where: OwnedNftWhereInput, $orderBy: [OwnedNftOrderByInput!], $limit: Int, $offset: Int) {
   ownedNfts(where: $where, orderBy: $orderBy, limit: $limit, offset: $offset) {
     ...FullNftFields
   }
@@ -21,7 +16,7 @@ query GetNfts(
 # No changes
 query GetNftsConnection(
   $where: OwnedNftWhereInput
-  $orderBy: [OwnedNftOrderByInput!] = [createdAt_DESC]
+  $orderBy: [OwnedNftOrderByInput!] = [id_DESC]
   $first: Int
   $after: String
 ) {
@@ -36,15 +31,16 @@ query GetNftsConnection(
       hasNextPage
       endCursor
     }
+  }
+}
+
+query GetNftsCount($where: OwnedNftWhereInput) {
+  ownedNftsConnection(where: $where, orderBy: [id_ASC]) {
     totalCount
   }
 }
 
-query GetFeaturedNftsVideos(
-  $limit: Int
-  $where: OwnedNftWhereInput
-  $orderBy: [OwnedNftOrderByInput!] = [createdAt_DESC]
-) {
+query GetFeaturedNftsVideos($limit: Int, $where: OwnedNftWhereInput, $orderBy: [OwnedNftOrderByInput!]) {
   ownedNfts(limit: $limit, orderBy: $orderBy, where: $where) {
     ...FullNftFields
     video {

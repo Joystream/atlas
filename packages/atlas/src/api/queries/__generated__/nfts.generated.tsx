@@ -659,7 +659,6 @@ export type GetNftsConnectionQuery = {
   __typename?: 'Query'
   ownedNftsConnection: {
     __typename?: 'OwnedNftsConnection'
-    totalCount: number
     edges: Array<{
       __typename?: 'OwnedNftEdge'
       cursor: string
@@ -976,6 +975,15 @@ export type GetNftsConnectionQuery = {
     }>
     pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor: string }
   }
+}
+
+export type GetNftsCountQueryVariables = Types.Exact<{
+  where?: Types.InputMaybe<Types.OwnedNftWhereInput>
+}>
+
+export type GetNftsCountQuery = {
+  __typename?: 'Query'
+  ownedNftsConnection: { __typename?: 'OwnedNftsConnection'; totalCount: number }
 }
 
 export type GetFeaturedNftsVideosQueryVariables = Types.Exact<{
@@ -1363,12 +1371,7 @@ export type GetNftQueryHookResult = ReturnType<typeof useGetNftQuery>
 export type GetNftLazyQueryHookResult = ReturnType<typeof useGetNftLazyQuery>
 export type GetNftQueryResult = Apollo.QueryResult<GetNftQuery, GetNftQueryVariables>
 export const GetNftsDocument = gql`
-  query GetNfts(
-    $where: OwnedNftWhereInput
-    $orderBy: [OwnedNftOrderByInput!] = [createdAt_DESC]
-    $limit: Int
-    $offset: Int
-  ) {
+  query GetNfts($where: OwnedNftWhereInput, $orderBy: [OwnedNftOrderByInput!], $limit: Int, $offset: Int) {
     ownedNfts(where: $where, orderBy: $orderBy, limit: $limit, offset: $offset) {
       ...FullNftFields
     }
@@ -1409,7 +1412,7 @@ export type GetNftsQueryResult = Apollo.QueryResult<GetNftsQuery, GetNftsQueryVa
 export const GetNftsConnectionDocument = gql`
   query GetNftsConnection(
     $where: OwnedNftWhereInput
-    $orderBy: [OwnedNftOrderByInput!] = [createdAt_DESC]
+    $orderBy: [OwnedNftOrderByInput!] = [id_DESC]
     $first: Int
     $after: String
   ) {
@@ -1424,7 +1427,6 @@ export const GetNftsConnectionDocument = gql`
         hasNextPage
         endCursor
       }
-      totalCount
     }
   }
   ${FullNftFieldsFragmentDoc}
@@ -1467,12 +1469,47 @@ export function useGetNftsConnectionLazyQuery(
 export type GetNftsConnectionQueryHookResult = ReturnType<typeof useGetNftsConnectionQuery>
 export type GetNftsConnectionLazyQueryHookResult = ReturnType<typeof useGetNftsConnectionLazyQuery>
 export type GetNftsConnectionQueryResult = Apollo.QueryResult<GetNftsConnectionQuery, GetNftsConnectionQueryVariables>
+export const GetNftsCountDocument = gql`
+  query GetNftsCount($where: OwnedNftWhereInput) {
+    ownedNftsConnection(where: $where, orderBy: [id_ASC]) {
+      totalCount
+    }
+  }
+`
+
+/**
+ * __useGetNftsCountQuery__
+ *
+ * To run a query within a React component, call `useGetNftsCountQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetNftsCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetNftsCountQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetNftsCountQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetNftsCountQuery, GetNftsCountQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetNftsCountQuery, GetNftsCountQueryVariables>(GetNftsCountDocument, options)
+}
+export function useGetNftsCountLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetNftsCountQuery, GetNftsCountQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetNftsCountQuery, GetNftsCountQueryVariables>(GetNftsCountDocument, options)
+}
+export type GetNftsCountQueryHookResult = ReturnType<typeof useGetNftsCountQuery>
+export type GetNftsCountLazyQueryHookResult = ReturnType<typeof useGetNftsCountLazyQuery>
+export type GetNftsCountQueryResult = Apollo.QueryResult<GetNftsCountQuery, GetNftsCountQueryVariables>
 export const GetFeaturedNftsVideosDocument = gql`
-  query GetFeaturedNftsVideos(
-    $limit: Int
-    $where: OwnedNftWhereInput
-    $orderBy: [OwnedNftOrderByInput!] = [createdAt_DESC]
-  ) {
+  query GetFeaturedNftsVideos($limit: Int, $where: OwnedNftWhereInput, $orderBy: [OwnedNftOrderByInput!]) {
     ownedNfts(limit: $limit, orderBy: $orderBy, where: $where) {
       ...FullNftFields
       video {
