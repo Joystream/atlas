@@ -13,6 +13,7 @@ import { RevenueShareProgress } from '@/components/_crt/RevenueShareParticipatio
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
+import { permillToPercentage } from '@/utils/number'
 import { formatDateTime, formatDurationShort } from '@/utils/time'
 
 import { CloseRevenueButton, CustomPill, EmptyStateBox, StakersBox, StyledPill } from './CrtRevenueShareWidget.styles'
@@ -72,7 +73,8 @@ export const CrtRevenueShareWidget = ({ token, onTabSwitch }: CrtHoldersWidgetPr
                 REVENUE SHARE RATIO
               </Text>
               <Text variant="h400" as="p">
-                Channel {token.revenueShareRatioPermill}%, Holders {100 - token.revenueShareRatioPermill}%
+                Channel {permillToPercentage(token.revenueShareRatioPermill)}%, Holders{' '}
+                {100 - permillToPercentage(token.revenueShareRatioPermill)}%
               </Text>
             </FlexBox>
           </FlexBox>
