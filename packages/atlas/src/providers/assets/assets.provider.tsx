@@ -102,7 +102,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
       GetStorageBucketsWithBagsQueryVariables
     >({
       query: GetStorageBucketsWithBagsDocument,
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'no-cache',
     })
     const userCoordinates = await getUserCoordinates()
 
@@ -162,17 +162,6 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
 
   useMountEffect(() => {
     const initBenchmark = async () => {
-      // const { data } = await getBasicVideoActivity({
-      //   variables: {
-      //     limit: 20,
-      //     where: {
-      //       thumbnailPhoto: {
-      //         isAccepted_eq: true,
-      //       },
-      //     },
-      //   },
-      // })
-      //
       const thumbnail = benchmarkData?.videos
         ? benchmarkData?.videos[Math.floor(Math.random() * benchmarkData.videos.length)].thumbnailPhoto
         : undefined
