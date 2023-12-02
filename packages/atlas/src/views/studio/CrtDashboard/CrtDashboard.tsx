@@ -25,7 +25,7 @@ export const CrtDashboard = () => {
   const { activeChannel } = useUser()
   const { data } = useGetFullCreatorTokenQuery({
     variables: {
-      id: activeChannel?.creatorToken?.token.id ?? '',
+      id: '18', //activeChannel?.creatorToken?.token.id ?? '',
     },
   })
   const handleChangeTab = useCallback((idx: number) => {

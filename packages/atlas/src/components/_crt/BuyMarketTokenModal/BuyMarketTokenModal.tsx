@@ -39,7 +39,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
   const { control, watch, handleSubmit, reset, formState } = useForm<{ tokens: number }>()
   const tokens = watch('tokens') || 0
   const { fullFee } = useFee('purchaseTokenOnMarketTx', ['1', '1', String(tokens ?? 0), '1000000'])
-  const { data } = useGetFullCreatorTokenQuery({
+  const { data, loading } = useGetFullCreatorTokenQuery({
     variables: {
       id: tokenId,
     },
@@ -251,7 +251,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
     }
   }, [activeStep, data?.creatorTokenById?.symbol, handleSubmit, onTransactionSubmit])
 
-  if (!currentAmm && show) {
+  if (!loading && !currentAmm && show) {
     throw new Error('BuyAmmModal invoked on token without active amm')
   }
 

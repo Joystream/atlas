@@ -223,6 +223,12 @@ const numberCompactFormatter = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 2,
 })
 
+const numberIntFormatter = new Intl.NumberFormat('en-US', {
+  notation: 'compact',
+  compactDisplay: 'short',
+  maximumFractionDigits: 0,
+})
+
 const dollarSmallNumberFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
@@ -232,6 +238,10 @@ const dollarSmallNumberFormatter = new Intl.NumberFormat('en-US', {
 
 export const formatNumberShort = (num: number): string => {
   return numberCompactFormatter.format(num).replaceAll(',', ' ')
+}
+
+export const formatNumberShortInt = (num: number): string => {
+  return numberIntFormatter.format(num).replaceAll(',', ' ')
 }
 
 const formatDollars = (num: number) => dollarSmallNumberFormatter.format(num).replaceAll(',', ' ')

@@ -27,7 +27,7 @@ export const CrtHoldersTab = ({ token }: CrtHoldersTabProps) => {
         ? data.tokenAccounts.map((holder) => ({
             member: holder.member,
             tokenId: token.id,
-            allocation: Math.round((+holder.totalAmount / +token.totalSupply) * 100),
+            allocation: (+holder.totalAmount / +token.totalSupply) * 100,
             total: +holder.totalAmount,
             vested: +(
               holder.vestingSchedules.find(
