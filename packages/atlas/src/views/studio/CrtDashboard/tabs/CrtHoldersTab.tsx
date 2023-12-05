@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 
+import { TokenAccountOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { useGetCreatorTokenHoldersQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { HoldersTable } from '@/components/_crt/HoldersTable/HoldersTable'
@@ -18,6 +19,7 @@ export const CrtHoldersTab = ({ token }: CrtHoldersTabProps) => {
           id_eq: token.id,
         },
       },
+      orderBy: TokenAccountOrderByInput.TotalAmountDesc,
     },
   })
 

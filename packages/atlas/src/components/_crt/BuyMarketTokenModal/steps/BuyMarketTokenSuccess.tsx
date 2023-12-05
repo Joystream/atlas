@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import { FC } from 'react'
 
 import confettiAnimation from '@/assets/animations/confetti.json'
@@ -9,6 +10,7 @@ import {
   IllustrationWrapper,
   LottieContainer,
 } from '@/components/_auth/SignUpModal/SignUpSteps/SignUpSuccessStep/SignUpSuccessStep.styles'
+import { AnimatedCoin } from '@/components/_crt/AnimatedCoin/AnimatedCoin'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMountEffect } from '@/hooks/useMountEffect'
 
@@ -32,7 +34,7 @@ export const BuyMarketTokenSuccess: FC<SignUpSuccessStepProps> = ({ tokenName, s
   return (
     <>
       <IllustrationWrapper>
-        <AppKV />
+        <AppKV customNode={<StyledAnimatedCoin />} />
         {!smMatch && (
           <LottieContainer>
             <LottiePlayer
@@ -57,3 +59,7 @@ export const BuyMarketTokenSuccess: FC<SignUpSuccessStepProps> = ({ tokenName, s
     </>
   )
 }
+
+const StyledAnimatedCoin = styled(AnimatedCoin)`
+  position: absolute;
+`
