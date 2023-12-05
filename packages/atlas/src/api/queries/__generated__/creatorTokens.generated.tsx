@@ -293,6 +293,15 @@ export type GetCreatorTokenHoldersQuery = {
   }>
 }
 
+export type GetCreatorTokenHoldersCountQueryVariables = Types.Exact<{
+  where?: Types.InputMaybe<Types.TokenAccountWhereInput>
+}>
+
+export type GetCreatorTokenHoldersCountQuery = {
+  __typename?: 'Query'
+  tokenAccountsConnection: { __typename?: 'TokenAccountsConnection'; totalCount: number }
+}
+
 export type GetChannelTokenBalanceQueryVariables = Types.Exact<{
   currentBlockHeight: Types.Scalars['Int']
   memberId: Types.Scalars['String']
@@ -521,6 +530,54 @@ export type GetCreatorTokenHoldersLazyQueryHookResult = ReturnType<typeof useGet
 export type GetCreatorTokenHoldersQueryResult = Apollo.QueryResult<
   GetCreatorTokenHoldersQuery,
   GetCreatorTokenHoldersQueryVariables
+>
+export const GetCreatorTokenHoldersCountDocument = gql`
+  query GetCreatorTokenHoldersCount($where: TokenAccountWhereInput) {
+    tokenAccountsConnection(where: $where, orderBy: [id_ASC]) {
+      totalCount
+    }
+  }
+`
+
+/**
+ * __useGetCreatorTokenHoldersCountQuery__
+ *
+ * To run a query within a React component, call `useGetCreatorTokenHoldersCountQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCreatorTokenHoldersCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCreatorTokenHoldersCountQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetCreatorTokenHoldersCountQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetCreatorTokenHoldersCountQuery, GetCreatorTokenHoldersCountQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetCreatorTokenHoldersCountQuery, GetCreatorTokenHoldersCountQueryVariables>(
+    GetCreatorTokenHoldersCountDocument,
+    options
+  )
+}
+export function useGetCreatorTokenHoldersCountLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetCreatorTokenHoldersCountQuery, GetCreatorTokenHoldersCountQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetCreatorTokenHoldersCountQuery, GetCreatorTokenHoldersCountQueryVariables>(
+    GetCreatorTokenHoldersCountDocument,
+    options
+  )
+}
+export type GetCreatorTokenHoldersCountQueryHookResult = ReturnType<typeof useGetCreatorTokenHoldersCountQuery>
+export type GetCreatorTokenHoldersCountLazyQueryHookResult = ReturnType<typeof useGetCreatorTokenHoldersCountLazyQuery>
+export type GetCreatorTokenHoldersCountQueryResult = Apollo.QueryResult<
+  GetCreatorTokenHoldersCountQuery,
+  GetCreatorTokenHoldersCountQueryVariables
 >
 export const GetChannelTokenBalanceDocument = gql`
   query GetChannelTokenBalance($currentBlockHeight: Int!, $memberId: String!, $tokenId: String!) {

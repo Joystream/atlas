@@ -1,6 +1,7 @@
 import { ReactElement, useMemo } from 'react'
 import { Column, useFlexLayout, usePagination, useTable } from 'react-table'
 
+import { PaginationProps } from '@/components/Pagination'
 import { Text } from '@/components/Text'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
@@ -30,17 +31,19 @@ export type TableProps<T = object> = {
     icon: ReactElement
   }
   className?: string
+  pagination?: PaginationProps
 }
 
 export const Table = <T extends object>({
   columns,
   data,
   title,
-  pageSize = 20,
+  pageSize = 10,
   emptyState,
   doubleColumn,
   onRowClick,
   className,
+  pagination,
 }: TableProps<T>) => {
   const {
     getTableProps,
@@ -48,8 +51,6 @@ export const Table = <T extends object>({
     headerGroups,
     page: rawPage,
     prepareRow,
-    gotoPage,
-    state: { pageIndex },
   } = useTable({ columns, data, initialState: { pageSize } }, usePagination, useFlexLayout)
 
   const page = useMemo(() => {
@@ -134,9 +135,7 @@ export const Table = <T extends object>({
         </EmptyTableContainer>
       ) : null}
 
-      {data.length > pageSize && (
-        <StyledPagination onChangePage={gotoPage} page={pageIndex} itemsPerPage={pageSize} totalCount={data.length} />
-      )}
+      {pagination && <StyledPagination {...pagination} />}
     </Wrapper>
   )
 }
