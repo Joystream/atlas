@@ -1,4 +1,12 @@
-export const TABLE_STRUCTURE = [
+import { SetMembershipNotificationPreferencesMutation } from '@/api/queries/__generated__/notifications.generated'
+import { NotificationSettingSections } from '@/components/NotificationsTable'
+
+type Name = Exclude<
+  keyof SetMembershipNotificationPreferencesMutation['setAccountNotificationPreferences'],
+  '__typename'
+>
+
+export const TABLE_STRUCTURE: NotificationSettingSections<Name> = [
   {
     title: 'Generic',
     rows: [

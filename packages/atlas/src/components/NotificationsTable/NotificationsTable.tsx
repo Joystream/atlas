@@ -8,8 +8,13 @@ import { Table } from './NotificationsTable.styles'
 
 export type NotificationsState = Record<string, { inAppEnabled: boolean; emailEnabled: boolean }>
 
+export type NotificationSettingSections<Name extends string = string> = {
+  title: string
+  rows: { label: string; name: Name }[]
+}[]
+
 type NotificationsTableComponentProps = {
-  sections: { title: string; rows: { label: string; name: string }[] }[]
+  sections: NotificationSettingSections
   form: UseFormReturn<NotificationsState>
   disabled?: boolean
 }
