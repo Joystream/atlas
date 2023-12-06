@@ -32,6 +32,7 @@ export type GetBasicCreatorTokenQuery = {
     revenueShares: Array<{ __typename?: 'RevenueShare'; id: string }>
     channel?: {
       __typename?: 'TokenChannel'
+      id: string
       channel: {
         __typename?: 'Channel'
         id: string
@@ -161,6 +162,7 @@ export type GetFullCreatorTokenQuery = {
     }>
     channel?: {
       __typename?: 'TokenChannel'
+      id: string
       channel: {
         __typename?: 'Channel'
         id: string
@@ -272,10 +274,11 @@ export type GetCreatorTokenHoldersQuery = {
       symbol?: string | null
       status: Types.TokenStatus
       lastPrice?: string | null
-      channel?: { __typename?: 'TokenChannel'; id: string } | null
+      channel?: { __typename?: 'TokenChannel'; id: string; channel: { __typename?: 'Channel'; id: string } } | null
     }
     vestingSchedules: Array<{
       __typename?: 'VestedAccount'
+      id: string
       totalVestingAmount: string
       vestingSource:
         | { __typename: 'InitialIssuanceVestingSource' }
@@ -283,6 +286,7 @@ export type GetCreatorTokenHoldersQuery = {
         | { __typename: 'SaleVestingSource' }
       vesting: {
         __typename?: 'VestingSchedule'
+        id: string
         endsAt: number
         cliffBlock: number
         cliffDurationBlocks: number

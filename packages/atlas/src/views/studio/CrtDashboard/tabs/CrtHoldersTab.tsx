@@ -20,15 +20,16 @@ export const CrtHoldersTab = ({ token }: CrtHoldersTabProps) => {
   const { memberId } = useUser()
   const { currentPage, setCurrentPage } = usePagination(0)
   const { data, loading } = useGetCreatorTokenHoldersQuery({
+    notifyOnNetworkStatusChange: true,
     variables: {
+      offset: currentPage * TILES_PER_PAGE,
+      orderBy: [TokenAccountOrderByInput.TotalAmountDesc],
+      limit: TILES_PER_PAGE,
       where: {
         token: {
           id_eq: token.id,
         },
       },
-      limit: TILES_PER_PAGE,
-      offset: currentPage * TILES_PER_PAGE,
-      orderBy: TokenAccountOrderByInput.TotalAmountDesc,
     },
   })
   const { data: holdersCountData } = useGetCreatorTokenHoldersCountQuery({
