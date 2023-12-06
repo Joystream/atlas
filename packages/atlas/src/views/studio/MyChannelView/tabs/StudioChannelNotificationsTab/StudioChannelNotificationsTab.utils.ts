@@ -7,16 +7,8 @@ export const TABLE_STRUCTURE = [
         name: 'channelExcludedFromApp',
       },
       {
-        label: 'Your video is featured on category page',
-        name: 'videoFeaturedOnCategoryPage',
-      },
-      {
         label: 'Your NFT is featured on marketplace',
         name: 'nftFeaturedOnMarketPlace',
-      },
-      {
-        label: 'Your video is featured as category hero video',
-        name: 'videoFeaturedAsHero',
       },
       // {
       //   label: 'Your video is excluded from the app',
