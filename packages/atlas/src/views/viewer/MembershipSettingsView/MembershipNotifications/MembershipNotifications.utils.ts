@@ -54,10 +54,6 @@ export const TABLE_STRUCTURE: NotificationSettingSections<Name> = [
         name: 'higherBidThanYoursMade',
       },
       {
-        label: 'Auction you participated in expired',
-        name: 'timedAuctionExpired',
-      },
-      {
         label: 'You won the auction',
         name: 'auctionWon',
       },
