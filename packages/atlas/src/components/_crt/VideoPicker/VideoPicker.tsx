@@ -9,6 +9,7 @@ import {
   SvgAlertsInformative32,
   SvgIllustrativeVideo,
 } from '@/assets/icons'
+import { FlexBox } from '@/components/FlexBox'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { Input } from '@/components/_inputs/Input'
@@ -40,7 +41,7 @@ type VideoPickerProps = {
 export const VideoPicker = ({ setSelectedVideo, selectedVideo, className }: VideoPickerProps) => {
   const [showPicker, setShowPicker] = useState(false)
   const xsMatch = useMediaMatch('xs')
-  const { memberId } = useUser()
+  const { channelId } = useUser()
   const { data } = useGetBasicVideosQuery({
     variables: {
       where: {
@@ -59,7 +60,7 @@ export const VideoPicker = ({ setSelectedVideo, selectedVideo, className }: Vide
           setSelectedVideo(id)
           setShowPicker(false)
         }}
-        memberId={memberId || undefined}
+        channelId={channelId || undefined}
       />
       {data?.videos[0] ? (
         <ThumbnailContainer>
@@ -92,13 +93,13 @@ export const VideoPicker = ({ setSelectedVideo, selectedVideo, className }: Vide
 }
 
 type SelectVideoDialogProps = {
-  memberId?: string
+  channelId?: string
   onVideoSelection: (id: string) => void
   show: boolean
   onClose: () => void
 }
 
-const SelectVideoDialog = ({ memberId, onVideoSelection, show, onClose }: SelectVideoDialogProps) => {
+const SelectVideoDialog = ({ channelId, onVideoSelection, show, onClose }: SelectVideoDialogProps) => {
   const [search, setSearch] = useState('')
   const debouncedSearch = useDebounceValue(search)
   const { data, loading } = useGetBasicVideosQuery({
@@ -107,17 +108,16 @@ const SelectVideoDialog = ({ memberId, onVideoSelection, show, onClose }: Select
       where: {
         title_containsInsensitive: debouncedSearch,
         channel: {
-          ownerMember: {
-            id_eq: memberId,
-          },
+          id_eq: channelId,
         },
       },
       limit: 5,
     },
-    skip: !memberId,
+    fetchPolicy: 'network-only',
+    skip: !channelId,
   })
 
-  const hasNoVideos = !loading && !data?.videos?.length
+  const hasNoVideos = !loading && !data?.videos?.length && !debouncedSearch
 
   return (
     <DialogModal
@@ -137,6 +137,7 @@ const SelectVideoDialog = ({ memberId, onVideoSelection, show, onClose }: Select
         hasNoVideos
           ? {
               text: 'Upload a video',
+              onClick: onClose,
               to: absoluteRoutes.studio.videoWorkspace(),
               icon: <SvgActionNewTab />,
               iconPlacement: 'right',
@@ -169,17 +170,25 @@ const SelectVideoDialog = ({ memberId, onVideoSelection, show, onClose }: Select
           </DialogContent>
 
           <VideoBox>
-            {loading
-              ? Array.from({ length: 5 }, (_, idx) => <VideoListItemLoader key={idx} variant="small" />)
-              : data?.videos.map((video) => (
-                  <VideoListItem
-                    key={video.id}
-                    isInteractive
-                    onClick={() => onVideoSelection(video.id)}
-                    variant="small"
-                    id={video.id}
-                  />
-                ))}
+            {loading ? (
+              Array.from({ length: 5 }, (_, idx) => <VideoListItemLoader key={idx} variant="small" />)
+            ) : data?.videos.length ? (
+              data.videos.map((video) => (
+                <VideoListItem
+                  key={video.id}
+                  isInteractive
+                  onClick={() => onVideoSelection(video.id)}
+                  variant="small"
+                  id={video.id}
+                />
+              ))
+            ) : (
+              <FlexBox justifyContent="center">
+                <Text variant="t300" as="p" color="colorText">
+                  No videos found
+                </Text>
+              </FlexBox>
+            )}
           </VideoBox>
         </>
       )}
