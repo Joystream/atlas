@@ -493,15 +493,22 @@ fragment BasicCreatorTokenHolder on TokenAccount {
     status
     lastPrice
     channel {
-      id
+      ... on TokenChannel {
+        id
+        channel {
+          id
+        }
+      }
     }
   }
   vestingSchedules {
+    id
     totalVestingAmount
     vestingSource {
       __typename
     }
     vesting {
+      id
       endsAt
       cliffBlock
       cliffDurationBlocks
@@ -551,6 +558,7 @@ fragment BasicCreatorToken on CreatorToken {
   }
   channel {
     ... on TokenChannel {
+      id
       channel {
         ...BasicChannelFields
       }

@@ -27,9 +27,9 @@ export type HoldersTableProps = {
   isLoading: boolean
   currentMemberId: string
   symbol?: string
-}
+} & Pick<TableProps, 'pagination' | 'pageSize'>
 
-export const HoldersTable = ({ data, currentMemberId, symbol }: HoldersTableProps) => {
+export const HoldersTable = ({ data, currentMemberId, symbol, pagination, pageSize }: HoldersTableProps) => {
   const mappedData = useMemo(
     () =>
       data.map((row) => ({
@@ -46,7 +46,7 @@ export const HoldersTable = ({ data, currentMemberId, symbol }: HoldersTableProp
       })),
     [currentMemberId, data, symbol]
   )
-  return <StyledTable columns={COLUMNS} data={mappedData} />
+  return <StyledTable pageSize={pageSize} columns={COLUMNS} data={mappedData} pagination={pagination} />
 }
 
 const TransferableBalance = ({ memberId, tokenId, ticker }: { memberId: string; tokenId: string; ticker?: string }) => {
