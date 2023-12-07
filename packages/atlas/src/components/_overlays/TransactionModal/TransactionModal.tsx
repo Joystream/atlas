@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { SvgActionCheck, SvgLogoPolkadot } from '@/assets/icons'
@@ -40,14 +40,17 @@ export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, c
   const { wallet } = useWallet()
   const nonUploadTransaction = initialStatus === ExtrinsicStatus.Unsigned
   const error = status === ExtrinsicStatus.Error
-  const stepDetails =
-    status != null
-      ? getExtrinsicStatusDetails(
-          status === ExtrinsicStatus.Completed ? ExtrinsicStatus.Syncing : status,
-          errorCode,
-          wallet?.title
-        )
-      : null
+  const stepDetails = useMemo(
+    () =>
+      status != null
+        ? getExtrinsicStatusDetails(
+            status === ExtrinsicStatus.Completed ? ExtrinsicStatus.Syncing : status,
+            errorCode,
+            wallet?.title
+          )
+        : null,
+    [errorCode, status, wallet?.title]
+  )
 
   useEffect(() => {
     if (status !== null && initialStatus === null) {

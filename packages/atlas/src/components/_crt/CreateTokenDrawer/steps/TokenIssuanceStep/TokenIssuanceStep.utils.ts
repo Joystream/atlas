@@ -38,11 +38,11 @@ export const vestingOptions = [
   },
   {
     value: '3',
-    name: '3 month',
+    name: '3 months',
   },
   {
     value: '6',
-    name: '6 month',
+    name: '6 months',
   },
 ]
 
@@ -57,11 +57,11 @@ export const cliffOptions = [
   },
   {
     value: '3',
-    name: '3 month',
+    name: '3 months',
   },
   {
     value: '6',
-    name: '6 month',
+    name: '6 months',
   },
 ]
 
@@ -76,7 +76,11 @@ export const createTokenIssuanceSchema = (tokenName: string) =>
       assuranceType: z.enum(['safe', 'risky', 'secure', 'custom']),
       cliff: z.enum(['0', '1', '3', '6']).nullable(),
       vesting: z.enum(['0', '1', '3', '6']).nullable(),
-      firstPayout: z.number().max(100, 'Payout cannot exceed 100%.').optional(),
+      firstPayout: z
+        .number()
+        .positive('Payout cannot be a negative number.')
+        .max(100, 'Payout cannot exceed 100%.')
+        .optional(),
     })
     .refine(
       (data) => {
@@ -116,6 +120,7 @@ export const createTokenIssuanceSchema = (tokenName: string) =>
     )
 
 export const generateChartData = (cliffTime: number, vestingTime: number, firstPayout = 0) => {
+  firstPayout = Math.max(0, firstPayout)
   if (!cliffTime && !vestingTime) {
     return [
       {
@@ -157,6 +162,7 @@ export const generateChartData = (cliffTime: number, vestingTime: number, firstP
       })
     }
   }
+
   for (let i = cliffTime + 1; i <= cliffTime + vestingTime; i++) {
     const partToVest = 100 - firstPayout
     const vestingPerTick = partToVest / vestingTime
