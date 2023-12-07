@@ -19,6 +19,7 @@ const defaultJoystreamProps: Omit<ReponsiveProps, 'data'> = {
   isInteractive: true,
   enableArcLinkLabels: false,
   arcLabelsRadiusOffset: 0.5,
+  arcLabelsSkipAngle: 30,
   arcLabelsComponent: (datum) => {
     return (
       <animated.g transform={datum.style.transform}>
