@@ -1,4 +1,12 @@
-export const TABLE_STRUCTURE = [
+import { SetMembershipNotificationPreferencesMutation } from '@/api/queries/__generated__/notifications.generated'
+import { NotificationSettingSections } from '@/components/NotificationsTable'
+
+type Name = Exclude<
+  keyof SetMembershipNotificationPreferencesMutation['setAccountNotificationPreferences'],
+  '__typename'
+>
+
+export const TABLE_STRUCTURE: NotificationSettingSections<Name> = [
   {
     title: 'Generic',
     rows: [
@@ -44,10 +52,6 @@ export const TABLE_STRUCTURE = [
       {
         label: 'Someone placed higher bid than you',
         name: 'higherBidThanYoursMade',
-      },
-      {
-        label: 'Auction you participated in expired',
-        name: 'timedAuctionExpired',
       },
       {
         label: 'You won the auction',
