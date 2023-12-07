@@ -20,6 +20,11 @@ import { CrtRevenueTab } from '@/views/studio/CrtDashboard/tabs/CrtRevenueTab'
 
 import { TABS } from './CrtDashboard.types'
 
+type TabsNames = typeof TABS[number]
+
+const getTabIndex = (tabName: TabsNames, allTabs: { name: TabsNames }[]): number =>
+  allTabs.findIndex((tab) => tab.name === tabName)
+
 export const CrtDashboard = () => {
   const [currentTab, setCurrentTab] = useState<number>(0)
   const [openRevenueShareModal, setOpenRevenueShareModal] = useState(false)
@@ -33,7 +38,7 @@ export const CrtDashboard = () => {
     setCurrentTab(idx)
   }, [])
   const hasOpenMarket = data?.creatorTokenById?.ammCurves.some((curve) => !curve.finalized)
-  const mappedTabs = TABS.filter((tab) => (hasOpenMarket ? true : tab != 'Market')).map((tab) => ({ name: tab }))
+  const mappedTabs = TABS.filter((tab) => (hasOpenMarket ? true : tab !== 'Market')).map((tab) => ({ name: tab }))
 
   if (!data?.creatorTokenById) {
     return null
@@ -91,21 +96,15 @@ export const CrtDashboard = () => {
             </>
           )}
         </TabsContainer>
-        {currentTab === mappedTabs.findIndex((tab) => tab.name === 'Dashboard') && (
+        {currentTab === getTabIndex('Dashboard', mappedTabs) && (
           <CrtDashboardMainTab
             token={data.creatorTokenById}
             onTabChange={(tabName) => setCurrentTab(mappedTabs.findIndex((tab) => tab.name === tabName))}
           />
         )}
-        {currentTab === mappedTabs.findIndex((tab) => tab.name === 'Market') && (
-          <CrtMarketTab token={data.creatorTokenById} />
-        )}
-        {currentTab === mappedTabs.findIndex((tab) => tab.name === 'Holders') && (
-          <CrtHoldersTab token={data.creatorTokenById} />
-        )}
-        {currentTab === mappedTabs.findIndex((tab) => tab.name === 'Revenue share') && (
-          <CrtRevenueTab token={data.creatorTokenById} />
-        )}
+        {currentTab === getTabIndex('Market', mappedTabs) && <CrtMarketTab token={data.creatorTokenById} />}
+        {currentTab === getTabIndex('Holders', mappedTabs) && <CrtHoldersTab token={data.creatorTokenById} />}
+        {currentTab === getTabIndex('Revenue share', mappedTabs) && <CrtRevenueTab token={data.creatorTokenById} />}
       </MainContainer>
     </LimitedWidthContainer>
   )
