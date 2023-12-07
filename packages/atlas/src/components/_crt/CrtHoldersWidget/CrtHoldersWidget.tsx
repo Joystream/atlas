@@ -58,20 +58,27 @@ export const CrtHoldersWidget = ({ tokenId, totalSupply, onShowMore }: CrtHolder
         },
       },
       limit: 6,
-      orderBy: TokenAccountOrderByInput.TokenAccountsNumDesc,
+      orderBy: TokenAccountOrderByInput.TotalAmountDesc,
     },
   })
-  const chartData = useMemo(() => {
-    const parsedData = data?.tokenAccounts ? holdersToDatum(data.tokenAccounts, totalSupply) : []
+  const [owner, restChartData] = useMemo(() => {
+    let parsedData = data?.tokenAccounts ? holdersToDatum(data.tokenAccounts, totalSupply) : []
+    const ownerIdx = parsedData.findIndex((holder) => holder.id === activeMembership?.handle)
+    const owner = ownerIdx !== -1 ? parsedData[ownerIdx] : null
+    if (ownerIdx !== -1) {
+      parsedData = [parsedData.slice(0, ownerIdx), parsedData.slice(ownerIdx + 1, parsedData.length)].flat()
+    }
+
     if (parsedData.length > 3) {
-      let namedHoldersAccumulated = 0
+      let namedHoldersAccumulated = owner ? owner.value : 0
+
       const namedHolders = parsedData.slice(0, 3)
       namedHolders.forEach((holder) => {
         namedHoldersAccumulated += holder.value
       })
 
       namedHolders.push({
-        id: 'others',
+        id: 'Others',
         value: 100 - namedHoldersAccumulated,
         name: 'Others',
         index: namedHolders.length,
@@ -81,15 +88,11 @@ export const CrtHoldersWidget = ({ tokenId, totalSupply, onShowMore }: CrtHolder
         })),
       })
 
-      return namedHolders
+      return [owner, namedHolders]
     }
-    return parsedData
-  }, [data?.tokenAccounts, totalSupply])
+    return [owner, parsedData]
+  }, [activeMembership?.handle, data?.tokenAccounts, totalSupply])
 
-  const owner = useMemo(
-    () => chartData.find((holder) => holder.id === activeMembership?.handle),
-    [chartData, activeMembership?.handle]
-  )
   return (
     <Widget
       title="Holders"
@@ -108,7 +111,7 @@ export const CrtHoldersWidget = ({ tokenId, totalSupply, onShowMore }: CrtHolder
             </Text>
             <ChartWrapper>
               <PieChart
-                data={chartData}
+                data={[...restChartData, ...(owner ? [owner] : [])]}
                 onDataHover={setHoveredHolder}
                 hoverOpacity
                 hoveredData={hoveredHolder}
@@ -138,7 +141,7 @@ export const CrtHoldersWidget = ({ tokenId, totalSupply, onShowMore }: CrtHolder
               <Text variant="h100" as="h1" margin={{ bottom: 4 }} color="colorTextMuted">
                 TOP HOLDERS
               </Text>
-              {chartData.map((row) =>
+              {restChartData.map((row) =>
                 row.id === activeMembership?.handle ? null : (
                   <HoldersLegendEntry
                     key={row.id}

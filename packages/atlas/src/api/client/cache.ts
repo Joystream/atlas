@@ -9,6 +9,7 @@ import {
   QueryChannelsConnectionArgs,
   QueryCommentsConnectionArgs,
   QueryOwnedNftsConnectionArgs,
+  QueryTokenAccountsArgs,
   QueryVideosConnectionArgs,
   VideosConnection,
 } from '../queries/__generated__/baseTypes.generated'
@@ -77,6 +78,23 @@ const getNftKeyArgs = (
   const video = stringifyValue(args?.where?.video)
 
   return `${OR}:${AND}:${ownerMember}:${creatorChannel}:${status}:${auctionStatus}:${sorting}:${createdAtGte}:${createdAtLte}:${video}:${offset}:${lastSalePriceGte}:${lastSalePriceLte}`
+}
+
+const getTokenAccountsKeyArgs = (
+  args: Partial<QueryTokenAccountsArgs> | null,
+  ctx: {
+    variables?: Record<string, unknown>
+    fieldName: string
+  }
+) => {
+  const offset = ctx?.variables?.offset ?? ''
+  const OR = stringifyValue(args?.where?.OR)
+  const AND = stringifyValue(args?.where?.AND)
+  const sortingArray = args?.orderBy != null ? (Array.isArray(args.orderBy) ? args.orderBy : [args.orderBy]) : []
+  const sorting = stringifyValue(sortingArray)
+  const where = stringifyValue(args?.where ?? {})
+
+  return `${OR}:${AND}:${sorting}:${offset}:${where}`
 }
 
 const getChannelKeyArgs = (args: Partial<QueryChannelsConnectionArgs> | null) => {
@@ -224,6 +242,25 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
         id: args?.id,
       })
     )
+  },
+  tokenAccounts: {
+    ...offsetLimitPagination(getTokenAccountsKeyArgs),
+    read(existing, { args, toReference, canRead }) {
+      if (args?.where?.id_eq) {
+        const holderRef = toReference({
+          __typename: 'TokenAccount',
+          id: args?.where.id_eq,
+        })
+        if (canRead(holderRef)) {
+          return [holderRef]
+        } else {
+          return undefined
+        }
+      }
+      const offset = args?.offset ?? 0
+      const limit = args?.limit ?? existing?.length
+      return existing?.slice(offset, offset + limit)
+    },
   },
   commentById: (existing, { toReference, args }) => {
     return (
