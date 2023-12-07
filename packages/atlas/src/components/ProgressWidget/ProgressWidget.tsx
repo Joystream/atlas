@@ -22,6 +22,7 @@ import {
 } from '@/components/ProgressWidget/ProgressWidget.styles'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
+import { useDebounceValue } from '@/hooks/useDebounceValue'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { getProgressPercentage, responsive } from './ProgressWidget.utils'
@@ -45,6 +46,7 @@ export const ProgressWidget = ({
   renderCurrentStepActionButton,
 }: ProgressWidgetProps) => {
   const [isVisible, setIsVisible] = useState(true)
+  const debouncedVisible = useDebounceValue(isVisible, 100)
   const [glider, setGlider] = useState<SwiperInstance | null>(null)
   const drawer = useRef<HTMLDivElement>(null)
   const xsMatch = useMediaMatch('xs')
@@ -52,7 +54,7 @@ export const ProgressWidget = ({
   const isDone = activeStep + 1 > steps.length
   return (
     <MainWrapper>
-      <Header progressWidth={isVisible ? '0%' : `${getProgressPercentage(activeStep, steps.length)}%`}>
+      <Header progressWidth={debouncedVisible ? '0%' : `${getProgressPercentage(activeStep, steps.length)}%`}>
         <RowBox gap={4}>
           <Text variant="h500" as="h5">
             Your progress
