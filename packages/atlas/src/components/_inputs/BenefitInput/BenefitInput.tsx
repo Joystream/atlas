@@ -50,8 +50,20 @@ export const BenefitInput = ({
         <TextArea placeholder="Add benefit description" value={description} onChange={onDescriptionChange} />
       </FlexBox>
       <FlexBox gap={2} flow={smMatch ? 'column' : 'row'}>
-        <Button variant="tertiary" icon={<SvgActionChevronT />} onClick={onMoveUp} disabled={position === 'first'} />
-        <Button variant="tertiary" icon={<SvgActionChevronB />} onClick={onMoveDown} disabled={position === 'last'} />
+        <Button
+          variant="tertiary"
+          icon={<SvgActionChevronT />}
+          title="Move benefit higher"
+          onClick={onMoveUp}
+          disabled={position === 'first'}
+        />
+        <Button
+          variant="tertiary"
+          icon={<SvgActionChevronB />}
+          title="Move benefit lower"
+          onClick={onMoveDown}
+          disabled={position === 'last'}
+        />
         <Button variant="tertiary" icon={<StyledSvgActionTrash />} onClick={onRemove} />
       </FlexBox>
     </Container>

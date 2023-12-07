@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { createPortal, flushSync } from 'react-dom'
 
 import { SvgActionSell } from '@/assets/icons'
@@ -13,6 +13,7 @@ type StartSaleOrMarketButtonProps = {
 export const StartSaleOrMarketButton = ({ tokenName, ...buttonProps }: StartSaleOrMarketButtonProps) => {
   const [showChoiceDrawer, setShowChoiceDrawer] = useState(false)
   const [showMarketDrawer, setShowMarketDrawer] = useState(false)
+  const onMarketClose = useCallback(() => setShowMarketDrawer(false), [])
   return (
     <>
       <Button {...buttonProps} onClick={() => setShowChoiceDrawer(true)} icon={<SvgActionSell />}>
@@ -30,7 +31,7 @@ export const StartSaleOrMarketButton = ({ tokenName, ...buttonProps }: StartSale
               setShowMarketDrawer(true)
             }}
           />
-          <MarketDrawer tokenName={tokenName} show={showMarketDrawer} onClose={() => setShowMarketDrawer(false)} />
+          <MarketDrawer tokenName={tokenName} show={showMarketDrawer} onClose={onMarketClose} />
         </>,
         document.body
       )}
