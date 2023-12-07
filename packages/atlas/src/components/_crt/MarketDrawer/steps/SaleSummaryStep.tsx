@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react'
+import { FC, useCallback, useEffect } from 'react'
 
 import { SvgAlertsInformative24 } from '@/assets/icons'
 import { ActionDialogButtonProps } from '@/components/ActionBar'
@@ -39,36 +39,24 @@ export const SaleSummaryStep: FC<SaleSummaryProps> = ({
   const { joystream, proxyCallback } = useJoystream()
   const { memberId, channelId } = useUser()
 
-  useEffect(() => {
-    setPrimaryButtonProps({
-      text: 'Start sale',
-      onClick: () => {
-        if (!joystream || !memberId || !channelId || !tokenPrice) return
-        handleTransaction({
-          txFactory: async (updateStatus) =>
-            (await joystream.extrinsics).startAmm(memberId, channelId, tokenPrice, price, proxyCallback(updateStatus)),
-          onTxSync: async () => {
-            onSuccess()
-          },
-          onError: () => {
-            displaySnackbar({
-              title: 'Something went wrong',
-            })
-            handleCloseModal()
-          },
-        })
+  const handleSubmitTransaction = useCallback(() => {
+    if (!joystream || !memberId || !channelId || !tokenPrice) return
+    handleTransaction({
+      txFactory: async (updateStatus) =>
+        (await joystream.extrinsics).startAmm(memberId, channelId, tokenPrice, price, proxyCallback(updateStatus)),
+      onTxSync: async () => {
+        onSuccess()
       },
-    })
-    setSecondaryButtonProps({
-      text: 'Back',
-      onClick: () => {
-        handleBackClick()
+      onError: () => {
+        displaySnackbar({
+          title: 'Something went wrong',
+        })
+        handleCloseModal()
       },
     })
   }, [
     channelId,
     displaySnackbar,
-    handleBackClick,
     handleCloseModal,
     handleTransaction,
     joystream,
@@ -76,10 +64,22 @@ export const SaleSummaryStep: FC<SaleSummaryProps> = ({
     onSuccess,
     price,
     proxyCallback,
-    setPrimaryButtonProps,
-    setSecondaryButtonProps,
     tokenPrice,
   ])
+
+  useEffect(() => {
+    setPrimaryButtonProps({
+      text: 'Start sale',
+      onClick: () => handleSubmitTransaction(),
+    })
+
+    setSecondaryButtonProps({
+      text: 'Back',
+      onClick: () => {
+        handleBackClick()
+      },
+    })
+  }, [handleBackClick, handleSubmitTransaction, setPrimaryButtonProps, setSecondaryButtonProps])
 
   return (
     <ColumnBox gap={2}>

@@ -153,7 +153,7 @@ export const CrtDashboardMainTab = ({ token, onTabChange }: CrtDashboardMainTabP
           }
         />
         <WidgetTile
-          title="Total rev."
+          title="Total revenue"
           tooltip={{
             text: 'It is locked value',
           }}

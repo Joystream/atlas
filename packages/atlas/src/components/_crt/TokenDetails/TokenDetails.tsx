@@ -77,7 +77,7 @@ export const TokenDetails = ({ about, videoId, benefits }: TokenDetailsProps) =>
               <EmojiPlaceholder />
               <FlexBox flow="column">
                 <Text variant="h400" as="h4">
-                  {benefit.title}
+                  {benefit.title || 'Benefit title'}
                 </Text>
                 <Text variant="t300" as="p" color="colorTextMuted">
                   {benefit.description}
