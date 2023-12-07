@@ -2,7 +2,7 @@ import AOS from 'aos'
 import 'aos/dist/aos.css'
 import { ReactElement, ReactNode, useEffect } from 'react'
 
-import crtDashbaord2x from '@/assets/images/crt-dashboard-2x.webp'
+import crtDashboard2x from '@/assets/images/crt-dashboard-2x.webp'
 import crtForm2x from '@/assets/images/crt-form-2x.webp'
 import myUploads1x from '@/assets/images/my-uploads-1x.webp'
 import myUploads2x from '@/assets/images/my-uploads-2x.webp'
@@ -62,12 +62,12 @@ const typeIllustrationsFactory = (
 ): Record<WelcomeViewProps['type'], { srcSet: string; alt: string }[]> => ({
   'crt': [
     {
-      srcSet: `${crtForm2x} 1x, ${crtForm2x} 2x`,
-      alt: 'CRT creation form image',
+      srcSet: `${crtDashboard2x} 1x, ${crtDashboard2x} 2x`,
+      alt: 'CRT dashboard image',
     },
     {
-      srcSet: `${crtDashbaord2x} 1x, ${crtDashbaord2x} 2x`,
-      alt: 'CRT dashboard image',
+      srcSet: `${crtForm2x} 1x, ${crtForm2x} 2x`,
+      alt: 'CRT creation form image',
     },
   ],
   // be aware that we reverse the order of image on md

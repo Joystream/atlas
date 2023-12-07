@@ -1,3 +1,4 @@
+import { useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -44,6 +45,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
       id: tokenId,
     },
   })
+  const client = useApolloClient()
   const { accountBalance } = useSubscribeAccountBalance()
   const title = data?.creatorTokenById?.symbol ?? 'N/A'
 
@@ -126,6 +128,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
         ),
       onTxSync: async () => {
         setActiveStep(BUY_MARKET_TOKEN_STEPS.success)
+        client.refetchQueries({ include: 'all' })
       },
       onError: () => {
         setActiveStep(BUY_MARKET_TOKEN_STEPS.form)
@@ -134,7 +137,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
         })
       },
     })
-  }, [calculateRequiredHapi, displaySnackbar, handleTransaction, joystream, memberId, proxyCallback, tokenId])
+  }, [calculateRequiredHapi, client, displaySnackbar, handleTransaction, joystream, memberId, proxyCallback, tokenId])
 
   const formDetails = useMemo(
     () => [

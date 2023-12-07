@@ -2958,6 +2958,26 @@ export type FullCreatorTokenFragment = {
     | null
 }
 
+export type FullAmmCurveFragment = {
+  __typename?: 'AmmCurve'
+  id: string
+  ammSlopeParameter: string
+  mintedByAmm: string
+  burnedByAmm: string
+  ammInitPrice: string
+  finalized: boolean
+  transactions: Array<{
+    __typename?: 'AmmTransaction'
+    id: string
+    createdIn: number
+    pricePaid: string
+    pricePerUnit: string
+    transactionType: Types.AmmTransactionType
+    quantity: string
+    account: { __typename?: 'TokenAccount'; member: { __typename?: 'Membership'; id: string } }
+  }>
+}
+
 export const ExtendedVideoCategoryFieldsFragmentDoc = gql`
   fragment ExtendedVideoCategoryFields on ExtendedVideoCategory {
     category {
@@ -3602,4 +3622,27 @@ export const FullCreatorTokenFragmentDoc = gql`
   }
   ${BasicCreatorTokenFragmentDoc}
   ${BasicRevenueShareFragmentDoc}
+`
+export const FullAmmCurveFragmentDoc = gql`
+  fragment FullAmmCurve on AmmCurve {
+    id
+    ammSlopeParameter
+    mintedByAmm
+    burnedByAmm
+    ammInitPrice
+    finalized
+    transactions {
+      id
+      createdIn
+      pricePaid
+      pricePerUnit
+      transactionType
+      quantity
+      account {
+        member {
+          id
+        }
+      }
+    }
+  }
 `

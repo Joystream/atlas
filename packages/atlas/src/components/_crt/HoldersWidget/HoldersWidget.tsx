@@ -23,7 +23,7 @@ export const HoldersWidget = ({ holders: _holders, ownerId, totalSupply }: Holde
     memberId: holder?.member?.id ?? '',
     total: +holder.totalAmount,
     allocation: Math.round((+holder.totalAmount / totalSupply) * 100),
-    vested: +holder.vestingSchedules[0].totalVestingAmount,
+    vested: +(holder.vestingSchedules[0]?.totalVestingAmount ?? 0),
   }))
 
   return (

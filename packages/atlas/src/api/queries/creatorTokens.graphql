@@ -50,6 +50,12 @@ query GetHistoricalTokenAllocation($tokenId: String!) {
   }
 }
 
+query GetFullAmmCurve($where: AmmCurveWhereInput, $orderBy: [AmmCurveOrderByInput!], $limit: Int, $offset: Int) {
+  ammCurves(where: $where, orderBy: $orderBy, offset: $offset, limit: $limit) {
+    ...FullAmmCurve
+  }
+}
+
 query GetTokenRevenueShares($where: RevenueShareWhereInput, $limit: Int, $offset: Int) {
   revenueShares(where: $where, limit: $limit, offset: $offset) {
     ...BasicRevenueShare

@@ -7,16 +7,17 @@ import { SvgActionLinkUrl, SvgActionMarket, SvgActionShoppingCart, SvgActionWarn
 import { ActionDialogButtonProps } from '@/components/ActionBar'
 import { CrtDrawer } from '@/components/CrtDrawer'
 import { TextButton } from '@/components/_buttons/Button'
-import { CrtMarketForm } from '@/components/_crt/MarketDrawer/MarketDrawer.types'
-import { MarketDrawerPreview } from '@/components/_crt/MarketDrawer/MarketDrawerPreview'
-import { MarketStep } from '@/components/_crt/MarketDrawer/steps/MarketStep'
-import { SaleSummaryStep } from '@/components/_crt/MarketDrawer/steps/SaleSummaryStep'
 import { SuccessActionModalTemplate } from '@/components/_crt/SuccessActionModalTemplate'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useUser } from '@/providers/user/user.hooks'
 import { transitions } from '@/styles'
+
+import { CrtMarketForm } from './MarketDrawer.types'
+import { MarketDrawerPreview } from './MarketDrawerPreview'
+import { MarketStep } from './steps/MarketStep'
+import { SaleSummaryStep } from './steps/SaleSummaryStep'
 
 enum MARKET_STEPS {
   market,
@@ -133,9 +134,8 @@ export const MarketDrawer = ({ show, onClose, tokenName }: CrtMarketSaleViewProp
         primaryButton={{
           text: 'Continue',
           onClick: () => {
-            client.refetchQueries({ include: 'active' }).then(() => {
-              setShowSuccessModal(false)
-            })
+            client.refetchQueries({ include: 'active' })
+            setShowSuccessModal(false)
           },
         }}
       />
