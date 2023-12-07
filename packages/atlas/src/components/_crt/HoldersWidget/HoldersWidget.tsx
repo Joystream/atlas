@@ -20,7 +20,7 @@ export const HoldersWidget = ({ holders: _holders, ownerId, totalSupply }: Holde
   const [showModal, setShowModal] = useState(false)
 
   const holders = _holders.map((holder) => ({
-    memberId: holder.member.id,
+    memberId: holder?.member?.id ?? '',
     total: +holder.totalAmount,
     allocation: Math.round((+holder.totalAmount / totalSupply) * 100),
     vested: +holder.vestingSchedules[0].totalVestingAmount,
