@@ -607,3 +607,25 @@ fragment FullCreatorToken on CreatorToken {
     ...BasicRevenueShare
   }
 }
+
+fragment FullAmmCurve on AmmCurve {
+  id
+  ammSlopeParameter
+  mintedByAmm
+  burnedByAmm
+  ammInitPrice
+  finalized
+  transactions {
+    id
+    createdIn
+    pricePaid
+    pricePerUnit
+    transactionType
+    quantity
+    account {
+      member {
+        id
+      }
+    }
+  }
+}
