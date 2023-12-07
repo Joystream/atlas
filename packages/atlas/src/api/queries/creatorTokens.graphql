@@ -26,6 +26,12 @@ query GetCreatorTokenHolders(
   }
 }
 
+query GetCreatorTokenHoldersCount($where: TokenAccountWhereInput) {
+  tokenAccountsConnection(where: $where, orderBy: [id_ASC]) {
+    totalCount
+  }
+}
+
 query GetChannelTokenBalance($currentBlockHeight: Int!, $memberId: String!, $tokenId: String!) {
   getAccountTransferrableBalance(currentBlockHeight: $currentBlockHeight, memberId: $memberId, tokenId: $tokenId) {
     transferrableCrtAmount

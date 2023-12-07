@@ -58,7 +58,7 @@ export const CrtPortfolioTable = ({ data, emptyState }: CrtPortfolioTableProps) 
       status: <Status status={row.status} />,
       transferable: (
         <RightAlignedCell>
-          <TransferableBalance memberId={row.memberId} tokenId={row.tokenId} ticker={`$${row.tokenTitle}`} />
+          <TransferableBalance memberId={row.memberId} tokenId={row.tokenId} ticker={`${row.tokenTitle}`} />
         </RightAlignedCell>
       ),
       vested: (
