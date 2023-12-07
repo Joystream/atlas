@@ -2240,10 +2240,11 @@ export type BasicCreatorTokenHolderFragment = {
     symbol?: string | null
     status: Types.TokenStatus
     lastPrice?: string | null
-    channel?: { __typename?: 'TokenChannel'; id: string } | null
+    channel?: { __typename?: 'TokenChannel'; id: string; channel: { __typename?: 'Channel'; id: string } } | null
   }
   vestingSchedules: Array<{
     __typename?: 'VestedAccount'
+    id: string
     totalVestingAmount: string
     vestingSource:
       | { __typename: 'InitialIssuanceVestingSource' }
@@ -2251,6 +2252,7 @@ export type BasicCreatorTokenHolderFragment = {
       | { __typename: 'SaleVestingSource' }
     vesting: {
       __typename?: 'VestingSchedule'
+      id: string
       endsAt: number
       cliffBlock: number
       cliffDurationBlocks: number
@@ -2294,6 +2296,7 @@ export type BasicCreatorTokenFragment = {
   revenueShares: Array<{ __typename?: 'RevenueShare'; id: string }>
   channel?: {
     __typename?: 'TokenChannel'
+    id: string
     channel: {
       __typename?: 'Channel'
       id: string
@@ -2416,6 +2419,7 @@ export type FullCreatorTokenFragment = {
   }>
   channel?: {
     __typename?: 'TokenChannel'
+    id: string
     channel: {
       __typename?: 'Channel'
       id: string
@@ -3023,15 +3027,22 @@ export const BasicCreatorTokenHolderFragmentDoc = gql`
       status
       lastPrice
       channel {
-        id
+        ... on TokenChannel {
+          id
+          channel {
+            id
+          }
+        }
       }
     }
     vestingSchedules {
+      id
       totalVestingAmount
       vestingSource {
         __typename
       }
       vesting {
+        id
         endsAt
         cliffBlock
         cliffDurationBlocks
@@ -3057,6 +3068,7 @@ export const BasicCreatorTokenFragmentDoc = gql`
     }
     channel {
       ... on TokenChannel {
+        id
         channel {
           ...BasicChannelFields
         }
