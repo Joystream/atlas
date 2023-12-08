@@ -17,6 +17,7 @@ import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { cVar } from '@/styles'
+import { SentryLogger } from '@/utils/logs'
 
 export type RevenueShareParticipationWidgetProps = {
   revenueShare: FullCreatorTokenFragment['revenueShares'][number]
@@ -38,7 +39,14 @@ export const RevenueShareParticipationWidget = ({
   const navigate = useNavigate()
 
   const handleExitRevenueShare = async () => {
-    if (!joystream || !token || !memberId) return
+    if (!joystream || !token || !memberId) {
+      SentryLogger.error('Failed to submit exit revenue share', 'RevenueShareParticipationWidget', {
+        joystream,
+        token,
+        memberId,
+      })
+      return
+    }
     handleTransaction({
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).exitRevenueSplit(token.id, memberId, proxyCallback(updateStatus)),
@@ -48,6 +56,12 @@ export const RevenueShareParticipationWidget = ({
           iconType: 'success',
           actionText: 'Go to my portfolio',
           onActionClick: () => navigate(absoluteRoutes.viewer.portfolio()),
+        })
+      },
+      onError: () => {
+        displaySnackbar({
+          iconType: 'error',
+          title: 'Something went wrong',
         })
       },
     })
