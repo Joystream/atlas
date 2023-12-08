@@ -65,7 +65,7 @@ export const CrtDashboard = () => {
 
         <TabsContainer>
           <Tabs initialIndex={0} selected={currentTab} tabs={mappedTabs} onSelectTab={handleChangeTab} />
-          {currentTab === 0 && (
+          {currentTab === getTabIndex('Dashboard', mappedTabs) && (
             <>
               <Button to={absoluteRoutes.studio.crtTokenEdit()} variant="secondary" icon={<SvgActionEdit />}>
                 Edit token page
@@ -77,7 +77,10 @@ export const CrtDashboard = () => {
               )}
             </>
           )}
-          {currentTab === 2 && (
+          {currentTab === getTabIndex('Market', mappedTabs) && (
+            <CloseMarketButton channelId={activeChannel?.id ?? '-1'} />
+          )}
+          {currentTab === getTabIndex('Revenue share', mappedTabs) && (
             <>
               {!activeRevenueShare ? (
                 <>
@@ -98,6 +101,7 @@ export const CrtDashboard = () => {
         </TabsContainer>
         {currentTab === getTabIndex('Dashboard', mappedTabs) && (
           <CrtDashboardMainTab
+            hasOpenedMarket={!!hasOpenMarket}
             token={data.creatorTokenById}
             onTabChange={(tabName) => setCurrentTab(mappedTabs.findIndex((tab) => tab.name === tabName))}
           />
