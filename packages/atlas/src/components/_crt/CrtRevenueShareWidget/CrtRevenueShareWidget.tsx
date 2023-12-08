@@ -37,6 +37,7 @@ export const CrtRevenueShareWidget = ({ token, onTabSwitch }: CrtHoldersWidgetPr
       title="Revenue share with holders"
       titleVariant="h500"
       titleColor="colorTextStrong"
+      titleBottomMargin={6}
       customTopRightNode={
         <TextButton iconPlacement="right" onClick={onTabSwitch} icon={<SvgActionChevronR />}>
           Show revenue shares
@@ -69,6 +70,7 @@ export const CrtRevenueShareWidget = ({ token, onTabSwitch }: CrtHoldersWidgetPr
                 </Text>
               )}
             </FlexBox>
+
             <FlexBox flow="column">
               <Text variant="h100" as="h1" color="colorTextMuted">
                 REVENUE SHARE RATIO
@@ -79,6 +81,7 @@ export const CrtRevenueShareWidget = ({ token, onTabSwitch }: CrtHoldersWidgetPr
               </Text>
             </FlexBox>
           </FlexBox>
+
           <FlexBox flow="column">
             <Text variant="h100" as="h1" color="colorTextMuted">
               STAKED HOLDERS
@@ -107,13 +110,11 @@ export const CrtRevenueShareWidget = ({ token, onTabSwitch }: CrtHoldersWidgetPr
             <RevenueShareProgress token={token} revenueShare={activeRevenueShare} hasEnded={status === 'past'} />
           )}
 
-          {activeRevenueShare && status !== 'inactive' && (
-            <CloseRevenueShareButton
-              disabled={status === 'active'}
-              variant="secondary"
-              revenueShare={activeRevenueShare}
-            />
-          )}
+          {activeRevenueShare ? (
+            <FlexBox width="100%" justifyContent="end">
+              <CloseRevenueShareButton disabled={status === 'active'} variant="secondary" />
+            </FlexBox>
+          ) : null}
         </FlexBox>
       }
     />

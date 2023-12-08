@@ -1,0 +1,30 @@
+import { useCallback } from 'react'
+
+import { useJoystream } from '@/providers/joystream'
+import { useSnackbar } from '@/providers/snackbars'
+import { useTransaction } from '@/providers/transactions/transactions.hooks'
+
+export const useUnlockTokenStake = () => {
+  const { joystream, proxyCallback } = useJoystream()
+  const handleTransaction = useTransaction()
+  const { displaySnackbar } = useSnackbar()
+
+  return useCallback(
+    async (memberId: string, tokenId: string, tokenSymbol: string) => {
+      if (!joystream) {
+        return
+      }
+      handleTransaction({
+        txFactory: async (updateStatus) =>
+          (await joystream.extrinsics).exitRevenueSplit(tokenId, memberId, proxyCallback(updateStatus)),
+        onTxSync: async (data) => {
+          displaySnackbar({
+            title: `${data.amount} $${tokenSymbol} unlocked`,
+            iconType: 'success',
+          })
+        },
+      })
+    },
+    [joystream, handleTransaction, proxyCallback, displaySnackbar]
+  )
+}

@@ -12,9 +12,7 @@ import { Button } from '@/components/_buttons/Button'
 import { ClaimShareModal } from '@/components/_crt/ClaimShareModal'
 import { InfoBox, Wrapper } from '@/components/_crt/RevenueShareWidget/RevenueShareWidget.styles'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
-import { useJoystream } from '@/providers/joystream'
-import { useSnackbar } from '@/providers/snackbars'
-import { useTransaction } from '@/providers/transactions/transactions.hooks'
+import { useUnlockTokenStake } from '@/hooks/useUnlockTokenStake'
 import { formatDateTime } from '@/utils/time'
 
 export type RevenueShareWidgetProps = {
@@ -24,11 +22,9 @@ export type RevenueShareWidgetProps = {
   memberId: string
 }
 export const RevenueShareWidget = ({ tokenName, tokenId, revenueShare, memberId }: RevenueShareWidgetProps) => {
-  const { joystream, proxyCallback } = useJoystream()
-  const handleTransaction = useTransaction()
   const [openClaimShareModal, setOpenClaimShareModal] = useState(false)
-  const { displaySnackbar } = useSnackbar()
   const { convertBlockToMsTimestamp, currentBlock } = useBlockTimeEstimation()
+  const unlockStakeTx = useUnlockTokenStake()
   const memberStake = revenueShare.stakers.find((stakers) => stakers.account.member.id === memberId)
   const status =
     revenueShare.startingAt > currentBlock
@@ -38,21 +34,13 @@ export const RevenueShareWidget = ({ tokenName, tokenId, revenueShare, memberId 
       : memberStake
       ? 'locked'
       : 'active'
-  const unlockStake = useCallback(async () => {
-    if (!joystream || !memberId) {
+  const handleUnlockStake = useCallback(async () => {
+    if (!memberId) {
       return
     }
-    handleTransaction({
-      txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).exitRevenueSplit(tokenId, memberId, proxyCallback(updateStatus)),
-      onTxSync: async (data) => {
-        displaySnackbar({
-          title: `${data.amount} $${tokenName} unlocked`,
-          iconType: 'success',
-        })
-      },
-    })
-  }, [joystream, memberId, handleTransaction, tokenId, proxyCallback, displaySnackbar, tokenName])
+
+    unlockStakeTx(memberId, tokenId, tokenName)
+  }, [memberId, unlockStakeTx, tokenId, tokenName])
 
   const actionNode = () => {
     switch (status) {
@@ -64,7 +52,7 @@ export const RevenueShareWidget = ({ tokenName, tokenId, revenueShare, memberId 
         )
       case 'unlocked':
         return (
-          <Button fullWidth onClick={unlockStake}>
+          <Button fullWidth onClick={handleUnlockStake}>
             Unlock tokens
           </Button>
         )

@@ -1,7 +1,6 @@
 import { useApolloClient } from '@apollo/client'
 import { useCallback } from 'react'
 
-import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { Button, ButtonProps } from '@/components/_buttons/Button'
 import { atlasConfig } from '@/config'
 import { useJoystream } from '@/providers/joystream'
@@ -11,10 +10,16 @@ import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 
 type CloseRevenueShareButtonProps = {
-  revenueShare: FullCreatorTokenFragment['revenueShares'][number]
+  revenueShareEndingBlock?: number
+  hideOnInactiveRevenue?: boolean
 } & Pick<ButtonProps, 'variant' | 'disabled'>
 
-export const CloseRevenueShareButton = ({ revenueShare, variant }: CloseRevenueShareButtonProps) => {
+export const CloseRevenueShareButton = ({
+  variant,
+  disabled,
+  hideOnInactiveRevenue,
+  revenueShareEndingBlock,
+}: CloseRevenueShareButtonProps) => {
   const { joystream, proxyCallback } = useJoystream()
   const { channelId, memberId } = useUser()
   const handleTransaction = useTransaction()
@@ -40,12 +45,12 @@ export const CloseRevenueShareButton = ({ revenueShare, variant }: CloseRevenueS
     })
   }, [channelId, client, displaySnackbar, handleTransaction, joystream, memberId, proxyCallback])
 
-  if (currentBlock < revenueShare.endsAt) {
+  if (hideOnInactiveRevenue && currentBlock < (revenueShareEndingBlock ?? 0)) {
     return null
   }
 
   return (
-    <Button onClick={finalizeRevenueShare} variant={variant}>
+    <Button disabled={disabled} onClick={finalizeRevenueShare} variant={variant}>
       Close revenue share
     </Button>
   )
