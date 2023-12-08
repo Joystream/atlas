@@ -246,7 +246,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
             client.refetchQueries({ include: 'active' })
           }}
           show={openClaimShareModal}
-          token={localTokenData.creatorTokenById}
+          tokenId={localTokenData.creatorTokenById.id}
         />
       )}
       <SuccessActionModalTemplate

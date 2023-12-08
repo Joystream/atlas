@@ -80,7 +80,11 @@ export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
                 revenueShare={activeRevenueShare}
                 onClaimShare={() => setOpenClaimShareModal(true)}
               />
-              <ClaimShareModal onClose={() => setOpenClaimShareModal(false)} show={openClaimShareModal} token={token} />
+              <ClaimShareModal
+                onClose={() => setOpenClaimShareModal(false)}
+                show={openClaimShareModal}
+                tokenId={token.id}
+              />
             </GridItem>
             <GridItem colSpan={{ base: 12 }}>
               <RevenueShareStakersTable

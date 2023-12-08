@@ -1,8 +1,10 @@
 import { useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
 
-import { useGetRevenueShareDividendQuery } from '@/api/queries/__generated__/creatorTokens.generated'
-import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
+import {
+  useGetFullCreatorTokenQuery,
+  useGetRevenueShareDividendQuery,
+} from '@/api/queries/__generated__/creatorTokens.generated'
 import { SvgAlertsInformative24 } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
 import { FlexBox } from '@/components/FlexBox'
@@ -23,26 +25,27 @@ type ClaimShareModalProps = {
   show?: boolean
   onClose: () => void
   tokenId?: string
-  token: FullCreatorTokenFragment
 }
 
-export const ClaimShareModal = ({ onClose, token, show }: ClaimShareModalProps) => {
-  const tokenName = token.symbol ?? 'N/A'
+export const ClaimShareModal = ({ onClose, show, tokenId }: ClaimShareModalProps) => {
+  const { data } = useGetFullCreatorTokenQuery({ variables: { id: tokenId ?? '' }, skip: !tokenId })
+  const token = data?.creatorTokenById
+  const tokenName = token?.symbol ?? 'N/A'
   const { joystream, proxyCallback } = useJoystream()
   const { memberId } = useUser()
   const { displaySnackbar } = useSnackbar()
   const handleTransaction = useTransaction()
-  const { tokenBalance } = useGetTokenBalance(token.id, memberId ?? '')
+  const { tokenBalance } = useGetTokenBalance(token?.id, memberId ?? '')
   const { fullFee } = useFee('participateInSplitTx')
-  const activeRevenueShare = token.revenueShares.find((rS) => !rS.finalized)
+  const activeRevenueShare = token?.revenueShares.find((rS) => !rS.finalized)
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
   const client = useApolloClient()
   const { data: dividedData } = useGetRevenueShareDividendQuery({
     variables: {
-      tokenId: token.id,
+      tokenId: token?.id ?? '',
       stakingAmount: tokenBalance,
     },
-    skip: !tokenBalance,
+    skip: !tokenBalance || !token,
   })
 
   const onSubmit = async () => {
