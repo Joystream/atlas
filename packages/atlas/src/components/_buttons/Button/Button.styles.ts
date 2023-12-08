@@ -3,6 +3,7 @@ import { SerializedStyles, css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { smallBadgeStyles } from '@/components/Badge'
+import { Text } from '@/components/Text'
 import { cVar, sizes } from '@/styles'
 
 export type ButtonSize = 'small' | 'medium' | 'large'
@@ -451,4 +452,8 @@ export const ButtonBase = styled('button', { shouldForwardProp: isPropValid })<B
     opacity: 0.5;
     color: ${({ textOnly }) => !textOnly && cVar('colorTextStrong')};
   }
+`
+
+export const ButtonText = styled(Text)`
+  white-space: nowrap;
 `

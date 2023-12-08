@@ -11,10 +11,11 @@ import { ClaimShareModal } from '@/components/_crt/ClaimShareModal'
 import { absoluteRoutes } from '@/config/routes'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useUnlockTokenStake } from '@/hooks/useUnlockTokenStake'
+import { getRevenueShareStatusForMember } from '@/utils/crts'
 import { formatDateTime, formatDurationShort } from '@/utils/time'
 
 type RevenueShareStateWidgetProps = {
-  revenueShare: GetTokenRevenueSharesQuery['revenueShares'][number]
+  revenueShare?: GetTokenRevenueSharesQuery['revenueShares'][number]
   className?: string
   withLink?: boolean
   memberId?: string
@@ -30,7 +31,7 @@ export const RevenueShareStateWidget = ({
   tokenId,
   tokenSymbol,
 }: RevenueShareStateWidgetProps) => {
-  const { startingAt, endsAt, stakers } = revenueShare
+  const { startingAt, endsAt, stakers } = revenueShare ?? { startingAt: 0, endsAt: 0 }
   const [openClaimShareModal, setOpenClaimShareModal] = useState(false)
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
   const endingBlockTimestamp = convertBlockToMsTimestamp(endsAt ?? 0)
@@ -38,21 +39,20 @@ export const RevenueShareStateWidget = ({
   const { currentBlock } = useBlockTimeEstimation()
   const unlockStakeTx = useUnlockTokenStake()
 
-  const memberStake = stakers.find((stakers) => stakers.account.member.id === memberId)
+  const memberStake = stakers?.find((stakers) => stakers.account.member.id === memberId)
   const status: 'active' | 'past' | 'inactive' = !endingBlockTimestamp
     ? 'inactive'
     : endingBlockTimestamp < Date.now()
     ? 'past'
     : 'active'
 
-  const memberStatus =
-    startingAt > currentBlock
-      ? 'upcoming'
-      : endsAt < currentBlock && memberStake
-      ? 'unlocked'
-      : memberStake
-      ? 'locked'
-      : 'active'
+  const memberStatus = getRevenueShareStatusForMember({
+    startingAt,
+    endingAt: endsAt,
+    hasMemberStaked: !!memberStake,
+    currentBlock: currentBlock,
+    isFinalized: revenueShare?.finalized ?? false,
+  })
 
   const memberActionNode = useMemo(() => {
     if (!tokenId || !tokenSymbol || !memberId) {
@@ -65,7 +65,7 @@ export const RevenueShareStateWidget = ({
             Claim your share
           </Button>
         )
-      case 'unlocked':
+      case 'unlock':
         return (
           <Button
             fullWidth
@@ -115,7 +115,7 @@ export const RevenueShareStateWidget = ({
         }
         customNode={
           status !== 'inactive' && endsAt ? (
-            <FlexBox justifyContent="space-between" width="100%">
+            <FlexBox justifyContent="space-between" alignItems="center" width="100%">
               {status === 'past' ? (
                 <Text variant="h500" as="h5" margin={{ bottom: 4 }}>
                   {endingDate ? formatDateTime(endingDate).replace(',', ' at') : 'N/A'}
@@ -130,7 +130,7 @@ export const RevenueShareStateWidget = ({
                   </Text>
                 </FlexBox>
               )}
-              {memberActionNode}
+              <div style={{ marginLeft: 'auto' }}>{memberActionNode}</div>
             </FlexBox>
           ) : (
             <Text variant="h500" as="h5" margin={{ bottom: 4 }}>

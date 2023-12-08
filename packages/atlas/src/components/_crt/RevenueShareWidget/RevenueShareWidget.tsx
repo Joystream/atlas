@@ -13,6 +13,7 @@ import { ClaimShareModal } from '@/components/_crt/ClaimShareModal'
 import { InfoBox, Wrapper } from '@/components/_crt/RevenueShareWidget/RevenueShareWidget.styles'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useUnlockTokenStake } from '@/hooks/useUnlockTokenStake'
+import { getRevenueShareStatusForMember } from '@/utils/crts'
 import { formatDateTime } from '@/utils/time'
 
 export type RevenueShareWidgetProps = {
@@ -26,14 +27,13 @@ export const RevenueShareWidget = ({ tokenName, tokenId, revenueShare, memberId 
   const { convertBlockToMsTimestamp, currentBlock } = useBlockTimeEstimation()
   const unlockStakeTx = useUnlockTokenStake()
   const memberStake = revenueShare.stakers.find((stakers) => stakers.account.member.id === memberId)
-  const status =
-    revenueShare.startingAt > currentBlock
-      ? 'upcoming'
-      : revenueShare.endsAt < currentBlock && memberStake
-      ? 'unlocked'
-      : memberStake
-      ? 'locked'
-      : 'active'
+  const status = getRevenueShareStatusForMember({
+    currentBlock,
+    endingAt: revenueShare.endsAt,
+    startingAt: revenueShare.startingAt,
+    hasMemberStaked: !!memberStake,
+    isFinalized: revenueShare.finalized,
+  })
   const handleUnlockStake = useCallback(async () => {
     if (!memberId) {
       return
@@ -50,7 +50,7 @@ export const RevenueShareWidget = ({ tokenName, tokenId, revenueShare, memberId 
             Claim your share
           </Button>
         )
-      case 'unlocked':
+      case 'unlock':
         return (
           <Button fullWidth onClick={handleUnlockStake}>
             Unlock tokens
@@ -80,7 +80,7 @@ export const RevenueShareWidget = ({ tokenName, tokenId, revenueShare, memberId 
   }
 
   // don't show widget if a member didn't stake and revenue already ended
-  if (!memberStake && currentBlock > revenueShare.endsAt) {
+  if (status === 'finalized' || (!memberStake && currentBlock > revenueShare.endsAt)) {
     return null
   }
 

@@ -39,7 +39,7 @@ export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
     <>
       <LayoutGrid>
         <GridItem colSpan={{ base: 12, sm: 4 }}>
-          {activeRevenueShare && <RevenueShareStateWidget revenueShare={activeRevenueShare} />}
+          <RevenueShareStateWidget revenueShare={activeRevenueShare} />
         </GridItem>
         <GridItem colSpan={{ base: 12, sm: 4 }}>
           <WidgetTile
