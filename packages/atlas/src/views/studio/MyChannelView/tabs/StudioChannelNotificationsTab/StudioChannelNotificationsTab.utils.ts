@@ -1,4 +1,9 @@
-export const TABLE_STRUCTURE = [
+import { SetChannelNotificationPreferencesMutation } from '@/api/queries/__generated__/notifications.generated'
+import { NotificationSettingSections } from '@/components/NotificationsTable'
+
+type Name = Exclude<keyof SetChannelNotificationPreferencesMutation['setAccountNotificationPreferences'], '__typename'>
+
+export const TABLE_STRUCTURE: NotificationSettingSections<Name> = [
   {
     title: 'Content moderation and featuring',
     rows: [
