@@ -1,14 +1,14 @@
 import { useCallback, useState } from 'react'
 
 import { useGetFullCreatorTokenQuery } from '@/api/queries/__generated__/creatorTokens.generated'
-import { SvgActionEdit, SvgActionLinkUrl, SvgActionRevenueShare } from '@/assets/icons'
+import { SvgActionEdit, SvgActionLinkUrl } from '@/assets/icons'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Tabs } from '@/components/Tabs'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { CloseMarketButton } from '@/components/_crt/CloseMarketButton'
 import { CloseRevenueShareButton } from '@/components/_crt/CloseRevenueShareButton'
-import { StartRevenueShare } from '@/components/_crt/StartRevenueShareModal/StartRevenueShareModal'
+import { RevenueShareModalButton } from '@/components/_crt/RevenueShareModalButton'
 import { StartSaleOrMarketButton } from '@/components/_crt/StartSaleOrMarketButton/StartSaleOrMarketButton'
 import { absoluteRoutes } from '@/config/routes'
 import { useUser } from '@/providers/user/user.hooks'
@@ -27,7 +27,6 @@ const getTabIndex = (tabName: TabsNames, allTabs: { name: TabsNames }[]): number
 
 export const CrtDashboard = () => {
   const [currentTab, setCurrentTab] = useState<number>(0)
-  const [openRevenueShareModal, setOpenRevenueShareModal] = useState(false)
   const { activeChannel } = useUser()
   const { data } = useGetFullCreatorTokenQuery({
     variables: {
@@ -83,16 +82,7 @@ export const CrtDashboard = () => {
           {currentTab === getTabIndex('Revenue share', mappedTabs) && (
             <>
               {!activeRevenueShare ? (
-                <>
-                  <Button onClick={() => setOpenRevenueShareModal(true)} icon={<SvgActionRevenueShare />}>
-                    Start revenue share
-                  </Button>
-                  <StartRevenueShare
-                    show={openRevenueShareModal}
-                    token={data.creatorTokenById}
-                    onClose={() => setOpenRevenueShareModal(false)}
-                  />
-                </>
+                <RevenueShareModalButton token={data.creatorTokenById} />
               ) : (
                 <CloseRevenueShareButton revenueShare={activeRevenueShare} />
               )}
