@@ -7,7 +7,6 @@ import {
 import { getTokenDetails } from '@/components/CrtPreviewLayout'
 import { FlexBox } from '@/components/FlexBox'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
-import { WidgetTile } from '@/components/WidgetTile'
 import { CrtBasicInfoWidget } from '@/components/_crt/CrtBasicInfoWidget'
 import { CrtStatusWidget } from '@/components/_crt/CrtStatusWidget'
 import { HoldersWidget } from '@/components/_crt/HoldersWidget'
@@ -96,8 +95,4 @@ export const ChannelToken = ({ tokenId, memberId }: ChannelTokenProps) => {
       </GridItem>
     </LayoutGrid>
   )
-}
-
-const CrtRevenueShareSmallWidget = () => {
-  return <WidgetTile title="REV. SHARE BEGINS ON" />
 }

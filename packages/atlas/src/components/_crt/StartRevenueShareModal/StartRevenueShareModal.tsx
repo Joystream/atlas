@@ -75,7 +75,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
     channelStateBloatBond: memoizedChannelStateBloatBond,
   })
 
-  const { trigger, handleSubmit, control, watch } = useForm<{
+  const { trigger, handleSubmit, control, watch, resetField } = useForm<{
     startDate: AuctionDatePickerProps['value'] | null
     endDate: AuctionDatePickerProps['value'] | null
   }>({
@@ -308,7 +308,6 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
                       <AuctionDatePicker
                         error={!!error}
                         minDate={new Date()}
-                        maxDate={selectDurationToDate(endDate, selectDurationToDate(startDate))}
                         items={[
                           {
                             value: null,
@@ -317,6 +316,9 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
                         ]}
                         onChange={(value) => {
                           onChange(value)
+                          if (endDate?.type === 'date') {
+                            resetField('endDate', { defaultValue: { type: 'duration', durationDays: 7 } })
+                          }
                           trigger('startDate')
                         }}
                         value={value}
