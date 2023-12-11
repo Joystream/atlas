@@ -7,8 +7,8 @@ import { Controller, useForm } from 'react-hook-form'
 import { useGetFullCreatorTokenLazyQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgActionClock, SvgActionCreatorToken, SvgActionLinkUrl, SvgActionPayment } from '@/assets/icons'
+import { Banner } from '@/components/Banner'
 import { FlexBox } from '@/components/FlexBox/FlexBox'
-import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { TextButton } from '@/components/_buttons/Button'
@@ -16,21 +16,20 @@ import { ClaimShareModal } from '@/components/_crt/ClaimShareModal'
 import { SuccessActionModalTemplate } from '@/components/_crt/SuccessActionModalTemplate'
 import { AuctionDatePicker, AuctionDatePickerProps } from '@/components/_inputs/AuctionDatePicker'
 import { FormField } from '@/components/_inputs/FormField'
-import { DetailsContent } from '@/components/_nft/NftTile'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { absoluteRoutes } from '@/config/routes'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useJoystream, useSubscribeAccountBalance } from '@/providers/joystream'
+import { useFee, useJoystream, useSubscribeAccountBalance } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { SentryLogger } from '@/utils/logs'
 import { pluralizeNoun } from '@/utils/misc'
 import { permillToPercentage } from '@/utils/number'
-import { addDaysToDate } from '@/utils/time'
+import { addDaysToDate, formatDateTimeAt } from '@/utils/time'
 
 export type StartRevenueShareProps = {
   token: FullCreatorTokenFragment
@@ -68,6 +67,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
     },
     fetchPolicy: 'no-cache',
   })
+  const { fullFee } = useFee('issueRevenueSplitTx', ['1', '1', 10000, 10000])
 
   const memoizedChannelStateBloatBond = useMemo(() => {
     return new BN(activeChannel?.channelStateBloatBond || 0)
@@ -85,11 +85,28 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
     },
   })
   const [startDate, endDate] = watch(['startDate', 'endDate'])
+  const rawStartDate = startDate?.type === 'date' ? startDate.date : new Date()
+  const endDateTimestamp =
+    endDate?.type === 'date'
+      ? endDate.date
+      : endDate?.durationDays
+      ? addDaysToDate(endDate.durationDays, rawStartDate)
+      : new Date()
 
   const onSubmit = () =>
     handleSubmit((data) => {
       const rawStartDate = data.startDate?.type === 'date' ? data.startDate.date : new Date()
       const startBlock = convertMsTimestampToBlock(rawStartDate.getTime())
+
+      if (channelBalance?.lten(0)) {
+        displaySnackbar({
+          iconType: 'warning',
+          title: 'Cannot start revenue share',
+          description: 'There are no assets on the channel that could be shared with holders.',
+        })
+        return
+      }
+
       if (!joystream || !memberId || !channelId || !startBlock) {
         SentryLogger.error('Failed submit to start revenue share', 'StartRevenueShare', {
           joystream,
@@ -189,35 +206,18 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
   const details = useMemo(
     () => [
       {
-        title: 'You will share',
+        title: 'Revenue share ends on',
         content: (
-          <NumberFormat
-            value={channelBalance ?? 0}
-            as="p"
-            variant="t100"
-            color="colorText"
-            withDenomination="before"
-            withToken
-          />
+          <Text variant="t200" as="p">
+            {formatDateTimeAt(endDateTimestamp)}
+          </Text>
         ),
       },
       {
-        title: 'You will receive',
-        content: (
-          <FlexBox alignItems="baseline" width="fit-content">
-            <NumberFormat
-              value={channelBalance?.muln(patronageRate) ?? 0}
-              as="p"
-              variant="t100"
-              color="colorText"
-              withToken
-            />
-            <Text variant="t100" as="p" color="colorText">
-              ({Math.round(patronageRate * 100)}%)
-            </Text>
-          </FlexBox>
-        ),
+        title: 'You will share',
+        content: <NumberFormat value={channelBalance ?? 0} as="p" variant="t200" withDenomination="before" withToken />,
       },
+
       {
         title: 'Your holders will receive',
         content: (
@@ -225,18 +225,41 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
             <NumberFormat
               value={channelBalance?.muln(1 - patronageRate) ?? 0}
               as="p"
-              variant="t100"
-              color="colorText"
+              variant="t200"
               withToken
+              withDenomination="before"
             />
-            <Text variant="t100" as="p" color="colorText">
+            <Text variant="t200" as="p">
               ({Math.round((1 - patronageRate) * 100)}%)
             </Text>
           </FlexBox>
         ),
       },
+      {
+        title: 'Transaction fee',
+        content: <NumberFormat value={fullFee} as="p" variant="t200" withDenomination="before" withToken />,
+        tooltipText: 'Lorem ipsum',
+      },
+      {
+        title: 'You will receive',
+        variant: 'h300' as const,
+        content: (
+          <FlexBox alignItems="baseline" width="fit-content">
+            <NumberFormat
+              value={channelBalance?.muln(patronageRate) ?? 0}
+              as="p"
+              variant="h300"
+              withToken
+              withDenomination="before"
+            />
+            <Text variant="t200" as="p">
+              ({Math.round(patronageRate * 100)}%)
+            </Text>
+          </FlexBox>
+        ),
+      },
     ],
-    [channelBalance, patronageRate]
+    [channelBalance, endDateTimestamp, fullFee, patronageRate]
   )
 
   const selectDurationToDate = useCallback((value: AuctionDatePickerProps['value'], base?: Date) => {
@@ -286,30 +309,6 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
         }}
       >
         <FlexBox flow="column" gap={8}>
-          <FlexBox gap={6} equalChildren>
-            <DetailsContent
-              avoidIconStyling
-              tileSize={smMatch ? 'big' : 'bigSmall'}
-              caption="YOUR CHANNEL BALANCE"
-              content={channelBalance ?? 0}
-              icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
-              withDenomination
-            />
-          </FlexBox>
-
-          <FlexBox flow="column" gap={2}>
-            {details.map((row) => (
-              <FlexBox key={row.title} alignItems="center" justifyContent="space-between">
-                <FlexBox width="fit-content" alignItems="center">
-                  <Text variant="t100" as="p" color="colorText">
-                    {row.title}
-                  </Text>
-                </FlexBox>
-                {row.content}
-              </FlexBox>
-            ))}
-          </FlexBox>
-
           <FlexBox equalChildren alignItems="center" gap={6}>
             <Controller
               name="startDate"
@@ -363,6 +362,22 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
                 </FormField>
               )}
             />
+          </FlexBox>
+          <Banner
+            title="All tokens will be shared"
+            description="The only way to do the revenue share right now is to share all of your available balance."
+          />
+          <FlexBox flow="column" gap={2}>
+            {details.map((row) => (
+              <FlexBox key={row.title} alignItems="center" justifyContent="space-between">
+                <FlexBox width="fit-content" alignItems="center">
+                  <Text variant={row.variant ?? 't200'} as="p" color="colorText">
+                    {row.title}
+                  </Text>
+                </FlexBox>
+                {row.content}
+              </FlexBox>
+            ))}
           </FlexBox>
         </FlexBox>
       </DialogModal>
