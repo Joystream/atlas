@@ -84,8 +84,8 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
   })
   const [startDate, endDate] = watch(['startDate', 'endDate'])
   const endDateTimestamp = useMemo(() => {
-    const rawStartDate = startDate?.type === 'date' ? startDate.date : new Date()
-
+    // we need to create new date object to aviod modifying it in addDaystoDate
+    const rawStartDate = startDate?.type === 'date' ? new Date(startDate.date.getTime()) : new Date()
     return endDate?.type === 'date'
       ? endDate.date
       : endDate?.durationDays
@@ -95,7 +95,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
 
   const onSubmit = () =>
     handleSubmit((data) => {
-      const rawStartDate = data.startDate?.type === 'date' ? data.startDate.date : new Date()
+      const rawStartDate = startDate?.type === 'date' ? new Date(startDate.date.getTime()) : new Date()
       const startBlock = convertMsTimestampToBlock(rawStartDate.getTime())
 
       if (channelBalance?.lten(0)) {
@@ -332,7 +332,11 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
                         ]}
                         onChange={(value) => {
                           onChange(value)
-                          if (endDate?.type === 'date') {
+                          if (
+                            endDate?.type === 'date' &&
+                            value?.type === 'date' &&
+                            value.date.getTime() > endDate.date.getTime()
+                          ) {
                             resetField('endDate', { defaultValue: { type: 'duration', durationDays: 7 } })
                           }
                           trigger('startDate')

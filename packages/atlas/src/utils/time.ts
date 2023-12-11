@@ -36,6 +36,7 @@ export const daysToMilliseconds = (days: number) => {
   return days * 24 * 60 * 60 * 1000
 }
 
+// Warning: this function will modify received date as a ref
 export const addDaysToDate = (daysToAdd: number, date = new Date()) => {
   date.setDate(date.getDate() + daysToAdd)
   return date

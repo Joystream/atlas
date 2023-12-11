@@ -33,18 +33,23 @@ export const RevenueShareStateWidget = ({
 }: RevenueShareStateWidgetProps) => {
   const { startingAt, endsAt, stakers } = revenueShare ?? { startingAt: 0, endsAt: 0 }
   const [openClaimShareModal, setOpenClaimShareModal] = useState(false)
-  const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
+  const { convertBlockToMsTimestamp, currentBlock } = useBlockTimeEstimation()
   const endingBlockTimestamp = convertBlockToMsTimestamp(endsAt ?? 0)
+  const startingBlockTimestamp = convertBlockToMsTimestamp(startingAt ?? 0)
   const endingDate = endingBlockTimestamp ? new Date(endingBlockTimestamp) : null
-  const { currentBlock } = useBlockTimeEstimation()
+  const startingDate = startingBlockTimestamp ? new Date(startingBlockTimestamp) : null
   const unlockStakeTx = useUnlockTokenStake()
 
   const memberStake = stakers?.find((stakers) => stakers.account.member.id === memberId)
-  const status: 'active' | 'past' | 'inactive' = !endingBlockTimestamp
-    ? 'inactive'
-    : endingBlockTimestamp < Date.now()
-    ? 'past'
-    : 'active'
+  const status = revenueShare
+    ? getRevenueShareStatusForMember({
+        currentBlock,
+        isFinalized: revenueShare.finalized,
+        hasMemberStaked: false,
+        endingAt: endsAt,
+        startingAt: startingAt,
+      })
+    : 'inactive'
 
   const memberStatus = getRevenueShareStatusForMember({
     startingAt,
@@ -111,32 +116,42 @@ export const RevenueShareStateWidget = ({
             ? 'REVENUE SHARE STATE'
             : status === 'past'
             ? 'REVENUE SHARE ENDED ON'
+            : status === 'upcoming'
+            ? 'REVENUE SHARE STARTS IN'
             : 'REVENUE SHARE ENDS IN'
         }
         customNode={
-          status !== 'inactive' && endsAt ? (
-            <FlexBox justifyContent="space-between" alignItems="center" width="100%">
-              {status === 'past' ? (
-                <Text variant="h500" as="h5" margin={{ bottom: 4 }}>
+          <FlexBox justifyContent="space-between" alignItems="center" width="100%">
+            {status === 'inactive' ? (
+              <Text variant="h500" as="h5" margin={{ bottom: 4 }}>
+                No active share
+              </Text>
+            ) : status === 'past' ? (
+              <Text variant="h500" as="h5" margin={{ bottom: 4 }}>
+                {endingDate ? formatDateTime(endingDate).replace(',', ' at') : 'N/A'}
+              </Text>
+            ) : status === 'upcoming' ? (
+              <FlexBox flow="column">
+                <Text variant="h500" as="h5">
+                  {startingDate ? formatDurationShort(Math.round((startingDate.getTime() - Date.now()) / 1000)) : 'N/A'}
+                </Text>
+                <Text variant="t100" as="p" color="colorText">
+                  {startingDate ? formatDateTime(startingDate).replace(',', ' at') : 'N/A'}
+                </Text>
+              </FlexBox>
+            ) : (
+              <FlexBox flow="column">
+                <Text variant="h500" as="h5">
+                  {endingDate ? formatDurationShort(Math.round((endingDate.getTime() - Date.now()) / 1000)) : 'N/A'}
+                </Text>
+                <Text variant="t100" as="p" color="colorText">
                   {endingDate ? formatDateTime(endingDate).replace(',', ' at') : 'N/A'}
                 </Text>
-              ) : (
-                <FlexBox flow="column">
-                  <Text variant="h500" as="h5">
-                    {endingDate ? formatDurationShort(Math.round((endingDate.getTime() - Date.now()) / 1000)) : 'N/A'}
-                  </Text>
-                  <Text variant="t100" as="p" color="colorText">
-                    {endingDate ? formatDateTime(endingDate).replace(',', ' at') : 'N/A'}
-                  </Text>
-                </FlexBox>
-              )}
-              <div style={{ marginLeft: 'auto' }}>{memberActionNode}</div>
-            </FlexBox>
-          ) : (
-            <Text variant="h500" as="h5" margin={{ bottom: 4 }}>
-              No active share
-            </Text>
-          )
+              </FlexBox>
+            )}
+
+            <div style={{ marginLeft: 'auto' }}>{memberActionNode}</div>
+          </FlexBox>
         }
         customTopRightNode={withLink ? <TextButton to={absoluteRoutes.viewer.portfolio()} /> : undefined}
         tooltip={
