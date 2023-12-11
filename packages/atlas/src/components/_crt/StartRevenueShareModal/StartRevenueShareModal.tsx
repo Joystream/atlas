@@ -27,6 +27,7 @@ import { useJoystream, useSubscribeAccountBalance } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
+import { SentryLogger } from '@/utils/logs'
 import { pluralizeNoun } from '@/utils/misc'
 import { permillToPercentage } from '@/utils/number'
 import { addDaysToDate } from '@/utils/time'
@@ -90,6 +91,12 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
       const rawStartDate = data.startDate?.type === 'date' ? data.startDate.date : new Date()
       const startBlock = convertMsTimestampToBlock(rawStartDate.getTime())
       if (!joystream || !memberId || !channelId || !startBlock) {
+        SentryLogger.error('Failed to start revenue share', 'StartRevenueShare', {
+          joystream,
+          memberId,
+          channelId,
+          startBlock,
+        })
         return
       }
 

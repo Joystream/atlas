@@ -9,9 +9,11 @@ import { Tooltip } from '@/components/Tooltip'
 import { CrtFormWrapper } from '@/components/_crt/CrtFormWrapper'
 import { useMountEffect } from '@/hooks/useMountEffect'
 import { useFee, useJoystream } from '@/providers/joystream'
+import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { sizes } from '@/styles'
+import { SentryLogger } from '@/utils/logs'
 import { pluralizeNoun } from '@/utils/misc'
 import { formatNumber } from '@/utils/number'
 
@@ -38,6 +40,7 @@ export type TokenSummaryStepProps = {
 export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: TokenSummaryStepProps) => {
   const { joystream, proxyCallback } = useJoystream()
   const { channelId, memberId } = useUser()
+  const { displaySnackbar } = useSnackbar()
   const handleTransaction = useTransaction()
   const [cliff, vesting, payout] = getDataBasedOnType(form.assuranceType) ?? [
     form.cliff,
@@ -58,7 +61,10 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: Tok
     },
   ])
   const handleSubmitTx = async () => {
-    if (!joystream || !channelId || !memberId) return
+    if (!joystream || !channelId || !memberId) {
+      SentryLogger.error('Failed to create token', 'TokenSummaryStep', { joystream, channelId, memberId })
+      return
+    }
     return handleTransaction({
       fee: fullFee,
       txFactory: async (handleUpdate) =>
@@ -80,7 +86,13 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: Tok
         onSuccess()
       },
       snackbarSuccessMessage: {
-        title: `$${form.name} minted successfuly.`,
+        title: `$${form.name} minted successfully.`,
+      },
+      onError: () => {
+        displaySnackbar({
+          iconType: 'error',
+          title: 'Something went wrong',
+        })
       },
     })
   }

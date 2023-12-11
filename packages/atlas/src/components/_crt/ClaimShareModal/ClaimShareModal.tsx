@@ -17,6 +17,7 @@ import { useFee, useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
+import { SentryLogger } from '@/utils/logs'
 import { formatDateTime } from '@/utils/time'
 
 type ClaimShareModalProps = {
@@ -46,7 +47,16 @@ export const ClaimShareModal = ({ onClose, token, show }: ClaimShareModalProps) 
   })
 
   const onSubmit = async () => {
-    if (!joystream || !token || !memberId || !tokenBalance || !activeRevenueShare) return
+    if (!joystream || !token || !memberId || !tokenBalance || !activeRevenueShare) {
+      SentryLogger.error('Failed to submit claim share transaction', 'ClaimShareModal', {
+        joystream,
+        token,
+        memberId,
+        tokenBalance,
+        activeRevenueShare,
+      })
+      return
+    }
     handleTransaction({
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).participateInSplit(
@@ -68,6 +78,12 @@ export const ClaimShareModal = ({ onClose, token, show }: ClaimShareModalProps) 
         })
         onClose()
         client.refetchQueries({ include: 'active' })
+      },
+      onError: () => {
+        displaySnackbar({
+          iconType: 'error',
+          title: 'Something went wrong',
+        })
       },
     })
   }

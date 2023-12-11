@@ -55,7 +55,7 @@ export const CreateTokenSuccessModal = ({ tokenName, show }: CreateTokenSuccessM
       </IllustrationWrapper>
       <FlexBox flow="column" gap={2} alignItems="center">
         <Text variant="h500" as="h3">
-          Congratulations you just made (minted) your ${tokenName} token!
+          Congratulations, you just made (minted) your ${tokenName} token!
         </Text>
         <Text variant="t200" as="p" color="colorText">
           Help your buyers discover your token by customizing the token page and putting it ouy to market!

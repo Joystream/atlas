@@ -13,6 +13,7 @@ import { useFee, useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
+import { SentryLogger } from '@/utils/logs'
 
 type SaleSummaryProps = {
   price: number
@@ -40,7 +41,15 @@ export const SaleSummaryStep: FC<SaleSummaryProps> = ({
   const { memberId, channelId } = useUser()
 
   const handleSubmitTransaction = useCallback(() => {
-    if (!joystream || !memberId || !channelId || !tokenPrice) return
+    if (!joystream || !memberId || !channelId || !tokenPrice) {
+      SentryLogger.error('Failed to submit CRT market start', 'MarketDrawer', {
+        joystream,
+        memberId,
+        channelId,
+        tokenPrice,
+      })
+      return
+    }
     handleTransaction({
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).startAmm(memberId, channelId, tokenPrice, price, proxyCallback(updateStatus)),
