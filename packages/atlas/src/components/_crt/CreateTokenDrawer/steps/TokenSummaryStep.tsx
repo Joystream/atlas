@@ -99,20 +99,24 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: Tok
         </Text>
         <SectionRow
           title="Name"
-          tooltipText="3 letter name for your token, to be displayed on your token page, all tokens marketplace and in your buyer's portfolio."
+          tooltipText="Short name of your token, how it will be displayed in portfolio and marketplace."
         >
           <Text variant="h300" as="p" color="colorTextStrong">
             ${form.name}
           </Text>
         </SectionRow>
-        <SectionRow title="Access" tooltipText="Define if everyone can buy your token or only selected memebers.">
+        <SectionRow
+          title="Access"
+          tooltipText="Token can be accessed and purchased by any member, or strictly limited to members added to your token whitelist."
+        >
           <Text variant="h300" as="p" color="colorTextStrong">
             {form.isOpen ? 'Anyone' : 'Invite only'}
           </Text>
         </SectionRow>
         <SectionRow
           title="Revenue share with holders"
-          tooltipText="Define % of your channel revenue that you will keep and how much your token holders will earn. "
+          tooltipText="The % ratio of how much channel revenue gets distributed among all token holders vs the % ratio of what get's transferred to channel owners (yours) account when the revenue share is initiated.
+           Annual creator reward Annual creator reward aka patronage, that is earned by channel owner for managing channel.Tokens issued in your walletTotal number of tokens issuedCliffPeriod of time during which no tokens can be issued. After the cliff has passed, initial allocation happens.Vesting periodPeriod of time after cliff during which all your tokens become vested, meaning that they can be spent or transferred.First payotAmount of tokens that become transferable, after the clif and before the vesting period starts."
         >
           <RowBox gap={2}>
             <RowBox gap={1}>
