@@ -10,6 +10,7 @@ import { AmmTransactionsTable } from '@/components/_crt/AmmTransactionsTable/Amm
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { calcBuyMarketPricePerToken } from '@/utils/crts'
+import { SentryLogger } from '@/utils/logs'
 
 type CrtMarketTabProps = {
   token: FullCreatorTokenFragment
@@ -25,6 +26,9 @@ export const CrtMarketTab = ({ token }: CrtMarketTabProps) => {
       },
     },
     skip: !currentAmm,
+    onError: (error) => {
+      SentryLogger.error('Failed to fetch AMM curve', 'CrtMarketTab', error)
+    },
   })
   const pricePerUnit = useMemo(
     () => calcBuyMarketPricePerToken(currentAmm?.mintedByAmm, currentAmm?.ammSlopeParameter, currentAmm?.ammInitPrice),
