@@ -76,7 +76,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
     channelStateBloatBond: memoizedChannelStateBloatBond,
   })
 
-  const { trigger, handleSubmit, control, watch } = useForm<{
+  const { trigger, handleSubmit, control, watch, resetField } = useForm<{
     startDate: AuctionDatePickerProps['value'] | null
     endDate: AuctionDatePickerProps['value'] | null
   }>({
@@ -91,7 +91,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
       const rawStartDate = data.startDate?.type === 'date' ? data.startDate.date : new Date()
       const startBlock = convertMsTimestampToBlock(rawStartDate.getTime())
       if (!joystream || !memberId || !channelId || !startBlock) {
-        SentryLogger.error('Failed to start revenue share', 'StartRevenueShare', {
+        SentryLogger.error('Failed submit to start revenue share', 'StartRevenueShare', {
           joystream,
           memberId,
           channelId,
@@ -132,6 +132,12 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
         onError: () => {
           displaySnackbar({
             title: 'Something went wrong',
+          })
+          SentryLogger.error('Failed to start revenue share', 'StartRevenueShare', {
+            joystream,
+            memberId,
+            channelId,
+            startBlock,
           })
           onClose()
         },
@@ -253,7 +259,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
             client.refetchQueries({ include: 'active' })
           }}
           show={openClaimShareModal}
-          token={localTokenData.creatorTokenById}
+          tokenId={localTokenData.creatorTokenById.id}
         />
       )}
       <SuccessActionModalTemplate
@@ -315,7 +321,6 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
                       <AuctionDatePicker
                         error={!!error}
                         minDate={new Date()}
-                        maxDate={selectDurationToDate(endDate, selectDurationToDate(startDate))}
                         items={[
                           {
                             value: null,
@@ -324,6 +329,9 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
                         ]}
                         onChange={(value) => {
                           onChange(value)
+                          if (endDate?.type === 'date') {
+                            resetField('endDate', { defaultValue: { type: 'duration', durationDays: 7 } })
+                          }
                           trigger('startDate')
                         }}
                         value={value}

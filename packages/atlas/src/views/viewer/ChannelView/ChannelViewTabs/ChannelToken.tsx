@@ -10,6 +10,7 @@ import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { CrtBasicInfoWidget } from '@/components/_crt/CrtBasicInfoWidget'
 import { CrtStatusWidget } from '@/components/_crt/CrtStatusWidget'
 import { HoldersWidget } from '@/components/_crt/HoldersWidget'
+import { RevenueShareStateWidget } from '@/components/_crt/RevenueShareStateWidget'
 import { TokenDetails } from '@/components/_crt/TokenDetails/TokenDetails'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -48,6 +49,7 @@ export const ChannelToken = ({ tokenId, memberId }: ChannelTokenProps) => {
   }
 
   const { creatorTokenById: token } = data
+  const activeRevenueShare = token.revenueShares.find((revenueShare) => !revenueShare.finalized)
 
   return (
     <LayoutGrid>
@@ -70,6 +72,16 @@ export const ChannelToken = ({ tokenId, memberId }: ChannelTokenProps) => {
             description={token?.description ?? ''}
           />
           <CrtStatusWidget token={token} />
+          {activeRevenueShare && (
+            <RevenueShareStateWidget
+              withLink
+              revenueShare={activeRevenueShare}
+              tokenId={token?.id}
+              tokenSymbol={token?.symbol ?? 'N/A'}
+              memberId={memberId}
+            />
+          )}
+
           {holdersData ? (
             <HoldersWidget
               totalSupply={+token.totalSupply}
