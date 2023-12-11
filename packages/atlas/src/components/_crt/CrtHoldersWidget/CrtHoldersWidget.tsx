@@ -102,6 +102,7 @@ export const CrtHoldersWidget = ({ tokenId, totalSupply, onShowMore }: CrtHolder
       title="Holders"
       titleVariant="h500"
       titleColor="colorTextStrong"
+      titleBottomMargin={6}
       customTopRightNode={
         <TextButton onClick={onShowMore} icon={<SvgActionChevronR />} iconPlacement="right">
           Show more

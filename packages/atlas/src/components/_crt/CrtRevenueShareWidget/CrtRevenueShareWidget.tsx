@@ -8,6 +8,7 @@ import { Avatar } from '@/components/Avatar'
 import { FlexBox } from '@/components/FlexBox'
 import { Text } from '@/components/Text'
 import { Button, TextButton } from '@/components/_buttons/Button'
+import { CloseRevenueShareButton } from '@/components/_crt/CloseRevenueShareButton'
 import { Widget } from '@/components/_crt/CrtStatusWidget/CrtStatusWidget.styles'
 import { RevenueShareProgress } from '@/components/_crt/RevenueShareParticipationWidget'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
@@ -16,7 +17,7 @@ import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { permillToPercentage } from '@/utils/number'
 import { formatDateTime, formatDurationShort } from '@/utils/time'
 
-import { CloseRevenueButton, CustomPill, EmptyStateBox, StakersBox, StyledPill } from './CrtRevenueShareWidget.styles'
+import { CustomPill, EmptyStateBox, StakersBox, StyledPill } from './CrtRevenueShareWidget.styles'
 
 export type CrtHoldersWidgetProps = {
   token: FullCreatorTokenFragment
@@ -36,6 +37,7 @@ export const CrtRevenueShareWidget = ({ token, onTabSwitch }: CrtHoldersWidgetPr
       title="Revenue share with holders"
       titleVariant="h500"
       titleColor="colorTextStrong"
+      titleBottomMargin={6}
       customTopRightNode={
         <TextButton iconPlacement="right" onClick={onTabSwitch} icon={<SvgActionChevronR />}>
           Show revenue shares
@@ -68,6 +70,7 @@ export const CrtRevenueShareWidget = ({ token, onTabSwitch }: CrtHoldersWidgetPr
                 </Text>
               )}
             </FlexBox>
+
             <FlexBox flow="column">
               <Text variant="h100" as="h1" color="colorTextMuted">
                 REVENUE SHARE RATIO
@@ -78,6 +81,7 @@ export const CrtRevenueShareWidget = ({ token, onTabSwitch }: CrtHoldersWidgetPr
               </Text>
             </FlexBox>
           </FlexBox>
+
           <FlexBox flow="column">
             <Text variant="h100" as="h1" color="colorTextMuted">
               STAKED HOLDERS
@@ -106,11 +110,11 @@ export const CrtRevenueShareWidget = ({ token, onTabSwitch }: CrtHoldersWidgetPr
             <RevenueShareProgress token={token} revenueShare={activeRevenueShare} hasEnded={status === 'past'} />
           )}
 
-          {status !== 'inactive' && (
-            <CloseRevenueButton disabled={status === 'active'} variant="secondary">
-              Close revenue share
-            </CloseRevenueButton>
-          )}
+          {activeRevenueShare ? (
+            <FlexBox width="100%" justifyContent="end">
+              <CloseRevenueShareButton disabled={status === 'active'} variant="secondary" />
+            </FlexBox>
+          ) : null}
         </FlexBox>
       }
     />
