@@ -37,10 +37,10 @@ export const Content = styled.div<{ withButton?: boolean }>`
   }
 `
 
-export const Title = styled.div<{ hasTooltip: boolean }>`
+export const Title = styled.div<{ hasTooltip: boolean; marginBottom?: number }>`
   grid-template-columns: 1fr auto;
   gap: ${({ hasTooltip }) => (hasTooltip ? sizes(2) : 'unset')};
-  margin-bottom: ${({ hasTooltip }) => sizes(hasTooltip ? 0 : 2)};
+  margin-bottom: ${({ hasTooltip, marginBottom }) => sizes(marginBottom ?? hasTooltip ? 0 : 2)};
   margin-top: ${({ hasTooltip }) => (hasTooltip ? sizes(-2) : 'unset')};
   ${commonGridStyles};
 

@@ -25,6 +25,7 @@ export type WidgetTileProps = {
   className?: string
   titleVariant?: TextVariant
   titleColor?: Color
+  titleBottomMargin?: number
 }
 
 export const WidgetTile: FC<WidgetTileProps> = ({
@@ -40,6 +41,7 @@ export const WidgetTile: FC<WidgetTileProps> = ({
   className,
   titleVariant,
   titleColor,
+  titleBottomMargin,
 }) => {
   const mdMatch = useMediaMatch('md')
   const lgMatch = useMediaMatch('lg')
@@ -60,7 +62,7 @@ export const WidgetTile: FC<WidgetTileProps> = ({
 
   return (
     <Wrapper className={className}>
-      <Title hasTooltip={!!tooltip}>
+      <Title hasTooltip={!!tooltip} marginBottom={titleBottomMargin}>
         <Text variant={titleVariant ?? 'h100'} as="p" color={titleColor ?? 'colorText'}>
           {title}
         </Text>

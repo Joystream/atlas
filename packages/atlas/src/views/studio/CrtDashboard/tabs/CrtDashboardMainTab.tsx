@@ -8,6 +8,7 @@ import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
 import { Button, ButtonProps, TextButton } from '@/components/_buttons/Button'
 import { CrtHoldersWidget } from '@/components/_crt/CrtHoldersWidget'
+import { CrtMarketWidget } from '@/components/_crt/CrtMarketWidget'
 import { CrtRevenueShareWidget } from '@/components/_crt/CrtRevenueShareWidget'
 import { StartSaleOrMarketButton } from '@/components/_crt/StartSaleOrMarketButton/StartSaleOrMarketButton'
 import { absoluteRoutes } from '@/config/routes'
@@ -27,6 +28,7 @@ import { StyledSvgJoyTokenMonochrome24 } from '@/views/studio/MyPaymentsView/Pay
 type CrtDashboardMainTabProps = {
   token: FullCreatorTokenFragment
   onTabChange: (tab: CrtTabs) => void
+  hasOpenedMarket: boolean
 }
 
 const steps: ProgressWidgetProps['steps'] = [
@@ -50,7 +52,7 @@ const steps: ProgressWidgetProps['steps'] = [
   },
 ]
 
-export const CrtDashboardMainTab = ({ token, onTabChange }: CrtDashboardMainTabProps) => {
+export const CrtDashboardMainTab = ({ token, onTabChange, hasOpenedMarket }: CrtDashboardMainTabProps) => {
   const { memberId } = useUser()
   const smMatch = useMediaMatch('sm')
   const { data } = useGetCreatorTokenHoldersQuery({
@@ -185,6 +187,7 @@ export const CrtDashboardMainTab = ({ token, onTabChange }: CrtDashboardMainTabP
           }
         />
       </WidgetContainer>
+      {hasOpenedMarket && <CrtMarketWidget token={token} onTabSwitch={() => onTabChange('Market')} />}
       <BigWidgetContainer>
         <CrtHoldersWidget
           onShowMore={() => onTabChange('Holders')}

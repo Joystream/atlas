@@ -52,10 +52,6 @@ export const SupplyLine = styled.div`
 export const Widget = styled(WidgetTile)`
   position: relative;
 
-  > :first-child {
-    margin-bottom: ${sizes(1)};
-  }
-
   > :last-child {
     grid-template-columns: 1fr;
   }
