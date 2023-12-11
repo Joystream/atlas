@@ -136,6 +136,8 @@ const EmptyState = () => {
 }
 
 const StakerPill = ({ id }: { id: string }) => {
+  // todo: this will execute individual query for each staker (as id is different and it can't use cache),
+  //  worth batching it into single transaction IMO
   const { data, loading } = useGetMembershipsQuery({
     variables: {
       where: {

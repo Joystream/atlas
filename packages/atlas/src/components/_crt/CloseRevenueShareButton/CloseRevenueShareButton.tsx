@@ -8,6 +8,7 @@ import { useJoystreamStore } from '@/providers/joystream/joystream.store'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
+import { SentryLogger } from '@/utils/logs'
 
 type CloseRevenueShareButtonProps = {
   revenueShareEndingBlock?: number
@@ -29,6 +30,7 @@ export const CloseRevenueShareButton = ({
 
   const finalizeRevenueShare = useCallback(() => {
     if (!joystream || !memberId || !channelId) {
+      SentryLogger.error('Failed to close revenue share', 'CloseRevenueShareButton', { joystream, memberId, channelId })
       return
     }
     handleTransaction({
@@ -38,8 +40,14 @@ export const CloseRevenueShareButton = ({
         client.refetchQueries({ include: 'active' })
         displaySnackbar({
           title: 'Revenue share is closed',
-          description: `Remaining unclaimed ${data.amount} ${atlasConfig.joystream.tokenTicker} was transfered back to your channel balance.`,
+          description: `Remaining unclaimed ${data.amount} ${atlasConfig.joystream.tokenTicker} was transferred back to your channel balance.`,
           iconType: 'info',
+        })
+      },
+      onError: () => {
+        displaySnackbar({
+          iconType: 'error',
+          title: 'Something went wrong',
         })
       },
     })

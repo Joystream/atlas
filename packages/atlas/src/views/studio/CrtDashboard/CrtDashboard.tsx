@@ -12,6 +12,7 @@ import { RevenueShareModalButton } from '@/components/_crt/RevenueShareModalButt
 import { StartSaleOrMarketButton } from '@/components/_crt/StartSaleOrMarketButton/StartSaleOrMarketButton'
 import { absoluteRoutes } from '@/config/routes'
 import { useUser } from '@/providers/user/user.hooks'
+import { SentryLogger } from '@/utils/logs'
 import { HeaderContainer, MainContainer, TabsContainer } from '@/views/studio/CrtDashboard/CrtDashboard.styles'
 import { CrtDashboardMainTab } from '@/views/studio/CrtDashboard/tabs/CrtDashboardMainTab'
 import { CrtHoldersTab } from '@/views/studio/CrtDashboard/tabs/CrtHoldersTab'
@@ -31,6 +32,9 @@ export const CrtDashboard = () => {
   const { data } = useGetFullCreatorTokenQuery({
     variables: {
       id: activeChannel?.creatorToken?.token.id ?? '',
+    },
+    onError: (error) => {
+      SentryLogger.error('Failed to fetch creator token', 'CrtDashboard', error)
     },
   })
   const handleChangeTab = useCallback((idx: number) => {

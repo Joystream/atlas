@@ -20,6 +20,7 @@ import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { zIndex } from '@/styles'
+import { SentryLogger } from '@/utils/logs'
 
 type CrtPageForm = {
   videoId: string
@@ -36,6 +37,9 @@ export const CrtTokenEditView = () => {
   const { data } = useGetFullCreatorTokenQuery({
     variables: {
       id: activeChannel?.creatorToken?.token.id ?? '',
+    },
+    onError: (error) => {
+      SentryLogger.error('Failed to fetch token data', 'CrtTokenEdit', error)
     },
   })
 
@@ -75,6 +79,7 @@ export const CrtTokenEditView = () => {
 
   const handleSubmit = form.handleSubmit((data) => {
     if (!joystream || !memberId || !channelId) {
+      SentryLogger.error('Failed to submit CRT token edit form', 'CrtTokenEdit', { joystream, memberId, channelId })
       return
     }
 

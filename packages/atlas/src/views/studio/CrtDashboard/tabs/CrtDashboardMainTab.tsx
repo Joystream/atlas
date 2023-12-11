@@ -15,6 +15,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useUser } from '@/providers/user/user.hooks'
+import { SentryLogger } from '@/utils/logs'
 import { permillToPercentage } from '@/utils/number'
 import {
   BigWidgetContainer,
@@ -64,6 +65,9 @@ export const CrtDashboardMainTab = ({ token, onTabChange, hasOpenedMarket }: Crt
           id_eq: token.id,
         },
       },
+    },
+    onError: (error) => {
+      SentryLogger.error('Error while fetching token holders', 'CrtDashboard', error)
     },
   })
   const { tokenBalance } = useGetTokenBalance(token.id)

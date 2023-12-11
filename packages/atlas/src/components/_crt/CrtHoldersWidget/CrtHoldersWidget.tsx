@@ -15,6 +15,7 @@ import { Widget } from '@/components/_crt/CrtStatusWidget/CrtStatusWidget.styles
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useUser } from '@/providers/user/user.hooks'
 import { cVar } from '@/styles'
+import { SentryLogger } from '@/utils/logs'
 
 export type HolderDatum = {
   id: string
@@ -59,6 +60,9 @@ export const CrtHoldersWidget = ({ tokenId, totalSupply, onShowMore }: CrtHolder
       },
       limit: 6,
       orderBy: TokenAccountOrderByInput.TotalAmountDesc,
+    },
+    onError: (error) => {
+      SentryLogger.error('Failed to fetch token holders', 'CrtHoldersWidget', error)
     },
   })
   const [owner, restChartData] = useMemo(() => {

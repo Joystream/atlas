@@ -14,6 +14,7 @@ import { InfoBox, Wrapper } from '@/components/_crt/RevenueShareWidget/RevenueSh
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useUnlockTokenStake } from '@/hooks/useUnlockTokenStake'
 import { getRevenueShareStatusForMember } from '@/utils/crts'
+import { SentryLogger } from '@/utils/logs'
 import { formatDateTime } from '@/utils/time'
 
 export type RevenueShareWidgetProps = {
@@ -37,6 +38,7 @@ export const RevenueShareWidget = ({ tokenName, tokenId, revenueShare, memberId 
   const handleUnlockStake = useCallback(async () => {
     if (!memberId) {
       return
+      SentryLogger.error('Failed to submit unlock stake', 'RevenueShareWidget', { memberId })
     }
 
     unlockStakeTx(memberId, tokenId, tokenName)

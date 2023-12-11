@@ -8,6 +8,7 @@ import {
 import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { HoldersTable } from '@/components/_crt/HoldersTable/HoldersTable'
 import { useUser } from '@/providers/user/user.hooks'
+import { SentryLogger } from '@/utils/logs'
 import { usePagination } from '@/views/viewer/ChannelView/ChannelView.hooks'
 
 type CrtHoldersTabProps = {
@@ -31,6 +32,9 @@ export const CrtHoldersTab = ({ token }: CrtHoldersTabProps) => {
         },
       },
     },
+    onError: (error) => {
+      SentryLogger.error('Failed to fetch token holders query', 'CrtHoldersTab', error)
+    },
   })
   const { data: holdersCountData } = useGetCreatorTokenHoldersCountQuery({
     variables: {
@@ -39,6 +43,9 @@ export const CrtHoldersTab = ({ token }: CrtHoldersTabProps) => {
           id_eq: token.id,
         },
       },
+    },
+    onError: (error) => {
+      SentryLogger.error('Failed to fetch token holders count query', 'CrtHoldersTab', error)
     },
   })
 
