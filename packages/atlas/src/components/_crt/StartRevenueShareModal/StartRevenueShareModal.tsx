@@ -21,7 +21,6 @@ import { absoluteRoutes } from '@/config/routes'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
-import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useFee, useJoystream, useSubscribeAccountBalance } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
@@ -60,7 +59,6 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
   const { copyToClipboard } = useClipboard()
   const { convertMsTimestampToBlock } = useBlockTimeEstimation()
   const { tokenBalance } = useGetTokenBalance(token.id, memberId ?? '-1')
-  const smMatch = useMediaMatch('sm')
   const [refetchToken, { data: localTokenData }] = useGetFullCreatorTokenLazyQuery({
     variables: {
       id: token.id,
@@ -85,13 +83,15 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
     },
   })
   const [startDate, endDate] = watch(['startDate', 'endDate'])
-  const rawStartDate = startDate?.type === 'date' ? startDate.date : new Date()
-  const endDateTimestamp =
-    endDate?.type === 'date'
+  const endDateTimestamp = useMemo(() => {
+    const rawStartDate = startDate?.type === 'date' ? startDate.date : new Date()
+
+    return endDate?.type === 'date'
       ? endDate.date
       : endDate?.durationDays
       ? addDaysToDate(endDate.durationDays, rawStartDate)
       : new Date()
+  }, [endDate, startDate])
 
   const onSubmit = () =>
     handleSubmit((data) => {
@@ -174,7 +174,11 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
           icon: <SvgActionClock />,
           actionNode: (
             <TextButton
-              onClick={() => copyToClipboard(absoluteRoutes.viewer.channel(channelId ?? '', { tab: 'Token' }))}
+              onClick={() =>
+                copyToClipboard(
+                  `${window.location.host}${absoluteRoutes.viewer.channel(channelId ?? '', { tab: 'Token' })}`
+                )
+              }
               icon={<SvgActionLinkUrl />}
               iconPlacement="right"
             >
