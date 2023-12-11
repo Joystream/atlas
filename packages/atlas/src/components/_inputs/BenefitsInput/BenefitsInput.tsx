@@ -27,6 +27,11 @@ export const BenefitsInput = <T extends FieldValues>({ control, name }: Benefits
             key={field.id}
             name={`${name}.${index}` as Path<T>}
             control={control}
+            rules={{
+              validate: (data) => {
+                return !data.title ? 'Benefit is missing a title' : true
+              },
+            }}
             render={({ field: { value, onChange } }) => (
               <BenefitInput
                 onMoveUp={() => move(index, index - 1)}

@@ -17,6 +17,8 @@ import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { cVar } from '@/styles'
+import { SentryLogger } from '@/utils/logs'
+import { formatNumber } from '@/utils/number'
 
 export type RevenueShareParticipationWidgetProps = {
   revenueShare: FullCreatorTokenFragment['revenueShares'][number]
@@ -38,7 +40,14 @@ export const RevenueShareParticipationWidget = ({
   const navigate = useNavigate()
 
   const handleExitRevenueShare = async () => {
-    if (!joystream || !token || !memberId) return
+    if (!joystream || !token || !memberId) {
+      SentryLogger.error('Failed to submit exit revenue share', 'RevenueShareParticipationWidget', {
+        joystream,
+        token,
+        memberId,
+      })
+      return
+    }
     handleTransaction({
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).exitRevenueSplit(token.id, memberId, proxyCallback(updateStatus)),
@@ -48,6 +57,17 @@ export const RevenueShareParticipationWidget = ({
           iconType: 'success',
           actionText: 'Go to my portfolio',
           onActionClick: () => navigate(absoluteRoutes.viewer.portfolio()),
+        })
+      },
+      onError: () => {
+        SentryLogger.error('Failed to exit revenue share', 'RevenueShareParticipationWidget', {
+          joystream,
+          token,
+          memberId,
+        })
+        displaySnackbar({
+          iconType: 'error',
+          title: 'Something went wrong',
         })
       },
     })
@@ -136,13 +156,14 @@ export const RevenueShareProgress = ({ revenueShare, hasEnded, token }: RevenueS
           <FlexBox alignItems="center">
             <SvgJoyTokenMonochrome16 />
             <Text variant="h400" as="h4">
-              {hapiBnToTokenNumber(new BN(revenueShare.claimed))}/{hapiBnToTokenNumber(new BN(revenueShare.allocation))}
+              {formatNumber(hapiBnToTokenNumber(new BN(revenueShare.claimed)))}/
+              {formatNumber(hapiBnToTokenNumber(new BN(revenueShare.allocation)))}
             </Text>
           </FlexBox>
 
           <Text variant="t100" as="p" color="colorText">
-            ${(hapiBnToTokenNumber(new BN(revenueShare.claimed)) * tokenPrice).toFixed(2)}/
-            {(hapiBnToTokenNumber(new BN(revenueShare.allocation)) * tokenPrice).toFixed(2)}
+            ${formatNumber(hapiBnToTokenNumber(new BN(revenueShare.claimed)) * tokenPrice)}/
+            {formatNumber(hapiBnToTokenNumber(new BN(revenueShare.allocation)) * tokenPrice)}
           </Text>
         </FlexBox>
 

@@ -9,12 +9,15 @@ import { Tooltip } from '@/components/Tooltip'
 import { CrtFormWrapper } from '@/components/_crt/CrtFormWrapper'
 import { useMountEffect } from '@/hooks/useMountEffect'
 import { useFee, useJoystream } from '@/providers/joystream'
+import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { sizes } from '@/styles'
+import { SentryLogger } from '@/utils/logs'
+import { pluralizeNoun } from '@/utils/misc'
 import { formatNumber } from '@/utils/number'
 
-import { cliffOptions, getDataBasedOnType, vestingOptions } from './TokenIssuanceStep/TokenIssuanceStep.utils'
+import { getDataBasedOnType } from './TokenIssuanceStep/TokenIssuanceStep.utils'
 import { CommonStepProps } from './types'
 
 const cliffBanner = (
@@ -37,6 +40,7 @@ export type TokenSummaryStepProps = {
 export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: TokenSummaryStepProps) => {
   const { joystream, proxyCallback } = useJoystream()
   const { channelId, memberId } = useUser()
+  const { displaySnackbar } = useSnackbar()
   const handleTransaction = useTransaction()
   const [cliff, vesting, payout] = getDataBasedOnType(form.assuranceType) ?? [
     form.cliff,
@@ -57,7 +61,10 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: Tok
     },
   ])
   const handleSubmitTx = async () => {
-    if (!joystream || !channelId || !memberId) return
+    if (!joystream || !channelId || !memberId) {
+      SentryLogger.error('Failed to submit create token', 'TokenSummaryStep', { joystream, channelId, memberId })
+      return
+    }
     return handleTransaction({
       fee: fullFee,
       txFactory: async (handleUpdate) =>
@@ -79,7 +86,14 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: Tok
         onSuccess()
       },
       snackbarSuccessMessage: {
-        title: `$${form.name} minted successfuly.`,
+        title: `$${form.name} minted successfully.`,
+      },
+      onError: () => {
+        SentryLogger.error('Failed to create token', 'TokenSummaryStep', { joystream, channelId, memberId })
+        displaySnackbar({
+          iconType: 'error',
+          title: 'Something went wrong',
+        })
       },
     })
   }
@@ -155,40 +169,40 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: Tok
             </Text>
           </SectionRow>
         )}
-        {form.cliff && (
+        {typeof cliff !== 'object' && (
           <>
             <SectionRow
               title="Cliff"
               tooltipText="Cliff is a period of time that locks your channel tokens from being sold or transferred."
             >
               <Text variant="h300" as="p" color="colorTextStrong">
-                {cliffOptions.find((opt) => opt.value === form.cliff)?.name}
+                {Number(cliff) === 0 ? 'No vesting' : pluralizeNoun(Number(cliff), 'month')}
               </Text>
             </SectionRow>
             {cliffBanner}
           </>
         )}
-        {form.vesting && (
+        {typeof vesting !== 'object' && (
           <SectionRow
             title="Vesting period"
             tooltipText="All tokens minted that are not part of the first payout get unlocked gradually over the course of the vesting period. Vesting period starts after the cliff has passed."
           >
             <Text variant="h300" as="p" color="colorTextStrong">
-              {vestingOptions.find((opt) => opt.value === form.vesting)?.name}
+              {Number(vesting) === 0 ? 'No vesting' : pluralizeNoun(Number(vesting), 'month')}
             </Text>
           </SectionRow>
         )}
-        {!!(form.creatorIssueAmount && form.firstPayout) && (
+        {!!(form.creatorIssueAmount && payout) && (
           <SectionRow
             title="First payout"
             tooltipText="A portion of your own tokens that will be released to you right after cliff period."
           >
             <RowBox gap={2}>
               <Text variant="h300" as="p" color="colorText">
-                ({formatNumber((form.creatorIssueAmount * form.firstPayout) / 100)} ${form.name})
+                ({formatNumber((form.creatorIssueAmount * payout) / 100)} ${form.name})
               </Text>
               <Text variant="h300" as="p" color="colorTextStrong">
-                {form.firstPayout}%
+                {payout}%
               </Text>
             </RowBox>
           </SectionRow>

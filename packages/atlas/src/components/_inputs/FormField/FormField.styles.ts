@@ -52,6 +52,7 @@ type ChildrenWrapperProps = {
 }
 
 export const ChildrenWrapper = styled.div<ChildrenWrapperProps>`
+  min-width: 0;
   ${({ isError, disableErrorAnimation }) => (isError && !disableErrorAnimation ? errorShakeAnimation : null)};
 `
 

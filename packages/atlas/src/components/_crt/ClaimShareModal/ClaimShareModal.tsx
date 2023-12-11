@@ -1,8 +1,10 @@
 import { useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
 
-import { useGetRevenueShareDividendQuery } from '@/api/queries/__generated__/creatorTokens.generated'
-import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
+import {
+  useGetFullCreatorTokenQuery,
+  useGetRevenueShareDividendQuery,
+} from '@/api/queries/__generated__/creatorTokens.generated'
 import { SvgAlertsInformative24 } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
 import { FlexBox } from '@/components/FlexBox'
@@ -17,36 +19,47 @@ import { useFee, useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
+import { SentryLogger } from '@/utils/logs'
 import { formatDateTime } from '@/utils/time'
 
 type ClaimShareModalProps = {
   show?: boolean
   onClose: () => void
   tokenId?: string
-  token: FullCreatorTokenFragment
 }
 
-export const ClaimShareModal = ({ onClose, token, show }: ClaimShareModalProps) => {
-  const tokenName = token.symbol ?? 'N/A'
+export const ClaimShareModal = ({ onClose, show, tokenId }: ClaimShareModalProps) => {
+  const { data } = useGetFullCreatorTokenQuery({ variables: { id: tokenId ?? '' }, skip: !tokenId })
+  const token = data?.creatorTokenById
+  const tokenName = token?.symbol ?? 'N/A'
   const { joystream, proxyCallback } = useJoystream()
   const { memberId } = useUser()
   const { displaySnackbar } = useSnackbar()
   const handleTransaction = useTransaction()
-  const { tokenBalance } = useGetTokenBalance(token.id, memberId ?? '')
+  const { tokenBalance } = useGetTokenBalance(token?.id, memberId ?? '')
   const { fullFee } = useFee('participateInSplitTx')
-  const activeRevenueShare = token.revenueShares.find((rS) => !rS.finalized)
+  const activeRevenueShare = token?.revenueShares.find((rS) => !rS.finalized)
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
   const client = useApolloClient()
   const { data: dividedData } = useGetRevenueShareDividendQuery({
     variables: {
-      tokenId: token.id,
+      tokenId: token?.id ?? '',
       stakingAmount: tokenBalance,
     },
-    skip: !tokenBalance,
+    skip: !tokenBalance || !token,
   })
 
   const onSubmit = async () => {
-    if (!joystream || !token || !memberId || !tokenBalance || !activeRevenueShare) return
+    if (!joystream || !token || !memberId || !tokenBalance || !activeRevenueShare) {
+      SentryLogger.error('Failed to submit claim share transaction', 'ClaimShareModal', {
+        joystream,
+        token,
+        memberId,
+        tokenBalance,
+        activeRevenueShare,
+      })
+      return
+    }
     handleTransaction({
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).participateInSplit(
@@ -68,6 +81,19 @@ export const ClaimShareModal = ({ onClose, token, show }: ClaimShareModalProps) 
         })
         onClose()
         client.refetchQueries({ include: 'active' })
+      },
+      onError: () => {
+        SentryLogger.error('Failed to claim share transaction', 'ClaimShareModal', {
+          joystream,
+          token,
+          memberId,
+          tokenBalance,
+          activeRevenueShare,
+        })
+        displaySnackbar({
+          iconType: 'error',
+          title: 'Something went wrong',
+        })
       },
     })
   }

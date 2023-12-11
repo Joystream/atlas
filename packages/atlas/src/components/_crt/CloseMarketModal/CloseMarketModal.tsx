@@ -13,6 +13,7 @@ import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { cVar } from '@/styles'
+import { SentryLogger } from '@/utils/logs'
 
 const getTokenDetails = (id: string) => ({
   title: 'JBC',
@@ -39,6 +40,7 @@ export const CloseMarketModal = ({ onClose, show, channelId }: CloseMarketModalP
 
   const handleCloseAmm = useCallback(async () => {
     if (!joystream || !channelId || !memberId) {
+      SentryLogger.error('Failed to submit close market', 'CloseMarketModal', { joystream, channelId, memberId })
       return
     }
     handleTransaction({
@@ -47,12 +49,13 @@ export const CloseMarketModal = ({ onClose, show, channelId }: CloseMarketModalP
       onTxSync: async () => {
         client.refetchQueries({ include: 'active' }).then(() => {
           displaySnackbar({
-            title: 'Market closed successfuly',
+            title: 'Market closed successfully',
           })
           onClose()
         })
       },
       onError: () => {
+        SentryLogger.error('Failed to close market', 'CloseMarketModal', { joystream, channelId, memberId })
         displaySnackbar({
           iconType: 'error',
           title: 'Something went wrong',

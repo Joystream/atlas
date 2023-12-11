@@ -1,3 +1,4 @@
+import { useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -16,6 +17,7 @@ import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { calcBuyMarketPricePerToken } from '@/utils/crts'
+import { SentryLogger } from '@/utils/logs'
 
 import { BuyMarketTokenConditions } from './steps/BuyMarketTokenConditions'
 
@@ -39,11 +41,15 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
   const { control, watch, handleSubmit, reset, formState } = useForm<{ tokens: number }>()
   const tokens = watch('tokens') || 0
   const { fullFee } = useFee('purchaseTokenOnMarketTx', ['1', '1', String(tokens ?? 0), '1000000'])
-  const { data } = useGetFullCreatorTokenQuery({
+  const { data, loading } = useGetFullCreatorTokenQuery({
     variables: {
       id: tokenId,
     },
+    onError: (error) => {
+      SentryLogger.error('Error while fetching creator token', 'BuyMarketTokenModal', error)
+    },
   })
+  const client = useApolloClient()
   const { accountBalance } = useSubscribeAccountBalance()
   const title = data?.creatorTokenById?.symbol ?? 'N/A'
 
@@ -112,6 +118,12 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
   const onTransactionSubmit = useCallback(() => {
     const slippageAmount = calculateRequiredHapi(amountRef.current ?? 0)
     if (!joystream || !memberId || !amountRef.current || !slippageAmount) {
+      SentryLogger.error('Failed to submit buy market token', 'BuyMarketTokenModal', {
+        joystream,
+        memberId,
+        amountRef,
+        slippageAmount,
+      })
       return
     }
 
@@ -126,15 +138,23 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
         ),
       onTxSync: async () => {
         setActiveStep(BUY_MARKET_TOKEN_STEPS.success)
+        client.refetchQueries({ include: 'all' })
       },
       onError: () => {
         setActiveStep(BUY_MARKET_TOKEN_STEPS.form)
+        SentryLogger.error('Error while buying market token', 'BuyMarketTokenModal', {
+          joystream,
+          memberId,
+          amountRef,
+          slippageAmount,
+        })
         displaySnackbar({
+          iconType: 'error',
           title: 'Something went wrong',
         })
       },
     })
-  }, [calculateRequiredHapi, displaySnackbar, handleTransaction, joystream, memberId, proxyCallback, tokenId])
+  }, [calculateRequiredHapi, client, displaySnackbar, handleTransaction, joystream, memberId, proxyCallback, tokenId])
 
   const formDetails = useMemo(
     () => [
@@ -251,7 +271,11 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
     }
   }, [activeStep, data?.creatorTokenById?.symbol, handleSubmit, onTransactionSubmit])
 
-  if (!currentAmm && show) {
+  if (!loading && !currentAmm && show) {
+    SentryLogger.error('BuyAmmModal invoked on token without active amm', 'BuyMarketTokenModal', {
+      loading,
+      currentAmm,
+    })
     throw new Error('BuyAmmModal invoked on token without active amm')
   }
 

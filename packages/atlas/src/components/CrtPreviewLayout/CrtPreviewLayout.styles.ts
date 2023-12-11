@@ -47,6 +47,8 @@ export const FirstColumn = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${sizes(12)};
+  min-width: 0;
+  overflow-x: hidden;
 
   ${media.md} {
     gap: ${sizes(16)};

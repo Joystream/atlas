@@ -6,6 +6,7 @@ import {
   BasicCreatorTokenFragmentDoc,
   BasicCreatorTokenHolderFragmentDoc,
   BasicRevenueShareFragmentDoc,
+  FullAmmCurveFragmentDoc,
   FullCreatorTokenFragmentDoc,
 } from './fragments.generated'
 
@@ -32,6 +33,7 @@ export type GetBasicCreatorTokenQuery = {
     revenueShares: Array<{ __typename?: 'RevenueShare'; id: string }>
     channel?: {
       __typename?: 'TokenChannel'
+      id: string
       channel: {
         __typename?: 'Channel'
         id: string
@@ -161,6 +163,7 @@ export type GetFullCreatorTokenQuery = {
     }>
     channel?: {
       __typename?: 'TokenChannel'
+      id: string
       channel: {
         __typename?: 'Channel'
         id: string
@@ -272,10 +275,11 @@ export type GetCreatorTokenHoldersQuery = {
       symbol?: string | null
       status: Types.TokenStatus
       lastPrice?: string | null
-      channel?: { __typename?: 'TokenChannel'; id: string } | null
+      channel?: { __typename?: 'TokenChannel'; id: string; channel: { __typename?: 'Channel'; id: string } } | null
     }
     vestingSchedules: Array<{
       __typename?: 'VestedAccount'
+      id: string
       totalVestingAmount: string
       vestingSource:
         | { __typename: 'InitialIssuanceVestingSource' }
@@ -283,6 +287,7 @@ export type GetCreatorTokenHoldersQuery = {
         | { __typename: 'SaleVestingSource' }
       vesting: {
         __typename?: 'VestingSchedule'
+        id: string
         endsAt: number
         cliffBlock: number
         cliffDurationBlocks: number
@@ -291,6 +296,15 @@ export type GetCreatorTokenHoldersQuery = {
       }
     }>
   }>
+}
+
+export type GetCreatorTokenHoldersCountQueryVariables = Types.Exact<{
+  where?: Types.InputMaybe<Types.TokenAccountWhereInput>
+}>
+
+export type GetCreatorTokenHoldersCountQuery = {
+  __typename?: 'Query'
+  tokenAccountsConnection: { __typename?: 'TokenAccountsConnection'; totalCount: number }
 }
 
 export type GetChannelTokenBalanceQueryVariables = Types.Exact<{
@@ -327,6 +341,36 @@ export type GetHistoricalTokenAllocationQuery = {
     __typename?: 'GetCumulativeHistoricalShareAllocationResult'
     cumulativeHistoricalAllocation: number
   }
+}
+
+export type GetFullAmmCurveQueryVariables = Types.Exact<{
+  where?: Types.InputMaybe<Types.AmmCurveWhereInput>
+  orderBy?: Types.InputMaybe<Array<Types.AmmCurveOrderByInput> | Types.AmmCurveOrderByInput>
+  limit?: Types.InputMaybe<Types.Scalars['Int']>
+  offset?: Types.InputMaybe<Types.Scalars['Int']>
+}>
+
+export type GetFullAmmCurveQuery = {
+  __typename?: 'Query'
+  ammCurves: Array<{
+    __typename?: 'AmmCurve'
+    id: string
+    ammSlopeParameter: string
+    mintedByAmm: string
+    burnedByAmm: string
+    ammInitPrice: string
+    finalized: boolean
+    transactions: Array<{
+      __typename?: 'AmmTransaction'
+      id: string
+      createdIn: number
+      pricePaid: string
+      pricePerUnit: string
+      transactionType: Types.AmmTransactionType
+      quantity: string
+      account: { __typename?: 'TokenAccount'; member: { __typename?: 'Membership'; id: string } }
+    }>
+  }>
 }
 
 export type GetTokenRevenueSharesQueryVariables = Types.Exact<{
@@ -522,6 +566,54 @@ export type GetCreatorTokenHoldersQueryResult = Apollo.QueryResult<
   GetCreatorTokenHoldersQuery,
   GetCreatorTokenHoldersQueryVariables
 >
+export const GetCreatorTokenHoldersCountDocument = gql`
+  query GetCreatorTokenHoldersCount($where: TokenAccountWhereInput) {
+    tokenAccountsConnection(where: $where, orderBy: [id_ASC]) {
+      totalCount
+    }
+  }
+`
+
+/**
+ * __useGetCreatorTokenHoldersCountQuery__
+ *
+ * To run a query within a React component, call `useGetCreatorTokenHoldersCountQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCreatorTokenHoldersCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCreatorTokenHoldersCountQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetCreatorTokenHoldersCountQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetCreatorTokenHoldersCountQuery, GetCreatorTokenHoldersCountQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetCreatorTokenHoldersCountQuery, GetCreatorTokenHoldersCountQueryVariables>(
+    GetCreatorTokenHoldersCountDocument,
+    options
+  )
+}
+export function useGetCreatorTokenHoldersCountLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetCreatorTokenHoldersCountQuery, GetCreatorTokenHoldersCountQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetCreatorTokenHoldersCountQuery, GetCreatorTokenHoldersCountQueryVariables>(
+    GetCreatorTokenHoldersCountDocument,
+    options
+  )
+}
+export type GetCreatorTokenHoldersCountQueryHookResult = ReturnType<typeof useGetCreatorTokenHoldersCountQuery>
+export type GetCreatorTokenHoldersCountLazyQueryHookResult = ReturnType<typeof useGetCreatorTokenHoldersCountLazyQuery>
+export type GetCreatorTokenHoldersCountQueryResult = Apollo.QueryResult<
+  GetCreatorTokenHoldersCountQuery,
+  GetCreatorTokenHoldersCountQueryVariables
+>
 export const GetChannelTokenBalanceDocument = gql`
   query GetChannelTokenBalance($currentBlockHeight: Int!, $memberId: String!, $tokenId: String!) {
     getAccountTransferrableBalance(currentBlockHeight: $currentBlockHeight, memberId: $memberId, tokenId: $tokenId) {
@@ -674,6 +766,49 @@ export type GetHistoricalTokenAllocationQueryResult = Apollo.QueryResult<
   GetHistoricalTokenAllocationQuery,
   GetHistoricalTokenAllocationQueryVariables
 >
+export const GetFullAmmCurveDocument = gql`
+  query GetFullAmmCurve($where: AmmCurveWhereInput, $orderBy: [AmmCurveOrderByInput!], $limit: Int, $offset: Int) {
+    ammCurves(where: $where, orderBy: $orderBy, offset: $offset, limit: $limit) {
+      ...FullAmmCurve
+    }
+  }
+  ${FullAmmCurveFragmentDoc}
+`
+
+/**
+ * __useGetFullAmmCurveQuery__
+ *
+ * To run a query within a React component, call `useGetFullAmmCurveQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFullAmmCurveQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetFullAmmCurveQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *   },
+ * });
+ */
+export function useGetFullAmmCurveQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetFullAmmCurveQuery, GetFullAmmCurveQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetFullAmmCurveQuery, GetFullAmmCurveQueryVariables>(GetFullAmmCurveDocument, options)
+}
+export function useGetFullAmmCurveLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetFullAmmCurveQuery, GetFullAmmCurveQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetFullAmmCurveQuery, GetFullAmmCurveQueryVariables>(GetFullAmmCurveDocument, options)
+}
+export type GetFullAmmCurveQueryHookResult = ReturnType<typeof useGetFullAmmCurveQuery>
+export type GetFullAmmCurveLazyQueryHookResult = ReturnType<typeof useGetFullAmmCurveLazyQuery>
+export type GetFullAmmCurveQueryResult = Apollo.QueryResult<GetFullAmmCurveQuery, GetFullAmmCurveQueryVariables>
 export const GetTokenRevenueSharesDocument = gql`
   query GetTokenRevenueShares($where: RevenueShareWhereInput, $limit: Int, $offset: Int) {
     revenueShares(where: $where, limit: $limit, offset: $offset) {

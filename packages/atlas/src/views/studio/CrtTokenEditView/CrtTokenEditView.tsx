@@ -14,11 +14,13 @@ import { Benefit } from '@/components/_inputs/BenefitInput'
 import { BenefitsInput } from '@/components/_inputs/BenefitsInput'
 import { FormField } from '@/components/_inputs/FormField'
 import { MarkdownEditor } from '@/components/_inputs/MarkdownEditor/MarkdownEditor'
+import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { zIndex } from '@/styles'
+import { SentryLogger } from '@/utils/logs'
 
 type CrtPageForm = {
   videoId: string
@@ -36,10 +38,34 @@ export const CrtTokenEditView = () => {
     variables: {
       id: activeChannel?.creatorToken?.token.id ?? '',
     },
+    onError: (error) => {
+      SentryLogger.error('Failed to fetch token data', 'CrtTokenEdit', error)
+    },
   })
 
   const [mode, setMode] = useState<'edit' | 'preview'>('edit')
   const form = useForm<CrtPageForm>()
+  const [openDialog, closeDialog] = useConfirmationModal({
+    title: 'Discard changes?',
+    description:
+      'You have unsaved changes which are going to be lost if you change the tab. Are you sure you want to continue?',
+    type: 'warning',
+    primaryButton: {
+      text: 'Discard changes',
+      onClick: () => {
+        closeDialog()
+        form.reset()
+        displaySnackbar({
+          title: 'All changes were discarded',
+          iconType: 'info',
+        })
+      },
+    },
+    secondaryButton: {
+      text: 'Cancel',
+      onClick: () => closeDialog(),
+    },
+  })
 
   useEffect(() => {
     if (data?.creatorTokenById) {
@@ -53,6 +79,7 @@ export const CrtTokenEditView = () => {
 
   const handleSubmit = form.handleSubmit((data) => {
     if (!joystream || !memberId || !channelId) {
+      SentryLogger.error('Failed to submit CRT token edit form', 'CrtTokenEdit', { joystream, memberId, channelId })
       return
     }
 
@@ -94,7 +121,7 @@ export const CrtTokenEditView = () => {
   return (
     <Wrapper>
       <CrtPreviewLayout
-        mode="preview"
+        mode={mode}
         isDirty={form.formState.isDirty}
         token={data.creatorTokenById}
         tokenDetails={
@@ -105,7 +132,11 @@ export const CrtTokenEditView = () => {
                 control={form.control}
                 render={({ field }) => <VideoPicker selectedVideo={field.value} setSelectedVideo={field.onChange} />}
               />
-              <FormField label="Benefits" description="Add benefits and utilities for holders of your token.">
+              <FormField
+                label="Benefits"
+                description="Add benefits and utilities for holders of your token."
+                error={form.formState.errors.benefits?.[0]?.message}
+              >
                 <BenefitsInput name="benefits" control={form.control} />
               </FormField>
               <Controller
@@ -142,15 +173,16 @@ export const CrtTokenEditView = () => {
         secondaryButton={
           mode === 'edit'
             ? {
+                disabled: !form.formState.isDirty,
                 text: 'Cancel',
-                onClick: () => form.reset(),
+                onClick: () => openDialog(),
               }
             : undefined
         }
         isNoneCrypto
         primaryButton={
           mode === 'edit'
-            ? { text: 'Publish', onClick: handleSubmit }
+            ? { text: 'Publish', onClick: handleSubmit, disabled: !form.formState.isDirty }
             : {
                 text: 'Edit',
                 onClick: () => setMode('edit'),

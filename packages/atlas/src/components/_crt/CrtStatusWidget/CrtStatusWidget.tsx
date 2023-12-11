@@ -15,6 +15,7 @@ import { DetailsContent } from '@/components/_nft/NftTile'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { calcBuyMarketPricePerToken } from '@/utils/crts'
+import { SentryLogger } from '@/utils/logs'
 import { formatDate } from '@/utils/time'
 
 import { Drawer, StatisticsContainer, SupplyLine, ToggleContainer, Widget } from './CrtStatusWidget.styles'
@@ -32,6 +33,9 @@ export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({ token }) => {
       tokenId: token.id,
     },
     skip: !token.id,
+    onError: (error) => {
+      SentryLogger.error('Failed to fetch token allocation query', 'CrtStatusWidget', error)
+    },
   })
 
   const totalVolume = useMemo(() => {

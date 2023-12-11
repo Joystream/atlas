@@ -26,6 +26,12 @@ query GetCreatorTokenHolders(
   }
 }
 
+query GetCreatorTokenHoldersCount($where: TokenAccountWhereInput) {
+  tokenAccountsConnection(where: $where, orderBy: [id_ASC]) {
+    totalCount
+  }
+}
+
 query GetChannelTokenBalance($currentBlockHeight: Int!, $memberId: String!, $tokenId: String!) {
   getAccountTransferrableBalance(currentBlockHeight: $currentBlockHeight, memberId: $memberId, tokenId: $tokenId) {
     transferrableCrtAmount
@@ -41,6 +47,12 @@ query GetRevenueShareDividend($stakingAmount: Int!, $tokenId: String!) {
 query GetHistoricalTokenAllocation($tokenId: String!) {
   getCumulativeHistoricalShareAllocation(tokenId: $tokenId) {
     cumulativeHistoricalAllocation
+  }
+}
+
+query GetFullAmmCurve($where: AmmCurveWhereInput, $orderBy: [AmmCurveOrderByInput!], $limit: Int, $offset: Int) {
+  ammCurves(where: $where, orderBy: $orderBy, offset: $offset, limit: $limit) {
+    ...FullAmmCurve
   }
 }
 

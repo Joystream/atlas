@@ -16,6 +16,7 @@ export const Header = styled.div<{ progressWidth: string }>`
     content: ' ';
     display: block;
     background-color: ${cVar('colorBackgroundPrimary')};
+    transition: width 0.3s ease-in-out;
     position: absolute;
     bottom: 0;
     height: 4px;
