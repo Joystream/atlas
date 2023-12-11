@@ -16,6 +16,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUser } from '@/providers/user/user.hooks'
+import { SentryLogger } from '@/utils/logs'
 import { permillToPercentage } from '@/utils/number'
 
 import {
@@ -96,6 +97,9 @@ export const CrtPreviewLayout = ({
           id_eq: memberId,
         },
       },
+    },
+    onError: (error) => {
+      SentryLogger.error('Failed to fetch token holders query', 'CrtPreviewLayout', error)
     },
   })
 

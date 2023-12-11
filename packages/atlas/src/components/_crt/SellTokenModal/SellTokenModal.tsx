@@ -15,6 +15,7 @@ import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { calcSellMarketPricePerToken } from '@/utils/crts'
+import { SentryLogger } from '@/utils/logs'
 
 export type SellTokenModalProps = {
   tokenId: string
@@ -34,6 +35,9 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
   const { data } = useGetFullCreatorTokenQuery({
     variables: {
       id: tokenId,
+    },
+    onError: (error) => {
+      SentryLogger.error('Failed to fetch token data', 'SellTokenModal', { error })
     },
   })
 
