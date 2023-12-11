@@ -64,9 +64,6 @@ export const CrtMarketWidget = ({ onTabSwitch, token }: CrtMarketWidgetProps) =>
           </Detail>
           <ButtonWrapper>
             <CloseMarketButton fullWidth={!smMatch} channelId={channelId ?? '-1'} />
-            {/*<Button fullWidth={!smMatch} icon={<SvgActionNotForSale />} variant="destructive-secondary">*/}
-            {/*  Close market*/}
-            {/*</Button>*/}
           </ButtonWrapper>
         </FlexBox>
       }
