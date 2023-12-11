@@ -118,7 +118,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
   const onTransactionSubmit = useCallback(() => {
     const slippageAmount = calculateRequiredHapi(amountRef.current ?? 0)
     if (!joystream || !memberId || !amountRef.current || !slippageAmount) {
-      SentryLogger.error('Error while buying market token', 'BuyMarketTokenModal', {
+      SentryLogger.error('Failed to submit buy market token', 'BuyMarketTokenModal', {
         joystream,
         memberId,
         amountRef,
@@ -142,6 +142,12 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
       },
       onError: () => {
         setActiveStep(BUY_MARKET_TOKEN_STEPS.form)
+        SentryLogger.error('Error while buying market token', 'BuyMarketTokenModal', {
+          joystream,
+          memberId,
+          amountRef,
+          slippageAmount,
+        })
         displaySnackbar({
           iconType: 'error',
           title: 'Something went wrong',

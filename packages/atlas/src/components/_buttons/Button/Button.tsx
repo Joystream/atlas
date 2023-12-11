@@ -1,10 +1,18 @@
 import { To } from 'history'
 import { ButtonHTMLAttributes, ElementType, PropsWithChildren, ReactNode, forwardRef } from 'react'
 
-import { Text, TextVariant } from '@/components/Text'
+import { TextVariant } from '@/components/Text'
 import { getLinkPropsFromTo } from '@/utils/button'
 
-import { BorderWrapper, ButtonBase, ButtonIconWrapper, ButtonSize, ButtonVariant, IconPlacement } from './Button.styles'
+import {
+  BorderWrapper,
+  ButtonBase,
+  ButtonIconWrapper,
+  ButtonSize,
+  ButtonText,
+  ButtonVariant,
+  IconPlacement,
+} from './Button.styles'
 
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> &
   PropsWithChildren<{
@@ -77,9 +85,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) =>
           </ButtonIconWrapper>
         )}
         {children && (
-          <Text as="span" variant={BUTTON_SIZE_TO_TEXT_VARIANT[size]} color="inherit">
+          <ButtonText as="span" variant={BUTTON_SIZE_TO_TEXT_VARIANT[size]} color="inherit">
             {children}
-          </Text>
+          </ButtonText>
         )}
         {icon && iconPlacement === 'right' && (
           <ButtonIconWrapper size={size} iconOnly={iconOnly} iconPlacement={iconPlacement}>

@@ -3,12 +3,14 @@ import { useMemo, useState } from 'react'
 
 import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgJoyTokenMonochrome24 } from '@/assets/icons'
+import { EmptyFallback } from '@/components/EmptyFallback'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
 import { RatioPreview } from '@/components/RatioPreview/RatioPreview'
 import { WidgetTile } from '@/components/WidgetTile'
 import { ClaimShareModal } from '@/components/_crt/ClaimShareModal'
 import { RevenueShareHistoryTable } from '@/components/_crt/RevenueShareHistoryTable'
+import { RevenueShareModalButton } from '@/components/_crt/RevenueShareModalButton'
 import { RevenueShareParticipationWidget } from '@/components/_crt/RevenueShareParticipationWidget'
 import { RevenueShareStakersTable } from '@/components/_crt/RevenueShareStakersTable'
 import { RevenueShareStateWidget } from '@/components/_crt/RevenueShareStateWidget'
@@ -37,7 +39,7 @@ export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
     <>
       <LayoutGrid>
         <GridItem colSpan={{ base: 12, sm: 4 }}>
-          <RevenueShareStateWidget endsAtBlock={activeRevenueShare?.endsAt} />
+          <RevenueShareStateWidget revenueShare={activeRevenueShare} />
         </GridItem>
         <GridItem colSpan={{ base: 12, sm: 4 }}>
           <WidgetTile
@@ -69,30 +71,42 @@ export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
             }
           />
         </GridItem>
-        {activeRevenueShare && (
-          <GridItem colSpan={{ base: 12 }}>
-            <RevenueShareParticipationWidget
-              token={token}
-              revenueShare={activeRevenueShare}
-              onClaimShare={() => setOpenClaimShareModal(true)}
-            />
-            <ClaimShareModal onClose={() => setOpenClaimShareModal(false)} show={openClaimShareModal} token={token} />
-          </GridItem>
-        )}
 
         {activeRevenueShare ? (
+          <>
+            <GridItem colSpan={{ base: 12 }}>
+              <RevenueShareParticipationWidget
+                token={token}
+                revenueShare={activeRevenueShare}
+                onClaimShare={() => setOpenClaimShareModal(true)}
+              />
+              <ClaimShareModal
+                onClose={() => setOpenClaimShareModal(false)}
+                show={openClaimShareModal}
+                tokenId={token.id}
+              />
+            </GridItem>
+            <GridItem colSpan={{ base: 12 }}>
+              <RevenueShareStakersTable
+                data={activeRevenueShare.stakers.map((staker) => ({
+                  memberId: staker.account.member.id,
+                  stakedAtBlock: staker.createdIn,
+                  staked: +(staker.stakedAmount ?? 0),
+                  earnings: new BN(staker.earnings ?? 0),
+                }))}
+                tokenSymbol={token.symbol}
+              />
+            </GridItem>
+          </>
+        ) : finalizedRevenueShares.length ? null : (
           <GridItem colSpan={{ base: 12 }}>
-            <RevenueShareStakersTable
-              data={activeRevenueShare.stakers.map((staker) => ({
-                memberId: staker.account.member.id,
-                stakedAtBlock: staker.createdIn,
-                staked: +(staker.stakedAmount ?? 0),
-                earnings: new BN(staker.earnings ?? 0),
-              }))}
-              tokenSymbol={token.symbol}
+            <EmptyFallback
+              title="No ongoing revenue share"
+              subtitle="To witdraw tokens from your channel you have to start revenue share with your holders"
+              button={<RevenueShareModalButton variant="secondary" token={token} />}
             />
           </GridItem>
-        ) : null}
+        )}
 
         {finalizedRevenueShares.length ? (
           <GridItem colSpan={{ base: 12 }}>

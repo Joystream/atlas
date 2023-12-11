@@ -62,7 +62,7 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: Tok
   ])
   const handleSubmitTx = async () => {
     if (!joystream || !channelId || !memberId) {
-      SentryLogger.error('Failed to create token', 'TokenSummaryStep', { joystream, channelId, memberId })
+      SentryLogger.error('Failed to submit create token', 'TokenSummaryStep', { joystream, channelId, memberId })
       return
     }
     return handleTransaction({
@@ -89,6 +89,7 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: Tok
         title: `$${form.name} minted successfully.`,
       },
       onError: () => {
+        SentryLogger.error('Failed to create token', 'TokenSummaryStep', { joystream, channelId, memberId })
         displaySnackbar({
           iconType: 'error',
           title: 'Something went wrong',
