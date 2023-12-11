@@ -12,6 +12,7 @@ import { StartRevenueShare } from '@/components/_crt/StartRevenueShareModal/Star
 import { StartSaleOrMarketButton } from '@/components/_crt/StartSaleOrMarketButton/StartSaleOrMarketButton'
 import { absoluteRoutes } from '@/config/routes'
 import { useUser } from '@/providers/user/user.hooks'
+import { SentryLogger } from '@/utils/logs'
 import { HeaderContainer, MainContainer, TabsContainer } from '@/views/studio/CrtDashboard/CrtDashboard.styles'
 import { CrtDashboardMainTab } from '@/views/studio/CrtDashboard/tabs/CrtDashboardMainTab'
 import { CrtHoldersTab } from '@/views/studio/CrtDashboard/tabs/CrtHoldersTab'
@@ -32,6 +33,9 @@ export const CrtDashboard = () => {
   const { data } = useGetFullCreatorTokenQuery({
     variables: {
       id: activeChannel?.creatorToken?.token.id ?? '',
+    },
+    onError: (error) => {
+      SentryLogger.error('Failed to fetch creator token', 'CrtDashboard', error)
     },
   })
   const handleChangeTab = useCallback((idx: number) => {
@@ -65,7 +69,7 @@ export const CrtDashboard = () => {
 
         <TabsContainer>
           <Tabs initialIndex={0} selected={currentTab} tabs={mappedTabs} onSelectTab={handleChangeTab} />
-          {currentTab === 0 && (
+          {currentTab === getTabIndex('Market', mappedTabs) && (
             <>
               <Button to={absoluteRoutes.studio.crtTokenEdit()} variant="secondary" icon={<SvgActionEdit />}>
                 Edit token page
@@ -77,7 +81,7 @@ export const CrtDashboard = () => {
               )}
             </>
           )}
-          {currentTab === 2 && (
+          {currentTab === getTabIndex('Revenue share', mappedTabs) && (
             <>
               {!activeRevenueShare ? (
                 <>

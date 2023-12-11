@@ -14,6 +14,7 @@ import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
+import { SentryLogger } from '@/utils/logs'
 import { formatDateTime } from '@/utils/time'
 
 export type RevenueShareWidgetProps = {
@@ -39,6 +40,7 @@ export const RevenueShareWidget = ({ tokenName, tokenId, revenueShare, memberId 
   const unlockStake = useCallback(async () => {
     if (!joystream || !memberId) {
       return
+      SentryLogger.error('Failed to unlock stake', 'RevenueShareWidget', { joystream, memberId })
     }
     handleTransaction({
       txFactory: async (updateStatus) =>
@@ -47,6 +49,12 @@ export const RevenueShareWidget = ({ tokenName, tokenId, revenueShare, memberId 
         displaySnackbar({
           title: `${data.amount} $${tokenName} unlocked`,
           iconType: 'success',
+        })
+      },
+      onError: () => {
+        displaySnackbar({
+          iconType: 'error',
+          title: 'Something went wrong',
         })
       },
     })
