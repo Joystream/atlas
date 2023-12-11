@@ -57,6 +57,12 @@ export const SaleSummaryStep: FC<SaleSummaryProps> = ({
         onSuccess()
       },
       onError: () => {
+        SentryLogger.error('Failed to start CRT market', 'MarketDrawer', {
+          joystream,
+          memberId,
+          channelId,
+          tokenPrice,
+        })
         displaySnackbar({
           title: 'Something went wrong',
         })

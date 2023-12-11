@@ -83,6 +83,13 @@ export const ClaimShareModal = ({ onClose, show, tokenId }: ClaimShareModalProps
         client.refetchQueries({ include: 'active' })
       },
       onError: () => {
+        SentryLogger.error('Failed to claim share transaction', 'ClaimShareModal', {
+          joystream,
+          token,
+          memberId,
+          tokenBalance,
+          activeRevenueShare,
+        })
         displaySnackbar({
           iconType: 'error',
           title: 'Something went wrong',

@@ -91,7 +91,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
       const rawStartDate = data.startDate?.type === 'date' ? data.startDate.date : new Date()
       const startBlock = convertMsTimestampToBlock(rawStartDate.getTime())
       if (!joystream || !memberId || !channelId || !startBlock) {
-        SentryLogger.error('Failed to start revenue share', 'StartRevenueShare', {
+        SentryLogger.error('Failed submit to start revenue share', 'StartRevenueShare', {
           joystream,
           memberId,
           channelId,
@@ -132,6 +132,12 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
         onError: () => {
           displaySnackbar({
             title: 'Something went wrong',
+          })
+          SentryLogger.error('Failed to start revenue share', 'StartRevenueShare', {
+            joystream,
+            memberId,
+            channelId,
+            startBlock,
           })
           onClose()
         },

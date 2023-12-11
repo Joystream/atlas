@@ -30,7 +30,11 @@ export const CloseRevenueShareButton = ({
 
   const finalizeRevenueShare = useCallback(() => {
     if (!joystream || !memberId || !channelId) {
-      SentryLogger.error('Failed to close revenue share', 'CloseRevenueShareButton', { joystream, memberId, channelId })
+      SentryLogger.error('Failed to submit close revenue share', 'CloseRevenueShareButton', {
+        joystream,
+        memberId,
+        channelId,
+      })
       return
     }
     handleTransaction({
@@ -45,6 +49,11 @@ export const CloseRevenueShareButton = ({
         })
       },
       onError: () => {
+        SentryLogger.error('Failed to close revenue share', 'CloseRevenueShareButton', {
+          joystream,
+          memberId,
+          channelId,
+        })
         displaySnackbar({
           iconType: 'error',
           title: 'Something went wrong',

@@ -40,7 +40,7 @@ export const CloseMarketModal = ({ onClose, show, channelId }: CloseMarketModalP
 
   const handleCloseAmm = useCallback(async () => {
     if (!joystream || !channelId || !memberId) {
-      SentryLogger.error('Failed to close market', 'CloseMarketModal', { joystream, channelId, memberId })
+      SentryLogger.error('Failed to submit close market', 'CloseMarketModal', { joystream, channelId, memberId })
       return
     }
     handleTransaction({
@@ -55,6 +55,7 @@ export const CloseMarketModal = ({ onClose, show, channelId }: CloseMarketModalP
         })
       },
       onError: () => {
+        SentryLogger.error('Failed to close market', 'CloseMarketModal', { joystream, channelId, memberId })
         displaySnackbar({
           iconType: 'error',
           title: 'Something went wrong',
