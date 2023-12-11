@@ -5,6 +5,7 @@ import { TokenAccountOrderByInput } from '@/api/queries/__generated__/baseTypes.
 import { useGetCreatorTokenHoldersQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { BasicCreatorTokenHolderFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgActionChevronR } from '@/assets/icons'
+import { SvgHoldersPlaceholder } from '@/assets/illustrations'
 import { Avatar } from '@/components/Avatar'
 import { AvatarGroup } from '@/components/Avatar/AvatarGroup'
 import { FlexBox } from '@/components/FlexBox'
@@ -146,19 +147,23 @@ export const CrtHoldersWidget = ({ tokenId, totalSupply, onShowMore }: CrtHolder
               <Text variant="h100" as="h1" margin={{ bottom: 4 }} color="colorTextMuted">
                 TOP HOLDERS
               </Text>
-              {restChartData.map((row) =>
-                row.id === activeMembership?.handle ? null : (
-                  <HoldersLegendEntry
-                    key={row.id}
-                    name={row.id}
-                    members={row.members}
-                    color={joystreamColors[row.index]}
-                    value={row.value}
-                    isActive={row.id === hoveredHolder?.id}
-                    onMouseEnter={() => setHoveredHolder(row)}
-                    onMouseExit={() => setHoveredHolder(null)}
-                  />
+              {restChartData.length ? (
+                restChartData.map((row) =>
+                  row.id === activeMembership?.handle ? null : (
+                    <HoldersLegendEntry
+                      key={row.id}
+                      name={row.id}
+                      members={row.members}
+                      color={joystreamColors[row.index]}
+                      value={row.value}
+                      isActive={row.id === hoveredHolder?.id}
+                      onMouseEnter={() => setHoveredHolder(row)}
+                      onMouseExit={() => setHoveredHolder(null)}
+                    />
+                  )
                 )
+              ) : (
+                <SvgHoldersPlaceholder />
               )}
             </FlexBox>
           </FlexBox>
