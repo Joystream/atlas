@@ -138,7 +138,7 @@ export const CrtDashboardMainTab = ({ token, onTabChange }: CrtDashboardMainTabP
         <WidgetTile
           title="Locked"
           tooltip={{
-            text: 'It is locked value',
+            text: 'Tokens locked for certain actions like revenue shares.',
           }}
           customNode={
             <NumberFormat
@@ -155,7 +155,7 @@ export const CrtDashboardMainTab = ({ token, onTabChange }: CrtDashboardMainTabP
         <WidgetTile
           title="Total rev."
           tooltip={{
-            text: 'It is locked value',
+            text: 'Total revenue this channel made from DAO earnings, NFT sales and Royalties.',
           }}
           customNode={
             <NumberFormat
@@ -172,7 +172,7 @@ export const CrtDashboardMainTab = ({ token, onTabChange }: CrtDashboardMainTabP
         <WidgetTile
           title="Patronage"
           tooltip={{
-            text: 'It is locked value',
+            text: `Additional tokens you will be earning every year for managing your creator tokens defined as % from total token supply. If you and all your holders have 10,000 tokens and patronage rate is set to 10%, your annual reward will be 1000 tokens.`,
           }}
           customNode={
             <Text variant="h400" as="h4">

@@ -74,7 +74,7 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
             denominationMultiplier={pricePerUnit}
           />
         ),
-        tooltipText: 'Lorem ipsum',
+        tooltipText: 'Available balance for current membership.',
       },
       {
         title: 'You will receive',
@@ -87,7 +87,7 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
             withDenomination="before"
           />
         ),
-        tooltipText: 'Lorem ipsum',
+        tooltipText: `Amount of ${atlasConfig.joystream.tokenTicker} that you will receive for your tokens.`,
       },
     ],
     [priceForAllToken, pricePerUnit, title, tokens, userTokenBalance]
@@ -108,7 +108,7 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
             denominationMultiplier={pricePerUnit}
           />
         ),
-        tooltipText: 'Lorem ipsum',
+        tooltipText: 'Amount of tokens that will be sold to the market.',
       },
       {
         title: 'Price per unit',
@@ -121,12 +121,12 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
             withDenomination="before"
           />
         ),
-        tooltipText: 'Lorem ipsum',
+        tooltipText: 'Averaged price per token.',
       },
       {
         title: 'Fee',
         content: <NumberFormat value={fullFee} as="p" variant="t200" withToken withDenomination="before" />,
-        tooltipText: 'Lorem ipsum',
+        tooltipText: 'Fees paid for including the transaction into the block.',
       },
       {
         title: 'You will get',
@@ -139,7 +139,7 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
             withDenomination="before"
           />
         ),
-        tooltipText: 'Lorem ipsum',
+        tooltipText: `Amount of ${atlasConfig.joystream.tokenTicker} that you will receive for your tokens.`,
       },
     ],
     [calculateSlippageAmount, fullFee, pricePerUnit, title, tokens]

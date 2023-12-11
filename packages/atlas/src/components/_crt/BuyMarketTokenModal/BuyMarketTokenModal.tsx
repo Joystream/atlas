@@ -141,7 +141,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
       {
         title: 'Available balance',
         content: <NumberFormat value={accountBalance ?? 0} as="p" variant="t200" withDenomination="before" withToken />,
-        tooltipText: 'Lorem ipsum',
+        tooltipText: 'Available balance for current membership.',
       },
       {
         title: 'You will pay',
@@ -154,7 +154,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
             withToken
           />
         ),
-        tooltipText: 'Lorem ipsum',
+        tooltipText: 'Estimated price that will be payed for tokens.',
       },
     ],
     [accountBalance, calculateRequiredHapi, tokens]
@@ -173,7 +173,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
             withDenomination="before"
           />
         ),
-        tooltipText: 'Lorem ipsum',
+        tooltipText: 'Price for all the tokens.',
       },
       {
         title: 'Price per unit',
@@ -186,12 +186,12 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
             withDenomination="before"
           />
         ),
-        tooltipText: 'Lorem ipsum',
+        tooltipText: 'Price for a single token divided by the token amount.',
       },
       {
         title: 'Fee',
         content: <NumberFormat value={fullFee} as="p" variant="t200" withToken withDenomination="before" />,
-        tooltipText: 'Lorem ipsum',
+        tooltipText: 'Fees paid for including the transaction into the block.',
       },
       {
         title: 'Total',
@@ -204,7 +204,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
             withDenomination="before"
           />
         ),
-        tooltipText: 'Lorem ipsum',
+        tooltipText: 'Total cost - fees plus price for tokens.',
       },
       {
         title: 'You will get',
@@ -219,7 +219,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
             denominationMultiplier={pricePerUnit}
           />
         ),
-        tooltipText: 'Lorem ipsum',
+        tooltipText: 'Amount of tokens current membership will receive.',
       },
     ],
     [calculateRequiredHapi, fullFee, pricePerUnit, title, tokens]

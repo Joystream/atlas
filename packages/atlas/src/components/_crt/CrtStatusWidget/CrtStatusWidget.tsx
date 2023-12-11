@@ -130,7 +130,7 @@ const MarketDetails = ({ token }: { token: FullCreatorTokenFragment }) => {
         icon={<SvgJoyTokenSilver24 />}
         withDenomination
         tileSize="big"
-        tooltipText="Lorem ipsum"
+        tooltipText="Price per unit is calculated for current market supply and can quickly change."
       />
       <FlexBox equalChildren width="100%" gap={2}>
         <SellOnMarketButton tokenId={token.id} />
@@ -144,7 +144,7 @@ const MarketDetails = ({ token }: { token: FullCreatorTokenFragment }) => {
         <Text variant="t100" as="p">
           Market
         </Text>
-        <Information />
+        <Information text="An automated market maker (AMM) is an algorithm that helps to buy and sell tokens by using price curves which automatically set prices and match buyers and sellers." />
       </SupplyLine>
     </>
   )

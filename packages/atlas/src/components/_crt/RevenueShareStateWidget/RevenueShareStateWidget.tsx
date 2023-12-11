@@ -47,7 +47,12 @@ export const RevenueShareStateWidget = ({ endsAtBlock, className }: { endsAtBloc
         )
       }
       tooltip={{
-        text: 'Lorem ipsum',
+        text:
+          status === 'inactive'
+            ? 'There is no active share at this moment. Remember to close market or token sale before you try to start one.'
+            : status === 'past'
+            ? 'Revenue share ended. You can now unlock your staked tokens!'
+            : 'Revenue share in progress. Stake your tokens to receive your part of the revenue. Token will be locked till the end of the revenue share, remeber to unlock your tokens after the timer runs out.',
       }}
     />
   )
