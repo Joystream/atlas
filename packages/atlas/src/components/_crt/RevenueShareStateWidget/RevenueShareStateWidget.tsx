@@ -5,6 +5,7 @@ import { SvgActionCalendar } from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox'
 import { Information } from '@/components/Information'
 import { Text } from '@/components/Text'
+import { TextTimer } from '@/components/TextTimer/TextTimer'
 import { WidgetTile } from '@/components/WidgetTile'
 import { Button, TextButton } from '@/components/_buttons/Button'
 import { ClaimShareModal } from '@/components/_crt/ClaimShareModal'
@@ -12,7 +13,6 @@ import { absoluteRoutes } from '@/config/routes'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useUnlockTokenStake } from '@/hooks/useUnlockTokenStake'
 import { getRevenueShareStatusForMember } from '@/utils/crts'
-import { formatDateTime, formatDurationShort } from '@/utils/time'
 
 type RevenueShareStateWidgetProps = {
   revenueShare?: GetTokenRevenueSharesQuery['revenueShares'][number]
@@ -33,11 +33,7 @@ export const RevenueShareStateWidget = ({
 }: RevenueShareStateWidgetProps) => {
   const { startingAt, endsAt, stakers } = revenueShare ?? { startingAt: 0, endsAt: 0 }
   const [openClaimShareModal, setOpenClaimShareModal] = useState(false)
-  const { convertBlockToMsTimestamp, currentBlock } = useBlockTimeEstimation()
-  const endingBlockTimestamp = convertBlockToMsTimestamp(endsAt ?? 0)
-  const startingBlockTimestamp = convertBlockToMsTimestamp(startingAt ?? 0)
-  const endingDate = endingBlockTimestamp ? new Date(endingBlockTimestamp) : null
-  const startingDate = startingBlockTimestamp ? new Date(startingBlockTimestamp) : null
+  const { currentBlock } = useBlockTimeEstimation()
   const unlockStakeTx = useUnlockTokenStake()
 
   const memberStake = stakers?.find((stakers) => stakers.account.member.id === memberId)
@@ -127,27 +123,11 @@ export const RevenueShareStateWidget = ({
                 No active share
               </Text>
             ) : status === 'past' ? (
-              <Text variant="h500" as="h5" margin={{ bottom: 4 }}>
-                {endingDate ? formatDateTime(endingDate).replace(',', ' at') : 'N/A'}
-              </Text>
+              <TextTimer type="block" atBlock={endsAt} />
             ) : status === 'upcoming' ? (
-              <FlexBox flow="column">
-                <Text variant="h500" as="h5">
-                  {startingDate ? formatDurationShort(Math.round((startingDate.getTime() - Date.now()) / 1000)) : 'N/A'}
-                </Text>
-                <Text variant="t100" as="p" color="colorText">
-                  {startingDate ? formatDateTime(startingDate).replace(',', ' at') : 'N/A'}
-                </Text>
-              </FlexBox>
+              <TextTimer type="block" atBlock={startingAt} />
             ) : (
-              <FlexBox flow="column">
-                <Text variant="h500" as="h5">
-                  {endingDate ? formatDurationShort(Math.round((endingDate.getTime() - Date.now()) / 1000)) : 'N/A'}
-                </Text>
-                <Text variant="t100" as="p" color="colorText">
-                  {endingDate ? formatDateTime(endingDate).replace(',', ' at') : 'N/A'}
-                </Text>
-              </FlexBox>
+              <TextTimer type="block" atBlock={endsAt} />
             )}
 
             <div style={{ marginLeft: 'auto' }}>{memberActionNode}</div>

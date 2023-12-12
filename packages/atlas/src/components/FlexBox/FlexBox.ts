@@ -12,6 +12,7 @@ type FlexBoxProps = {
   width?: string | number
   padding?: number
   height?: string | number
+  minWidth?: string | number
 }
 
 export const FlexBox = styled.div<FlexBoxProps>`
@@ -24,6 +25,7 @@ export const FlexBox = styled.div<FlexBoxProps>`
     justify-content: ${props.justifyContent ?? 'start'};
     width: ${props.width ?? '100%'};
     height: ${props.height ?? 'initial'};
+    min-width: ${props.minWidth ?? 'initial'};
   `}
 
   ${(props) =>

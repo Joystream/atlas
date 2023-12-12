@@ -88,7 +88,13 @@ export const CrtPortfolioTable = ({ data, emptyState }: CrtPortfolioTableProps) 
   return (
     <>
       {tokenId && <BuyMarketTokenModal tokenId={tokenId} show={showModal} onClose={() => setShowModal(false)} />}
-      <StyledTable isEmpty={!mappingData.length} columns={COLUMNS} data={mappingData} emptyState={emptyState} />
+      <StyledTable
+        minWidth={730}
+        isEmpty={!mappingData.length}
+        columns={COLUMNS}
+        data={mappingData}
+        emptyState={emptyState}
+      />
     </>
   )
 }
@@ -99,7 +105,7 @@ export const TokenInfo = ({
   isVerified,
 }: Pick<PortfolioToken, 'tokenName' | 'tokenTitle' | 'isVerified'>) => {
   return (
-    <FlexBox alignItems="center" gap={2}>
+    <FlexBox minWidth="100px" alignItems="center" gap={2}>
       <Avatar />
       <FlexBox flow="column" gap={0}>
         <Text variant="h200" as="h1">

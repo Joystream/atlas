@@ -1,5 +1,6 @@
-import { ReactElement, useMemo } from 'react'
+import { ReactElement, useMemo, useRef } from 'react'
 import { Column, useFlexLayout, usePagination, useTable } from 'react-table'
+import useDraggableScroll from 'use-draggable-scroll'
 
 import { PaginationProps } from '@/components/Pagination'
 import { Text } from '@/components/Text'
@@ -12,6 +13,7 @@ import {
   PageWrapper,
   StyledPagination,
   TableBase,
+  TableWrapper,
   Td,
   Th,
   Thead,
@@ -32,6 +34,7 @@ export type TableProps<T = object> = {
   }
   className?: string
   pagination?: PaginationProps
+  minWidth: number
 }
 
 export const Table = <T extends object>({
@@ -44,7 +47,10 @@ export const Table = <T extends object>({
   onRowClick,
   className,
   pagination,
+  minWidth,
 }: TableProps<T>) => {
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const { onMouseDown } = useDraggableScroll(scrollRef, { direction: 'horizontal' })
   const {
     getTableProps,
     getTableBodyProps,
@@ -75,54 +81,56 @@ export const Table = <T extends object>({
         </Text>
       )}
       {data.length ? (
-        <PageWrapper>
-          {page.map((subpage, idx) => (
-            <TableBase className="table-base" {...getTableProps()} key={`table-slice-${idx}`}>
-              <Thead className="table-header">
-                {headerGroups.map((headerGroup) => (
-                  <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.getHeaderGroupProps().key}>
-                    {headerGroup.headers.map((column) => (
-                      <Th
-                        variant="h100"
-                        as="th"
-                        color="colorText"
-                        {...column.getHeaderProps({ style: { width: column.width } })}
-                        key={column.getHeaderProps().key}
-                      >
-                        {column.render('Header')}
-                      </Th>
-                    ))}
-                  </tr>
-                ))}
-              </Thead>
-              <tbody {...getTableBodyProps()}>
-                {subpage.map((row, idx) => {
-                  prepareRow(row)
-                  return (
-                    <tr
-                      className="table-row"
-                      {...row.getRowProps()}
-                      onClick={() => onRowClick?.(idx)}
-                      key={row.getRowProps().key}
-                    >
-                      {row.cells.map((cell) => (
-                        <Td
-                          variant="t100"
-                          as="td"
-                          {...cell.getCellProps()}
-                          key={cell.getCellProps().key}
-                          className="table-cell"
+        <TableWrapper ref={scrollRef} onMouseDown={onMouseDown}>
+          <PageWrapper minWidth={minWidth}>
+            {page.map((subpage, idx) => (
+              <TableBase className="table-base" {...getTableProps()} key={`table-slice-${idx}`}>
+                <Thead className="table-header">
+                  {headerGroups.map((headerGroup) => (
+                    <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.getHeaderGroupProps().key}>
+                      {headerGroup.headers.map((column) => (
+                        <Th
+                          variant="h100"
+                          as="th"
+                          color="colorText"
+                          {...column.getHeaderProps({ style: { width: column.width } })}
+                          key={column.getHeaderProps().key}
                         >
-                          {cell.render('Cell')}
-                        </Td>
+                          {column.render('Header')}
+                        </Th>
                       ))}
                     </tr>
-                  )
-                })}
-              </tbody>
-            </TableBase>
-          ))}
-        </PageWrapper>
+                  ))}
+                </Thead>
+                <tbody {...getTableBodyProps()}>
+                  {subpage.map((row, idx) => {
+                    prepareRow(row)
+                    return (
+                      <tr
+                        className="table-row"
+                        {...row.getRowProps()}
+                        onClick={() => onRowClick?.(idx)}
+                        key={row.getRowProps().key}
+                      >
+                        {row.cells.map((cell) => (
+                          <Td
+                            variant="t100"
+                            as="td"
+                            {...cell.getCellProps()}
+                            key={cell.getCellProps().key}
+                            className="table-cell"
+                          >
+                            {cell.render('Cell')}
+                          </Td>
+                        ))}
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </TableBase>
+            ))}
+          </PageWrapper>
+        </TableWrapper>
       ) : emptyState ? (
         <EmptyTableContainer>
           {emptyState.icon}

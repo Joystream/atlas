@@ -13,6 +13,7 @@ import { Text } from '@/components/Text'
 import { TextButton } from '@/components/_buttons/Button'
 import { PieChart, PieDatum, joystreamColors } from '@/components/_charts/PieChart'
 import { Widget } from '@/components/_crt/CrtStatusWidget/CrtStatusWidget.styles'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useUser } from '@/providers/user/user.hooks'
 import { cVar } from '@/styles'
@@ -51,6 +52,7 @@ export const holdersToDatum = (accounts: BasicCreatorTokenHolderFragment[], tota
 
 export const CrtHoldersWidget = ({ tokenId, totalSupply, onShowMore }: CrtHoldersWidgetProps) => {
   const { activeMembership } = useUser()
+  const smMatch = useMediaMatch('sm')
   const [hoveredHolder, setHoveredHolder] = useState<PieDatum | null>(null)
   const { data } = useGetCreatorTokenHoldersQuery({
     variables: {
@@ -103,15 +105,15 @@ export const CrtHoldersWidget = ({ tokenId, totalSupply, onShowMore }: CrtHolder
       title="Holders"
       titleVariant="h500"
       titleColor="colorTextStrong"
-      titleBottomMargin={6}
+      titleBottomMargin={4}
       customTopRightNode={
         <TextButton onClick={onShowMore} icon={<SvgActionChevronR />} iconPlacement="right">
           Show more
         </TextButton>
       }
       customNode={
-        <FlexBox width="100%" gap={12} equalChildren>
-          <FlexBox flow="column" width="100%">
+        <FlexBox minWidth={0} flow={smMatch ? 'row' : 'column'} width="100%" gap={12} equalChildren>
+          <FlexBox minWidth={0} flow="column" width="100%">
             <Text variant="h100" as="h1" color="colorTextMuted">
               TOTAL SUPPLY
             </Text>
@@ -233,4 +235,7 @@ const ColorBox = styled.div<{ color: string }>`
 const ChartWrapper = styled.div`
   height: 300px;
   width: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
 `

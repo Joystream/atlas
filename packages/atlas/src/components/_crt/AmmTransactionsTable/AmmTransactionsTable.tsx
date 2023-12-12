@@ -49,7 +49,13 @@ export const AmmTransactionsTable = ({ data }: AmmTransactionsTableProps) => {
   )
 
   return (
-    <StyledTable title="Market transactions" data={mappedData ?? []} columns={COLUMNS} emptyState={tableEmptyState} />
+    <StyledTable
+      minWidth={900}
+      title="Market transactions"
+      data={mappedData ?? []}
+      columns={COLUMNS}
+      emptyState={tableEmptyState}
+    />
   )
 }
 

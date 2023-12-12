@@ -46,7 +46,7 @@ export const HoldersTable = ({ data, currentMemberId, symbol, pagination, pageSi
       })),
     [currentMemberId, data, symbol]
   )
-  return <StyledTable pageSize={pageSize} columns={COLUMNS} data={mappedData} pagination={pagination} />
+  return <StyledTable minWidth={750} pageSize={pageSize} columns={COLUMNS} data={mappedData} pagination={pagination} />
 }
 
 const TransferableBalance = ({ memberId, tokenId, ticker }: { memberId: string; tokenId: string; ticker?: string }) => {
