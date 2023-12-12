@@ -165,7 +165,12 @@ export const CrtHoldersWidget = ({ tokenId, totalSupply, onShowMore }: CrtHolder
                   )
                 )
               ) : (
-                <SvgHoldersPlaceholder />
+                <FlexBox gap={2} flow="column">
+                  <SvgHoldersPlaceholder />
+                  <Text variant="t100" as="p" margin={{ left: 2 }} color="colorTextMuted">
+                    No holders yet.
+                  </Text>
+                </FlexBox>
               )}
             </FlexBox>
           </FlexBox>
