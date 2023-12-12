@@ -34,7 +34,7 @@ export type TableProps<T = object> = {
   }
   className?: string
   pagination?: PaginationProps
-  minWidth: number
+  minWidth?: number
 }
 
 export const Table = <T extends object>({
@@ -47,7 +47,7 @@ export const Table = <T extends object>({
   onRowClick,
   className,
   pagination,
-  minWidth,
+  minWidth = 300,
 }: TableProps<T>) => {
   const scrollRef = useRef<HTMLDivElement>(null)
   const { onMouseDown } = useDraggableScroll(scrollRef, { direction: 'horizontal' })
