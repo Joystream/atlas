@@ -5,6 +5,7 @@ import { TokenAccountOrderByInput } from '@/api/queries/__generated__/baseTypes.
 import { useGetCreatorTokenHoldersQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { BasicCreatorTokenHolderFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgActionChevronR } from '@/assets/icons'
+import { SvgHoldersPlaceholder } from '@/assets/illustrations'
 import { Avatar } from '@/components/Avatar'
 import { AvatarGroup } from '@/components/Avatar/AvatarGroup'
 import { FlexBox } from '@/components/FlexBox'
@@ -12,6 +13,7 @@ import { Text } from '@/components/Text'
 import { TextButton } from '@/components/_buttons/Button'
 import { PieChart, PieDatum, joystreamColors } from '@/components/_charts/PieChart'
 import { Widget } from '@/components/_crt/CrtStatusWidget/CrtStatusWidget.styles'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useUser } from '@/providers/user/user.hooks'
 import { cVar } from '@/styles'
@@ -50,6 +52,7 @@ export const holdersToDatum = (accounts: BasicCreatorTokenHolderFragment[], tota
 
 export const CrtHoldersWidget = ({ tokenId, totalSupply, onShowMore }: CrtHoldersWidgetProps) => {
   const { activeMembership } = useUser()
+  const smMatch = useMediaMatch('sm')
   const [hoveredHolder, setHoveredHolder] = useState<PieDatum | null>(null)
   const { data } = useGetCreatorTokenHoldersQuery({
     variables: {
@@ -102,15 +105,15 @@ export const CrtHoldersWidget = ({ tokenId, totalSupply, onShowMore }: CrtHolder
       title="Holders"
       titleVariant="h500"
       titleColor="colorTextStrong"
-      titleBottomMargin={6}
+      titleBottomMargin={4}
       customTopRightNode={
         <TextButton onClick={onShowMore} icon={<SvgActionChevronR />} iconPlacement="right">
           Show more
         </TextButton>
       }
       customNode={
-        <FlexBox width="100%" gap={12} equalChildren>
-          <FlexBox flow="column" width="100%">
+        <FlexBox minWidth={0} flow={smMatch ? 'row' : 'column'} width="100%" gap={12} equalChildren>
+          <FlexBox minWidth={0} flow="column" width="100%">
             <Text variant="h100" as="h1" color="colorTextMuted">
               TOTAL SUPPLY
             </Text>
@@ -146,19 +149,28 @@ export const CrtHoldersWidget = ({ tokenId, totalSupply, onShowMore }: CrtHolder
               <Text variant="h100" as="h1" margin={{ bottom: 4 }} color="colorTextMuted">
                 TOP HOLDERS
               </Text>
-              {restChartData.map((row) =>
-                row.id === activeMembership?.handle ? null : (
-                  <HoldersLegendEntry
-                    key={row.id}
-                    name={row.id}
-                    members={row.members}
-                    color={joystreamColors[row.index]}
-                    value={row.value}
-                    isActive={row.id === hoveredHolder?.id}
-                    onMouseEnter={() => setHoveredHolder(row)}
-                    onMouseExit={() => setHoveredHolder(null)}
-                  />
+              {restChartData.length ? (
+                restChartData.map((row) =>
+                  row.id === activeMembership?.handle ? null : (
+                    <HoldersLegendEntry
+                      key={row.id}
+                      name={row.id}
+                      members={row.members}
+                      color={joystreamColors[row.index]}
+                      value={row.value}
+                      isActive={row.id === hoveredHolder?.id}
+                      onMouseEnter={() => setHoveredHolder(row)}
+                      onMouseExit={() => setHoveredHolder(null)}
+                    />
+                  )
                 )
+              ) : (
+                <FlexBox gap={2} flow="column">
+                  <SvgHoldersPlaceholder />
+                  <Text variant="t100" as="p" margin={{ left: 2 }} color="colorTextMuted">
+                    No holders yet.
+                  </Text>
+                </FlexBox>
               )}
             </FlexBox>
           </FlexBox>
@@ -228,4 +240,7 @@ const ColorBox = styled.div<{ color: string }>`
 const ChartWrapper = styled.div`
   height: 300px;
   width: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
 `

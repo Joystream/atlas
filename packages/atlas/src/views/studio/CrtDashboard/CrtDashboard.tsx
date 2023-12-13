@@ -1,4 +1,5 @@
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
 import { useGetFullCreatorTokenQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { SvgActionEdit, SvgActionLinkUrl } from '@/assets/icons'
@@ -11,6 +12,7 @@ import { CloseRevenueShareButton } from '@/components/_crt/CloseRevenueShareButt
 import { RevenueShareModalButton } from '@/components/_crt/RevenueShareModalButton'
 import { StartSaleOrMarketButton } from '@/components/_crt/StartSaleOrMarketButton/StartSaleOrMarketButton'
 import { absoluteRoutes } from '@/config/routes'
+import { useMountEffect } from '@/hooks/useMountEffect'
 import { useUser } from '@/providers/user/user.hooks'
 import { SentryLogger } from '@/utils/logs'
 import { HeaderContainer, MainContainer, TabsContainer } from '@/views/studio/CrtDashboard/CrtDashboard.styles'
@@ -27,7 +29,8 @@ const getTabIndex = (tabName: TabsNames, allTabs: { name: TabsNames }[]): number
   allTabs.findIndex((tab) => tab.name === tabName)
 
 export const CrtDashboard = () => {
-  const [currentTab, setCurrentTab] = useState<number>(0)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
   const { activeChannel } = useUser()
   const { data } = useGetFullCreatorTokenQuery({
     variables: {
@@ -37,11 +40,19 @@ export const CrtDashboard = () => {
       SentryLogger.error('Failed to fetch creator token', 'CrtDashboard', error)
     },
   })
-  const handleChangeTab = useCallback((idx: number) => {
-    setCurrentTab(idx)
-  }, [])
+
   const hasOpenMarket = data?.creatorTokenById?.ammCurves.some((curve) => !curve.finalized)
   const mappedTabs = TABS.filter((tab) => (hasOpenMarket ? true : tab !== 'Market')).map((tab) => ({ name: tab }))
+  const currentTab = currentTabName ? getTabIndex(currentTabName, mappedTabs) : 0
+  const handleChangeTab = useCallback(
+    (idx: number) => {
+      setSearchParams({ tab: mappedTabs[idx].name })
+    },
+    [mappedTabs, setSearchParams]
+  )
+  useMountEffect(() => {
+    if (currentTab === -1) setSearchParams({ 'tab': '0' }, { replace: true })
+  })
 
   if (!data?.creatorTokenById) {
     return null
@@ -67,7 +78,7 @@ export const CrtDashboard = () => {
         </HeaderContainer>
 
         <TabsContainer>
-          <Tabs initialIndex={0} selected={currentTab} tabs={mappedTabs} onSelectTab={handleChangeTab} />
+          <Tabs initialIndex={0} selected={currentTab ?? 0} tabs={mappedTabs} onSelectTab={handleChangeTab} />
           {currentTab === getTabIndex('Dashboard', mappedTabs) && (
             <>
               <Button to={absoluteRoutes.studio.crtTokenEdit()} variant="secondary" icon={<SvgActionEdit />}>
@@ -97,7 +108,7 @@ export const CrtDashboard = () => {
           <CrtDashboardMainTab
             hasOpenedMarket={!!hasOpenMarket}
             token={data.creatorTokenById}
-            onTabChange={(tabName) => setCurrentTab(mappedTabs.findIndex((tab) => tab.name === tabName))}
+            onTabChange={(tabName) => handleChangeTab(mappedTabs.findIndex((tab) => tab.name === tabName))}
           />
         )}
         {currentTab === getTabIndex('Market', mappedTabs) && <CrtMarketTab token={data.creatorTokenById} />}

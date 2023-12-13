@@ -157,7 +157,9 @@ export const TokenIssuanceStep = ({
                           <Text variant="t300" as="p" color="colorTextMuted">
                             {formatNumber((creatorIssueAmount * Number(field.value || 0)) / 100)} ${form.name}
                           </Text>
-                        ) : null
+                        ) : (
+                          <div />
+                        )
                       }
                     />
                   )}
@@ -176,7 +178,11 @@ export const TokenIssuanceStep = ({
   useLayoutEffect(() => {
     const data =
       assuranceType === 'custom'
-        ? generateChartData(Number(customCliff ?? 0), Number(customVesting ?? 0), firstPayout ? firstPayout : 0)
+        ? generateChartData(
+            Number(customCliff ?? 0),
+            Number(customVesting ?? 0),
+            firstPayout ? Math.min(Math.max(firstPayout, 0), 100) : 0
+          )
         : generateChartData(...(getDataBasedOnType(assuranceType) as [number, number, number]))
     setPreview(
       <PreviewContainer>
