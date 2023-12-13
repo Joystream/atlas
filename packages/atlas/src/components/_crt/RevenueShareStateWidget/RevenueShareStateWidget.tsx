@@ -12,13 +12,13 @@ import { ClaimShareModal } from '@/components/_crt/ClaimShareModal'
 import { absoluteRoutes } from '@/config/routes'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useUnlockTokenStake } from '@/hooks/useUnlockTokenStake'
+import { useUser } from '@/providers/user/user.hooks'
 import { getRevenueShareStatusForMember } from '@/utils/crts'
 
 type RevenueShareStateWidgetProps = {
   revenueShare?: GetTokenRevenueSharesQuery['revenueShares'][number]
   className?: string
   withLink?: boolean
-  memberId?: string
   tokenId?: string
   tokenSymbol?: string
 }
@@ -26,11 +26,11 @@ type RevenueShareStateWidgetProps = {
 export const RevenueShareStateWidget = ({
   className,
   withLink,
-  memberId,
   revenueShare,
   tokenId,
   tokenSymbol,
 }: RevenueShareStateWidgetProps) => {
+  const { memberId } = useUser()
   const { startingAt, endsAt, stakers } = revenueShare ?? { startingAt: 0, endsAt: 0 }
   const [openClaimShareModal, setOpenClaimShareModal] = useState(false)
   const { currentBlock } = useBlockTimeEstimation()

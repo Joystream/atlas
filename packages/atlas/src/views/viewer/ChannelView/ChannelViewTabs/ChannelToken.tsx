@@ -95,7 +95,6 @@ export const ChannelToken = ({ tokenId, memberId }: ChannelTokenProps) => {
                 revenueShare={activeRevenueShare}
                 tokenId={token?.id}
                 tokenSymbol={token?.symbol ?? 'N/A'}
-                memberId={memberId}
               />
             )
           )}
