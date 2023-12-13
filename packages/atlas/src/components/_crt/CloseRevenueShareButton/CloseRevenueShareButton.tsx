@@ -1,8 +1,10 @@
 import { useApolloClient } from '@apollo/client'
+import BN from 'bn.js'
 import { useCallback } from 'react'
 
 import { Button, ButtonProps } from '@/components/_buttons/Button'
 import { atlasConfig } from '@/config'
+import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useJoystream } from '@/providers/joystream'
 import { useJoystreamStore } from '@/providers/joystream/joystream.store'
 import { useSnackbar } from '@/providers/snackbars'
@@ -44,7 +46,9 @@ export const CloseRevenueShareButton = ({
         client.refetchQueries({ include: 'active' })
         displaySnackbar({
           title: 'Revenue share is closed',
-          description: `Remaining unclaimed ${data.amount} ${atlasConfig.joystream.tokenTicker} was transferred back to your channel balance.`,
+          description: `Remaining unclaimed ${hapiBnToTokenNumber(new BN(data.amount))} ${
+            atlasConfig.joystream.tokenTicker
+          } were transferred back to your channel balance.`,
           iconType: 'info',
         })
       },

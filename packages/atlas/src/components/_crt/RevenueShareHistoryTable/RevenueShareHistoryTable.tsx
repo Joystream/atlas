@@ -49,7 +49,7 @@ export const RevenueShareHistoryTable = ({ data }: RevenueShareHistoryTableProps
     })
   }, [data, memberId])
 
-  return <StyledTable columns={COLUMNS} data={mappedData} />
+  return <StyledTable minWidth={900} columns={COLUMNS} data={mappedData} />
 }
 
 const StyledTable = styled(Table)`

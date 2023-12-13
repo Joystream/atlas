@@ -7,15 +7,17 @@ import { SvgRevenueSharePlaceholder } from '@/assets/illustrations'
 import { Avatar } from '@/components/Avatar'
 import { FlexBox } from '@/components/FlexBox'
 import { Text } from '@/components/Text'
+import { TextTimer } from '@/components/TextTimer/TextTimer'
 import { Button, TextButton } from '@/components/_buttons/Button'
 import { CloseRevenueShareButton } from '@/components/_crt/CloseRevenueShareButton'
 import { Widget } from '@/components/_crt/CrtStatusWidget/CrtStatusWidget.styles'
 import { RevenueShareProgress } from '@/components/_crt/RevenueShareParticipationWidget'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
+import { getRevenueShareStatusForMember } from '@/utils/crts'
 import { permillToPercentage } from '@/utils/number'
-import { formatDateTime, formatDurationShort } from '@/utils/time'
 
 import { CustomPill, EmptyStateBox, StakersBox, StyledPill } from './CrtRevenueShareWidget.styles'
 
@@ -26,21 +28,27 @@ export type CrtHoldersWidgetProps = {
 
 export const CrtRevenueShareWidget = ({ token, onTabSwitch }: CrtHoldersWidgetProps) => {
   const activeRevenueShare = token.revenueShares.find((rS) => !rS.finalized)
-  const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
-  const endingBlockTimestamp = convertBlockToMsTimestamp(activeRevenueShare?.endsAt ?? 0)
-  const endingDate = endingBlockTimestamp ? new Date(endingBlockTimestamp) : null
-  const status: 'active' | 'past' | 'inactive' =
-    !endingBlockTimestamp || !activeRevenueShare ? 'inactive' : endingBlockTimestamp < Date.now() ? 'past' : 'active'
+  const smMatch = useMediaMatch('sm')
+  const { currentBlock } = useBlockTimeEstimation()
+  const status = activeRevenueShare
+    ? getRevenueShareStatusForMember({
+        currentBlock,
+        isFinalized: activeRevenueShare.finalized,
+        hasMemberStaked: false,
+        endingAt: activeRevenueShare.endsAt,
+        startingAt: activeRevenueShare.startingAt,
+      })
+    : 'inactive'
 
   return (
     <Widget
-      title="Revenue share with holders"
+      title={!smMatch ? 'Revenue share' : 'Revenue share with holders'}
       titleVariant="h500"
       titleColor="colorTextStrong"
-      titleBottomMargin={6}
+      titleBottomMargin={4}
       customTopRightNode={
         <TextButton iconPlacement="right" onClick={onTabSwitch} icon={<SvgActionChevronR />}>
-          Show revenue shares
+          {!smMatch ? 'Show more' : 'Show revenue shares'}
         </TextButton>
       }
       customNode={
@@ -56,13 +64,9 @@ export const CrtRevenueShareWidget = ({ token, onTabSwitch }: CrtHoldersWidgetPr
               </Text>
               {status !== 'inactive' && activeRevenueShare?.endsAt ? (
                 status === 'past' ? (
-                  <Text variant="h400" as="h5" margin={{ bottom: 4 }}>
-                    {endingDate ? formatDateTime(endingDate).replace(',', ' at') : 'N/A'}
-                  </Text>
+                  <TextTimer mainVariant="h400" type="block" atBlock={activeRevenueShare?.endsAt ?? 0} />
                 ) : (
-                  <Text variant="h400" as="h5">
-                    {endingDate ? formatDurationShort(Math.round((endingDate.getTime() - Date.now()) / 1000)) : 'N/A'}
-                  </Text>
+                  <TextTimer mainVariant="h400" type="block" atBlock={activeRevenueShare?.endsAt ?? 0} />
                 )
               ) : (
                 <Text variant="h400" as="h5" margin={{ bottom: 4 }}>

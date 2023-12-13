@@ -7,7 +7,7 @@ import { useUser } from '@/providers/user/user.hooks'
 import { useChannelPaymentsHistory } from '@/views/studio/MyPaymentsView/PaymentsTransactions/PaymentTransactions.hooks'
 import { aggregatePaymentHistory } from '@/views/studio/MyPaymentsView/PaymentsTransactions/PaymentTransactions.utils'
 
-import { StyledSvgJoyTokenMonochrome24, TableWrapper, TilesWrapper } from './PaymentTransactions.styles'
+import { StyledSvgJoyTokenMonochrome24, TilesWrapper } from './PaymentTransactions.styles'
 
 export const PaymentTransactions = () => {
   const { channelId } = useUser()
@@ -43,9 +43,7 @@ export const PaymentTransactions = () => {
           }
         />
       </TilesWrapper>
-      <TableWrapper isEmpty={!paymentData?.length}>
-        <TablePaymentsHistory isLoading={loading} data={paymentData ?? []} />
-      </TableWrapper>
+      <TablePaymentsHistory isLoading={loading} data={paymentData ?? []} />
     </>
   )
 }
