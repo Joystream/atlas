@@ -20,7 +20,7 @@ import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { SentryLogger } from '@/utils/logs'
-import { formatDateTime } from '@/utils/time'
+import { formatDateTimeAt } from '@/utils/time'
 
 type ClaimShareModalProps = {
   show?: boolean
@@ -72,11 +72,11 @@ export const ClaimShareModal = ({ onClose, show, tokenId }: ClaimShareModalProps
       onTxSync: async (data) => {
         displaySnackbar({
           title: `${hapiBnToTokenNumber(new BN(data.dividendAmount))} ${atlasConfig.joystream.tokenTicker} received`,
-          description: `${data.stakedAmount} $${tokenName} is locked until the end of revenue share. (${formatDateTime(
+          description: `${
+            data.stakedAmount
+          } $${tokenName} is locked until the end of revenue share. (${formatDateTimeAt(
             new Date(convertBlockToMsTimestamp(activeRevenueShare.endsAt) ?? 0)
-          )
-            .split(',')
-            .join(' at')})`,
+          )})`,
           iconType: 'success',
         })
         onClose()
@@ -139,9 +139,7 @@ export const ClaimShareModal = ({ onClose, show, tokenId }: ClaimShareModalProps
             </Text>
             <Text variant="t100" as="p" color="colorText">
               {activeRevenueShare
-                ? formatDateTime(new Date(convertBlockToMsTimestamp(activeRevenueShare?.endsAt) ?? 0))
-                    .split(',')
-                    .join(' at')
+                ? formatDateTimeAt(new Date(convertBlockToMsTimestamp(activeRevenueShare?.endsAt) ?? 0))
                 : '-'}
             </Text>
           </FlexBox>

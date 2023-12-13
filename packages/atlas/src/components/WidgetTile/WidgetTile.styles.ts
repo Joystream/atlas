@@ -38,14 +38,15 @@ export const Content = styled.div<{ withButton?: boolean }>`
 `
 
 export const Title = styled.div<{ hasTooltip: boolean; marginBottom?: number }>`
-  grid-template-columns: 1fr auto;
-  gap: ${({ hasTooltip }) => (hasTooltip ? sizes(2) : 'unset')};
-  margin-bottom: ${({ hasTooltip, marginBottom }) => sizes(marginBottom ?? hasTooltip ? 0 : 2)};
-  margin-top: ${({ hasTooltip }) => (hasTooltip ? sizes(-2) : 'unset')};
   ${commonGridStyles};
 
+  grid-template-columns: 1fr auto;
+  gap: ${({ hasTooltip }) => (hasTooltip ? sizes(2) : 'unset')};
+  margin-bottom: ${({ hasTooltip, marginBottom }) => sizes(marginBottom ? marginBottom : hasTooltip ? 0 : 2)}!important;
+  margin-top: ${({ hasTooltip }) => (hasTooltip ? sizes(-2) : 'unset')};
+
   ${media.md} {
-    margin-bottom: ${({ hasTooltip }) => sizes(hasTooltip ? 2 : 4)};
+    margin-bottom: ${({ marginBottom, hasTooltip }) => sizes(marginBottom ? marginBottom : hasTooltip ? 2 : 4)};
   }
 `
 

@@ -15,7 +15,7 @@ import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useUnlockTokenStake } from '@/hooks/useUnlockTokenStake'
 import { getRevenueShareStatusForMember } from '@/utils/crts'
 import { SentryLogger } from '@/utils/logs'
-import { formatDateTime } from '@/utils/time'
+import { formatDateTimeAt } from '@/utils/time'
 
 export type RevenueShareWidgetProps = {
   tokenId: string
@@ -133,12 +133,12 @@ export const RevenueShareWidget = ({ tokenName, tokenId, revenueShare, memberId 
             }
           >
             <Text variant="t300" as="p">
-              {formatDateTime(
+              {formatDateTimeAt(
                 new Date(
                   convertBlockToMsTimestamp(status === 'upcoming' ? revenueShare.startingAt : revenueShare.endsAt) ??
                     Date.now()
                 )
-              ).replace(',', ' at')}
+              )}
             </Text>
           </Detail>
         </InfoBox>

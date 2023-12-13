@@ -1,6 +1,5 @@
 import BN from 'bn.js'
-import { useMemo, useRef, useState } from 'react'
-import useDraggableScroll from 'use-draggable-scroll'
+import { useMemo, useState } from 'react'
 
 import {
   GetTopSellingChannelsFromThreePeriodsQuery,
@@ -22,7 +21,6 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import {
   JoyAmountWrapper,
   NftSoldText,
-  ScrollWrapper,
   SenderItemIconsWrapper,
   SkeletonChannelContainer,
   StyledLink,
@@ -74,9 +72,6 @@ export const TopSellingChannelsTable = () => {
       limit: 10,
     },
   })
-
-  const ref = useRef<HTMLDivElement>(null)
-  const { onMouseDown } = useDraggableScroll(ref, { direction: 'horizontal' })
 
   const lgMatch = useMediaMatch('lg')
   const mappedData: TableProps['data'] = useMemo(() => {
@@ -184,9 +179,14 @@ export const TopSellingChannelsTable = () => {
           },
         },
         children: [
-          <ScrollWrapper key="single" ref={ref} onMouseDown={onMouseDown}>
-            <StyledTable emptyState={tableEmptyState} columns={COLUMNS} data={mappedData} doubleColumn={lgMatch} />
-          </ScrollWrapper>,
+          <StyledTable
+            key="single"
+            minWidth={528}
+            emptyState={tableEmptyState}
+            columns={COLUMNS}
+            data={mappedData}
+            doubleColumn={lgMatch}
+          />,
         ],
       }}
     />
