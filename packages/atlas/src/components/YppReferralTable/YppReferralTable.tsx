@@ -30,7 +30,14 @@ export const YppReferralTable = ({ isLoading, data }: YppReferralTableProps) => 
       })),
     [data]
   )
-  return <Table title="Channels you referred" columns={COLUMNS} data={isLoading ? tableLoadingData : mappedData} />
+  return (
+    <Table
+      minWidth={600}
+      title="Channels you referred"
+      columns={COLUMNS}
+      data={isLoading ? tableLoadingData : mappedData}
+    />
+  )
 }
 
 const Tier = ({ subscribers }: { subscribers: number }) => {

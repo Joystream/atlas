@@ -29,10 +29,10 @@ import { formatNumber } from '@/utils/number'
 import { StyledSvgJoyTokenMonochrome24 } from '@/views/studio/MyPaymentsView/PaymentsOverview/PaymentsOverview.styles'
 
 const JOY_COLUMNS: TableProps['columns'] = [
-  { Header: 'Name', accessor: 'name', width: 110 },
-  { Header: 'Current price', accessor: 'price', width: 100 },
-  { Header: 'Balance value', accessor: 'balanceValue', width: 100 },
-  { Header: 'Your balance', accessor: 'balance', width: 100 },
+  { Header: 'Name', accessor: 'name', width: 150 },
+  { Header: 'Current price', accessor: 'price', width: 150 },
+  { Header: 'Balance value', accessor: 'balanceValue', width: 150 },
+  { Header: 'Your balance', accessor: 'balance', width: 150 },
   { Header: '', accessor: 'utils', width: 50 },
 ]
 
@@ -170,11 +170,12 @@ export const PortfolioTokenTab = () => {
         </FlexBox>
       )}
 
-      <FlexBox flow="column" gap={6}>
+      <FlexBox minWidth="0" flow="column" gap={6}>
         <Text variant="h500" as="h3">
           {atlasConfig.joystream.tokenTicker} balance
         </Text>
         <StyledTable
+          minWidth={650}
           data={[
             {
               name: (
@@ -222,6 +223,8 @@ export const PortfolioTokenTab = () => {
 }
 
 const StyledTable = styled(Table)`
+  width: 100%;
+
   td:nth-child(n + 2),
   td:nth-child(n + 3),
   td:nth-child(n + 4) {

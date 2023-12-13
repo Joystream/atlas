@@ -1,0 +1,34 @@
+<svg width="259" height="128" viewBox="0 0 259 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="8" y="8" width="24" height="24" fill="#343D44"/>
+<g clip-path="url(#clip0_2780_776)">
+<rect x="42" y="8" width="24" height="24" rx="12" fill="#343D44"/>
+</g>
+<rect x="42.5" y="8.5" width="23" height="23" rx="11.5" stroke="#BCD5FA" stroke-opacity="0.08"/>
+<rect x="76" y="12" width="82" height="16" fill="#343D44"/>
+<rect x="219" y="12" width="32" height="16" fill="#343D44"/>
+<rect x="8" y="52" width="24" height="24" fill="#272D33"/>
+<g clip-path="url(#clip1_2780_776)">
+<rect x="42" y="52" width="24" height="24" rx="12" fill="#272D33"/>
+</g>
+<rect x="42.5" y="52.5" width="23" height="23" rx="11.5" stroke="#BCD5FA" stroke-opacity="0.08"/>
+<rect x="76" y="56" width="82" height="16" fill="#272D33"/>
+<rect x="219" y="56" width="32" height="16" fill="#272D33"/>
+<rect x="8" y="96" width="24" height="24" fill="#181C20"/>
+<g clip-path="url(#clip2_2780_776)">
+<rect x="42" y="96" width="24" height="24" rx="12" fill="#181C20"/>
+</g>
+<rect x="42.5" y="96.5" width="23" height="23" rx="11.5" stroke="#BCD5FA" stroke-opacity="0.08"/>
+<rect x="76" y="100" width="82" height="16" fill="#181C20"/>
+<rect x="219" y="100" width="32" height="16" fill="#181C20"/>
+<defs>
+<clipPath id="clip0_2780_776">
+<rect x="42" y="8" width="24" height="24" rx="12" fill="white"/>
+</clipPath>
+<clipPath id="clip1_2780_776">
+<rect x="42" y="52" width="24" height="24" rx="12" fill="white"/>
+</clipPath>
+<clipPath id="clip2_2780_776">
+<rect x="42" y="96" width="24" height="24" rx="12" fill="white"/>
+</clipPath>
+</defs>
+</svg>

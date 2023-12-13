@@ -17,6 +17,7 @@ import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { cVar } from '@/styles'
+import { getRevenueShareStatusForMember } from '@/utils/crts'
 import { SentryLogger } from '@/utils/logs'
 import { formatNumber } from '@/utils/number'
 
@@ -38,6 +39,15 @@ export const RevenueShareParticipationWidget = ({
   const { displaySnackbar } = useSnackbar()
   const handleTransaction = useTransaction()
   const navigate = useNavigate()
+  const status = revenueShare
+    ? getRevenueShareStatusForMember({
+        currentBlock,
+        isFinalized: revenueShare.finalized,
+        hasMemberStaked: revenueShare.stakers.some((staker) => staker.account.member.id === memberId),
+        endingAt: revenueShare.endsAt,
+        startingAt: revenueShare.startingAt,
+      })
+    : 'inactive'
 
   const handleExitRevenueShare = async () => {
     if (!joystream || !token || !memberId) {
@@ -74,30 +84,27 @@ export const RevenueShareParticipationWidget = ({
   }
 
   const actionNode = () => {
-    const hasStaked = revenueShare.stakers.some((staker) => staker.account.member.id === memberId)
-    if (!hasEnded) {
-      if (hasStaked) {
-        return <StyledPill icon={<SvgActionCheck />} size="large" label="Staked your tokens" />
-      } else {
+    switch (status) {
+      case 'active':
         return (
           <Button size="small" variant="secondary" onClick={onClaimShare}>
             Stake your tokens
           </Button>
         )
-      }
+      case 'unlock':
+        return (
+          <Button size="small" onClick={handleExitRevenueShare}>
+            Claim tokens
+          </Button>
+        )
+      case 'locked':
+        return <StyledPill icon={<SvgActionCheck />} size="large" label="Staked your tokens" />
+      case 'past':
+        return <StyledPill icon={<SvgActionCheck />} size="large" label="Tokens claimed" />
+      case 'inactive':
+      case 'finalized':
+        return null
     }
-    if (!hasStaked) return null
-
-    const hasClaimed = false
-    if (hasClaimed) {
-      return <StyledPill icon={<SvgActionCheck />} size="large" label="Tokens claimed" />
-    }
-
-    return (
-      <Button size="small" onClick={handleExitRevenueShare}>
-        Claim tokens
-      </Button>
-    )
   }
 
   return (

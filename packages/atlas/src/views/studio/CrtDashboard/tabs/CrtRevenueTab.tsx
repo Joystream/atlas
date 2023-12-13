@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import { BN } from 'bn.js'
 import { useMemo, useState } from 'react'
 
@@ -39,7 +40,7 @@ export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
     <>
       <LayoutGrid>
         <GridItem colSpan={{ base: 12, sm: 4 }}>
-          <RevenueShareStateWidget revenueShare={activeRevenueShare} />
+          <StyledRevenueShareStateWidget revenueShare={activeRevenueShare} />
         </GridItem>
         <GridItem colSpan={{ base: 12, sm: 4 }}>
           <WidgetTile
@@ -86,17 +87,19 @@ export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
                 tokenId={token.id}
               />
             </GridItem>
-            <GridItem colSpan={{ base: 12 }}>
-              <RevenueShareStakersTable
-                data={activeRevenueShare.stakers.map((staker) => ({
-                  memberId: staker.account.member.id,
-                  stakedAtBlock: staker.createdIn,
-                  staked: +(staker.stakedAmount ?? 0),
-                  earnings: new BN(staker.earnings ?? 0),
-                }))}
-                tokenSymbol={token.symbol}
-              />
-            </GridItem>
+            {activeRevenueShare.stakers.length ? (
+              <GridItem colSpan={{ base: 12 }}>
+                <RevenueShareStakersTable
+                  data={activeRevenueShare.stakers.map((staker) => ({
+                    memberId: staker.account.member.id,
+                    stakedAtBlock: staker.createdIn,
+                    staked: +(staker.stakedAmount ?? 0),
+                    earnings: new BN(staker.earnings ?? 0),
+                  }))}
+                  tokenSymbol={token.symbol}
+                />
+              </GridItem>
+            ) : null}
           </>
         ) : finalizedRevenueShares.length ? null : (
           <GridItem colSpan={{ base: 12 }}>
@@ -124,3 +127,7 @@ export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
     </>
   )
 }
+
+const StyledRevenueShareStateWidget = styled(RevenueShareStateWidget)`
+  height: 100%;
+`

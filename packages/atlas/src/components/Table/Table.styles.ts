@@ -72,9 +72,10 @@ export const EmptyTableDescription = styled(Text)`
   margin-top: ${sizes(2)};
 `
 
-export const PageWrapper = styled.div`
+export const PageWrapper = styled.div<{ minWidth: number }>`
   display: flex;
   gap: ${sizes(6)};
+  min-width: ${(props) => `${props.minWidth}px`};
 `
 
 export const RightAlignedHeader = styled.div`
@@ -95,4 +96,14 @@ export const ColumnBox = styled.div`
   gap: ${sizes(2)};
   width: 100%;
   align-items: center;
+`
+
+export const TableWrapper = styled.div<{ isEmpty?: boolean }>`
+  scrollbar-width: none;
+  position: relative;
+  overflow: auto;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `
