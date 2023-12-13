@@ -69,6 +69,7 @@ export const TablePaymentsHistory: FC<TablePaymentsHistoryProps> = ({ data, isLo
         </DialogText>
       </DialogModal>
       <Table
+        minWidth={900}
         title="History"
         columns={COLUMNS}
         data={isLoading ? tableLoadingData : mappedData}

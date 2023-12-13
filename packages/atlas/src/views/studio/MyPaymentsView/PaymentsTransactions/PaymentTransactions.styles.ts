@@ -1,4 +1,3 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { SvgJoyTokenMonochrome24 } from '@/assets/icons'
@@ -17,19 +16,6 @@ export const TilesWrapper = styled.div`
     gap: ${sizes(6)};
     margin-bottom: ${sizes(6)};
   }
-`
-
-export const TableWrapper = styled.div<{ isEmpty?: boolean }>`
-  overflow-x: auto;
-
-  ${({ isEmpty }) =>
-    !isEmpty
-      ? css`
-          > * {
-            min-width: 900px;
-          }
-        `
-      : ''}
 `
 
 export const StyledSvgJoyTokenMonochrome24 = styled(SvgJoyTokenMonochrome24)`

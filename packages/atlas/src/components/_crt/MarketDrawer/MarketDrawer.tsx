@@ -113,7 +113,11 @@ export const MarketDrawer = ({ show, onClose, tokenName }: CrtMarketSaleViewProp
         icon: <SvgActionShoppingCart />,
         actionNode: (
           <TextButton
-            onClick={() => copyToClipboard(absoluteRoutes.viewer.channel(channelId ?? '-1', { tab: 'Token' }))}
+            onClick={() =>
+              copyToClipboard(
+                `${window.location.host}${absoluteRoutes.viewer.channel(channelId ?? '', { tab: 'Token' })}`
+              )
+            }
             icon={<SvgActionLinkUrl />}
           >
             Copy link to market

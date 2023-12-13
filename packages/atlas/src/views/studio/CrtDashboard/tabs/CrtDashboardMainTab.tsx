@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { useCallback, useMemo } from 'react'
 
 import { useGetCreatorTokenHoldersQuery } from '@/api/queries/__generated__/creatorTokens.generated'
@@ -14,6 +15,7 @@ import { StartSaleOrMarketButton } from '@/components/_crt/StartSaleOrMarketButt
 import { absoluteRoutes } from '@/config/routes'
 import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useUser } from '@/providers/user/user.hooks'
 import { SentryLogger } from '@/utils/logs'
 import { permillToPercentage } from '@/utils/number'
@@ -136,6 +138,7 @@ export const CrtDashboardMainTab = ({ token, onTabChange, hasOpenedMarket }: Crt
               icon={<StyledSvgJoyTokenMonochrome24 />}
               withDenomination
               withToken
+              denominationMultiplier={token.lastPrice ? hapiBnToTokenNumber(new BN(token.lastPrice)) : 0}
               customTicker={`$${token.symbol}`}
               variant="h400"
             />
@@ -153,6 +156,7 @@ export const CrtDashboardMainTab = ({ token, onTabChange, hasOpenedMarket }: Crt
               icon={<StyledSvgJoyTokenMonochrome24 />}
               withDenomination
               withToken
+              denominationMultiplier={token.lastPrice ? hapiBnToTokenNumber(new BN(token.lastPrice)) : 0}
               customTicker={`$${token.symbol}`}
               variant="h400"
             />
@@ -170,7 +174,6 @@ export const CrtDashboardMainTab = ({ token, onTabChange, hasOpenedMarket }: Crt
               icon={<StyledSvgJoyTokenMonochrome24 />}
               withDenomination
               withToken
-              customTicker={`$${token.symbol}`}
               variant="h400"
             />
           }
