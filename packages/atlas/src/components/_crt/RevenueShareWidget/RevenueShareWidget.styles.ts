@@ -12,7 +12,7 @@ export const Wrapper = styled(FlexBox)<{ isActive: boolean }>`
   gap: ${sizes(4)};
   padding: ${sizes(6)};
   ${media.sm} {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr 150px;
   }
 `
 

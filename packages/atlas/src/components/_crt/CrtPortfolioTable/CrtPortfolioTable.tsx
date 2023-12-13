@@ -15,11 +15,27 @@ import { Avatar } from '@/components/Avatar'
 import { FlexBox } from '@/components/FlexBox'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Table, TableProps } from '@/components/Table'
+import { ColumnBox } from '@/components/Table/Table.styles'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { BuyMarketTokenModal } from '@/components/_crt/BuyMarketTokenModal'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
+
+export const tableLoadingData = Array.from({ length: 5 }, () => ({
+  token: (
+    <ColumnBox>
+      <SkeletonLoader rounded height={32} width={32} />
+      <SkeletonLoader height={20} width="40%" />
+    </ColumnBox>
+  ),
+  status: <SkeletonLoader height={20} width="40%" />,
+  transferable: <SkeletonLoader height={20} width="40%" />,
+  vested: <SkeletonLoader height={20} width="40%" />,
+  total: <SkeletonLoader height={20} width="40%" />,
+  utils: null,
+}))
 
 const COLUMNS: TableProps['columns'] = [
   { Header: 'Token', accessor: 'token', width: 150 },
@@ -48,7 +64,7 @@ export type CrtPortfolioTableProps = {
   emptyState?: TableProps['emptyState']
 }
 
-export const CrtPortfolioTable = ({ data, emptyState }: CrtPortfolioTableProps) => {
+export const CrtPortfolioTable = ({ data, emptyState, isLoading }: CrtPortfolioTableProps) => {
   const [showModal, setShowModal] = useState(false)
   const [tokenId, setTokenId] = useState<string | null>(null)
 
@@ -56,21 +72,9 @@ export const CrtPortfolioTable = ({ data, emptyState }: CrtPortfolioTableProps) 
     return data.map((row) => ({
       token: <TokenInfo {...row} />,
       status: <Status status={row.status} />,
-      transferable: (
-        <RightAlignedCell>
-          <TransferableBalance memberId={row.memberId} tokenId={row.tokenId} ticker={`${row.tokenTitle}`} />
-        </RightAlignedCell>
-      ),
-      vested: (
-        <RightAlignedCell>
-          <NumberFormat value={row.vested} as="p" withToken customTicker={`$${row.tokenTitle}`} />
-        </RightAlignedCell>
-      ),
-      total: (
-        <RightAlignedCell>
-          <NumberFormat value={row.total} as="p" withToken customTicker={`$${row.tokenTitle}`} />
-        </RightAlignedCell>
-      ),
+      transferable: <TransferableBalance memberId={row.memberId} tokenId={row.tokenId} ticker={`${row.tokenTitle}`} />,
+      vested: <NumberFormat value={row.vested} as="p" withToken customTicker={`$${row.tokenTitle}`} />,
+      total: <NumberFormat value={row.total} as="p" withToken customTicker={`$${row.tokenTitle}`} />,
       utils: (
         <TokenPortfolioUtils
           onTransfer={() => undefined}
@@ -92,7 +96,7 @@ export const CrtPortfolioTable = ({ data, emptyState }: CrtPortfolioTableProps) 
         minWidth={730}
         isEmpty={!mappingData.length}
         columns={COLUMNS}
-        data={mappingData}
+        data={isLoading ? tableLoadingData : mappingData}
         emptyState={emptyState}
       />
     </>
@@ -195,6 +199,17 @@ const StyledTable = styled(Table)<{ isEmpty?: boolean }>`
   th:nth-child(n + 3),
   th:nth-child(n + 4),
   th:nth-child(n + 5) {
+    align-items: end;
+    justify-content: end;
+
+    > div {
+      align-items: end;
+    }
+  }
+
+  td:nth-child(n + 3),
+  td:nth-child(n + 4),
+  td:nth-child(n + 5) {
     align-items: end;
     justify-content: end;
 

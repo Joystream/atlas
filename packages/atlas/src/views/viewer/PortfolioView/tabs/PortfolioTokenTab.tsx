@@ -18,7 +18,8 @@ import {
   TokenInfo,
   TokenPortfolioUtils,
 } from '@/components/_crt/CrtPortfolioTable/CrtPortfolioTable'
-import { RevenueShareWidget } from '@/components/_crt/RevenueShareWidget/RevenueShareWidget'
+import { RevenueShareWidget, RevenueShareWidgetLoader } from '@/components/_crt/RevenueShareWidget/RevenueShareWidget'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { SendFundsDialog } from '@/components/_overlays/SendTransferDialogs'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -47,7 +48,7 @@ export const PortfolioTokenTab = () => {
   const [liquidCrtValue, setLiquidCrtValue] = useState<BN | null>(null)
   const toggleSendDialog = () => setShowSendDialog((prevState) => !prevState)
 
-  const { data, loading } = useGetCreatorTokenHoldersQuery({
+  const { data, loading: loadingHolderData } = useGetCreatorTokenHoldersQuery({
     variables: {
       where: {
         member: {
@@ -57,7 +58,7 @@ export const PortfolioTokenTab = () => {
     },
     skip: !memberId,
   })
-  const { data: memberTokenRevenueShareData } = useGetTokenRevenueSharesQuery({
+  const { data: memberTokenRevenueShareData, loading: loadingRevenueShares } = useGetTokenRevenueSharesQuery({
     variables: {
       where: {
         token: {
@@ -146,29 +147,40 @@ export const PortfolioTokenTab = () => {
         <WidgetTile
           title="Total tokens value"
           customNode={
-            <NumberFormat value={totalTokenValue} as="span" icon={<StyledSvgJoyTokenMonochrome24 />} withDenomination />
+            loadingHolderData ? (
+              <SkeletonLoader height={30} width={90} />
+            ) : (
+              <NumberFormat
+                value={totalTokenValue}
+                as="span"
+                icon={<StyledSvgJoyTokenMonochrome24 />}
+                withDenomination
+              />
+            )
           }
         />
       </FlexBox>
 
-      {memberTokenRevenueShareData && (
+      {loadingRevenueShares || memberTokenRevenueShareData ? (
         <FlexBox flow="column" gap={6}>
           <Text variant="h500" as="h3">
             Revenue shares
           </Text>
           <FlexBox flow="column" gap={2}>
-            {memberTokenRevenueShareData?.revenueShares.map((revenueShare) => (
-              <RevenueShareWidget
-                key={revenueShare.id}
-                tokenId={revenueShare.token.id}
-                tokenName={revenueShare.token.symbol ?? ''}
-                revenueShare={revenueShare}
-                memberId={memberId ?? ''}
-              />
-            ))}
+            {loadingRevenueShares
+              ? Array.from({ length: 3 }, (_, idx) => <RevenueShareWidgetLoader key={idx} />)
+              : memberTokenRevenueShareData?.revenueShares.map((revenueShare) => (
+                  <RevenueShareWidget
+                    key={revenueShare.id}
+                    tokenId={revenueShare.token.id}
+                    tokenName={revenueShare.token.symbol ?? ''}
+                    revenueShare={revenueShare}
+                    memberId={memberId ?? ''}
+                  />
+                ))}
           </FlexBox>
         </FlexBox>
-      )}
+      ) : null}
 
       <FlexBox minWidth="0" flow="column" gap={6}>
         <Text variant="h500" as="h3">
@@ -210,7 +222,7 @@ export const PortfolioTokenTab = () => {
         </Text>
         <CrtPortfolioTable
           data={mappedData ?? []}
-          isLoading={loading}
+          isLoading={loadingHolderData}
           emptyState={{
             icon: <SvgEmptyStateIllustration />,
             title: 'You don’t own any creator tokens yet',
