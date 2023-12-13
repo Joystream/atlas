@@ -12,6 +12,7 @@ import { CrtHoldersWidget } from '@/components/_crt/CrtHoldersWidget'
 import { CrtMarketWidget } from '@/components/_crt/CrtMarketWidget'
 import { CrtRevenueShareWidget } from '@/components/_crt/CrtRevenueShareWidget'
 import { StartSaleOrMarketButton } from '@/components/_crt/StartSaleOrMarketButton/StartSaleOrMarketButton'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -57,7 +58,7 @@ const steps: ProgressWidgetProps['steps'] = [
 export const CrtDashboardMainTab = ({ token, onTabChange, hasOpenedMarket }: CrtDashboardMainTabProps) => {
   const { memberId } = useUser()
   const smMatch = useMediaMatch('sm')
-  const { data } = useGetCreatorTokenHoldersQuery({
+  const { data, loading: loadingTokenHolders } = useGetCreatorTokenHoldersQuery({
     variables: {
       where: {
         member: {
@@ -72,8 +73,8 @@ export const CrtDashboardMainTab = ({ token, onTabChange, hasOpenedMarket }: Crt
       SentryLogger.error('Error while fetching token holders', 'CrtDashboard', error)
     },
   })
-  const { tokenBalance } = useGetTokenBalance(token.id)
   const memberTokenAccount = data?.tokenAccounts[0]
+  const { tokenBalance } = useGetTokenBalance(token.id)
 
   const currentMemberStep = useMemo((): number => {
     if (!token.description) return 1
@@ -150,16 +151,20 @@ export const CrtDashboardMainTab = ({ token, onTabChange, hasOpenedMarket }: Crt
             text: 'It is locked value',
           }}
           customNode={
-            <NumberFormat
-              value={+(memberTokenAccount?.stakedAmount ?? 0)}
-              as="span"
-              icon={<StyledSvgJoyTokenMonochrome24 />}
-              withDenomination
-              withToken
-              denominationMultiplier={token.lastPrice ? hapiBnToTokenNumber(new BN(token.lastPrice)) : 0}
-              customTicker={`$${token.symbol}`}
-              variant="h400"
-            />
+            loadingTokenHolders ? (
+              <SkeletonLoader height={30} width={90} />
+            ) : (
+              <NumberFormat
+                value={+(memberTokenAccount?.stakedAmount ?? 0)}
+                as="span"
+                icon={<StyledSvgJoyTokenMonochrome24 />}
+                withDenomination
+                withToken
+                denominationMultiplier={token.lastPrice ? hapiBnToTokenNumber(new BN(token.lastPrice)) : 0}
+                customTicker={`$${token.symbol}`}
+                variant="h400"
+              />
+            )
           }
         />
         <WidgetTile

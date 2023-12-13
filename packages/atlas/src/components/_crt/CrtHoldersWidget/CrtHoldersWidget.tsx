@@ -13,6 +13,7 @@ import { Text } from '@/components/Text'
 import { TextButton } from '@/components/_buttons/Button'
 import { PieChart, PieDatum, joystreamColors } from '@/components/_charts/PieChart'
 import { Widget } from '@/components/_crt/CrtStatusWidget/CrtStatusWidget.styles'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useUser } from '@/providers/user/user.hooks'
@@ -53,8 +54,9 @@ export const holdersToDatum = (accounts: BasicCreatorTokenHolderFragment[], tota
 export const CrtHoldersWidget = ({ tokenId, totalSupply, onShowMore }: CrtHoldersWidgetProps) => {
   const { activeMembership } = useUser()
   const smMatch = useMediaMatch('sm')
+  const xsMatch = useMediaMatch('xs')
   const [hoveredHolder, setHoveredHolder] = useState<PieDatum | null>(null)
-  const { data } = useGetCreatorTokenHoldersQuery({
+  const { data, loading } = useGetCreatorTokenHoldersQuery({
     variables: {
       where: {
         token: {
@@ -117,39 +119,51 @@ export const CrtHoldersWidget = ({ tokenId, totalSupply, onShowMore }: CrtHolder
             <Text variant="h100" as="h1" color="colorTextMuted">
               TOTAL SUPPLY
             </Text>
-            <ChartWrapper>
-              <PieChart
-                data={[...restChartData, ...(owner ? [owner] : [])]}
-                onDataHover={setHoveredHolder}
-                hoverOpacity
-                hoveredData={hoveredHolder}
-                valueFormat={(value) => `${value}%`}
-              />
-            </ChartWrapper>
+            {loading ? (
+              <FlexBox width="100%" justifyContent="center">
+                <SkeletonLoader height={xsMatch ? 300 : 200} width={xsMatch ? 300 : 200} rounded />
+              </FlexBox>
+            ) : (
+              <ChartWrapper>
+                <PieChart
+                  data={[...restChartData, ...(owner ? [owner] : [])]}
+                  onDataHover={setHoveredHolder}
+                  hoverOpacity
+                  hoveredData={hoveredHolder}
+                  valueFormat={(value) => `${value}%`}
+                />
+              </ChartWrapper>
+            )}
           </FlexBox>
           <FlexBox flow="column" gap={6}>
             <FlexBox flow="column" gap={2}>
               <Text variant="h100" as="h1" margin={{ bottom: 4 }} color="colorTextMuted">
                 YOU OWN
               </Text>
-              {owner && (
-                <HoldersLegendEntry
-                  key={owner.id}
-                  name={owner.id}
-                  members={owner.members}
-                  color={joystreamColors[owner.index]}
-                  value={owner.value}
-                  isActive={owner.id === hoveredHolder?.id}
-                  onMouseEnter={() => setHoveredHolder(owner)}
-                  onMouseExit={() => setHoveredHolder(null)}
-                />
+              {loading ? (
+                <ListItemEntryLoader />
+              ) : (
+                owner && (
+                  <HoldersLegendEntry
+                    key={owner.id}
+                    name={owner.id}
+                    members={owner.members}
+                    color={joystreamColors[owner.index]}
+                    value={owner.value}
+                    isActive={owner.id === hoveredHolder?.id}
+                    onMouseEnter={() => setHoveredHolder(owner)}
+                    onMouseExit={() => setHoveredHolder(null)}
+                  />
+                )
               )}
             </FlexBox>
             <FlexBox flow="column" gap={2}>
               <Text variant="h100" as="h1" margin={{ bottom: 4 }} color="colorTextMuted">
                 TOP HOLDERS
               </Text>
-              {restChartData.length ? (
+              {loading ? (
+                Array.from({ length: 3 }, (_, idx) => <ListItemEntryLoader key={idx} />)
+              ) : restChartData.length ? (
                 restChartData.map((row) =>
                   row.id === activeMembership?.handle ? null : (
                     <HoldersLegendEntry
@@ -230,6 +244,16 @@ const HoldersLegendEntry = ({
     </FlexBox>
   )
 }
+
+const ListItemEntryLoader = () => (
+  <FlexBox justifyContent="space-between">
+    <FlexBox gap={3}>
+      <SkeletonLoader height={30} width={30} rounded />
+      <SkeletonLoader height={30} width={90} />
+    </FlexBox>
+    <SkeletonLoader height={30} width={50} />
+  </FlexBox>
+)
 
 const ColorBox = styled.div<{ color: string }>`
   min-width: 24px;

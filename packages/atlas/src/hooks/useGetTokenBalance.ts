@@ -15,6 +15,7 @@ export const useGetTokenBalance = (tokenId?: string, memberId?: string) => {
       memberId: memberId ?? currentMemberId ?? '',
       currentBlockHeight: currentBlock,
     },
+    notifyOnNetworkStatusChange: true,
     fetchPolicy: 'no-cache',
     skip: !!tokenBalance || !tokenId || !(memberId || currentMemberId),
     onCompleted: (data) => {
