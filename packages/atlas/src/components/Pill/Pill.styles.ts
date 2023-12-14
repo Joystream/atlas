@@ -51,7 +51,7 @@ const variantStyles = ({ variant }: PillProps) => {
   switch (variant) {
     case 'overlay':
       return css`
-        background-color: ${cVar('colorBackgroundOverlay')}; ;
+        background-color: ${cVar('colorBackgroundOverlay')};
       `
     case 'danger':
       return css`

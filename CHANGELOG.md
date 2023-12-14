@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [4.14.3] - 2023-12-08
 
+### Fixed
+
+- Fixed atlas meta server query
+- Fiex basic channel query performance
+
+## [4.14.3] - 2023-12-08
+
 ### Changed
 
 - Changed Atlas TnC
