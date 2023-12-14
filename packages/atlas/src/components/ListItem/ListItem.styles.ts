@@ -111,16 +111,15 @@ export const LabelText = styled(Text)`
   text-align: left;
 `
 
-const iconStyles = ({ destructive, isHovering, isSelected }: NodeContainerProps) =>
-  css`
-    > svg > path {
-      fill: ${destructive
-        ? cVar('colorTextError')
-        : isHovering || isSelected
-        ? cVar('colorTextStrong')
-        : cVar('colorText')};
-    }
-  `
+const iconStyles = ({ destructive, isHovering, isSelected }: NodeContainerProps) => css`
+  > svg > path {
+    fill: ${destructive
+      ? cVar('colorTextError')
+      : isHovering || isSelected
+      ? cVar('colorTextStrong')
+      : cVar('colorText')};
+  }
+`
 
 type NodeContainerProps = {
   destructive?: boolean

@@ -37,9 +37,9 @@ export const TopReferrals = () => {
   const xsMatch = useMediaMatch('xs')
   const mdMatch = useMediaMatch('md')
 
-  const { extendedChannels: topReferrersChannels } = useBasicChannels(
+  const { channels: topReferrersChannels } = useBasicChannels(
     {
-      where: { channel: { id_in: topChannels?.map((channel) => channel.referrerChannelId.toString()) || [] } },
+      where: { id_in: topChannels?.map((channel) => channel.referrerChannelId.toString()) || [] },
       limit: 5,
     },
     {
@@ -47,7 +47,7 @@ export const TopReferrals = () => {
     }
   )
 
-  const channelById = (id: string) => topReferrersChannels?.find((channel) => channel.channel.id === id)?.channel
+  const channelById = (id: string) => topReferrersChannels?.find((channel) => channel.id === id)
 
   return (
     <FlexBox flow="column" marginTop={mdMatch ? 24 : xsMatch ? 16 : 14} gap={xsMatch ? 18 : 12} alignItems="center">

@@ -26,7 +26,7 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = memo(({ channelId }
   const videoRows = useVideoGridRows('compact')
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const {
-    extendedChannel,
+    channel,
     loading: channelLoading,
     error: channelError,
   } = useBasicChannel(channelId || '', {
@@ -43,7 +43,7 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = memo(({ channelId }
     onError: (error) => SentryLogger.error('Failed to fetch videos', 'ChannelWithVideos', error),
   })
 
-  const { toggleFollowing, isFollowing } = useHandleFollowChannel(channelId, extendedChannel?.channel?.title)
+  const { toggleFollowing, isFollowing } = useHandleFollowChannel(channelId, channel?.title)
 
   const targetItemsCount = videosPerRow * videoRows
   const displayedVideos = (videos || []).slice(0, targetItemsCount)
@@ -74,24 +74,20 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = memo(({ channelId }
   return (
     <>
       <ChannelCardAnchor to={channelId ? absoluteRoutes.viewer.channel(channelId) : ''}>
-        <StyledAvatar
-          size={mdMatch ? 136 : 88}
-          loading={isLoading}
-          assetUrls={extendedChannel?.channel.avatarPhoto?.resolvedUrls}
-        />
+        <StyledAvatar size={mdMatch ? 136 : 88} loading={isLoading} assetUrls={channel?.avatarPhoto?.resolvedUrls} />
         <InfoWrapper>
           {isLoading ? (
             <SkeletonLoader width="120px" height="20px" bottomSpace="4px" />
           ) : (
             <ChannelTitle variant="h300" as="h3">
-              {extendedChannel?.channel?.title}
+              {channel?.title}
             </ChannelTitle>
           )}
           {isLoading ? (
             <SkeletonLoader width="80px" height="20px" bottomSpace="8px" />
           ) : (
             <ChannelFollows as="span" variant="t200" color="colorText">
-              <NumberFormat as="span" color="colorText" value={extendedChannel?.channel?.followsNum || 0} /> followers
+              <NumberFormat as="span" color="colorText" value={channel?.followsNum || 0} /> followers
             </ChannelFollows>
           )}
           {isLoading ? (
