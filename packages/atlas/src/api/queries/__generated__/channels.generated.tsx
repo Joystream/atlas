@@ -105,6 +105,44 @@ export type GetFullChannelQuery = {
   } | null
 }
 
+export type GetBasicChannelsQueryVariables = Types.Exact<{
+  where?: Types.InputMaybe<Types.ChannelWhereInput>
+  limit?: Types.InputMaybe<Types.Scalars['Int']>
+  orderBy?: Types.InputMaybe<Array<Types.ChannelOrderByInput> | Types.ChannelOrderByInput>
+}>
+
+export type GetBasicChannelsQuery = {
+  __typename?: 'Query'
+  channels: Array<{
+    __typename?: 'Channel'
+    id: string
+    title?: string | null
+    description?: string | null
+    createdAt: Date
+    followsNum: number
+    rewardAccount: string
+    channelStateBloatBond: string
+    avatarPhoto?: {
+      __typename?: 'StorageDataObject'
+      id: string
+      resolvedUrls: Array<string>
+      createdAt: Date
+      size: string
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type?:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoSubtitle' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+        | null
+    } | null
+  }>
+}
+
 export type GetExtendedBasicChannelsQueryVariables = Types.Exact<{
   where?: Types.InputMaybe<Types.ExtendedChannelWhereInput>
   limit?: Types.InputMaybe<Types.Scalars['Int']>
@@ -804,6 +842,48 @@ export function useGetFullChannelLazyQuery(
 export type GetFullChannelQueryHookResult = ReturnType<typeof useGetFullChannelQuery>
 export type GetFullChannelLazyQueryHookResult = ReturnType<typeof useGetFullChannelLazyQuery>
 export type GetFullChannelQueryResult = Apollo.QueryResult<GetFullChannelQuery, GetFullChannelQueryVariables>
+export const GetBasicChannelsDocument = gql`
+  query GetBasicChannels($where: ChannelWhereInput, $limit: Int = 50, $orderBy: [ChannelOrderByInput!]) {
+    channels(where: $where, orderBy: $orderBy, limit: $limit) {
+      ...BasicChannelFields
+    }
+  }
+  ${BasicChannelFieldsFragmentDoc}
+`
+
+/**
+ * __useGetBasicChannelsQuery__
+ *
+ * To run a query within a React component, call `useGetBasicChannelsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBasicChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBasicChannelsQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      limit: // value for 'limit'
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useGetBasicChannelsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetBasicChannelsQuery, GetBasicChannelsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetBasicChannelsQuery, GetBasicChannelsQueryVariables>(GetBasicChannelsDocument, options)
+}
+export function useGetBasicChannelsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetBasicChannelsQuery, GetBasicChannelsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetBasicChannelsQuery, GetBasicChannelsQueryVariables>(GetBasicChannelsDocument, options)
+}
+export type GetBasicChannelsQueryHookResult = ReturnType<typeof useGetBasicChannelsQuery>
+export type GetBasicChannelsLazyQueryHookResult = ReturnType<typeof useGetBasicChannelsLazyQuery>
+export type GetBasicChannelsQueryResult = Apollo.QueryResult<GetBasicChannelsQuery, GetBasicChannelsQueryVariables>
 export const GetExtendedBasicChannelsDocument = gql`
   query GetExtendedBasicChannels(
     $where: ExtendedChannelWhereInput
