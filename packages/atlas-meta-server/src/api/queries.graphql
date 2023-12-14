@@ -1,6 +1,9 @@
 fragment DataObjectFields on StorageDataObject {
   id
   resolvedUrls
+  storageBag{
+    id
+  }
 }
 
 fragment BasicChannelFields on Channel {
