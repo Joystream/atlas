@@ -6,6 +6,8 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 
 import {
   FollowChannelMutation,
+  GetBasicChannelsQuery,
+  GetBasicChannelsQueryVariables,
   GetChannelNftCollectorsQuery,
   GetChannelNftCollectorsQueryVariables,
   GetDiscoverChannelsQuery,
@@ -18,6 +20,7 @@ import {
   GetTop10ChannelsQueryVariables,
   UnfollowChannelMutation,
   useFollowChannelMutation,
+  useGetBasicChannelsQuery,
   useGetChannelNftCollectorsQuery,
   useGetDiscoverChannelsQuery,
   useGetExtendedBasicChannelsQuery,
@@ -29,6 +32,23 @@ import {
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 
 export const useBasicChannel = (
+  id: string,
+  opts?: QueryHookOptions<GetBasicChannelsQuery, GetBasicChannelsQueryVariables>
+) => {
+  const { data, ...rest } = useGetBasicChannelsQuery({
+    ...opts,
+    variables: {
+      ...opts?.variables,
+      where: { ...opts?.variables?.where, id_eq: id },
+    },
+  })
+  return {
+    channel: data?.channels[0],
+    ...rest,
+  }
+}
+
+export const useBasicExtendedChannel = (
   id: string,
   opts?: QueryHookOptions<GetExtendedBasicChannelsQuery, GetExtendedBasicChannelsQueryVariables>
 ) => {
@@ -71,6 +91,20 @@ export const useFullChannel = (
 }
 
 export const useBasicChannels = (
+  variables?: GetBasicChannelsQueryVariables,
+  opts?: QueryHookOptions<GetBasicChannelsQuery, GetBasicChannelsQueryVariables>
+) => {
+  const { data, ...rest } = useGetBasicChannelsQuery({
+    ...opts,
+    variables,
+  })
+  return {
+    channels: data?.channels,
+    ...rest,
+  }
+}
+
+export const useBasicExtendedChannels = (
   variables?: GetExtendedBasicChannelsQueryVariables,
   opts?: QueryHookOptions<GetExtendedBasicChannelsQuery, GetExtendedBasicChannelsQueryVariables>
 ) => {

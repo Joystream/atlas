@@ -8,6 +8,12 @@ query GetFullChannel($id: String!) {
   }
 }
 
+query GetBasicChannels($where: ChannelWhereInput, $limit: Int = 50, $orderBy: [ChannelOrderByInput!]) {
+  channels(where: $where, orderBy: $orderBy, limit: $limit) {
+    ...BasicChannelFields
+  }
+}
+
 # CHANGE: `channels` replaced with `extendedChannels` (which include `activeVideosCount`)
 query GetExtendedBasicChannels($where: ExtendedChannelWhereInput, $limit: Int = 50, $orderBy: [ChannelOrderByInput!]) {
   extendedChannels(where: $where, orderBy: $orderBy, limit: $limit) {
