@@ -1,7 +1,7 @@
 import { QueryHookOptions } from '@apollo/client'
 import { FC, Fragment, useState } from 'react'
 
-import { useBasicChannels, useDiscoverChannels } from '@/api/hooks/channel'
+import { useBasicExtendedChannels, useDiscoverChannels } from '@/api/hooks/channel'
 import { ChannelOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { SvgActionChevronR } from '@/assets/icons'
 import { ChannelTitle } from '@/components/ChannelTitle'
@@ -154,7 +154,7 @@ const useChannelsListData = (queryType: ChannelsQueryType, selectedLanguage: str
   )
 
   // regular channels query needs explicit limit and sorting as it's not defined by Orion
-  const regular = useBasicChannels(
+  const regular = useBasicExtendedChannels(
     {
       limit: 15,
       orderBy: ChannelOrderByInput.CreatedAtDesc,
