@@ -352,7 +352,14 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
               name="endDate"
               control={control}
               render={({ field: { onChange, value }, fieldState: { error } }) => (
-                <FormField error={error?.message} disableErrorAnimation label="Ends">
+                <FormField
+                  error={error?.message}
+                  disableErrorAnimation
+                  label="Ends"
+                  tooltip={{
+                    text: 'Revenue share has limited duration and needs to be closed after the ending date ends. It is after closing the revenue share, all tokens staked during the revenue share can be recovered.',
+                  }}
+                >
                   <OuterBox>
                     <InnerBox>
                       <AuctionDatePicker

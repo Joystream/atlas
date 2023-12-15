@@ -271,7 +271,9 @@ export const TokenIssuanceStep = ({
         label="Token assurances"
         description="Add cliff & vesting for your own tokens to make your followers feel more secure when investing in your channel."
         tooltip={{
-          text: "These parameters are set up to restrict your ability to sell your own tokens over time. There's a benefit of extra security in locking the portion of your tokens, which acts as a safety net in case your account gets compromised. Additionally, restricting token sales allows all holders to minimise the manipulation of token price by the biggest token owner, which will be yourself at start, and block the infamous pump and dump tactics. ",
+          text:
+            'Different options presented below correspond to different level of token safety projected to your potential buyers. ' +
+            'For example choosing risky option does not signal to your buyers that they are safe from the pump and dump scenario, while secure and safe options signal a safer token purchasing option. ',
         }}
       >
         <Controller
