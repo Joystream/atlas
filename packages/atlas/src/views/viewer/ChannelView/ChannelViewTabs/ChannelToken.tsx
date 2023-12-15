@@ -1,9 +1,6 @@
 import { useMemo } from 'react'
 
-import {
-  useGetCreatorTokenHoldersQuery,
-  useGetFullCreatorTokenQuery,
-} from '@/api/queries/__generated__/creatorTokens.generated'
+import { useGetFullCreatorTokenQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { getTokenDetails } from '@/components/CrtPreviewLayout'
 import { FlexBox } from '@/components/FlexBox'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
@@ -12,7 +9,6 @@ import { CrtStatusWidget } from '@/components/_crt/CrtStatusWidget'
 import { HoldersWidget } from '@/components/_crt/HoldersWidget'
 import { RevenueShareStateWidget } from '@/components/_crt/RevenueShareStateWidget'
 import { TokenDetails } from '@/components/_crt/TokenDetails/TokenDetails'
-import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 type ChannelTokenProps = {
@@ -25,15 +21,6 @@ export const ChannelToken = ({ tokenId, memberId }: ChannelTokenProps) => {
   const { data } = useGetFullCreatorTokenQuery({
     variables: {
       id: tokenId ?? '',
-    },
-  })
-  const { data: holdersData } = useGetCreatorTokenHoldersQuery({
-    variables: {
-      where: {
-        token: {
-          id_eq: tokenId ?? '',
-        },
-      },
     },
   })
 
@@ -82,15 +69,12 @@ export const ChannelToken = ({ tokenId, memberId }: ChannelTokenProps) => {
             />
           )}
 
-          {holdersData ? (
-            <HoldersWidget
-              totalSupply={+token.totalSupply}
-              holders={holdersData.tokenAccounts}
-              ownerId={memberId ?? ''}
-            />
-          ) : (
-            <SkeletonLoader width="100%" height={300} />
-          )}
+          <HoldersWidget
+            totalSupply={+token.totalSupply}
+            tokenId={tokenId ?? ''}
+            ownerId={memberId ?? ''}
+            totalHolders={token?.accountsNum ?? '-'}
+          />
         </FlexBox>
       </GridItem>
     </LayoutGrid>
