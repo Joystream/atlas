@@ -49,7 +49,7 @@ export const BuySaleTokenForm = ({ tokenId, setPrimaryButtonProps, onSubmit }: B
             customTicker={`$${title}`}
           />
         ),
-        tooltipText: 'Lorem ipsum',
+        tooltipText: 'Amount of tokens that can be bought through current market.',
       },
       {
         title: 'You will get',
@@ -64,17 +64,17 @@ export const BuySaleTokenForm = ({ tokenId, setPrimaryButtonProps, onSubmit }: B
             customTicker={`$${title}`}
           />
         ),
-        tooltipText: 'Lorem ipsum',
+        tooltipText: 'Amount of tokens that will be bought from the sale.',
       },
       {
         title: 'Fee',
         content: <NumberFormat value={tokensOnSale} as="p" variant="t200" withDenomination="before" withToken />,
-        tooltipText: 'Lorem ipsum',
+        tooltipText: 'Fees paid for including the transaction into the block.',
       },
       {
         title: 'You will spend',
         content: <NumberFormat value={tokensOnSale} as="p" variant="t200" withDenomination="before" withToken />,
-        tooltipText: 'Lorem ipsum',
+        tooltipText: 'Amount that will need to be paid for tokens.',
       },
     ],
     [title, tokens, tokensOnSale]
