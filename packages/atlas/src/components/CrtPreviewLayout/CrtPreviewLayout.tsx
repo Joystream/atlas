@@ -44,7 +44,7 @@ export const getTokenDetails = (token: FullCreatorTokenFragment) => {
       caption: 'TOTAL REV.',
       content: +token.totalSupply,
       icon: <JoyTokenIcon size={16} variant="silver" />,
-      tooltipText: 'Total revenue this channel made from DAO earnings, NFT sales and Royalties.',
+      tooltipText: 'Total revenue this channel made from DAO earnings, NFT sales and royalties.',
       withDenomination: true,
     })
 
