@@ -9,6 +9,27 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { Pill } from '@/components/Pill'
 import { Table, TableProps } from '@/components/Table'
 import { DateBlockCell, LoadingMemberRow, TokenAmount } from '@/components/Table/Table.cells'
+import { ColumnBox, RowBox } from '@/components/Table/Table.styles'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+
+export const tableLoadingData = Array.from({ length: 5 }, () => ({
+  date: (
+    <RowBox>
+      <SkeletonLoader height={20} width="70%" />
+      <SkeletonLoader height={20} width="50%" />
+    </RowBox>
+  ),
+  member: (
+    <ColumnBox>
+      <SkeletonLoader rounded height={32} width={32} />
+      <SkeletonLoader height={20} width="40%" />
+    </ColumnBox>
+  ),
+  action: <SkeletonLoader height={20} width="40%" />,
+  pricePerUnit: <SkeletonLoader height={20} width="40%" />,
+  quantity: <SkeletonLoader height={20} width="40%" />,
+  amount: <SkeletonLoader height={20} width="40%" />,
+}))
 
 const COLUMNS: TableProps['columns'] = [
   { Header: 'Date', accessor: 'date' },
@@ -27,9 +48,10 @@ const tableEmptyState = {
 
 type AmmTransactionsTableProps = {
   data: FullAmmCurveFragment['transactions']
+  loading: boolean
 }
 
-export const AmmTransactionsTable = ({ data }: AmmTransactionsTableProps) => {
+export const AmmTransactionsTable = ({ data, loading }: AmmTransactionsTableProps) => {
   const mappedData = useMemo(
     () =>
       data.map((row) => ({
@@ -52,7 +74,7 @@ export const AmmTransactionsTable = ({ data }: AmmTransactionsTableProps) => {
     <StyledTable
       minWidth={900}
       title="Market transactions"
-      data={mappedData ?? []}
+      data={loading ? tableLoadingData : mappedData ?? []}
       columns={COLUMNS}
       emptyState={tableEmptyState}
     />
