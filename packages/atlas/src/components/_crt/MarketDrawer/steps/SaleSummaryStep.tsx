@@ -74,6 +74,7 @@ export const SaleSummaryStep: FC<SaleSummaryProps> = ({
     })
   }, [
     channelId,
+    client,
     displaySnackbar,
     handleCloseModal,
     handleTransaction,

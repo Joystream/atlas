@@ -51,6 +51,7 @@ export const ChannelToken = ({ tokenId, memberId }: ChannelTokenProps) => {
         <FlexBox flow="column" gap={6} alignItems="stretch">
           <CrtBasicInfoWidget
             details={basicDetails}
+            isInviteOnly={token?.isInviteOnly}
             name={token.symbol ?? 'N/A'}
             symbol={token.symbol ?? 'N/A'}
             avatar={token?.channel?.channel.avatarPhoto?.resolvedUrls?.[0]}

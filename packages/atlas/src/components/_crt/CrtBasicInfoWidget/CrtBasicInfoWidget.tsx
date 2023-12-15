@@ -17,6 +17,7 @@ export type CrtBasicInfoWidgetProps = {
   accountsNum?: number
   description?: string
   avatar?: string
+  isInviteOnly?: boolean
   details: {
     caption: string
     content: number | string | ReactElement | ReactElement[]
@@ -35,6 +36,7 @@ export const CrtBasicInfoWidget = ({
   accountsNum,
   size = 'large',
   avatar,
+  isInviteOnly,
 }: CrtBasicInfoWidgetProps) => {
   const smMatch = useMediaMatch('sm')
   return (
@@ -45,7 +47,7 @@ export const CrtBasicInfoWidget = ({
           <Text variant="h600" as="h3" margin={{ bottom: 2 }}>
             ${symbol}
           </Text>
-          <Pill icon={<SvgActionShieldLock />} label="Invite only" />
+          {isInviteOnly && <Pill icon={<SvgActionShieldLock />} label="Invite only" />}
         </FlexBox>
         <FlexBox>
           <Text variant="t200" as="p">
