@@ -80,7 +80,8 @@ export const SetupTokenStep = ({ setPrimaryButtonProps, onSubmit, form, setPrevi
                 avoidIconStyling
                 caption="REVENUE SHARE"
                 content={`${watchedForm.revenueShare}%`}
-                tooltipText="Loremp ipsum"
+                tooltipText="The % ratio of how much channel revenue gets distributed among all token holders vs the % ratio of what get's transferred to channel owners (yours) account when the revenue share is initiated.
+           Annual creator reward Annual creator reward aka patronage, that is earned by channel owner for managing channel.Tokens issued in your walletTotal number of tokens issuedCliffPeriod of time during which no tokens can be issued. After the cliff has passed, initial allocation happens.Vesting periodPeriod of time after cliff during which all your tokens become vested, meaning that they can be spent or transferred.First payotAmount of tokens that become transferable, after the clif and before the vesting period starts."
                 tileSize={smMatch ? 'big' : 'bigSmall'}
                 withDenomination
               />
@@ -88,7 +89,7 @@ export const SetupTokenStep = ({ setPrimaryButtonProps, onSubmit, form, setPrevi
                 avoidIconStyling
                 caption="CREATOR REWARD"
                 content={`${watchedForm.creatorReward}%`}
-                tooltipText="Loremp ipsum"
+                tooltipText="Additional tokens you will be earning every year for managing your creator tokens defined as % from total token supply. If you and all your holders have 10,000 tokens and patronage rate is set to 10%, your annual reward will be 1000 tokens."
                 tileSize={smMatch ? 'big' : 'bigSmall'}
                 withDenomination
               />
