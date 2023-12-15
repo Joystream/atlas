@@ -7,6 +7,7 @@ import {
   SvgActionMarket,
   SvgActionMore,
   SvgActionNotForSale,
+  SvgActionSell,
   SvgActionShoppingCart,
   SvgActionTransfer,
   SvgActionVerified,
@@ -18,6 +19,7 @@ import { Table, TableProps } from '@/components/Table'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { BuyMarketTokenModal } from '@/components/_crt/BuyMarketTokenModal'
+import { SellTokenModal } from '@/components/_crt/SellTokenModal'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
 
@@ -49,7 +51,8 @@ export type CrtPortfolioTableProps = {
 }
 
 export const CrtPortfolioTable = ({ data, emptyState }: CrtPortfolioTableProps) => {
-  const [showModal, setShowModal] = useState(false)
+  const [showBuyModal, setShowBuyModal] = useState(false)
+  const [showSellModal, setShowSellModal] = useState(false)
   const [tokenId, setTokenId] = useState<string | null>(null)
 
   const mappingData = useMemo(() => {
@@ -77,9 +80,14 @@ export const CrtPortfolioTable = ({ data, emptyState }: CrtPortfolioTableProps) 
           disableTransfer
           onBuy={() => {
             setTokenId(row.tokenId)
-            setShowModal(true)
+            setShowBuyModal(true)
           }}
-          disableBuy={row.status === TokenStatus.Idle}
+          onSell={() => {
+            setTokenId(row.tokenId)
+            setShowSellModal(true)
+          }}
+          disableBuy={row.status !== TokenStatus.Market}
+          disableSell={row.status !== TokenStatus.Market}
         />
       ),
     }))
@@ -87,7 +95,8 @@ export const CrtPortfolioTable = ({ data, emptyState }: CrtPortfolioTableProps) 
 
   return (
     <>
-      {tokenId && <BuyMarketTokenModal tokenId={tokenId} show={showModal} onClose={() => setShowModal(false)} />}
+      {tokenId && <BuyMarketTokenModal tokenId={tokenId} show={showBuyModal} onClose={() => setShowBuyModal(false)} />}
+      {tokenId && <SellTokenModal tokenId={tokenId} show={showSellModal} onClose={() => setShowSellModal(false)} />}
       <StyledTable
         minWidth={730}
         isEmpty={!mappingData.length}
@@ -146,12 +155,21 @@ const Status = ({ status }: { status: TokenStatus }) => {
 
 type TokenPortfolioUtilsProps = {
   onBuy?: () => void
+  onSell?: () => void
   onTransfer: () => void
   disableTransfer?: boolean
   disableBuy?: boolean
+  disableSell?: boolean
 }
 
-export const TokenPortfolioUtils = ({ onBuy, onTransfer, disableTransfer, disableBuy }: TokenPortfolioUtilsProps) => {
+export const TokenPortfolioUtils = ({
+  onBuy,
+  onTransfer,
+  disableTransfer,
+  disableBuy,
+  disableSell,
+  onSell,
+}: TokenPortfolioUtilsProps) => {
   const [ref, setRef] = useState<HTMLButtonElement | null>(null)
 
   return (
@@ -174,6 +192,13 @@ export const TokenPortfolioUtils = ({ onBuy, onTransfer, disableTransfer, disabl
             onClick: onTransfer,
             nodeStart: <SvgActionTransfer />,
             disabled: disableTransfer,
+          },
+          {
+            asButton: true,
+            label: 'Sell',
+            onClick: onSell,
+            nodeStart: <SvgActionSell />,
+            disabled: disableSell,
           },
         ]}
         trigger={null}

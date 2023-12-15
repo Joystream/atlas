@@ -3,7 +3,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { useGetFullCreatorTokenQuery } from '@/api/queries/__generated__/creatorTokens.generated'
-import { NumberFormat } from '@/components/NumberFormat'
+import { NumberFormat, formatNumberShort } from '@/components/NumberFormat'
 import { AmmModalFormTemplate } from '@/components/_crt/AmmModalTemplates'
 import { AmmModalSummaryTemplate } from '@/components/_crt/AmmModalTemplates/AmmModalSummaryTemplate'
 import { DialogModal } from '@/components/_overlays/DialogModal'
@@ -32,7 +32,7 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
   const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()
   const { fullFee } = useFee('sellTokenOnMarketTx', ['1', '1', '2', '10000000'])
-  const { data } = useGetFullCreatorTokenQuery({
+  const { data, loading } = useGetFullCreatorTokenQuery({
     variables: {
       id: tokenId,
     },
@@ -176,17 +176,25 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
         })
       },
       onTxSync: async () => {
+        // todo add joys from rpc event
         displaySnackbar({
-          title: `${(tokens * priceForAllToken) / tokens} ${atlasConfig.joystream.tokenTicker} received`,
-          description: `${tokens} $${title} sold`,
+          iconType: 'success',
+          title: `${formatNumberShort((tokens * priceForAllToken) / tokens)} ${
+            atlasConfig.joystream.tokenTicker
+          } received`,
+          description: `You will find it in your portfolio.`,
         })
         onClose()
       },
     })
   }
 
-  if (!currentAmm && show) {
-    throw new Error('BuyAmmModal invoked on token without active amm')
+  if (!loading && !currentAmm && show) {
+    SentryLogger.error('SellAmmModal invoked on token without active amm', 'SellTokenModal', {
+      loading,
+      currentAmm,
+    })
+    throw new Error('SellAmmModal invoked on token without active amm')
   }
 
   const isFormStep = step === 'form'
