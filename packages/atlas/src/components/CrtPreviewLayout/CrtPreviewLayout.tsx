@@ -44,8 +44,7 @@ export const getTokenDetails = (token: FullCreatorTokenFragment) => {
       caption: 'TOTAL REV.',
       content: +token.totalSupply,
       icon: <JoyTokenIcon size={16} variant="silver" />,
-      tooltipText:
-        'This is the total amount of revenue that the channel made from the time it was created. This information can be useful to determine if the creator had high or low income from their content in the past.',
+      tooltipText: 'Total revenue this channel made from DAO earnings, NFT sales and royalties.',
       withDenomination: true,
     })
 
