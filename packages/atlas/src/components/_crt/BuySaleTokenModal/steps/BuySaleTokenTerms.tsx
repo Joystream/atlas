@@ -51,7 +51,7 @@ export const BuySaleTokenTerms = ({
           </Text>
         ),
         date: new Date(),
-        tooltipText: 'Lorem ipsum',
+        tooltipText: 'Cliff is a period of time that locks your token from being able to sell or transfer.',
       },
       {
         title: 'First payout',
@@ -67,7 +67,7 @@ export const BuySaleTokenTerms = ({
         ),
         date: new Date(new Date(currentDate.setMonth(currentDate.getMonth() + cliffTime))),
 
-        tooltipText: 'Lorem ipsum',
+        tooltipText: 'This is a portion of the issuance that will be unlock right after cliff ends.',
       },
       {
         title: 'Your vesting',
@@ -78,7 +78,7 @@ export const BuySaleTokenTerms = ({
         ),
         date: new Date(new Date(currentDate.setMonth(currentDate.getMonth() + cliffTime + vestingTime))),
 
-        tooltipText: 'Lorem ipsum',
+        tooltipText: 'Time period during which tokens will unlock gradually with each block.',
       },
     ]
   }, [cliffTime, firstPayout, title, tokenAmount, vestingTime])
