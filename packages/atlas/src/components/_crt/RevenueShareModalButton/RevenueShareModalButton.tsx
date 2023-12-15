@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgActionRevenueShare } from '@/assets/icons'
 import { Button, ButtonProps } from '@/components/_buttons/Button'
-import { StartRevenueShare } from '@/components/_crt/StartRevenueShareModal/StartRevenueShareModal'
+import { StartRevenueShare } from '@/components/_crt/StartRevenueShareModal'
 
 export type RevenueShareModalButtonProps = {
   token: FullCreatorTokenFragment

@@ -7,6 +7,7 @@ import { FlexBox } from '@/components/FlexBox'
 import { NumberFormat } from '@/components/NumberFormat'
 import { WidgetTile } from '@/components/WidgetTile'
 import { AmmTransactionsTable } from '@/components/_crt/AmmTransactionsTable/AmmTransactionsTable'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { calcBuyMarketPricePerToken } from '@/utils/crts'
@@ -19,7 +20,7 @@ type CrtMarketTabProps = {
 export const CrtMarketTab = ({ token }: CrtMarketTabProps) => {
   const mdMatch = useMediaMatch('md')
   const currentAmm = token.ammCurves.find((curve) => !curve.finalized)
-  const { data } = useGetFullAmmCurveQuery({
+  const { data, loading } = useGetFullAmmCurveQuery({
     variables: {
       where: {
         id_eq: currentAmm?.id,
@@ -41,13 +42,17 @@ export const CrtMarketTab = ({ token }: CrtMarketTabProps) => {
         <WidgetTile
           title="Current price per unit"
           customNode={
-            <NumberFormat
-              value={pricePerUnit ?? 0}
-              icon={<SvgJoyTokenMonochrome24 />}
-              variant="h500"
-              as="p"
-              withDenomination
-            />
+            loading ? (
+              <SkeletonLoader height={30} width={90} />
+            ) : (
+              <NumberFormat
+                value={pricePerUnit ?? 0}
+                icon={<SvgJoyTokenMonochrome24 />}
+                variant="h500"
+                as="p"
+                withDenomination
+              />
+            )
           }
           tooltip={{
             text: `This is the amount of ${atlasConfig.joystream.tokenTicker} that is currently stored on your channel balance. To withdraw it you have to create a revenue share.`,
@@ -56,13 +61,17 @@ export const CrtMarketTab = ({ token }: CrtMarketTabProps) => {
         <WidgetTile
           title="Bought on market"
           customNode={
-            <NumberFormat
-              value={+(currentAmm?.mintedByAmm ?? 0)}
-              withToken
-              customTicker={`$${token.symbol}`}
-              variant="h500"
-              as="p"
-            />
+            loading ? (
+              <SkeletonLoader height={30} width={90} />
+            ) : (
+              <NumberFormat
+                value={+(currentAmm?.mintedByAmm ?? 0)}
+                withToken
+                customTicker={`$${token.symbol}`}
+                variant="h500"
+                as="p"
+              />
+            )
           }
           tooltip={{
             text: `This is the amount of ${atlasConfig.joystream.tokenTicker} that is currently stored on your channel balance. To withdraw it you have to create a revenue share.`,
@@ -71,20 +80,24 @@ export const CrtMarketTab = ({ token }: CrtMarketTabProps) => {
         <WidgetTile
           title="Sold to market"
           customNode={
-            <NumberFormat
-              value={+(currentAmm?.burnedByAmm ?? 0)}
-              withToken
-              customTicker={`$${token.symbol}`}
-              variant="h500"
-              as="p"
-            />
+            loading ? (
+              <SkeletonLoader height={30} width={90} />
+            ) : (
+              <NumberFormat
+                value={+(currentAmm?.burnedByAmm ?? 0)}
+                withToken
+                customTicker={`$${token.symbol}`}
+                variant="h500"
+                as="p"
+              />
+            )
           }
           tooltip={{
             text: `This is the amount of ${atlasConfig.joystream.tokenTicker} that is currently stored on your channel balance. To withdraw it you have to create a revenue share.`,
           }}
         />
       </FlexBox>
-      <AmmTransactionsTable data={data?.ammCurves[0].transactions ?? []} />
+      <AmmTransactionsTable loading={loading} data={data?.ammCurves[0].transactions ?? []} />
     </>
   )
 }

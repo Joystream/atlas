@@ -6,7 +6,22 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { Pill } from '@/components/Pill'
 import { Table, TableProps } from '@/components/Table'
 import { MemberCell } from '@/components/Table/Table.cells'
+import { ColumnBox } from '@/components/Table/Table.styles'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
+
+export const tableLoadingData = Array.from({ length: 5 }, () => ({
+  member: (
+    <ColumnBox>
+      <SkeletonLoader rounded height={32} width={32} />
+      <SkeletonLoader height={20} width="40%" />
+    </ColumnBox>
+  ),
+  transferable: <SkeletonLoader height={20} width="40%" />,
+  vested: <SkeletonLoader height={20} width="40%" />,
+  total: <SkeletonLoader height={20} width="40%" />,
+  allocation: <SkeletonLoader height={20} width="40%" />,
+}))
 
 const COLUMNS: TableProps['columns'] = [
   { Header: 'Member', accessor: 'member' },
@@ -29,7 +44,7 @@ export type HoldersTableProps = {
   symbol?: string
 } & Pick<TableProps, 'pagination' | 'pageSize'>
 
-export const HoldersTable = ({ data, currentMemberId, symbol, pagination, pageSize }: HoldersTableProps) => {
+export const HoldersTable = ({ data, currentMemberId, symbol, pagination, pageSize, isLoading }: HoldersTableProps) => {
   const mappedData = useMemo(
     () =>
       data.map((row) => ({
@@ -46,7 +61,15 @@ export const HoldersTable = ({ data, currentMemberId, symbol, pagination, pageSi
       })),
     [currentMemberId, data, symbol]
   )
-  return <StyledTable minWidth={750} pageSize={pageSize} columns={COLUMNS} data={mappedData} pagination={pagination} />
+  return (
+    <StyledTable
+      minWidth={750}
+      pageSize={pageSize}
+      columns={COLUMNS}
+      data={isLoading ? tableLoadingData : mappedData}
+      pagination={pagination}
+    />
+  )
 }
 
 const TransferableBalance = ({ memberId, tokenId, ticker }: { memberId: string; tokenId: string; ticker?: string }) => {

@@ -10,6 +10,7 @@ import { Banner } from '@/components/Banner'
 import { FlexBox } from '@/components/FlexBox'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
@@ -41,7 +42,7 @@ export const ClaimShareModal = ({ onClose, show, tokenId }: ClaimShareModalProps
   const activeRevenueShare = token?.revenueShares.find((rS) => !rS.finalized)
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
   const client = useApolloClient()
-  const { data: dividedData } = useGetRevenueShareDividendQuery({
+  const { data: dividendData, loading: loadingDividendData } = useGetRevenueShareDividendQuery({
     variables: {
       tokenId: token?.id ?? '',
       stakingAmount: tokenBalance,
@@ -147,13 +148,17 @@ export const ClaimShareModal = ({ onClose, show, tokenId }: ClaimShareModalProps
             <Text variant="h300" as="h1" color="colorText">
               You will receive
             </Text>
-            <NumberFormat
-              value={dividedData?.getShareDividend.dividendJoyAmount ?? 0}
-              variant="h300"
-              as="p"
-              withDenomination="before"
-              withToken
-            />
+            {loadingDividendData ? (
+              <SkeletonLoader height={30} width={90} />
+            ) : (
+              <NumberFormat
+                value={dividendData?.getShareDividend.dividendJoyAmount ?? 0}
+                variant="h300"
+                as="p"
+                withDenomination="before"
+                withToken
+              />
+            )}
           </FlexBox>
         </FlexBox>
       </FlexBox>
