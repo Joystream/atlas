@@ -11,11 +11,18 @@ import { CloseMarketButton } from '@/components/_crt/CloseMarketButton'
 import { CloseRevenueShareButton } from '@/components/_crt/CloseRevenueShareButton'
 import { RevenueShareModalButton } from '@/components/_crt/RevenueShareModalButton'
 import { StartSaleOrMarketButton } from '@/components/_crt/StartSaleOrMarketButton/StartSaleOrMarketButton'
+import { Loader } from '@/components/_loaders/Loader'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useMountEffect } from '@/hooks/useMountEffect'
 import { useUser } from '@/providers/user/user.hooks'
 import { SentryLogger } from '@/utils/logs'
-import { HeaderContainer, MainContainer, TabsContainer } from '@/views/studio/CrtDashboard/CrtDashboard.styles'
+import {
+  EmptyStateBox,
+  HeaderContainer,
+  MainContainer,
+  TabsContainer,
+} from '@/views/studio/CrtDashboard/CrtDashboard.styles'
 import { CrtDashboardMainTab } from '@/views/studio/CrtDashboard/tabs/CrtDashboardMainTab'
 import { CrtHoldersTab } from '@/views/studio/CrtDashboard/tabs/CrtHoldersTab'
 import { CrtMarketTab } from '@/views/studio/CrtDashboard/tabs/CrtMarketTab'
@@ -54,66 +61,82 @@ export const CrtDashboard = () => {
     if (currentTab === -1) setSearchParams({ 'tab': '0' }, { replace: true })
   })
 
-  if (!data?.creatorTokenById) {
-    return null
-  }
-
-  const activeRevenueShare = data.creatorTokenById.revenueShares.find((revenueShare) => !revenueShare.finalized)
+  const activeRevenueShare = data?.creatorTokenById?.revenueShares.find((revenueShare) => !revenueShare.finalized)
+  const { creatorTokenById } = data ?? {}
 
   return (
     <LimitedWidthContainer big>
       <MainContainer>
         <HeaderContainer>
           <Text variant="h700" as="h1">
-            ${data.creatorTokenById.symbol ?? 'N/A'}
+            {creatorTokenById ? `${creatorTokenById.symbol ?? 'N/A'}` : <SkeletonLoader height={50} width={120} />}
           </Text>
-          <Button
-            to={absoluteRoutes.viewer.channel(data.creatorTokenById.channel?.channel.id, { tab: 'Token' })}
-            variant="tertiary"
-            icon={<SvgActionLinkUrl />}
-            iconPlacement="right"
-          >
-            See your token
-          </Button>
+          {creatorTokenById ? (
+            <Button
+              to={absoluteRoutes.viewer.channel(creatorTokenById.channel?.channel.id, { tab: 'Token' })}
+              variant="tertiary"
+              icon={<SvgActionLinkUrl />}
+              iconPlacement="right"
+            >
+              See your token
+            </Button>
+          ) : null}
         </HeaderContainer>
 
         <TabsContainer>
           <Tabs initialIndex={0} selected={currentTab ?? 0} tabs={mappedTabs} onSelectTab={handleChangeTab} />
-          {currentTab === getTabIndex('Dashboard', mappedTabs) && (
+          {creatorTokenById ? (
             <>
-              <Button to={absoluteRoutes.studio.crtTokenEdit()} variant="secondary" icon={<SvgActionEdit />}>
-                Edit token page
-              </Button>
-              {!hasOpenMarket ? (
-                <StartSaleOrMarketButton tokenName={data.creatorTokenById.symbol ?? 'N/A'} />
-              ) : (
+              {currentTab === getTabIndex('Dashboard', mappedTabs) && (
+                <>
+                  <Button to={absoluteRoutes.studio.crtTokenEdit()} variant="secondary" icon={<SvgActionEdit />}>
+                    Edit token page
+                  </Button>
+                  {!hasOpenMarket ? (
+                    <StartSaleOrMarketButton tokenName={creatorTokenById.symbol ?? 'N/A'} />
+                  ) : (
+                    <CloseMarketButton channelId={activeChannel?.id ?? '-1'} />
+                  )}
+                </>
+              )}
+              {currentTab === getTabIndex('Market', mappedTabs) && (
                 <CloseMarketButton channelId={activeChannel?.id ?? '-1'} />
               )}
-            </>
-          )}
-          {currentTab === getTabIndex('Market', mappedTabs) && (
-            <CloseMarketButton channelId={activeChannel?.id ?? '-1'} />
-          )}
-          {currentTab === getTabIndex('Revenue share', mappedTabs) && (
-            <>
-              {!activeRevenueShare ? (
-                <RevenueShareModalButton token={data.creatorTokenById} />
-              ) : (
-                <CloseRevenueShareButton hideOnInactiveRevenue revenueShareEndingBlock={activeRevenueShare.endsAt} />
+              {currentTab === getTabIndex('Revenue share', mappedTabs) && (
+                <>
+                  {!activeRevenueShare ? (
+                    <RevenueShareModalButton token={creatorTokenById} />
+                  ) : (
+                    <CloseRevenueShareButton
+                      hideOnInactiveRevenue
+                      revenueShareEndingBlock={activeRevenueShare.endsAt}
+                    />
+                  )}
+                </>
               )}
             </>
+          ) : (
+            <SkeletonLoader height={40} width={100} />
           )}
         </TabsContainer>
-        {currentTab === getTabIndex('Dashboard', mappedTabs) && (
-          <CrtDashboardMainTab
-            hasOpenedMarket={!!hasOpenMarket}
-            token={data.creatorTokenById}
-            onTabChange={(tabName) => handleChangeTab(mappedTabs.findIndex((tab) => tab.name === tabName))}
-          />
+        {creatorTokenById ? (
+          <>
+            {currentTab === getTabIndex('Dashboard', mappedTabs) && (
+              <CrtDashboardMainTab
+                hasOpenedMarket={!!hasOpenMarket}
+                token={creatorTokenById}
+                onTabChange={(tabName) => handleChangeTab(mappedTabs.findIndex((tab) => tab.name === tabName))}
+              />
+            )}
+            {currentTab === getTabIndex('Market', mappedTabs) && <CrtMarketTab token={creatorTokenById} />}
+            {currentTab === getTabIndex('Holders', mappedTabs) && <CrtHoldersTab token={creatorTokenById} />}
+            {currentTab === getTabIndex('Revenue share', mappedTabs) && <CrtRevenueTab token={creatorTokenById} />}
+          </>
+        ) : (
+          <EmptyStateBox>
+            <Loader variant="xlarge" />
+          </EmptyStateBox>
         )}
-        {currentTab === getTabIndex('Market', mappedTabs) && <CrtMarketTab token={data.creatorTokenById} />}
-        {currentTab === getTabIndex('Holders', mappedTabs) && <CrtHoldersTab token={data.creatorTokenById} />}
-        {currentTab === getTabIndex('Revenue share', mappedTabs) && <CrtRevenueTab token={data.creatorTokenById} />}
       </MainContainer>
     </LimitedWidthContainer>
   )
