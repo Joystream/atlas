@@ -11,6 +11,7 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { ClaimShareModal } from '@/components/_crt/ClaimShareModal'
 import { InfoBox, Wrapper } from '@/components/_crt/RevenueShareWidget/RevenueShareWidget.styles'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useUnlockTokenStake } from '@/hooks/useUnlockTokenStake'
 import { getRevenueShareStatusForMember } from '@/utils/crts'
@@ -156,5 +157,31 @@ export const Detail = ({ title, children }: { title: string; children: ReactElem
       </Text>
       {children}
     </FlexBox>
+  )
+}
+
+export const RevenueShareWidgetLoader = () => {
+  return (
+    <Wrapper isActive={false}>
+      <InfoBox>
+        <FlexBox flow="column">
+          <SkeletonLoader height={20} width="20%" />
+          <SkeletonLoader height={25} width="35%" />
+        </FlexBox>
+        <FlexBox flow="column">
+          <SkeletonLoader height={20} width="20%" />
+          <SkeletonLoader height={25} width="35%" />
+        </FlexBox>
+        <FlexBox flow="column">
+          <SkeletonLoader height={20} width="20%" />
+          <SkeletonLoader height={25} width="35%" />
+        </FlexBox>
+        <FlexBox flow="column">
+          <SkeletonLoader height={20} width="20%" />
+          <SkeletonLoader height={25} width="35%" />
+        </FlexBox>
+      </InfoBox>
+      <SkeletonLoader height={40} width="100%" />
+    </Wrapper>
   )
 }

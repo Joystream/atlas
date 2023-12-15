@@ -14,6 +14,7 @@ import { Benefit } from '@/components/_inputs/BenefitInput'
 import { BenefitsInput } from '@/components/_inputs/BenefitsInput'
 import { FormField } from '@/components/_inputs/FormField'
 import { MarkdownEditor } from '@/components/_inputs/MarkdownEditor/MarkdownEditor'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
@@ -34,7 +35,7 @@ export const CrtTokenEditView = () => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const client = useApolloClient()
-  const { data } = useGetFullCreatorTokenQuery({
+  const { data, loading } = useGetFullCreatorTokenQuery({
     variables: {
       id: activeChannel?.creatorToken?.token.id ?? '',
     },
@@ -116,42 +117,55 @@ export const CrtTokenEditView = () => {
     })
   })
 
-  if (!data?.creatorTokenById) return null
-
   return (
     <Wrapper>
       <CrtPreviewLayout
         mode={mode}
         isDirty={form.formState.isDirty}
-        token={data.creatorTokenById}
+        isLoading={loading}
+        token={data?.creatorTokenById ?? undefined}
         tokenDetails={
           mode === 'edit' ? (
-            <FlexBox gap={12} flow="column">
-              <Controller
-                name="videoId"
-                control={form.control}
-                render={({ field }) => <VideoPicker selectedVideo={field.value} setSelectedVideo={field.onChange} />}
-              />
-              <FormField
-                label="Benefits"
-                description="Add benefits and utilities for holders of your token."
-                error={form.formState.errors.benefits?.[0]?.message}
-              >
-                <BenefitsInput name="benefits" control={form.control} />
-              </FormField>
-              <Controller
-                name="about"
-                control={form.control}
-                render={({ field }) => (
-                  <FormField
-                    label="About"
-                    description="Tell the story of your token, share all important details. Use markdown to add headings, images and embed your JOYstream videos. "
-                  >
-                    <MarkdownEditor value={field.value} onChange={field.onChange} />
-                  </FormField>
-                )}
-              />
-            </FlexBox>
+            loading ? (
+              <FlexBox gap={12} flow="column">
+                <SkeletonLoader width="100%" height={500} />
+                <FlexBox gap={4}>
+                  <SkeletonLoader width={50} height={50} rounded />
+                  <FlexBox flow="column" gap={4}>
+                    <SkeletonLoader width="100%" height={50} />
+                    <SkeletonLoader width="100%" height={150} />
+                  </FlexBox>
+                </FlexBox>
+                <SkeletonLoader width="100%" height={300} />
+              </FlexBox>
+            ) : (
+              <FlexBox gap={12} flow="column">
+                <Controller
+                  name="videoId"
+                  control={form.control}
+                  render={({ field }) => <VideoPicker selectedVideo={field.value} setSelectedVideo={field.onChange} />}
+                />
+                <FormField
+                  label="Benefits"
+                  description="Add benefits and utilities for holders of your token."
+                  error={form.formState.errors.benefits?.[0]?.message}
+                >
+                  <BenefitsInput name="benefits" control={form.control} />
+                </FormField>
+                <Controller
+                  name="about"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormField
+                      label="About"
+                      description="Tell the story of your token, share all important details. Use markdown to add headings, images and embed your JOYstream videos. "
+                    >
+                      <MarkdownEditor value={field.value} onChange={field.onChange} />
+                    </FormField>
+                  )}
+                />
+              </FlexBox>
+            )
           ) : (
             <TokenDetails
               videoId={form.getValues('videoId')}
