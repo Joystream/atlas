@@ -28,7 +28,9 @@ export const HoldersWidget = ({ tokenId, ownerId, totalSupply, totalHolders }: H
     totalCount,
     currentPage,
     setCurrentPage,
-  } = useHoldersPagination(tokenId, { pageSize: TILES_PER_PAGE })
+    setPerPage,
+    perPage,
+  } = useHoldersPagination(tokenId, { initialPageSize: TILES_PER_PAGE })
 
   const holders = useMemo(
     () =>
@@ -56,9 +58,11 @@ export const HoldersWidget = ({ tokenId, ownerId, totalSupply, totalHolders }: H
         isLoading={isLoading}
         show={showModal}
         onExitClick={() => setShowModal(false)}
+        pageSize={perPage}
         pagination={{
+          setPerPage,
           totalCount,
-          itemsPerPage: TILES_PER_PAGE,
+          itemsPerPage: perPage,
           page: currentPage,
           onChangePage: setCurrentPage,
         }}

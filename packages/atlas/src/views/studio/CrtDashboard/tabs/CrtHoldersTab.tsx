@@ -13,9 +13,12 @@ const TILES_PER_PAGE = 10
 
 export const CrtHoldersTab = ({ token }: CrtHoldersTabProps) => {
   const { memberId } = useUser()
-  const { holders, currentPage, setCurrentPage, isLoading, totalCount } = useHoldersPagination(token.id, {
-    pageSize: TILES_PER_PAGE,
-  })
+  const { holders, currentPage, setCurrentPage, isLoading, totalCount, setPerPage, perPage } = useHoldersPagination(
+    token.id,
+    {
+      initialPageSize: TILES_PER_PAGE,
+    }
+  )
 
   const mappedData = useMemo(
     () =>
@@ -41,10 +44,11 @@ export const CrtHoldersTab = ({ token }: CrtHoldersTabProps) => {
       isLoading={isLoading}
       currentMemberId={memberId ?? ''}
       symbol={token.symbol ?? 'N/A'}
-      pageSize={TILES_PER_PAGE}
+      pageSize={perPage}
       pagination={{
+        setPerPage,
         totalCount,
-        itemsPerPage: TILES_PER_PAGE,
+        itemsPerPage: perPage,
         page: currentPage,
         onChangePage: setCurrentPage,
       }}

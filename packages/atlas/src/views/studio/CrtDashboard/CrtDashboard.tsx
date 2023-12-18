@@ -34,7 +34,7 @@ export const CrtDashboard = () => {
   const { activeChannel } = useUser()
   const { data } = useGetFullCreatorTokenQuery({
     variables: {
-      id: activeChannel?.creatorToken?.token.id ?? '',
+      id: '18', //activeChannel?.creatorToken?.token.id ?? '',
     },
     onError: (error) => {
       SentryLogger.error('Failed to fetch creator token', 'CrtDashboard', error)

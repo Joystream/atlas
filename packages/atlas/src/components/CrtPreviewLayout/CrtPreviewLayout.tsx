@@ -1,7 +1,6 @@
 import { ReactElement, useMemo } from 'react'
 import { useNavigate } from 'react-router'
 
-import { useGetCreatorTokenHoldersQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgActionChevronL, SvgActionNewTab } from '@/assets/icons'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
@@ -11,12 +10,10 @@ import { Button } from '@/components/_buttons/Button'
 import { CrtBasicInfoWidget } from '@/components/_crt/CrtBasicInfoWidget'
 import { CrtStatusWidget } from '@/components/_crt/CrtStatusWidget'
 import { HoldersWidget } from '@/components/_crt/HoldersWidget'
-import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUser } from '@/providers/user/user.hooks'
-import { SentryLogger } from '@/utils/logs'
 import { permillToPercentage } from '@/utils/number'
 
 import {
@@ -87,22 +84,6 @@ export const CrtPreviewLayout = ({
   const navigate = useNavigate()
   const [openConfirmationModal, closeModal] = useConfirmationModal()
   const { memberId } = useUser()
-  const { data } = useGetCreatorTokenHoldersQuery({
-    variables: {
-      where: {
-        token: {
-          id_eq: token.id,
-        },
-        member: {
-          id_eq: memberId,
-        },
-      },
-    },
-    onError: (error) => {
-      SentryLogger.error('Failed to fetch token holders query', 'CrtPreviewLayout', error)
-    },
-  })
-
   const basicDetails = useMemo(() => getTokenDetails(token), [token])
 
   return (
@@ -160,11 +141,12 @@ export const CrtPreviewLayout = ({
         />
         {/* todo all props below creationDate are incorrect and should be calucated on orion side */}
         <CrtStatusWidget token={token} />
-        {data ? (
-          <HoldersWidget totalSupply={+token.totalSupply} holders={data.tokenAccounts} ownerId={memberId ?? ''} />
-        ) : (
-          <SkeletonLoader width="100%" height={300} />
-        )}
+        <HoldersWidget
+          totalSupply={+token.totalSupply}
+          totalHolders={token.accountsNum}
+          tokenId={token.id}
+          ownerId={memberId ?? ''}
+        />
       </SecondColumn>
     </Wrapper>
   )
