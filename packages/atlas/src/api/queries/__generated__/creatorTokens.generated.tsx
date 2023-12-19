@@ -403,6 +403,15 @@ export type GetTokenRevenueSharesQuery = {
   }>
 }
 
+export type GetTokenRevenueSharesCountQueryVariables = Types.Exact<{
+  where?: Types.InputMaybe<Types.RevenueShareWhereInput>
+}>
+
+export type GetTokenRevenueSharesCountQuery = {
+  __typename?: 'Query'
+  revenueSharesConnection: { __typename?: 'RevenueSharesConnection'; totalCount: number }
+}
+
 export const GetBasicCreatorTokenDocument = gql`
   query GetBasicCreatorToken(
     $where: CreatorTokenWhereInput
@@ -859,4 +868,52 @@ export type GetTokenRevenueSharesLazyQueryHookResult = ReturnType<typeof useGetT
 export type GetTokenRevenueSharesQueryResult = Apollo.QueryResult<
   GetTokenRevenueSharesQuery,
   GetTokenRevenueSharesQueryVariables
+>
+export const GetTokenRevenueSharesCountDocument = gql`
+  query GetTokenRevenueSharesCount($where: RevenueShareWhereInput) {
+    revenueSharesConnection(where: $where, orderBy: [id_ASC]) {
+      totalCount
+    }
+  }
+`
+
+/**
+ * __useGetTokenRevenueSharesCountQuery__
+ *
+ * To run a query within a React component, call `useGetTokenRevenueSharesCountQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTokenRevenueSharesCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTokenRevenueSharesCountQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetTokenRevenueSharesCountQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetTokenRevenueSharesCountQuery, GetTokenRevenueSharesCountQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetTokenRevenueSharesCountQuery, GetTokenRevenueSharesCountQueryVariables>(
+    GetTokenRevenueSharesCountDocument,
+    options
+  )
+}
+export function useGetTokenRevenueSharesCountLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetTokenRevenueSharesCountQuery, GetTokenRevenueSharesCountQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetTokenRevenueSharesCountQuery, GetTokenRevenueSharesCountQueryVariables>(
+    GetTokenRevenueSharesCountDocument,
+    options
+  )
+}
+export type GetTokenRevenueSharesCountQueryHookResult = ReturnType<typeof useGetTokenRevenueSharesCountQuery>
+export type GetTokenRevenueSharesCountLazyQueryHookResult = ReturnType<typeof useGetTokenRevenueSharesCountLazyQuery>
+export type GetTokenRevenueSharesCountQueryResult = Apollo.QueryResult<
+  GetTokenRevenueSharesCountQuery,
+  GetTokenRevenueSharesCountQueryVariables
 >
