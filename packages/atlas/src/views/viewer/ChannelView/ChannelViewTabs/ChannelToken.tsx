@@ -81,7 +81,7 @@ export const ChannelToken = ({ tokenId, memberId }: ChannelTokenProps) => {
               symbol={token.symbol ?? 'N/A'}
               avatar={token.channel?.channel.avatarPhoto?.resolvedUrls?.[0]}
               accountsNum={token.accountsNum}
-              size={lgMatch ? 'large' : 'small'}
+              size={lgMatch ? 'medium' : 'small'}
               description={token.description ?? ''}
             />
           )}
