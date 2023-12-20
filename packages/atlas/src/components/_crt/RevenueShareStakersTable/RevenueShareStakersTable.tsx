@@ -35,7 +35,7 @@ export const RevenueShareStakersTable = ({ data, tokenSymbol = 'N/A' }: RevenueS
     })
   }, [data, tokenSymbol])
 
-  return <StyledTable minWidth={610} columns={COLUMNS} data={mappedData} />
+  return <StyledTable title="Staked holders" minWidth={610} columns={COLUMNS} data={mappedData} />
 }
 
 const StyledTable = styled(Table)`

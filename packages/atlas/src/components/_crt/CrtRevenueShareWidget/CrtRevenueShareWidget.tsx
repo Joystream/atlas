@@ -97,7 +97,7 @@ export const CrtRevenueShareWidget = ({ token, onTabSwitch }: CrtHoldersWidgetPr
                     <StakerPill key={staker.id} id={staker.account.member.id} />
                   ))}
                   {activeRevenueShare.stakers.length > 5 ? (
-                    <StyledPill label={activeRevenueShare.stakers.length - 5} />
+                    <StyledPill label={`+${activeRevenueShare.stakers.length - 5}`} />
                   ) : null}
                 </FlexBox>
               </StakersBox>

@@ -176,7 +176,7 @@ export const RevenueShareProgress = ({ revenueShare, hasEnded, token }: RevenueS
 
         <FlexBox flow="column" alignItems="end">
           <Text variant="h100" as="h1" color="colorTextMuted">
-            ENDED ON
+            {hasEnded ? 'ENDED ON' : 'HOLDERS STAKED'}
           </Text>
           <Text variant="h400" as="h4">
             {revenueShare.stakers.length}/{token.accountsNum}
