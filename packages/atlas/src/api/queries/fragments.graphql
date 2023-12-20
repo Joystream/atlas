@@ -25,6 +25,7 @@ fragment BasicChannelFields on Channel {
   followsNum # CHANGE: Instead of `follows` (which is now a One-to-Many field)
   rewardAccount
   channelStateBloatBond
+  cumulativeRevenue
   avatarPhoto {
     ...StorageDataObjectFields
   }
@@ -552,8 +553,17 @@ fragment BasicCreatorToken on CreatorToken {
   status
   createdAt
   lastPrice
-  revenueShares {
+  totalSupply
+  description
+  currentAmmSale {
     id
+    burnedByAmm
+    mintedByAmm
+  }
+  currentSale {
+    id
+    tokensSold
+    endsAt
   }
   channel {
     ... on TokenChannel {
