@@ -16,13 +16,13 @@ export type CrtBasicInfoWidgetProps = {
     icon?: ReactNode
     tooltipText?: string
   }[]
-  size?: 'large' | 'small'
+  size?: 'medium' | 'small'
   className?: string
 } & CrtMainInfoProps
 
 export const CrtBasicInfoWidget = ({
   details,
-  size = 'large',
+  size = 'medium',
   className,
   ...mainInfoProps
 }: CrtBasicInfoWidgetProps) => {
@@ -47,6 +47,7 @@ export type CrtMainInfoProps = {
   description?: string
   avatar?: string
   children?: ReactNode
+  size?: 'small' | 'medium'
 }
 
 export const CrtMainInfo = ({
@@ -56,34 +57,36 @@ export const CrtMainInfo = ({
   symbol,
   accountsNum,
   isVerified,
+  size = 'medium',
   children,
 }: CrtMainInfoProps) => {
+  const isSmall = size === 'small'
   return (
-    <TopSection hasImage={!!avatar}>
+    <TopSection size={size} hasImage={!!avatar}>
       {children}
       {avatar && <BackgroundImage src={avatar} alt="" />}
       <FlexBox gap={4} alignItems="center">
-        <Text variant="h600" as="h3" margin={{ bottom: 2 }}>
+        <Text variant={isSmall ? 'h400' : 'h600'} as="h3" margin={{ bottom: 2 }}>
           ${symbol}
         </Text>
         {/*<Pill icon={<SvgActionShieldLock />} label="Invite only" />*/}
       </FlexBox>
       <FlexBox>
-        <Text variant="t200" as="p">
+        <Text variant={isSmall ? 't100' : 't200'} as="p">
           {name}
         </Text>
         {isVerified ? <SvgActionVerified /> : null}
-        <Text variant="t200" as="p" color="colorText">
+        <Text variant={isSmall ? 't100' : 't200'} as="p" color="colorText">
           ・
         </Text>
         <SvgActionCouncil />
-        <Text variant="t200" as="p">
+        <Text variant={isSmall ? 't100' : 't200'} as="p">
           {pluralizeNoun(accountsNum ?? 0, 'holder')}
         </Text>
       </FlexBox>
       <Text
         className="description-text"
-        variant="t200"
+        variant={isSmall ? 't100' : 't200'}
         as="h3"
         margin={{ top: 4 }}
         color="colorText"
@@ -104,17 +107,17 @@ export const DetailsWrapper = styled.div<{ size: CrtBasicInfoWidgetProps['size']
   grid-gap: ${({ size }) => sizes(size === 'small' ? 4 : 6)} ${sizes(4)};
 `
 
-export const TopSection = styled.div<{ hasImage?: boolean }>`
+export const TopSection = styled.div<{ size: CrtBasicInfoWidgetProps['size']; hasImage?: boolean }>`
   width: 100%;
   flex: 1;
   position: relative;
   background-color: ${(props) => (props.hasImage ? 'transparent' : cVar('colorBackground'))};
-  padding: ${sizes(6)};
+  padding: ${(props) => sizes(props.size === 'small' ? 4 : 6)};
   overflow: hidden;
   box-shadow: cVar('effectDividersBottom');
 
   .description-text {
-    height: 60px;
+    height: ${(props) => sizes(props.size === 'small' ? 12 : 15)};
   }
 `
 

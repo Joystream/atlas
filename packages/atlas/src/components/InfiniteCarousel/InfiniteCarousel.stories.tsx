@@ -58,6 +58,7 @@ const ChangeableTemplate: Story<InfiniteCarouselProps> = (args) => {
         rewardAccount: 'dummy',
         createdAt: new Date(),
         channelStateBloatBond: '',
+        cumulativeRevenue: '0',
       }}
     />
   ))

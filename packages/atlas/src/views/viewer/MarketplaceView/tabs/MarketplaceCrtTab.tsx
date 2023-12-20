@@ -11,7 +11,7 @@ import { DEFAULT_NFTS_GRID } from '@/styles'
 export const MarketplaceCrtTab = () => {
   const { data } = useGetBasicCreatorTokenQuery({})
   const children = data?.creatorTokens.map(
-    ({ id, symbol, channel, totalSupply, accountsNum, lastPrice, currentAmmSale, description, currentSale }, idx) => {
+    ({ id, symbol, channel, totalSupply, accountsNum, lastPrice, currentAmmSale, description, currentSale }) => {
       const status: CrtSaleTypes = currentSale
         ? {
             type: 'sale' as const,
@@ -29,6 +29,7 @@ export const MarketplaceCrtTab = () => {
         <CrtCard
           key={id}
           status={status}
+          size="small"
           symbol={symbol ?? 'N/A'}
           avatar={channel?.channel.avatarPhoto?.resolvedUrls[0]}
           marketCap={
