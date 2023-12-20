@@ -30,7 +30,10 @@ export type GetBasicCreatorTokenQuery = {
     status: Types.TokenStatus
     createdAt: Date
     lastPrice?: string | null
-    revenueShares: Array<{ __typename?: 'RevenueShare'; id: string }>
+    totalSupply: string
+    description?: string | null
+    currentAmmSale?: { __typename?: 'AmmCurve'; id: string; burnedByAmm: string; mintedByAmm: string } | null
+    currentSale?: { __typename?: 'Sale'; id: string; tokensSold: string; endsAt: number } | null
     channel?: {
       __typename?: 'TokenChannel'
       id: string
@@ -43,6 +46,7 @@ export type GetBasicCreatorTokenQuery = {
         followsNum: number
         rewardAccount: string
         channelStateBloatBond: string
+        cumulativeRevenue: string
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -161,6 +165,8 @@ export type GetFullCreatorTokenQuery = {
         account: { __typename?: 'TokenAccount'; member: { __typename?: 'Membership'; id: string } }
       }>
     }>
+    currentAmmSale?: { __typename?: 'AmmCurve'; id: string; burnedByAmm: string; mintedByAmm: string } | null
+    currentSale?: { __typename?: 'Sale'; id: string; tokensSold: string; endsAt: number } | null
     channel?: {
       __typename?: 'TokenChannel'
       id: string
@@ -173,6 +179,7 @@ export type GetFullCreatorTokenQuery = {
         followsNum: number
         rewardAccount: string
         channelStateBloatBond: string
+        cumulativeRevenue: string
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string

@@ -255,7 +255,7 @@ export const NftTileDetails: FC<NftTileDetailsProps> = memo(
 
 NftTileDetails.displayName = 'NftTileDetails'
 
-type DetailsContentProps = {
+export type DetailsContentProps = {
   caption: string
   icon?: ReactNode
   avoidIconStyling?: boolean
@@ -267,9 +267,10 @@ type DetailsContentProps = {
   customTicker?: string
   withToken?: boolean
   tooltipText?: string
+  className?: string
 }
 export const DetailsContent: FC<DetailsContentProps> = memo(
-  ({ tileSize, caption, icon, content, secondary, avoidIconStyling, tooltipText, ...numberFormatProps }) => {
+  ({ tileSize, caption, icon, content, className, secondary, avoidIconStyling, tooltipText, ...numberFormatProps }) => {
     const getSize = () => {
       switch (tileSize) {
         case 'small':
@@ -285,8 +286,8 @@ export const DetailsContent: FC<DetailsContentProps> = memo(
     }
 
     return (
-      <div>
-        <FlexBox alignItems="center">
+      <div className={className}>
+        <FlexBox width="auto" alignItems="center">
           <Text as="span" variant={getSize().title} color="colorText">
             {caption}
           </Text>
