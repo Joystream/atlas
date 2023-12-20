@@ -28,6 +28,7 @@ export type GetMembershipsQuery = {
       followsNum: number
       rewardAccount: string
       channelStateBloatBond: string
+      cumulativeRevenue: string
       coverPhoto?: {
         __typename?: 'StorageDataObject'
         id: string

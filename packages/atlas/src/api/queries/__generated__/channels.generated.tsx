@@ -32,6 +32,7 @@ export type GetFullChannelQuery = {
     followsNum: number
     rewardAccount: string
     channelStateBloatBond: string
+    cumulativeRevenue: string
     ownerMember?: {
       __typename?: 'Membership'
       id: string
@@ -125,6 +126,7 @@ export type GetExtendedBasicChannelsQuery = {
       followsNum: number
       rewardAccount: string
       channelStateBloatBond: string
+      cumulativeRevenue: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -173,6 +175,7 @@ export type GetExtendedFullChannelsQuery = {
       followsNum: number
       rewardAccount: string
       channelStateBloatBond: string
+      cumulativeRevenue: string
       ownerMember?: {
         __typename?: 'Membership'
         id: string
@@ -271,6 +274,7 @@ export type GetBasicChannelsConnectionQuery = {
         followsNum: number
         rewardAccount: string
         channelStateBloatBond: string
+        cumulativeRevenue: string
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -332,6 +336,7 @@ export type GetTop10ChannelsQuery = {
       followsNum: number
       rewardAccount: string
       channelStateBloatBond: string
+      cumulativeRevenue: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -372,6 +377,7 @@ export type GetDiscoverChannelsQuery = {
       followsNum: number
       rewardAccount: string
       channelStateBloatBond: string
+      cumulativeRevenue: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -637,6 +643,7 @@ export type GetTopSellingChannelsFromThreePeriodsQuery = {
       followsNum: number
       rewardAccount: string
       channelStateBloatBond: string
+      cumulativeRevenue: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -671,6 +678,7 @@ export type GetTopSellingChannelsFromThreePeriodsQuery = {
       followsNum: number
       rewardAccount: string
       channelStateBloatBond: string
+      cumulativeRevenue: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -705,6 +713,7 @@ export type GetTopSellingChannelsFromThreePeriodsQuery = {
       followsNum: number
       rewardAccount: string
       channelStateBloatBond: string
+      cumulativeRevenue: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
