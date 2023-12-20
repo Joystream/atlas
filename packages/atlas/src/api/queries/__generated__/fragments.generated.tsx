@@ -2792,6 +2792,50 @@ export type BasicCreatorTokenFragment = {
   lastPrice?: string | null
   totalSupply: string
   description?: string | null
+  trailerVideo: Array<{
+    __typename?: 'TrailerVideo'
+    id: string
+    video: {
+      __typename?: 'Video'
+      id: string
+      media?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        resolvedUrls: Array<string>
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type?:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+          | null
+      } | null
+      thumbnailPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        resolvedUrls: Array<string>
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type?:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+          | null
+      } | null
+    }
+  }>
   currentAmmSale?: { __typename?: 'AmmCurve'; id: string; burnedByAmm: string; mintedByAmm: string } | null
   currentSale?: { __typename?: 'Sale'; id: string; tokensSold: string; endsAt: number } | null
   channel?: {
@@ -2896,7 +2940,47 @@ export type FullCreatorTokenFragment = {
   trailerVideo: Array<{
     __typename?: 'TrailerVideo'
     id: string
-    video: { __typename?: 'Video'; id: string; title?: string | null }
+    video: {
+      __typename?: 'Video'
+      id: string
+      title?: string | null
+      media?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        resolvedUrls: Array<string>
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type?:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+          | null
+      } | null
+      thumbnailPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        resolvedUrls: Array<string>
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type?:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+          | null
+      } | null
+    }
   }>
   revenueShares: Array<{
     __typename?: 'RevenueShare'
@@ -3552,6 +3636,18 @@ export const BasicCreatorTokenFragmentDoc = gql`
     lastPrice
     totalSupply
     description
+    trailerVideo {
+      id
+      video {
+        id
+        media {
+          ...StorageDataObjectFields
+        }
+        thumbnailPhoto {
+          ...StorageDataObjectFields
+        }
+      }
+    }
     currentAmmSale {
       id
       burnedByAmm
@@ -3581,8 +3677,8 @@ export const BasicCreatorTokenFragmentDoc = gql`
       }
     }
   }
-  ${BasicChannelFieldsFragmentDoc}
   ${StorageDataObjectFieldsFragmentDoc}
+  ${BasicChannelFieldsFragmentDoc}
 `
 export const BasicRevenueShareFragmentDoc = gql`
   fragment BasicRevenueShare on RevenueShare {

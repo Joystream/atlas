@@ -27,13 +27,24 @@ export const CrtCarouselDetails = ({
   active: boolean
   slideNext: () => void
 }) => {
-  const thumbnailUrls: string[] = []
-  const mediaUrls: string[] = []
+  const {
+    lastPrice,
+    trailerVideo,
+    description,
+    symbol,
+    accountsNum,
+    totalSupply,
+    currentAmmSale,
+    currentSale,
+    channel,
+  } = crt
+  const { video } = trailerVideo[0] ?? {}
+  const thumbnailUrls: string[] = video?.thumbnailPhoto?.resolvedUrls ?? []
+  const mediaUrls: string[] = video?.media?.resolvedUrls ?? []
   const isLoading = !thumbnailUrls || !mediaUrls
-  const { lastPrice, description, symbol, accountsNum, totalSupply, currentAmmSale, currentSale, channel } = crt
   const marketCap = lastPrice && totalSupply ? hapiBnToTokenNumber(new BN(lastPrice).mul(new BN(totalSupply))) ?? 0 : 0
   const smMatch = useMediaMatch('sm')
-
+  console.log('sym', symbol)
   const details = useMemo(() => {
     const baseDetails: {
       caption: string
@@ -115,7 +126,7 @@ export const CrtCarouselDetails = ({
 
   return (
     <VideoCardWrapper
-      videoId=""
+      videoId={video?.id}
       active={active}
       goNextSlide={slideNext}
       mediaUrls={mediaUrls}
