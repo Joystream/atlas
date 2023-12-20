@@ -93,6 +93,7 @@ export type GetFullVideoQuery = {
       followsNum: number
       rewardAccount: string
       channelStateBloatBond: string
+      cumulativeRevenue: string
       ownerMember?: {
         __typename?: 'Membership'
         id: string
@@ -190,6 +191,7 @@ export type GetFullVideoQuery = {
               followsNum: number
               rewardAccount: string
               channelStateBloatBond: string
+              cumulativeRevenue: string
               ownerMember?: {
                 __typename?: 'Membership'
                 id: string
@@ -486,6 +488,7 @@ export type GetBasicVideosConnectionQuery = {
           followsNum: number
           rewardAccount: string
           channelStateBloatBond: string
+          cumulativeRevenue: string
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -543,6 +546,7 @@ export type GetBasicVideosConnectionQuery = {
                   followsNum: number
                   rewardAccount: string
                   channelStateBloatBond: string
+                  cumulativeRevenue: string
                   ownerMember?: {
                     __typename?: 'Membership'
                     id: string
@@ -884,6 +888,7 @@ export type GetFullVideosConnectionQuery = {
           followsNum: number
           rewardAccount: string
           channelStateBloatBond: string
+          cumulativeRevenue: string
           ownerMember?: {
             __typename?: 'Membership'
             id: string
@@ -981,6 +986,7 @@ export type GetFullVideosConnectionQuery = {
                   followsNum: number
                   rewardAccount: string
                   channelStateBloatBond: string
+                  cumulativeRevenue: string
                   ownerMember?: {
                     __typename?: 'Membership'
                     id: string
@@ -1277,6 +1283,7 @@ export type GetBasicVideosQuery = {
       followsNum: number
       rewardAccount: string
       channelStateBloatBond: string
+      cumulativeRevenue: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -1334,6 +1341,7 @@ export type GetBasicVideosQuery = {
               followsNum: number
               rewardAccount: string
               channelStateBloatBond: string
+              cumulativeRevenue: string
               ownerMember?: {
                 __typename?: 'Membership'
                 id: string
@@ -1663,6 +1671,7 @@ export type GetFullVideosQuery = {
       followsNum: number
       rewardAccount: string
       channelStateBloatBond: string
+      cumulativeRevenue: string
       ownerMember?: {
         __typename?: 'Membership'
         id: string
@@ -1760,6 +1769,7 @@ export type GetFullVideosQuery = {
               followsNum: number
               rewardAccount: string
               channelStateBloatBond: string
+              cumulativeRevenue: string
               ownerMember?: {
                 __typename?: 'Membership'
                 id: string
@@ -2058,6 +2068,7 @@ export type GetMostViewedVideosConnectionQuery = {
           followsNum: number
           rewardAccount: string
           channelStateBloatBond: string
+          cumulativeRevenue: string
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -2115,6 +2126,7 @@ export type GetMostViewedVideosConnectionQuery = {
                   followsNum: number
                   rewardAccount: string
                   channelStateBloatBond: string
+                  cumulativeRevenue: string
                   ownerMember?: {
                     __typename?: 'Membership'
                     id: string

@@ -17,6 +17,7 @@ export type BasicChannelFieldsFragment = {
   followsNum: number
   rewardAccount: string
   channelStateBloatBond: string
+  cumulativeRevenue: string
   avatarPhoto?: {
     __typename?: 'StorageDataObject'
     id: string
@@ -52,6 +53,7 @@ export type FullChannelFieldsFragment = {
   followsNum: number
   rewardAccount: string
   channelStateBloatBond: string
+  cumulativeRevenue: string
   ownerMember?: {
     __typename?: 'Membership'
     id: string
@@ -141,6 +143,7 @@ export type ExtendedFullChannelFieldsFragment = {
     followsNum: number
     rewardAccount: string
     channelStateBloatBond: string
+    cumulativeRevenue: string
     ownerMember?: {
       __typename?: 'Membership'
       id: string
@@ -226,6 +229,7 @@ export type ExtendedBasicChannelFieldsFragment = {
     followsNum: number
     rewardAccount: string
     channelStateBloatBond: string
+    cumulativeRevenue: string
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -299,6 +303,7 @@ export type FullMembershipFieldsFragment = {
     followsNum: number
     rewardAccount: string
     channelStateBloatBond: string
+    cumulativeRevenue: string
     coverPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -459,6 +464,7 @@ export type BasicVideoFieldsFragment = {
     followsNum: number
     rewardAccount: string
     channelStateBloatBond: string
+    cumulativeRevenue: string
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -516,6 +522,7 @@ export type BasicVideoFieldsFragment = {
             followsNum: number
             rewardAccount: string
             channelStateBloatBond: string
+            cumulativeRevenue: string
             ownerMember?: {
               __typename?: 'Membership'
               id: string
@@ -835,6 +842,7 @@ export type FullVideoFieldsFragment = {
     followsNum: number
     rewardAccount: string
     channelStateBloatBond: string
+    cumulativeRevenue: string
     ownerMember?: {
       __typename?: 'Membership'
       id: string
@@ -932,6 +940,7 @@ export type FullVideoFieldsFragment = {
             followsNum: number
             rewardAccount: string
             channelStateBloatBond: string
+            cumulativeRevenue: string
             ownerMember?: {
               __typename?: 'Membership'
               id: string
@@ -1213,6 +1222,7 @@ export type BasicNftFieldsFragment = {
           followsNum: number
           rewardAccount: string
           channelStateBloatBond: string
+          cumulativeRevenue: string
           ownerMember?: {
             __typename?: 'Membership'
             id: string
@@ -1474,6 +1484,7 @@ export type FullNftFieldsFragment = {
       followsNum: number
       rewardAccount: string
       channelStateBloatBond: string
+      cumulativeRevenue: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -1531,6 +1542,7 @@ export type FullNftFieldsFragment = {
               followsNum: number
               rewardAccount: string
               channelStateBloatBond: string
+              cumulativeRevenue: string
               ownerMember?: {
                 __typename?: 'Membership'
                 id: string
@@ -1779,6 +1791,7 @@ export type FullNftFieldsFragment = {
           followsNum: number
           rewardAccount: string
           channelStateBloatBond: string
+          cumulativeRevenue: string
           ownerMember?: {
             __typename?: 'Membership'
             id: string
@@ -2495,6 +2508,7 @@ export type BasicFeaturedVideoFragment = {
     followsNum: number
     rewardAccount: string
     channelStateBloatBond: string
+    cumulativeRevenue: string
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -2584,6 +2598,7 @@ export type BasicVideoFeaturedInCategoryFragment = {
       followsNum: number
       rewardAccount: string
       channelStateBloatBond: string
+      cumulativeRevenue: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -2775,7 +2790,10 @@ export type BasicCreatorTokenFragment = {
   status: Types.TokenStatus
   createdAt: Date
   lastPrice?: string | null
-  revenueShares: Array<{ __typename?: 'RevenueShare'; id: string }>
+  totalSupply: string
+  description?: string | null
+  currentAmmSale?: { __typename?: 'AmmCurve'; id: string; burnedByAmm: string; mintedByAmm: string } | null
+  currentSale?: { __typename?: 'Sale'; id: string; tokensSold: string; endsAt: number } | null
   channel?: {
     __typename?: 'TokenChannel'
     id: string
@@ -2788,6 +2806,7 @@ export type BasicCreatorTokenFragment = {
       followsNum: number
       rewardAccount: string
       channelStateBloatBond: string
+      cumulativeRevenue: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -2899,6 +2918,8 @@ export type FullCreatorTokenFragment = {
       account: { __typename?: 'TokenAccount'; member: { __typename?: 'Membership'; id: string } }
     }>
   }>
+  currentAmmSale?: { __typename?: 'AmmCurve'; id: string; burnedByAmm: string; mintedByAmm: string } | null
+  currentSale?: { __typename?: 'Sale'; id: string; tokensSold: string; endsAt: number } | null
   channel?: {
     __typename?: 'TokenChannel'
     id: string
@@ -2911,6 +2932,7 @@ export type FullCreatorTokenFragment = {
       followsNum: number
       rewardAccount: string
       channelStateBloatBond: string
+      cumulativeRevenue: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -3012,6 +3034,7 @@ export const BasicChannelFieldsFragmentDoc = gql`
     followsNum
     rewardAccount
     channelStateBloatBond
+    cumulativeRevenue
     avatarPhoto {
       ...StorageDataObjectFields
     }
@@ -3527,8 +3550,17 @@ export const BasicCreatorTokenFragmentDoc = gql`
     status
     createdAt
     lastPrice
-    revenueShares {
+    totalSupply
+    description
+    currentAmmSale {
       id
+      burnedByAmm
+      mintedByAmm
+    }
+    currentSale {
+      id
+      tokensSold
+      endsAt
     }
     channel {
       ... on TokenChannel {
