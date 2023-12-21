@@ -14,18 +14,18 @@ import { formatDate } from '@/utils/time'
 
 import { CrtStatus, TokenInfo } from '../CrtPortfolioTable'
 
-export const tableLoadingData = Array.from({ length: 5 }, () => ({
+export const tableLoadingData = Array.from({ length: 10 }, () => ({
   token: (
     <ColumnBox>
       <SkeletonLoader rounded height={32} width={32} />
       <SkeletonLoader height={20} width="40%" />
     </ColumnBox>
   ),
-  status: <SkeletonLoader height={20} width="40%" />,
-  createdAt: <SkeletonLoader height={20} width="40%" />,
-  marketCap: <SkeletonLoader height={20} width="40%" />,
-  totalRevenue: <SkeletonLoader height={20} width="40%" />,
-  holders: <SkeletonLoader height={20} width="40%" />,
+  status: <SkeletonLoader height={20} width="60%" />,
+  createdAt: <SkeletonLoader height={20} width="50%" />,
+  marketCap: <SkeletonLoader height={20} width="50%" />,
+  totalRevenue: <SkeletonLoader height={20} width="50%" />,
+  holders: <SkeletonLoader height={20} width="50%" />,
 }))
 
 const COLUMNS: TableProps['columns'] = [

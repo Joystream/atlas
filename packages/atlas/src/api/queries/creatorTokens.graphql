@@ -1,4 +1,4 @@
-query GetBasicCreatorToken(
+query GetBasicCreatorTokens(
   $where: CreatorTokenWhereInput
   $orderBy: [CreatorTokenOrderByInput!]
   $limit: Int
@@ -12,6 +12,12 @@ query GetBasicCreatorToken(
 query GetFullCreatorToken($id: String!) {
   creatorTokenById(id: $id) {
     ...FullCreatorToken
+  }
+}
+
+query GetCreatorTokensCount($where: CreatorTokenWhereInput) {
+  creatorTokensConnection(where: $where, orderBy: [id_ASC]) {
+    totalCount
   }
 }
 

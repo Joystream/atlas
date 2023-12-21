@@ -1,6 +1,6 @@
 import BN from 'bn.js'
 
-import { useGetBasicCreatorTokenQuery } from '@/api/queries/__generated__/creatorTokens.generated'
+import { useGetBasicCreatorTokensQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { Section } from '@/components/Section/Section'
 import { AllTokensSection } from '@/components/_crt/AllTokensSection'
 import { CrtCard, CrtSaleTypes } from '@/components/_crt/CrtCard/CrtCard'
@@ -11,7 +11,7 @@ import { responsive } from '../FeaturedNftsSection/FeaturedNftsSection'
 
 export const MarketplaceCrtTab = () => {
   const mdMatch = useMediaMatch('md')
-  const { data } = useGetBasicCreatorTokenQuery({})
+  const { data } = useGetBasicCreatorTokensQuery({})
   const featuredCrts =
     data?.creatorTokens
       .slice(5)

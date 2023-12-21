@@ -58,7 +58,7 @@ export type PortfolioToken = {
   total: number
   tokenId: string
   memberId: string
-  channelId: string
+  channelId?: string
 }
 
 export type CrtPortfolioTableProps = {
@@ -112,13 +112,13 @@ export const TokenInfo = ({
   isVerified,
   channelId,
 }: Pick<PortfolioToken, 'tokenName' | 'tokenTitle' | 'isVerified' | 'channelId'>) => {
-  const { extendedChannel } = useBasicChannel(channelId)
+  const { extendedChannel } = useBasicChannel(channelId ?? '')
   const navigate = useNavigate()
   return (
     <FlexBox minWidth="100px" alignItems="center" gap={2}>
       <Avatar
         assetUrls={extendedChannel?.channel.avatarPhoto?.resolvedUrls}
-        onClick={() => navigate(absoluteRoutes.viewer.channel(channelId, { tab: 'Token' }))}
+        onClick={() => (channelId ? navigate(absoluteRoutes.viewer.channel(channelId, { tab: 'Token' })) : undefined)}
       />
       <FlexBox flow="column" gap={0}>
         <Text variant="h200" as="h1">

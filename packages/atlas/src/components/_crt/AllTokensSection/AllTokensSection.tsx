@@ -1,6 +1,9 @@
 import BN from 'bn.js'
 
-import { useGetBasicCreatorTokenQuery } from '@/api/queries/__generated__/creatorTokens.generated'
+import {
+  useGetBasicCreatorTokensQuery,
+  useGetCreatorTokensCountQuery,
+} from '@/api/queries/__generated__/creatorTokens.generated'
 import { FallbackContainer } from '@/components/AllNftSection'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { NumberFormat } from '@/components/NumberFormat'
@@ -21,12 +24,18 @@ export const AllTokensSection = () => {
     actions: { onApplyFilters, setOrder, clearFilters },
   } = useCrtSectionFilters()
 
-  const { data, loading } = useGetBasicCreatorTokenQuery({
+  const { data, loading } = useGetBasicCreatorTokensQuery({
     variables: {
       where: creatorTokenWhereInput,
       orderBy: order,
     },
   })
+  const { data: countData } = useGetCreatorTokensCountQuery({
+    variables: {
+      where: creatorTokenWhereInput,
+    },
+  })
+  const totalCount = countData?.creatorTokensConnection.totalCount
 
   const tableData =
     data?.creatorTokens.map(({ createdAt, accountsNum, lastPrice, totalSupply, status, symbol, channel }) => ({
@@ -40,8 +49,6 @@ export const AllTokensSection = () => {
       tokenName: symbol ?? 'N/A',
       tokenTitle: symbol ?? 'N/A',
     })) ?? []
-
-  const totalCount = 1
 
   return (
     <Section
