@@ -555,6 +555,18 @@ fragment BasicCreatorToken on CreatorToken {
   lastPrice
   totalSupply
   description
+  trailerVideo {
+    id
+    video {
+      id
+      media {
+        ...StorageDataObjectFields
+      }
+      thumbnailPhoto {
+        ...StorageDataObjectFields
+      }
+    }
+  }
   currentAmmSale {
     id
     burnedByAmm

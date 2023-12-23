@@ -15,7 +15,7 @@ export const MarketplaceNftTab = () => {
   return (
     <>
       {headTags}
-      <MarketplaceCarousel type="nft" nfts={nfts} isLoading={loading} />
+      <MarketplaceCarousel type="nft" nfts={nfts ?? []} isLoading={loading} />
       <FeaturedNftsSection />
       <TableFullWitdhtWrapper>
         <LimitedWidthContainer big noBottomPadding>

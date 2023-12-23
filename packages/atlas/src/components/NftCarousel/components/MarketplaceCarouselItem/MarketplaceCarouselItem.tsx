@@ -3,13 +3,18 @@ import { useSwiperSlide } from 'swiper/react'
 
 import { SvgActionChevronL, SvgActionChevronR } from '@/assets/icons'
 
-import { ItemWrapper, LeftChevronContainer, NavigationContainer, RightChevronContainer } from './NftCarouselItem.styles'
+import {
+  ItemWrapper,
+  LeftChevronContainer,
+  NavigationContainer,
+  RightChevronContainer,
+} from './MarketplaceCarouselItem.styles'
 
-type NftCarouselItemProps = {
+type MarketplaceCarouselItemProps = {
   onClick?: (dir: '<' | '>') => void
   children?: ((isActive: boolean) => ReactNode) | ReactNode
 }
-export const NftCarouselItem = ({ onClick, children }: NftCarouselItemProps) => {
+export const MarketplaceCarouselItem = ({ onClick, children }: MarketplaceCarouselItemProps) => {
   const { isActive } = useSwiperSlide()
   return (
     <ItemWrapper>

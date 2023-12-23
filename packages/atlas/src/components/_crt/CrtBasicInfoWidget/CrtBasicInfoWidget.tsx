@@ -71,7 +71,7 @@ export const CrtMainInfo = ({
         </Text>
         {/*<Pill icon={<SvgActionShieldLock />} label="Invite only" />*/}
       </FlexBox>
-      <FlexBox>
+      <FlexBox alignItems="center">
         <Text variant={isSmall ? 't100' : 't200'} as="p">
           {name}
         </Text>
