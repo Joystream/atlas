@@ -3,5 +3,5 @@ import { MarketplaceCarousel } from '@/components/NftCarousel/MarketplaceCarouse
 
 export const PlaygroundMarketplaceCarousel = () => {
   const { nfts, loading } = useFeaturedNftsVideos()
-  return <MarketplaceCarousel type="nft" nfts={nfts} isLoading={loading} />
+  return <MarketplaceCarousel type="nft" nfts={nfts ?? []} isLoading={loading} />
 }
