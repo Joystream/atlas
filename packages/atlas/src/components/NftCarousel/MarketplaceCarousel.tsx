@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { useCallback, useMemo, useState } from 'react'
 
-import { GetBasicCreatorTokenQuery } from '@/api/queries/__generated__/creatorTokens.generated'
+import { GetBasicCreatorTokensQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { GetFeaturedNftsVideosQuery } from '@/api/queries/__generated__/nfts.generated'
 import { Carousel, CarouselProps, SwiperInstance } from '@/components/Carousel'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
@@ -19,7 +19,7 @@ type NftCarouselType = {
 
 type CrtCarouselType = {
   type: 'crt'
-  crts: GetBasicCreatorTokenQuery['creatorTokens']
+  crts: GetBasicCreatorTokensQuery['creatorTokens']
 }
 
 type MarketplaceCarouselTypes = NftCarouselType | CrtCarouselType

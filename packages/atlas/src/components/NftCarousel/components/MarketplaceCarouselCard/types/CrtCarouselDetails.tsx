@@ -1,7 +1,7 @@
 import BN from 'bn.js'
 import { ReactElement, useMemo } from 'react'
 
-import { GetBasicCreatorTokenQuery } from '@/api/queries/__generated__/creatorTokens.generated'
+import { GetBasicCreatorTokensQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { SvgActionAuction, SvgActionCouncil, SvgActionMarket } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
 import { FlexBox } from '@/components/FlexBox'
@@ -23,7 +23,7 @@ export const CrtCarouselDetails = ({
   active,
   slideNext,
 }: {
-  crt: GetBasicCreatorTokenQuery['creatorTokens'][number]
+  crt: GetBasicCreatorTokensQuery['creatorTokens'][number]
   active: boolean
   slideNext: () => void
 }) => {
