@@ -44,7 +44,7 @@ export const CrtCarouselDetails = ({
   const isLoading = !thumbnailUrls || !mediaUrls
   const marketCap = lastPrice && totalSupply ? hapiBnToTokenNumber(new BN(lastPrice).mul(new BN(totalSupply))) ?? 0 : 0
   const smMatch = useMediaMatch('sm')
-  console.log('sym', symbol)
+
   const details = useMemo(() => {
     const baseDetails: {
       caption: string
