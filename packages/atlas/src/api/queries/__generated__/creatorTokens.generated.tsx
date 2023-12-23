@@ -11,14 +11,14 @@ import {
 } from './fragments.generated'
 
 const defaultOptions = {} as const
-export type GetBasicCreatorTokenQueryVariables = Types.Exact<{
+export type GetBasicCreatorTokensQueryVariables = Types.Exact<{
   where?: Types.InputMaybe<Types.CreatorTokenWhereInput>
   orderBy?: Types.InputMaybe<Array<Types.CreatorTokenOrderByInput> | Types.CreatorTokenOrderByInput>
   limit?: Types.InputMaybe<Types.Scalars['Int']>
   offset?: Types.InputMaybe<Types.Scalars['Int']>
 }>
 
-export type GetBasicCreatorTokenQuery = {
+export type GetBasicCreatorTokensQuery = {
   __typename?: 'Query'
   creatorTokens: Array<{
     __typename?: 'CreatorToken'
@@ -312,6 +312,15 @@ export type GetFullCreatorTokenQuery = {
   } | null
 }
 
+export type GetCreatorTokensCountQueryVariables = Types.Exact<{
+  where?: Types.InputMaybe<Types.CreatorTokenWhereInput>
+}>
+
+export type GetCreatorTokensCountQuery = {
+  __typename?: 'Query'
+  creatorTokensConnection: { __typename?: 'CreatorTokensConnection'; totalCount: number }
+}
+
 export type GetCreatorTokenHoldersQueryVariables = Types.Exact<{
   where?: Types.InputMaybe<Types.TokenAccountWhereInput>
   orderBy?: Types.InputMaybe<Array<Types.TokenAccountOrderByInput> | Types.TokenAccountOrderByInput>
@@ -494,8 +503,8 @@ export type GetTokenRevenueSharesQuery = {
   }>
 }
 
-export const GetBasicCreatorTokenDocument = gql`
-  query GetBasicCreatorToken(
+export const GetBasicCreatorTokensDocument = gql`
+  query GetBasicCreatorTokens(
     $where: CreatorTokenWhereInput
     $orderBy: [CreatorTokenOrderByInput!]
     $limit: Int
@@ -509,16 +518,16 @@ export const GetBasicCreatorTokenDocument = gql`
 `
 
 /**
- * __useGetBasicCreatorTokenQuery__
+ * __useGetBasicCreatorTokensQuery__
  *
- * To run a query within a React component, call `useGetBasicCreatorTokenQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetBasicCreatorTokenQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetBasicCreatorTokensQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBasicCreatorTokensQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetBasicCreatorTokenQuery({
+ * const { data, loading, error } = useGetBasicCreatorTokensQuery({
  *   variables: {
  *      where: // value for 'where'
  *      orderBy: // value for 'orderBy'
@@ -527,29 +536,29 @@ export const GetBasicCreatorTokenDocument = gql`
  *   },
  * });
  */
-export function useGetBasicCreatorTokenQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetBasicCreatorTokenQuery, GetBasicCreatorTokenQueryVariables>
+export function useGetBasicCreatorTokensQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetBasicCreatorTokensQuery, GetBasicCreatorTokensQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetBasicCreatorTokenQuery, GetBasicCreatorTokenQueryVariables>(
-    GetBasicCreatorTokenDocument,
+  return Apollo.useQuery<GetBasicCreatorTokensQuery, GetBasicCreatorTokensQueryVariables>(
+    GetBasicCreatorTokensDocument,
     options
   )
 }
-export function useGetBasicCreatorTokenLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetBasicCreatorTokenQuery, GetBasicCreatorTokenQueryVariables>
+export function useGetBasicCreatorTokensLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetBasicCreatorTokensQuery, GetBasicCreatorTokensQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetBasicCreatorTokenQuery, GetBasicCreatorTokenQueryVariables>(
-    GetBasicCreatorTokenDocument,
+  return Apollo.useLazyQuery<GetBasicCreatorTokensQuery, GetBasicCreatorTokensQueryVariables>(
+    GetBasicCreatorTokensDocument,
     options
   )
 }
-export type GetBasicCreatorTokenQueryHookResult = ReturnType<typeof useGetBasicCreatorTokenQuery>
-export type GetBasicCreatorTokenLazyQueryHookResult = ReturnType<typeof useGetBasicCreatorTokenLazyQuery>
-export type GetBasicCreatorTokenQueryResult = Apollo.QueryResult<
-  GetBasicCreatorTokenQuery,
-  GetBasicCreatorTokenQueryVariables
+export type GetBasicCreatorTokensQueryHookResult = ReturnType<typeof useGetBasicCreatorTokensQuery>
+export type GetBasicCreatorTokensLazyQueryHookResult = ReturnType<typeof useGetBasicCreatorTokensLazyQuery>
+export type GetBasicCreatorTokensQueryResult = Apollo.QueryResult<
+  GetBasicCreatorTokensQuery,
+  GetBasicCreatorTokensQueryVariables
 >
 export const GetFullCreatorTokenDocument = gql`
   query GetFullCreatorToken($id: String!) {
@@ -599,6 +608,54 @@ export type GetFullCreatorTokenLazyQueryHookResult = ReturnType<typeof useGetFul
 export type GetFullCreatorTokenQueryResult = Apollo.QueryResult<
   GetFullCreatorTokenQuery,
   GetFullCreatorTokenQueryVariables
+>
+export const GetCreatorTokensCountDocument = gql`
+  query GetCreatorTokensCount($where: CreatorTokenWhereInput) {
+    creatorTokensConnection(where: $where, orderBy: [id_ASC]) {
+      totalCount
+    }
+  }
+`
+
+/**
+ * __useGetCreatorTokensCountQuery__
+ *
+ * To run a query within a React component, call `useGetCreatorTokensCountQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCreatorTokensCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCreatorTokensCountQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetCreatorTokensCountQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetCreatorTokensCountQuery, GetCreatorTokensCountQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetCreatorTokensCountQuery, GetCreatorTokensCountQueryVariables>(
+    GetCreatorTokensCountDocument,
+    options
+  )
+}
+export function useGetCreatorTokensCountLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetCreatorTokensCountQuery, GetCreatorTokensCountQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetCreatorTokensCountQuery, GetCreatorTokensCountQueryVariables>(
+    GetCreatorTokensCountDocument,
+    options
+  )
+}
+export type GetCreatorTokensCountQueryHookResult = ReturnType<typeof useGetCreatorTokensCountQuery>
+export type GetCreatorTokensCountLazyQueryHookResult = ReturnType<typeof useGetCreatorTokensCountLazyQuery>
+export type GetCreatorTokensCountQueryResult = Apollo.QueryResult<
+  GetCreatorTokensCountQuery,
+  GetCreatorTokensCountQueryVariables
 >
 export const GetCreatorTokenHoldersDocument = gql`
   query GetCreatorTokenHolders(
