@@ -18,7 +18,7 @@ import { createPlaceholderData } from '@/utils/data'
 import { FeatureNftModal } from './FeatureNftModal'
 import { FeaturedNftsWrapper } from './FeaturedNftsSection.styles'
 
-const responsive: CarouselProps['breakpoints'] = {
+export const responsive: CarouselProps['breakpoints'] = {
   [parseInt(breakpoints.xxs)]: {
     slidesPerView: 1.2,
     slidesPerGroup: 1,
