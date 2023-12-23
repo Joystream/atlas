@@ -1,6 +1,8 @@
 import styled from '@emotion/styled'
 import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router'
 
+import { useBasicChannel } from '@/api/hooks/channel'
 import { TokenStatus } from '@/api/queries/__generated__/baseTypes.generated'
 import {
   SvgActionBuyNow,
@@ -21,6 +23,7 @@ import { Button } from '@/components/_buttons/Button'
 import { BuyMarketTokenModal } from '@/components/_crt/BuyMarketTokenModal'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
+import { absoluteRoutes } from '@/config/routes'
 import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
 
 export const tableLoadingData = Array.from({ length: 5 }, () => ({
@@ -55,7 +58,7 @@ export type PortfolioToken = {
   total: number
   tokenId: string
   memberId: string
-  channelId: string
+  channelId?: string
 }
 
 export type CrtPortfolioTableProps = {
@@ -71,7 +74,7 @@ export const CrtPortfolioTable = ({ data, emptyState, isLoading }: CrtPortfolioT
   const mappingData = useMemo(() => {
     return data.map((row) => ({
       token: <TokenInfo {...row} />,
-      status: <Status status={row.status} />,
+      status: <CrtStatus status={row.status} />,
       transferable: <TransferableBalance memberId={row.memberId} tokenId={row.tokenId} ticker={`${row.tokenTitle}`} />,
       vested: <NumberFormat value={row.vested} as="p" withToken customTicker={`$${row.tokenTitle}`} />,
       total: <NumberFormat value={row.total} as="p" withToken customTicker={`$${row.tokenTitle}`} />,
@@ -107,10 +110,16 @@ export const TokenInfo = ({
   tokenTitle,
   tokenName,
   isVerified,
-}: Pick<PortfolioToken, 'tokenName' | 'tokenTitle' | 'isVerified'>) => {
+  channelId,
+}: Pick<PortfolioToken, 'tokenName' | 'tokenTitle' | 'isVerified' | 'channelId'>) => {
+  const { extendedChannel } = useBasicChannel(channelId ?? '')
+  const navigate = useNavigate()
   return (
     <FlexBox minWidth="100px" alignItems="center" gap={2}>
-      <Avatar />
+      <Avatar
+        assetUrls={extendedChannel?.channel.avatarPhoto?.resolvedUrls}
+        onClick={() => (channelId ? navigate(absoluteRoutes.viewer.channel(channelId, { tab: 'Token' })) : undefined)}
+      />
       <FlexBox flow="column" gap={0}>
         <Text variant="h200" as="h1">
           {tokenTitle}
@@ -126,7 +135,7 @@ export const TokenInfo = ({
   )
 }
 
-const Status = ({ status }: { status: TokenStatus }) => {
+export const CrtStatus = ({ status }: { status: TokenStatus }) => {
   const [icon, text] = useMemo(() => {
     switch (status) {
       case TokenStatus.Market:
@@ -187,7 +196,15 @@ export const TokenPortfolioUtils = ({ onBuy, onTransfer, disableTransfer, disabl
   )
 }
 
-const TransferableBalance = ({ memberId, tokenId, ticker }: { memberId: string; tokenId: string; ticker?: string }) => {
+export const TransferableBalance = ({
+  memberId,
+  tokenId,
+  ticker,
+}: {
+  memberId: string
+  tokenId: string
+  ticker?: string
+}) => {
   const { tokenBalance } = useGetTokenBalance(tokenId, memberId)
   return <NumberFormat value={tokenBalance} as="p" withToken customTicker={`$${ticker}`} />
 }

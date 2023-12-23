@@ -1,11 +1,12 @@
-import { GetBasicCreatorTokenQuery } from '@/api/queries/__generated__/creatorTokens.generated'
+import { GetBasicCreatorTokensQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { GetFeaturedNftsVideosQuery } from '@/api/queries/__generated__/nfts.generated'
-import { CrtCarouselDetails } from '@/components/NftCarousel/components/MarketplaceCarouselCard/types/CrtCarouselDetails'
-import { NftCarouselDetails } from '@/components/NftCarousel/components/MarketplaceCarouselCard/types/NftCarouselDetails'
+
+import { CrtCarouselDetails } from './types/CrtCarouselDetails'
+import { NftCarouselDetails } from './types/NftCarouselDetails'
 
 type CrtCard = {
   type: 'crt'
-  crt: GetBasicCreatorTokenQuery['creatorTokens'][number]
+  crt: GetBasicCreatorTokensQuery['creatorTokens'][number]
 }
 
 type NftCard = {
