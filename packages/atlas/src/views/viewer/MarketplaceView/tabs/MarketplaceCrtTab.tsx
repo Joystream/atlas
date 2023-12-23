@@ -1,6 +1,7 @@
 import BN from 'bn.js'
 
 import { useGetBasicCreatorTokensQuery } from '@/api/queries/__generated__/creatorTokens.generated'
+import { MarketplaceCarousel } from '@/components/NftCarousel/MarketplaceCarousel'
 import { Section } from '@/components/Section/Section'
 import { AllTokensSection } from '@/components/_crt/AllTokensSection'
 import { CrtCard, CrtSaleTypes } from '@/components/_crt/CrtCard/CrtCard'
@@ -11,7 +12,7 @@ import { responsive } from '../FeaturedNftsSection/FeaturedNftsSection'
 
 export const MarketplaceCrtTab = () => {
   const mdMatch = useMediaMatch('md')
-  const { data } = useGetBasicCreatorTokensQuery({})
+  const { data, loading } = useGetBasicCreatorTokensQuery({})
   const featuredCrts =
     data?.creatorTokens
       .slice(5)
@@ -50,6 +51,8 @@ export const MarketplaceCrtTab = () => {
 
   return (
     <>
+      <MarketplaceCarousel type="crt" crts={data?.creatorTokens.slice(6) ?? []} isLoading={loading} />
+
       {featuredCrts.length > 4 && (
         <Section
           headerProps={{
