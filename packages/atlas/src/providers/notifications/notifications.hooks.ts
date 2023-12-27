@@ -32,6 +32,7 @@ export type UseNotifications = Pick<QueryResult<GetNotificationsConnectionQuery>
   setLastSeenNotificationDate: (data: Date) => void
   markNotificationsAsRead: (notifications: NotificationRecord[]) => void
   pageInfo?: GetNotificationsConnectionQuery['notificationsConnection']['pageInfo']
+  recipient: RecipientTypeWhereInput | undefined
 }
 
 export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkStatusChange'>): UseNotifications => {
@@ -120,6 +121,7 @@ export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkS
     unseenNotificationsCounts,
     setLastSeenNotificationDate,
     markNotificationsAsRead,
+    recipient,
   }
 }
 
