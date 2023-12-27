@@ -64,12 +64,15 @@ type TopSellingChannelsQueryPropKey = Exclude<keyof GetTopSellingChannelsFromThr
 
 const MIN_TOP_SELLING_ITEMS = 4
 
-export const TopSellingChannelsTable = () => {
+export const TopSellingChannelsTable = ({ withCrtOnly }: { withCrtOnly?: boolean }) => {
   const [sort, setSort] = useState<TopSellingChannelsQueryPropKey>('topAllTimeSellingChannels')
 
   const { data, loading } = useGetTopSellingChannelsFromThreePeriodsQuery({
     variables: {
       limit: 10,
+      where: {
+        ...(withCrtOnly ? { channel: { creatorToken_isNull: false } } : {}),
+      },
     },
   })
 
@@ -155,7 +158,7 @@ export const TopSellingChannelsTable = () => {
       headerProps={{
         start: {
           type: 'title',
-          title: 'Top selling channels',
+          title: `Top selling channels ${withCrtOnly ? 'with a token' : ''}`,
         },
         ...(sortingOptions.length > 1
           ? {
@@ -181,9 +184,9 @@ export const TopSellingChannelsTable = () => {
         children: [
           <StyledTable
             key="single"
-            minWidth={528}
+            minWidth={withCrtOnly ? 400 : 528}
             emptyState={tableEmptyState}
-            columns={COLUMNS}
+            columns={withCrtOnly ? COLUMNS.filter((col) => col.accessor !== 'nftsSold') : COLUMNS}
             data={mappedData}
             doubleColumn={lgMatch}
           />,
@@ -194,8 +197,7 @@ export const TopSellingChannelsTable = () => {
 }
 
 const Channel = ({ channel }: { channel: BasicChannelFieldsFragment }) => {
-  // todo to be implemented
-  const creatorToken = false
+  const hasCreatorToken = !!channel.creatorToken?.token.id
   // todo to be implemented
   const verified = false
   return (
@@ -206,7 +208,7 @@ const Channel = ({ channel }: { channel: BasicChannelFieldsFragment }) => {
         isInteractive={false}
         nodeEnd={
           <SenderItemIconsWrapper>
-            {creatorToken && (
+            {hasCreatorToken && (
               <span title="Creator token">
                 <SvgActionCreatorToken />
               </span>
