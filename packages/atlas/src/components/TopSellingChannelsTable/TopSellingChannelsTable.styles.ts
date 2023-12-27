@@ -20,7 +20,6 @@ export const ScrollWrapper = styled.div`
 
 export const StyledTable = styled(Table)`
   background: transparent;
-  min-width: 528px;
 
   .table-base {
     height: fit-content;
