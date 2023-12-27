@@ -1,12 +1,15 @@
 import BN from 'bn.js'
 
 import { useGetBasicCreatorTokensQuery } from '@/api/queries/__generated__/creatorTokens.generated'
+import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { MarketplaceCarousel } from '@/components/NftCarousel/MarketplaceCarousel'
 import { Section } from '@/components/Section/Section'
+import { TopSellingChannelsTable } from '@/components/TopSellingChannelsTable'
 import { AllTokensSection } from '@/components/_crt/AllTokensSection'
 import { CrtCard, CrtSaleTypes } from '@/components/_crt/CrtCard/CrtCard'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
+import { TableFullWitdhtWrapper } from '@/views/viewer/MarketplaceView/MarketplaceView.styles'
 
 import { responsive } from '../FeaturedNftsSection/FeaturedNftsSection'
 
@@ -69,6 +72,11 @@ export const MarketplaceCrtTab = () => {
           }}
         />
       )}
+      <TableFullWitdhtWrapper>
+        <LimitedWidthContainer big noBottomPadding>
+          <TopSellingChannelsTable withCrtOnly />
+        </LimitedWidthContainer>
+      </TableFullWitdhtWrapper>
       <AllTokensSection />
     </>
   )
