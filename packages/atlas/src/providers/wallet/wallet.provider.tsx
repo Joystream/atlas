@@ -29,7 +29,10 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const setWalletAccounts = useCallback(
     async (accounts: WalletAccount[]) => {
-      const mappedAccounts = accounts.map((account) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const polkadotAccounts = accounts.filter((account: any) => account.type === 'sr25519')
+
+      const mappedAccounts = polkadotAccounts.map((account) => {
         return {
           ...account,
           address: formatJoystreamAddress(account.address),
@@ -56,16 +59,17 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
         // taken from https://github.com/TalismanSociety/talisman-connect/blob/47cfefee9f1333326c0605c159d6ee8ebfba3e84/libs/wallets/src/lib/base-dotsama-wallet/index.ts#L98-L107
         // should be part of future talisman-connect release
         const accounts = await selectedWallet.extension.accounts.get()
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const accountsWithWallet = accounts.map((account: any) => {
-          return {
-            ...account,
-            address: formatJoystreamAddress(account.address),
-            source: selectedWallet.extension?.name as string,
-            wallet: selectedWallet,
-            signer: selectedWallet.extension?.signer,
-          }
-        })
+        const accountsWithWallet = accounts
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .map((account: any) => {
+            return {
+              ...account,
+              address: account.address,
+              source: selectedWallet.extension?.name as string,
+              wallet: selectedWallet,
+              signer: selectedWallet.extension?.signer,
+            }
+          })
 
         setWalletAccounts(accountsWithWallet)
         setWallet(selectedWallet)
