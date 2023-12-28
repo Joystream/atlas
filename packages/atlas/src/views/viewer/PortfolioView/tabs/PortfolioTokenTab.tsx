@@ -120,7 +120,7 @@ export const PortfolioTokenTab = () => {
         memberId: memberId ?? '',
         vested: tokenAccount.vestingSchedules.reduce((prev, next) => prev + Number(next.totalVestingAmount), 0),
         total: +tokenAccount.totalAmount,
-        channelId: tokenAccount.token.channel?.id ?? '',
+        channelId: tokenAccount.token.channel?.channel.id ?? '',
         hasStaked: +tokenAccount.stakedAmount > 0,
       })),
     [data?.tokenAccounts, memberId]

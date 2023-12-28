@@ -88,10 +88,10 @@ export const ChannelToken = ({ tokenId, memberId }: ChannelTokenProps) => {
           )}
 
           <HoldersWidget
-            totalSupply={+token.totalSupply}
+            totalSupply={+(token?.totalSupply ?? 0)}
             tokenId={tokenId ?? ''}
             ownerId={memberId ?? ''}
-            totalHolders={token?.accountsNum ?? '-'}
+            totalHolders={token?.accountsNum ?? 0}
           />
         </FlexBox>
       </GridItem>

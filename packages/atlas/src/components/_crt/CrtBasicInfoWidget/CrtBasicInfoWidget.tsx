@@ -47,12 +47,6 @@ export type CrtMainInfoProps = {
   description?: string
   avatar?: string
   isInviteOnly?: boolean
-  details: {
-    caption: string
-    content: number | string | ReactElement | ReactElement[]
-    icon?: ReactNode
-    tooltipText?: string
-  }[]
   children?: ReactNode
   size?: 'small' | 'medium'
 }

@@ -270,7 +270,6 @@ const StyledTable = styled(Table)<{ isEmpty?: boolean }>`
   td:nth-child(n + 4),
   td:nth-child(n + 5) {
     align-items: end;
-    justify-content: end;
 
     > div {
       align-items: end;

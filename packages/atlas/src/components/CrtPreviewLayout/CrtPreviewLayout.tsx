@@ -166,16 +166,12 @@ export const CrtPreviewLayout = ({
         )}
         {/* todo all props below creationDate are incorrect and should be calucated on orion side */}
         {isLoading || !token ? <SkeletonLoader width="100%" height={300} /> : <CrtStatusWidget token={token} />}
-        {!isLoading && !loadingHolders ? (
-          <HoldersWidget
-            totalSupply={+token.totalSupply}
-            totalHolders={token.accountsNum}
-            tokenId={token.id}
-            ownerId={memberId ?? ''}
-          />
-        ) : (
-          <SkeletonLoader width="100%" height={300} />
-        )}
+        <HoldersWidget
+          totalSupply={+(token?.totalSupply ?? 0)}
+          totalHolders={token?.accountsNum ?? 0}
+          tokenId={token?.id ?? '-1'}
+          ownerId={memberId ?? ''}
+        />
       </SecondColumn>
     </Wrapper>
   )
