@@ -2279,6 +2279,7 @@ export type BasicRevenueShareFragment = {
     __typename?: 'RevenueShareParticipation'
     id: string
     stakedAmount: string
+    recovered: boolean
     earnings: string
     createdIn: number
     account: { __typename?: 'TokenAccount'; member: { __typename?: 'Membership'; id: string } }
@@ -2414,6 +2415,7 @@ export type FullCreatorTokenFragment = {
       __typename?: 'RevenueShareParticipation'
       id: string
       stakedAmount: string
+      recovered: boolean
       earnings: string
       createdIn: number
       account: { __typename?: 'TokenAccount'; member: { __typename?: 'Membership'; id: string } }
@@ -3108,6 +3110,7 @@ export const BasicRevenueShareFragmentDoc = gql`
     stakers {
       id
       stakedAmount
+      recovered
       earnings
       createdIn
       account {

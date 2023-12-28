@@ -36,7 +36,7 @@ export const CrtMarketWidget = ({ onTabSwitch, token }: CrtMarketWidgetProps) =>
       titleColor="colorTextStrong"
       customTopRightNode={
         <TextButton iconPlacement="right" onClick={onTabSwitch} icon={<SvgActionChevronR />}>
-          Show sales
+          Show market
         </TextButton>
       }
       customNode={

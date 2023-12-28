@@ -9,6 +9,7 @@ import { SvgHoldersPlaceholder } from '@/assets/illustrations'
 import { Avatar } from '@/components/Avatar'
 import { AvatarGroup } from '@/components/Avatar/AvatarGroup'
 import { FlexBox } from '@/components/FlexBox'
+import { formatNumberShort } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { TextButton } from '@/components/_buttons/Button'
 import { PieChart, PieDatum, joystreamColors } from '@/components/_charts/PieChart'
@@ -41,7 +42,7 @@ export const holdersToDatum = (accounts: BasicCreatorTokenHolderFragment[], tota
   accounts.map((acc, index) => ({
     id: acc.member.handle,
     name: acc.member.handle,
-    value: Math.round((+(acc.totalAmount ?? 0) / totalSupply) * 100),
+    value: +formatNumberShort((+(acc.totalAmount ?? 0) / totalSupply) * 100),
     members: [
       {
         avatarUrls: getMemberAvatar(acc.member).urls ?? [],

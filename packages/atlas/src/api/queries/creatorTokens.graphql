@@ -67,3 +67,9 @@ query GetTokenRevenueShares($where: RevenueShareWhereInput, $limit: Int, $offset
     ...BasicRevenueShare
   }
 }
+
+query GetTokenRevenueSharesCount($where: RevenueShareWhereInput) {
+  revenueSharesConnection(where: $where, orderBy: [id_ASC]) {
+    totalCount
+  }
+}

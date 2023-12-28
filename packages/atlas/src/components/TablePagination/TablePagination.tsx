@@ -1,9 +1,11 @@
 import { FC, useCallback, useMemo } from 'react'
 
 import { SvgActionChevronL, SvgActionChevronR } from '@/assets/icons'
+import { FlexBox } from '@/components/FlexBox'
 import { Container, HorizontalContainer, PageInfo } from '@/components/TablePagination/TablePagination.styles'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { Select, SelectItem } from '../_inputs/Select'
 
@@ -28,22 +30,25 @@ const PER_PAGE_ITEMS: SelectItem[] = [
   },
 ]
 
-type TablePaginationProps = {
-  totalItemCount: number
-  currentPage: number
-  setPage: (page: number) => void
-  perPage: number
+export type TablePaginationProps = {
   setPerPage: (perPage: number) => void
+  onChangePage: (page: number) => void
+  className?: string
+  itemsPerPage: number
+  totalCount: number
+  page: number
 }
 
 export const TablePagination: FC<TablePaginationProps> = ({
-  perPage,
+  itemsPerPage,
   setPerPage,
-  totalItemCount,
-  currentPage,
-  setPage,
+  totalCount,
+  page,
+  onChangePage,
+  className,
 }) => {
-  const pagesCount = Math.max(Math.ceil(totalItemCount / perPage), 1)
+  const smMatch = useMediaMatch('sm')
+  const pagesCount = Math.max(Math.ceil(totalCount / itemsPerPage), 1)
   const pageItems = useMemo(
     (): SelectItem[] =>
       Array.from({ length: pagesCount }, (_, idx) => ({
@@ -57,60 +62,59 @@ export const TablePagination: FC<TablePaginationProps> = ({
     (value?: string | null) => {
       if (value) {
         setPerPage(+value)
-        setPage(0)
+        onChangePage(0)
       }
     },
-    [setPage, setPerPage]
+    [onChangePage, setPerPage]
   )
 
   return (
-    <Container>
+    <Container className={className}>
       <HorizontalContainer>
-        <Select
-          icon={
-            <Text as="p" variant="t200" color="colorText">
-              Rows per page:
-            </Text>
-          }
-          value={String(perPage)}
-          onChange={handlePerPageChange}
-          items={PER_PAGE_ITEMS}
-        />
-        <PageInfo as="p" variant="t200" color="colorTextStrong">
-          {!totalItemCount
+        <div>
+          <Select
+            icon={
+              <Text as="p" variant={smMatch ? 't200' : 't100'} color="colorText">
+                {smMatch ? 'Rows per page:' : 'Rows:'}
+              </Text>
+            }
+            value={String(itemsPerPage)}
+            onChange={handlePerPageChange}
+            items={PER_PAGE_ITEMS}
+          />
+        </div>
+        <PageInfo as="p" variant={smMatch ? 't200' : 't100'} color="colorTextStrong">
+          {!totalCount
             ? 0
-            : `${1 + perPage * currentPage}-${Math.min(
-                perPage + perPage * currentPage,
-                totalItemCount
-              )} of ${totalItemCount}`}{' '}
+            : `${1 + itemsPerPage * page}-${Math.min(
+                itemsPerPage + itemsPerPage * page,
+                totalCount
+              )} of ${totalCount}`}{' '}
           items
         </PageInfo>
       </HorizontalContainer>
+
       <HorizontalContainer>
-        <HorizontalContainer>
-          <Select
-            value={String(currentPage + 1)}
-            onChange={(value) => value && setPage(+value - 1)}
-            items={pageItems}
-          />
-          <PageInfo as="p" variant="t200" color="colorTextStrong">
+        <FlexBox gap={4} width="auto" alignItems="center">
+          <Select value={String(page + 1)} onChange={(value) => value && onChangePage(+value - 1)} items={pageItems} />
+          <PageInfo as="p" variant={smMatch ? 't200' : 't100'} color="colorTextStrong">
             of {pagesCount} pages
           </PageInfo>
-        </HorizontalContainer>
-        <HorizontalContainer>
+        </FlexBox>
+        <FlexBox width="auto">
           <Button
             variant="tertiary"
             icon={<SvgActionChevronL />}
-            onClick={() => setPage(currentPage - 1)}
-            disabled={currentPage === 0}
+            onClick={() => onChangePage(page - 1)}
+            disabled={page === 0}
           />
           <Button
             variant="tertiary"
             icon={<SvgActionChevronR />}
-            onClick={() => setPage(currentPage + 1)}
-            disabled={currentPage + 1 === pagesCount}
+            onClick={() => onChangePage(page + 1)}
+            disabled={page + 1 === pagesCount}
           />
-        </HorizontalContainer>
+        </FlexBox>
       </HorizontalContainer>
     </Container>
   )
