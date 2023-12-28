@@ -1,7 +1,6 @@
 import { ReactElement, useMemo } from 'react'
 import { useNavigate } from 'react-router'
 
-import { useGetCreatorTokenHoldersQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgActionChevronL, SvgActionNewTab } from '@/assets/icons'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
@@ -16,7 +15,6 @@ import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUser } from '@/providers/user/user.hooks'
-import { SentryLogger } from '@/utils/logs'
 import { permillToPercentage } from '@/utils/number'
 
 import {
@@ -88,22 +86,6 @@ export const CrtPreviewLayout = ({
   const navigate = useNavigate()
   const [openConfirmationModal, closeModal] = useConfirmationModal()
   const { memberId } = useUser()
-  const { data, loading: loadingHolders } = useGetCreatorTokenHoldersQuery({
-    skip: !token,
-    variables: {
-      where: {
-        token: {
-          id_eq: token?.id,
-        },
-        member: {
-          id_eq: memberId,
-        },
-      },
-    },
-    onError: (error) => {
-      SentryLogger.error('Failed to fetch token holders query', 'CrtPreviewLayout', error)
-    },
-  })
 
   const basicDetails = useMemo(() => (token ? getTokenDetails(token) : []), [token])
 
