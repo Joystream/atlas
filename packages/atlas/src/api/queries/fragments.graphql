@@ -534,6 +534,7 @@ fragment BasicRevenueShare on RevenueShare {
   stakers {
     id
     stakedAmount
+    recovered
     earnings
     createdIn
     account {

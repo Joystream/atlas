@@ -46,6 +46,7 @@ export type CrtMainInfoProps = {
   accountsNum?: number
   description?: string
   avatar?: string
+  isInviteOnly?: boolean
   children?: ReactNode
   size?: 'small' | 'medium'
 }

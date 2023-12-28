@@ -1,3 +1,4 @@
+import { useApolloClient } from '@apollo/client'
 import { FC, useCallback, useEffect } from 'react'
 
 import { SvgAlertsInformative24 } from '@/assets/icons'
@@ -39,6 +40,7 @@ export const SaleSummaryStep: FC<SaleSummaryProps> = ({
   const { displaySnackbar } = useSnackbar()
   const { joystream, proxyCallback } = useJoystream()
   const { memberId, channelId } = useUser()
+  const client = useApolloClient()
 
   const handleSubmitTransaction = useCallback(() => {
     if (!joystream || !memberId || !channelId || !tokenPrice) {
@@ -54,6 +56,7 @@ export const SaleSummaryStep: FC<SaleSummaryProps> = ({
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).startAmm(memberId, channelId, tokenPrice, price, proxyCallback(updateStatus)),
       onTxSync: async () => {
+        client.refetchQueries({ include: 'active' })
         onSuccess()
       },
       onError: () => {
@@ -71,6 +74,7 @@ export const SaleSummaryStep: FC<SaleSummaryProps> = ({
     })
   }, [
     channelId,
+    client,
     displaySnackbar,
     handleCloseModal,
     handleTransaction,
@@ -84,7 +88,7 @@ export const SaleSummaryStep: FC<SaleSummaryProps> = ({
 
   useEffect(() => {
     setPrimaryButtonProps({
-      text: 'Start sale',
+      text: 'Start market',
       onClick: () => handleSubmitTransaction(),
     })
 

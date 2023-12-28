@@ -39,13 +39,15 @@ export const RevenueShareParticipationWidget = ({
   const { displaySnackbar } = useSnackbar()
   const handleTransaction = useTransaction()
   const navigate = useNavigate()
+  const memberStake = revenueShare.stakers.find((staker) => staker.account.member.id === memberId)
   const status = revenueShare
     ? getRevenueShareStatusForMember({
         currentBlock,
         isFinalized: revenueShare.finalized,
-        hasMemberStaked: revenueShare.stakers.some((staker) => staker.account.member.id === memberId),
+        hasMemberStaked: !!memberStake,
         endingAt: revenueShare.endsAt,
         startingAt: revenueShare.startingAt,
+        hasRecovered: !!memberStake?.recovered,
       })
     : 'inactive'
 
@@ -103,7 +105,7 @@ export const RevenueShareParticipationWidget = ({
         return <StyledPill icon={<SvgActionCheck />} size="large" label="Tokens claimed" />
       case 'inactive':
       case 'finalized':
-        return null
+        return <div />
     }
   }
 
@@ -176,7 +178,7 @@ export const RevenueShareProgress = ({ revenueShare, hasEnded, token }: RevenueS
 
         <FlexBox flow="column" alignItems="end">
           <Text variant="h100" as="h1" color="colorTextMuted">
-            ENDED ON
+            {hasEnded ? 'ENDED ON' : 'HOLDERS STAKED'}
           </Text>
           <Text variant="h400" as="h4">
             {revenueShare.stakers.length}/{token.accountsNum}

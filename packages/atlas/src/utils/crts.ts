@@ -36,6 +36,7 @@ type GetRevenueShareStatusForMemberProps = {
   startingAt: number
   endingAt: number
   hasMemberStaked: boolean
+  hasRecovered: boolean
   isFinalized: boolean
 }
 
@@ -45,6 +46,7 @@ export const getRevenueShareStatusForMember = ({
   endingAt,
   hasMemberStaked,
   isFinalized,
+  hasRecovered,
 }: GetRevenueShareStatusForMemberProps) => {
   if (currentBlock < startingAt) {
     return 'upcoming'
@@ -54,7 +56,7 @@ export const getRevenueShareStatusForMember = ({
     if (isFinalized) {
       return 'finalized'
     }
-    if (hasMemberStaked) {
+    if (hasMemberStaked && !hasRecovered) {
       return 'unlock'
     }
 

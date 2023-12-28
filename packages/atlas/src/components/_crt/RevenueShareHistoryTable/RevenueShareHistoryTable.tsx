@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import BN from 'bn.js'
 import { useMemo } from 'react'
 
 import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
@@ -30,7 +31,7 @@ export const RevenueShareHistoryTable = ({ data }: RevenueShareHistoryTableProps
 
   const mappedData = useMemo(() => {
     return data.map((row) => {
-      const memberStake = +(row.stakers.find((staker) => staker.account.member.id === memberId)?.stakedAmount ?? 0)
+      const memberStake = new BN(row.stakers.find((staker) => staker.account.member.id === memberId)?.earnings ?? 0)
       return {
         endDate: <DateBlockCell type="block" block={row.endsAtBlock} />,
         participants: (
@@ -41,9 +42,9 @@ export const RevenueShareHistoryTable = ({ data }: RevenueShareHistoryTableProps
             </Text>
           </Text>
         ),
-        total: <TokenAmount tokenAmount={row.claimed} />,
+        total: <TokenAmount tokenAmount={new BN(row.claimed)} />,
         userClaimed: <TokenAmount tokenAmount={memberStake} />,
-        holdersClaimed: <TokenAmount tokenAmount={row.claimed - memberStake} />,
+        holdersClaimed: <TokenAmount tokenAmount={memberStake.sub(new BN(row.claimed))} />,
         unclaimed: 'N/A',
       }
     })
