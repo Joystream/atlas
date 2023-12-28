@@ -37,6 +37,7 @@ export const CrtRevenueShareWidget = ({ token, onTabSwitch }: CrtHoldersWidgetPr
         hasMemberStaked: false,
         endingAt: activeRevenueShare.endsAt,
         startingAt: activeRevenueShare.startingAt,
+        hasRecovered: false,
       })
     : 'inactive'
 
@@ -97,7 +98,7 @@ export const CrtRevenueShareWidget = ({ token, onTabSwitch }: CrtHoldersWidgetPr
                     <StakerPill key={staker.id} id={staker.account.member.id} />
                   ))}
                   {activeRevenueShare.stakers.length > 5 ? (
-                    <StyledPill label={activeRevenueShare.stakers.length - 5} />
+                    <StyledPill label={`+${activeRevenueShare.stakers.length - 5}`} />
                   ) : null}
                 </FlexBox>
               </StakersBox>

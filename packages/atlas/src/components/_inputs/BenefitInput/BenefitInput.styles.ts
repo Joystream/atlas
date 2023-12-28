@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { SvgActionTrash } from '@/assets/icons'
-import { cVar, media, sizes } from '@/styles'
+import { cVar, media, sizes, square } from '@/styles'
 
 export const Container = styled.div`
   display: grid;
@@ -39,8 +39,8 @@ export const StyledSvgActionTrash = styled(SvgActionTrash)`
 `
 
 export const EmojiPlaceholder = styled.div`
-  width: 40px;
-  height: 40px;
+  ${square(40)};
+
   border-radius: 50%;
   background: gray;
 `

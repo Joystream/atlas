@@ -88,13 +88,14 @@ const getTokenAccountsKeyArgs = (
   }
 ) => {
   const offset = ctx?.variables?.offset ?? ''
+  const limit = ctx?.variables?.limit ?? ''
   const OR = stringifyValue(args?.where?.OR)
   const AND = stringifyValue(args?.where?.AND)
   const sortingArray = args?.orderBy != null ? (Array.isArray(args.orderBy) ? args.orderBy : [args.orderBy]) : []
   const sorting = stringifyValue(sortingArray)
   const where = stringifyValue(args?.where ?? {})
 
-  return `${OR}:${AND}:${sorting}:${offset}:${where}`
+  return `${OR}:${AND}:${sorting}:${offset}:${where}:${limit}`
 }
 
 const getChannelKeyArgs = (args: Partial<QueryChannelsConnectionArgs> | null) => {

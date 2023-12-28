@@ -47,12 +47,12 @@ export const CloseMarketModal = ({ onClose, show, channelId }: CloseMarketModalP
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).closeAmm(memberId, channelId, proxyCallback(updateStatus)),
       onTxSync: async () => {
-        client.refetchQueries({ include: 'active' }).then(() => {
-          displaySnackbar({
-            title: 'Market closed successfully',
-          })
-          onClose()
+        await client.refetchQueries({ include: 'active' })
+        displaySnackbar({
+          iconType: 'success',
+          title: 'Market closed',
         })
+        onClose()
       },
       onError: () => {
         SentryLogger.error('Failed to close market', 'CloseMarketModal', { joystream, channelId, memberId })
