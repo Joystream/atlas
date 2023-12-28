@@ -37,6 +37,7 @@ export const CrtRevenueShareWidget = ({ token, onTabSwitch }: CrtHoldersWidgetPr
         hasMemberStaked: false,
         endingAt: activeRevenueShare.endsAt,
         startingAt: activeRevenueShare.startingAt,
+        hasRecovered: false,
       })
     : 'inactive'
 

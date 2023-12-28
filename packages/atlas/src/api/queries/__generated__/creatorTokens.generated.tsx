@@ -156,6 +156,7 @@ export type GetFullCreatorTokenQuery = {
         __typename?: 'RevenueShareParticipation'
         id: string
         stakedAmount: string
+        recovered: boolean
         earnings: string
         createdIn: number
         account: { __typename?: 'TokenAccount'; member: { __typename?: 'Membership'; id: string } }
@@ -396,6 +397,7 @@ export type GetTokenRevenueSharesQuery = {
       __typename?: 'RevenueShareParticipation'
       id: string
       stakedAmount: string
+      recovered: boolean
       earnings: string
       createdIn: number
       account: { __typename?: 'TokenAccount'; member: { __typename?: 'Membership'; id: string } }

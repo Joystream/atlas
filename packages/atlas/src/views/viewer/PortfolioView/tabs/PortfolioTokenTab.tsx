@@ -115,6 +115,7 @@ export const PortfolioTokenTab = () => {
         vested: tokenAccount.vestingSchedules.reduce((prev, next) => prev + Number(next.totalVestingAmount), 0),
         total: +tokenAccount.totalAmount,
         channelId: tokenAccount.token.channel?.id ?? '',
+        hasStaked: +tokenAccount.stakedAmount > 0,
       })),
     [data?.tokenAccounts, memberId]
   )
@@ -186,7 +187,7 @@ export const PortfolioTokenTab = () => {
         />
       </FlexBox>
 
-      {memberTokenRevenueShareData && (
+      {memberTokenRevenueShareData?.revenueShares.length ? (
         <FlexBox flow="column" gap={6}>
           <Text variant="h500" as="h3">
             Revenue shares
@@ -229,7 +230,7 @@ export const PortfolioTokenTab = () => {
             </FlexBox>
           ) : null}
         </FlexBox>
-      )}
+      ) : null}
 
       <FlexBox minWidth="0" flow="column" gap={6}>
         <Text variant="h500" as="h3">

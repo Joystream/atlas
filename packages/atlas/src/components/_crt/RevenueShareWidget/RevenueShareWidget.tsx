@@ -36,7 +36,9 @@ export const RevenueShareWidget = ({ tokenName, tokenId, revenueShare, memberId 
     startingAt: revenueShare.startingAt,
     hasMemberStaked: !!memberStake,
     isFinalized: revenueShare.finalized,
+    hasRecovered: !!memberStake?.recovered,
   })
+
   const handleUnlockStake = useCallback(async () => {
     if (!memberId) {
       SentryLogger.error('Failed to submit unlock stake', 'RevenueShareWidget', { memberId })

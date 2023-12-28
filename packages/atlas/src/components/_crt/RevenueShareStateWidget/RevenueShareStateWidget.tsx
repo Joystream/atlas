@@ -44,6 +44,7 @@ export const RevenueShareStateWidget = ({
         hasMemberStaked: false,
         endingAt: endsAt,
         startingAt: startingAt,
+        hasRecovered: false,
       })
     : 'inactive'
 
@@ -53,6 +54,7 @@ export const RevenueShareStateWidget = ({
     hasMemberStaked: !!memberStake,
     currentBlock: currentBlock,
     isFinalized: revenueShare?.finalized ?? false,
+    hasRecovered: !!memberStake?.recovered,
   })
 
   const memberActionNode = useMemo(() => {

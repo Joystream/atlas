@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import { TokenStatus } from '@/api/queries/__generated__/baseTypes.generated'
 import {
   SvgActionBuyNow,
+  SvgActionLock,
   SvgActionMarket,
   SvgActionMore,
   SvgActionNotForSale,
@@ -42,6 +43,7 @@ export type PortfolioToken = {
   tokenId: string
   memberId: string
   channelId: string
+  hasStaked: boolean
 }
 
 export type CrtPortfolioTableProps = {
@@ -60,19 +62,22 @@ export const CrtPortfolioTable = ({ data, emptyState }: CrtPortfolioTableProps) 
       token: <TokenInfo {...row} />,
       status: <Status status={row.status} />,
       transferable: (
-        <RightAlignedCell>
+        <FlexBox width="auto" alignItems="center" gap={1}>
+          {row.hasStaked && <SvgActionLock />}
           <TransferableBalance memberId={row.memberId} tokenId={row.tokenId} ticker={`${row.tokenTitle}`} />
-        </RightAlignedCell>
+        </FlexBox>
       ),
       vested: (
-        <RightAlignedCell>
+        <FlexBox width="auto" alignItems="center" gap={1}>
+          {row.hasStaked && <SvgActionLock />}
           <NumberFormat value={row.vested} as="p" withToken customTicker={`$${row.tokenTitle}`} />
-        </RightAlignedCell>
+        </FlexBox>
       ),
       total: (
-        <RightAlignedCell>
+        <FlexBox width="auto" alignItems="center" gap={1}>
+          {row.hasStaked && <SvgActionLock />}
           <NumberFormat value={row.total} as="p" withToken customTicker={`$${row.tokenTitle}`} />
-        </RightAlignedCell>
+        </FlexBox>
       ),
       utils: (
         <TokenPortfolioUtils
@@ -226,6 +231,13 @@ const StyledTable = styled(Table)<{ isEmpty?: boolean }>`
     > div {
       align-items: end;
     }
+  }
+
+  td:nth-child(n + 3),
+  td:nth-child(n + 4),
+  td:nth-child(n + 5) {
+    width: auto;
+    align-items: end;
   }
 `
 
