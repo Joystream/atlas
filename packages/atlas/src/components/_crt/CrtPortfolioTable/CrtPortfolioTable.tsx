@@ -1,6 +1,8 @@
 import styled from '@emotion/styled'
 import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router'
 
+import { useBasicChannel } from '@/api/hooks/channel'
 import { TokenStatus } from '@/api/queries/__generated__/baseTypes.generated'
 import {
   SvgActionBuyNow,
@@ -17,12 +19,29 @@ import { Avatar } from '@/components/Avatar'
 import { FlexBox } from '@/components/FlexBox'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Table, TableProps } from '@/components/Table'
+import { ColumnBox } from '@/components/Table/Table.styles'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { BuyMarketTokenModal } from '@/components/_crt/BuyMarketTokenModal'
 import { SellTokenModal } from '@/components/_crt/SellTokenModal'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
+import { absoluteRoutes } from '@/config/routes'
 import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
+
+export const tableLoadingData = Array.from({ length: 5 }, () => ({
+  token: (
+    <ColumnBox>
+      <SkeletonLoader rounded height={32} width={32} />
+      <SkeletonLoader height={20} width="40%" />
+    </ColumnBox>
+  ),
+  status: <SkeletonLoader height={20} width="40%" />,
+  transferable: <SkeletonLoader height={20} width="40%" />,
+  vested: <SkeletonLoader height={20} width="40%" />,
+  total: <SkeletonLoader height={20} width="40%" />,
+  utils: null,
+}))
 
 const COLUMNS: TableProps['columns'] = [
   { Header: 'Token', accessor: 'token', width: 150 },
@@ -42,7 +61,7 @@ export type PortfolioToken = {
   total: number
   tokenId: string
   memberId: string
-  channelId: string
+  channelId?: string
   hasStaked: boolean
 }
 
@@ -52,7 +71,7 @@ export type CrtPortfolioTableProps = {
   emptyState?: TableProps['emptyState']
 }
 
-export const CrtPortfolioTable = ({ data, emptyState }: CrtPortfolioTableProps) => {
+export const CrtPortfolioTable = ({ data, emptyState, isLoading }: CrtPortfolioTableProps) => {
   const [showBuyModal, setShowBuyModal] = useState(false)
   const [showSellModal, setShowSellModal] = useState(false)
   const [tokenId, setTokenId] = useState<string | null>(null)
@@ -60,7 +79,7 @@ export const CrtPortfolioTable = ({ data, emptyState }: CrtPortfolioTableProps) 
   const mappingData = useMemo(() => {
     return data.map((row) => ({
       token: <TokenInfo {...row} />,
-      status: <Status status={row.status} />,
+      status: <CrtStatus status={row.status} />,
       transferable: (
         <FlexBox width="auto" alignItems="center" gap={1}>
           {row.hasStaked && <SvgActionLock />}
@@ -106,7 +125,7 @@ export const CrtPortfolioTable = ({ data, emptyState }: CrtPortfolioTableProps) 
         minWidth={730}
         isEmpty={!mappingData.length}
         columns={COLUMNS}
-        data={mappingData}
+        data={isLoading ? tableLoadingData : mappingData}
         emptyState={emptyState}
       />
     </>
@@ -117,10 +136,16 @@ export const TokenInfo = ({
   tokenTitle,
   tokenName,
   isVerified,
-}: Pick<PortfolioToken, 'tokenName' | 'tokenTitle' | 'isVerified'>) => {
+  channelId,
+}: Pick<PortfolioToken, 'tokenName' | 'tokenTitle' | 'isVerified' | 'channelId'>) => {
+  const { extendedChannel } = useBasicChannel(channelId ?? '')
+  const navigate = useNavigate()
   return (
     <FlexBox minWidth="100px" alignItems="center" gap={2}>
-      <Avatar />
+      <Avatar
+        assetUrls={extendedChannel?.channel.avatarPhoto?.resolvedUrls}
+        onClick={() => (channelId ? navigate(absoluteRoutes.viewer.channel(channelId, { tab: 'Token' })) : undefined)}
+      />
       <FlexBox flow="column" gap={0}>
         <Text variant="h200" as="h1">
           {tokenTitle}
@@ -136,7 +161,7 @@ export const TokenInfo = ({
   )
 }
 
-const Status = ({ status }: { status: TokenStatus }) => {
+export const CrtStatus = ({ status }: { status: TokenStatus }) => {
   const [icon, text] = useMemo(() => {
     switch (status) {
       case TokenStatus.Market:
@@ -213,7 +238,15 @@ export const TokenPortfolioUtils = ({
   )
 }
 
-const TransferableBalance = ({ memberId, tokenId, ticker }: { memberId: string; tokenId: string; ticker?: string }) => {
+export const TransferableBalance = ({
+  memberId,
+  tokenId,
+  ticker,
+}: {
+  memberId: string
+  tokenId: string
+  ticker?: string
+}) => {
   const { tokenBalance } = useGetTokenBalance(tokenId, memberId)
   return <NumberFormat value={tokenBalance} as="p" withToken customTicker={`$${ticker}`} />
 }
@@ -236,8 +269,12 @@ const StyledTable = styled(Table)<{ isEmpty?: boolean }>`
   td:nth-child(n + 3),
   td:nth-child(n + 4),
   td:nth-child(n + 5) {
-    width: auto;
     align-items: end;
+    justify-content: end;
+
+    > div {
+      align-items: end;
+    }
   }
 `
 

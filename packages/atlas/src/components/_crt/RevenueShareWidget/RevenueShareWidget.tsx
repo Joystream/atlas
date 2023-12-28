@@ -11,6 +11,7 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { ClaimShareModal } from '@/components/_crt/ClaimShareModal'
 import { InfoBox, Wrapper } from '@/components/_crt/RevenueShareWidget/RevenueShareWidget.styles'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
 import { useUnlockTokenStake } from '@/hooks/useUnlockTokenStake'
@@ -69,7 +70,7 @@ export const RevenueShareWidget = ({ tokenName, tokenId, revenueShare, memberId 
             <Text variant="t200-strong" as="p">
               Upcoming
             </Text>
-            <Information text="lorem ipsum" />
+            <Information text="This revenue share was scheduled in the future. Wait untill it is active to claim your share." />
           </FlexBox>
         )
       case 'locked':
@@ -79,7 +80,7 @@ export const RevenueShareWidget = ({ tokenName, tokenId, revenueShare, memberId 
             <Text variant="t200-strong" as="p">
               Locked
             </Text>
-            <Information text="lorem ipsum" />
+            <Information text="Your tokens have been locked and revenue share received. Wait for the revenue share end to unlock tokens." />
           </FlexBox>
         )
     }
@@ -154,5 +155,31 @@ export const Detail = ({ title, children }: { title: string; children: ReactElem
       </Text>
       {children}
     </FlexBox>
+  )
+}
+
+export const RevenueShareWidgetLoader = () => {
+  return (
+    <Wrapper isActive={false}>
+      <InfoBox>
+        <FlexBox flow="column">
+          <SkeletonLoader height={20} width="20%" />
+          <SkeletonLoader height={25} width="35%" />
+        </FlexBox>
+        <FlexBox flow="column">
+          <SkeletonLoader height={20} width="20%" />
+          <SkeletonLoader height={25} width="35%" />
+        </FlexBox>
+        <FlexBox flow="column">
+          <SkeletonLoader height={20} width="20%" />
+          <SkeletonLoader height={25} width="35%" />
+        </FlexBox>
+        <FlexBox flow="column">
+          <SkeletonLoader height={20} width="20%" />
+          <SkeletonLoader height={25} width="35%" />
+        </FlexBox>
+      </InfoBox>
+      <SkeletonLoader height={40} width="100%" />
+    </Wrapper>
   )
 }

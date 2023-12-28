@@ -1,6 +1,7 @@
 import { ReactElement, useMemo } from 'react'
 import { useNavigate } from 'react-router'
 
+import { useGetCreatorTokenHoldersQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgActionChevronL, SvgActionNewTab } from '@/assets/icons'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
@@ -10,10 +11,12 @@ import { Button } from '@/components/_buttons/Button'
 import { CrtBasicInfoWidget } from '@/components/_crt/CrtBasicInfoWidget'
 import { CrtStatusWidget } from '@/components/_crt/CrtStatusWidget'
 import { HoldersWidget } from '@/components/_crt/HoldersWidget'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUser } from '@/providers/user/user.hooks'
+import { SentryLogger } from '@/utils/logs'
 import { permillToPercentage } from '@/utils/number'
 
 import {
@@ -29,8 +32,9 @@ import {
 type CrtPreviewViewProps = {
   mode: 'edit' | 'preview'
   tokenDetails?: ReactElement
-  token: FullCreatorTokenFragment
+  token?: FullCreatorTokenFragment
   isDirty?: boolean
+  isLoading?: boolean
 }
 
 export const getTokenDetails = (token: FullCreatorTokenFragment) => {
@@ -41,8 +45,7 @@ export const getTokenDetails = (token: FullCreatorTokenFragment) => {
       caption: 'TOTAL REV.',
       content: +token.totalSupply,
       icon: <JoyTokenIcon size={16} variant="silver" />,
-      tooltipText:
-        'This is the total amount of revenue that the channel made from the time it was created. This information can be useful to determine if the creator had high or low income from their content in the past.',
+      tooltipText: 'Total revenue this channel made from DAO earnings, NFT sales and royalties.',
       withDenomination: true,
     })
 
@@ -79,12 +82,30 @@ export const CrtPreviewLayout = ({
   mode,
   token,
   isDirty,
+  isLoading,
 }: CrtPreviewViewProps) => {
   const lgMatch = useMediaMatch('lg')
   const navigate = useNavigate()
   const [openConfirmationModal, closeModal] = useConfirmationModal()
   const { memberId } = useUser()
-  const basicDetails = useMemo(() => getTokenDetails(token), [token])
+  const { data, loading: loadingHolders } = useGetCreatorTokenHoldersQuery({
+    skip: !token,
+    variables: {
+      where: {
+        token: {
+          id_eq: token?.id,
+        },
+        member: {
+          id_eq: memberId,
+        },
+      },
+    },
+    onError: (error) => {
+      SentryLogger.error('Failed to fetch token holders query', 'CrtPreviewLayout', error)
+    },
+  })
+
+  const basicDetails = useMemo(() => (token ? getTokenDetails(token) : []), [token])
 
   return (
     <Wrapper>
@@ -111,7 +132,7 @@ export const CrtPreviewLayout = ({
                     text: 'Confirm and leave',
                     onClick: () => {
                       closeModal()
-                      navigate(absoluteRoutes.viewer.channel(token.channel?.channel.id, { tab: 'Token' }))
+                      navigate(absoluteRoutes.viewer.channel(token?.channel?.channel.id, { tab: 'Token' }))
                     },
                   },
                   secondaryButton: {
@@ -121,7 +142,7 @@ export const CrtPreviewLayout = ({
                 })
                 return
               }
-              navigate(absoluteRoutes.viewer.channel(token.channel?.channel.id, { tab: 'Token' }))
+              navigate(absoluteRoutes.viewer.channel(token?.channel?.channel.id, { tab: 'Token' }))
             }}
           >
             See your token
@@ -130,23 +151,31 @@ export const CrtPreviewLayout = ({
       </HeaderContainer>
       <FirstColumn>{tokenDetails}</FirstColumn>
       <SecondColumn>
-        <CrtBasicInfoWidget
-          details={basicDetails}
-          name={token.symbol ?? 'N/A'}
-          symbol={token.symbol ?? 'N/A'}
-          avatar={token?.channel?.channel.avatarPhoto?.resolvedUrls?.[0]}
-          accountsNum={token?.accountsNum}
-          size={lgMatch ? 'large' : 'small'}
-          description={token?.description ?? ''}
-        />
+        {isLoading || !token ? (
+          <SkeletonLoader width="100%" height={400} />
+        ) : (
+          <CrtBasicInfoWidget
+            details={basicDetails}
+            name={token.symbol ?? 'N/A'}
+            symbol={token.symbol ?? 'N/A'}
+            avatar={token.channel?.channel.avatarPhoto?.resolvedUrls?.[0]}
+            accountsNum={token.accountsNum}
+            size={lgMatch ? 'medium' : 'small'}
+            description={token.description ?? ''}
+          />
+        )}
         {/* todo all props below creationDate are incorrect and should be calucated on orion side */}
-        <CrtStatusWidget token={token} />
-        <HoldersWidget
-          totalSupply={+token.totalSupply}
-          totalHolders={token.accountsNum}
-          tokenId={token.id}
-          ownerId={memberId ?? ''}
-        />
+        {isLoading || !token ? <SkeletonLoader width="100%" height={300} /> : <CrtStatusWidget token={token} />}
+        {!isLoading && !loadingHolders ? (
+          <HoldersWidget
+            totalSupply={+token.totalSupply}
+            totalHolders={token.accountsNum}
+            tokenId={token.id}
+            ownerId={memberId ?? ''}
+          />
+        ) : (
+          <SkeletonLoader width="100%" height={300} />
+        )}
       </SecondColumn>
     </Wrapper>
   )

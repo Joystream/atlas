@@ -40,6 +40,7 @@ export type GetNftQuery = {
         followsNum: number
         rewardAccount: string
         channelStateBloatBond: string
+        cumulativeRevenue: string
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -97,6 +98,7 @@ export type GetNftQuery = {
                 followsNum: number
                 rewardAccount: string
                 channelStateBloatBond: string
+                cumulativeRevenue: string
                 ownerMember?: {
                   __typename?: 'Membership'
                   id: string
@@ -348,6 +350,7 @@ export type GetNftQuery = {
             followsNum: number
             rewardAccount: string
             channelStateBloatBond: string
+            cumulativeRevenue: string
             ownerMember?: {
               __typename?: 'Membership'
               id: string
@@ -619,6 +622,7 @@ export type GetNftsQuery = {
         followsNum: number
         rewardAccount: string
         channelStateBloatBond: string
+        cumulativeRevenue: string
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -676,6 +680,7 @@ export type GetNftsQuery = {
                 followsNum: number
                 rewardAccount: string
                 channelStateBloatBond: string
+                cumulativeRevenue: string
                 ownerMember?: {
                   __typename?: 'Membership'
                   id: string
@@ -927,6 +932,7 @@ export type GetNftsQuery = {
             followsNum: number
             rewardAccount: string
             channelStateBloatBond: string
+            cumulativeRevenue: string
             ownerMember?: {
               __typename?: 'Membership'
               id: string
@@ -1204,6 +1210,7 @@ export type GetNftsConnectionQuery = {
             followsNum: number
             rewardAccount: string
             channelStateBloatBond: string
+            cumulativeRevenue: string
             avatarPhoto?: {
               __typename?: 'StorageDataObject'
               id: string
@@ -1261,6 +1268,7 @@ export type GetNftsConnectionQuery = {
                     followsNum: number
                     rewardAccount: string
                     channelStateBloatBond: string
+                    cumulativeRevenue: string
                     ownerMember?: {
                       __typename?: 'Membership'
                       id: string
@@ -1512,6 +1520,7 @@ export type GetNftsConnectionQuery = {
                 followsNum: number
                 rewardAccount: string
                 channelStateBloatBond: string
+                cumulativeRevenue: string
                 ownerMember?: {
                   __typename?: 'Membership'
                   id: string
@@ -1806,6 +1815,7 @@ export type GetFeaturedNftsVideosQuery = {
         followsNum: number
         rewardAccount: string
         channelStateBloatBond: string
+        cumulativeRevenue: string
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -1863,6 +1873,7 @@ export type GetFeaturedNftsVideosQuery = {
                 followsNum: number
                 rewardAccount: string
                 channelStateBloatBond: string
+                cumulativeRevenue: string
                 ownerMember?: {
                   __typename?: 'Membership'
                   id: string
@@ -2114,6 +2125,7 @@ export type GetFeaturedNftsVideosQuery = {
             followsNum: number
             rewardAccount: string
             channelStateBloatBond: string
+            cumulativeRevenue: string
             ownerMember?: {
               __typename?: 'Membership'
               id: string

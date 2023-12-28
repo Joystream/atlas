@@ -32,6 +32,7 @@ export type GetVideoHeroQuery = {
         followsNum: number
         rewardAccount: string
         channelStateBloatBond: string
+        cumulativeRevenue: string
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -89,6 +90,7 @@ export type GetVideoHeroQuery = {
                 followsNum: number
                 rewardAccount: string
                 channelStateBloatBond: string
+                cumulativeRevenue: string
                 ownerMember?: {
                   __typename?: 'Membership'
                   id: string
@@ -360,6 +362,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
           followsNum: number
           rewardAccount: string
           channelStateBloatBond: string
+          cumulativeRevenue: string
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -460,6 +463,7 @@ export type GetCategoryFeaturedVideosQuery = {
           followsNum: number
           rewardAccount: string
           channelStateBloatBond: string
+          cumulativeRevenue: string
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
