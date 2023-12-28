@@ -85,6 +85,7 @@ export type GetFullVideoQuery = {
       description?: string | null
       isPublic?: boolean | null
       cumulativeRewardClaimed?: string | null
+      cumulativeRevenue: string
       isCensored: boolean
       language?: string | null
       id: string
@@ -93,7 +94,6 @@ export type GetFullVideoQuery = {
       followsNum: number
       rewardAccount: string
       channelStateBloatBond: string
-      cumulativeRevenue: string
       ownerMember?: {
         __typename?: 'Membership'
         id: string
@@ -880,6 +880,7 @@ export type GetFullVideosConnectionQuery = {
           description?: string | null
           isPublic?: boolean | null
           cumulativeRewardClaimed?: string | null
+          cumulativeRevenue: string
           isCensored: boolean
           language?: string | null
           id: string
@@ -888,7 +889,6 @@ export type GetFullVideosConnectionQuery = {
           followsNum: number
           rewardAccount: string
           channelStateBloatBond: string
-          cumulativeRevenue: string
           ownerMember?: {
             __typename?: 'Membership'
             id: string
@@ -1663,6 +1663,7 @@ export type GetFullVideosQuery = {
       description?: string | null
       isPublic?: boolean | null
       cumulativeRewardClaimed?: string | null
+      cumulativeRevenue: string
       isCensored: boolean
       language?: string | null
       id: string
@@ -1671,7 +1672,6 @@ export type GetFullVideosQuery = {
       followsNum: number
       rewardAccount: string
       channelStateBloatBond: string
-      cumulativeRevenue: string
       ownerMember?: {
         __typename?: 'Membership'
         id: string

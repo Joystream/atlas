@@ -356,6 +356,7 @@ export type GetNotificationsConnectionQuery = {
               }
             | { __typename?: 'BuyNowCanceledEventData' }
             | { __typename?: 'BuyNowPriceUpdatedEventData' }
+            | { __typename?: 'ChannelAssetsDeletedByModeratorEventData' }
             | { __typename?: 'ChannelFundsWithdrawnEventData' }
             | { __typename?: 'ChannelPaymentMadeEventData' }
             | { __typename?: 'ChannelPayoutsUpdatedEventData' }
@@ -756,6 +757,7 @@ export type GetNotificationsConnectionQuery = {
                     }
               }
             | { __typename?: 'OpenAuctionStartedEventData' }
+            | { __typename?: 'VideoAssetsDeletedByModeratorEventData' }
         }
       }
     }>
@@ -1205,6 +1207,7 @@ export type GetNftHistoryQuery = {
                   }
                 }
           }
+        | { __typename?: 'ChannelAssetsDeletedByModeratorEventData' }
         | { __typename?: 'ChannelFundsWithdrawnEventData' }
         | { __typename?: 'ChannelPaymentMadeEventData' }
         | { __typename?: 'ChannelPayoutsUpdatedEventData' }
@@ -1799,6 +1802,7 @@ export type GetNftHistoryQuery = {
                   }
                 }
           }
+        | { __typename?: 'VideoAssetsDeletedByModeratorEventData' }
     }
   }>
 }
@@ -2543,6 +2547,7 @@ export type GetNftActivitiesQuery = {
                       }
                     }
               }
+            | { __typename?: 'ChannelAssetsDeletedByModeratorEventData' }
             | { __typename?: 'ChannelFundsWithdrawnEventData' }
             | { __typename?: 'ChannelPaymentMadeEventData' }
             | { __typename?: 'ChannelPayoutsUpdatedEventData' }
@@ -3402,6 +3407,7 @@ export type GetNftActivitiesQuery = {
                       }
                     }
               }
+            | { __typename?: 'VideoAssetsDeletedByModeratorEventData' }
         }
       }
     }>

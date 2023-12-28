@@ -22,6 +22,7 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
       | { __typename?: 'BidMadeCompletingAuctionEventData' }
       | { __typename?: 'BuyNowCanceledEventData' }
       | { __typename?: 'BuyNowPriceUpdatedEventData' }
+      | { __typename?: 'ChannelAssetsDeletedByModeratorEventData' }
       | { __typename?: 'ChannelFundsWithdrawnEventData' }
       | { __typename?: 'ChannelPaymentMadeEventData' }
       | { __typename?: 'ChannelPayoutsUpdatedEventData' }
@@ -252,6 +253,7 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
       | { __typename?: 'NftSellOrderMadeEventData' }
       | { __typename?: 'OpenAuctionBidAcceptedEventData' }
       | { __typename?: 'OpenAuctionStartedEventData' }
+      | { __typename?: 'VideoAssetsDeletedByModeratorEventData' }
   }>
 }
 

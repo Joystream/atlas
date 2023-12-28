@@ -24,6 +24,7 @@ export type GetFullChannelQuery = {
     description?: string | null
     isPublic?: boolean | null
     cumulativeRewardClaimed?: string | null
+    cumulativeRevenue: string
     isCensored: boolean
     language?: string | null
     id: string
@@ -32,7 +33,6 @@ export type GetFullChannelQuery = {
     followsNum: number
     rewardAccount: string
     channelStateBloatBond: string
-    cumulativeRevenue: string
     ownerMember?: {
       __typename?: 'Membership'
       id: string
@@ -167,6 +167,7 @@ export type GetExtendedFullChannelsQuery = {
       description?: string | null
       isPublic?: boolean | null
       cumulativeRewardClaimed?: string | null
+      cumulativeRevenue: string
       isCensored: boolean
       language?: string | null
       id: string
@@ -175,7 +176,6 @@ export type GetExtendedFullChannelsQuery = {
       followsNum: number
       rewardAccount: string
       channelStateBloatBond: string
-      cumulativeRevenue: string
       ownerMember?: {
         __typename?: 'Membership'
         id: string
@@ -486,6 +486,7 @@ export type GetPayloadDataByCommitmentQuery = {
       | { __typename?: 'BidMadeCompletingAuctionEventData' }
       | { __typename?: 'BuyNowCanceledEventData' }
       | { __typename?: 'BuyNowPriceUpdatedEventData' }
+      | { __typename?: 'ChannelAssetsDeletedByModeratorEventData' }
       | { __typename?: 'ChannelFundsWithdrawnEventData' }
       | { __typename?: 'ChannelPaymentMadeEventData' }
       | {
@@ -522,6 +523,7 @@ export type GetPayloadDataByCommitmentQuery = {
       | { __typename?: 'NftSellOrderMadeEventData' }
       | { __typename?: 'OpenAuctionBidAcceptedEventData' }
       | { __typename?: 'OpenAuctionStartedEventData' }
+      | { __typename?: 'VideoAssetsDeletedByModeratorEventData' }
   }>
 }
 
@@ -556,6 +558,7 @@ export type GetChannelPaymentEventsQuery = {
         }
       | { __typename: 'BuyNowCanceledEventData' }
       | { __typename: 'BuyNowPriceUpdatedEventData' }
+      | { __typename: 'ChannelAssetsDeletedByModeratorEventData' }
       | {
           __typename: 'ChannelFundsWithdrawnEventData'
           amount: string
@@ -620,6 +623,7 @@ export type GetChannelPaymentEventsQuery = {
           previousNftOwner: { __typename: 'NftOwnerChannel' } | { __typename: 'NftOwnerMember' }
         }
       | { __typename: 'OpenAuctionStartedEventData' }
+      | { __typename: 'VideoAssetsDeletedByModeratorEventData' }
   }>
 }
 
