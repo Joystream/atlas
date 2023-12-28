@@ -6,9 +6,11 @@ import { useBasicChannel } from '@/api/hooks/channel'
 import { TokenStatus } from '@/api/queries/__generated__/baseTypes.generated'
 import {
   SvgActionBuyNow,
+  SvgActionLock,
   SvgActionMarket,
   SvgActionMore,
   SvgActionNotForSale,
+  SvgActionSell,
   SvgActionShoppingCart,
   SvgActionTransfer,
   SvgActionVerified,
@@ -21,6 +23,7 @@ import { ColumnBox } from '@/components/Table/Table.styles'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { BuyMarketTokenModal } from '@/components/_crt/BuyMarketTokenModal'
+import { SellTokenModal } from '@/components/_crt/SellTokenModal'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { absoluteRoutes } from '@/config/routes'
@@ -59,6 +62,7 @@ export type PortfolioToken = {
   tokenId: string
   memberId: string
   channelId?: string
+  hasStaked: boolean
 }
 
 export type CrtPortfolioTableProps = {
@@ -68,25 +72,46 @@ export type CrtPortfolioTableProps = {
 }
 
 export const CrtPortfolioTable = ({ data, emptyState, isLoading }: CrtPortfolioTableProps) => {
-  const [showModal, setShowModal] = useState(false)
+  const [showBuyModal, setShowBuyModal] = useState(false)
+  const [showSellModal, setShowSellModal] = useState(false)
   const [tokenId, setTokenId] = useState<string | null>(null)
 
   const mappingData = useMemo(() => {
     return data.map((row) => ({
       token: <TokenInfo {...row} />,
       status: <CrtStatus status={row.status} />,
-      transferable: <TransferableBalance memberId={row.memberId} tokenId={row.tokenId} ticker={`${row.tokenTitle}`} />,
-      vested: <NumberFormat value={row.vested} as="p" withToken customTicker={`$${row.tokenTitle}`} />,
-      total: <NumberFormat value={row.total} as="p" withToken customTicker={`$${row.tokenTitle}`} />,
+      transferable: (
+        <FlexBox width="auto" alignItems="center" gap={1}>
+          {row.hasStaked && <SvgActionLock />}
+          <TransferableBalance memberId={row.memberId} tokenId={row.tokenId} ticker={`${row.tokenTitle}`} />
+        </FlexBox>
+      ),
+      vested: (
+        <FlexBox width="auto" alignItems="center" gap={1}>
+          {row.hasStaked && <SvgActionLock />}
+          <NumberFormat value={row.vested} as="p" withToken customTicker={`$${row.tokenTitle}`} />
+        </FlexBox>
+      ),
+      total: (
+        <FlexBox width="auto" alignItems="center" gap={1}>
+          {row.hasStaked && <SvgActionLock />}
+          <NumberFormat value={row.total} as="p" withToken customTicker={`$${row.tokenTitle}`} />
+        </FlexBox>
+      ),
       utils: (
         <TokenPortfolioUtils
           onTransfer={() => undefined}
           disableTransfer
           onBuy={() => {
             setTokenId(row.tokenId)
-            setShowModal(true)
+            setShowBuyModal(true)
           }}
-          disableBuy={row.status === TokenStatus.Idle}
+          onSell={() => {
+            setTokenId(row.tokenId)
+            setShowSellModal(true)
+          }}
+          disableBuy={row.status !== TokenStatus.Market}
+          disableSell={row.status !== TokenStatus.Market}
         />
       ),
     }))
@@ -94,7 +119,8 @@ export const CrtPortfolioTable = ({ data, emptyState, isLoading }: CrtPortfolioT
 
   return (
     <>
-      {tokenId && <BuyMarketTokenModal tokenId={tokenId} show={showModal} onClose={() => setShowModal(false)} />}
+      {tokenId && <BuyMarketTokenModal tokenId={tokenId} show={showBuyModal} onClose={() => setShowBuyModal(false)} />}
+      {tokenId && <SellTokenModal tokenId={tokenId} show={showSellModal} onClose={() => setShowSellModal(false)} />}
       <StyledTable
         minWidth={730}
         isEmpty={!mappingData.length}
@@ -159,12 +185,21 @@ export const CrtStatus = ({ status }: { status: TokenStatus }) => {
 
 type TokenPortfolioUtilsProps = {
   onBuy?: () => void
+  onSell?: () => void
   onTransfer: () => void
   disableTransfer?: boolean
   disableBuy?: boolean
+  disableSell?: boolean
 }
 
-export const TokenPortfolioUtils = ({ onBuy, onTransfer, disableTransfer, disableBuy }: TokenPortfolioUtilsProps) => {
+export const TokenPortfolioUtils = ({
+  onBuy,
+  onTransfer,
+  disableTransfer,
+  disableBuy,
+  disableSell,
+  onSell,
+}: TokenPortfolioUtilsProps) => {
   const [ref, setRef] = useState<HTMLButtonElement | null>(null)
 
   return (
@@ -187,6 +222,13 @@ export const TokenPortfolioUtils = ({ onBuy, onTransfer, disableTransfer, disabl
             onClick: onTransfer,
             nodeStart: <SvgActionTransfer />,
             disabled: disableTransfer,
+          },
+          {
+            asButton: true,
+            label: 'Sell',
+            onClick: onSell,
+            nodeStart: <SvgActionSell />,
+            disabled: disableSell,
           },
         ]}
         trigger={null}
@@ -228,7 +270,6 @@ const StyledTable = styled(Table)<{ isEmpty?: boolean }>`
   td:nth-child(n + 4),
   td:nth-child(n + 5) {
     align-items: end;
-    justify-content: end;
 
     > div {
       align-items: end;

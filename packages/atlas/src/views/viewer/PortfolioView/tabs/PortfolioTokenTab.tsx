@@ -5,14 +5,17 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   useGetChannelTokenBalanceLazyQuery,
   useGetCreatorTokenHoldersQuery,
+  useGetTokenRevenueSharesCountQuery,
   useGetTokenRevenueSharesQuery,
 } from '@/api/queries/__generated__/creatorTokens.generated'
+import { SvgActionChevronB } from '@/assets/icons'
 import { SvgEmptyStateIllustration } from '@/assets/illustrations'
 import { FlexBox } from '@/components/FlexBox'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Table, TableProps } from '@/components/Table'
 import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
+import { Button } from '@/components/_buttons/Button'
 import {
   CrtPortfolioTable,
   TokenInfo,
@@ -37,6 +40,8 @@ const JOY_COLUMNS: TableProps['columns'] = [
   { Header: '', accessor: 'utils', width: 50 },
 ]
 
+const REVENUE_SHARES_PER_REFETCH = 3
+let timestamp = 0
 export const PortfolioTokenTab = () => {
   const { memberId } = useUser()
   const { tokenPrice, convertHapiToUSD } = useTokenPrice()
@@ -47,6 +52,11 @@ export const PortfolioTokenTab = () => {
   const [showSendDialog, setShowSendDialog] = useState(false)
   const [liquidCrtValue, setLiquidCrtValue] = useState<BN | null>(null)
   const toggleSendDialog = () => setShowSendDialog((prevState) => !prevState)
+  useEffect(() => {
+    if (!timestamp) {
+      timestamp = currentBlock
+    }
+  }, [currentBlock])
 
   const { data, loading: loadingHolderData } = useGetCreatorTokenHoldersQuery({
     variables: {
@@ -58,15 +68,45 @@ export const PortfolioTokenTab = () => {
     },
     skip: !memberId,
   })
-  const { data: memberTokenRevenueShareData, loading: loadingRevenueShares } = useGetTokenRevenueSharesQuery({
-    variables: {
-      where: {
-        token: {
-          id_in: data?.tokenAccounts.map(({ token }) => token.id),
+  const commonParams = {
+    finalized_eq: false,
+    token: {
+      id_in: data?.tokenAccounts.map(({ token }) => token.id),
+    },
+  }
+  const where = {
+    OR: [
+      {
+        ...commonParams,
+        endsAt_gt: timestamp,
+      },
+      {
+        ...commonParams,
+        stakers_some: {
+          account: {
+            member: {
+              id_eq: memberId,
+            },
+          },
         },
       },
+    ],
+  }
+  const { data: revenueSharesCount } = useGetTokenRevenueSharesCountQuery({
+    variables: {
+      where,
     },
-    skip: !data?.tokenAccounts || !memberId,
+  })
+  const {
+    data: memberTokenRevenueShareData,
+    loading: loadingRevenueShares,
+    fetchMore,
+  } = useGetTokenRevenueSharesQuery({
+    variables: {
+      where,
+      limit: REVENUE_SHARES_PER_REFETCH,
+    },
+    skip: !data?.tokenAccounts || !memberId || !timestamp, //!currentBlockRef.current,
   })
 
   const mappedData = useMemo(
@@ -80,7 +120,8 @@ export const PortfolioTokenTab = () => {
         memberId: memberId ?? '',
         vested: tokenAccount.vestingSchedules.reduce((prev, next) => prev + Number(next.totalVestingAmount), 0),
         total: +tokenAccount.totalAmount,
-        channelId: tokenAccount.token.channel?.id ?? '',
+        channelId: tokenAccount.token.channel?.channel.id ?? '',
+        hasStaked: +tokenAccount.stakedAmount > 0,
       })),
     [data?.tokenAccounts, memberId]
   )
@@ -161,7 +202,7 @@ export const PortfolioTokenTab = () => {
         />
       </FlexBox>
 
-      {loadingRevenueShares || memberTokenRevenueShareData ? (
+      {loadingRevenueShares || memberTokenRevenueShareData?.revenueShares.length ? (
         <FlexBox flow="column" gap={6}>
           <Text variant="h500" as="h3">
             Revenue shares
@@ -179,6 +220,32 @@ export const PortfolioTokenTab = () => {
                   />
                 ))}
           </FlexBox>
+          {(revenueSharesCount?.revenueSharesConnection.totalCount ?? 0) >
+          (memberTokenRevenueShareData?.revenueShares.length ?? 0) ? (
+            <FlexBox width="100%" justifyContent="center">
+              <Button
+                variant="secondary"
+                iconPlacement="right"
+                icon={<SvgActionChevronB />}
+                onClick={() =>
+                  fetchMore({
+                    variables: {
+                      limit: REVENUE_SHARES_PER_REFETCH,
+                      offset: memberTokenRevenueShareData?.revenueShares.length,
+                    },
+                    updateQuery: (prev, { fetchMoreResult }) => {
+                      return {
+                        ...prev,
+                        revenueShares: [...prev.revenueShares, ...fetchMoreResult.revenueShares],
+                      }
+                    },
+                  })
+                }
+              >
+                Load more
+              </Button>
+            </FlexBox>
+          ) : null}
         </FlexBox>
       ) : null}
 

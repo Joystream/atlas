@@ -1,8 +1,8 @@
-import { ReactElement, useMemo, useRef } from 'react'
+import { ReactElement, useEffect, useMemo, useRef } from 'react'
 import { Column, useFlexLayout, usePagination, useTable } from 'react-table'
 import useDraggableScroll from 'use-draggable-scroll'
 
-import { PaginationProps } from '@/components/Pagination'
+import { TablePagination, TablePaginationProps } from '@/components/TablePagination'
 import { Text } from '@/components/Text'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
@@ -11,7 +11,6 @@ import {
   EmptyTableDescription,
   EmptyTableHeader,
   PageWrapper,
-  StyledPagination,
   TableBase,
   TableWrapper,
   Td,
@@ -33,7 +32,7 @@ export type TableProps<T = object> = {
     icon: ReactElement
   }
   className?: string
-  pagination?: PaginationProps
+  pagination?: TablePaginationProps
   minWidth?: number
 }
 
@@ -56,8 +55,13 @@ export const Table = <T extends object>({
     getTableBodyProps,
     headerGroups,
     page: rawPage,
+    setPageSize,
     prepareRow,
   } = useTable({ columns, data, initialState: { pageSize } }, usePagination, useFlexLayout)
+
+  useEffect(() => {
+    setPageSize(pageSize)
+  }, [pageSize, setPageSize])
 
   const page = useMemo(() => {
     if (doubleColumn) {
@@ -130,6 +134,7 @@ export const Table = <T extends object>({
               </TableBase>
             ))}
           </PageWrapper>
+          {pagination && <TablePagination {...pagination} />}
         </TableWrapper>
       ) : emptyState ? (
         <EmptyTableContainer>
@@ -142,8 +147,6 @@ export const Table = <T extends object>({
           </EmptyTableDescription>
         </EmptyTableContainer>
       ) : null}
-
-      {pagination && <StyledPagination {...pagination} />}
     </Wrapper>
   )
 }

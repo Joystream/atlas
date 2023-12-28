@@ -16,11 +16,14 @@ export const useGetTokenBalance = (tokenId?: string, memberId?: string) => {
       currentBlockHeight: currentBlock,
     },
     fetchPolicy: 'no-cache',
-    skip: !!tokenBalance || !tokenId || !(memberId || currentMemberId),
+    skip: tokenBalance !== null || !tokenId || !(memberId || currentMemberId),
     onCompleted: (data) => {
       if (data.getAccountTransferrableBalance.transferrableCrtAmount !== tokenBalance) {
         setTokenBalance(data.getAccountTransferrableBalance.transferrableCrtAmount)
       }
+    },
+    onError: () => {
+      setTokenBalance(0)
     },
   })
 
