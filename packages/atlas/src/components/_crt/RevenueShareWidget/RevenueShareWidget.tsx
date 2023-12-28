@@ -12,6 +12,7 @@ import { Button } from '@/components/_buttons/Button'
 import { ClaimShareModal } from '@/components/_crt/ClaimShareModal'
 import { InfoBox, Wrapper } from '@/components/_crt/RevenueShareWidget/RevenueShareWidget.styles'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
+import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
 import { useUnlockTokenStake } from '@/hooks/useUnlockTokenStake'
 import { getRevenueShareStatusForMember } from '@/utils/crts'
 import { SentryLogger } from '@/utils/logs'
@@ -25,6 +26,7 @@ export type RevenueShareWidgetProps = {
 }
 export const RevenueShareWidget = ({ tokenName, tokenId, revenueShare, memberId }: RevenueShareWidgetProps) => {
   const [openClaimShareModal, setOpenClaimShareModal] = useState(false)
+  const { tokenBalance } = useGetTokenBalance(tokenId, memberId)
   const { convertBlockToMsTimestamp, currentBlock } = useBlockTimeEstimation()
   const unlockStakeTx = useUnlockTokenStake()
   const memberStake = revenueShare.stakers.find((stakers) => stakers.account.member.id === memberId)
@@ -114,13 +116,7 @@ export const RevenueShareWidget = ({ tokenName, tokenId, revenueShare, memberId 
           </Detail>
 
           <Detail title="YOUR TOKENS">
-            <NumberFormat
-              value={+(memberStake?.stakedAmount ?? 0)}
-              as="p"
-              variant="t300"
-              withToken
-              customTicker={`$${tokenName}`}
-            />
+            <NumberFormat value={+(tokenBalance ?? 0)} as="p" variant="t300" withToken customTicker={`$${tokenName}`} />
           </Detail>
 
           <Detail
