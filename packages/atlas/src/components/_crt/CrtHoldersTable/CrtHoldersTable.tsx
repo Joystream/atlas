@@ -7,12 +7,25 @@ import { FlexBox } from '@/components/FlexBox'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Table, TableProps } from '@/components/Table'
 import { LoadingMemberRow } from '@/components/Table/Table.cells'
+import { ColumnBox } from '@/components/Table/Table.styles'
 import { Text } from '@/components/Text'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 
+export const tableLoadingData = Array.from({ length: 5 }, () => ({
+  member: (
+    <ColumnBox>
+      <SkeletonLoader rounded height={32} width={32} />
+      <SkeletonLoader height={20} width="60%" />
+    </ColumnBox>
+  ),
+  total: <SkeletonLoader height={20} width="70%" />,
+  vested: <SkeletonLoader height={20} width="100%" />,
+}))
+
 const COLUMNS: TableProps['columns'] = [
-  { Header: 'Member', accessor: 'member', width: 2 },
-  { Header: 'Total', accessor: 'total', width: 1 },
+  { Header: 'Member', accessor: 'member', width: 3 },
+  { Header: 'Total', accessor: 'total', width: 2 },
   { Header: 'Vested', accessor: 'vested', width: 1 },
 ]
 
@@ -28,9 +41,16 @@ export type CrtHoldersTableProps = {
   isLoading: boolean
   className?: string
   ownerId?: string
-}
+} & Pick<TableProps, 'pagination' | 'pageSize'>
 
-export const CrtHoldersTable = ({ isLoading, data, className, ownerId }: CrtHoldersTableProps) => {
+export const CrtHoldersTable = ({
+  isLoading,
+  data,
+  className,
+  ownerId,
+  pagination,
+  pageSize,
+}: CrtHoldersTableProps) => {
   const navigate = useNavigate()
   const mappedData = useMemo(
     () =>
@@ -49,27 +69,17 @@ export const CrtHoldersTable = ({ isLoading, data, className, ownerId }: CrtHold
           />
         ),
         total: (
-          <RightAlignedCell>
-            <FlexBox alignItems="center" gap={1}>
-              <NumberFormat format="short" value={row.total} as="p" variant="t200-strong" />
-              <Text variant="t200" as="p" color="colorText">
-                ({row.allocation}%)
-              </Text>
-            </FlexBox>
-          </RightAlignedCell>
+          <FlexBox width="auto" alignItems="center" gap={1}>
+            <NumberFormat format="short" value={row.total} as="p" variant="t200-strong" />
+            <Text variant="t200" as="p" color="colorText">
+              ({row.allocation}%)
+            </Text>
+          </FlexBox>
         ),
-        vested: (
-          <RightAlignedCell>
-            <NumberFormat format="short" value={row.vested} as="p" variant="t200-strong" />
-          </RightAlignedCell>
-        ),
+        vested: <NumberFormat format="short" value={row.vested} as="p" variant="t200-strong" />,
       })),
     [data, ownerId]
   )
-
-  if (isLoading) {
-    return null
-  }
 
   return (
     <StyledTable
@@ -77,8 +87,10 @@ export const CrtHoldersTable = ({ isLoading, data, className, ownerId }: CrtHold
         navigate(absoluteRoutes.viewer.member(data[rowIdx].memberId))
       }}
       columns={COLUMNS}
-      data={mappedData}
+      data={isLoading ? tableLoadingData : mappedData}
       className={className}
+      pagination={pagination}
+      pageSize={pageSize}
     />
   )
 }
@@ -88,8 +100,11 @@ export const StyledTable = styled(Table)`
     cursor: pointer;
   }
 
-  th:nth-child(n + 2) {
+  th:not(:nth-child(1)) {
     justify-content: end;
+  }
+
+  td:not(:nth-child(1)) {
     align-items: end;
 
     > div {

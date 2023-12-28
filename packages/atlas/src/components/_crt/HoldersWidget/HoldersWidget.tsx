@@ -1,52 +1,89 @@
 import styled from '@emotion/styled'
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
-import { BasicCreatorTokenHolderFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgActionChevronR } from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox'
+import { formatNumberShort } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { TextButton } from '@/components/_buttons/Button'
 import { CrtHoldersTable, CrtHoldersTableProps } from '@/components/_crt/CrtHoldersTable/CrtHoldersTable'
 import { DialogModal } from '@/components/_overlays/DialogModal'
+import { useHoldersPagination } from '@/hooks/useHoldersPagination'
 import { cVar, sizes } from '@/styles'
 
 export type HoldersWidgetProps = {
   ownerId: string
-  holders: BasicCreatorTokenHolderFragment[]
+  tokenId: string
   totalSupply: number
+  totalHolders: number
 }
 
-export const HoldersWidget = ({ holders: _holders, ownerId, totalSupply }: HoldersWidgetProps) => {
-  const [showModal, setShowModal] = useState(false)
+const TILES_PER_PAGE = 5
 
-  const holders = _holders.map((holder) => ({
-    memberId: holder?.member?.id ?? '',
-    total: +holder.totalAmount,
-    allocation: Math.round((+holder.totalAmount / totalSupply) * 100),
-    vested: +(holder.vestingSchedules[0]?.totalVestingAmount ?? 0),
-  }))
+export const HoldersWidget = ({ tokenId, ownerId, totalSupply, totalHolders }: HoldersWidgetProps) => {
+  const [showModal, setShowModal] = useState(false)
+  const {
+    holders: _holders,
+    isLoading,
+    totalCount,
+    currentPage,
+    setCurrentPage,
+    setPerPage,
+    perPage,
+  } = useHoldersPagination(tokenId, { initialPageSize: TILES_PER_PAGE })
+
+  const holders = useMemo(
+    () =>
+      _holders?.map((holder) => ({
+        memberId: holder?.member?.id ?? '',
+        total: +holder.totalAmount,
+        allocation: +formatNumberShort((+holder.totalAmount / totalSupply) * 100),
+        vested: +(holder.vestingSchedules[0]?.totalVestingAmount ?? 0),
+      })) ?? [],
+    [_holders, totalSupply]
+  )
+  const [firstPageHolders, setFirstPageHolders] = useState<typeof holders>([])
+
+  useEffect(() => {
+    if (currentPage === 0 && holders.length && !firstPageHolders.length) {
+      setFirstPageHolders(holders)
+    }
+  }, [currentPage, firstPageHolders.length, holders])
 
   return (
     <Box>
       <CrtHoldersTableModal
         data={holders}
         ownerId={ownerId}
-        isLoading={false}
+        isLoading={isLoading}
         show={showModal}
         onExitClick={() => setShowModal(false)}
+        pageSize={perPage}
+        pagination={{
+          setPerPage,
+          totalCount,
+          itemsPerPage: perPage,
+          page: currentPage,
+          onChangePage: setCurrentPage,
+        }}
       />
       <FlexBox alignItems="center" justifyContent="space-between">
         <Text variant="h500" as="span">
           Holders{' '}
           <Text variant="h500" as="span" color="colorText">
-            ({holders.length})
+            ({totalHolders})
           </Text>
         </Text>
         <TextButton icon={<SvgActionChevronR />} iconPlacement="right" onClick={() => setShowModal(true)}>
           Show all holders
         </TextButton>
       </FlexBox>
-      <CrtHoldersTable data={holders} ownerId={ownerId} isLoading={false} />
+      <CrtHoldersTable
+        pageSize={5}
+        data={firstPageHolders}
+        ownerId={ownerId}
+        isLoading={isLoading && !firstPageHolders.length}
+      />
     </Box>
   )
 }
@@ -73,10 +110,10 @@ type CrtHoldersTableModalProps = {
   onExitClick: () => void
 } & CrtHoldersTableProps
 
-const CrtHoldersTableModal = ({ data, onExitClick, show }: CrtHoldersTableModalProps) => {
+const CrtHoldersTableModal = ({ data, onExitClick, show, pagination, isLoading }: CrtHoldersTableModalProps) => {
   return (
     <DialogModal onExitClick={onExitClick} show={show} noContentPadding title="Holders">
-      <StyledHoldersTable data={data} isLoading={false} />
+      <StyledHoldersTable data={data} isLoading={isLoading} pagination={pagination} />
     </DialogModal>
   )
 }
