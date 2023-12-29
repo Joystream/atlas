@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { ReactElement, useMemo } from 'react'
 import { useNavigate } from 'react-router'
 
@@ -32,16 +33,16 @@ type CrtPreviewViewProps = {
   tokenDetails?: ReactElement
   token?: FullCreatorTokenFragment
   isDirty?: boolean
+  channelRevenue?: string
   isLoading?: boolean
 }
 
-export const getTokenDetails = (token: FullCreatorTokenFragment) => {
+export const getTokenDetails = (token: FullCreatorTokenFragment, cumulativeRevenue?: string) => {
   const details = []
-  // todo: after resolver is done on orion, redo total rev
-  if (token.totalSupply)
+  if (cumulativeRevenue)
     details.push({
       caption: 'TOTAL REV.',
-      content: +token.totalSupply,
+      content: new BN(cumulativeRevenue),
       icon: <JoyTokenIcon size={16} variant="silver" />,
       tooltipText: 'Total revenue this channel made from DAO earnings, NFT sales and royalties.',
       withDenomination: true,
@@ -80,14 +81,14 @@ export const CrtPreviewLayout = ({
   mode,
   token,
   isDirty,
+  channelRevenue,
   isLoading,
 }: CrtPreviewViewProps) => {
   const lgMatch = useMediaMatch('lg')
   const navigate = useNavigate()
   const [openConfirmationModal, closeModal] = useConfirmationModal()
   const { memberId } = useUser()
-
-  const basicDetails = useMemo(() => (token ? getTokenDetails(token) : []), [token])
+  const basicDetails = useMemo(() => (token ? getTokenDetails(token, channelRevenue) : []), [token, channelRevenue])
 
   return (
     <Wrapper>

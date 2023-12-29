@@ -4,6 +4,7 @@ import Long from 'long'
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
+import { useFullChannel } from '@/api/hooks/channel'
 import { useGetFullCreatorTokenQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { ActionBar } from '@/components/ActionBar'
 import { CrtPreviewLayout } from '@/components/CrtPreviewLayout'
@@ -31,6 +32,7 @@ type CrtPageForm = {
 
 export const CrtTokenEditView = () => {
   const { activeChannel, channelId, memberId } = useUser()
+  const { channel } = useFullChannel(channelId ?? '', { skip: !channelId })
   const { displaySnackbar } = useSnackbar()
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
@@ -124,6 +126,7 @@ export const CrtTokenEditView = () => {
         isDirty={form.formState.isDirty}
         isLoading={loading}
         token={data?.creatorTokenById ?? undefined}
+        channelRevenue={channel?.cumulativeRevenue ?? undefined}
         tokenDetails={
           mode === 'edit' ? (
             loading ? (
