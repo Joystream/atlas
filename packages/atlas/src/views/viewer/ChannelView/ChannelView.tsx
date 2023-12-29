@@ -212,7 +212,13 @@ export const ChannelView: FC = () => {
       case 'Information':
         return <ChannelAbout channel={channel} activeVideosCount={activeVideosCount} />
       case 'Token':
-        return <ChannelToken memberId={channel?.ownerMember?.id} tokenId={channel?.creatorToken?.token.id} />
+        return (
+          <ChannelToken
+            memberId={channel?.ownerMember?.id}
+            tokenId={channel?.creatorToken?.token.id}
+            cumulativeRevenue={channel?.cumulativeRevenue ?? undefined}
+          />
+        )
     }
   }
 

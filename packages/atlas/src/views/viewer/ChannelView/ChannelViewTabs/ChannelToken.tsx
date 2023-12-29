@@ -15,9 +15,10 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 type ChannelTokenProps = {
   tokenId?: string
   memberId?: string
+  cumulativeRevenue?: string
 }
 
-export const ChannelToken = ({ tokenId, memberId }: ChannelTokenProps) => {
+export const ChannelToken = ({ tokenId, memberId, cumulativeRevenue }: ChannelTokenProps) => {
   const lgMatch = useMediaMatch('lg')
   const { data, loading: loadingToken } = useGetFullCreatorTokenQuery({
     variables: {
@@ -27,10 +28,10 @@ export const ChannelToken = ({ tokenId, memberId }: ChannelTokenProps) => {
 
   const basicDetails = useMemo(() => {
     if (data?.creatorTokenById) {
-      return getTokenDetails(data.creatorTokenById)
+      return getTokenDetails(data.creatorTokenById, cumulativeRevenue)
     }
     return []
-  }, [data?.creatorTokenById])
+  }, [cumulativeRevenue, data?.creatorTokenById])
 
   const { creatorTokenById: token } = data ?? {}
   const activeRevenueShare = token?.revenueShares.find((revenueShare) => !revenueShare.finalized)

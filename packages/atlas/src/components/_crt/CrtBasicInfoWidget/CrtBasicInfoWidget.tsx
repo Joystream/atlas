@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import BN from 'bn.js'
 import { ReactElement, ReactNode } from 'react'
 
 import { SvgActionCouncil, SvgActionVerified } from '@/assets/icons'
@@ -12,7 +13,7 @@ import { pluralizeNoun } from '@/utils/misc'
 export type CrtBasicInfoWidgetProps = {
   details: {
     caption: string
-    content: number | string | ReactElement | ReactElement[]
+    content: number | string | BN | ReactElement | ReactElement[]
     icon?: ReactNode
     tooltipText?: string
   }[]
