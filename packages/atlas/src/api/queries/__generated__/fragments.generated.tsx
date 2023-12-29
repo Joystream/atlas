@@ -45,6 +45,7 @@ export type FullChannelFieldsFragment = {
   description?: string | null
   isPublic?: boolean | null
   cumulativeRewardClaimed?: string | null
+  cumulativeRevenue: string
   isCensored: boolean
   language?: string | null
   id: string
@@ -53,7 +54,6 @@ export type FullChannelFieldsFragment = {
   followsNum: number
   rewardAccount: string
   channelStateBloatBond: string
-  cumulativeRevenue: string
   ownerMember?: {
     __typename?: 'Membership'
     id: string
@@ -135,6 +135,7 @@ export type ExtendedFullChannelFieldsFragment = {
     description?: string | null
     isPublic?: boolean | null
     cumulativeRewardClaimed?: string | null
+    cumulativeRevenue: string
     isCensored: boolean
     language?: string | null
     id: string
@@ -143,7 +144,6 @@ export type ExtendedFullChannelFieldsFragment = {
     followsNum: number
     rewardAccount: string
     channelStateBloatBond: string
-    cumulativeRevenue: string
     ownerMember?: {
       __typename?: 'Membership'
       id: string
@@ -834,6 +834,7 @@ export type FullVideoFieldsFragment = {
     description?: string | null
     isPublic?: boolean | null
     cumulativeRewardClaimed?: string | null
+    cumulativeRevenue: string
     isCensored: boolean
     language?: string | null
     id: string
@@ -842,7 +843,6 @@ export type FullVideoFieldsFragment = {
     followsNum: number
     rewardAccount: string
     channelStateBloatBond: string
-    cumulativeRevenue: string
     ownerMember?: {
       __typename?: 'Membership'
       id: string
@@ -3159,6 +3159,7 @@ export const FullChannelFieldsFragmentDoc = gql`
     description
     isPublic
     cumulativeRewardClaimed
+    cumulativeRevenue
     isCensored
     language
     ownerMember {

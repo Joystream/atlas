@@ -220,8 +220,8 @@ export enum AmmCurveOrderByInput {
   MintedByAmmDesc = 'mintedByAmm_DESC',
   TokenAccountsNumAsc = 'token_accountsNum_ASC',
   TokenAccountsNumDesc = 'token_accountsNum_DESC',
-  TokenAnnualCreatorRewardAsc = 'token_annualCreatorReward_ASC',
-  TokenAnnualCreatorRewardDesc = 'token_annualCreatorReward_DESC',
+  TokenAnnualCreatorRewardPermillAsc = 'token_annualCreatorRewardPermill_ASC',
+  TokenAnnualCreatorRewardPermillDesc = 'token_annualCreatorRewardPermill_DESC',
   TokenCreatedAtAsc = 'token_createdAt_ASC',
   TokenCreatedAtDesc = 'token_createdAt_DESC',
   TokenDeissuedAsc = 'token_deissued_ASC',
@@ -232,6 +232,8 @@ export enum AmmCurveOrderByInput {
   TokenIdDesc = 'token_id_DESC',
   TokenIsInviteOnlyAsc = 'token_isInviteOnly_ASC',
   TokenIsInviteOnlyDesc = 'token_isInviteOnly_DESC',
+  TokenLastPriceAsc = 'token_lastPrice_ASC',
+  TokenLastPriceDesc = 'token_lastPrice_DESC',
   TokenNumberOfRevenueShareActivationsAsc = 'token_numberOfRevenueShareActivations_ASC',
   TokenNumberOfRevenueShareActivationsDesc = 'token_numberOfRevenueShareActivations_DESC',
   TokenNumberOfVestedTransferIssuedAsc = 'token_numberOfVestedTransferIssued_ASC',
@@ -1247,6 +1249,8 @@ export enum BannedMemberOrderByInput {
   ChannelCreatedAtDesc = 'channel_createdAt_DESC',
   ChannelCreatedInBlockAsc = 'channel_createdInBlock_ASC',
   ChannelCreatedInBlockDesc = 'channel_createdInBlock_DESC',
+  ChannelCumulativeRevenueAsc = 'channel_cumulativeRevenue_ASC',
+  ChannelCumulativeRevenueDesc = 'channel_cumulativeRevenue_DESC',
   ChannelCumulativeRewardClaimedAsc = 'channel_cumulativeRewardClaimed_ASC',
   ChannelCumulativeRewardClaimedDesc = 'channel_cumulativeRewardClaimed_DESC',
   ChannelDescriptionAsc = 'channel_description_ASC',
@@ -1355,8 +1359,8 @@ export enum BenefitOrderByInput {
   TitleDesc = 'title_DESC',
   TokenAccountsNumAsc = 'token_accountsNum_ASC',
   TokenAccountsNumDesc = 'token_accountsNum_DESC',
-  TokenAnnualCreatorRewardAsc = 'token_annualCreatorReward_ASC',
-  TokenAnnualCreatorRewardDesc = 'token_annualCreatorReward_DESC',
+  TokenAnnualCreatorRewardPermillAsc = 'token_annualCreatorRewardPermill_ASC',
+  TokenAnnualCreatorRewardPermillDesc = 'token_annualCreatorRewardPermill_DESC',
   TokenCreatedAtAsc = 'token_createdAt_ASC',
   TokenCreatedAtDesc = 'token_createdAt_DESC',
   TokenDeissuedAsc = 'token_deissued_ASC',
@@ -1367,6 +1371,8 @@ export enum BenefitOrderByInput {
   TokenIdDesc = 'token_id_DESC',
   TokenIsInviteOnlyAsc = 'token_isInviteOnly_ASC',
   TokenIsInviteOnlyDesc = 'token_isInviteOnly_DESC',
+  TokenLastPriceAsc = 'token_lastPrice_ASC',
+  TokenLastPriceDesc = 'token_lastPrice_DESC',
   TokenNumberOfRevenueShareActivationsAsc = 'token_numberOfRevenueShareActivations_ASC',
   TokenNumberOfRevenueShareActivationsDesc = 'token_numberOfRevenueShareActivations_DESC',
   TokenNumberOfVestedTransferIssuedAsc = 'token_numberOfVestedTransferIssued_ASC',
@@ -1692,6 +1698,8 @@ export type Channel = {
   createdInBlock: Scalars['Int']
   /** Token issued by channel if any */
   creatorToken?: Maybe<TokenChannel>
+  /** Cumulative total revenue coming from nft sales + member payments + council payouts */
+  cumulativeRevenue: Scalars['BigInt']
   /** Cumulative rewards claimed by this channel */
   cumulativeRewardClaimed?: Maybe<Scalars['BigInt']>
   /** The description of a Channel */
@@ -1738,6 +1746,18 @@ export type ChannelVideosArgs = {
   offset?: InputMaybe<Scalars['Int']>
   orderBy?: InputMaybe<Array<VideoOrderByInput>>
   where?: InputMaybe<VideoWhereInput>
+}
+
+export type ChannelAssetsDeletedByModeratorEventData = {
+  __typename?: 'ChannelAssetsDeletedByModeratorEventData'
+  /** IDs of channel assets being deleted by moderator */
+  assetIds?: Maybe<Array<Scalars['BigInt']>>
+  /** Channel whose assets were deleted */
+  channel: Channel
+  /** Actor who deleted the channel assets. */
+  deletedBy: ContentActor
+  /** why the channel assets were deleted */
+  rationale: Scalars['String']
 }
 
 export type ChannelEdge = {
@@ -1902,6 +1922,8 @@ export enum ChannelOrderByInput {
   CreatedInBlockDesc = 'createdInBlock_DESC',
   CreatorTokenIdAsc = 'creatorToken_id_ASC',
   CreatorTokenIdDesc = 'creatorToken_id_DESC',
+  CumulativeRevenueAsc = 'cumulativeRevenue_ASC',
+  CumulativeRevenueDesc = 'cumulativeRevenue_DESC',
   CumulativeRewardClaimedAsc = 'cumulativeRewardClaimed_ASC',
   CumulativeRewardClaimedDesc = 'cumulativeRewardClaimed_DESC',
   DescriptionAsc = 'description_ASC',
@@ -2068,6 +2090,15 @@ export type ChannelWhereInput = {
   createdInBlock_not_in?: InputMaybe<Array<Scalars['Int']>>
   creatorToken?: InputMaybe<TokenChannelWhereInput>
   creatorToken_isNull?: InputMaybe<Scalars['Boolean']>
+  cumulativeRevenue_eq?: InputMaybe<Scalars['BigInt']>
+  cumulativeRevenue_gt?: InputMaybe<Scalars['BigInt']>
+  cumulativeRevenue_gte?: InputMaybe<Scalars['BigInt']>
+  cumulativeRevenue_in?: InputMaybe<Array<Scalars['BigInt']>>
+  cumulativeRevenue_isNull?: InputMaybe<Scalars['Boolean']>
+  cumulativeRevenue_lt?: InputMaybe<Scalars['BigInt']>
+  cumulativeRevenue_lte?: InputMaybe<Scalars['BigInt']>
+  cumulativeRevenue_not_eq?: InputMaybe<Scalars['BigInt']>
+  cumulativeRevenue_not_in?: InputMaybe<Array<Scalars['BigInt']>>
   cumulativeRewardClaimed_eq?: InputMaybe<Scalars['BigInt']>
   cumulativeRewardClaimed_gt?: InputMaybe<Scalars['BigInt']>
   cumulativeRewardClaimed_gte?: InputMaybe<Scalars['BigInt']>
@@ -2707,8 +2738,8 @@ export type CreatorToken = {
   accountsNum: Scalars['Int']
   /** amm curves issued for this token */
   ammCurves: Array<AmmCurve>
-  /** creator annual revenue permill (minted) */
-  annualCreatorReward: Scalars['Int']
+  /** creator annual revenue (minted) */
+  annualCreatorRewardPermill: Scalars['Int']
   /** avatar object (profile picture) */
   avatar?: Maybe<TokenAvatar>
   /** list of benefits for the token */
@@ -2731,6 +2762,8 @@ export type CreatorToken = {
   id: Scalars['String']
   /** access status invite only vs anyone */
   isInviteOnly: Scalars['Boolean']
+  /** last unit price available */
+  lastPrice?: Maybe<Scalars['BigInt']>
   /** number of revenue shares issued */
   numberOfRevenueShareActivations: Scalars['Int']
   /** number of vested transfer completed */
@@ -2748,7 +2781,7 @@ export type CreatorToken = {
   /** total supply */
   totalSupply: Scalars['BigInt']
   /** video for the token presentation page */
-  trailerVideo?: Maybe<TrailerVideo>
+  trailerVideo: Array<TrailerVideo>
   /** link for creator to member interested in joining the whitelist */
   whitelistApplicantLink?: Maybe<Scalars['String']>
   /** note from creator to member interested in joining the whitelist */
@@ -2790,6 +2823,13 @@ export type CreatorTokenSalesArgs = {
   where?: InputMaybe<SaleWhereInput>
 }
 
+export type CreatorTokenTrailerVideoArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<TrailerVideoOrderByInput>>
+  where?: InputMaybe<TrailerVideoWhereInput>
+}
+
 export type CreatorTokenEdge = {
   __typename?: 'CreatorTokenEdge'
   cursor: Scalars['String']
@@ -2799,8 +2839,8 @@ export type CreatorTokenEdge = {
 export enum CreatorTokenOrderByInput {
   AccountsNumAsc = 'accountsNum_ASC',
   AccountsNumDesc = 'accountsNum_DESC',
-  AnnualCreatorRewardAsc = 'annualCreatorReward_ASC',
-  AnnualCreatorRewardDesc = 'annualCreatorReward_DESC',
+  AnnualCreatorRewardPermillAsc = 'annualCreatorRewardPermill_ASC',
+  AnnualCreatorRewardPermillDesc = 'annualCreatorRewardPermill_DESC',
   AvatarAvatarUriAsc = 'avatar_avatarUri_ASC',
   AvatarAvatarUriDesc = 'avatar_avatarUri_DESC',
   AvatarIsTypeOfAsc = 'avatar_isTypeOf_ASC',
@@ -2865,6 +2905,8 @@ export enum CreatorTokenOrderByInput {
   IdDesc = 'id_DESC',
   IsInviteOnlyAsc = 'isInviteOnly_ASC',
   IsInviteOnlyDesc = 'isInviteOnly_DESC',
+  LastPriceAsc = 'lastPrice_ASC',
+  LastPriceDesc = 'lastPrice_DESC',
   NumberOfRevenueShareActivationsAsc = 'numberOfRevenueShareActivations_ASC',
   NumberOfRevenueShareActivationsDesc = 'numberOfRevenueShareActivations_DESC',
   NumberOfVestedTransferIssuedAsc = 'numberOfVestedTransferIssued_ASC',
@@ -2877,8 +2919,6 @@ export enum CreatorTokenOrderByInput {
   SymbolDesc = 'symbol_DESC',
   TotalSupplyAsc = 'totalSupply_ASC',
   TotalSupplyDesc = 'totalSupply_DESC',
-  TrailerVideoIdAsc = 'trailerVideo_id_ASC',
-  TrailerVideoIdDesc = 'trailerVideo_id_DESC',
   WhitelistApplicantLinkAsc = 'whitelistApplicantLink_ASC',
   WhitelistApplicantLinkDesc = 'whitelistApplicantLink_DESC',
   WhitelistApplicantNoteAsc = 'whitelistApplicantNote_ASC',
@@ -2903,15 +2943,15 @@ export type CreatorTokenWhereInput = {
   ammCurves_every?: InputMaybe<AmmCurveWhereInput>
   ammCurves_none?: InputMaybe<AmmCurveWhereInput>
   ammCurves_some?: InputMaybe<AmmCurveWhereInput>
-  annualCreatorReward_eq?: InputMaybe<Scalars['Int']>
-  annualCreatorReward_gt?: InputMaybe<Scalars['Int']>
-  annualCreatorReward_gte?: InputMaybe<Scalars['Int']>
-  annualCreatorReward_in?: InputMaybe<Array<Scalars['Int']>>
-  annualCreatorReward_isNull?: InputMaybe<Scalars['Boolean']>
-  annualCreatorReward_lt?: InputMaybe<Scalars['Int']>
-  annualCreatorReward_lte?: InputMaybe<Scalars['Int']>
-  annualCreatorReward_not_eq?: InputMaybe<Scalars['Int']>
-  annualCreatorReward_not_in?: InputMaybe<Array<Scalars['Int']>>
+  annualCreatorRewardPermill_eq?: InputMaybe<Scalars['Int']>
+  annualCreatorRewardPermill_gt?: InputMaybe<Scalars['Int']>
+  annualCreatorRewardPermill_gte?: InputMaybe<Scalars['Int']>
+  annualCreatorRewardPermill_in?: InputMaybe<Array<Scalars['Int']>>
+  annualCreatorRewardPermill_isNull?: InputMaybe<Scalars['Boolean']>
+  annualCreatorRewardPermill_lt?: InputMaybe<Scalars['Int']>
+  annualCreatorRewardPermill_lte?: InputMaybe<Scalars['Int']>
+  annualCreatorRewardPermill_not_eq?: InputMaybe<Scalars['Int']>
+  annualCreatorRewardPermill_not_in?: InputMaybe<Array<Scalars['Int']>>
   avatar?: InputMaybe<TokenAvatarWhereInput>
   avatar_isNull?: InputMaybe<Scalars['Boolean']>
   benefits_every?: InputMaybe<BenefitWhereInput>
@@ -2974,6 +3014,15 @@ export type CreatorTokenWhereInput = {
   isInviteOnly_eq?: InputMaybe<Scalars['Boolean']>
   isInviteOnly_isNull?: InputMaybe<Scalars['Boolean']>
   isInviteOnly_not_eq?: InputMaybe<Scalars['Boolean']>
+  lastPrice_eq?: InputMaybe<Scalars['BigInt']>
+  lastPrice_gt?: InputMaybe<Scalars['BigInt']>
+  lastPrice_gte?: InputMaybe<Scalars['BigInt']>
+  lastPrice_in?: InputMaybe<Array<Scalars['BigInt']>>
+  lastPrice_isNull?: InputMaybe<Scalars['Boolean']>
+  lastPrice_lt?: InputMaybe<Scalars['BigInt']>
+  lastPrice_lte?: InputMaybe<Scalars['BigInt']>
+  lastPrice_not_eq?: InputMaybe<Scalars['BigInt']>
+  lastPrice_not_in?: InputMaybe<Array<Scalars['BigInt']>>
   numberOfRevenueShareActivations_eq?: InputMaybe<Scalars['Int']>
   numberOfRevenueShareActivations_gt?: InputMaybe<Scalars['Int']>
   numberOfRevenueShareActivations_gte?: InputMaybe<Scalars['Int']>
@@ -3038,8 +3087,9 @@ export type CreatorTokenWhereInput = {
   totalSupply_lte?: InputMaybe<Scalars['BigInt']>
   totalSupply_not_eq?: InputMaybe<Scalars['BigInt']>
   totalSupply_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-  trailerVideo?: InputMaybe<TrailerVideoWhereInput>
-  trailerVideo_isNull?: InputMaybe<Scalars['Boolean']>
+  trailerVideo_every?: InputMaybe<TrailerVideoWhereInput>
+  trailerVideo_none?: InputMaybe<TrailerVideoWhereInput>
+  trailerVideo_some?: InputMaybe<TrailerVideoWhereInput>
   whitelistApplicantLink_contains?: InputMaybe<Scalars['String']>
   whitelistApplicantLink_containsInsensitive?: InputMaybe<Scalars['String']>
   whitelistApplicantLink_endsWith?: InputMaybe<Scalars['String']>
@@ -3950,6 +4000,7 @@ export type EventData =
   | BidMadeCompletingAuctionEventData
   | BuyNowCanceledEventData
   | BuyNowPriceUpdatedEventData
+  | ChannelAssetsDeletedByModeratorEventData
   | ChannelFundsWithdrawnEventData
   | ChannelPaymentMadeEventData
   | ChannelPayoutsUpdatedEventData
@@ -3966,6 +4017,7 @@ export type EventData =
   | NftSellOrderMadeEventData
   | OpenAuctionBidAcceptedEventData
   | OpenAuctionStartedEventData
+  | VideoAssetsDeletedByModeratorEventData
 
 export type EventDataWhereInput = {
   account_contains?: InputMaybe<Scalars['String']>
@@ -3999,6 +4051,10 @@ export type EventDataWhereInput = {
   amount_lte?: InputMaybe<Scalars['BigInt']>
   amount_not_eq?: InputMaybe<Scalars['BigInt']>
   amount_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  assetIds_containsAll?: InputMaybe<Array<Scalars['BigInt']>>
+  assetIds_containsAny?: InputMaybe<Array<Scalars['BigInt']>>
+  assetIds_containsNone?: InputMaybe<Array<Scalars['BigInt']>>
+  assetIds_isNull?: InputMaybe<Scalars['Boolean']>
   auction?: InputMaybe<AuctionWhereInput>
   auction_isNull?: InputMaybe<Scalars['Boolean']>
   bid?: InputMaybe<BidWhereInput>
@@ -4029,6 +4085,8 @@ export type EventDataWhereInput = {
   commitment_not_in?: InputMaybe<Array<Scalars['String']>>
   commitment_not_startsWith?: InputMaybe<Scalars['String']>
   commitment_startsWith?: InputMaybe<Scalars['String']>
+  deletedBy?: InputMaybe<ContentActorWhereInput>
+  deletedBy_isNull?: InputMaybe<Scalars['Boolean']>
   isTypeOf_contains?: InputMaybe<Scalars['String']>
   isTypeOf_containsInsensitive?: InputMaybe<Scalars['String']>
   isTypeOf_endsWith?: InputMaybe<Scalars['String']>
@@ -4151,6 +4209,8 @@ export type EventDataWhereInput = {
   text_not_in?: InputMaybe<Array<Scalars['String']>>
   text_not_startsWith?: InputMaybe<Scalars['String']>
   text_startsWith?: InputMaybe<Scalars['String']>
+  video?: InputMaybe<VideoWhereInput>
+  video_isNull?: InputMaybe<Scalars['Boolean']>
   winningBid?: InputMaybe<BidWhereInput>
   winningBid_isNull?: InputMaybe<Scalars['Boolean']>
 }
@@ -4444,6 +4504,21 @@ export type GeographicalAreaSubdivistion = {
   __typename?: 'GeographicalAreaSubdivistion'
   /** ISO 3166-2 subdivision code */
   subdivisionCode?: Maybe<Scalars['String']>
+}
+
+export type GetAccountTransferrableBalanceResult = {
+  __typename?: 'GetAccountTransferrableBalanceResult'
+  transferrableCrtAmount: Scalars['Int']
+}
+
+export type GetCumulativeHistoricalShareAllocationResult = {
+  __typename?: 'GetCumulativeHistoricalShareAllocationResult'
+  cumulativeHistoricalAllocation: Scalars['Int']
+}
+
+export type GetShareDividendsResult = {
+  __typename?: 'GetShareDividendsResult'
+  dividendJoyAmount: Scalars['Float']
 }
 
 export type InitialIssuanceVestingSource = {
@@ -5925,7 +6000,10 @@ export type Query = {
   gatewayConfigByUniqueInput?: Maybe<GatewayConfig>
   gatewayConfigs: Array<GatewayConfig>
   gatewayConfigsConnection: GatewayConfigsConnection
+  getAccountTransferrableBalance: GetAccountTransferrableBalanceResult
+  getCumulativeHistoricalShareAllocation: GetCumulativeHistoricalShareAllocationResult
   getKillSwitch: KillSwitch
+  getShareDividend: GetShareDividendsResult
   licenseById?: Maybe<License>
   /** @deprecated Use licenseById */
   licenseByUniqueInput?: Maybe<License>
@@ -6684,6 +6762,21 @@ export type QueryGatewayConfigsConnectionArgs = {
   first?: InputMaybe<Scalars['Int']>
   orderBy: Array<GatewayConfigOrderByInput>
   where?: InputMaybe<GatewayConfigWhereInput>
+}
+
+export type QueryGetAccountTransferrableBalanceArgs = {
+  currentBlockHeight: Scalars['Int']
+  memberId: Scalars['String']
+  tokenId: Scalars['String']
+}
+
+export type QueryGetCumulativeHistoricalShareAllocationArgs = {
+  tokenId: Scalars['String']
+}
+
+export type QueryGetShareDividendArgs = {
+  stakingAmount: Scalars['Int']
+  tokenId: Scalars['String']
 }
 
 export type QueryLicenseByIdArgs = {
@@ -7713,8 +7806,8 @@ export enum RevenueShareOrderByInput {
   StartingAtDesc = 'startingAt_DESC',
   TokenAccountsNumAsc = 'token_accountsNum_ASC',
   TokenAccountsNumDesc = 'token_accountsNum_DESC',
-  TokenAnnualCreatorRewardAsc = 'token_annualCreatorReward_ASC',
-  TokenAnnualCreatorRewardDesc = 'token_annualCreatorReward_DESC',
+  TokenAnnualCreatorRewardPermillAsc = 'token_annualCreatorRewardPermill_ASC',
+  TokenAnnualCreatorRewardPermillDesc = 'token_annualCreatorRewardPermill_DESC',
   TokenCreatedAtAsc = 'token_createdAt_ASC',
   TokenCreatedAtDesc = 'token_createdAt_DESC',
   TokenDeissuedAsc = 'token_deissued_ASC',
@@ -7725,6 +7818,8 @@ export enum RevenueShareOrderByInput {
   TokenIdDesc = 'token_id_DESC',
   TokenIsInviteOnlyAsc = 'token_isInviteOnly_ASC',
   TokenIsInviteOnlyDesc = 'token_isInviteOnly_DESC',
+  TokenLastPriceAsc = 'token_lastPrice_ASC',
+  TokenLastPriceDesc = 'token_lastPrice_DESC',
   TokenNumberOfRevenueShareActivationsAsc = 'token_numberOfRevenueShareActivations_ASC',
   TokenNumberOfRevenueShareActivationsDesc = 'token_numberOfRevenueShareActivations_DESC',
   TokenNumberOfVestedTransferIssuedAsc = 'token_numberOfVestedTransferIssued_ASC',
@@ -7753,6 +7848,8 @@ export type RevenueShareParticipation = {
   earnings: Scalars['BigInt']
   /** counter */
   id: Scalars['String']
+  /** whether the account unstaked funds, recoving the participation */
+  recovered: Scalars['Boolean']
   /** revenue share the account is participating in */
   revenueShare: RevenueShare
   /** staked amount */
@@ -7780,6 +7877,8 @@ export enum RevenueShareParticipationOrderByInput {
   EarningsDesc = 'earnings_DESC',
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
+  RecoveredAsc = 'recovered_ASC',
+  RecoveredDesc = 'recovered_DESC',
   RevenueShareAllocationAsc = 'revenueShare_allocation_ASC',
   RevenueShareAllocationDesc = 'revenueShare_allocation_DESC',
   RevenueShareClaimedAsc = 'revenueShare_claimed_ASC',
@@ -7840,6 +7939,9 @@ export type RevenueShareParticipationWhereInput = {
   id_not_in?: InputMaybe<Array<Scalars['String']>>
   id_not_startsWith?: InputMaybe<Scalars['String']>
   id_startsWith?: InputMaybe<Scalars['String']>
+  recovered_eq?: InputMaybe<Scalars['Boolean']>
+  recovered_isNull?: InputMaybe<Scalars['Boolean']>
+  recovered_not_eq?: InputMaybe<Scalars['Boolean']>
   revenueShare?: InputMaybe<RevenueShareWhereInput>
   revenueShare_isNull?: InputMaybe<Scalars['Boolean']>
   stakedAmount_eq?: InputMaybe<Scalars['BigInt']>
@@ -8025,8 +8127,8 @@ export enum SaleOrderByInput {
   TokenSaleAllocationDesc = 'tokenSaleAllocation_DESC',
   TokenAccountsNumAsc = 'token_accountsNum_ASC',
   TokenAccountsNumDesc = 'token_accountsNum_DESC',
-  TokenAnnualCreatorRewardAsc = 'token_annualCreatorReward_ASC',
-  TokenAnnualCreatorRewardDesc = 'token_annualCreatorReward_DESC',
+  TokenAnnualCreatorRewardPermillAsc = 'token_annualCreatorRewardPermill_ASC',
+  TokenAnnualCreatorRewardPermillDesc = 'token_annualCreatorRewardPermill_DESC',
   TokenCreatedAtAsc = 'token_createdAt_ASC',
   TokenCreatedAtDesc = 'token_createdAt_DESC',
   TokenDeissuedAsc = 'token_deissued_ASC',
@@ -8037,6 +8139,8 @@ export enum SaleOrderByInput {
   TokenIdDesc = 'token_id_DESC',
   TokenIsInviteOnlyAsc = 'token_isInviteOnly_ASC',
   TokenIsInviteOnlyDesc = 'token_isInviteOnly_DESC',
+  TokenLastPriceAsc = 'token_lastPrice_ASC',
+  TokenLastPriceDesc = 'token_lastPrice_DESC',
   TokenNumberOfRevenueShareActivationsAsc = 'token_numberOfRevenueShareActivations_ASC',
   TokenNumberOfRevenueShareActivationsDesc = 'token_numberOfRevenueShareActivations_DESC',
   TokenNumberOfVestedTransferIssuedAsc = 'token_numberOfVestedTransferIssued_ASC',
@@ -10296,8 +10400,8 @@ export enum TokenAccountOrderByInput {
   StakedAmountDesc = 'stakedAmount_DESC',
   TokenAccountsNumAsc = 'token_accountsNum_ASC',
   TokenAccountsNumDesc = 'token_accountsNum_DESC',
-  TokenAnnualCreatorRewardAsc = 'token_annualCreatorReward_ASC',
-  TokenAnnualCreatorRewardDesc = 'token_annualCreatorReward_DESC',
+  TokenAnnualCreatorRewardPermillAsc = 'token_annualCreatorRewardPermill_ASC',
+  TokenAnnualCreatorRewardPermillDesc = 'token_annualCreatorRewardPermill_DESC',
   TokenCreatedAtAsc = 'token_createdAt_ASC',
   TokenCreatedAtDesc = 'token_createdAt_DESC',
   TokenDeissuedAsc = 'token_deissued_ASC',
@@ -10308,6 +10412,8 @@ export enum TokenAccountOrderByInput {
   TokenIdDesc = 'token_id_DESC',
   TokenIsInviteOnlyAsc = 'token_isInviteOnly_ASC',
   TokenIsInviteOnlyDesc = 'token_isInviteOnly_DESC',
+  TokenLastPriceAsc = 'token_lastPrice_ASC',
+  TokenLastPriceDesc = 'token_lastPrice_DESC',
   TokenNumberOfRevenueShareActivationsAsc = 'token_numberOfRevenueShareActivations_ASC',
   TokenNumberOfRevenueShareActivationsDesc = 'token_numberOfRevenueShareActivations_DESC',
   TokenNumberOfVestedTransferIssuedAsc = 'token_numberOfVestedTransferIssued_ASC',
@@ -10470,6 +10576,8 @@ export enum TokenChannelOrderByInput {
   ChannelCreatedAtDesc = 'channel_createdAt_DESC',
   ChannelCreatedInBlockAsc = 'channel_createdInBlock_ASC',
   ChannelCreatedInBlockDesc = 'channel_createdInBlock_DESC',
+  ChannelCumulativeRevenueAsc = 'channel_cumulativeRevenue_ASC',
+  ChannelCumulativeRevenueDesc = 'channel_cumulativeRevenue_DESC',
   ChannelCumulativeRewardClaimedAsc = 'channel_cumulativeRewardClaimed_ASC',
   ChannelCumulativeRewardClaimedDesc = 'channel_cumulativeRewardClaimed_DESC',
   ChannelDescriptionAsc = 'channel_description_ASC',
@@ -10500,8 +10608,8 @@ export enum TokenChannelOrderByInput {
   IdDesc = 'id_DESC',
   TokenAccountsNumAsc = 'token_accountsNum_ASC',
   TokenAccountsNumDesc = 'token_accountsNum_DESC',
-  TokenAnnualCreatorRewardAsc = 'token_annualCreatorReward_ASC',
-  TokenAnnualCreatorRewardDesc = 'token_annualCreatorReward_DESC',
+  TokenAnnualCreatorRewardPermillAsc = 'token_annualCreatorRewardPermill_ASC',
+  TokenAnnualCreatorRewardPermillDesc = 'token_annualCreatorRewardPermill_DESC',
   TokenCreatedAtAsc = 'token_createdAt_ASC',
   TokenCreatedAtDesc = 'token_createdAt_DESC',
   TokenDeissuedAsc = 'token_deissued_ASC',
@@ -10512,6 +10620,8 @@ export enum TokenChannelOrderByInput {
   TokenIdDesc = 'token_id_DESC',
   TokenIsInviteOnlyAsc = 'token_isInviteOnly_ASC',
   TokenIsInviteOnlyDesc = 'token_isInviteOnly_DESC',
+  TokenLastPriceAsc = 'token_lastPrice_ASC',
+  TokenLastPriceDesc = 'token_lastPrice_DESC',
   TokenNumberOfRevenueShareActivationsAsc = 'token_numberOfRevenueShareActivations_ASC',
   TokenNumberOfRevenueShareActivationsDesc = 'token_numberOfRevenueShareActivations_DESC',
   TokenNumberOfVestedTransferIssuedAsc = 'token_numberOfVestedTransferIssued_ASC',
@@ -10684,8 +10794,8 @@ export enum TrailerVideoOrderByInput {
   IdDesc = 'id_DESC',
   TokenAccountsNumAsc = 'token_accountsNum_ASC',
   TokenAccountsNumDesc = 'token_accountsNum_DESC',
-  TokenAnnualCreatorRewardAsc = 'token_annualCreatorReward_ASC',
-  TokenAnnualCreatorRewardDesc = 'token_annualCreatorReward_DESC',
+  TokenAnnualCreatorRewardPermillAsc = 'token_annualCreatorRewardPermill_ASC',
+  TokenAnnualCreatorRewardPermillDesc = 'token_annualCreatorRewardPermill_DESC',
   TokenCreatedAtAsc = 'token_createdAt_ASC',
   TokenCreatedAtDesc = 'token_createdAt_DESC',
   TokenDeissuedAsc = 'token_deissued_ASC',
@@ -10696,6 +10806,8 @@ export enum TrailerVideoOrderByInput {
   TokenIdDesc = 'token_id_DESC',
   TokenIsInviteOnlyAsc = 'token_isInviteOnly_ASC',
   TokenIsInviteOnlyDesc = 'token_isInviteOnly_DESC',
+  TokenLastPriceAsc = 'token_lastPrice_ASC',
+  TokenLastPriceDesc = 'token_lastPrice_DESC',
   TokenNumberOfRevenueShareActivationsAsc = 'token_numberOfRevenueShareActivations_ASC',
   TokenNumberOfRevenueShareActivationsDesc = 'token_numberOfRevenueShareActivations_DESC',
   TokenNumberOfVestedTransferIssuedAsc = 'token_numberOfVestedTransferIssued_ASC',
@@ -10986,6 +11098,8 @@ export type VestedAccount = {
   __typename?: 'VestedAccount'
   /** account reference */
   account: TokenAccount
+  /** acquired at block */
+  acquiredAt: Scalars['Int']
   /** counter */
   id: Scalars['String']
   /** total amount the schedule is vested */
@@ -11011,6 +11125,8 @@ export enum VestedAccountOrderByInput {
   AccountStakedAmountDesc = 'account_stakedAmount_DESC',
   AccountTotalAmountAsc = 'account_totalAmount_ASC',
   AccountTotalAmountDesc = 'account_totalAmount_DESC',
+  AcquiredAtAsc = 'acquiredAt_ASC',
+  AcquiredAtDesc = 'acquiredAt_DESC',
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
   TotalVestingAmountAsc = 'totalVestingAmount_ASC',
@@ -11023,8 +11139,8 @@ export enum VestedAccountOrderByInput {
   VestingCliffBlockDesc = 'vesting_cliffBlock_DESC',
   VestingCliffDurationBlocksAsc = 'vesting_cliffDurationBlocks_ASC',
   VestingCliffDurationBlocksDesc = 'vesting_cliffDurationBlocks_DESC',
-  VestingCliffPercentAsc = 'vesting_cliffPercent_ASC',
-  VestingCliffPercentDesc = 'vesting_cliffPercent_DESC',
+  VestingCliffRatioPermillAsc = 'vesting_cliffRatioPermill_ASC',
+  VestingCliffRatioPermillDesc = 'vesting_cliffRatioPermill_DESC',
   VestingEndsAtAsc = 'vesting_endsAt_ASC',
   VestingEndsAtDesc = 'vesting_endsAt_DESC',
   VestingIdAsc = 'vesting_id_ASC',
@@ -11038,6 +11154,15 @@ export type VestedAccountWhereInput = {
   OR?: InputMaybe<Array<VestedAccountWhereInput>>
   account?: InputMaybe<TokenAccountWhereInput>
   account_isNull?: InputMaybe<Scalars['Boolean']>
+  acquiredAt_eq?: InputMaybe<Scalars['Int']>
+  acquiredAt_gt?: InputMaybe<Scalars['Int']>
+  acquiredAt_gte?: InputMaybe<Scalars['Int']>
+  acquiredAt_in?: InputMaybe<Array<Scalars['Int']>>
+  acquiredAt_isNull?: InputMaybe<Scalars['Boolean']>
+  acquiredAt_lt?: InputMaybe<Scalars['Int']>
+  acquiredAt_lte?: InputMaybe<Scalars['Int']>
+  acquiredAt_not_eq?: InputMaybe<Scalars['Int']>
+  acquiredAt_not_in?: InputMaybe<Array<Scalars['Int']>>
   id_contains?: InputMaybe<Scalars['String']>
   id_containsInsensitive?: InputMaybe<Scalars['String']>
   id_endsWith?: InputMaybe<Scalars['String']>
@@ -11120,8 +11245,8 @@ export enum VestedSaleOrderByInput {
   VestingCliffBlockDesc = 'vesting_cliffBlock_DESC',
   VestingCliffDurationBlocksAsc = 'vesting_cliffDurationBlocks_ASC',
   VestingCliffDurationBlocksDesc = 'vesting_cliffDurationBlocks_DESC',
-  VestingCliffPercentAsc = 'vesting_cliffPercent_ASC',
-  VestingCliffPercentDesc = 'vesting_cliffPercent_DESC',
+  VestingCliffRatioPermillAsc = 'vesting_cliffRatioPermill_ASC',
+  VestingCliffRatioPermillDesc = 'vesting_cliffRatioPermill_DESC',
   VestingEndsAtAsc = 'vesting_endsAt_ASC',
   VestingEndsAtDesc = 'vesting_endsAt_DESC',
   VestingIdAsc = 'vesting_id_ASC',
@@ -11171,8 +11296,8 @@ export type VestingSchedule = {
   cliffBlock: Scalars['Int']
   /** cliff duration in blocks */
   cliffDurationBlocks: Scalars['Int']
-  /** % of amount vested immediately after cliff period */
-  cliffPercent: Scalars['Int']
+  /** Permill of amount vested immediately after cliff period */
+  cliffRatioPermill: Scalars['Int']
   /** vesting ending block */
   endsAt: Scalars['Int']
   /** counter */
@@ -11201,8 +11326,8 @@ export enum VestingScheduleOrderByInput {
   CliffBlockDesc = 'cliffBlock_DESC',
   CliffDurationBlocksAsc = 'cliffDurationBlocks_ASC',
   CliffDurationBlocksDesc = 'cliffDurationBlocks_DESC',
-  CliffPercentAsc = 'cliffPercent_ASC',
-  CliffPercentDesc = 'cliffPercent_DESC',
+  CliffRatioPermillAsc = 'cliffRatioPermill_ASC',
+  CliffRatioPermillDesc = 'cliffRatioPermill_DESC',
   EndsAtAsc = 'endsAt_ASC',
   EndsAtDesc = 'endsAt_DESC',
   IdAsc = 'id_ASC',
@@ -11237,15 +11362,15 @@ export type VestingScheduleWhereInput = {
   cliffDurationBlocks_lte?: InputMaybe<Scalars['Int']>
   cliffDurationBlocks_not_eq?: InputMaybe<Scalars['Int']>
   cliffDurationBlocks_not_in?: InputMaybe<Array<Scalars['Int']>>
-  cliffPercent_eq?: InputMaybe<Scalars['Int']>
-  cliffPercent_gt?: InputMaybe<Scalars['Int']>
-  cliffPercent_gte?: InputMaybe<Scalars['Int']>
-  cliffPercent_in?: InputMaybe<Array<Scalars['Int']>>
-  cliffPercent_isNull?: InputMaybe<Scalars['Boolean']>
-  cliffPercent_lt?: InputMaybe<Scalars['Int']>
-  cliffPercent_lte?: InputMaybe<Scalars['Int']>
-  cliffPercent_not_eq?: InputMaybe<Scalars['Int']>
-  cliffPercent_not_in?: InputMaybe<Array<Scalars['Int']>>
+  cliffRatioPermill_eq?: InputMaybe<Scalars['Int']>
+  cliffRatioPermill_gt?: InputMaybe<Scalars['Int']>
+  cliffRatioPermill_gte?: InputMaybe<Scalars['Int']>
+  cliffRatioPermill_in?: InputMaybe<Array<Scalars['Int']>>
+  cliffRatioPermill_isNull?: InputMaybe<Scalars['Boolean']>
+  cliffRatioPermill_lt?: InputMaybe<Scalars['Int']>
+  cliffRatioPermill_lte?: InputMaybe<Scalars['Int']>
+  cliffRatioPermill_not_eq?: InputMaybe<Scalars['Int']>
+  cliffRatioPermill_not_in?: InputMaybe<Array<Scalars['Int']>>
   endsAt_eq?: InputMaybe<Scalars['Int']>
   endsAt_gt?: InputMaybe<Scalars['Int']>
   endsAt_gte?: InputMaybe<Scalars['Int']>
@@ -11388,7 +11513,7 @@ export type Video = {
   /** The title of the video */
   title?: Maybe<Scalars['String']>
   /** token for which this video is trailer */
-  trailerVideoForToken?: Maybe<Token>
+  trailerVideoForToken: Array<TrailerVideo>
   /** Video relevance score based on the views, reactions, comments and update date */
   videoRelevance: Scalars['Float']
   /** Value of video state bloat bond fee paid by channel owner */
@@ -11418,6 +11543,25 @@ export type VideoSubtitlesArgs = {
   offset?: InputMaybe<Scalars['Int']>
   orderBy?: InputMaybe<Array<VideoSubtitleOrderByInput>>
   where?: InputMaybe<VideoSubtitleWhereInput>
+}
+
+export type VideoTrailerVideoForTokenArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<TrailerVideoOrderByInput>>
+  where?: InputMaybe<TrailerVideoWhereInput>
+}
+
+export type VideoAssetsDeletedByModeratorEventData = {
+  __typename?: 'VideoAssetsDeletedByModeratorEventData'
+  /** IDs of video assets being deleted by moderator */
+  assetIds?: Maybe<Array<Scalars['BigInt']>>
+  /** Actor who deleted the video assets. */
+  deletedBy: ContentActor
+  /** why the video assets were deleted */
+  rationale: Scalars['String']
+  /** Video whose assets were deleted */
+  video: Video
 }
 
 export type VideoCategoriesConnection = {
@@ -12143,6 +12287,8 @@ export enum VideoOrderByInput {
   ChannelCreatedAtDesc = 'channel_createdAt_DESC',
   ChannelCreatedInBlockAsc = 'channel_createdInBlock_ASC',
   ChannelCreatedInBlockDesc = 'channel_createdInBlock_DESC',
+  ChannelCumulativeRevenueAsc = 'channel_cumulativeRevenue_ASC',
+  ChannelCumulativeRevenueDesc = 'channel_cumulativeRevenue_DESC',
   ChannelCumulativeRewardClaimedAsc = 'channel_cumulativeRewardClaimed_ASC',
   ChannelCumulativeRewardClaimedDesc = 'channel_cumulativeRewardClaimed_DESC',
   ChannelDescriptionAsc = 'channel_description_ASC',
@@ -12303,14 +12449,6 @@ export enum VideoOrderByInput {
   ThumbnailPhotoUnsetAtDesc = 'thumbnailPhoto_unsetAt_DESC',
   TitleAsc = 'title_ASC',
   TitleDesc = 'title_DESC',
-  TrailerVideoForTokenExpiryAsc = 'trailerVideoForToken_expiry_ASC',
-  TrailerVideoForTokenExpiryDesc = 'trailerVideoForToken_expiry_DESC',
-  TrailerVideoForTokenIdAsc = 'trailerVideoForToken_id_ASC',
-  TrailerVideoForTokenIdDesc = 'trailerVideoForToken_id_DESC',
-  TrailerVideoForTokenIssuedAtAsc = 'trailerVideoForToken_issuedAt_ASC',
-  TrailerVideoForTokenIssuedAtDesc = 'trailerVideoForToken_issuedAt_DESC',
-  TrailerVideoForTokenTypeAsc = 'trailerVideoForToken_type_ASC',
-  TrailerVideoForTokenTypeDesc = 'trailerVideoForToken_type_DESC',
   VideoRelevanceAsc = 'videoRelevance_ASC',
   VideoRelevanceDesc = 'videoRelevance_DESC',
   VideoStateBloatBondAsc = 'videoStateBloatBond_ASC',
@@ -12916,8 +13054,9 @@ export type VideoWhereInput = {
   title_not_in?: InputMaybe<Array<Scalars['String']>>
   title_not_startsWith?: InputMaybe<Scalars['String']>
   title_startsWith?: InputMaybe<Scalars['String']>
-  trailerVideoForToken?: InputMaybe<TokenWhereInput>
-  trailerVideoForToken_isNull?: InputMaybe<Scalars['Boolean']>
+  trailerVideoForToken_every?: InputMaybe<TrailerVideoWhereInput>
+  trailerVideoForToken_none?: InputMaybe<TrailerVideoWhereInput>
+  trailerVideoForToken_some?: InputMaybe<TrailerVideoWhereInput>
   videoRelevance_eq?: InputMaybe<Scalars['Float']>
   videoRelevance_gt?: InputMaybe<Scalars['Float']>
   videoRelevance_gte?: InputMaybe<Scalars['Float']>
