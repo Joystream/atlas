@@ -10,7 +10,7 @@ import { formatJoystreamAddress } from '@/utils/address'
 import { SentryLogger } from '@/utils/logs'
 import { retryWalletPromise } from '@/utils/misc'
 
-import { getWalletsList } from './wallet.helpers'
+import { filterUnsupportedAccounts, getWalletsList } from './wallet.helpers'
 
 const WalletContext = createContext<undefined | WalletContextValue>(undefined)
 WalletContext.displayName = 'WalletContext'
@@ -29,8 +29,7 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const setWalletAccounts = useCallback(
     async (accounts: WalletAccount[]) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const polkadotAccounts = accounts.filter((account: any) => account.type === 'sr25519')
+      const polkadotAccounts = accounts.filter(filterUnsupportedAccounts)
 
       const mappedAccounts = polkadotAccounts.map((account) => {
         return {
@@ -59,12 +58,14 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
         // taken from https://github.com/TalismanSociety/talisman-connect/blob/47cfefee9f1333326c0605c159d6ee8ebfba3e84/libs/wallets/src/lib/base-dotsama-wallet/index.ts#L98-L107
         // should be part of future talisman-connect release
         const accounts = await selectedWallet.extension.accounts.get()
+
         const accountsWithWallet = accounts
+          .filter(filterUnsupportedAccounts)
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           .map((account: any) => {
             return {
               ...account,
-              address: account.address,
+              address: formatJoystreamAddress(account.address),
               source: selectedWallet.extension?.name as string,
               wallet: selectedWallet,
               signer: selectedWallet.extension?.signer,

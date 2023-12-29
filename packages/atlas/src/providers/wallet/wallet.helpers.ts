@@ -17,6 +17,9 @@ export const getWalletsList = () => {
   return [...supportedWallets, ...unknownWallets]
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const filterUnsupportedAccounts = (account: any) => account.type === 'sr25519'
+
 export class UnknownWallet extends BaseDotsamaWallet {
   extensionName: string
   title: string
