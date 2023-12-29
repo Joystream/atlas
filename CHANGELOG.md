@@ -5,12 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [4.14.3] - 2023-12-08
+## [4.14.5] - 2023-12-29
+
+### Fixed
+
+- Fixed wallet problems when injecting ethereum addresses
+- Removed notification polling for anonymous users
+
+## [4.14.4] - 2023-12-08
 
 ### Fixed
 
 - Fixed atlas meta server query
-- Fiex basic channel query performance
+- Fixed basic channel query performance
 
 ## [4.14.3] - 2023-12-08
 
