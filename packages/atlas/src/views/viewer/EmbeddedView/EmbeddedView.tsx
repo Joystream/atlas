@@ -10,6 +10,7 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { absoluteRoutes } from '@/config/routes'
+import { useHeadTags } from '@/hooks/useHeadTags'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
 import { SentryLogger } from '@/utils/logs'
 
@@ -21,7 +22,7 @@ export const EmbeddedView: FC = () => {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
   })
   const { addVideoView } = useAddVideoView()
-
+  const headTags = useHeadTags(null, {})
   const mediaUrls = video?.media?.resolvedUrls
   const thumbnailUrls = video?.thumbnailPhoto?.resolvedUrls
   const channelAvatarUrls = video?.channel.avatarPhoto?.resolvedUrls
@@ -90,6 +91,7 @@ export const EmbeddedView: FC = () => {
 
   return (
     <>
+      {headTags}
       <EmbeddedGlobalStyles />
       <Container>
         {!loading && video ? (
