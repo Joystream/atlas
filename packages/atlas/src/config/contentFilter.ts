@@ -1,5 +1,4 @@
 import { ChannelWhereInput, VideoWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
-import { atlasConfig } from '@/config/config'
 
 export const publicChannelFilter: ChannelWhereInput = {
   isCensored_eq: false,
@@ -20,9 +19,9 @@ export const cancelledVideoFilter: VideoWhereInput = {
 export const publicCryptoVideoFilter: VideoWhereInput = {
   isPublic_eq: true,
   isCensored_eq: false,
-  category: {
-    id_in: atlasConfig.content.categories.find((category) => category.name === 'Crypto')?.videoCategories,
-  },
+  // category: {
+  //   id_in: atlasConfig.content.categories.find((category) => category.name === 'Crypto')?.videoCategories,
+  // },
   media: {
     isAccepted_eq: true,
   },

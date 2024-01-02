@@ -11,7 +11,8 @@ export type EnvironmentState = {
 export const ENV_PREFIX = 'VITE'
 
 const INITIAL_STATE: EnvironmentState = {
-  defaultDataEnv: import.meta.env[getEnvName('DEFAULT_DATA_ENV')] || import.meta.env[getEnvName('ENV')] || 'production',
+  defaultDataEnv:
+    'next' || import.meta.env[getEnvName('DEFAULT_DATA_ENV')] || import.meta.env[getEnvName('ENV')] || 'production',
   nodeOverride: null,
 }
 
