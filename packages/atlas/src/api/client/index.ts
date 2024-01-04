@@ -8,6 +8,29 @@ import { useUserLocationStore } from '@/providers/userLocation'
 
 import { cache } from './cache'
 
+const initializePerformanceObserver = () => {
+  try {
+    const observer = new PerformanceObserver((list) => {
+      for (const entry of list.getEntries()) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if ((entry as any).initiatorType === 'fetch') {
+          const queryString = entry.name.split('?')?.[1]
+          const params = new URLSearchParams(queryString)
+          const queryType = params.get('queryName')
+          // eslint-disable-next-line no-console
+          console.log(`Query ${queryType ?? entry.name} took ${entry.duration}ms to complete`, entry)
+        }
+      }
+    })
+    // Start listening for `resource` entries to be dispatched.
+    observer.observe({ type: 'resource', buffered: true })
+  } catch (e) {
+    // Do nothing if the browser doesn't support this API.
+  }
+}
+
+initializePerformanceObserver()
+
 const delayLink = new ApolloLink((operation, forward) => {
   const ctx = operation.getContext()
   if (!ctx.delay) {
@@ -31,11 +54,29 @@ export const createApolloClient = () => {
     })
   )
 
-  const orionLink = ApolloLink.from([delayLink, new HttpLink({ uri: ORION_GRAPHQL_URL, credentials: 'include' })])
+  const orionLink = ApolloLink.from([
+    delayLink,
+    new HttpLink({
+      uri: ORION_GRAPHQL_URL,
+      credentials: 'include',
+      fetch: async (uri, options) => {
+        const queryName = options?.headers
+          ? (options.headers?.['queryname' as keyof typeof options.headers] as string)
+          : null
+        const queryString = queryName ? `?queryName=${queryName}` : ''
+        return fetch(`${uri}${queryString}`, options)
+      },
+    }),
+  ])
 
   const operationSplitLink = split(
     ({ query, setContext }) => {
       const locationStore = useUserLocationStore.getState()
+      const firstDefinition = query.definitions[0]
+      let queryName: string | null | undefined = null
+      if (firstDefinition.kind === 'OperationDefinition' && firstDefinition.operation === 'query') {
+        queryName = firstDefinition.name?.value
+      }
 
       if (
         !locationStore.disableUserLocation &&
@@ -47,6 +88,7 @@ export const createApolloClient = () => {
             headers: {
               ...headers,
               'x-client-loc': `${locationStore?.coordinates?.latitude}, ${locationStore.coordinates?.longitude}`,
+              ...(queryName ? { queryName } : {}),
             },
           }
         })
