@@ -1,3 +1,4 @@
+import { isAxiosError } from 'axios'
 import { useCallback, useEffect, useState } from 'react'
 import { useMutation } from 'react-query'
 import { useNavigate } from 'react-router'
@@ -228,8 +229,17 @@ export const YppDashboardSettingsTab = () => {
         })
         return
       }
-
       SentryLogger.error('Error while opting out: ', e)
+
+      if (isAxiosError(e)) {
+        displaySnackbar({
+          title: 'Something went wrong',
+          description: e.response?.data?.message ?? 'Failed to leave the program. Try again later',
+          iconType: 'error',
+        })
+        return
+      }
+
       displaySnackbar({
         title: 'Something went wrong',
         description: 'Failed to leave the program. Try again later',
