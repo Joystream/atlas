@@ -161,6 +161,10 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
   }, [fetchStorageOperators, isStudio])
 
   useMountEffect(() => {
+    getUserCoordinates()
+  })
+
+  useMountEffect(() => {
     const initBenchmark = async () => {
       const thumbnail = benchmarkData?.videos
         ? benchmarkData?.videos[Math.floor(Math.random() * benchmarkData.videos.length)].thumbnailPhoto
