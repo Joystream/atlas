@@ -11,6 +11,7 @@ import { OperatorsContextProvider } from '@/providers/assets/assets.provider'
 import { handleAnonymousAuth } from '@/providers/auth/auth.helpers'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
+import { OverlayManagerProvider } from '@/providers/overlayManager'
 import { SegmentAnalyticsProvider } from '@/providers/segmentAnalytics/segment.provider'
 import { GlobalStyles } from '@/styles'
 import { EmbeddedView } from '@/views/viewer/EmbeddedView'
@@ -57,9 +58,11 @@ export const EmbeddedCommonProviders: FC<PropsWithChildren> = ({ children }) => 
           <QueryClientProvider client={queryClient}>
             <AnonymousEmbeddedProvider>
               <ConfirmationModalProvider>
-                <BrowserRouter>
-                  <OperatorsContextProvider>{children}</OperatorsContextProvider>
-                </BrowserRouter>
+                <OverlayManagerProvider>
+                  <BrowserRouter>
+                    <OperatorsContextProvider>{children}</OperatorsContextProvider>
+                  </BrowserRouter>
+                </OverlayManagerProvider>
               </ConfirmationModalProvider>
             </AnonymousEmbeddedProvider>
           </QueryClientProvider>
