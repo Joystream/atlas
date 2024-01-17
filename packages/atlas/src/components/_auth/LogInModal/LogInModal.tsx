@@ -44,7 +44,10 @@ export const LogInModal = () => {
   } = useForm<{ email: string; password: string }>({
     resolver: zodResolver(
       z.object({
-        email: z.string().min(3, { message: 'Enter email address.' }).email({ message: 'Enter valid email address.' }),
+        email: z
+          .string()
+          .min(3, { message: 'Enter email address.' })
+          .regex(/^\S+@\S+\.\S+$/, 'Enter valid email address.'),
         password: z.string().min(1, 'Enter password.'),
       })
     ),

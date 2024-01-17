@@ -39,7 +39,7 @@ export const ExternalSignInModal: FC = () => {
   const form = useForm<{ email: string }>({
     resolver: zodResolver(
       z.object({
-        email: z.string().email(),
+        email: z.string().regex(/^\S+@\S+\.\S+$/, 'Enter valid email address.'),
       })
     ),
   })
