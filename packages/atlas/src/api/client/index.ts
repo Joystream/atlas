@@ -62,7 +62,6 @@ export const createApolloClient = () => {
         const queryName = options?.headers
           ? (options.headers?.['queryname' as keyof typeof options.headers] as string)
           : null
-        console.log('Options', options)
         const queryString = queryName ? `?queryName=${queryName}` : ''
         return fetch(`${uri}${queryString}`, options)
       },
@@ -78,6 +77,17 @@ export const createApolloClient = () => {
         queryName = firstDefinition.name?.value
       }
 
+      if (queryName) {
+        setContext(({ headers }: Record<string, object>) => {
+          return {
+            headers: {
+              ...headers,
+              ...(queryName ? { queryName } : {}),
+            },
+          }
+        })
+      }
+
       if (
         !locationStore.disableUserLocation &&
         locationStore.coordinates?.latitude &&
@@ -88,7 +98,6 @@ export const createApolloClient = () => {
             headers: {
               ...headers,
               'x-client-loc': `${locationStore?.coordinates?.latitude}, ${locationStore.coordinates?.longitude}`,
-              ...(queryName ? { queryName } : {}),
             },
           }
         })
