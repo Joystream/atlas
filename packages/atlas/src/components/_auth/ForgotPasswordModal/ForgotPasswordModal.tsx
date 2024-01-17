@@ -29,7 +29,10 @@ const commonPasswordValidation = z
 
 const schema = z.object({
   [ForgotPasswordStep.EmailAndSeedStep]: z.object({
-    email: z.string().min(3, { message: 'Enter email address.' }).email({ message: 'Enter valid email address.' }),
+    email: z
+      .string()
+      .min(3, { message: 'Enter email address.' })
+      .regex(/^\S+@\S+\.\S+$/, 'Enter valid email address.'),
     mnemonic: z
       .string()
       .min(1, 'Enter wallet seed phrase.')

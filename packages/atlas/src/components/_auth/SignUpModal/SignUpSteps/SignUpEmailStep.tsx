@@ -17,11 +17,14 @@ import { AuthenticationModalStepTemplate } from '../../AuthenticationModalStepTe
 
 const zodSchema = z
   .object({
-    email: z.string().min(3, { message: 'Enter email address.' }).email({ message: 'Enter valid email address.' }),
+    email: z
+      .string()
+      .min(3, { message: 'Enter email address.' })
+      .regex(/^\S+@\S+\.\S+$/, 'Enter valid email address.'),
     confirmEmail: z
       .string()
       .min(1, { message: 'Enter email address.' })
-      .email({ message: 'Enter valid email address.' }),
+      .regex(/^\S+@\S+\.\S+$/, 'Enter valid email address.'),
     confirmedTerms: z.boolean().refine((value) => value, { message: 'Agree to Terms and Conditions to continue.' }),
   })
   .refine(
