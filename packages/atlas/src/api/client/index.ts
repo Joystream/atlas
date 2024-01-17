@@ -12,8 +12,7 @@ const initializePerformanceObserver = () => {
   try {
     const observer = new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if ((entry as any).initiatorType === 'fetch') {
+        if (['fetch', 'xmlhttprequest'].includes((entry as PerformanceResourceTiming).initiatorType)) {
           const queryString = entry.name.split('?')?.[1]
           const params = new URLSearchParams(queryString)
           const queryType = params.get('queryName')
@@ -63,6 +62,7 @@ export const createApolloClient = () => {
         const queryName = options?.headers
           ? (options.headers?.['queryname' as keyof typeof options.headers] as string)
           : null
+        console.log('Options', options)
         const queryString = queryName ? `?queryName=${queryName}` : ''
         return fetch(`${uri}${queryString}`, options)
       },
