@@ -5,6 +5,7 @@ import { createClient } from 'graphql-ws'
 
 import { ORION_GRAPHQL_URL, QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL } from '@/config/env'
 import { useUserLocationStore } from '@/providers/userLocation'
+import { UserEventsLogger } from '@/utils/logs'
 
 import { cache } from './cache'
 
@@ -16,8 +17,10 @@ const initializePerformanceObserver = () => {
           const queryString = entry.name.split('?')?.[1]
           const params = new URLSearchParams(queryString)
           const queryType = params.get('queryName')
-          // eslint-disable-next-line no-console
-          console.log(`Query ${queryType ?? entry.name} took ${entry.duration}ms to complete`, entry)
+          UserEventsLogger.logUserEvent('request-response-time', {
+            requestName: queryType ?? entry.name,
+            timeToComplete: entry.duration,
+          })
         }
       }
     })
