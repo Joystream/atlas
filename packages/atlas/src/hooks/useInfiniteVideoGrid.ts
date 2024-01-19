@@ -1,11 +1,11 @@
 import { QueryHookOptions, useQuery as useApolloQuery } from '@apollo/client'
 import { DocumentNode } from 'graphql'
 
+import { QueryHomepageVideosArgs } from '@/api/queries/__generated__/baseTypes.generated'
 import {
   GetBasicVideosConnectionQuery,
   GetBasicVideosConnectionQueryVariables,
-  GetMostViewedVideosConnectionQuery,
-  GetMostViewedVideosConnectionQueryVariables,
+  GetHomepageVideosQuery,
 } from '@/api/queries/__generated__/videos.generated'
 import { DEFAULT_VIDEO_GRID } from '@/styles'
 import { createPlaceholderData } from '@/utils/data'
@@ -13,13 +13,13 @@ import { createPlaceholderData } from '@/utils/data'
 import { useBreakpointKey } from './useBreakpointKey'
 import { useVideoGridRows } from './useVideoGridRows'
 
-type VideoInfiniteQueries = GetBasicVideosConnectionQuery | GetMostViewedVideosConnectionQuery
+type VideoInfiniteQueries = GetBasicVideosConnectionQuery | GetHomepageVideosQuery
 
 type useGridTilesOpts<Query extends VideoInfiniteQueries> = {
   query: DocumentNode
   variables: Query extends GetBasicVideosConnectionQuery
     ? GetBasicVideosConnectionQueryVariables
-    : GetMostViewedVideosConnectionQueryVariables
+    : QueryHomepageVideosArgs
   options?: Omit<QueryHookOptions, 'variables'>
 }
 
@@ -39,22 +39,35 @@ export const useInfiniteVideoGrid = <Query extends VideoInfiniteQueries>({
     skip: !columns,
     variables: {
       ...variables,
+      limit: columns * initialRowsToLoad,
       first: columns * initialRowsToLoad,
     },
   })
-  const dataConnection =
-    data && ('mostViewedVideosConnection' in data ? data.mostViewedVideosConnection : data.videosConnection)
 
-  const firstLoad = !dataConnection?.edges && loading
+  const dataConnection = data && ('homepageVideos' in data ? data.homepageVideos : data.videosConnection)
+
+  const firstLoad = !dataConnection && loading
   const firstLoadPlaceholders = firstLoad ? createPlaceholderData(columns * initialRowsToLoad) : []
+  const displayedItems = dataConnection
+    ? 'edges' in dataConnection
+      ? dataConnection.edges.map((edge) => edge.node)
+      : dataConnection?.video
+    : []
 
-  const displayedItems = dataConnection?.edges.map((edge) => edge.node) || []
-  const nextLoadPlaceholders = dataConnection?.pageInfo.hasNextPage ? createPlaceholderData(columns * 4) : []
+  const nextLoadPlaceholders = dataConnection
+    ? 'pageInfo' in dataConnection
+      ? dataConnection.pageInfo.hasNextPage
+        ? createPlaceholderData(columns * 4)
+        : []
+      : createPlaceholderData(columns * 4)
+    : []
 
   return {
     tiles: [...firstLoadPlaceholders, ...displayedItems, ...(loading ? nextLoadPlaceholders : [])],
     fetchMore,
-    pageInfo: dataConnection?.pageInfo,
+    rawData: data as Query,
+    pageInfo: dataConnection ? ('pageInfo' in dataConnection ? dataConnection?.pageInfo : undefined) : undefined,
     columns,
+    loading,
   }
 }

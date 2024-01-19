@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 
 import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
-import { GetBasicVideosConnectionLightweightDocument } from '@/api/queries/__generated__/videos.generated'
+import { GetHomepageVideosDocument, GetHomepageVideosQuery } from '@/api/queries/__generated__/videos.generated'
 import { Section } from '@/components/Section/Section'
 import { ReferralsBanner } from '@/components/_referrals/ReferralsBanner/ReferralsBanner'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
@@ -14,20 +14,22 @@ import { useInfiniteVideoGrid } from '@/hooks/useInfiniteVideoGrid'
 import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { DEFAULT_VIDEO_GRID, sizes } from '@/styles'
+import { InteractionsService } from '@/utils/InteractionsService'
 import { InfiniteLoadingOffsets } from '@/utils/loading.contants'
 
 export const HomeView: FC = () => {
+  const numberOfPages = useRef(0)
   const location = useLocation()
   const {
     actions: { setAuthModalOpenName },
   } = useAuthStore()
 
   const headTags = useHeadTags()
-  const { columns, fetchMore, pageInfo, tiles } = useInfiniteVideoGrid({
-    query: GetBasicVideosConnectionLightweightDocument,
+  const { columns, fetchMore, tiles, rawData, loading } = useInfiniteVideoGrid<GetHomepageVideosQuery>({
+    query: GetHomepageVideosDocument,
     variables: {
       where: publicCryptoVideoFilter,
-      orderBy: VideoOrderByInput.VideoRelevanceDesc,
+      orderBy: [VideoOrderByInput.VideoRelevanceDesc],
     },
   })
 
@@ -46,17 +48,35 @@ export const HomeView: FC = () => {
         contentProps={{
           type: 'grid',
           grid: DEFAULT_VIDEO_GRID,
-          children: tiles?.map((video, idx) => <VideoTileViewer id={video.id} key={idx} />),
+          children: tiles?.map((video) => (
+            <VideoTileViewer
+              id={video.id}
+              key={video.id}
+              onClick={() => {
+                if (video.id) {
+                  InteractionsService.videoClicked(video.id, { recommId: rawData.homepageVideos.recommId })
+                }
+              }}
+            />
+          )),
         }}
         footerProps={{
-          reachedEnd: !pageInfo?.hasNextPage,
+          reachedEnd: loading || !(numberOfPages.current < 20),
           fetchMore: async () => {
-            if (pageInfo?.hasNextPage) {
-              await fetchMore({
-                variables: { first: columns * 4, after: pageInfo.endCursor },
+            if (!loading && numberOfPages.current < 20) {
+              fetchMore({
+                variables: { prevRecommId: rawData.homepageVideos.recommId, limit: columns * 4 },
+                updateQuery: (prev, { fetchMoreResult }) => {
+                  fetchMoreResult.homepageVideos.video = [
+                    ...(prev.homepageVideos?.video ?? []),
+                    ...fetchMoreResult.homepageVideos.video,
+                  ]
+                  return fetchMoreResult
+                },
+              }).then(() => {
+                numberOfPages.current++
               })
             }
-            return
           },
           type: 'infinite',
           loadingTriggerOffset: InfiniteLoadingOffsets.VideoTile,

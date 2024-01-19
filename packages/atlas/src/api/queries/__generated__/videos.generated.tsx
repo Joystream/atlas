@@ -1,5 +1,5 @@
-import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
+import { gql } from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
 import {
@@ -1702,6 +1702,149 @@ export type GetVideosCountQuery = {
   videosConnection: { __typename?: 'VideosConnection'; totalCount: number }
 }
 
+export type GetHomepageVideosQueryVariables = Types.Exact<{
+  prevRecommId?: Types.InputMaybe<Types.Scalars['String']>
+  limit?: Types.InputMaybe<Types.Scalars['Int']>
+}>
+
+export type GetHomepageVideosQuery = {
+  __typename?: 'Query'
+  homepageVideos: {
+    __typename?: 'RecommendedVideosQuery'
+    numberNextRecommsCalls?: number | null
+    recommId: string
+    video: Array<{
+      __typename?: 'Video'
+      id: string
+      title?: string | null
+      viewsNum: number
+      createdAt: Date
+      duration?: number | null
+      reactionsCount: number
+      commentsCount: number
+      channel: {
+        __typename?: 'Channel'
+        id: string
+        title?: string | null
+        description?: string | null
+        createdAt: Date
+        followsNum: number
+        rewardAccount: string
+        channelStateBloatBond: string
+        avatarPhoto?: {
+          __typename?: 'StorageDataObject'
+          id: string
+          resolvedUrls: Array<string>
+          createdAt: Date
+          size: string
+          isAccepted: boolean
+          ipfsHash: string
+          storageBag: { __typename?: 'StorageBag'; id: string }
+          type?:
+            | { __typename: 'DataObjectTypeChannelAvatar' }
+            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+            | { __typename: 'DataObjectTypeVideoMedia' }
+            | { __typename: 'DataObjectTypeVideoSubtitle' }
+            | { __typename: 'DataObjectTypeVideoThumbnail' }
+            | null
+        } | null
+      }
+      nft?: { __typename?: 'OwnedNft'; id: string } | null
+      thumbnailPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        resolvedUrls: Array<string>
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type?:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+          | null
+      } | null
+    }>
+  }
+}
+
+export type GetSimiliarVideosQueryVariables = Types.Exact<{
+  videoId: Types.Scalars['String']
+  prevRecommId?: Types.InputMaybe<Types.Scalars['String']>
+  limit?: Types.InputMaybe<Types.Scalars['Int']>
+}>
+
+export type GetSimiliarVideosQuery = {
+  __typename?: 'Query'
+  similiarVideos: {
+    __typename?: 'RecommendedVideosQuery'
+    numberNextRecommsCalls?: number | null
+    recommId: string
+    video: Array<{
+      __typename?: 'Video'
+      id: string
+      title?: string | null
+      viewsNum: number
+      createdAt: Date
+      duration?: number | null
+      reactionsCount: number
+      commentsCount: number
+      channel: {
+        __typename?: 'Channel'
+        id: string
+        title?: string | null
+        description?: string | null
+        createdAt: Date
+        followsNum: number
+        rewardAccount: string
+        channelStateBloatBond: string
+        avatarPhoto?: {
+          __typename?: 'StorageDataObject'
+          id: string
+          resolvedUrls: Array<string>
+          createdAt: Date
+          size: string
+          isAccepted: boolean
+          ipfsHash: string
+          storageBag: { __typename?: 'StorageBag'; id: string }
+          type?:
+            | { __typename: 'DataObjectTypeChannelAvatar' }
+            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+            | { __typename: 'DataObjectTypeVideoMedia' }
+            | { __typename: 'DataObjectTypeVideoSubtitle' }
+            | { __typename: 'DataObjectTypeVideoThumbnail' }
+            | null
+        } | null
+      }
+      nft?: { __typename?: 'OwnedNft'; id: string } | null
+      thumbnailPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        resolvedUrls: Array<string>
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type?:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+          | null
+      } | null
+    }>
+  }
+}
+
 export type AddVideoViewMutationVariables = Types.Exact<{
   videoId: Types.Scalars['String']
 }>
@@ -2228,6 +2371,103 @@ export function useGetVideosCountLazyQuery(
 export type GetVideosCountQueryHookResult = ReturnType<typeof useGetVideosCountQuery>
 export type GetVideosCountLazyQueryHookResult = ReturnType<typeof useGetVideosCountLazyQuery>
 export type GetVideosCountQueryResult = Apollo.QueryResult<GetVideosCountQuery, GetVideosCountQueryVariables>
+export const GetHomepageVideosDocument = gql`
+  query GetHomepageVideos($prevRecommId: String, $limit: Int) {
+    homepageVideos(recommId: $prevRecommId, limit: $limit) {
+      video {
+        ...BasicVideoFields
+      }
+      numberNextRecommsCalls
+      recommId
+    }
+  }
+  ${BasicVideoFieldsFragmentDoc}
+`
+
+/**
+ * __useGetHomepageVideosQuery__
+ *
+ * To run a query within a React component, call `useGetHomepageVideosQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetHomepageVideosQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetHomepageVideosQuery({
+ *   variables: {
+ *      prevRecommId: // value for 'prevRecommId'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useGetHomepageVideosQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetHomepageVideosQuery, GetHomepageVideosQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetHomepageVideosQuery, GetHomepageVideosQueryVariables>(GetHomepageVideosDocument, options)
+}
+export function useGetHomepageVideosLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetHomepageVideosQuery, GetHomepageVideosQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetHomepageVideosQuery, GetHomepageVideosQueryVariables>(
+    GetHomepageVideosDocument,
+    options
+  )
+}
+export type GetHomepageVideosQueryHookResult = ReturnType<typeof useGetHomepageVideosQuery>
+export type GetHomepageVideosLazyQueryHookResult = ReturnType<typeof useGetHomepageVideosLazyQuery>
+export type GetHomepageVideosQueryResult = Apollo.QueryResult<GetHomepageVideosQuery, GetHomepageVideosQueryVariables>
+export const GetSimiliarVideosDocument = gql`
+  query GetSimiliarVideos($videoId: String!, $prevRecommId: String, $limit: Int) {
+    similiarVideos(recommId: $prevRecommId, videoId: $videoId, limit: $limit) {
+      video {
+        ...BasicVideoFields
+      }
+      numberNextRecommsCalls
+      recommId
+    }
+  }
+  ${BasicVideoFieldsFragmentDoc}
+`
+
+/**
+ * __useGetSimiliarVideosQuery__
+ *
+ * To run a query within a React component, call `useGetSimiliarVideosQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSimiliarVideosQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSimiliarVideosQuery({
+ *   variables: {
+ *      videoId: // value for 'videoId'
+ *      prevRecommId: // value for 'prevRecommId'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useGetSimiliarVideosQuery(
+  baseOptions: Apollo.QueryHookOptions<GetSimiliarVideosQuery, GetSimiliarVideosQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetSimiliarVideosQuery, GetSimiliarVideosQueryVariables>(GetSimiliarVideosDocument, options)
+}
+export function useGetSimiliarVideosLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetSimiliarVideosQuery, GetSimiliarVideosQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetSimiliarVideosQuery, GetSimiliarVideosQueryVariables>(
+    GetSimiliarVideosDocument,
+    options
+  )
+}
+export type GetSimiliarVideosQueryHookResult = ReturnType<typeof useGetSimiliarVideosQuery>
+export type GetSimiliarVideosLazyQueryHookResult = ReturnType<typeof useGetSimiliarVideosLazyQuery>
+export type GetSimiliarVideosQueryResult = Apollo.QueryResult<GetSimiliarVideosQuery, GetSimiliarVideosQueryVariables>
 export const AddVideoViewDocument = gql`
   mutation AddVideoView($videoId: String!) {
     addVideoView(videoId: $videoId) {

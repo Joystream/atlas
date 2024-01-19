@@ -126,6 +126,26 @@ query GetVideosCount($where: VideoWhereInput) {
   }
 }
 
+query GetHomepageVideos($prevRecommId: String, $limit: Int) {
+  homepageVideos(recommId: $prevRecommId, limit: $limit) {
+    video {
+      ...BasicVideoFields
+    }
+    numberNextRecommsCalls
+    recommId
+  }
+}
+
+query GetSimiliarVideos($videoId: String!, $prevRecommId: String, $limit: Int) {
+  similiarVideos(recommId: $prevRecommId, videoId: $videoId, limit: $limit) {
+    video {
+      ...BasicVideoFields
+    }
+    numberNextRecommsCalls
+    recommId
+  }
+}
+
 # CHANGE: `channelId` and `categoryId` args were removed, ID is now `String`
 mutation AddVideoView($videoId: String!) {
   addVideoView(videoId: $videoId) {
