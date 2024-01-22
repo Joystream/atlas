@@ -126,8 +126,8 @@ query GetVideosCount($where: VideoWhereInput) {
   }
 }
 
-query GetHomepageVideos($prevRecommId: String, $limit: Int) {
-  homepageVideos(recommId: $prevRecommId, limit: $limit) {
+query GetHomepageVideos($prevRecommId: String, $limit: Int, $where: VideoWhereInput, $orderBy: [VideoOrderByInput!]) {
+  homepageVideos(recommId: $prevRecommId, limit: $limit, where: $where, orderBy: $orderBy) {
     video {
       ...BasicVideoFields
     }
@@ -136,8 +136,8 @@ query GetHomepageVideos($prevRecommId: String, $limit: Int) {
   }
 }
 
-query GetSimiliarVideos($videoId: String!, $prevRecommId: String, $limit: Int) {
-  similiarVideos(recommId: $prevRecommId, videoId: $videoId, limit: $limit) {
+query GetSimiliarVideos($videoId: String!, $prevRecommId: String, $limit: Int, $where: VideoWhereInput, $orderBy: [VideoOrderByInput!]) {
+  similiarVideos(recommId: $prevRecommId, videoId: $videoId, limit: $limit, where: $where, orderBy: $orderBy) {
     video {
       ...BasicVideoFields
     }

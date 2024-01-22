@@ -34,7 +34,7 @@ class _InteractionsService {
 
   async videoPortion(videoId: string, { recommId, portion }: PortionOptions) {
     return axiosInstance.post(
-      `${this.uri}/video-consumed`,
+      `${this.uri}/video-portion`,
       {
         recommId,
         portion,

@@ -7,6 +7,7 @@ import { useInView } from 'react-intersection-observer'
 import { useParams } from 'react-router-dom'
 
 import { useAddVideoView, useFullVideo } from '@/api/hooks/video'
+import { useGetSimiliarVideosQuery } from '@/api/queries/__generated__/videos.generated'
 import { SvgActionFlag, SvgActionMore, SvgActionShare } from '@/assets/icons'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
@@ -21,6 +22,7 @@ import { NftWidget, useNftWidget } from '@/components/_nft/NftWidget'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { ReportModal } from '@/components/_overlays/ReportModal'
 import { AvailableTrack } from '@/components/_video/VideoPlayer/SettingsButtonWithPopover'
+import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { atlasConfig } from '@/config'
 import { displayCategories } from '@/config/categories'
 import { getSingleAssetUrl } from '@/hooks/useGetAssetUrl'
@@ -29,6 +31,7 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
+import { useVideoPortion } from '@/hooks/useVideoPortion'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
 import { VideoReaction } from '@/joystream-lib/types'
 import { useFee } from '@/providers/joystream'
@@ -37,6 +40,8 @@ import { useOverlayManager } from '@/providers/overlayManager'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user/user.hooks'
 import { transitions } from '@/styles'
+import { InteractionsService } from '@/utils/InteractionsService'
+import { createPlaceholderData } from '@/utils/data'
 import { SentryLogger } from '@/utils/logs'
 import { formatDate } from '@/utils/time'
 
@@ -66,13 +71,25 @@ const DISABLE_VIEWS = true
 export const VideoView: FC = () => {
   const { id } = useParams()
   const { memberId, isLoggedIn } = useUser()
+  const lgMatch = useMediaMatch('lg')
   const [showReportDialog, setShowReportDialog] = useState(false)
   const [reactionFee, setReactionFee] = useState<BN | undefined>()
   const [availableTracks, setAvailableTracks] = useState<AvailableTrack[]>([])
   const { openNftPutOnSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement, cancelNftSale } =
     useNftActions()
   const { trackPageView } = useSegmentAnalytics()
+
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
+  const { loading: loadingRecommendations, data } = useGetSimiliarVideosQuery({
+    variables: {
+      videoId: id ?? '',
+      limit: 10,
+    },
+    skip: !id,
+  })
+  const placeholderItems = loadingRecommendations && !data?.similiarVideos.video.length ? createPlaceholderData(10) : []
+  const displayedRecommendationItems = loadingRecommendations ? [] : data?.similiarVideos.video ?? []
+
   const { loading, video, error } = useFullVideo(
     id ?? '',
     {
@@ -91,6 +108,18 @@ export const VideoView: FC = () => {
       },
     }
   )
+  const { registerVideoTick, clearTimer } = useVideoPortion(video?.duration ?? 9999, (milestone) => {
+    if (!video) {
+      return
+    }
+    if (milestone === 0.25) {
+      // addVideoView()
+    }
+    if (milestone === 0.9) {
+      InteractionsService.videoConsumed(video.id)
+    }
+    InteractionsService.videoPortion(video.id, { portion: milestone })
+  })
   const [isInView, ref] = useIntersectionObserver()
   const [videoReactionProcessing, setVideoReactionProcessing] = useState(false)
   const [isCommenting, setIsCommenting] = useState<boolean>(false)
@@ -209,12 +238,16 @@ export const VideoView: FC = () => {
     [video?.id]
   )
 
+  // onTimeUpdate from videojs lib sends an event each 265ms on average
+  const handleVideoTick = useCallback((rate: number) => registerVideoTick(265, rate), [registerVideoTick])
+
   const handleVideoEnd = useCallback(() => {
     if (video?.id) {
       handleTimeUpdate.cancel()
+      clearTimer()
       updateWatchedVideos('COMPLETED', video?.id)
     }
-  }, [video?.id, handleTimeUpdate, updateWatchedVideos])
+  }, [video?.id, handleTimeUpdate, clearTimer, updateWatchedVideos])
 
   const { getTxFee: getReactionFee } = useFee('reactToVideoTx')
 
@@ -317,6 +350,22 @@ export const VideoView: FC = () => {
               onWithdrawBid={(bid, createdAt) => id && createdAt && bid && withdrawBid(id, bid, createdAt)}
             />
           )}
+      <LayoutGrid>
+        {[...placeholderItems, ...displayedRecommendationItems].map((video, idx) => (
+          <GridItem key={`similiar-videos-${idx}`} colSpan={{ xxs: 12, sm: 6, md: 12 }}>
+            <VideoTileViewer
+              id={video.id}
+              detailsVariant="withChannelName"
+              direction={lgMatch ? 'horizontal' : 'vertical'}
+              onClick={() => {
+                if (video.id) {
+                  InteractionsService.videoClicked(video.id, { recommId: data?.similiarVideos.recommId })
+                }
+              }}
+            />
+          </GridItem>
+        ))}
+      </LayoutGrid>
       <MoreVideos channelId={channelId} channelName={channelName} videoId={id} type="channel" />
       {belongsToCategories?.map((category) => (
         <MoreVideos
@@ -434,7 +483,10 @@ export const VideoView: FC = () => {
                   autoplay
                   videoUrls={mediaUrls}
                   onEnd={handleVideoEnd}
-                  onTimeUpdated={handleTimeUpdate}
+                  onTimeUpdated={(time, rate) => {
+                    handleTimeUpdate(time)
+                    handleVideoTick(rate)
+                  }}
                   startTime={startTimestamp}
                   isPlayNextDisabled={pausePlayNext}
                   ref={playerRef}

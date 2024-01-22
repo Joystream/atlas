@@ -1,11 +1,11 @@
 import { QueryHookOptions, useQuery as useApolloQuery } from '@apollo/client'
 import { DocumentNode } from 'graphql'
 
-import { QueryHomepageVideosArgs } from '@/api/queries/__generated__/baseTypes.generated'
 import {
   GetBasicVideosConnectionQuery,
   GetBasicVideosConnectionQueryVariables,
   GetHomepageVideosQuery,
+  GetHomepageVideosQueryVariables,
 } from '@/api/queries/__generated__/videos.generated'
 import { DEFAULT_VIDEO_GRID } from '@/styles'
 import { createPlaceholderData } from '@/utils/data'
@@ -19,7 +19,7 @@ type useGridTilesOpts<Query extends VideoInfiniteQueries> = {
   query: DocumentNode
   variables: Query extends GetBasicVideosConnectionQuery
     ? GetBasicVideosConnectionQueryVariables
-    : QueryHomepageVideosArgs
+    : GetHomepageVideosQueryVariables
   options?: Omit<QueryHookOptions, 'variables'>
 }
 

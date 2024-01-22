@@ -18,7 +18,7 @@ export type VideoJsConfig = {
   onPlay?: () => void
   onPause?: () => void
   onEnd?: () => void
-  onTimeUpdated?: (time: number) => void
+  onTimeUpdated?: (time: number, playbackRate: number) => void
 }
 
 type VideoJsPlayerHook = (config: VideoJsConfig) => [VideoJsPlayer | null, RefObject<HTMLVideoElement>]
@@ -191,7 +191,7 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
     if (!player || !onTimeUpdated) {
       return
     }
-    const handler = () => onTimeUpdated(player.currentTime())
+    const handler = () => onTimeUpdated(player.currentTime(), player.playbackRate())
     player.on('timeupdate', handler)
 
     return () => player.off('timeupdate', handler)

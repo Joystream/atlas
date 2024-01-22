@@ -1705,6 +1705,8 @@ export type GetVideosCountQuery = {
 export type GetHomepageVideosQueryVariables = Types.Exact<{
   prevRecommId?: Types.InputMaybe<Types.Scalars['String']>
   limit?: Types.InputMaybe<Types.Scalars['Int']>
+  where?: Types.InputMaybe<Types.VideoWhereInput>
+  orderBy?: Types.InputMaybe<Array<Types.VideoOrderByInput> | Types.VideoOrderByInput>
 }>
 
 export type GetHomepageVideosQuery = {
@@ -1777,6 +1779,8 @@ export type GetSimiliarVideosQueryVariables = Types.Exact<{
   videoId: Types.Scalars['String']
   prevRecommId?: Types.InputMaybe<Types.Scalars['String']>
   limit?: Types.InputMaybe<Types.Scalars['Int']>
+  where?: Types.InputMaybe<Types.VideoWhereInput>
+  orderBy?: Types.InputMaybe<Array<Types.VideoOrderByInput> | Types.VideoOrderByInput>
 }>
 
 export type GetSimiliarVideosQuery = {
@@ -2372,8 +2376,8 @@ export type GetVideosCountQueryHookResult = ReturnType<typeof useGetVideosCountQ
 export type GetVideosCountLazyQueryHookResult = ReturnType<typeof useGetVideosCountLazyQuery>
 export type GetVideosCountQueryResult = Apollo.QueryResult<GetVideosCountQuery, GetVideosCountQueryVariables>
 export const GetHomepageVideosDocument = gql`
-  query GetHomepageVideos($prevRecommId: String, $limit: Int) {
-    homepageVideos(recommId: $prevRecommId, limit: $limit) {
+  query GetHomepageVideos($prevRecommId: String, $limit: Int, $where: VideoWhereInput, $orderBy: [VideoOrderByInput!]) {
+    homepageVideos(recommId: $prevRecommId, limit: $limit, where: $where, orderBy: $orderBy) {
       video {
         ...BasicVideoFields
       }
@@ -2398,6 +2402,8 @@ export const GetHomepageVideosDocument = gql`
  *   variables: {
  *      prevRecommId: // value for 'prevRecommId'
  *      limit: // value for 'limit'
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
  *   },
  * });
  */
@@ -2420,8 +2426,14 @@ export type GetHomepageVideosQueryHookResult = ReturnType<typeof useGetHomepageV
 export type GetHomepageVideosLazyQueryHookResult = ReturnType<typeof useGetHomepageVideosLazyQuery>
 export type GetHomepageVideosQueryResult = Apollo.QueryResult<GetHomepageVideosQuery, GetHomepageVideosQueryVariables>
 export const GetSimiliarVideosDocument = gql`
-  query GetSimiliarVideos($videoId: String!, $prevRecommId: String, $limit: Int) {
-    similiarVideos(recommId: $prevRecommId, videoId: $videoId, limit: $limit) {
+  query GetSimiliarVideos(
+    $videoId: String!
+    $prevRecommId: String
+    $limit: Int
+    $where: VideoWhereInput
+    $orderBy: [VideoOrderByInput!]
+  ) {
+    similiarVideos(recommId: $prevRecommId, videoId: $videoId, limit: $limit, where: $where, orderBy: $orderBy) {
       video {
         ...BasicVideoFields
       }
@@ -2447,6 +2459,8 @@ export const GetSimiliarVideosDocument = gql`
  *      videoId: // value for 'videoId'
  *      prevRecommId: // value for 'prevRecommId'
  *      limit: // value for 'limit'
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
  *   },
  * });
  */
