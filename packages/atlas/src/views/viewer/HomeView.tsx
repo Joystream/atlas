@@ -13,6 +13,7 @@ import { useHeadTags } from '@/hooks/useHeadTags'
 import { useInfiniteVideoGrid } from '@/hooks/useInfiniteVideoGrid'
 import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
 import { useAuthStore } from '@/providers/auth/auth.store'
+import { usePersonalDataStore } from '@/providers/personalData'
 import { DEFAULT_VIDEO_GRID, sizes } from '@/styles'
 import { InteractionsService } from '@/utils/InteractionsService'
 import { InfiniteLoadingOffsets } from '@/utils/loading.contants'
@@ -23,6 +24,9 @@ export const HomeView: FC = () => {
   const {
     actions: { setAuthModalOpenName },
   } = useAuthStore()
+  const {
+    actions: { setGlobalRecommendationId },
+  } = usePersonalDataStore()
 
   const headTags = useHeadTags()
   const { columns, fetchMore, tiles, rawData, loading } = useInfiniteVideoGrid<GetHomepageVideosQuery>({
@@ -55,6 +59,7 @@ export const HomeView: FC = () => {
               onClick={() => {
                 if (video.id) {
                   InteractionsService.videoClicked(video.id, { recommId: rawData.homepageVideos.recommId })
+                  setGlobalRecommendationId(rawData.homepageVideos.recommId)
                 }
               }}
             />

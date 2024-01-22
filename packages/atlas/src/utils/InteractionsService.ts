@@ -1,19 +1,17 @@
 import { axiosInstance } from '@/api/axios'
 import { ORION_INTERACTIONS_URL } from '@/config/env'
 
-type ClickOptions = {
-  recommId?: string
-  duration?: number
+type ConsummationOptions = {
+  recommId?: string | null
 }
 
-type ConsummationOptions = {
-  recommId?: string
-}
+type ClickOptions = {
+  duration?: number
+} & ConsummationOptions
 
 type PortionOptions = {
-  recommId?: string
   portion: number
-}
+} & ConsummationOptions
 
 class _InteractionsService {
   private uri = ''

@@ -89,6 +89,10 @@ export const VideoView: FC = () => {
   })
   const placeholderItems = loadingRecommendations && !data?.similiarVideos.video.length ? createPlaceholderData(10) : []
   const displayedRecommendationItems = loadingRecommendations ? [] : data?.similiarVideos.video ?? []
+  const {
+    lastGlobalRecommendationId,
+    actions: { setGlobalRecommendationId },
+  } = usePersonalDataStore()
 
   const { loading, video, error } = useFullVideo(
     id ?? '',
@@ -116,9 +120,9 @@ export const VideoView: FC = () => {
       // addVideoView()
     }
     if (milestone === 0.9) {
-      InteractionsService.videoConsumed(video.id)
+      InteractionsService.videoConsumed(video.id, { recommId: lastGlobalRecommendationId })
     }
-    InteractionsService.videoPortion(video.id, { portion: milestone })
+    InteractionsService.videoPortion(video.id, { portion: milestone, recommId: lastGlobalRecommendationId })
   })
   const [isInView, ref] = useIntersectionObserver()
   const [videoReactionProcessing, setVideoReactionProcessing] = useState(false)
@@ -358,8 +362,9 @@ export const VideoView: FC = () => {
               detailsVariant="withChannelName"
               direction={lgMatch ? 'horizontal' : 'vertical'}
               onClick={() => {
-                if (video.id) {
-                  InteractionsService.videoClicked(video.id, { recommId: data?.similiarVideos.recommId })
+                if (video.id && data) {
+                  InteractionsService.videoClicked(video.id, { recommId: data.similiarVideos.recommId })
+                  setGlobalRecommendationId(data.similiarVideos.recommId)
                 }
               }}
             />
