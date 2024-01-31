@@ -16,12 +16,20 @@ import { VideoDetailsVariant } from '../VideoTileDetails'
 type VideoTileViewerProps = {
   id?: string
   onClick?: () => void
+  onChannelClick?: () => void
   detailsVariant?: VideoDetailsVariant
   direction?: 'vertical' | 'horizontal'
   className?: string
 }
 
-export const VideoTileViewer: FC<VideoTileViewerProps> = ({ id, onClick, detailsVariant, direction, className }) => {
+export const VideoTileViewer: FC<VideoTileViewerProps> = ({
+  id,
+  onClick,
+  detailsVariant,
+  direction,
+  className,
+  onChannelClick,
+}) => {
   const navigate = useNavigate()
   const { video, loading } = useBasicVideo(id ?? '', {
     skip: !id,
@@ -53,7 +61,10 @@ export const VideoTileViewer: FC<VideoTileViewerProps> = ({ id, onClick, details
       detailsVariant={detailsVariant}
       videoHref={videoHref}
       channelHref={channelHref}
-      onChannelAvatarClick={() => navigate(channelHref)}
+      onChannelAvatarClick={() => {
+        navigate(channelHref)
+        onChannelClick?.()
+      }}
       loadingDetails={loading || !video}
       loadingThumbnail={isLoadingThumbnail}
       thumbnailUrls={thumbnailPhotoUrls}

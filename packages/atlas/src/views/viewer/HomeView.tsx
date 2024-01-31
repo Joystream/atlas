@@ -62,6 +62,12 @@ export const HomeView: FC = () => {
                   setGlobalRecommendationId(rawData.homepageVideos.recommId)
                 }
               }}
+              onChannelClick={() => {
+                if ('channel' in video && video?.channel.id) {
+                  InteractionsService.channelClicked(video.channel.id)
+                  setGlobalRecommendationId(rawData.homepageVideos.recommId)
+                }
+              }}
             />
           )),
         }}
