@@ -146,6 +146,16 @@ query GetSimiliarVideos($videoId: String!, $prevRecommId: String, $limit: Int, $
   }
 }
 
+query GetNextVideo($videoId: String!, $prevRecommId: String, $where: VideoWhereInput) {
+  nextVideo(recommId: $prevRecommId, videoId: $videoId, where: $where) {
+    video {
+      ...BasicVideoFields
+    }
+    numberNextRecommsCalls
+    recommId
+  }
+}
+
 # CHANGE: `channelId` and `categoryId` args were removed, ID is now `String`
 mutation AddVideoView($videoId: String!) {
   addVideoView(videoId: $videoId) {

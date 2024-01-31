@@ -6794,6 +6794,7 @@ export type Query = {
   membershipsConnection: MembershipsConnection
   mostRecentChannels: Array<ExtendedChannel>
   mostViewedVideosConnection: VideosConnection
+  nextVideo: RecommendedVideosQuery
   nftActivities: Array<NftActivity>
   nftActivitiesConnection: NftActivitiesConnection
   nftActivityById?: Maybe<NftActivity>
@@ -7582,6 +7583,12 @@ export type QueryMostViewedVideosConnectionArgs = {
   where?: InputMaybe<VideoWhereInput>
 }
 
+export type QueryNextVideoArgs = {
+  recommId?: InputMaybe<Scalars['String']>
+  videoId?: InputMaybe<Scalars['String']>
+  where?: InputMaybe<VideoWhereInput>
+}
+
 export type QueryNftActivitiesArgs = {
   limit?: InputMaybe<Scalars['Int']>
   offset?: InputMaybe<Scalars['Int']>
@@ -8230,6 +8237,13 @@ export type RecipientTypeWhereInput = {
   isTypeOf_startsWith?: InputMaybe<Scalars['String']>
   membership?: InputMaybe<MembershipWhereInput>
   membership_isNull?: InputMaybe<Scalars['Boolean']>
+}
+
+export type RecommendedChannelsQuery = {
+  __typename?: 'RecommendedChannelsQuery'
+  numberNextRecommsCalls?: Maybe<Scalars['Int']>
+  recommId: Scalars['String']
+  video: Array<Channel>
 }
 
 export type RecommendedVideosQuery = {

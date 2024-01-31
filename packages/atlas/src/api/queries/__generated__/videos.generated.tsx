@@ -1849,6 +1849,78 @@ export type GetSimiliarVideosQuery = {
   }
 }
 
+export type GetNextVideoQueryVariables = Types.Exact<{
+  videoId: Types.Scalars['String']
+  prevRecommId?: Types.InputMaybe<Types.Scalars['String']>
+  where?: Types.InputMaybe<Types.VideoWhereInput>
+}>
+
+export type GetNextVideoQuery = {
+  __typename?: 'Query'
+  nextVideo: {
+    __typename?: 'RecommendedVideosQuery'
+    numberNextRecommsCalls?: number | null
+    recommId: string
+    video: Array<{
+      __typename?: 'Video'
+      id: string
+      title?: string | null
+      viewsNum: number
+      createdAt: Date
+      duration?: number | null
+      reactionsCount: number
+      commentsCount: number
+      channel: {
+        __typename?: 'Channel'
+        id: string
+        title?: string | null
+        description?: string | null
+        createdAt: Date
+        followsNum: number
+        rewardAccount: string
+        channelStateBloatBond: string
+        avatarPhoto?: {
+          __typename?: 'StorageDataObject'
+          id: string
+          resolvedUrls: Array<string>
+          createdAt: Date
+          size: string
+          isAccepted: boolean
+          ipfsHash: string
+          storageBag: { __typename?: 'StorageBag'; id: string }
+          type?:
+            | { __typename: 'DataObjectTypeChannelAvatar' }
+            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+            | { __typename: 'DataObjectTypeVideoMedia' }
+            | { __typename: 'DataObjectTypeVideoSubtitle' }
+            | { __typename: 'DataObjectTypeVideoThumbnail' }
+            | null
+        } | null
+      }
+      nft?: { __typename?: 'OwnedNft'; id: string } | null
+      thumbnailPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        resolvedUrls: Array<string>
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type?:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+          | null
+      } | null
+    }>
+  }
+}
+
 export type AddVideoViewMutationVariables = Types.Exact<{
   videoId: Types.Scalars['String']
 }>
@@ -2482,6 +2554,52 @@ export function useGetSimiliarVideosLazyQuery(
 export type GetSimiliarVideosQueryHookResult = ReturnType<typeof useGetSimiliarVideosQuery>
 export type GetSimiliarVideosLazyQueryHookResult = ReturnType<typeof useGetSimiliarVideosLazyQuery>
 export type GetSimiliarVideosQueryResult = Apollo.QueryResult<GetSimiliarVideosQuery, GetSimiliarVideosQueryVariables>
+export const GetNextVideoDocument = gql`
+  query GetNextVideo($videoId: String!, $prevRecommId: String, $where: VideoWhereInput) {
+    nextVideo(recommId: $prevRecommId, videoId: $videoId, where: $where) {
+      video {
+        ...BasicVideoFields
+      }
+      numberNextRecommsCalls
+      recommId
+    }
+  }
+  ${BasicVideoFieldsFragmentDoc}
+`
+
+/**
+ * __useGetNextVideoQuery__
+ *
+ * To run a query within a React component, call `useGetNextVideoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetNextVideoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetNextVideoQuery({
+ *   variables: {
+ *      videoId: // value for 'videoId'
+ *      prevRecommId: // value for 'prevRecommId'
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetNextVideoQuery(
+  baseOptions: Apollo.QueryHookOptions<GetNextVideoQuery, GetNextVideoQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetNextVideoQuery, GetNextVideoQueryVariables>(GetNextVideoDocument, options)
+}
+export function useGetNextVideoLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetNextVideoQuery, GetNextVideoQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetNextVideoQuery, GetNextVideoQueryVariables>(GetNextVideoDocument, options)
+}
+export type GetNextVideoQueryHookResult = ReturnType<typeof useGetNextVideoQuery>
+export type GetNextVideoLazyQueryHookResult = ReturnType<typeof useGetNextVideoLazyQuery>
+export type GetNextVideoQueryResult = Apollo.QueryResult<GetNextVideoQuery, GetNextVideoQueryVariables>
 export const AddVideoViewDocument = gql`
   mutation AddVideoView($videoId: String!) {
     addVideoView(videoId: $videoId) {
