@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 
 import { GetTokenRevenueSharesQuery } from '@/api/queries/__generated__/creatorTokens.generated'
-import { SvgActionCalendar } from '@/assets/icons'
+import { SvgActionCalendar, SvgActionChevronR } from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox'
 import { Information } from '@/components/Information'
 import { Text } from '@/components/Text'
@@ -35,7 +35,7 @@ export const RevenueShareStateWidget = ({
   const [openClaimShareModal, setOpenClaimShareModal] = useState(false)
   const { currentBlock } = useBlockTimeEstimation()
   const unlockStakeTx = useUnlockTokenStake()
-
+  console.log('xd', withLink ? <TextButton to={absoluteRoutes.viewer.portfolio()} /> : undefined)
   const memberStake = stakers?.find((stakers) => stakers.account.member.id === memberId)
   const status = revenueShare
     ? getRevenueShareStatusForMember({
@@ -135,7 +135,13 @@ export const RevenueShareStateWidget = ({
             <div style={{ marginLeft: 'auto' }}>{memberActionNode}</div>
           </FlexBox>
         }
-        customTopRightNode={withLink ? <TextButton to={absoluteRoutes.viewer.portfolio()} /> : undefined}
+        customTopRightNode={
+          withLink ? (
+            <TextButton icon={<SvgActionChevronR />} iconPlacement="right" to={absoluteRoutes.viewer.portfolio()}>
+              See in portfolio
+            </TextButton>
+          ) : undefined
+        }
         tooltip={
           !withLink
             ? {
