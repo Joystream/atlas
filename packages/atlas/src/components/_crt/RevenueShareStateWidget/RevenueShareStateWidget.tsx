@@ -35,7 +35,6 @@ export const RevenueShareStateWidget = ({
   const [openClaimShareModal, setOpenClaimShareModal] = useState(false)
   const { currentBlock } = useBlockTimeEstimation()
   const unlockStakeTx = useUnlockTokenStake()
-  console.log('xd', withLink ? <TextButton to={absoluteRoutes.viewer.portfolio()} /> : undefined)
   const memberStake = stakers?.find((stakers) => stakers.account.member.id === memberId)
   const status = revenueShare
     ? getRevenueShareStatusForMember({
