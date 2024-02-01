@@ -1,13 +1,10 @@
 import styled from '@emotion/styled'
-import { FC, useEffect, useState } from 'react'
+import { FC } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { useBasicVideos } from '@/api/hooks/video'
-import { VideoOrderByInput, VideoWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
-import { BasicVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { useGetNextVideoQuery } from '@/api/queries/__generated__/videos.generated'
 import { publicCryptoVideoFilter } from '@/config/contentFilter'
 import { cVar, transitions } from '@/styles'
-import { getRandomIntInclusive } from '@/utils/number'
 
 import { EndingOverlay, ErrorOverlay, InactiveOverlay } from './VideoOverlays'
 import { PlayerState } from './utils'
@@ -35,37 +32,47 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
   isPlayNextDisabled,
   isMinimized,
   playRandomVideoOnEnded = true,
-  currentVideoCreatedAt,
 }) => {
-  const [randomNextVideo, setRandomNextVideo] = useState<BasicVideoFieldsFragment | null>(null)
-  const commonFiltersFactory = (where?: VideoWhereInput) => ({
-    limit: 1,
-    orderBy: VideoOrderByInput.CreatedAtAsc,
-    where: {
-      ...publicCryptoVideoFilter,
-      channel: {
-        id_eq: channelId,
+  const { data } = useGetNextVideoQuery({
+    variables: {
+      videoId: videoId ?? '',
+      where: {
+        ...publicCryptoVideoFilter,
       },
-      ...where,
     },
-  })
-  const { videos: newerVideos, loading: loadingNewestVideos } = useBasicVideos(
-    commonFiltersFactory({ createdAt_gt: currentVideoCreatedAt })
-  )
-  const { videos: olderVideos } = useBasicVideos(commonFiltersFactory({ createdAt_lt: currentVideoCreatedAt }), {
-    skip: loadingNewestVideos || !!newerVideos?.length,
+    skip: !videoId,
   })
 
-  useEffect(() => {
-    const videos = newerVideos?.length ? newerVideos : olderVideos
-    if (!videos?.length || videos.length === 0) {
-      return
-    }
-    const filteredVideos = videos.filter((video) => video.id !== videoId)
-    const randomNumber = getRandomIntInclusive(0, filteredVideos.length - 1)
-
-    setRandomNextVideo(filteredVideos[randomNumber])
-  }, [channelId, currentVideoCreatedAt, newerVideos, olderVideos, videoId])
+  // this might be useful in the future
+  // const [randomNextVideo, setRandomNextVideo] = useState<BasicVideoFieldsFragment | null>(null)
+  // const commonFiltersFactory = (where?: VideoWhereInput) => ({
+  //   limit: 1,
+  //   orderBy: VideoOrderByInput.CreatedAtAsc,
+  //   where: {
+  //     ...publicCryptoVideoFilter,
+  //     channel: {
+  //       id_eq: channelId,
+  //     },
+  //     ...where,
+  //   },
+  // })
+  // const { videos: newerVideos, loading: loadingNewestVideos } = useBasicVideos(
+  //     commonFiltersFactory({ createdAt_gt: currentVideoCreatedAt })
+  // )
+  // const { videos: olderVideos } = useBasicVideos(commonFiltersFactory({ createdAt_lt: currentVideoCreatedAt }), {
+  //   skip: loadingNewestVideos || !!newerVideos?.length,
+  // })
+  //
+  // useEffect(() => {
+  //   const videos = newerVideos?.length ? newerVideos : olderVideos
+  //   if (!videos?.length || videos.length === 0) {
+  //     return
+  //   }
+  //   const filteredVideos = videos.filter((video) => video.id !== videoId)
+  //   const randomNumber = getRandomIntInclusive(0, filteredVideos.length - 1)
+  //
+  //   setRandomNextVideo(filteredVideos[randomNumber])
+  // }, [channelId, currentVideoCreatedAt, newerVideos, olderVideos, videoId])
 
   return (
     <SwitchTransition>
@@ -88,7 +95,9 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
               onPlayAgain={onPlayAgain}
               channelId={channelId}
               currentThumbnailUrls={currentThumbnailUrls}
-              randomNextVideo={playRandomVideoOnEnded ? randomNextVideo : undefined}
+              randomNextVideo={
+                playRandomVideoOnEnded && data?.nextVideo.video.length ? data.nextVideo.video[0] : undefined
+              }
             />
           )}
           {playerState === 'error' && <ErrorOverlay />}
