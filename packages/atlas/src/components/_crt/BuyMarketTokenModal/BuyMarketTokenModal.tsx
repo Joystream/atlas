@@ -2,14 +2,19 @@ import { useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router'
 
-import { useGetFullCreatorTokenQuery } from '@/api/queries/__generated__/creatorTokens.generated'
+import {
+  useGetCreatorTokenHoldersQuery,
+  useGetFullCreatorTokenQuery,
+} from '@/api/queries/__generated__/creatorTokens.generated'
 import { NumberFormat } from '@/components/NumberFormat'
 import { AmmModalFormTemplate } from '@/components/_crt/AmmModalTemplates'
 import { AmmModalSummaryTemplate } from '@/components/_crt/AmmModalTemplates/AmmModalSummaryTemplate'
 import { BuyMarketTokenSuccess } from '@/components/_crt/BuyMarketTokenModal/steps/BuyMarketTokenSuccess'
 import { DialogProps } from '@/components/_overlays/Dialog'
 import { DialogModal } from '@/components/_overlays/DialogModal'
+import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { useFee, useJoystream, useSubscribeAccountBalance } from '@/providers/joystream'
@@ -35,12 +40,14 @@ enum BUY_MARKET_TOKEN_STEPS {
 }
 
 export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModalProps) => {
+  const { memberId } = useUser()
+  const navigate = useNavigate()
   const [activeStep, setActiveStep] = useState(BUY_MARKET_TOKEN_STEPS.form)
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogProps['primaryButton']>()
   const amountRef = useRef<number | null>(null)
-  const { control, watch, handleSubmit, reset, formState } = useForm<{ tokens: number }>()
-  const tokens = watch('tokens') || 0
-  const { fullFee } = useFee('purchaseTokenOnMarketTx', ['1', '1', String(tokens ?? 0), '1000000'])
+  const { control, watch, handleSubmit, reset, formState } = useForm<{ tokenAmount: number }>()
+  const tokenAmount = watch('tokenAmount') || 0
+  const { fullFee } = useFee('purchaseTokenOnMarketTx', ['1', '1', String(tokenAmount ?? 0), '1000000'])
   const { data, loading } = useGetFullCreatorTokenQuery({
     variables: {
       id: tokenId,
@@ -49,17 +56,28 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
       SentryLogger.error('Error while fetching creator token', 'BuyMarketTokenModal', error)
     },
   })
+  const { data: memberTokenAccount } = useGetCreatorTokenHoldersQuery({
+    variables: {
+      where: {
+        token: {
+          id_eq: tokenId,
+        },
+        member: {
+          id_eq: memberId,
+        },
+      },
+    },
+    skip: !memberId,
+  })
   const client = useApolloClient()
   const { accountBalance } = useSubscribeAccountBalance()
-  const title = data?.creatorTokenById?.symbol ?? 'N/A'
-
+  const tokenTitle = data?.creatorTokenById?.symbol ?? 'N/A'
   const currentAmm = data?.creatorTokenById?.ammCurves.find((amm) => !amm.finalized)
-
-  const { memberId } = useUser()
   const smMatch = useMediaMatch('sm')
   const { displaySnackbar } = useSnackbar()
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
+
   const secondaryButton = useMemo(() => {
     switch (activeStep) {
       case BUY_MARKET_TOKEN_STEPS.conditions:
@@ -105,9 +123,9 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
   )
 
   const priceForAllToken = useMemo(() => {
-    return hapiBnToTokenNumber(calculateRequiredHapi(Math.max(tokens, 1)) ?? new BN(0))
-  }, [tokens, calculateRequiredHapi])
-  const pricePerUnit = priceForAllToken / (tokens || 1)
+    return hapiBnToTokenNumber(calculateRequiredHapi(Math.max(tokenAmount, 1)) ?? new BN(0))
+  }, [tokenAmount, calculateRequiredHapi])
+  const pricePerUnit = priceForAllToken / (tokenAmount || 1)
 
   const commonProps = {
     setPrimaryButtonProps,
@@ -137,7 +155,18 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
           proxyCallback(updateStatus)
         ),
       onTxSync: async () => {
-        setActiveStep(BUY_MARKET_TOKEN_STEPS.success)
+        if (memberTokenAccount?.tokenAccounts.length) {
+          displaySnackbar({
+            iconType: 'success',
+            title: `${tokenAmount} $${tokenTitle} purchased`,
+            description: 'You will find it in your portfolio.',
+            actionText: 'Go to portfolio',
+            onActionClick: () => navigate(absoluteRoutes.viewer.portfolio()),
+          })
+          onClose()
+        } else {
+          setActiveStep(BUY_MARKET_TOKEN_STEPS.success)
+        }
         client.refetchQueries({ include: 'all' })
       },
       onError: () => {
@@ -154,7 +183,21 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
         })
       },
     })
-  }, [calculateRequiredHapi, client, displaySnackbar, handleTransaction, joystream, memberId, proxyCallback, tokenId])
+  }, [
+    calculateRequiredHapi,
+    client,
+    displaySnackbar,
+    handleTransaction,
+    joystream,
+    memberId,
+    memberTokenAccount?.tokenAccounts.length,
+    navigate,
+    onClose,
+    proxyCallback,
+    tokenAmount,
+    tokenId,
+    tokenTitle,
+  ])
 
   const formDetails = useMemo(
     () => [
@@ -167,7 +210,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
         title: 'You will pay',
         content: (
           <NumberFormat
-            value={hapiBnToTokenNumber(calculateRequiredHapi(tokens) ?? new BN(0))}
+            value={hapiBnToTokenNumber(calculateRequiredHapi(tokenAmount) ?? new BN(0))}
             as="p"
             variant="h300"
             withDenomination="before"
@@ -177,7 +220,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
         tooltipText: 'Estimated price that will be payed for tokens.',
       },
     ],
-    [accountBalance, calculateRequiredHapi, tokens]
+    [accountBalance, calculateRequiredHapi, tokenAmount]
   )
 
   const summaryDetails = useMemo(
@@ -186,7 +229,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
         title: 'Purchase',
         content: (
           <NumberFormat
-            value={calculateRequiredHapi(tokens) ?? 0}
+            value={calculateRequiredHapi(tokenAmount) ?? 0}
             as="p"
             variant="t200"
             withToken
@@ -217,7 +260,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
         title: 'Total',
         content: (
           <NumberFormat
-            value={fullFee.add(calculateRequiredHapi(tokens) ?? new BN(0))}
+            value={fullFee.add(calculateRequiredHapi(tokenAmount) ?? new BN(0))}
             as="p"
             variant="t200"
             withToken
@@ -230,24 +273,24 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
         title: 'You will get',
         content: (
           <NumberFormat
-            value={tokens}
+            value={tokenAmount}
             as="p"
             variant="h300"
             withToken
             withDenomination="before"
-            customTicker={`$${title}`}
+            customTicker={`$${tokenTitle}`}
             denominationMultiplier={pricePerUnit}
           />
         ),
         tooltipText: 'Amount of tokens current membership will receive.',
       },
     ],
-    [calculateRequiredHapi, fullFee, pricePerUnit, title, tokens]
+    [calculateRequiredHapi, fullFee, pricePerUnit, tokenTitle, tokenAmount]
   )
 
   useEffect(() => {
     if (!show) {
-      reset({ tokens: 0 })
+      reset({ tokenAmount: 0 })
     }
   }, [reset, show])
 
@@ -257,7 +300,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
         text: 'Continue',
         onClick: () =>
           handleSubmit((data) => {
-            amountRef.current = data.tokens
+            amountRef.current = data.tokenAmount
             setActiveStep(BUY_MARKET_TOKEN_STEPS.conditions)
           })(),
       })
@@ -297,7 +340,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
           control={control}
           details={formDetails}
           pricePerUnit={pricePerUnit}
-          error={formState.errors.tokens?.message}
+          error={formState.errors.tokenAmount?.message}
           validation={(value) => {
             if (!value || value < 1) return 'You need to buy at least one token'
             const requiredHapi = calculateRequiredHapi(value ?? 0)
@@ -317,6 +360,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
             onClose()
             setActiveStep(BUY_MARKET_TOKEN_STEPS.form)
           }}
+          tokenAmount={tokenAmount}
           tokenName={data?.creatorTokenById?.symbol ?? 'N/A'}
         />
       )}
