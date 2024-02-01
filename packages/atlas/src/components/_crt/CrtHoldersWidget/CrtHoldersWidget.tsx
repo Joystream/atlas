@@ -89,7 +89,7 @@ export const CrtHoldersWidget = ({ tokenId, totalSupply, onShowMore }: CrtHolder
 
       namedHolders.push({
         id: 'Others',
-        value: 100 - namedHoldersAccumulated,
+        value: +(100 - namedHoldersAccumulated).toFixed(2),
         name: 'Others',
         index: namedHolders.length,
         members: parsedData.slice(3).map((holder) => ({
@@ -265,7 +265,6 @@ const ColorBox = styled.div<{ color: string }>`
 const ChartWrapper = styled.div`
   height: 300px;
   width: 100%;
-  overflow: hidden;
   display: flex;
   justify-content: center;
 `
