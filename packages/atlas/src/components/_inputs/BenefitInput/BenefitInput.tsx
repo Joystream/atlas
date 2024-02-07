@@ -3,14 +3,9 @@ import { ChangeEvent } from 'react'
 import { SvgActionChevronB, SvgActionChevronT } from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox'
 import { Button } from '@/components/_buttons/Button'
-import {
-  Container,
-  EmojiPlaceholder,
-  StyledSvgActionTrash,
-} from '@/components/_inputs/BenefitInput/BenefitInput.styles'
+import { Container, StyledSvgActionTrash } from '@/components/_inputs/BenefitInput/BenefitInput.styles'
 import { Input } from '@/components/_inputs/Input'
 import { TextArea } from '@/components/_inputs/TextArea'
-import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 export type Benefit = {
   title: string
@@ -39,17 +34,15 @@ export const BenefitInput = ({
   onTitleChange,
   position,
 }: BenefitInputProps) => {
-  const smMatch = useMediaMatch('sm')
+  // const smMatch = useMediaMatch('sm')
   return (
     <Container>
-      <FlexBox gap={2}>
-        <EmojiPlaceholder />
-      </FlexBox>
+      {/*<FlexBox gap={2}>/!*<EmojiPlaceholder />*!/</FlexBox>*/}
       <FlexBox gap={2} alignItems="strech" flow="column">
         <Input placeholder="Add benefit title" value={title} onChange={onTitleChange} />
         <TextArea placeholder="Add benefit description" value={description} onChange={onDescriptionChange} />
       </FlexBox>
-      <FlexBox gap={2} flow={smMatch ? 'column' : 'row'}>
+      <FlexBox gap={2} flow="column">
         <Button
           variant="tertiary"
           icon={<SvgActionChevronT />}

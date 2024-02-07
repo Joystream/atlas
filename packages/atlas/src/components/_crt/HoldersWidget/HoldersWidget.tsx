@@ -37,7 +37,7 @@ export const HoldersWidget = ({ tokenId, ownerId, totalSupply, totalHolders }: H
       _holders?.map((holder) => ({
         memberId: holder?.member?.id ?? '',
         total: +holder.totalAmount,
-        allocation: +formatNumberShort((+holder.totalAmount / totalSupply) * 100),
+        allocation: totalSupply ? +formatNumberShort((+holder.totalAmount / totalSupply) * 100) : 0,
         vested: +(holder.vestingSchedules[0]?.totalVestingAmount ?? 0),
       })) ?? [],
     [_holders, totalSupply]
@@ -45,7 +45,7 @@ export const HoldersWidget = ({ tokenId, ownerId, totalSupply, totalHolders }: H
   const [firstPageHolders, setFirstPageHolders] = useState<typeof holders>([])
 
   useEffect(() => {
-    if (currentPage === 0 && holders.length && !firstPageHolders.length) {
+    if (currentPage === 0 && holders.length) {
       setFirstPageHolders(holders)
     }
   }, [currentPage, firstPageHolders.length, holders])

@@ -313,7 +313,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
         }}
       >
         <FlexBox flow="column" gap={8}>
-          <FlexBox equalChildren alignItems="center" gap={6}>
+          <FlexBox equalChildren alignItems="end" gap={6}>
             <Controller
               name="startDate"
               control={control}
