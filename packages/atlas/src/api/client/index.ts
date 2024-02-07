@@ -5,8 +5,33 @@ import { createClient } from 'graphql-ws'
 
 import { ORION_GRAPHQL_URL, QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL } from '@/config/env'
 import { useUserLocationStore } from '@/providers/userLocation'
+import { UserEventsLogger } from '@/utils/logs'
 
 import { cache } from './cache'
+
+const initializePerformanceObserver = () => {
+  try {
+    const observer = new PerformanceObserver((list) => {
+      for (const entry of list.getEntries()) {
+        if (['fetch', 'xmlhttprequest'].includes((entry as PerformanceResourceTiming).initiatorType)) {
+          const queryString = entry.name.split('?')?.[1]
+          const params = new URLSearchParams(queryString)
+          const queryType = params.get('queryName')
+          UserEventsLogger.logUserEvent('request-response-time', {
+            requestName: queryType ?? entry.name,
+            timeToComplete: entry.duration,
+          })
+        }
+      }
+    })
+    // Start listening for `resource` entries to be dispatched.
+    observer.observe({ type: 'resource', buffered: true })
+  } catch (e) {
+    // Do nothing if the browser doesn't support this API.
+  }
+}
+
+initializePerformanceObserver()
 
 const delayLink = new ApolloLink((operation, forward) => {
   const ctx = operation.getContext()
@@ -31,11 +56,40 @@ export const createApolloClient = () => {
     })
   )
 
-  const orionLink = ApolloLink.from([delayLink, new HttpLink({ uri: ORION_GRAPHQL_URL, credentials: 'include' })])
+  const orionLink = ApolloLink.from([
+    delayLink,
+    new HttpLink({
+      uri: ORION_GRAPHQL_URL,
+      credentials: 'include',
+      fetch: async (uri, options) => {
+        const queryName = options?.headers
+          ? (options.headers?.['queryname' as keyof typeof options.headers] as string)
+          : null
+        const queryString = queryName ? `?queryName=${queryName}` : ''
+        return fetch(`${uri}${queryString}`, options)
+      },
+    }),
+  ])
 
   const operationSplitLink = split(
     ({ query, setContext }) => {
       const locationStore = useUserLocationStore.getState()
+      const firstDefinition = query.definitions[0]
+      let queryName: string | null | undefined = null
+      if (firstDefinition.kind === 'OperationDefinition' && firstDefinition.operation === 'query') {
+        queryName = firstDefinition.name?.value
+      }
+
+      if (queryName) {
+        setContext(({ headers }: Record<string, object>) => {
+          return {
+            headers: {
+              ...headers,
+              ...(queryName ? { queryName } : {}),
+            },
+          }
+        })
+      }
 
       if (
         !locationStore.disableUserLocation &&
