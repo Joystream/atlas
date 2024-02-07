@@ -95,12 +95,15 @@ export const CrtDashboard = () => {
                   {!hasOpenMarket ? (
                     <StartSaleOrMarketButton tokenName={creatorTokenById.symbol ?? 'N/A'} />
                   ) : (
-                    <CloseMarketButton channelId={activeChannel?.id ?? '-1'} />
+                    <CloseMarketButton
+                      channelId={activeChannel?.id ?? '-1'}
+                      tokenId={data?.creatorTokenById?.id ?? ''}
+                    />
                   )}
                 </>
               )}
               {currentTab === getTabIndex('Market', mappedTabs) && (
-                <CloseMarketButton channelId={activeChannel?.id ?? '-1'} />
+                <CloseMarketButton channelId={activeChannel?.id ?? '-1'} tokenId={data?.creatorTokenById?.id ?? ''} />
               )}
               {currentTab === getTabIndex('Revenue share', mappedTabs) && (
                 <>

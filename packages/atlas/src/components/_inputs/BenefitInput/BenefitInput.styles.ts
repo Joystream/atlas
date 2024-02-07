@@ -5,32 +5,25 @@ import { cVar, media, sizes, square } from '@/styles'
 
 export const Container = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr auto;
   gap: ${sizes(2)};
-
-  > *:nth-child(2) {
-    grid-column: 1/3;
-  }
-
-  > *:nth-child(3) {
-    grid-column: 2/3;
-    grid-row: 1;
-    justify-self: end;
-  }
 
   ${media.sm} {
     gap: ${sizes(4)};
-    grid-template-columns: auto 1fr auto;
-
-    > *:nth-child(2) {
-      grid-column: 2/3;
-    }
-
-    > *:nth-child(3) {
-      grid-column: 3/4;
-    }
+    grid-template-columns: 1fr auto;
   }
 `
+
+// above
+//> *:nth-child(1) {
+//  grid-column: 1/2;
+//}
+
+//> *:nth-child(2) {
+//  grid-column: 2/3;
+//  //grid-row: 1;
+//  justify-self: end;
+//}
 
 export const StyledSvgActionTrash = styled(SvgActionTrash)`
   path {
