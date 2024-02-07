@@ -11,6 +11,7 @@ import { RevenueShareStateWidget } from '@/components/_crt/RevenueShareStateWidg
 import { TokenDetails } from '@/components/_crt/TokenDetails/TokenDetails'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useUser } from '@/providers/user/user.hooks'
 
 type ChannelTokenProps = {
   tokenId?: string
@@ -20,6 +21,7 @@ type ChannelTokenProps = {
 
 export const ChannelToken = ({ tokenId, memberId, cumulativeRevenue }: ChannelTokenProps) => {
   const lgMatch = useMediaMatch('lg')
+  const { isLoggedIn } = useUser()
   const { data, loading: loadingToken } = useGetFullCreatorTokenQuery({
     variables: {
       id: tokenId ?? '',
@@ -80,7 +82,7 @@ export const ChannelToken = ({ tokenId, memberId, cumulativeRevenue }: ChannelTo
           ) : (
             activeRevenueShare && (
               <RevenueShareStateWidget
-                withLink
+                withLink={isLoggedIn}
                 revenueShare={activeRevenueShare}
                 tokenId={token?.id}
                 tokenSymbol={token?.symbol ?? 'N/A'}

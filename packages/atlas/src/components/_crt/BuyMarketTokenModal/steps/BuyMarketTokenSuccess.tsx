@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { FC } from 'react'
+import { useNavigate } from 'react-router'
 
 import confettiAnimation from '@/assets/animations/confetti.json'
 import { AppKV } from '@/components/AppKV'
@@ -11,24 +12,43 @@ import {
   LottieContainer,
 } from '@/components/_auth/SignUpModal/SignUpSteps/SignUpSuccessStep/SignUpSuccessStep.styles'
 import { AnimatedCoin } from '@/components/_crt/AnimatedCoin/AnimatedCoin'
+import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMountEffect } from '@/hooks/useMountEffect'
+import { useSnackbar } from '@/providers/snackbars'
 
 import { CommonProps } from './types'
 
 type SignUpSuccessStepProps = {
   tokenName?: string
+  tokenAmount?: number
   coinImageUrl?: string
   onClose: () => void
 } & CommonProps
 
-export const BuyMarketTokenSuccess: FC<SignUpSuccessStepProps> = ({ tokenName, setPrimaryButtonProps, onClose }) => {
+export const BuyMarketTokenSuccess: FC<SignUpSuccessStepProps> = ({
+  tokenName,
+  setPrimaryButtonProps,
+  onClose,
+  tokenAmount,
+}) => {
   const smMatch = useMediaMatch('sm')
+  const { displaySnackbar } = useSnackbar()
+  const navigate = useNavigate()
 
   useMountEffect(() => {
     setPrimaryButtonProps({
       text: 'Continue',
-      onClick: () => onClose(),
+      onClick: () => {
+        onClose()
+        displaySnackbar({
+          iconType: 'success',
+          title: `${tokenAmount} $${tokenName} purchased`,
+          description: 'You will find it in your portfolio.',
+          actionText: 'Go to portfolio',
+          onActionClick: () => navigate(absoluteRoutes.viewer.portfolio()),
+        })
+      },
     })
   })
   return (

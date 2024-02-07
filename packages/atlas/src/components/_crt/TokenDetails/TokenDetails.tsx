@@ -6,7 +6,6 @@ import { FlexBox } from '@/components/FlexBox'
 import { MarkdownPreview } from '@/components/MarkdownPreview'
 import { Text } from '@/components/Text'
 import { Benefit } from '@/components/_inputs/BenefitInput'
-import { EmojiPlaceholder } from '@/components/_inputs/BenefitInput/BenefitInput.styles'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { cVar, sizes } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
@@ -74,7 +73,7 @@ export const TokenDetails = ({ about, videoId, benefits }: TokenDetailsProps) =>
           </Text>
           {benefits.map((benefit, idx) => (
             <FlexBox key={idx} gap={4}>
-              <EmojiPlaceholder />
+              {/*<EmojiPlaceholder />*/}
               <FlexBox flow="column">
                 <Text variant="h400" as="h4">
                   {benefit.title || 'Benefit title'}

@@ -25,9 +25,9 @@ export type SellTokenModalProps = {
 
 export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) => {
   const [step, setStep] = useState<'form' | 'summary'>('form')
-  const { control, watch, handleSubmit, formState } = useForm<{ tokens: number }>()
+  const { control, watch, handleSubmit, formState } = useForm<{ tokenAmount: number }>()
   const { memberId } = useUser()
-  const tokens = watch('tokens') || 0
+  const tokenAmount = watch('tokenAmount') || 0
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()
@@ -59,9 +59,9 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
   )
 
   const priceForAllToken = useMemo(() => {
-    return hapiBnToTokenNumber(calculateSlippageAmount(Math.max(tokens, 1)) ?? new BN(0))
-  }, [tokens, calculateSlippageAmount])
-  const pricePerUnit = priceForAllToken / (tokens || 1)
+    return hapiBnToTokenNumber(calculateSlippageAmount(Math.max(tokenAmount, 1)) ?? new BN(0))
+  }, [tokenAmount, calculateSlippageAmount])
+  const pricePerUnit = priceForAllToken / (tokenAmount || 1)
 
   const formDetails = useMemo(
     () => [
@@ -84,7 +84,7 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
         title: 'You will receive',
         content: (
           <NumberFormat
-            value={tokens > 0 ? priceForAllToken : 0}
+            value={tokenAmount > 0 ? priceForAllToken : 0}
             as="p"
             variant="t200-strong"
             withToken
@@ -94,7 +94,7 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
         tooltipText: `Amount of ${atlasConfig.joystream.tokenTicker} that you will receive for your tokens.`,
       },
     ],
-    [priceForAllToken, pricePerUnit, title, tokens, userTokenBalance]
+    [priceForAllToken, pricePerUnit, title, tokenAmount, userTokenBalance]
   )
 
   const summaryDetails = useMemo(
@@ -103,7 +103,7 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
         title: 'Selling',
         content: (
           <NumberFormat
-            value={tokens}
+            value={tokenAmount}
             as="p"
             variant="t200"
             withToken
@@ -136,7 +136,7 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
         title: 'You will get',
         content: (
           <NumberFormat
-            value={calculateSlippageAmount(Math.max(tokens, 1))?.sub(fullFee) ?? 0}
+            value={calculateSlippageAmount(Math.max(tokenAmount, 1))?.sub(fullFee) ?? 0}
             as="p"
             variant="h300"
             withToken
@@ -146,7 +146,7 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
         tooltipText: `Amount of ${atlasConfig.joystream.tokenTicker} that you will receive for your tokens.`,
       },
     ],
-    [calculateSlippageAmount, fullFee, pricePerUnit, title, tokens]
+    [calculateSlippageAmount, fullFee, pricePerUnit, title, tokenAmount]
   )
 
   const onFormSubmit = () =>
@@ -155,7 +155,7 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
     })()
 
   const onTransactionSubmit = async () => {
-    const slippageTolerance = calculateSlippageAmount(tokens)
+    const slippageTolerance = calculateSlippageAmount(tokenAmount)
 
     if (!joystream || !memberId || !slippageTolerance) {
       return
@@ -165,7 +165,7 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
         (await joystream.extrinsics).sellTokenOnMarket(
           tokenId,
           memberId,
-          String(tokens),
+          String(tokenAmount),
           slippageTolerance.toString(),
           proxyCallback(updateStatus)
         ),
@@ -179,7 +179,7 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
         // todo add joys from rpc event
         displaySnackbar({
           iconType: 'success',
-          title: `${formatNumberShort((tokens * priceForAllToken) / tokens)} ${
+          title: `${formatNumberShort((tokenAmount * priceForAllToken) / tokenAmount)} ${
             atlasConfig.joystream.tokenTicker
           } received`,
           description: `You will find it in your portfolio.`,
@@ -216,7 +216,7 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
       {step === 'form' ? (
         <AmmModalFormTemplate
           control={control}
-          error={formState.errors.tokens?.message}
+          error={formState.errors.tokenAmount?.message}
           pricePerUnit={pricePerUnit}
           maxValue={Math.min(+(currentAmm?.mintedByAmm ?? 0), userTokenBalance)}
           details={formDetails}
