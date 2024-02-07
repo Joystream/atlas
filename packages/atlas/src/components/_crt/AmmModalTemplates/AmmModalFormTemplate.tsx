@@ -13,7 +13,7 @@ type AmmModalFormTemplateProps = {
   validation?: Validate<number>
   maxValue?: number
   pricePerUnit?: number
-  control: Control<{ tokens: number }>
+  control: Control<{ tokenAmount: number }>
   details?: {
     title: string
     content: ReactNode
@@ -35,7 +35,7 @@ export const AmmModalFormTemplate = ({
   return (
     <FlexBox flow="column" gap={8}>
       <Controller
-        name="tokens"
+        name="tokenAmount"
         control={control}
         rules={{
           validate: {

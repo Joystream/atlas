@@ -7,10 +7,11 @@ import { CloseMarketModal } from '@/components/_crt/CloseMarketModal'
 type CloseMarketButtonProps = {
   disabled?: boolean
   channelId: string
+  tokenId: string
   fullWidth?: boolean
 }
 
-export const CloseMarketButton = ({ channelId, disabled, fullWidth }: CloseMarketButtonProps) => {
+export const CloseMarketButton = ({ channelId, disabled, fullWidth, tokenId }: CloseMarketButtonProps) => {
   const [showModal, setShowModal] = useState(false)
   return (
     <>
@@ -23,7 +24,7 @@ export const CloseMarketButton = ({ channelId, disabled, fullWidth }: CloseMarke
       >
         Close market
       </Button>
-      <CloseMarketModal show={showModal} channelId={channelId} onClose={() => setShowModal(false)} />
+      <CloseMarketModal show={showModal} tokenId={tokenId} channelId={channelId} onClose={() => setShowModal(false)} />
     </>
   )
 }

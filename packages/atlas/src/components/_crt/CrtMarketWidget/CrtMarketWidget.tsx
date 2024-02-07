@@ -63,7 +63,7 @@ export const CrtMarketWidget = ({ onTabSwitch, token }: CrtMarketWidgetProps) =>
             />
           </Detail>
           <ButtonWrapper>
-            <CloseMarketButton fullWidth={!smMatch} channelId={channelId ?? '-1'} />
+            <CloseMarketButton fullWidth={!smMatch} channelId={channelId ?? '-1'} tokenId={token.id} />
           </ButtonWrapper>
         </FlexBox>
       }
