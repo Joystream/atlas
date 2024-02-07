@@ -58,21 +58,23 @@ export const CrtRevenueShareWidget = ({ token, onTabSwitch }: CrtHoldersWidgetPr
             <FlexBox flow="column">
               <Text variant="h100" as="h1" color="colorTextMuted">
                 {status === 'inactive'
-                  ? 'CURRENT STATE'
+                  ? 'REVENUE SHARE STATE'
                   : status === 'past'
                   ? 'REVENUE SHARE ENDED ON'
+                  : status === 'upcoming'
+                  ? 'REVENUE SHARE STARTS IN'
                   : 'REVENUE SHARE ENDS IN'}
               </Text>
-              {status !== 'inactive' && activeRevenueShare?.endsAt ? (
-                status === 'past' ? (
-                  <TextTimer mainVariant="h400" type="block" atBlock={activeRevenueShare?.endsAt ?? 0} />
-                ) : (
-                  <TextTimer mainVariant="h400" type="block" atBlock={activeRevenueShare?.endsAt ?? 0} />
-                )
-              ) : (
+              {status === 'inactive' ? (
                 <Text variant="h400" as="h5" margin={{ bottom: 4 }}>
                   No active share
                 </Text>
+              ) : status === 'past' ? (
+                <TextTimer mainVariant="h400" type="block" atBlock={activeRevenueShare?.endsAt ?? 0} />
+              ) : status === 'upcoming' ? (
+                <TextTimer mainVariant="h400" type="block" atBlock={activeRevenueShare?.startingAt ?? 0} />
+              ) : (
+                <TextTimer mainVariant="h400" type="block" atBlock={activeRevenueShare?.endsAt ?? 0} />
               )}
             </FlexBox>
 

@@ -23,7 +23,7 @@ const defaultJoystreamProps: Omit<ReponsiveProps, 'data'> = {
   arcLabelsComponent: (datum) => {
     return (
       <animated.g transform={datum.style.transform}>
-        <foreignObject height={15} width={40}>
+        <foreignObject height={15} width={50}>
           <Text variant="h100" as="h1">
             {datum.datum.formattedValue}
           </Text>

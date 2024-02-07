@@ -274,6 +274,7 @@ export const PortfolioTokenTab = () => {
               utils: (
                 <TokenPortfolioUtils
                   onBuy={() => window.open('https://www.joystream.org/token/', '_blank')}
+                  onSell={() => window.open('https://www.joystream.org/token/', '_blank')}
                   onTransfer={toggleSendDialog}
                 />
               ),
