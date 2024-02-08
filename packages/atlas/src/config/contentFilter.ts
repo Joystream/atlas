@@ -17,11 +17,14 @@ export const cancelledVideoFilter: VideoWhereInput = {
   },
 }
 
+const browserLanguage = navigator.language.split('-')[0]
+
 export const publicCryptoVideoFilter: VideoWhereInput = {
   isPublic_eq: true,
   isCensored_eq: false,
+  orionLanguage_in: [...(browserLanguage ? [browserLanguage] : []), 'en'],
   category: {
-    id_in: atlasConfig.content.categories.find((category) => category.name === 'Crypto')?.videoCategories,
+    id_in: atlasConfig.content.categories.map((category) => category.videoCategories).flat(),
   },
   media: {
     isAccepted_eq: true,
