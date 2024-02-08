@@ -35,6 +35,7 @@ export const readEnv = (name: string, required = true, direct = false): string =
 // variables that depends on chosen environment
 export const ORION_GRAPHQL_URL = readEnv('ORION_URL')
 export const ORION_AUTH_URL = readEnv('ORION_AUTH_URL')
+export const ORION_INTERACTIONS_URL = readEnv('ORION_INTERACTIONS_URL', false)
 export const QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL = readEnv('QUERY_NODE_SUBSCRIPTION_URL')
 export const NODE_URL = readEnv('NODE_URL')
 export const FAUCET_URL = readEnv('FAUCET_URL')

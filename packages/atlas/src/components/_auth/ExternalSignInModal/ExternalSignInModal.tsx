@@ -122,8 +122,8 @@ export const ExternalSignInModal: FC = () => {
   useEffect(() => {
     if (currentStep === ModalSteps.NoMembership) {
       setPrimaryButtonProps({
-        text: 'Use email & password',
-        onClick: () => setAuthModalOpenName('logIn'),
+        text: 'Close',
+        onClick: () => setAuthModalOpenName(undefined),
       })
     }
   }, [currentStep, setAuthModalOpenName])
@@ -135,7 +135,12 @@ export const ExternalSignInModal: FC = () => {
         secondaryButton: [ModalSteps.Membership, ModalSteps.NoMembership].includes(currentStep)
           ? { text: 'Back', onClick: () => goToPreviousStep(ModalSteps.Wallet) }
           : [ModalSteps.Wallet, ModalSteps.NoMembership].includes(currentStep)
-          ? { text: 'Use email & password', onClick: () => setAuthModalOpenName('logIn') }
+          ? {
+              text: 'Use email & password',
+              onClick: () => setAuthModalOpenName('logIn'),
+              disabled: true,
+              tooltipText: 'Internal account are disabled on this playground',
+            }
           : undefined,
         additionalActionsNode: [ModalSteps.Wallet, ModalSteps.Membership, ModalSteps.Email].includes(currentStep) && (
           <Button

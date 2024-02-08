@@ -19,6 +19,7 @@ export type PersonalDataStoreState = {
   captionsEnabled: boolean
   captionsLanguage: string | null
   allowMinimizedPleyer: boolean
+  lastGlobalRecommendationId: string | null
 }
 
 const WHITELIST: (keyof PersonalDataStoreState)[] = [
@@ -54,7 +55,7 @@ export type PersonalDataStoreActions = {
   setCaptionsEnabled: (captionsEnabled: boolean) => void
   setMinimizedPlayerAllowed: (allowed: boolean) => void
   setCaptionsLanguage: (captionsLanguage: string | null) => void
-
+  setGlobalRecommendationId: (recommId: string) => void
   getIsCookiesPopoverVisible: () => boolean
 }
 
@@ -73,12 +74,18 @@ const initialState: PersonalDataStoreState = {
   captionsEnabled: false,
   captionsLanguage: null,
   allowMinimizedPleyer: true,
+  lastGlobalRecommendationId: null,
 }
 
 export const usePersonalDataStore = createStore<PersonalDataStoreState, PersonalDataStoreActions>(
   {
     state: initialState,
     actionsFactory: (set, get) => ({
+      setGlobalRecommendationId: (recommId) => {
+        set((state) => {
+          state.lastGlobalRecommendationId = recommId
+        })
+      },
       updateWatchedVideos: (__typename, id, timestamp) => {
         set((state) => {
           const currentVideo = state.watchedVideos.find((v) => v.id === id)

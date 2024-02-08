@@ -5094,7 +5094,7 @@ export type Mutation = {
   setMaxAttemptsOnMailDelivery: Scalars['Int']
   setNewAppRootDomain: AppRootDomain
   setNewNotificationAssetRoot: SetNewNotificationAssetRootResult
-  setNewNotificationCenterPath: AppRootDomain
+  setNewNotificationCenterPath: Scalars['Int']
   setSupportedCategories: SetSupportedCategoriesResult
   setVideoHero: SetVideoHeroResult
   setVideoViewPerUserTimeLimit: VideoViewPerUserTimeLimit
@@ -5102,6 +5102,7 @@ export type Mutation = {
   signAppActionCommitment: GeneratedSignature
   suspendChannels: Array<SuspendChannelResult>
   unfollowChannel: ChannelUnfollowResult
+  updateViewPercentage: AddVideoViewResult
   verifyChannel: VerifyChannelResult
 }
 
@@ -5248,6 +5249,11 @@ export type MutationSuspendChannelsArgs = {
 
 export type MutationUnfollowChannelArgs = {
   channelId: Scalars['String']
+}
+
+export type MutationUpdateViewPercentageArgs = {
+  percentage: Scalars['Int']
+  viewId: Scalars['String']
 }
 
 export type MutationVerifyChannelArgs = {
@@ -6770,6 +6776,7 @@ export type Query = {
   gatewayConfigs: Array<GatewayConfig>
   gatewayConfigsConnection: GatewayConfigsConnection
   getKillSwitch: KillSwitch
+  homepageVideos: RecommendedVideosQuery
   licenseById?: Maybe<License>
   /** @deprecated Use licenseById */
   licenseByUniqueInput?: Maybe<License>
@@ -6832,6 +6839,7 @@ export type Query = {
   sessionEncryptionArtifactsConnection: SessionEncryptionArtifactsConnection
   sessions: Array<Session>
   sessionsConnection: SessionsConnection
+  similiarVideos: RecommendedVideosQuery
   squidStatus?: Maybe<SquidStatus>
   storageBagById?: Maybe<StorageBag>
   /** @deprecated Use storageBagById */
@@ -7485,6 +7493,13 @@ export type QueryGatewayConfigsConnectionArgs = {
   where?: InputMaybe<GatewayConfigWhereInput>
 }
 
+export type QueryHomepageVideosArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<VideoOrderByInput>>
+  recommId?: InputMaybe<Scalars['String']>
+  where?: InputMaybe<VideoWhereInput>
+}
+
 export type QueryLicenseByIdArgs = {
   id: Scalars['String']
 }
@@ -7763,6 +7778,14 @@ export type QuerySessionsConnectionArgs = {
   first?: InputMaybe<Scalars['Int']>
   orderBy: Array<SessionOrderByInput>
   where?: InputMaybe<SessionWhereInput>
+}
+
+export type QuerySimiliarVideosArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<VideoOrderByInput>>
+  recommId?: InputMaybe<Scalars['String']>
+  videoId?: InputMaybe<Scalars['String']>
+  where?: InputMaybe<VideoWhereInput>
 }
 
 export type QueryStorageBagByIdArgs = {
@@ -8207,6 +8230,13 @@ export type RecipientTypeWhereInput = {
   isTypeOf_startsWith?: InputMaybe<Scalars['String']>
   membership?: InputMaybe<MembershipWhereInput>
   membership_isNull?: InputMaybe<Scalars['Boolean']>
+}
+
+export type RecommendedVideosQuery = {
+  __typename?: 'RecommendedVideosQuery'
+  numberNextRecommsCalls?: Maybe<Scalars['Int']>
+  recommId: Scalars['String']
+  video: Array<Video>
 }
 
 export type Report = {
@@ -10356,6 +10386,11 @@ export type Unread = {
   phantom?: Maybe<Scalars['Int']>
 }
 
+export type UpdateVideoViewResult = {
+  __typename?: 'UpdateVideoViewResult'
+  updated: Scalars['Boolean']
+}
+
 export type User = {
   __typename?: 'User'
   /** The account associated with the user (if any) */
@@ -11867,6 +11902,8 @@ export type VideoViewEvent = {
   user: User
   /** ID of the video that was viewed (the video may no longer exist) */
   videoId: Scalars['String']
+  /** Percentage of video viewed */
+  videoViewPercentage: Scalars['Int']
 }
 
 export type VideoViewEventEdge = {
@@ -11886,6 +11923,8 @@ export enum VideoViewEventOrderByInput {
   UserIsRootDesc = 'user_isRoot_DESC',
   VideoIdAsc = 'videoId_ASC',
   VideoIdDesc = 'videoId_DESC',
+  VideoViewPercentageAsc = 'videoViewPercentage_ASC',
+  VideoViewPercentageDesc = 'videoViewPercentage_DESC',
 }
 
 export type VideoViewEventWhereInput = {
@@ -11936,6 +11975,15 @@ export type VideoViewEventWhereInput = {
   videoId_not_in?: InputMaybe<Array<Scalars['String']>>
   videoId_not_startsWith?: InputMaybe<Scalars['String']>
   videoId_startsWith?: InputMaybe<Scalars['String']>
+  videoViewPercentage_eq?: InputMaybe<Scalars['Int']>
+  videoViewPercentage_gt?: InputMaybe<Scalars['Int']>
+  videoViewPercentage_gte?: InputMaybe<Scalars['Int']>
+  videoViewPercentage_in?: InputMaybe<Array<Scalars['Int']>>
+  videoViewPercentage_isNull?: InputMaybe<Scalars['Boolean']>
+  videoViewPercentage_lt?: InputMaybe<Scalars['Int']>
+  videoViewPercentage_lte?: InputMaybe<Scalars['Int']>
+  videoViewPercentage_not_eq?: InputMaybe<Scalars['Int']>
+  videoViewPercentage_not_in?: InputMaybe<Array<Scalars['Int']>>
 }
 
 export type VideoViewEventsConnection = {
