@@ -1,4 +1,4 @@
-import { WalletAccount } from '@talismn/connect-wallets'
+import { Wallet, WalletAccount } from '@talismn/connect-wallets'
 import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
 // import { ViewErrorFallback } from '@/components/ViewErrorFallback'
@@ -10,10 +10,38 @@ import { formatJoystreamAddress } from '@/utils/address'
 import { SentryLogger } from '@/utils/logs'
 import { retryWalletPromise } from '@/utils/misc'
 
+import { WalletConnectConfiguration, WalletConnectWallet } from './tmpwallet'
 import { filterUnsupportedAccounts, getWalletsList } from './wallet.helpers'
 
 const WalletContext = createContext<undefined | WalletContextValue>(undefined)
 WalletContext.displayName = 'WalletContext'
+
+const walletConnectParams: WalletConnectConfiguration = {
+  projectId: '33b2609463e399daee8c51726546c8dd',
+  relayUrl: 'wss://relay.walletconnect.com',
+  metadata: {
+    name: 'Joystream demo app',
+    description: 'Joystream Wallet-Connect',
+    url: '#',
+    icons: ['https://walletconnect.com/walletconnect-logo.png'],
+  },
+  chainIds: ['polkadot:91b171bb158e2d3848fa23a9f1c25182'],
+  optionalChainIds: ['polkadot:91b171bb158e2d3848fa23a9f1c25182'],
+  onSessionDelete: () => {
+    // do something when session is removed
+    console.log('session deleted')
+  },
+}
+
+const params = {
+  requiredNamespaces: {
+    polkadot: {
+      methods: ['polkadot_signTransaction', 'polkadot_signMessage'],
+      chains: ['polkadot:6b5e488e0fa8f9821110d5c13f4c468a'],
+      events: ['chainChanged", "accountsChanged'],
+    },
+  },
+}
 
 export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
   const { walletStatus, wallet, lastChainMetadataVersion } = useWalletStore()
@@ -107,10 +135,58 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
     [initSignerWallet]
   )
 
+  const signInWithWalletConnect = useCallback(async () => {
+    // const { uri, approval } = await provider.client.connect(params)
+    // const walletConnectModal = new WalletConnectModal({
+    //   projectId: '33b2609463e399daee8c51726546c8dd',
+    // })
+    // if (uri) {
+    //   walletConnectModal.openModal({ uri })
+    // }
+    // const walletConnectSession = await approval()
+    //
+    // const walletConnectAccount = Object.values(walletConnectSession.namespaces)
+    //   .map((namespace) => namespace.accounts)
+    //   .flat()
+    //
+    // const accounts = walletConnectAccount.map((wcAccount) => {
+    //   const address = wcAccount.split(':')[2]
+    //   return address
+    // })
+
+    console.log('wc function')
+    const wcWallet = new WalletConnectWallet(walletConnectParams, atlasConfig.general.appName)
+
+    await wcWallet.connect()
+    const accounts = await wcWallet.getAccounts()
+    console.log('wc accs', accounts)
+    const accountsWithWallet = accounts
+      // .filter(filterUnsupportedAccounts)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .map((account: any) => {
+        return {
+          ...account,
+          address: formatJoystreamAddress(account.address),
+          source: 'WalletConnect',
+          wallet: wcWallet,
+          signer: wcWallet.signer,
+        }
+      })
+
+    setWalletAccounts(accountsWithWallet)
+    setWallet(wcWallet as unknown as Wallet)
+    return accountsWithWallet
+  }, [setWallet, setWalletAccounts])
+
   const checkSignerStatus = useCallback(async () => {
     const chainMetadata = await joystreamCtx?.joystream?.getChainMetadata()
-
-    if (wallet?.extension.metadata && chainMetadata) {
+    // @ts-ignore asdffdf
+    if (!wallet || wallet.type === 'WALLET_CONNECT') {
+      console.log('ret')
+      return
+    }
+    console.log('crash here', console.log(wallet))
+    if (wallet?.extension?.metadata && chainMetadata) {
       const [localGenesisHash, localSpecVersion] = lastChainMetadataVersion ?? ['', 0]
 
       // update was skipped
@@ -133,12 +209,13 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
       const isOutdated = currentChain.specVersion < chainMetadata.specVersion
       setIsSignerMetadataOutdated(isOutdated)
     }
-  }, [joystreamCtx?.joystream, lastChainMetadataVersion, wallet?.extension.metadata])
+  }, [joystreamCtx?.joystream, lastChainMetadataVersion, wallet])
 
   const updateSignerMetadata = useCallback(async () => {
     const chainMetadata = await joystreamCtx?.joystream?.getChainMetadata()
-    return wallet?.extension.metadata.provide(chainMetadata)
-  }, [joystreamCtx?.joystream, wallet?.extension.metadata])
+    if (!wallet) return
+    return wallet?.extension.metadata.provider(chainMetadata)
+  }, [joystreamCtx?.joystream, wallet])
 
   const skipSignerMetadataUpdate = useCallback(async () => {
     const chainMetadata = await joystreamCtx?.joystream?.getChainMetadata()
@@ -184,8 +261,9 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
       isSignerMetadataOutdated,
       updateSignerMetadata,
       skipSignerMetadataUpdate,
+      signInWithWalletConnect,
     }),
-    [signInToWallet, isSignerMetadataOutdated, updateSignerMetadata, skipSignerMetadataUpdate]
+    [signInToWallet, isSignerMetadataOutdated, updateSignerMetadata, skipSignerMetadataUpdate, signInWithWalletConnect]
   )
 
   // if (error) {

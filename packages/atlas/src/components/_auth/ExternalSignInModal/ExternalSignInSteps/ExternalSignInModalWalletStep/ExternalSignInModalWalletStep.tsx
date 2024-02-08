@@ -1,5 +1,6 @@
 import { Wallet } from '@talismn/connect-wallets'
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
+import shallow from 'zustand/shallow'
 
 import { GetMembershipsQuery, useGetMembershipsLazyQuery } from '@/api/queries/__generated__/memberships.generated'
 import { SvgActionNewTab, SvgAlertsError24, SvgAlertsInformative24, SvgLogoPolkadot } from '@/assets/icons'
@@ -8,6 +9,7 @@ import { AuthenticationModalStepTemplate } from '@/components/_auth/Authenticati
 import { Loader } from '@/components/_loaders/Loader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMountEffect } from '@/hooks/useMountEffect'
+import { useAuthStore } from '@/providers/auth/auth.store'
 import { UnknownWallet, getWalletsList } from '@/providers/wallet/wallet.helpers'
 import { useWallet } from '@/providers/wallet/wallet.hooks'
 import { isMobile } from '@/utils/browser'
@@ -41,15 +43,22 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
   const [selectedWalletIdx, setSelectedWalletIdx] = useState<number>(0)
   const [hasError, setHasError] = useState(false)
   const [isConnecting, setIsConnecting] = useState(false)
-  const { wallet: walletFromStore, signInToWallet } = useWallet()
+  const { wallet: walletFromStore, signInToWallet, signInWithWalletConnect } = useWallet()
   const [fetchMemberships] = useGetMembershipsLazyQuery({})
+  const { setAuthModalOpenName } = useAuthStore(
+    (state) => ({
+      setAuthModalOpenName: state.actions.setAuthModalOpenName,
+    }),
+    shallow
+  )
   const wallets = useMemo(() => {
     const unsortedWallets = getWalletsList().filter((wallet) => wallet.installed)
+
     if (isMobileDevice) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const rawWallets = Object.keys((window as any).injectedWeb3 || {})
 
-      const allMoblieWallets = new Set([
+      const allMobileWallets = new Set([
         'polkawallet',
         ...rawWallets,
         ...unsortedWallets
@@ -58,7 +67,7 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
           .map((wallet) => wallet.extensionName),
       ])
 
-      return Array.from(allMoblieWallets)
+      return Array.from(allMobileWallets)
         .map((walletName) => {
           const possiblyInstalledWallet = unsortedWallets.find(
             (wallet) => wallet.extensionName === walletName && wallet.extensionName === 'subwallet-js'
@@ -87,17 +96,32 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
   const selectedWallet = (selectedWalletIdx != null && wallets[selectedWalletIdx]) || null
 
   const handleConfirm = useCallback(async () => {
-    if (!selectedWallet) return
+    if (selectedWalletIdx < wallets.length && !selectedWallet) return
 
     setIsConnecting(true)
     setHasError(false)
-    const accounts = await signInToWallet(selectedWallet.extensionName)
+
+    console.log(selectedWalletIdx, wallets.length)
+
+    if (selectedWalletIdx === wallets.length + 1) {
+      // setAuthModalOpenName(undefined)
+    }
+
+    const accounts =
+      selectedWalletIdx === wallets.length + 1
+        ? await signInWithWalletConnect()
+        : await signInToWallet(selectedWallet?.extensionName)
 
     if (!accounts) {
+      console.log('no accs!')
       setHasError(true)
+      setAuthModalOpenName('externalLogIn')
       // set error state
       return
     }
+    // setAuthModalOpenName('externalLogIn')
+
+    console.log('fetching memberships', accounts)
 
     const res = await fetchMemberships({
       variables: {
@@ -106,6 +130,7 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
         },
       },
     })
+    console.log('mems', res.data?.memberships)
     setIsConnecting(false)
 
     if (res.data?.memberships.length) {
@@ -114,7 +139,17 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
     } else {
       goToStep(ModalSteps.NoMembership)
     }
-  }, [fetchMemberships, goToStep, selectedWallet, setAvailableMemberships, signInToWallet])
+  }, [
+    fetchMemberships,
+    goToStep,
+    selectedWallet,
+    selectedWalletIdx,
+    setAuthModalOpenName,
+    setAvailableMemberships,
+    signInToWallet,
+    signInWithWalletConnect,
+    wallets.length,
+  ])
 
   const handleSelectWallet = useCallback((idx: number) => {
     setSelectedWalletIdx(idx)
@@ -137,16 +172,16 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
     setPrimaryButtonProps({
       text: isConnecting
         ? 'Connecting...'
-        : selectedWallet?.installed || isMobileDevice
+        : selectedWallet?.installed || isMobileDevice || selectedWalletIdx === wallets.length + 1
         ? 'Use wallet'
         : `Install ${selectedWallet?.title}`,
       disabled: isConnecting,
-      icon: selectedWallet?.installed ? null : <SvgActionNewTab />,
+      icon: selectedWallet?.installed || selectedWalletIdx === wallets.length + 1 ? null : <SvgActionNewTab />,
       iconPlacement: 'right',
       to: selectedWallet?.installed ? undefined : selectedWallet?.installUrl,
-      onClick: selectedWallet?.installed ? handleConfirm : undefined,
+      onClick: selectedWallet?.installed || selectedWalletIdx === wallets.length + 1 ? handleConfirm : undefined,
     })
-  }, [handleConfirm, isConnecting, selectedWallet, setPrimaryButtonProps])
+  }, [handleConfirm, isConnecting, selectedWallet, selectedWalletIdx, setPrimaryButtonProps, wallets.length])
 
   return (
     <AuthenticationModalStepTemplate
@@ -192,6 +227,18 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
             highlightWhenActive
           />
         ))}
+        <StyledListItem
+          key={'walletconnect'}
+          label={'walletconnect'}
+          caption={'test'}
+          size={smMatch ? 'large' : 'medium'}
+          selected={selectedWalletIdx === wallets.length + 1}
+          destructive={false}
+          nodeStart={<IconWrapper icon={<SvgLogoPolkadot />} />}
+          nodeEnd={undefined}
+          onClick={() => handleSelectWallet(wallets.length + 1)}
+          highlightWhenActive
+        />
       </ListItemsWrapper>
       {selectedWallet?.installed === false && !isMobileDevice ? (
         <StyledBottomBanner

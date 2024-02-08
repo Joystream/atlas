@@ -9,4 +9,5 @@ export type WalletContextValue = {
   skipSignerMetadataUpdate: () => Promise<void>
   signInToWallet: (walletName?: string, invokedAutomatically?: boolean) => Promise<SignerWalletAccount[] | null>
   updateSignerMetadata: () => Promise<void>
+  signInWithWalletConnect: () => Promise<SignerWalletAccount[] | null>
 }
