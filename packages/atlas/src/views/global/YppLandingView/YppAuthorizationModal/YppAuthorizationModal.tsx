@@ -203,7 +203,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     [setSelectedChannelId, setYtRequirementsErrors]
   )
 
-  const createOrUpdateChannel = useCreateEditChannelSubmit()
+  const createOrUpdateChannel = useCreateEditChannelSubmit(selectedChannelId ?? undefined)
 
   const handleCreateOrUpdateChannel = detailsFormMethods.handleSubmit(async (data) => {
     setFinalFormData(() => ({
