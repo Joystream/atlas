@@ -217,6 +217,9 @@ export class JoystreamLibExtrinsics {
           ? {
               [collaboratorMemberId]: createType('BTreeSet<PalletContentIterableEnumsChannelActionPermission>', [
                 'AddVideo',
+                'AgentRemark',
+                'UpdateChannelMetadata',
+                'UpdateVideoMetadata',
               ]),
             }
           : {}
@@ -295,6 +298,9 @@ export class JoystreamLibExtrinsics {
             ? {
                 [collaboratorMemberId]: createType('BTreeSet<PalletContentIterableEnumsChannelActionPermission>', [
                   'AddVideo',
+                  'AgentRemark',
+                  'UpdateChannelMetadata',
+                  'UpdateVideoMetadata',
                 ]),
               }
             : {}

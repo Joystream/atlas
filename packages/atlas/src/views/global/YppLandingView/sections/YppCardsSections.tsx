@@ -198,7 +198,7 @@ export const YppCardsSections: FC = () => {
                 data-aos-easing="atlas-easing"
               >
                 <ContentCard
-                  pill={{ label: 'Coming late 2023' }}
+                  pill={{ label: 'Coming early 2024' }}
                   title="Issue Channel Tokens"
                   subtitle="Creator tokens"
                   body="Turn viewers into evangelists by letting them hold a share in your channel when they buy your own channel token."
@@ -239,7 +239,7 @@ export const YppCardsSections: FC = () => {
                 data-aos-easing="atlas-easing"
               >
                 <ContentCard
-                  pill={{ label: 'Coming early 2024' }}
+                  pill={{ label: 'Coming late 2024' }}
                   title="Get recognized and supported with tips"
                   subtitle="Tips"
                   body="Receive tips from your viewers who appreciate your work and want you to know about it."
@@ -281,7 +281,7 @@ export const YppCardsSections: FC = () => {
                 data-aos-easing="atlas-easing"
               >
                 <ContentCard
-                  pill={{ label: 'Coming early 2024' }}
+                  pill={{ label: 'Coming late 2024' }}
                   title="Create videos which only your supporters can access"
                   subtitle="Gated content"
                   body="Offer exclusive content to the selected members who purchased your tokens and NFTs."
