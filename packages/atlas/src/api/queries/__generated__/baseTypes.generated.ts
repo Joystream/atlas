@@ -2467,6 +2467,8 @@ export enum CommentOrderByInput {
   VideoIsReactionFeatureEnabledDesc = 'video_isReactionFeatureEnabled_DESC',
   VideoLanguageAsc = 'video_language_ASC',
   VideoLanguageDesc = 'video_language_DESC',
+  VideoOrionLanguageAsc = 'video_orionLanguage_ASC',
+  VideoOrionLanguageDesc = 'video_orionLanguage_DESC',
   VideoPublishedBeforeJoystreamAsc = 'video_publishedBeforeJoystream_ASC',
   VideoPublishedBeforeJoystreamDesc = 'video_publishedBeforeJoystream_DESC',
   VideoReactionsCountAsc = 'video_reactionsCount_ASC',
@@ -2586,6 +2588,8 @@ export enum CommentReactionOrderByInput {
   VideoIsReactionFeatureEnabledDesc = 'video_isReactionFeatureEnabled_DESC',
   VideoLanguageAsc = 'video_language_ASC',
   VideoLanguageDesc = 'video_language_DESC',
+  VideoOrionLanguageAsc = 'video_orionLanguage_ASC',
+  VideoOrionLanguageDesc = 'video_orionLanguage_DESC',
   VideoPublishedBeforeJoystreamAsc = 'video_publishedBeforeJoystream_ASC',
   VideoPublishedBeforeJoystreamDesc = 'video_publishedBeforeJoystream_DESC',
   VideoReactionsCountAsc = 'video_reactionsCount_ASC',
@@ -5094,7 +5098,7 @@ export type Mutation = {
   setMaxAttemptsOnMailDelivery: Scalars['Int']
   setNewAppRootDomain: AppRootDomain
   setNewNotificationAssetRoot: SetNewNotificationAssetRootResult
-  setNewNotificationCenterPath: AppRootDomain
+  setNewNotificationCenterPath: Scalars['Int']
   setSupportedCategories: SetSupportedCategoriesResult
   setVideoHero: SetVideoHeroResult
   setVideoViewPerUserTimeLimit: VideoViewPerUserTimeLimit
@@ -5751,7 +5755,7 @@ export type NotificationEmailDelivery = {
   attempts: Array<EmailDeliveryAttempt>
   /** mark as discard after max attempts or successful attempt */
   discard: Scalars['Boolean']
-  /** Autoincremented */
+  /** UUID */
   id: Scalars['String']
   /** the notification being delivered */
   notification: Notification
@@ -6489,6 +6493,8 @@ export enum OwnedNftOrderByInput {
   VideoIsReactionFeatureEnabledDesc = 'video_isReactionFeatureEnabled_DESC',
   VideoLanguageAsc = 'video_language_ASC',
   VideoLanguageDesc = 'video_language_DESC',
+  VideoOrionLanguageAsc = 'video_orionLanguage_ASC',
+  VideoOrionLanguageDesc = 'video_orionLanguage_DESC',
   VideoPublishedBeforeJoystreamAsc = 'video_publishedBeforeJoystream_ASC',
   VideoPublishedBeforeJoystreamDesc = 'video_publishedBeforeJoystream_DESC',
   VideoReactionsCountAsc = 'video_reactionsCount_ASC',
@@ -10534,6 +10540,8 @@ export type Video = {
   mediaMetadata?: Maybe<VideoMediaMetadata>
   /** Video NFT details */
   nft?: Maybe<OwnedNft>
+  /** Video's orion langauge */
+  orionLanguage?: Maybe<Scalars['String']>
   /** channel owner pinned comment */
   pinnedComment?: Maybe<Comment>
   /** If the Video was published on other platform before beeing published on Joystream - the original publication date */
@@ -10824,6 +10832,8 @@ export enum VideoFeaturedInCategoryOrderByInput {
   VideoIsReactionFeatureEnabledDesc = 'video_isReactionFeatureEnabled_DESC',
   VideoLanguageAsc = 'video_language_ASC',
   VideoLanguageDesc = 'video_language_DESC',
+  VideoOrionLanguageAsc = 'video_orionLanguage_ASC',
+  VideoOrionLanguageDesc = 'video_orionLanguage_DESC',
   VideoPublishedBeforeJoystreamAsc = 'video_publishedBeforeJoystream_ASC',
   VideoPublishedBeforeJoystreamDesc = 'video_publishedBeforeJoystream_DESC',
   VideoReactionsCountAsc = 'video_reactionsCount_ASC',
@@ -10944,6 +10954,8 @@ export enum VideoHeroOrderByInput {
   VideoIsReactionFeatureEnabledDesc = 'video_isReactionFeatureEnabled_DESC',
   VideoLanguageAsc = 'video_language_ASC',
   VideoLanguageDesc = 'video_language_DESC',
+  VideoOrionLanguageAsc = 'video_orionLanguage_ASC',
+  VideoOrionLanguageDesc = 'video_orionLanguage_DESC',
   VideoPublishedBeforeJoystreamAsc = 'video_publishedBeforeJoystream_ASC',
   VideoPublishedBeforeJoystreamDesc = 'video_publishedBeforeJoystream_DESC',
   VideoReactionsCountAsc = 'video_reactionsCount_ASC',
@@ -11247,6 +11259,8 @@ export enum VideoMediaMetadataOrderByInput {
   VideoIsReactionFeatureEnabledDesc = 'video_isReactionFeatureEnabled_DESC',
   VideoLanguageAsc = 'video_language_ASC',
   VideoLanguageDesc = 'video_language_DESC',
+  VideoOrionLanguageAsc = 'video_orionLanguage_ASC',
+  VideoOrionLanguageDesc = 'video_orionLanguage_DESC',
   VideoPublishedBeforeJoystreamAsc = 'video_publishedBeforeJoystream_ASC',
   VideoPublishedBeforeJoystreamDesc = 'video_publishedBeforeJoystream_DESC',
   VideoReactionsCountAsc = 'video_reactionsCount_ASC',
@@ -11466,6 +11480,8 @@ export enum VideoOrderByInput {
   NftLastSaleDateDesc = 'nft_lastSaleDate_DESC',
   NftLastSalePriceAsc = 'nft_lastSalePrice_ASC',
   NftLastSalePriceDesc = 'nft_lastSalePrice_DESC',
+  OrionLanguageAsc = 'orionLanguage_ASC',
+  OrionLanguageDesc = 'orionLanguage_DESC',
   PinnedCommentCreatedAtAsc = 'pinnedComment_createdAt_ASC',
   PinnedCommentCreatedAtDesc = 'pinnedComment_createdAt_DESC',
   PinnedCommentIdAsc = 'pinnedComment_id_ASC',
@@ -11604,6 +11620,8 @@ export enum VideoReactionOrderByInput {
   VideoIsReactionFeatureEnabledDesc = 'video_isReactionFeatureEnabled_DESC',
   VideoLanguageAsc = 'video_language_ASC',
   VideoLanguageDesc = 'video_language_DESC',
+  VideoOrionLanguageAsc = 'video_orionLanguage_ASC',
+  VideoOrionLanguageDesc = 'video_orionLanguage_DESC',
   VideoPublishedBeforeJoystreamAsc = 'video_publishedBeforeJoystream_ASC',
   VideoPublishedBeforeJoystreamDesc = 'video_publishedBeforeJoystream_DESC',
   VideoReactionsCountAsc = 'video_reactionsCount_ASC',
@@ -11757,6 +11775,8 @@ export enum VideoSubtitleOrderByInput {
   VideoIsReactionFeatureEnabledDesc = 'video_isReactionFeatureEnabled_DESC',
   VideoLanguageAsc = 'video_language_ASC',
   VideoLanguageDesc = 'video_language_DESC',
+  VideoOrionLanguageAsc = 'video_orionLanguage_ASC',
+  VideoOrionLanguageDesc = 'video_orionLanguage_DESC',
   VideoPublishedBeforeJoystreamAsc = 'video_publishedBeforeJoystream_ASC',
   VideoPublishedBeforeJoystreamDesc = 'video_publishedBeforeJoystream_DESC',
   VideoReactionsCountAsc = 'video_reactionsCount_ASC',
@@ -12083,6 +12103,23 @@ export type VideoWhereInput = {
   media_isNull?: InputMaybe<Scalars['Boolean']>
   nft?: InputMaybe<OwnedNftWhereInput>
   nft_isNull?: InputMaybe<Scalars['Boolean']>
+  orionLanguage_contains?: InputMaybe<Scalars['String']>
+  orionLanguage_containsInsensitive?: InputMaybe<Scalars['String']>
+  orionLanguage_endsWith?: InputMaybe<Scalars['String']>
+  orionLanguage_eq?: InputMaybe<Scalars['String']>
+  orionLanguage_gt?: InputMaybe<Scalars['String']>
+  orionLanguage_gte?: InputMaybe<Scalars['String']>
+  orionLanguage_in?: InputMaybe<Array<Scalars['String']>>
+  orionLanguage_isNull?: InputMaybe<Scalars['Boolean']>
+  orionLanguage_lt?: InputMaybe<Scalars['String']>
+  orionLanguage_lte?: InputMaybe<Scalars['String']>
+  orionLanguage_not_contains?: InputMaybe<Scalars['String']>
+  orionLanguage_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  orionLanguage_not_endsWith?: InputMaybe<Scalars['String']>
+  orionLanguage_not_eq?: InputMaybe<Scalars['String']>
+  orionLanguage_not_in?: InputMaybe<Array<Scalars['String']>>
+  orionLanguage_not_startsWith?: InputMaybe<Scalars['String']>
+  orionLanguage_startsWith?: InputMaybe<Scalars['String']>
   pinnedComment?: InputMaybe<CommentWhereInput>
   pinnedComment_isNull?: InputMaybe<Scalars['Boolean']>
   publishedBeforeJoystream_eq?: InputMaybe<Scalars['DateTime']>
