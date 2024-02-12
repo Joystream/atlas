@@ -7,7 +7,7 @@ import { JoystreamContext, JoystreamContextValue } from '@/providers/joystream/j
 import { useWalletStore } from '@/providers/wallet/wallet.store'
 import { SignerWalletAccount, WalletContextValue } from '@/providers/wallet/wallet.types'
 import { formatJoystreamAddress } from '@/utils/address'
-import { SentryLogger } from '@/utils/logs'
+import {ConsoleLogger, SentryLogger} from '@/utils/logs'
 import { retryWalletPromise } from '@/utils/misc'
 
 import { WalletConnectConfiguration, WalletConnectWallet } from './tmpwallet'
@@ -29,7 +29,7 @@ const walletConnectParams: WalletConnectConfiguration = {
   optionalChainIds: ['polkadot:91b171bb158e2d3848fa23a9f1c25182'],
   onSessionDelete: () => {
     // do something when session is removed
-    console.log('session deleted')
+    ConsoleLogger.log('WalletConnect session deleted')
   },
 }
 
@@ -136,30 +136,11 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
   )
 
   const signInWithWalletConnect = useCallback(async () => {
-    // const { uri, approval } = await provider.client.connect(params)
-    // const walletConnectModal = new WalletConnectModal({
-    //   projectId: '33b2609463e399daee8c51726546c8dd',
-    // })
-    // if (uri) {
-    //   walletConnectModal.openModal({ uri })
-    // }
-    // const walletConnectSession = await approval()
-    //
-    // const walletConnectAccount = Object.values(walletConnectSession.namespaces)
-    //   .map((namespace) => namespace.accounts)
-    //   .flat()
-    //
-    // const accounts = walletConnectAccount.map((wcAccount) => {
-    //   const address = wcAccount.split(':')[2]
-    //   return address
-    // })
 
-    console.log('wc function')
     const wcWallet = new WalletConnectWallet(walletConnectParams, atlasConfig.general.appName)
 
     await wcWallet.connect()
     const accounts = await wcWallet.getAccounts()
-    console.log('wc accs', accounts)
     const accountsWithWallet = accounts
       // .filter(filterUnsupportedAccounts)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -180,12 +161,12 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const checkSignerStatus = useCallback(async () => {
     const chainMetadata = await joystreamCtx?.joystream?.getChainMetadata()
-    // @ts-ignore asdffdf
+
+    // @ts-ignore edit wallet type
     if (!wallet || wallet.type === 'WALLET_CONNECT') {
-      console.log('ret')
       return
     }
-    console.log('crash here', console.log(wallet))
+
     if (wallet?.extension?.metadata && chainMetadata) {
       const [localGenesisHash, localSpecVersion] = lastChainMetadataVersion ?? ['', 0]
 

@@ -3,7 +3,7 @@ import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import shallow from 'zustand/shallow'
 
 import { GetMembershipsQuery, useGetMembershipsLazyQuery } from '@/api/queries/__generated__/memberships.generated'
-import { SvgActionNewTab, SvgAlertsError24, SvgAlertsInformative24, SvgLogoPolkadot } from '@/assets/icons'
+import { SvgActionNewTab, SvgAlertsError24, SvgAlertsInformative24, SvgLogoPolkadot, SvgWcLogo } from '@/assets/icons'
 import { IconWrapper } from '@/components/IconWrapper'
 import { AuthenticationModalStepTemplate } from '@/components/_auth/AuthenticationModalStepTemplate'
 import { Loader } from '@/components/_loaders/Loader'
@@ -101,27 +101,17 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
     setIsConnecting(true)
     setHasError(false)
 
-    console.log(selectedWalletIdx, wallets.length)
-
-    if (selectedWalletIdx === wallets.length + 1) {
-      // setAuthModalOpenName(undefined)
-    }
-
     const accounts =
       selectedWalletIdx === wallets.length + 1
         ? await signInWithWalletConnect()
         : await signInToWallet(selectedWallet?.extensionName)
 
     if (!accounts) {
-      console.log('no accs!')
       setHasError(true)
       setAuthModalOpenName('externalLogIn')
       // set error state
       return
     }
-    // setAuthModalOpenName('externalLogIn')
-
-    console.log('fetching memberships', accounts)
 
     const res = await fetchMemberships({
       variables: {
@@ -130,7 +120,7 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
         },
       },
     })
-    console.log('mems', res.data?.memberships)
+
     setIsConnecting(false)
 
     if (res.data?.memberships.length) {
@@ -228,13 +218,12 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
           />
         ))}
         <StyledListItem
-          key={'walletconnect'}
-          label={'walletconnect'}
-          caption={'test'}
+          label="Walletconnect"
+          // caption={'test'}
           size={smMatch ? 'large' : 'medium'}
           selected={selectedWalletIdx === wallets.length + 1}
           destructive={false}
-          nodeStart={<IconWrapper icon={<SvgLogoPolkadot />} />}
+          nodeStart={<IconWrapper icon={<SvgWcLogo />} />}
           nodeEnd={undefined}
           onClick={() => handleSelectWallet(wallets.length + 1)}
           highlightWhenActive

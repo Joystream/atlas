@@ -42,7 +42,7 @@ export class WalletConnectWallet implements BaseWallet {
       chains: config.chainIds,
       themeMode: 'dark',
       themeVariables: {
-        '--wcm-z-index': '99999999!important',
+        '--wcm-z-index': '9999',
       },
     })
   }
