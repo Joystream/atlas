@@ -7,7 +7,7 @@ import { JoystreamContext, JoystreamContextValue } from '@/providers/joystream/j
 import { useWalletStore } from '@/providers/wallet/wallet.store'
 import { SignerWalletAccount, WalletContextValue } from '@/providers/wallet/wallet.types'
 import { formatJoystreamAddress } from '@/utils/address'
-import {ConsoleLogger, SentryLogger} from '@/utils/logs'
+import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { retryWalletPromise } from '@/utils/misc'
 
 import { WalletConnectConfiguration, WalletConnectWallet } from './tmpwallet'
@@ -30,16 +30,6 @@ const walletConnectParams: WalletConnectConfiguration = {
   onSessionDelete: () => {
     // do something when session is removed
     ConsoleLogger.log('WalletConnect session deleted')
-  },
-}
-
-const params = {
-  requiredNamespaces: {
-    polkadot: {
-      methods: ['polkadot_signTransaction', 'polkadot_signMessage'],
-      chains: ['polkadot:6b5e488e0fa8f9821110d5c13f4c468a'],
-      events: ['chainChanged", "accountsChanged'],
-    },
   },
 }
 
@@ -136,7 +126,6 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
   )
 
   const signInWithWalletConnect = useCallback(async () => {
-
     const wcWallet = new WalletConnectWallet(walletConnectParams, atlasConfig.general.appName)
 
     await wcWallet.connect()

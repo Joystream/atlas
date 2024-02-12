@@ -1,11 +1,10 @@
-import type { Account, BaseWallet, BaseWalletProvider, UnsubscribeFn, WalletMetadata } from './core'
-import { WalletType } from './core'
 import type { Signer } from '@polkadot/types/types'
 import { WalletConnectModal } from '@walletconnect/modal'
 import Client, { SignClient } from '@walletconnect/sign-client'
 import type { SessionTypes } from '@walletconnect/types'
 
 import { POLKADOT_CHAIN_ID, WC_VERSION } from './consts'
+import type { Account, BaseWallet, BaseWalletProvider, UnsubscribeFn, WalletMetadata, WalletType } from './core'
 import { WalletConnectSigner } from './signer.js'
 import type { WalletConnectConfiguration, WcAccount } from './types.js'
 

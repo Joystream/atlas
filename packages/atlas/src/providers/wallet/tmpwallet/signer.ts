@@ -1,9 +1,9 @@
 import { TypeRegistry } from '@polkadot/types'
-import type { Signer, SignerResult } from '@polkadot/types/types'
-import type { SignerPayloadJSON, SignerPayloadRaw } from '@polkadot/types/types'
+import type { Signer, SignerPayloadJSON, SignerPayloadRaw, SignerResult } from '@polkadot/types/types'
 import type { HexString } from '@polkadot/util/types'
 import SignClient from '@walletconnect/sign-client'
 import type { SessionTypes } from '@walletconnect/types'
+
 import { PolkadotNamespaceChainId } from './types'
 
 interface Signature {
