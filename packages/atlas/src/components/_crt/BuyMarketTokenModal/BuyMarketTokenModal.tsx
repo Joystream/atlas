@@ -118,7 +118,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
       }
 
       return calcBuyMarketPricePerToken(
-        currentAmm.mintedByAmm,
+        +currentAmm.mintedByAmm - +currentAmm.burnedByAmm,
         currentAmm.ammSlopeParameter,
         currentAmm.ammInitPrice,
         amount

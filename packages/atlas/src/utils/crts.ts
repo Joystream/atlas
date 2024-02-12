@@ -1,7 +1,7 @@
 import BN from 'bn.js'
 
 export const calcBuyMarketPricePerToken = (
-  mintedByAmm?: string,
+  mintedByAmm?: string | number,
   ammSlopeParameter?: string,
   ammInitPrice?: string,
   amount = 1
@@ -17,7 +17,7 @@ export const calcBuyMarketPricePerToken = (
 }
 
 export const calcSellMarketPricePerToken = (
-  mintedByAmm?: string,
+  mintedByAmm?: string | number,
   ammSlopeParameter?: string,
   ammInitPrice?: string,
   amount = 1

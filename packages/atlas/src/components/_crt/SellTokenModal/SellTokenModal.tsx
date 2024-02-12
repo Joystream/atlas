@@ -54,7 +54,7 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
     (amount: number) => {
       const currentAmm = data?.creatorTokenById?.ammCurves.find((amm) => !amm.finalized)
       return calcSellMarketPricePerToken(
-        currentAmm?.mintedByAmm,
+        currentAmm ? +currentAmm.mintedByAmm - +currentAmm.burnedByAmm : undefined,
         currentAmm?.ammSlopeParameter,
         currentAmm?.ammInitPrice,
         amount
