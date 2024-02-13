@@ -3,6 +3,7 @@ import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
 import {
+  BasicVideoFeaturedInCategoryFragmentDoc,
   BasicVideoFieldsFragmentDoc,
   FullNftFieldsFragmentDoc,
   StorageDataObjectFieldsFragmentDoc,

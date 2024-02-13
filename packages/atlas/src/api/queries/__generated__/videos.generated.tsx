@@ -4,6 +4,7 @@ import * as Apollo from '@apollo/client'
 import * as Types from './baseTypes.generated'
 import {
   BasicVideoActivityFieldsFragmentDoc,
+  BasicVideoFeaturedInCategoryFragmentDoc,
   BasicVideoFieldsFragmentDoc,
   FullVideoFieldsFragmentDoc,
 } from './fragments.generated'

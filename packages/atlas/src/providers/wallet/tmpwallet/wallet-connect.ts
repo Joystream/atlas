@@ -3,7 +3,7 @@ import { WalletConnectModal } from '@walletconnect/modal'
 import Client, { SignClient } from '@walletconnect/sign-client'
 import type { SessionTypes } from '@walletconnect/types'
 
-import { POLKADOT_CHAIN_ID, WC_VERSION } from './consts'
+import { JOYSTREAM_CHAIN_ID, POLKADOT_CHAIN_ID, WC_VERSION } from './consts'
 import { Account, BaseWallet, BaseWalletProvider, UnsubscribeFn, WalletMetadata, WalletType } from './core'
 import { WalletConnectSigner } from './signer.js'
 import type { WalletConnectConfiguration, WcAccount } from './types.js'
@@ -116,11 +116,13 @@ export class WalletConnectWallet implements BaseWallet {
 
     const lastKeyIndex = this.client.session.getAll().length - 1
     const lastSession = this.client.session.getAll()[lastKeyIndex]
+    const signerChainId = Array.isArray(this.config.chainIds) ? this.config.chainIds[0] : JOYSTREAM_CHAIN_ID
 
     if (lastSession) {
       return new Promise<void>((resolve) => {
         this.session = lastSession
-        this.signer = new WalletConnectSigner(this.client!, lastSession, POLKADOT_CHAIN_ID)
+
+        this.signer = new WalletConnectSigner(this.client!, lastSession, signerChainId)
         resolve()
       })
     }
@@ -142,7 +144,7 @@ export class WalletConnectWallet implements BaseWallet {
       approval()
         .then((session) => {
           this.session = session
-          this.signer = new WalletConnectSigner(this.client!, session, POLKADOT_CHAIN_ID)
+          this.signer = new WalletConnectSigner(this.client!, session, signerChainId)
 
           resolve()
         })

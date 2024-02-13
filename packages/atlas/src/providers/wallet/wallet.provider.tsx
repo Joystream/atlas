@@ -23,10 +23,15 @@ const walletConnectParams: WalletConnectConfiguration = {
     name: 'Joystream demo app',
     description: 'Joystream Wallet-Connect',
     url: '#',
-    icons: ['https://walletconnect.com/walletconnect-logo.png'],
+    icons: ['https://walletconnect.com/static/favicon.png'],
   },
-  chainIds: ['polkadot:91b171bb158e2d3848fa23a9f1c25182'],
-  optionalChainIds: ['polkadot:91b171bb158e2d3848fa23a9f1c25182'],
+  // prod chain
+  chainIds: ['polkadot:6b5e488e0fa8f9821110d5c13f4c468a'],
+  optionalChainIds: ['polkadot:6b5e488e0fa8f9821110d5c13f4c468a'],
+
+  //dev chain
+  // chainIds: ['polkadot:cf9fa736490c760e92ae4aba8c718638'],
+  // optionalChainIds: ['polkadot:cf9fa736490c760e92ae4aba8c718638'],
   onSessionDelete: () => {
     // do something when session is removed
     ConsoleLogger.log('WalletConnect session deleted')
@@ -102,32 +107,8 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
     },
     [setWallet, setWalletAccounts, setWalletStatus]
   )
-
-  const signInToWallet = useCallback(
-    async (walletName?: string, invokedAutomatically?: boolean): Promise<SignerWalletAccount[] | null> => {
-      if (!walletName) {
-        return null
-      }
-
-      try {
-        const initializedAccounts = await (!invokedAutomatically
-          ? initSignerWallet(walletName)
-          : retryWalletPromise(() => initSignerWallet(walletName), 1000, 5000))
-        if (initializedAccounts === null) {
-          SentryLogger.error('Selected wallet not found or not installed', 'UserProvider')
-        }
-        return initializedAccounts
-      } catch (e) {
-        SentryLogger.error('Failed to enable selected wallet', 'UserProvider', e)
-        return null
-      }
-    },
-    [initSignerWallet]
-  )
-
   const signInWithWalletConnect = useCallback(async () => {
     const wcWallet = new WalletConnectWallet(walletConnectParams, atlasConfig.general.appName)
-
     await wcWallet.connect()
     const accounts = await wcWallet.getAccounts()
     const accountsWithWallet = accounts
@@ -144,9 +125,45 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
       })
 
     setWalletAccounts(accountsWithWallet)
-    setWallet(wcWallet as unknown as Wallet)
+    const storeWallet = {
+      extensionName: 'WalletConnect',
+      signer: wcWallet.signer,
+      title: 'WalletConnect',
+      getAccounts: wcWallet.getAccounts,
+      logo: {
+        src: 'https://walletconnect.com/static/favicon.png',
+        alt: 'WalletConnect',
+      },
+    } as Wallet
+    setWallet(storeWallet)
     return accountsWithWallet
   }, [setWallet, setWalletAccounts])
+
+  const signInToWallet = useCallback(
+    async (walletName?: string, invokedAutomatically?: boolean): Promise<SignerWalletAccount[] | null> => {
+      if (!walletName) {
+        return null
+      }
+
+      try {
+        const walletType = walletName === 'WalletConnect' ? 'WALLET_CONNECT' : 'INJECTED'
+
+        const initializedAccounts = await (walletType === 'WALLET_CONNECT'
+          ? signInWithWalletConnect()
+          : !invokedAutomatically
+          ? initSignerWallet(walletName)
+          : retryWalletPromise(() => initSignerWallet(walletName), 1000, 5000))
+        if (initializedAccounts === null) {
+          SentryLogger.error('Selected wallet not found or not installed', 'UserProvider')
+        }
+        return initializedAccounts
+      } catch (e) {
+        SentryLogger.error('Failed to enable selected wallet', 'UserProvider', e)
+        return null
+      }
+    },
+    [initSignerWallet, signInWithWalletConnect]
+  )
 
   const checkSignerStatus = useCallback(async () => {
     const chainMetadata = await joystreamCtx?.joystream?.getChainMetadata()

@@ -86,6 +86,9 @@ export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, c
     }
   }, [decrementOverlaysOpenCount])
 
+  // @ts-ignore different wallet types before lib integration
+  const walletLogo = wallet?.logo ? wallet.logo.src : wallet.metadata.logoUrl || null
+
   return (
     <StyledModal show={!!stepDetails} className={className}>
       <StepsBar>
@@ -113,7 +116,7 @@ export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, c
         >
           <WalletInfoWrapper>
             <StyledIconWrapper
-              icon={wallet?.logo.src ? <WalletLogo src={wallet.logo.src} alt={wallet.logo.alt} /> : <SvgLogoPolkadot />}
+              icon={walletLogo ? <WalletLogo src={walletLogo} alt={wallet?.logo?.alt} /> : <SvgLogoPolkadot />}
             />
             <Text as="span" color="colorText" variant="t100">
               Continue in {wallet?.title}
