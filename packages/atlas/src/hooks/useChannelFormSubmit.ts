@@ -68,10 +68,10 @@ type CreateEditChannelSubmitParams = {
     | undefined
 }
 
-export const useCreateEditChannelSubmit = () => {
+export const useCreateEditChannelSubmit = (initialChannelId?: string) => {
   const { joystream, proxyCallback } = useJoystream()
-  const { channelId, memberId, refetchUserMemberships } = useUser()
-
+  const { channelId: activeChannelId, memberId, refetchUserMemberships } = useUser()
+  const channelId = initialChannelId || activeChannelId
   const addNewChannelIdToUploadsStore = useUploadsStore((state) => state.actions.addNewChannelId)
   const getBucketsConfigForNewChannel = useBucketsConfigForNewChannel()
   const { channelStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
