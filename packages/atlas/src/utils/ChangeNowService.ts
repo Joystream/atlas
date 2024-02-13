@@ -20,7 +20,10 @@ type ExchangeRange = {
   toNetwork: string
 }
 
+type TransactionType = 'sell' | 'buy'
+
 const JOYSTREAM_CHANGENOW_TICKER = 'joystream'
+const JOYSTREAM_CHANGENOW_NETWORK = 'polkadot'
 
 class ChangeNowService {
   private _apiKey
@@ -40,9 +43,15 @@ class ChangeNowService {
     )
   }
 
-  async getExchangeRange(currency: Currency) {
+  async getExchangeRange(currency: Currency, type: TransactionType) {
+    const isSellingJoy = type === 'sell'
+    const fromCurrency = isSellingJoy ? JOYSTREAM_CHANGENOW_TICKER : currency.ticker
+    const toCurrency = isSellingJoy ? currency.ticker : JOYSTREAM_CHANGENOW_TICKER
+    const fromNetwork = isSellingJoy ? JOYSTREAM_CHANGENOW_NETWORK : currency.network
+    const toNetwork = isSellingJoy ? currency.network : JOYSTREAM_CHANGENOW_NETWORK
+
     return axiosInstance.get<ExchangeRange>(
-      `https://api.changenow.io/v2/exchange/min-amount?fromCurrency=${currency.ticker}&toCurrency=${JOYSTREAM_CHANGENOW_TICKER}&fromNetwork=${currency.network}&toNetwork=eth&flow=standard`,
+      `https://api.changenow.io/v2/exchange/min-amount?fromCurrency=${fromCurrency}&toCurrency=${toCurrency}&fromNetwork=${fromNetwork}&toNetwork=${toNetwork}&flow=standard`,
       {
         headers: {
           'x-changenow-api-key': this._apiKey,
@@ -51,9 +60,15 @@ class ChangeNowService {
     )
   }
 
-  async getEstimatedExchangeAmount(amount: number, currency: Currency) {
+  async getEstimatedExchangeAmount(amount: number, currency: Currency, type: TransactionType) {
+    const isSellingJoy = type === 'sell'
+    const fromCurrency = isSellingJoy ? JOYSTREAM_CHANGENOW_TICKER : currency.ticker
+    const toCurrency = isSellingJoy ? currency.ticker : JOYSTREAM_CHANGENOW_TICKER
+    const fromNetwork = isSellingJoy ? JOYSTREAM_CHANGENOW_NETWORK : currency.network
+    const toNetwork = isSellingJoy ? currency.network : JOYSTREAM_CHANGENOW_NETWORK
+
     return axiosInstance.get<ExchangeRange>(
-      `https://api.changenow.io/v2/exchange/estimated-amount?fromCurrency=${currency.ticker}&toCurrency=${JOYSTREAM_CHANGENOW_TICKER}&fromAmount=${amount}&fromNetwork=${currency.network}&toNetwork=eth&flow=fixed-rate&type=direct`,
+      `https://api.changenow.io/v2/exchange/estimated-amount?fromCurrency=${fromCurrency}&toCurrency=${toCurrency}&fromAmount=${amount}&fromNetwork=${fromNetwork}&toNetwork=${toNetwork}&flow=fixed-rate&type=direct`,
       {
         headers: {
           'x-changenow-api-key': this._apiKey,
@@ -62,24 +77,40 @@ class ChangeNowService {
     )
   }
 
-  async createExchangeTransaction(amount: number, currency: Currency, addressToBePaid: string) {
+  async createExchangeTransaction({
+    addressToRefund,
+    addressToBePaid,
+    currency,
+    amount,
+    type,
+    contactEmail,
+  }: {
+    amount: number
+    currency: Currency
+    addressToBePaid: string
+    addressToRefund: string
+    type: TransactionType
+    contactEmail?: string
+  }) {
+    const isSellingJoy = type === 'sell'
+    const fromCurrency = isSellingJoy ? JOYSTREAM_CHANGENOW_TICKER : currency.ticker
+    const toCurrency = isSellingJoy ? currency.ticker : JOYSTREAM_CHANGENOW_TICKER
+    const fromNetwork = isSellingJoy ? JOYSTREAM_CHANGENOW_NETWORK : currency.network
+    const toNetwork = isSellingJoy ? currency.network : JOYSTREAM_CHANGENOW_NETWORK
+
     return axiosInstance.post('https://api.changenow.io/v2/exchange', {
-      'fromCurrency': currency.ticker,
-      'fromNetwork': currency.network,
-      'toCurrency': JOYSTREAM_CHANGENOW_TICKER,
-      'toNetwork': 'eth',
-      'fromAmount': String(amount),
-      // "toAmount": "",
-      'address': addressToBePaid,
-      'extraId': '',
-      'refundAddress': '',
-      'refundExtraId': '',
-      'userId': '',
-      'payload': '',
-      'contactEmail': '',
-      'flow': 'standard',
-      'type': 'direct',
-      'rateId': '',
+      fromCurrency,
+      fromNetwork,
+      toCurrency,
+      toNetwork,
+      contactEmail,
+      fromAmount: String(amount),
+      address: addressToBePaid,
+      refundAddress: addressToRefund,
+      // 'extraId': '',
+      // 'refundExtraId': '',
+      flow: 'standard',
+      type: 'direct',
     })
   }
 }
