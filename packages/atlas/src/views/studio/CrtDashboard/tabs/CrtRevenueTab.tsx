@@ -34,7 +34,9 @@ export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
     channelStateBloatBond: memoizedChannelStateBloatBond,
   })
   const activeRevenueShare = token.revenueShares.find((revenueShare) => !revenueShare.finalized)
-  const finalizedRevenueShares = token.revenueShares.filter((revenueShare) => revenueShare.finalized)
+  const finalizedRevenueShares = token.revenueShares
+    .filter((revenueShare) => revenueShare.finalized)
+    .sort((a, b) => b.startingAt - a.startingAt)
 
   return (
     <>
@@ -115,10 +117,11 @@ export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
           <GridItem colSpan={{ base: 12 }}>
             <RevenueShareHistoryTable
               data={finalizedRevenueShares.map((revenueShare) => ({
-                claimed: +(revenueShare.claimed ?? 0),
+                claimed: new BN(revenueShare.claimed ?? 0),
                 stakers: revenueShare.stakers,
                 totalParticipants: revenueShare.participantsNum,
                 endsAtBlock: revenueShare.endsAt,
+                allocation: new BN(revenueShare.allocation ?? 0),
               }))}
             />
           </GridItem>
