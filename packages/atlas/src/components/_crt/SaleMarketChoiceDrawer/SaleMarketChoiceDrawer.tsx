@@ -44,7 +44,7 @@ type SaleMarketChoiceDrawerProps = {
 export const SaleMarketChoiceDrawer = ({ isOpen, onClose, onMarketChoice }: SaleMarketChoiceDrawerProps) => {
   const smMatch = useMediaMatch('sm')
   return (
-    <StyledBottomDrawer isOpen={isOpen} onClose={onClose} title="Start sale or market">
+    <StyledBottomDrawer isOpen={isOpen} onClose={onClose}>
       <StyledLayoutGrid>
         <GridItem colSpan={{ base: 12, lg: 10, xl: 8, xxl: 6 }} colStart={{ lg: 2, xl: 3, xxl: 4 }}>
           <FlexBox gap={14} flow="column">
@@ -59,7 +59,7 @@ export const SaleMarketChoiceDrawer = ({ isOpen, onClose, onMarketChoice }: Sale
             <FlexBox flow={smMatch ? 'row' : 'column'} alignItems="strech" width="100%" gap={6}>
               <OptionCard
                 title="Sale"
-                titleAccessory={<Pill title="Comming soon" />}
+                titleAccessory={<Pill label="Comming soon" variant="warning" />}
                 description="A sale is a way to raise money for a new project by selling a certain number of tokens to the public at a set price over a certain period."
                 points={SALE_POINTS}
                 actionButton={{

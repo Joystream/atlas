@@ -47,6 +47,7 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
 
   const onClose = useCallback(() => {
     reset({ tokenAmount: 0 })
+    setStep('form')
     _onClose()
   }, [_onClose, reset])
 

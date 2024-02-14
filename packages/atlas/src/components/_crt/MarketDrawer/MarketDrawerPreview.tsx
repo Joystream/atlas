@@ -26,13 +26,14 @@ const issuedTokens = [1, 10, 10 ** 2, 10 ** 3, 10 ** 4, 10 ** 5]
 export const MarketDrawerPreview = ({ tokenName, startingPrice }: MarketDrawerPreviewProps) => {
   const { tokenPrice } = useTokenPrice()
   const debouncedStartingPrice = useDebounceValue(Math.max(0, startingPrice), 500)
+  const slopeNumber = AMM_DESCO_CURVE_CONST / (tokenPrice ?? 1)
   const chartData: Datum[] = issuedTokens.map((num) => ({
     x: formatNumberShort(num),
     y: hapiBnToTokenNumber(
       calcBuyMarketPricePerToken(
         String(0),
-        new BN(HAPI_TO_JOY_RATE).muln(AMM_DESCO_CURVE_CONST / (tokenPrice ?? 1)).toString(),
-        String(tokenNumberToHapiBn(debouncedStartingPrice)),
+        new BN(HAPI_TO_JOY_RATE).muln(slopeNumber).toString(),
+        new BN(num * slopeNumber).mul(new BN(HAPI_TO_JOY_RATE)).toString(),
         num
       ) ?? new BN(0)
     ),

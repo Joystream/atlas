@@ -152,19 +152,14 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
     }
 
     handleTransaction({
-      txFactory: async (updateStatus) => {
-        const data = await (
-          await joystream.extrinsics
-        ).purchaseTokenOnMarket(
+      txFactory: async (updateStatus) =>
+        (await joystream.extrinsics).purchaseTokenOnMarket(
           tokenId,
           memberId,
           String(amountRef.current),
           slippageAmount.toString(),
           proxyCallback(updateStatus)
-        )
-        console.log('xddddd kur')
-        return data
-      },
+        ),
       onTxSync: async () => {
         if (memberTokenAccount?.tokenAccounts.length) {
           displaySnackbar({
