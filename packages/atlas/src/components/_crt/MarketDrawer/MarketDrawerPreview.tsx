@@ -30,9 +30,10 @@ export const MarketDrawerPreview = ({ tokenName, startingPrice }: MarketDrawerPr
     x: formatNumberShort(num),
     y: hapiBnToTokenNumber(
       calcBuyMarketPricePerToken(
-        String(num),
+        String(0),
         new BN(HAPI_TO_JOY_RATE).muln(AMM_DESCO_CURVE_CONST / (tokenPrice ?? 1)).toString(),
-        String(tokenNumberToHapiBn(debouncedStartingPrice))
+        String(tokenNumberToHapiBn(debouncedStartingPrice)),
+        num
       ) ?? new BN(0)
     ),
   }))

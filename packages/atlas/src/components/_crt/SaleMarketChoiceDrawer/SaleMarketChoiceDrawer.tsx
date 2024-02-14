@@ -5,6 +5,7 @@ import { SvgActionCheck, SvgActionPlay } from '@/assets/icons'
 import { SvgPatternAngledLines, SvgPatternCircleLines } from '@/assets/illustrations'
 import { FlexBox } from '@/components/FlexBox'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
+import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { BottomDrawer } from '@/components/_overlays/BottomDrawer'
@@ -58,6 +59,7 @@ export const SaleMarketChoiceDrawer = ({ isOpen, onClose, onMarketChoice }: Sale
             <FlexBox flow={smMatch ? 'row' : 'column'} alignItems="strech" width="100%" gap={6}>
               <OptionCard
                 title="Sale"
+                titleAccessory={<Pill title="Comming soon" />}
                 description="A sale is a way to raise money for a new project by selling a certain number of tokens to the public at a set price over a certain period."
                 points={SALE_POINTS}
                 actionButton={{
@@ -69,6 +71,11 @@ export const SaleMarketChoiceDrawer = ({ isOpen, onClose, onMarketChoice }: Sale
               />
               <OptionCard
                 title="Market"
+                titleAccessory={
+                  <Button _textOnly icon={<SvgActionPlay />}>
+                    Learn more
+                  </Button>
+                }
                 description="An automated market maker (AMM) is an algorithm that helps to buy and sell tokens by using price curves which automatically set prices and match buyers and sellers."
                 points={MARKET_POINTS}
                 actionButton={{
@@ -98,9 +105,10 @@ type OptionCardProps = {
     disabled?: boolean
   }
   icon: ReactElement
+  titleAccessory: ReactElement
 }
 
-const OptionCard = ({ title, description, points, actionButton, icon }: OptionCardProps) => {
+const OptionCard = ({ title, description, points, actionButton, icon, titleAccessory }: OptionCardProps) => {
   return (
     <OptionCardWrapper>
       <FlexBox flow="column" gap={4}>
@@ -109,9 +117,7 @@ const OptionCard = ({ title, description, points, actionButton, icon }: OptionCa
           <Text variant="h600" as="h1">
             {title}
           </Text>
-          <Button _textOnly icon={<SvgActionPlay />}>
-            Learn more
-          </Button>
+          {titleAccessory}
         </FlexBox>
         <Text variant="t300" as="h1" color="colorText">
           {description}

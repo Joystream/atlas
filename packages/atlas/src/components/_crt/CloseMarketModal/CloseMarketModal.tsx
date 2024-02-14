@@ -120,6 +120,11 @@ export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMar
           })
         },
         onTxFinalize: async () => {
+          displaySnackbar({
+            title: 'Successfuly sold outstanding tokens',
+            description: 'Sign second transaction to close the market',
+            iconType: 'success',
+          })
           closeMarketTransaction()
         },
       })
