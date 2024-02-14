@@ -3,6 +3,7 @@ import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffec
 
 // import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { atlasConfig } from '@/config'
+import { JOYSTREAM_CHAIN_ID } from '@/config/env'
 import { JoystreamContext, JoystreamContextValue } from '@/providers/joystream/joystream.provider'
 import { useWalletStore } from '@/providers/wallet/wallet.store'
 import { SignerWalletAccount, WalletContextValue } from '@/providers/wallet/wallet.types'
@@ -26,8 +27,8 @@ const walletConnectParams: WalletConnectConfiguration = {
     icons: ['https://walletconnect.com/static/favicon.png'],
   },
   // prod chain
-  chainIds: ['polkadot:6b5e488e0fa8f9821110d5c13f4c468a'],
-  optionalChainIds: ['polkadot:6b5e488e0fa8f9821110d5c13f4c468a'],
+  chainIds: [JOYSTREAM_CHAIN_ID],
+  optionalChainIds: [JOYSTREAM_CHAIN_ID],
 
   //dev chain
   // chainIds: ['polkadot:cf9fa736490c760e92ae4aba8c718638'],
