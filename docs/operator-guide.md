@@ -192,8 +192,6 @@ Below is the list of all the variables used by Atlas with a short description:
 
 `VITE_{environment}_FAUCET_URL` - Faucet URL. See [Member Faucet](#member-faucet) section for more info.
 
-`VITE_{environment}_CHAIN_ID` - ID of the chain. Used to connect to WalletConnect. Chain id for your chain is ${polkadot:[32 first symbols of the chain's genesis block hash]}.
-
 **Optional**:
 
 `VITE_DEFAULT_DATA_ENV` - if `VITE_ENV` is set to `true`, atlas will use `VITE_PRODUCTION_` URLs. Changing this variable can overwrite this.

@@ -3,7 +3,6 @@ import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffec
 
 // import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { atlasConfig } from '@/config'
-import { JOYSTREAM_CHAIN_ID } from '@/config/env'
 import { JoystreamContext, JoystreamContextValue } from '@/providers/joystream/joystream.provider'
 import { useWalletStore } from '@/providers/wallet/wallet.store'
 import { SignerWalletAccount, WalletContextValue } from '@/providers/wallet/wallet.types'
@@ -16,28 +15,6 @@ import { filterUnsupportedAccounts, getWalletsList } from './wallet.helpers'
 
 const WalletContext = createContext<undefined | WalletContextValue>(undefined)
 WalletContext.displayName = 'WalletContext'
-
-const walletConnectParams: WalletConnectConfiguration = {
-  projectId: '33b2609463e399daee8c51726546c8dd',
-  relayUrl: 'wss://relay.walletconnect.com',
-  metadata: {
-    name: 'Joystream demo app',
-    description: 'Joystream Wallet-Connect',
-    url: '#',
-    icons: ['https://walletconnect.com/static/favicon.png'],
-  },
-  // prod chain
-  chainIds: [JOYSTREAM_CHAIN_ID],
-  optionalChainIds: [JOYSTREAM_CHAIN_ID],
-
-  //dev chain
-  // chainIds: ['polkadot:cf9fa736490c760e92ae4aba8c718638'],
-  // optionalChainIds: ['polkadot:cf9fa736490c760e92ae4aba8c718638'],
-  onSessionDelete: () => {
-    // do something when session is removed
-    ConsoleLogger.log('WalletConnect session deleted')
-  },
-}
 
 export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
   const { walletStatus, wallet, lastChainMetadataVersion } = useWalletStore()
@@ -65,6 +42,41 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
     },
     [_setWalletAccounts]
   )
+
+  const getWalletConnectParams = useCallback(async () => {
+    const chainMetadata = await joystreamCtx?.joystream?.getChainMetadata()
+
+    const genesisHash = chainMetadata?.genesisHash
+
+    if (!genesisHash) {
+      SentryLogger.error(
+        'WalletConnect Config error',
+        'wallet.provider.tsx',
+        'No genesis hash found in chain metadata. WalletConnect configuration is incorrect'
+      )
+    }
+    const chainId = `polkadot:${genesisHash?.replace('0x', '').substring(0, 32)}` as `polkadot:${string}`
+
+    const walletConnectParams: WalletConnectConfiguration = {
+      projectId: '33b2609463e399daee8c51726546c8dd',
+      relayUrl: 'wss://relay.walletconnect.com',
+      metadata: {
+        name: 'Joystream demo app',
+        description: 'Joystream Wallet-Connect',
+        url: '#',
+        icons: ['https://walletconnect.com/static/favicon.png'],
+      },
+      chainIds: [chainId],
+      optionalChainIds: [chainId],
+
+      onSessionDelete: () => {
+        // do something when session is removed
+        ConsoleLogger.log('WalletConnect session deleted')
+      },
+    }
+
+    return walletConnectParams
+  }, [joystreamCtx?.joystream])
 
   const initSignerWallet = useCallback(
     async (walletName: string): Promise<SignerWalletAccount[] | null> => {
@@ -109,6 +121,7 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
     [setWallet, setWalletAccounts, setWalletStatus]
   )
   const signInWithWalletConnect = useCallback(async () => {
+    const walletConnectParams = await getWalletConnectParams()
     const wcWallet = new WalletConnectWallet(walletConnectParams, atlasConfig.general.appName)
     await wcWallet.connect()
     const accounts = await wcWallet.getAccounts()
@@ -138,7 +151,7 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
     } as Wallet
     setWallet(storeWallet)
     return accountsWithWallet
-  }, [setWallet, setWalletAccounts])
+  }, [getWalletConnectParams, setWallet, setWalletAccounts])
 
   const signInToWallet = useCallback(
     async (walletName?: string, invokedAutomatically?: boolean): Promise<SignerWalletAccount[] | null> => {

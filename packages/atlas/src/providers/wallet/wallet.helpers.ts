@@ -1,4 +1,4 @@
-import { BaseDotsamaWallet, getWallets } from '@talismn/connect-wallets'
+import { BaseDotsamaWallet, Wallet, getWallets } from '@talismn/connect-wallets'
 
 export const getWalletsList = () => {
   const supportedWallets = getWallets()
@@ -14,7 +14,19 @@ export const getWalletsList = () => {
     return [...acc, new UnknownWallet(walletName)]
   }, [] as UnknownWallet[])
 
-  return [...supportedWallets, ...unknownWallets]
+  const wcWallet = {
+    extensionName: 'WalletConnect',
+    // signer: wcWallet.signer,
+    title: 'WalletConnect',
+    // getAccounts: wcWallet.getAccounts,
+    logo: {
+      src: 'https://walletconnect.com/static/favicon.png',
+      alt: 'WalletConnect',
+    },
+    installed: true,
+  } as Wallet
+
+  return [...supportedWallets, ...unknownWallets, wcWallet]
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

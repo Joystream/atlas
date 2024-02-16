@@ -3,7 +3,7 @@ import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import shallow from 'zustand/shallow'
 
 import { GetMembershipsQuery, useGetMembershipsLazyQuery } from '@/api/queries/__generated__/memberships.generated'
-import { SvgActionNewTab, SvgAlertsError24, SvgAlertsInformative24, SvgLogoPolkadot, SvgWcLogo } from '@/assets/icons'
+import { SvgActionNewTab, SvgAlertsError24, SvgAlertsInformative24, SvgLogoPolkadot } from '@/assets/icons'
 import { IconWrapper } from '@/components/IconWrapper'
 import { AuthenticationModalStepTemplate } from '@/components/_auth/AuthenticationModalStepTemplate'
 import { Loader } from '@/components/_loaders/Loader'
@@ -151,7 +151,6 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
     if (!walletFromStore) return
 
     const index = wallets.findIndex((w) => w.extensionName === walletFromStore.extensionName)
-
     if (selectedWalletIdx === index) return
 
     setSelectedWalletIdx(index)
@@ -162,14 +161,14 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
     setPrimaryButtonProps({
       text: isConnecting
         ? 'Connecting...'
-        : selectedWallet?.installed || isMobileDevice || selectedWalletIdx === wallets.length + 1
+        : selectedWallet?.installed || isMobileDevice
         ? 'Use wallet'
         : `Install ${selectedWallet?.title}`,
       disabled: isConnecting,
-      icon: selectedWallet?.installed || selectedWalletIdx === wallets.length + 1 ? null : <SvgActionNewTab />,
+      icon: selectedWallet?.installed ? null : <SvgActionNewTab />,
       iconPlacement: 'right',
       to: selectedWallet?.installed ? undefined : selectedWallet?.installUrl,
-      onClick: selectedWallet?.installed || selectedWalletIdx === wallets.length + 1 ? handleConfirm : undefined,
+      onClick: selectedWallet?.installed ? handleConfirm : undefined,
     })
   }, [handleConfirm, isConnecting, selectedWallet, selectedWalletIdx, setPrimaryButtonProps, wallets.length])
 
@@ -196,7 +195,7 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
             key={wallet.title}
             label={wallet.title}
             caption={
-              wallet.installed
+              wallet.installed && wallet.extensionName !== 'WalletConnect'
                 ? 'Installed'
                 : isMobileDevice && wallet.extensionName === 'subwallet-js'
                 ? 'Recommended'
@@ -217,17 +216,6 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
             highlightWhenActive
           />
         ))}
-        <StyledListItem
-          label="Walletconnect"
-          // caption={'test'}
-          size={smMatch ? 'large' : 'medium'}
-          selected={selectedWalletIdx === wallets.length + 1}
-          destructive={false}
-          nodeStart={<IconWrapper icon={<SvgWcLogo />} />}
-          nodeEnd={undefined}
-          onClick={() => handleSelectWallet(wallets.length + 1)}
-          highlightWhenActive
-        />
       </ListItemsWrapper>
       {selectedWallet?.installed === false && !isMobileDevice ? (
         <StyledBottomBanner
