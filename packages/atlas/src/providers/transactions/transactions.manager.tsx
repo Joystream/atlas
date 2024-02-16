@@ -1,6 +1,7 @@
 import { FC, useEffect, useRef, useState } from 'react'
 
 import { useQueryNodeStateSubscription } from '@/api/hooks/queryNode'
+import { ChangeNowModal } from '@/components/ChangeNowModal/ChangeNowModal'
 import { TransactionModal } from '@/components/_overlays/TransactionModal'
 import { ExtrinsicStatus } from '@/joystream-lib/types'
 import { useSnackbar } from '@/providers/snackbars'
@@ -100,6 +101,7 @@ export const TransactionsManager: FC = () => {
           errorCode={firstNonMinimizedTransaction.errorCode}
         />
       )}
+      <ChangeNowModal type="buy" />
     </>
   )
 }
