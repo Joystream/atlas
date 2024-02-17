@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { useQuery } from 'react-query'
 
 import {
   SvgActionClock,
@@ -14,8 +15,8 @@ import { Text } from '@/components/Text'
 import { ComboBox, ComboBoxProps } from '@/components/_inputs/ComboBox'
 import { TokenInput, TokenInputProps } from '@/components/_inputs/TokenInput'
 import { DialogModal } from '@/components/_overlays/DialogModal'
-import { useMountEffect } from '@/hooks/useMountEffect'
 import { cVar, sizes } from '@/styles'
+import { changeNowService } from '@/utils/ChangeNowService'
 
 import { FormField } from '../_inputs/FormField'
 
@@ -47,6 +48,9 @@ type CurrencyInputValues = {
 
 export const ChangeNowModal = ({ type }: ChangeNowModalProps) => {
   const [step, setStep] = useState()
+  const { data, isLoading } = useQuery('changenow-currency', () =>
+    changeNowService.getAvailableCurrencies().then((res) => res.data)
+  )
   const { control } = useForm<{
     from: CurrencyInputValues
     to: CurrencyInputValues
@@ -68,7 +72,15 @@ export const ChangeNowModal = ({ type }: ChangeNowModalProps) => {
     // fromCurreny: type === 'sell' ? 'joy' : undefined,
   })
 
-  useMountEffect(() => {})
+  const currencyOptions = useMemo(() => {
+    return data?.map((curr) => ({
+      ...curr,
+      value: curr.ticker,
+      label: curr.ticker.toUpperCase(),
+      caption: curr.name,
+      nodeStart: <img src={curr.image} alt={curr.ticker} />,
+    }))
+  }, [data])
 
   return (
     <DialogModal
@@ -94,7 +106,7 @@ export const ChangeNowModal = ({ type }: ChangeNowModalProps) => {
               >
                 <CurrencyInput
                   placeholder="10"
-                  currencies={options}
+                  currencies={currencyOptions}
                   value={value.amount}
                   onChange={(amount) => onChange({ ...value, amount })}
                   onCurrencySelect={(currency) => onChange({ ...value, currency })}
@@ -115,7 +127,7 @@ export const ChangeNowModal = ({ type }: ChangeNowModalProps) => {
               >
                 <CurrencyInput
                   placeholder="10"
-                  currencies={options}
+                  currencies={currencyOptions}
                   value={value.amount}
                   lockedCurrency={type === 'buy' ? 'btc' : undefined}
                   onChange={(amount) => onChange({ ...value, amount })}
@@ -138,7 +150,6 @@ type CurrencyInputProps = {
 
 const CurrencyInput = ({ currencies, onCurrencySelect, lockedCurrency, ...tokenProps }: CurrencyInputProps) => {
   const [sel, setSel] = useState<string | undefined>(undefined)
-  console.log(lockedCurrency)
   return (
     <InputGrid>
       <TokenInput {...tokenProps} nodeStart={<div />} nodeEnd={<div />} />

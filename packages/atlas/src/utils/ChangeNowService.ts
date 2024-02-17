@@ -114,3 +114,5 @@ class ChangeNowService {
     })
   }
 }
+
+export const changeNowService = new ChangeNowService('')

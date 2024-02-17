@@ -54,7 +54,7 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
 
   useEffect(() => {
     if (items) {
-      setInputItems(items)
+      setInputItems(items.slice(0, 10))
     }
   }, [items, value])
 
@@ -82,11 +82,16 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
       }
     },
     onInputValueChange: ({ inputValue }) => {
-      const filteredItems = items.filter(
-        (item) => (item.label as string)?.toLowerCase().startsWith(inputValue?.toLowerCase() || '') && !item.isSeparator
-      )
-      setInputItems(inputValue?.length ? uniqBy(filteredItems, 'label') : items)
       onInputValueChange?.(inputValue)
+      new Promise(() => {
+        const filteredItems = items
+          .filter(
+            (item) =>
+              (item.label as string)?.toLowerCase().startsWith(inputValue?.toLowerCase() || '') && !item.isSeparator
+          )
+          .slice(0, 20)
+        setInputItems(inputValue?.length ? uniqBy(filteredItems, 'label') : items.slice(0, 20))
+      })
     },
     onIsOpenChange: () => {
       update?.()
