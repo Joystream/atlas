@@ -28,6 +28,7 @@ export const HomeView: FC = () => {
     variables: {
       where: publicCryptoVideoFilter,
       orderBy: VideoOrderByInput.VideoRelevanceDesc,
+      first: 1,
     },
   })
 
@@ -46,7 +47,7 @@ export const HomeView: FC = () => {
         contentProps={{
           type: 'grid',
           grid: DEFAULT_VIDEO_GRID,
-          children: tiles?.map((video, idx) => <VideoTileViewer id={video.id} key={idx} />),
+          children: tiles?.map((video, idx) => <VideoTileViewer id={video.id} key={idx} prefetch={idx < 10} />),
         }}
         footerProps={{
           reachedEnd: !pageInfo?.hasNextPage,
