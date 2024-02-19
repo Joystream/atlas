@@ -64,6 +64,7 @@ export const MoreVideos: FC<MoreVideosProps> = ({
             id={video.id}
             detailsVariant="withChannelName"
             direction={lgMatch ? 'horizontal' : 'vertical'}
+            prefetch={idx < 5}
           />
         </GridItem>
       ))}
