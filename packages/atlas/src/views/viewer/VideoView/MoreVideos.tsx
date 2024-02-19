@@ -22,6 +22,7 @@ type MoreVideosProps = {
   categoryName?: string | null
   videoId?: string
   type: 'channel' | 'category'
+  shouldPrefetch?: boolean
 }
 
 const NUMBER_OF_VIDEOS = 6
@@ -33,6 +34,7 @@ export const MoreVideos: FC<MoreVideosProps> = ({
   categoryName,
   videoId,
   type,
+  shouldPrefetch,
 }) => {
   const videoCategories = categoryId ? displayCategoriesLookup[categoryId].videoCategories : undefined
   const where =
@@ -64,7 +66,7 @@ export const MoreVideos: FC<MoreVideosProps> = ({
             id={video.id}
             detailsVariant="withChannelName"
             direction={lgMatch ? 'horizontal' : 'vertical'}
-            prefetch={idx < 5}
+            prefetch={idx < 5 && shouldPrefetch}
           />
         </GridItem>
       ))}
