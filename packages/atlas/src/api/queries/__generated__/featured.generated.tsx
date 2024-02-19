@@ -23,6 +23,13 @@ export type GetVideoHeroQuery = {
       duration?: number | null
       reactionsCount: number
       commentsCount: number
+      media?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        isAccepted: boolean
+        resolvedUrls: Array<string>
+        storageBag: { __typename?: 'StorageBag'; id: string }
+      } | null
       channel: {
         __typename?: 'Channel'
         id: string
