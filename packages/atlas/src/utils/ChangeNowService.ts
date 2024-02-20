@@ -1,7 +1,8 @@
 import { axiosInstance } from '@/api/axios'
 
-type Currency = {
+export type Currency = {
   ticker: string
+  legacyTicker: string
   name: string
   image: string
   isStable: string

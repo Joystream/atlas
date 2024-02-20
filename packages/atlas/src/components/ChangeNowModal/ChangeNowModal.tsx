@@ -9,6 +9,7 @@ import {
   SvgActionHide,
   SvgActionLock,
   SvgAlertsInformative32,
+  SvgJoyTokenPrimary16,
 } from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox'
 import { Text } from '@/components/Text'
@@ -16,7 +17,7 @@ import { ComboBox, ComboBoxProps } from '@/components/_inputs/ComboBox'
 import { TokenInput, TokenInputProps } from '@/components/_inputs/TokenInput'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { cVar, sizes } from '@/styles'
-import { changeNowService } from '@/utils/ChangeNowService'
+import { Currency, changeNowService } from '@/utils/ChangeNowService'
 
 import { FormField } from '../_inputs/FormField'
 
@@ -36,10 +37,10 @@ type ChangeNowModalProps = {
   type: 'buy' | 'sell' | 'refill'
 }
 
-const options = [
-  { value: 'btc', label: 'BTC', caption: 'Bitcoin', nodeStart: <SvgActionHide /> },
-  { value: 'eth', label: 'ETH', caption: 'Ethereum', nodeStart: <SvgActionLock /> },
-]
+// const options = [
+//   { value: 'btc', label: 'BTC', caption: 'Bitcoin', nodeStart: <SvgActionHide /> },
+//   { value: 'eth', label: 'ETH', caption: 'Ethereum', nodeStart: <SvgActionLock /> },
+// ]
 
 type CurrencyInputValues = {
   amount: number
@@ -75,10 +76,10 @@ export const ChangeNowModal = ({ type }: ChangeNowModalProps) => {
   const currencyOptions = useMemo(() => {
     return data?.map((curr) => ({
       ...curr,
-      value: curr.ticker,
+      value: curr.legacyTicker,
       label: curr.ticker.toUpperCase(),
       caption: curr.name,
-      nodeStart: <img src={curr.image} alt={curr.ticker} />,
+      nodeStart: curr.image ? <img src={curr.image} alt={curr.ticker} /> : <SvgJoyTokenPrimary16 />,
     }))
   }, [data])
 
@@ -108,6 +109,7 @@ export const ChangeNowModal = ({ type }: ChangeNowModalProps) => {
                   placeholder="10"
                   currencies={currencyOptions}
                   value={value.amount}
+                  lockedCurrency={type === 'sell' ? 'joy' : undefined}
                   onChange={(amount) => onChange({ ...value, amount })}
                   onCurrencySelect={(currency) => onChange({ ...value, currency })}
                 />
@@ -129,7 +131,7 @@ export const ChangeNowModal = ({ type }: ChangeNowModalProps) => {
                   placeholder="10"
                   currencies={currencyOptions}
                   value={value.amount}
-                  lockedCurrency={type === 'buy' ? 'btc' : undefined}
+                  lockedCurrency={type === 'buy' ? 'joy' : undefined}
                   onChange={(amount) => onChange({ ...value, amount })}
                   onCurrencySelect={(currency) => onChange({ ...value, currency })}
                 />
@@ -143,24 +145,25 @@ export const ChangeNowModal = ({ type }: ChangeNowModalProps) => {
 }
 
 type CurrencyInputProps = {
-  currencies: ComboBoxProps<{ value: string }>['items']
+  currencies: ComboBoxProps<{ value: string } & Currency>['items']
   lockedCurrency?: string
   onCurrencySelect: (value: string) => void
 } & TokenInputProps
 
 const CurrencyInput = ({ currencies, onCurrencySelect, lockedCurrency, ...tokenProps }: CurrencyInputProps) => {
   const [sel, setSel] = useState<string | undefined>(undefined)
+  const selected = currencies?.find((opt) => opt.value.toLowerCase() === (lockedCurrency ?? sel)?.toLowerCase())
   return (
     <InputGrid>
       <TokenInput {...tokenProps} nodeStart={<div />} nodeEnd={<div />} />
       <ComboBox
-        nodeStart={options.find((opt) => opt.value === (lockedCurrency ?? sel))?.nodeStart ?? <div />}
-        value={options.find((opt) => opt.value === lockedCurrency)?.label ?? sel}
+        nodeStart={selected?.nodeStart ?? <div />}
+        value={selected?.label ?? sel}
         disabled={!!lockedCurrency}
         placeholder="BTC"
         onSelectedItemChange={(e) => {
-          setSel(e?.label ?? '')
-          onCurrencySelect(e?.label ?? '')
+          setSel(e?.legacyTicker ?? '')
+          onCurrencySelect(e?.legacyTicker ?? '')
         }}
         items={currencies}
       />

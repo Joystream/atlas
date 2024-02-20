@@ -87,7 +87,9 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
         const filteredItems = items
           .filter(
             (item) =>
-              (item.label as string)?.toLowerCase().startsWith(inputValue?.toLowerCase() || '') && !item.isSeparator
+              ((item.label as string)?.toLowerCase().startsWith(inputValue?.toLowerCase() || '') ||
+                (item.caption as string)?.toLowerCase().startsWith(inputValue?.toLowerCase() || '')) &&
+              !item.isSeparator
           )
           .slice(0, 20)
         setInputItems(inputValue?.length ? uniqBy(filteredItems, 'label') : items.slice(0, 20))
