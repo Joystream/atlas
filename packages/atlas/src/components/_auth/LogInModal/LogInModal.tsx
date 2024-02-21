@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import shallow from 'zustand/shallow'
 
+import { FlexBox } from '@/components/FlexBox'
 import { Button, TextButton } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
@@ -111,10 +112,15 @@ export const LogInModal = () => {
         <AuthenticationModalStepTemplate
           title="Sign in"
           subtitle={
-            <span>
-              Use your {atlasConfig.general.appName} account.{' '}
-              <TextButton onClick={() => setAuthModalOpenName('signUp')}>Create account</TextButton>
-            </span>
+            <FlexBox flow="column" alignItems="flex-start">
+              <span>
+                Use your {atlasConfig.general.appName} account.{' '}
+                <TextButton onClick={() => setAuthModalOpenName('signUp')}>Create account</TextButton>
+              </span>
+              <div>
+                <TextButton onClick={() => setAuthModalOpenName('externalLogIn')}>Use local wallet</TextButton>
+              </div>
+            </FlexBox>
           }
           hasNavigatedBack
         >

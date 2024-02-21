@@ -84,7 +84,7 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
           return {
             title: capitalizeFirstLetter(walletName),
             extensionName: walletName,
-            installed: rawWallets.some((rawWallet) => rawWallet === walletName),
+            installed: [...rawWallets, 'WalletConnect'].some((rawWallet) => rawWallet === walletName),
             ...(MOBILE_SUPPORTED_WALLETS[walletName as keyof typeof MOBILE_SUPPORTED_WALLETS] ?? { logo: { src: '' } }),
           } as UnknownWallet
         })

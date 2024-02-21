@@ -136,8 +136,10 @@ export const loginRequest = (
 export const logoutRequest = () => axiosInstance.post(`${ORION_AUTH_URL}/logout`, {}, { withCredentials: true })
 
 export const getCorrectLoginModal = (): AuthModals => {
-  const hasAtleastOneWallet = getWalletsList().some((wallet) => wallet.installed)
-  return hasAtleastOneWallet ? 'externalLogIn' : 'logIn'
+  const hasAtLeastOneWallet = getWalletsList().some(
+    (wallet) => wallet.extensionName !== 'WalletConnect' && wallet.installed
+  )
+  return hasAtLeastOneWallet ? 'externalLogIn' : 'logIn'
 }
 
 export const prepareEncryptionArtifacts = async (email: string, password: string, mnemonic: string) => {
