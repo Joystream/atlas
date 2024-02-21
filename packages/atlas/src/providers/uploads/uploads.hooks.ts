@@ -176,17 +176,12 @@ export const useStartFileUpload = () => {
         setAssetStatus({ lastStatus: 'error', progress: 0 })
 
         const axiosError = e as AxiosError
-        const networkFailure = axiosError.isAxiosError && !axiosError.response?.status
-        const providerFailure =
+        const networkFailure =
           axiosError.isAxiosError &&
-          axiosError.response &&
-          axiosError.response.status >= 400 &&
-          axiosError.response.status <= 500
-        if (providerFailure) {
-          SentryLogger.error('Failed to upload asset: provider failure', 'uploadsHooks', e, {
-            asset: { dataObjectId: asset.id, uploadOperator },
-          })
-          UserEventsLogger.logDistributorError({ dataObjectId: asset.id, distributorId: uploadOperator.id }, e)
+          (!axiosError.response?.status || (axiosError.response.status >= 400 && axiosError.response.status <= 500))
+
+        UserEventsLogger.logDistributorError({ dataObjectId: asset.id, distributorId: uploadOperator.id }, e)
+        if (networkFailure) {
           markStorageOperatorFailed(uploadOperator.id)
         }
 
@@ -195,10 +190,9 @@ export const useStartFileUpload = () => {
           return startFileUpload(file, asset, { ...opts, retry: retry + 1 })
         }
 
-        networkFailure &&
-          SentryLogger.error('Failed to upload asset: user network failure', 'uploadsHooks', e, {
-            asset: { dataObjectId: asset.id, uploadOperator },
-          })
+        SentryLogger.error('Failed to upload asset', 'uploadsHooks', e, {
+          asset: { dataObjectId: asset.id, uploadOperator },
+        })
 
         const snackbarDescription = networkFailure ? 'Host is not responding' : 'Unexpected error occurred'
 
