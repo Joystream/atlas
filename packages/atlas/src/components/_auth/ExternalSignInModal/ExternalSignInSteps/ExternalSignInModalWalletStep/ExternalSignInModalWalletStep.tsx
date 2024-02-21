@@ -102,7 +102,7 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
     setHasError(false)
 
     const accounts =
-       selectedWallet?.extensionName === 'WalletConnect'
+      selectedWallet?.extensionName === 'WalletConnect'
         ? await signInWithWalletConnect()
         : await signInToWallet(selectedWallet?.extensionName)
 
