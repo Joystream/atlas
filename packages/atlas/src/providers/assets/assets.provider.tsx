@@ -249,9 +249,9 @@ export const useStorageOperators = () => {
         if (includeFailed) {
           return bagOperators
         }
-
+        const blacklistedStorageOperators = evaluateStorageOperators()
         const workingBagOperators = bagOperators.filter(
-          (operator) => !evaluateStorageOperators().some(([id]) => operator.id === id)
+          (operator) => !blacklistedStorageOperators.some(([id]) => operator.id === id)
         )
 
         if (!workingBagOperators || !workingBagOperators.length) {
