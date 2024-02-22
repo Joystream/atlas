@@ -21,6 +21,20 @@ type ExchangeRange = {
   toNetwork: string
 }
 
+type ExchangeRate = {
+  flow: 'standard' | 'fixed'
+  fromCurrency: string
+  fromNetwork: string
+  toCurrency: string
+  toNetwork: string
+  rateId: string | null
+  validUntil: string | null
+  transactionSpeedForecast: string | null
+  warningMessage: string | null
+  fromAmount: number
+  toAmount: number
+}
+
 type TransactionType = 'sell' | 'buy'
 
 const JOYSTREAM_CHANGENOW_TICKER = 'joystream'
@@ -28,20 +42,26 @@ const JOYSTREAM_CHANGENOW_NETWORK = 'polkadot'
 
 class ChangeNowService {
   private _apiKey
+  private _currencies: Currency[] = []
 
   constructor(apiKey: string) {
     this._apiKey = apiKey
   }
 
   async getAvailableCurrencies() {
-    return axiosInstance.get<Currency[]>(
-      'https://api.changenow.io/v2/exchange/currencies?active=&flow=standard&buy=&sell=',
-      {
-        headers: {
-          'x-changenow-api-key': this._apiKey,
-        },
-      }
+    if (this._currencies.length) {
+      return this._currencies
+    }
+
+    const res = await axiosInstance.get<Currency[]>(
+      'https://api.changenow.io/v2/exchange/currencies?active=&flow=standard&buy=&sell='
     )
+
+    if (res.data) {
+      this._currencies = res.data
+    }
+
+    return res.data
   }
 
   async getExchangeRange(currency: Currency, type: TransactionType) {
@@ -68,7 +88,7 @@ class ChangeNowService {
     const fromNetwork = isSellingJoy ? JOYSTREAM_CHANGENOW_NETWORK : currency.network
     const toNetwork = isSellingJoy ? currency.network : JOYSTREAM_CHANGENOW_NETWORK
 
-    return axiosInstance.get<ExchangeRange>(
+    return axiosInstance.get<ExchangeRate>(
       `https://api.changenow.io/v2/exchange/estimated-amount?fromCurrency=${fromCurrency}&toCurrency=${toCurrency}&fromAmount=${amount}&fromNetwork=${fromNetwork}&toNetwork=${toNetwork}&flow=fixed-rate&type=direct`,
       {
         headers: {
@@ -99,20 +119,28 @@ class ChangeNowService {
     const fromNetwork = isSellingJoy ? JOYSTREAM_CHANGENOW_NETWORK : currency.network
     const toNetwork = isSellingJoy ? currency.network : JOYSTREAM_CHANGENOW_NETWORK
 
-    return axiosInstance.post('https://api.changenow.io/v2/exchange', {
-      fromCurrency,
-      fromNetwork,
-      toCurrency,
-      toNetwork,
-      contactEmail,
-      fromAmount: String(amount),
-      address: addressToBePaid,
-      refundAddress: addressToRefund,
-      // 'extraId': '',
-      // 'refundExtraId': '',
-      flow: 'standard',
-      type: 'direct',
-    })
+    return axiosInstance.post(
+      'https://api.changenow.io/v2/exchange',
+      {
+        fromCurrency,
+        fromNetwork,
+        toCurrency,
+        toNetwork,
+        contactEmail,
+        fromAmount: String(amount),
+        address: addressToBePaid,
+        refundAddress: addressToRefund,
+        // 'extraId': '',
+        // 'refundExtraId': '',
+        flow: 'standard',
+        type: 'direct',
+      },
+      {
+        headers: {
+          'x-changenow-api-key': this._apiKey,
+        },
+      }
+    )
   }
 }
 

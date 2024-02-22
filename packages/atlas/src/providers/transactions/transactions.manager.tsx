@@ -101,7 +101,7 @@ export const TransactionsManager: FC = () => {
           errorCode={firstNonMinimizedTransaction.errorCode}
         />
       )}
-      <ChangeNowModal type="sell" />
+      <ChangeNowModal type="sell" onClose={() => undefined} />
     </>
   )
 }

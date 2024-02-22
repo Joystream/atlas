@@ -20,6 +20,8 @@ type ModifiedListItemProps = ListItemProps & {
 
 export type ComboBoxProps<T = unknown> = {
   items?: (ModifiedListItemProps & T)[]
+  initialSelectedItem?: ModifiedListItemProps & T
+  selectedItem?: ModifiedListItemProps & T
   processing?: boolean
   onSelectedItemChange?: (item?: ModifiedListItemProps & T) => void
   onInputValueChange?: (item?: string) => void | Promise<void>
@@ -39,6 +41,8 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
     resetOnSelect,
     notFoundNode,
     error,
+    initialSelectedItem,
+    selectedItem,
     value,
     ...textFieldProps
   } = props
@@ -69,6 +73,8 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
     inputValue,
     setInputValue,
   } = useCombobox({
+    initialSelectedItem,
+    selectedItem,
     items: inputItems,
     itemToString: (item) => (item ? (item.label as string) : ''),
     onSelectedItemChange: ({ selectedItem }) => {
@@ -105,6 +111,12 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
       setInputValue(value as string)
     }
   }, [setInputValue, value])
+
+  useEffect(() => {
+    if (selectedItem && !isOpen) {
+      setInputValue(selectedItem.label)
+    }
+  }, [isOpen, selectedItem, setInputValue])
 
   const noItemsFound = isOpen && !error && inputItems.length === 0 && !processing && notFoundNode && inputValue
 
