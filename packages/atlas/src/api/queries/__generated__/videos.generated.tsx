@@ -478,6 +478,13 @@ export type GetBasicVideosConnectionQuery = {
         duration?: number | null
         reactionsCount: number
         commentsCount: number
+        media?: {
+          __typename?: 'StorageDataObject'
+          id: string
+          isAccepted: boolean
+          resolvedUrls: Array<string>
+          storageBag: { __typename?: 'StorageBag'; id: string }
+        } | null
         channel: {
           __typename?: 'Channel'
           id: string
@@ -554,6 +561,13 @@ export type GetBasicVideosConnectionLightweightQuery = {
         duration?: number | null
         reactionsCount: number
         commentsCount: number
+        media?: {
+          __typename?: 'StorageDataObject'
+          id: string
+          isAccepted: boolean
+          resolvedUrls: Array<string>
+          storageBag: { __typename?: 'StorageBag'; id: string }
+        } | null
         channel: {
           __typename?: 'Channel'
           id: string
@@ -1082,6 +1096,13 @@ export type GetBasicVideosQuery = {
     duration?: number | null
     reactionsCount: number
     commentsCount: number
+    media?: {
+      __typename?: 'StorageDataObject'
+      id: string
+      isAccepted: boolean
+      resolvedUrls: Array<string>
+      storageBag: { __typename?: 'StorageBag'; id: string }
+    } | null
     channel: {
       __typename?: 'Channel'
       id: string
@@ -1640,6 +1661,13 @@ export type GetMostViewedVideosConnectionQuery = {
         duration?: number | null
         reactionsCount: number
         commentsCount: number
+        media?: {
+          __typename?: 'StorageDataObject'
+          id: string
+          isAccepted: boolean
+          resolvedUrls: Array<string>
+          storageBag: { __typename?: 'StorageBag'; id: string }
+        } | null
         channel: {
           __typename?: 'Channel'
           id: string

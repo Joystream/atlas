@@ -455,6 +455,13 @@ export type BasicVideoFieldsFragment = {
   duration?: number | null
   reactionsCount: number
   commentsCount: number
+  media?: {
+    __typename?: 'StorageDataObject'
+    id: string
+    isAccepted: boolean
+    resolvedUrls: Array<string>
+    storageBag: { __typename?: 'StorageBag'; id: string }
+  } | null
   channel: {
     __typename?: 'Channel'
     id: string
@@ -1241,6 +1248,13 @@ export type FullNftFieldsFragment = {
           | null
       } | null
     }
+    media?: {
+      __typename?: 'StorageDataObject'
+      id: string
+      isAccepted: boolean
+      resolvedUrls: Array<string>
+      storageBag: { __typename?: 'StorageBag'; id: string }
+    } | null
     nft?: { __typename?: 'OwnedNft'; id: string } | null
     thumbnailPhoto?: {
       __typename?: 'StorageDataObject'
@@ -2486,6 +2500,14 @@ export const BasicVideoFieldsFragmentDoc = gql`
     duration
     reactionsCount
     commentsCount
+    media {
+      id
+      isAccepted
+      storageBag {
+        id
+      }
+      resolvedUrls
+    }
     channel {
       ...BasicChannelFields
     }

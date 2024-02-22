@@ -98,6 +98,7 @@ export const VideoView: FC = () => {
   const { likeOrDislikeVideo } = useReactionTransactions()
   const { withdrawBid } = useNftTransactions()
   const { trackLikeAdded, trackDislikeAdded } = useSegmentAnalytics()
+  const [canPrefetchNew, setCanPrefetchNew] = useState(false)
 
   const mdMatch = useMediaMatch('md')
   const { addVideoView } = useAddVideoView()
@@ -202,6 +203,9 @@ export const VideoView: FC = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleTimeUpdate = useCallback(
     throttle((time) => {
+      if (!canPrefetchNew) {
+        setCanPrefetchNew(true)
+      }
       if (video?.id) {
         updateWatchedVideos('INTERRUPTED', video.id, time)
       }
@@ -317,7 +321,13 @@ export const VideoView: FC = () => {
               onWithdrawBid={(bid, createdAt) => id && createdAt && bid && withdrawBid(id, bid, createdAt)}
             />
           )}
-      <MoreVideos channelId={channelId} channelName={channelName} videoId={id} type="channel" />
+      <MoreVideos
+        channelId={channelId}
+        channelName={channelName}
+        videoId={id}
+        type="channel"
+        shouldPrefetch={canPrefetchNew}
+      />
       {belongsToCategories?.map((category) => (
         <MoreVideos
           key={category.id}
