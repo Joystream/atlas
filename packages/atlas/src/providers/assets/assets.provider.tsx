@@ -40,7 +40,7 @@ type BagOperatorsMapping = Record<string, OperatorInfo[]>
 
 type OperatorsContextValue = {
   storageOperatorsMappingPromiseRef: MutableRefObject<Promise<BagOperatorsMapping> | undefined>
-  failedStorageOperatorIds: MutableRefObject<string[]>
+  failedStorageOperatorIds: MutableRefObject<[string, number][]>
   addFailedStorageOperator: (id: string[]) => void
   fetchStorageOperators: () => Promise<BagOperatorsMapping>
   userBenchmarkTime: MutableRefObject<number | null>
@@ -51,7 +51,7 @@ OperatorsContext.displayName = 'OperatorsContext'
 export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const storageOperatorsMappingPromiseRef = useRef<Promise<BagOperatorsMapping>>()
   const [storageOperatorsError, setStorageOperatorsError] = useState<unknown>(null)
-  const failedStorageOperatorIds = useRef<string[]>([])
+  const failedStorageOperatorIds = useRef<[string, number][]>([]) // ID, timestamp of failure
   const userBenchmarkTime = useRef<number | null>(null)
   const { data: benchmarkData } = useGetBasicVideoActivityQuery({
     variables: {
@@ -195,7 +195,10 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
     }
   })
 
-  const addFailedStorageOperator = useCallback((ids: string[]) => failedStorageOperatorIds.current.push(...ids), [])
+  const addFailedStorageOperator = useCallback(
+    (ids: string[]) => failedStorageOperatorIds.current.push(...ids.map((id) => [id, Date.now()] as [string, number])),
+    []
+  )
 
   if (storageOperatorsError) {
     return <ViewErrorFallback />
@@ -231,6 +234,13 @@ export const useStorageOperators = () => {
   const { storageOperatorsMappingPromiseRef, failedStorageOperatorIds, addFailedStorageOperator } =
     useOperatorsContext()
 
+  const evaluateStorageOperators = useCallback(() => {
+    failedStorageOperatorIds.current = failedStorageOperatorIds.current.filter(
+      ([, timestamp]) => Date.now() - timestamp >= 1000 * 60 * 5 // if operator was marked failed more than 5 mins ago, try it again
+    )
+    return failedStorageOperatorIds.current
+  }, [failedStorageOperatorIds])
+
   const getAllStorageOperatorsForBag = useCallback(
     async (storageBagId: string, includeFailed = false) => {
       try {
@@ -239,9 +249,11 @@ export const useStorageOperators = () => {
         if (includeFailed) {
           return bagOperators
         }
+        const blacklistedStorageOperators = evaluateStorageOperators()
         const workingBagOperators = bagOperators.filter(
-          (operator) => !failedStorageOperatorIds.current.includes(operator.id)
+          (operator) => !blacklistedStorageOperators.some(([id]) => operator.id === id)
         )
+
         if (!workingBagOperators || !workingBagOperators.length) {
           UserEventsLogger.logMissingOperatorsForBag(storageBagId)
           ConsoleLogger.warn('Missing storage operators for storage bag', { storageBagId })
@@ -253,7 +265,7 @@ export const useStorageOperators = () => {
         return null
       }
     },
-    [failedStorageOperatorIds, storageOperatorsMappingPromiseRef]
+    [evaluateStorageOperators, storageOperatorsMappingPromiseRef]
   )
 
   const getAvailableBucketsCountForBag = useCallback(
