@@ -187,6 +187,7 @@ export const SignUpModal = () => {
     goToNextStep,
     goToStep,
     referrerChannelId,
+    setAnonymousUserId,
     setAuthModalOpenName,
     setYppModalOpenName,
     setYtResponseData,
