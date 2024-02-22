@@ -82,9 +82,5 @@
   "engines": {
     "node": "^18"
   },
-  "packageManager": "yarn@3.2.1",
-  "dependencies": {
-    "@walletconnect/modal": "^2.6.2",
-    "@walletconnect/universal-provider": "^2.11.1"
-  }
+  "packageManager": "yarn@3.2.1"
 }

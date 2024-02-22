@@ -49,6 +49,8 @@
     "@sentry/react": "^7.53.1",
     "@talismn/connect-wallets": "^1.2.1",
     "@tippyjs/react": "^4.2.6",
+    "@walletconnect/modal": "^2.6.2",
+    "@walletconnect/universal-provider": "^2.11.1",
     "aos": "^2.3.4",
     "awesome-debounce-promise": "^2.1.0",
     "axios": "^1.2.1",

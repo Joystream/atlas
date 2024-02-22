@@ -4301,6 +4301,8 @@ __metadata:
     "@types/scroll-lock": ^2.1.0
     "@types/video.js": ^7.3.50
     "@vitejs/plugin-react": ^3.0.0
+    "@walletconnect/modal": ^2.6.2
+    "@walletconnect/universal-provider": ^2.11.1
     aos: ^2.3.4
     awesome-debounce-promise: ^2.1.0
     axios: ^1.2.1
@@ -21525,8 +21527,6 @@ __metadata:
     "@types/node": ^18.16.20
     "@typescript-eslint/eslint-plugin": ^6.2.1
     "@typescript-eslint/parser": ^6.2.1
-    "@walletconnect/modal": ^2.6.2
-    "@walletconnect/universal-provider": ^2.11.1
     eslint: ^8.29.0
     eslint-config-prettier: ^8.5.0
     eslint-plugin-jest-dom: ^4.0.3
