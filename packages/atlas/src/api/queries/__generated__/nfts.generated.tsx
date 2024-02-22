@@ -59,6 +59,13 @@ export type GetNftQuery = {
             | null
         } | null
       }
+      media?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        isAccepted: boolean
+        resolvedUrls: Array<string>
+        storageBag: { __typename?: 'StorageBag'; id: string }
+      } | null
       nft?: { __typename?: 'OwnedNft'; id: string } | null
       thumbnailPhoto?: {
         __typename?: 'StorageDataObject'
@@ -380,6 +387,13 @@ export type GetNftsQuery = {
             | null
         } | null
       }
+      media?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        isAccepted: boolean
+        resolvedUrls: Array<string>
+        storageBag: { __typename?: 'StorageBag'; id: string }
+      } | null
       nft?: { __typename?: 'OwnedNft'; id: string } | null
       thumbnailPhoto?: {
         __typename?: 'StorageDataObject'
@@ -706,6 +720,13 @@ export type GetNftsConnectionQuery = {
                 | null
             } | null
           }
+          media?: {
+            __typename?: 'StorageDataObject'
+            id: string
+            isAccepted: boolean
+            resolvedUrls: Array<string>
+            storageBag: { __typename?: 'StorageBag'; id: string }
+          } | null
           nft?: { __typename?: 'OwnedNft'; id: string } | null
           thumbnailPhoto?: {
             __typename?: 'StorageDataObject'
@@ -1013,10 +1034,10 @@ export type GetFeaturedNftsVideosQuery = {
       media?: {
         __typename?: 'StorageDataObject'
         id: string
+        isAccepted: boolean
         resolvedUrls: Array<string>
         createdAt: Date
         size: string
-        isAccepted: boolean
         ipfsHash: string
         storageBag: { __typename?: 'StorageBag'; id: string }
         type?:
