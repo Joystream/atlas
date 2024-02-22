@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { atlasConfig } from '@/config'
-import { logDistributorPerformance, testAssetDownload } from '@/providers/assets/assets.helpers'
+import { AssetTestOptions, logDistributorPerformance, testAssetDownload } from '@/providers/assets/assets.helpers'
 import { useOperatorsContext } from '@/providers/assets/assets.provider'
 import { AssetType } from '@/providers/uploads/uploads.types'
 import { isMobile } from '@/utils/browser'
@@ -9,15 +9,23 @@ import { getVideoCodec } from '@/utils/getVideoCodec'
 import { ConsoleLogger, DistributorEventEntry, SentryLogger, UserEventsLogger } from '@/utils/logs'
 import { withTimeout } from '@/utils/misc'
 
+const workingUrlMap = new Map<string, string>()
+
 export const getSingleAssetUrl = async (
   urls: string[] | null | undefined,
   id: string | null | undefined,
   type: AssetType | null,
-  timeout?: number
+  timeout?: number,
+  opts?: AssetTestOptions
 ): Promise<string | undefined> => {
   if (!urls || !urls.length) {
     return
   }
+
+  if (id && workingUrlMap.has(id)) {
+    return workingUrlMap.get(id)
+  }
+
   const mobile = isMobile()
 
   for (const distributionAssetUrl of urls) {
@@ -26,7 +34,7 @@ export const getSingleAssetUrl = async (
       dataObjectType: type || undefined,
       resolvedUrl: distributionAssetUrl,
     }
-    const assetTestPromise = testAssetDownload(distributionAssetUrl, type)
+    const assetTestPromise = testAssetDownload(distributionAssetUrl, type, opts)
     const assetTestPromiseWithTimeout = withTimeout(
       assetTestPromise,
       timeout ?? atlasConfig.storage.assetResponseTimeout
@@ -36,6 +44,10 @@ export const getSingleAssetUrl = async (
       await assetTestPromiseWithTimeout
 
       logDistributorPerformance(distributionAssetUrl, eventEntry)
+
+      if (id) {
+        workingUrlMap.set(id, distributionAssetUrl)
+      }
 
       return distributionAssetUrl
     } catch (err) {
@@ -67,7 +79,12 @@ export const getSingleAssetUrl = async (
     }
 
     Promise.any(promises)
-      .then(res)
+      .then((url) => {
+        if (id) {
+          workingUrlMap.set(id, url)
+        }
+        res(url)
+      })
       .catch((error) => {
         ConsoleLogger.warn(`Error during fallback asset promise race`, {
           urls,
@@ -77,11 +94,11 @@ export const getSingleAssetUrl = async (
   })
 }
 
-export const useGetAssetUrl = (urls: string[] | undefined | null, type: AssetType | null) => {
+export const useGetAssetUrl = (urls: string[] | undefined | null, type: AssetType | null, opts?: AssetTestOptions) => {
   const [url, setUrl] = useState<string | undefined>(undefined)
   const [isLoading, setIsLoading] = useState(true)
   const { userBenchmarkTime } = useOperatorsContext()
-  const id = url?.split('/').pop()
+  const id = urls?.[0]?.split('/').pop()
   useEffect(() => {
     if (!urls || (url && urls.includes(url)) || (!url && !urls.length)) {
       setIsLoading(false)
@@ -90,7 +107,7 @@ export const useGetAssetUrl = (urls: string[] | undefined | null, type: AssetTyp
     const init = async () => {
       setUrl(undefined)
       setIsLoading(true)
-      const resolvedUrl = await getSingleAssetUrl(urls, id, type, userBenchmarkTime.current ?? undefined)
+      const resolvedUrl = await getSingleAssetUrl(urls, id, type, userBenchmarkTime.current ?? undefined, opts)
       setIsLoading(false)
       if (resolvedUrl) {
         setUrl(resolvedUrl)
@@ -102,7 +119,7 @@ export const useGetAssetUrl = (urls: string[] | undefined | null, type: AssetTyp
     return () => {
       setIsLoading(false)
     }
-  }, [id, type, url, urls, userBenchmarkTime])
+  }, [id, opts, type, url, urls, userBenchmarkTime])
 
   return { url, isLoading }
 }

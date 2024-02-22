@@ -37,6 +37,7 @@ const MembershipSettingsView = lazy(() =>
 )
 const NotFoundView = lazy(() => import('./NotFoundView').then((module) => ({ default: module.NotFoundView })))
 const SearchView = lazy(() => import('./SearchView').then((module) => ({ default: module.SearchView })))
+const CuratorView = lazy(() => import('./CuratorView').then((module) => ({ default: module.CuratorView })))
 const VideoView = lazy(() => import('./VideoView').then((module) => ({ default: module.VideoView })))
 const ReferralsView = lazy(() =>
   import('@/views/global/ReferralsView').then((module) => ({ default: module.ReferralsView }))
@@ -44,6 +45,7 @@ const ReferralsView = lazy(() =>
 
 const viewerRoutes = [
   { path: relativeRoutes.viewer.search(), element: <SearchView /> },
+  { path: relativeRoutes.viewer.curatorView(), element: <CuratorView /> },
   { path: relativeRoutes.viewer.index(), element: <HomeView /> },
   { path: relativeRoutes.viewer.video(), element: <VideoView /> },
   { path: relativeRoutes.viewer.channels(), element: <ChannelsView /> },

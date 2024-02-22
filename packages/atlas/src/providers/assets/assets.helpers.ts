@@ -16,11 +16,21 @@ export const getMemberAvatar = (member?: Pick<BasicMembershipFieldsFragment, 'me
   return { urls: null, isLoadingAsset: avatar !== null }
 }
 
-export const testAssetDownload = (url: string, type: AssetType | null): Promise<string> => {
+export type AssetTestOptions = {
+  resolveOnlyOnEvents?: (keyof HTMLVideoElementEventMap)[]
+}
+
+export const testAssetDownload = (url: string, type: AssetType | null, opts?: AssetTestOptions): Promise<string> => {
   return new Promise((_resolve, _reject) => {
     const isImageType = type && ['thumbnail', 'avatar', 'cover'].includes(type)
     let img: HTMLImageElement | null = null
     let video: HTMLVideoElement | null = null
+    const videoEvents: (keyof HTMLVideoElementEventMap)[] = opts?.resolveOnlyOnEvents ?? [
+      'loadedmetadata',
+      'loadeddata',
+      'canplay',
+      'progress',
+    ]
 
     const cleanup = () => {
       if (img) {
@@ -31,10 +41,9 @@ export const testAssetDownload = (url: string, type: AssetType | null): Promise<
       }
       if (video) {
         video.removeEventListener('error', reject)
-        video.removeEventListener('loadedmetadata', resolve)
-        video.removeEventListener('loadeddata', resolve)
-        video.removeEventListener('canplay', resolve)
-        video.removeEventListener('progress', resolve)
+        videoEvents.forEach((event) => {
+          video?.removeEventListener(event, resolve)
+        })
         video.remove()
         video = null
       }
@@ -61,10 +70,9 @@ export const testAssetDownload = (url: string, type: AssetType | null): Promise<
       img.src = url
     } else if (type === 'video') {
       video = document.createElement('video')
-      video.addEventListener('loadedmetadata', resolve)
-      video.addEventListener('loadeddata', resolve)
-      video.addEventListener('canplay', resolve)
-      video.addEventListener('progress', resolve)
+      videoEvents.forEach((event) => {
+        video?.addEventListener(event, resolve)
+      })
       video.addEventListener('error', async (err) => {
         if (err.target) {
           reject((err.target as HTMLVideoElement).error)

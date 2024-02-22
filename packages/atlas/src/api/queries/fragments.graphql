@@ -162,6 +162,14 @@ fragment BasicVideoFields on Video {
   duration
   reactionsCount
   commentsCount
+  media {
+    id
+    isAccepted
+    storageBag {
+      id
+    }
+    resolvedUrls
+  }
   channel {
     ...BasicChannelFields
   }
