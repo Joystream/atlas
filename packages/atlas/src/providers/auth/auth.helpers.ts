@@ -42,6 +42,7 @@ export const handleAnonymousAuth = async (userId?: string | null) => {
     }
   } catch (error) {
     SentryLogger.error('Error during fetching user id', 'setAnonymousAuth', error)
+    throw error
   }
 }
 
