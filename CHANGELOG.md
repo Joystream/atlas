@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.15.1] - 2024-02-22
+
+## Added
+
+- Page for curators
+- Video preloading for homepage and video view
+
+### Fixed
+
+- Failing guest auth request in certain scenarios
+- Asset URL is now properly cached
+
+### Changed
+
+- Storage operator blacklisting logic on asset upload
+
 ## [4.15.0] - 2024-02-09
 
 ## Added
