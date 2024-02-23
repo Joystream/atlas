@@ -10,6 +10,7 @@ import { ConsoleLogger, DistributorEventEntry, SentryLogger, UserEventsLogger } 
 import { withTimeout } from '@/utils/misc'
 
 const workingUrlMap = new Map<string, string>()
+const assetsWithNoDistributions: string[] = []
 
 export const getSingleAssetUrl = async (
   urls: string[] | null | undefined,
@@ -18,7 +19,7 @@ export const getSingleAssetUrl = async (
   timeout?: number,
   opts?: AssetTestOptions
 ): Promise<string | undefined> => {
-  if (!urls || !urls.length) {
+  if (!urls || !urls.length || (id && assetsWithNoDistributions.includes(id))) {
     return
   }
 
@@ -90,6 +91,7 @@ export const getSingleAssetUrl = async (
           urls,
           error,
         })
+        return undefined
       })
   })
 }
@@ -108,9 +110,14 @@ export const useGetAssetUrl = (urls: string[] | undefined | null, type: AssetTyp
       setUrl(undefined)
       setIsLoading(true)
       const resolvedUrl = await getSingleAssetUrl(urls, id, type, userBenchmarkTime.current ?? undefined, opts)
+
       setIsLoading(false)
       if (resolvedUrl) {
+        console.log('trying', id, assetsWithNoDistributions, resolvedUrl)
+
         setUrl(resolvedUrl)
+      } else if (id) {
+        assetsWithNoDistributions.push(id)
       }
     }
 
