@@ -1,5 +1,7 @@
 import { BaseDotsamaWallet, Wallet, getWallets } from '@talismn/connect-wallets'
 
+import { atlasConfig } from '@/config'
+
 export const getWalletsList = () => {
   const supportedWallets = getWallets()
   const supportedWalletsNames = supportedWallets.map((wallet) => wallet.extensionName)
@@ -26,7 +28,11 @@ export const getWalletsList = () => {
     installed: true,
   } as Wallet
 
-  return [...supportedWallets, ...unknownWallets, wcWallet]
+  return [
+    ...supportedWallets,
+    ...unknownWallets,
+    ...(atlasConfig.features.members.walletConnectProjectId ? [wcWallet] : []),
+  ]
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

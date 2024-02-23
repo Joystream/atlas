@@ -120,6 +120,7 @@ export const configSchema = z.object({
     members: z.object({
       avatarServiceUrl: z.string(),
       hcaptchaSiteKey: z.string().nullable(),
+      walletConnectProjectId: z.string().nullable(),
     }),
     playback: z.object({ playbackRates: z.array(z.number()) }),
     comments: z.object({

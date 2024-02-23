@@ -3,7 +3,7 @@ import { WalletConnectModal } from '@walletconnect/modal'
 import Client, { SignClient } from '@walletconnect/sign-client'
 import type { SessionTypes } from '@walletconnect/types'
 
-import { JOYSTREAM_DEFAULT_CHAIN_ID, POLKADOT_CHAIN_ID, WC_VERSION } from './consts'
+import { JOYSTREAM_DEFAULT_CHAIN_ID, WC_VERSION } from './consts'
 import { Account, BaseWallet, BaseWalletProvider, UnsubscribeFn, WalletMetadata, WalletType } from './core'
 import { WalletConnectSigner } from './signer.js'
 import type { WalletConnectConfiguration, WcAccount } from './types.js'
@@ -25,7 +25,6 @@ export class WalletConnectWallet implements BaseWallet {
   walletConnectModal: WalletConnectModal
 
   constructor(config: WalletConnectConfiguration, appName: string) {
-    if (!config.chainIds || config.chainIds.length === 0) config.chainIds = [POLKADOT_CHAIN_ID]
     this.config = config
     this.appName = appName
     this.metadata = {
@@ -38,7 +37,7 @@ export class WalletConnectWallet implements BaseWallet {
     }
     this.walletConnectModal = new WalletConnectModal({
       projectId: config.projectId,
-      chains: config.chainIds,
+      // chains: config.chainIds,
       themeMode: 'dark',
       themeVariables: {
         '--wcm-z-index': '9999',
@@ -137,7 +136,7 @@ export class WalletConnectWallet implements BaseWallet {
       const unsubscribeModal = this.walletConnectModal.subscribeModal((state: ModalState) => {
         if (state.open === false) {
           unsubscribeModal()
-          resolve()
+          reject({ message: 'user_action' })
         }
       })
 

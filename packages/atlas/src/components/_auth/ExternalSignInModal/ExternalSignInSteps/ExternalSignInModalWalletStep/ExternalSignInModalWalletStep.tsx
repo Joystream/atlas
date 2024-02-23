@@ -103,11 +103,19 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
 
     const accounts =
       selectedWallet?.extensionName === 'WalletConnect'
-        ? await signInWithWalletConnect()
+        ? await signInWithWalletConnect().catch((err) => {
+            const message = err?.message
+            if (message === 'user_action' || message === 'User rejected.') {
+              setIsConnecting(false)
+              return null
+            }
+          })
         : await signInToWallet(selectedWallet?.extensionName)
 
     if (!accounts) {
-      setHasError(true)
+      if (selectedWallet?.extensionName !== 'WalletConnect') {
+        setHasError(true)
+      }
       setAuthModalOpenName('externalLogIn')
       // set error state
       return

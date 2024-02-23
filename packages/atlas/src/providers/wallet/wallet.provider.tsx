@@ -58,7 +58,7 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
     const chainId = `polkadot:${genesisHash?.replace('0x', '').substring(0, 32)}` as `polkadot:${string}`
 
     const walletConnectParams: WalletConnectConfiguration = {
-      projectId: '33b2609463e399daee8c51726546c8dd',
+      projectId: atlasConfig.features.members.walletConnectProjectId || '',
       relayUrl: 'wss://relay.walletconnect.com',
       metadata: {
         name: 'Joystream demo app',
