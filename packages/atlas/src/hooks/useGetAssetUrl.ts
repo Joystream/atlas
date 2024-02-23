@@ -113,8 +113,6 @@ export const useGetAssetUrl = (urls: string[] | undefined | null, type: AssetTyp
 
       setIsLoading(false)
       if (resolvedUrl) {
-        console.log('trying', id, assetsWithNoDistributions, resolvedUrl)
-
         setUrl(resolvedUrl)
       } else if (id) {
         assetsWithNoDistributions.push(id)

@@ -32,8 +32,8 @@ export const SkeletonLoader: FC<SkeletonLoaderProps> = ({ className, ...props })
 )
 
 const SkeletonLoaderContainer = styled.div<SkeletonLoaderProps>`
-  width: ${({ width = '100%' }) => getPropValue(width)};
-  height: ${({ height = '100%' }) => getPropValue(height)};
+  min-width: ${({ width = '100%' }) => getPropValue(width)};
+  min-height: ${({ height = '100%' }) => getPropValue(height)};
   margin-bottom: ${({ bottomSpace = 0 }) => getPropValue(bottomSpace)};
   border-radius: ${({ rounded = false }) => (rounded ? '100%' : '0')};
   background-color: ${cVar('colorCoreNeutral800Lighten')};
