@@ -19,6 +19,7 @@ import { useSearchStore } from '@/providers/search'
 import { useUser } from '@/providers/user/user.hooks'
 import { media, transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
+import { CuratorHomepage } from '@/views/viewer/CuratorHomepage'
 
 const YppLandingView = lazy(() =>
   import('@/views/global/YppLandingView').then((module) => ({ default: module.YppLandingView }))
@@ -46,6 +47,7 @@ const ReferralsView = lazy(() =>
 const viewerRoutes = [
   { path: relativeRoutes.viewer.search(), element: <SearchView /> },
   { path: relativeRoutes.viewer.curatorView(), element: <CuratorView /> },
+  { path: relativeRoutes.viewer.curatorHomepage(), element: <CuratorHomepage /> },
   { path: relativeRoutes.viewer.index(), element: <HomeView /> },
   { path: relativeRoutes.viewer.video(), element: <VideoView /> },
   { path: relativeRoutes.viewer.channels(), element: <ChannelsView /> },
