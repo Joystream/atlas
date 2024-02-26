@@ -15,6 +15,7 @@ import { useAuthStore } from '@/providers/auth/auth.store'
 import { useJoystream } from '@/providers/joystream/joystream.provider'
 import { useWallet } from '@/providers/wallet/wallet.hooks'
 import { useWalletStore } from '@/providers/wallet/wallet.store'
+import { isWalletConnectWallet } from '@/providers/wallet/wallet.types'
 import { SentryLogger } from '@/utils/logs'
 
 import {
@@ -44,6 +45,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     actions: { setAnonymousUserId, setEncodedSeed },
   } = useAuthStore()
   const lastUsedWalletName = useWalletStore((store) => store.lastUsedWalletName)
+  const currentWallet = useWalletStore((store) => store.wallet)
   const { signInToWallet } = useWallet()
 
   useMountEffect(() => {
@@ -239,6 +241,15 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const handleLogout: AuthContextValue['handleLogout'] = useCallback(async () => {
     try {
+      if (currentWallet && isWalletConnectWallet(currentWallet)) {
+        await currentWallet?.client?.disconnect({
+            topic: currentWallet?.session?.topic || '',
+            reason: {
+                code: -1,
+                message: 'Disconnected by client!',
+            },
+        })
+      }
       await logoutRequest()
       handleAnonymousAuth(anonymousUserId).then((userId) => {
         setAnonymousUserId(userId ?? null)
@@ -249,7 +260,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     } catch (error) {
       SentryLogger.error('Error when logging out', 'auth.provider', error)
     }
-  }, [anonymousUserId, setAnonymousUserId, setEncodedSeed, trackLogout])
+  }, [anonymousUserId, currentWallet, setAnonymousUserId, setEncodedSeed, trackLogout])
 
   const isWalletUser = useMemo(() => encodedSeed === null && !!currentUser, [currentUser, encodedSeed])
 

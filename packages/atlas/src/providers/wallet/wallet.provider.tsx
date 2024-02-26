@@ -1,11 +1,11 @@
-import { Wallet, WalletAccount } from '@talismn/connect-wallets'
+import { WalletAccount } from '@talismn/connect-wallets'
 import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
 // import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { atlasConfig } from '@/config'
 import { JoystreamContext, JoystreamContextValue } from '@/providers/joystream/joystream.provider'
 import { useWalletStore } from '@/providers/wallet/wallet.store'
-import { SignerWalletAccount, WalletContextValue } from '@/providers/wallet/wallet.types'
+import { SignerWalletAccount, WCWallet, WalletContextValue } from '@/providers/wallet/wallet.types'
 import { formatJoystreamAddress } from '@/utils/address'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { retryWalletPromise } from '@/utils/misc'
@@ -141,14 +141,12 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
     setWalletAccounts(accountsWithWallet)
     const storeWallet = {
       extensionName: 'WalletConnect',
-      signer: wcWallet.signer,
-      title: 'WalletConnect',
-      getAccounts: wcWallet.getAccounts,
       logo: {
         src: 'https://walletconnect.com/static/favicon.png',
         alt: 'WalletConnect',
       },
-    } as Wallet
+      ...wcWallet,
+    } as WCWallet
     setWallet(storeWallet)
     return accountsWithWallet
   }, [getWalletConnectParams, setWallet, setWalletAccounts])
