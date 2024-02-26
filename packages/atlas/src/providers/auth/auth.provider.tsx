@@ -243,11 +243,11 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     try {
       if (currentWallet && isWalletConnectWallet(currentWallet)) {
         await currentWallet?.client?.disconnect({
-            topic: currentWallet?.session?.topic || '',
-            reason: {
-                code: -1,
-                message: 'Disconnected by client!',
-            },
+          topic: currentWallet?.session?.topic || '',
+          reason: {
+            code: -1,
+            message: 'Disconnected by client!',
+          },
         })
       }
       await logoutRequest()

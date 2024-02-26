@@ -1,5 +1,6 @@
 import { Wallet, WalletAccount } from '@talismn/connect-wallets'
-import {WalletConnectWallet} from "@/providers/wallet/tmpwallet";
+
+import { WalletConnectWallet } from '@/providers/wallet/tmpwallet'
 
 export type SignerWallet = Wallet | WCWallet
 export type WCWallet = Partial<Wallet> & WalletConnectWallet
