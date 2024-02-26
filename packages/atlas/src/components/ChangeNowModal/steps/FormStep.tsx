@@ -41,6 +41,9 @@ export const FormStep = ({ goToStep, setPrimaryButtonProps, onSubmit, type, init
   const { displaySnackbar } = useSnackbar()
   const [isLoadingRate, setIsLoadingRate] = useState<'to' | 'from' | null>(null)
   const { data, isLoading } = useQuery('changenow-currency', () => changeNowService.getAvailableCurrencies())
+  const debouncedExchangeEstimation = useRef<DebouncedFunc<
+    (amount: number, type: 'from' | 'to') => Promise<void>
+  > | null>(null)
 
   const {
     control,
@@ -73,6 +76,14 @@ export const FormStep = ({ goToStep, setPrimaryButtonProps, onSubmit, type, init
     })
   })
 
+  const hasInitialValues = !!initialValues
+  useEffect(() => {
+    if (hasInitialValues && debouncedExchangeEstimation.current) {
+      console.log('calc')
+      debouncedExchangeEstimation.current(initialValues?.from.amount, 'from')
+    }
+  }, [hasInitialValues, initialValues?.from.amount])
+
   const currencyOptions = useMemo(() => {
     return data?.map((curr) => ({
       ...curr,
@@ -82,10 +93,6 @@ export const FormStep = ({ goToStep, setPrimaryButtonProps, onSubmit, type, init
       nodeStart: curr.image ? <img src={curr.image} alt={curr.ticker} /> : <SvgJoyTokenPrimary16 />,
     }))
   }, [data])
-
-  const debouncedExchangeEstimation = useRef<DebouncedFunc<
-    (amount: number, type: 'from' | 'to') => Promise<void>
-  > | null>(null)
 
   useEffect(() => {
     if (currencyOptions) {
@@ -131,6 +138,12 @@ export const FormStep = ({ goToStep, setPrimaryButtonProps, onSubmit, type, init
       }, 500)
     }
   }, [currencyOptions, displaySnackbar, setError, setValue, type, watch])
+
+  useEffect(() => {
+    if (initialValues?.validUntil && new Date(initialValues.validUntil).getTime() < Date.now() && currencyOptions) {
+      debouncedExchangeEstimation.current?.(initialValues.from.amount, 'from')
+    }
+  }, [currencyOptions, initialValues?.from.amount, initialValues?.validUntil])
 
   const [from, to] = watch(['from', 'to'])
 

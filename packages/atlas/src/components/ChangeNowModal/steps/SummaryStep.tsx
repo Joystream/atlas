@@ -9,10 +9,12 @@ import { Text } from '@/components/Text'
 import { TextButton } from '@/components/_buttons/Button'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { absoluteRoutes } from '@/config/routes'
+import { useMountEffect } from '@/hooks/useMountEffect'
 import { useUser } from '@/providers/user/user.hooks'
 import { cVar, sizes } from '@/styles'
 import { changeNowService } from '@/utils/ChangeNowService'
 import { shortenString } from '@/utils/misc'
+import { formatDurationShort, getTimeDiffInSeconds } from '@/utils/time'
 
 import { FormData } from './FormStep'
 
@@ -23,8 +25,10 @@ export type SummaryStepProps = {
 export const SummaryStep = ({ formData, setPrimaryButtonProps }: SummaryStepProps) => {
   const [termsAccepted, setTermsAccepted] = useState(false)
   const [error, setError] = useState('')
+  const [timeDiff, setTimeDiff] = useState(0)
   const { activeMembership } = useUser()
   const { data: currencies } = useQuery('changenow-currency', () => changeNowService.getAvailableCurrencies())
+  const { estimatedArrival, to, from, rateId, validUntil } = formData
 
   useEffect(() => {
     setPrimaryButtonProps({
@@ -38,6 +42,20 @@ export const SummaryStep = ({ formData, setPrimaryButtonProps }: SummaryStepProp
       },
     })
   }, [setPrimaryButtonProps, termsAccepted])
+
+  useMountEffect(() => {
+    if (!validUntil) {
+      return
+    }
+
+    const id = setInterval(() => {
+      setTimeDiff(getTimeDiffInSeconds(new Date(validUntil)))
+    }, 1_000)
+
+    return () => {
+      clearInterval(id)
+    }
+  })
 
   const [fromCurrency, toCurrency] = useMemo(() => {
     const from = currencies?.find((curr) => curr.legacyTicker === formData.from.currency)
@@ -78,7 +96,16 @@ export const SummaryStep = ({ formData, setPrimaryButtonProps }: SummaryStepProp
           Estimated Arrival
         </Text>
         <Text variant="t200" as="p">
-          {new Date(formData.estimatedArrival).toDateString()}
+          {estimatedArrival ? new Date(estimatedArrival).toDateString() : 'N/A'}
+        </Text>
+      </FlexBox>
+
+      <FlexBox width="100%" justifyContent="space-between">
+        <Text variant="t200" as="p" color="colorText">
+          Rate valid for
+        </Text>
+        <Text variant="t200" as="p">
+          {formatDurationShort(timeDiff)}
         </Text>
       </FlexBox>
 
@@ -87,7 +114,7 @@ export const SummaryStep = ({ formData, setPrimaryButtonProps }: SummaryStepProp
           Estimated Rate
         </Text>
         <Text variant="t200" as="p">
-          1 {fromTicker} ~ {formData.to.amount / formData.from.amount} {toTicker}
+          1 {fromTicker} ~ {to.amount / from.amount} {toTicker}
         </Text>
       </FlexBox>
 
@@ -96,7 +123,7 @@ export const SummaryStep = ({ formData, setPrimaryButtonProps }: SummaryStepProp
           You will receive
         </Text>
         <Text variant="h300" as="h1">
-          {formData.to.amount} {toTicker}
+          {to.amount} {toTicker}
         </Text>
       </FlexBox>
 
