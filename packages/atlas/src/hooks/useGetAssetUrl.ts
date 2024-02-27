@@ -10,6 +10,7 @@ import { ConsoleLogger, DistributorEventEntry, SentryLogger, UserEventsLogger } 
 import { withTimeout } from '@/utils/misc'
 
 const workingUrlMap = new Map<string, string>()
+const assetsWithNoDistributions: string[] = []
 
 export const getSingleAssetUrl = async (
   urls: string[] | null | undefined,
@@ -18,7 +19,7 @@ export const getSingleAssetUrl = async (
   timeout?: number,
   opts?: AssetTestOptions
 ): Promise<string | undefined> => {
-  if (!urls || !urls.length) {
+  if (!urls || !urls.length || (id && assetsWithNoDistributions.includes(id))) {
     return
   }
 
@@ -91,6 +92,7 @@ export const getSingleAssetUrl = async (
           urls,
           error,
         })
+        return undefined
       })
   })
 }
@@ -119,7 +121,7 @@ export const useGetAssetUrl = (urls: string[] | undefined | null, type: AssetTyp
         urls,
         id,
         type,
-        type === 'video' ? 20_000 : userBenchmarkTime.current ?? undefined,
+        type === 'video' ? 10_000 : userBenchmarkTime.current ?? undefined,
         opts
       )
       const resolvedUrl = await assetPromise.current
@@ -128,6 +130,8 @@ export const useGetAssetUrl = (urls: string[] | undefined | null, type: AssetTyp
       setIsLoading(false)
       if (resolvedUrl) {
         setUrl(resolvedUrl)
+      } else if (id) {
+        assetsWithNoDistributions.push(id)
       }
     }
 

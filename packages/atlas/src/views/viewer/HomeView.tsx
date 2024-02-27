@@ -1,43 +1,23 @@
 import styled from '@emotion/styled'
-import { FC, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import { FC, useState } from 'react'
 
-import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
-import { GetBasicVideosConnectionLightweightDocument } from '@/api/queries/__generated__/videos.generated'
+import { useGetCuratedHompageVideosQuery } from '@/api/queries/__generated__/videos.generated'
 import { Section } from '@/components/Section/Section'
 import { ReferralsBanner } from '@/components/_referrals/ReferralsBanner/ReferralsBanner'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { publicCryptoVideoFilter } from '@/config/contentFilter'
+import { useBreakpointKey } from '@/hooks/useBreakpointKey'
 import { useHeadTags } from '@/hooks/useHeadTags'
-import { useInfiniteVideoGrid } from '@/hooks/useInfiniteVideoGrid'
-import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
-import { useAuthStore } from '@/providers/auth/auth.store'
+import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { DEFAULT_VIDEO_GRID, sizes } from '@/styles'
+import { createPlaceholderData } from '@/utils/data'
 import { InfiniteLoadingOffsets } from '@/utils/loading.contants'
 
 export const HomeView: FC = () => {
-  const location = useLocation()
-  const {
-    actions: { setAuthModalOpenName },
-  } = useAuthStore()
-
+  const [hasMoreVideos, setHasMoreVideos] = useState(true)
   const headTags = useHeadTags()
-  const { columns, fetchMore, pageInfo, tiles } = useInfiniteVideoGrid({
-    query: GetBasicVideosConnectionLightweightDocument,
-    variables: {
-      where: publicCryptoVideoFilter,
-      orderBy: VideoOrderByInput.VideoRelevanceDesc,
-      first: 1,
-    },
-  })
-
-  useEffect(() => {
-    if (location.state?.['redirectTo']) {
-      setAuthModalOpenName(getCorrectLoginModal())
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const { columns, fetchMore, tiles, loading, skipVideoIds } = useHomeVideos()
 
   return (
     <VideoContentTemplate>
@@ -50,11 +30,22 @@ export const HomeView: FC = () => {
           children: tiles?.map((video, idx) => <VideoTileViewer id={video.id} key={idx} />),
         }}
         footerProps={{
-          reachedEnd: !pageInfo?.hasNextPage,
+          reachedEnd: !hasMoreVideos,
           fetchMore: async () => {
-            if (pageInfo?.hasNextPage) {
+            if (hasMoreVideos && !loading) {
               await fetchMore({
-                variables: { first: columns * 4, after: pageInfo.endCursor },
+                variables: { limit: columns * 4, skipVideoIds },
+                updateQuery: (prev, { fetchMoreResult }) => {
+                  if (!fetchMoreResult.dumbPublicFeedVideos.length) {
+                    setHasMoreVideos(false)
+                  }
+                  fetchMoreResult.dumbPublicFeedVideos = [
+                    ...(prev.dumbPublicFeedVideos ?? []),
+                    ...fetchMoreResult.dumbPublicFeedVideos,
+                  ]
+
+                  return fetchMoreResult
+                },
               })
             }
             return
@@ -70,3 +61,36 @@ export const HomeView: FC = () => {
 const StyledSection = styled(Section)`
   padding: ${sizes(8)} 0;
 `
+
+const useHomeVideos = () => {
+  const initialRowsToLoad = useVideoGridRows('main')
+  const [skipVideoIds, setSkipVideoIds] = useState<string[]>(['-1'])
+  const breakPointKey = useBreakpointKey()
+  const columns = (breakPointKey && DEFAULT_VIDEO_GRID[breakPointKey]?.columns) ?? 0
+  const { data, loading, fetchMore } = useGetCuratedHompageVideosQuery({
+    notifyOnNetworkStatusChange: true,
+    skip: !columns,
+    variables: {
+      where: { ...publicCryptoVideoFilter, includeInHomeFeed_eq: true, isShort_not_eq: undefined },
+      skipVideoIds: ['-1'],
+      limit: columns * initialRowsToLoad,
+    },
+    onCompleted: (result) => {
+      if (result.dumbPublicFeedVideos.length) setSkipVideoIds(result.dumbPublicFeedVideos.map((video) => video.id))
+    },
+  })
+
+  const firstLoad = !data?.dumbPublicFeedVideos && loading
+  const firstLoadPlaceholders = firstLoad ? createPlaceholderData(columns * initialRowsToLoad) : []
+
+  const displayedItems = data?.dumbPublicFeedVideos || []
+  const nextLoadPlaceholders = createPlaceholderData(columns * 4)
+
+  return {
+    tiles: [...firstLoadPlaceholders, ...displayedItems, ...(loading ? nextLoadPlaceholders : [])],
+    fetchMore,
+    columns,
+    loading,
+    skipVideoIds,
+  }
+}
