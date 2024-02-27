@@ -236,7 +236,7 @@ export const useStorageOperators = () => {
 
   const evaluateStorageOperators = useCallback(() => {
     failedStorageOperatorIds.current = failedStorageOperatorIds.current.filter(
-      ([, timestamp]) => Date.now() - timestamp >= 1000 * 60 * 5 // if operator was marked failed more than 5 mins ago, try it again
+      ([, timestamp]) => Date.now() - timestamp <= 1000 * 60 * 5 // if operator was marked failed more than 5 mins ago, try it again
     )
     return failedStorageOperatorIds.current
   }, [failedStorageOperatorIds])
