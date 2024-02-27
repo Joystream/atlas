@@ -73,8 +73,8 @@ export const LogInModal = () => {
     } catch (error) {
       if (error.message === LogInErrors.ArtifactsNotFound) {
         displaySnackbar({
-          title: `We can't find ${atlasConfig.general.appName} membership associated with this email`,
-          description: `Make sure that you are using the same email that you used to create your membership on ${atlasConfig.general.appName}.`,
+          title: `We can't find ${atlasConfig.general.appName} membership associated with these credentials`,
+          description: `Make sure that you are using the same email and password that you used to create your membership on ${atlasConfig.general.appName}.`,
           iconType: 'error',
         })
         setError('email', { type: 'custom', message: 'Incorrect email or password.' })
