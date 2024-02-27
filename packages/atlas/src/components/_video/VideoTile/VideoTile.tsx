@@ -1,5 +1,10 @@
+import styled from '@emotion/styled'
 import { FC, memo, useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
+
+import { FlexBox } from '@/components/FlexBox'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { square } from '@/styles'
 
 import { VideoTileContainer } from './VideoTile.styles'
 
@@ -62,6 +67,21 @@ export const VideoTile: FC<VideoTileProps> = memo(
       },
     })
 
+    if (loadingDetails) {
+      return (
+        <VideoTileContainer direction={direction} className={className}>
+          <StyledThumbnailSkeleton />
+          <FlexBox width="100%" gap={3}>
+            <AvatarSkeleton rounded width={32} height={32} />
+            <FlexBox gap={2} flow="column">
+              <SkeletonLoader width="90%" height={32} />
+              <SkeletonLoader width="40%" height={24} />
+            </FlexBox>
+          </FlexBox>
+        </VideoTileContainer>
+      )
+    }
+
     return (
       <VideoTileContainer direction={direction} className={className}>
         <VideoThumbnail
@@ -102,5 +122,16 @@ export const VideoTile: FC<VideoTileProps> = memo(
     )
   }
 )
+
+const StyledThumbnailSkeleton = styled(SkeletonLoader)`
+  min-width: unset;
+  min-height: unset;
+  width: 100%;
+  aspect-ratio: 16/9;
+`
+
+const AvatarSkeleton = styled(SkeletonLoader)`
+  ${square(32)}
+`
 
 VideoTile.displayName = 'VideoTile'
