@@ -126,6 +126,12 @@ query GetVideosCount($where: VideoWhereInput) {
   }
 }
 
+query GetCuratedHompageVideos($limit: Int, $where: VideoWhereInput, $skipVideoIds: [String!]) {
+  dumbPublicFeedVideos(limit: $limit, where: $where, skipVideoIds: $skipVideoIds) {
+    ...BasicVideoFields
+  }
+}
+
 # CHANGE: `channelId` and `categoryId` args were removed, ID is now `String`
 mutation AddVideoView($videoId: String!) {
   addVideoView(videoId: $videoId) {

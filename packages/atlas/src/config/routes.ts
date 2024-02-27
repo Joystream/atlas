@@ -28,6 +28,7 @@ export const relativeRoutes = {
   },
   viewer: {
     curatorView: () => 'curator-view',
+    curatorHomepage: () => 'curator-homepage',
     index: () => '',
     signin: () => 'signin',
     discover: () => 'discover',

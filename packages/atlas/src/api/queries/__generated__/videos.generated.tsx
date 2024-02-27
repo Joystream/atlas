@@ -1730,6 +1730,80 @@ export type GetVideosCountQuery = {
   videosConnection: { __typename?: 'VideosConnection'; totalCount: number }
 }
 
+export type GetCuratedHompageVideosQueryVariables = Types.Exact<{
+  limit?: Types.InputMaybe<Types.Scalars['Int']>
+  where?: Types.InputMaybe<Types.VideoWhereInput>
+  skipVideoIds?: Types.InputMaybe<Array<Types.Scalars['String']> | Types.Scalars['String']>
+}>
+
+export type GetCuratedHompageVideosQuery = {
+  __typename?: 'Query'
+  dumbPublicFeedVideos: Array<{
+    __typename?: 'Video'
+    id: string
+    title?: string | null
+    viewsNum: number
+    createdAt: Date
+    duration?: number | null
+    reactionsCount: number
+    commentsCount: number
+    media?: {
+      __typename?: 'StorageDataObject'
+      id: string
+      isAccepted: boolean
+      resolvedUrls: Array<string>
+      storageBag: { __typename?: 'StorageBag'; id: string }
+    } | null
+    channel: {
+      __typename?: 'Channel'
+      id: string
+      title?: string | null
+      description?: string | null
+      createdAt: Date
+      followsNum: number
+      rewardAccount: string
+      channelStateBloatBond: string
+      avatarPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        resolvedUrls: Array<string>
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type?:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+          | null
+      } | null
+    }
+    nft?: { __typename?: 'OwnedNft'; id: string } | null
+    thumbnailPhoto?: {
+      __typename?: 'StorageDataObject'
+      id: string
+      resolvedUrls: Array<string>
+      createdAt: Date
+      size: string
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type?:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoSubtitle' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+        | null
+    } | null
+  }>
+}
+
 export type AddVideoViewMutationVariables = Types.Exact<{
   videoId: Types.Scalars['String']
 }>
@@ -2256,6 +2330,57 @@ export function useGetVideosCountLazyQuery(
 export type GetVideosCountQueryHookResult = ReturnType<typeof useGetVideosCountQuery>
 export type GetVideosCountLazyQueryHookResult = ReturnType<typeof useGetVideosCountLazyQuery>
 export type GetVideosCountQueryResult = Apollo.QueryResult<GetVideosCountQuery, GetVideosCountQueryVariables>
+export const GetCuratedHompageVideosDocument = gql`
+  query GetCuratedHompageVideos($limit: Int, $where: VideoWhereInput, $skipVideoIds: [String!]) {
+    dumbPublicFeedVideos(limit: $limit, where: $where, skipVideoIds: $skipVideoIds) {
+      ...BasicVideoFields
+    }
+  }
+  ${BasicVideoFieldsFragmentDoc}
+`
+
+/**
+ * __useGetCuratedHompageVideosQuery__
+ *
+ * To run a query within a React component, call `useGetCuratedHompageVideosQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCuratedHompageVideosQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCuratedHompageVideosQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      where: // value for 'where'
+ *      skipVideoIds: // value for 'skipVideoIds'
+ *   },
+ * });
+ */
+export function useGetCuratedHompageVideosQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetCuratedHompageVideosQuery, GetCuratedHompageVideosQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetCuratedHompageVideosQuery, GetCuratedHompageVideosQueryVariables>(
+    GetCuratedHompageVideosDocument,
+    options
+  )
+}
+export function useGetCuratedHompageVideosLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetCuratedHompageVideosQuery, GetCuratedHompageVideosQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetCuratedHompageVideosQuery, GetCuratedHompageVideosQueryVariables>(
+    GetCuratedHompageVideosDocument,
+    options
+  )
+}
+export type GetCuratedHompageVideosQueryHookResult = ReturnType<typeof useGetCuratedHompageVideosQuery>
+export type GetCuratedHompageVideosLazyQueryHookResult = ReturnType<typeof useGetCuratedHompageVideosLazyQuery>
+export type GetCuratedHompageVideosQueryResult = Apollo.QueryResult<
+  GetCuratedHompageVideosQuery,
+  GetCuratedHompageVideosQueryVariables
+>
 export const AddVideoViewDocument = gql`
   mutation AddVideoView($videoId: String!) {
     addVideoView(videoId: $videoId) {
