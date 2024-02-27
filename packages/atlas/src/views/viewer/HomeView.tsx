@@ -27,7 +27,7 @@ export const HomeView: FC = () => {
         contentProps={{
           type: 'grid',
           grid: DEFAULT_VIDEO_GRID,
-          children: tiles?.map((video, idx) => <VideoTileViewer id={video.id} key={idx} prefetch={idx < 10} />),
+          children: tiles?.map((video, idx) => <VideoTileViewer id={video.id} key={idx} />),
         }}
         footerProps={{
           reachedEnd: !hasMoreVideos,
