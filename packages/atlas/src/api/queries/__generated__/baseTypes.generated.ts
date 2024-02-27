@@ -2453,6 +2453,8 @@ export enum CommentOrderByInput {
   VideoHasMarketingDesc = 'video_hasMarketing_DESC',
   VideoIdAsc = 'video_id_ASC',
   VideoIdDesc = 'video_id_DESC',
+  VideoIncludeInHomeFeedAsc = 'video_includeInHomeFeed_ASC',
+  VideoIncludeInHomeFeedDesc = 'video_includeInHomeFeed_DESC',
   VideoIsCensoredAsc = 'video_isCensored_ASC',
   VideoIsCensoredDesc = 'video_isCensored_DESC',
   VideoIsCommentSectionEnabledAsc = 'video_isCommentSectionEnabled_ASC',
@@ -2465,6 +2467,8 @@ export enum CommentOrderByInput {
   VideoIsPublicDesc = 'video_isPublic_DESC',
   VideoIsReactionFeatureEnabledAsc = 'video_isReactionFeatureEnabled_ASC',
   VideoIsReactionFeatureEnabledDesc = 'video_isReactionFeatureEnabled_DESC',
+  VideoIsShortAsc = 'video_isShort_ASC',
+  VideoIsShortDesc = 'video_isShort_DESC',
   VideoLanguageAsc = 'video_language_ASC',
   VideoLanguageDesc = 'video_language_DESC',
   VideoOrionLanguageAsc = 'video_orionLanguage_ASC',
@@ -2574,6 +2578,8 @@ export enum CommentReactionOrderByInput {
   VideoHasMarketingDesc = 'video_hasMarketing_DESC',
   VideoIdAsc = 'video_id_ASC',
   VideoIdDesc = 'video_id_DESC',
+  VideoIncludeInHomeFeedAsc = 'video_includeInHomeFeed_ASC',
+  VideoIncludeInHomeFeedDesc = 'video_includeInHomeFeed_DESC',
   VideoIsCensoredAsc = 'video_isCensored_ASC',
   VideoIsCensoredDesc = 'video_isCensored_DESC',
   VideoIsCommentSectionEnabledAsc = 'video_isCommentSectionEnabled_ASC',
@@ -2586,6 +2592,8 @@ export enum CommentReactionOrderByInput {
   VideoIsPublicDesc = 'video_isPublic_DESC',
   VideoIsReactionFeatureEnabledAsc = 'video_isReactionFeatureEnabled_ASC',
   VideoIsReactionFeatureEnabledDesc = 'video_isReactionFeatureEnabled_DESC',
+  VideoIsShortAsc = 'video_isShort_ASC',
+  VideoIsShortDesc = 'video_isShort_DESC',
   VideoLanguageAsc = 'video_language_ASC',
   VideoLanguageDesc = 'video_language_DESC',
   VideoOrionLanguageAsc = 'video_orionLanguage_ASC',
@@ -5099,6 +5107,7 @@ export type Mutation = {
   setNewAppRootDomain: AppRootDomain
   setNewNotificationAssetRoot: SetNewNotificationAssetRootResult
   setNewNotificationCenterPath: Scalars['Int']
+  setOrUnsetPublicFeedVideos: SetOrUnsetPublicFeedResult
   setSupportedCategories: SetSupportedCategoriesResult
   setVideoHero: SetVideoHeroResult
   setVideoViewPerUserTimeLimit: VideoViewPerUserTimeLimit
@@ -5209,6 +5218,11 @@ export type MutationSetNewNotificationAssetRootArgs = {
 
 export type MutationSetNewNotificationCenterPathArgs = {
   newMaxAttempts: Scalars['Int']
+}
+
+export type MutationSetOrUnsetPublicFeedVideosArgs = {
+  operation: PublicFeedOperationType
+  videoIds: Array<Scalars['String']>
 }
 
 export type MutationSetSupportedCategoriesArgs = {
@@ -6390,6 +6404,7 @@ export enum OperatorPermission {
   SetChannelWeights = 'SET_CHANNEL_WEIGHTS',
   SetFeaturedNfts = 'SET_FEATURED_NFTS',
   SetKillSwitch = 'SET_KILL_SWITCH',
+  SetPublicFeedVideos = 'SET_PUBLIC_FEED_VIDEOS',
   SetSupportedCategories = 'SET_SUPPORTED_CATEGORIES',
   SetVideoHero = 'SET_VIDEO_HERO',
   SetVideoViewPerUserTimeLimit = 'SET_VIDEO_VIEW_PER_USER_TIME_LIMIT',
@@ -6479,6 +6494,8 @@ export enum OwnedNftOrderByInput {
   VideoHasMarketingDesc = 'video_hasMarketing_DESC',
   VideoIdAsc = 'video_id_ASC',
   VideoIdDesc = 'video_id_DESC',
+  VideoIncludeInHomeFeedAsc = 'video_includeInHomeFeed_ASC',
+  VideoIncludeInHomeFeedDesc = 'video_includeInHomeFeed_DESC',
   VideoIsCensoredAsc = 'video_isCensored_ASC',
   VideoIsCensoredDesc = 'video_isCensored_DESC',
   VideoIsCommentSectionEnabledAsc = 'video_isCommentSectionEnabled_ASC',
@@ -6491,6 +6508,8 @@ export enum OwnedNftOrderByInput {
   VideoIsPublicDesc = 'video_isPublic_DESC',
   VideoIsReactionFeatureEnabledAsc = 'video_isReactionFeatureEnabled_ASC',
   VideoIsReactionFeatureEnabledDesc = 'video_isReactionFeatureEnabled_DESC',
+  VideoIsShortAsc = 'video_isShort_ASC',
+  VideoIsShortDesc = 'video_isShort_DESC',
   VideoLanguageAsc = 'video_language_ASC',
   VideoLanguageDesc = 'video_language_DESC',
   VideoOrionLanguageAsc = 'video_orionLanguage_ASC',
@@ -6643,6 +6662,11 @@ export type ProcessorState = {
   lastProcessedBlock: Scalars['Int']
 }
 
+export enum PublicFeedOperationType {
+  Set = 'SET',
+  Unset = 'UNSET',
+}
+
 export type Query = {
   __typename?: 'Query'
   accountById?: Maybe<Account>
@@ -6747,6 +6771,7 @@ export type Query = {
   distributionBucketOperatorsConnection: DistributionBucketOperatorsConnection
   distributionBuckets: Array<DistributionBucket>
   distributionBucketsConnection: DistributionBucketsConnection
+  dumbPublicFeedVideos: Array<Video>
   emailDeliveryAttemptById?: Maybe<EmailDeliveryAttempt>
   /** @deprecated Use emailDeliveryAttemptById */
   emailDeliveryAttemptByUniqueInput?: Maybe<EmailDeliveryAttempt>
@@ -7367,6 +7392,12 @@ export type QueryDistributionBucketsConnectionArgs = {
   first?: InputMaybe<Scalars['Int']>
   orderBy: Array<DistributionBucketOrderByInput>
   where?: InputMaybe<DistributionBucketWhereInput>
+}
+
+export type QueryDumbPublicFeedVideosArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  skipVideoIds?: InputMaybe<Array<Scalars['String']>>
+  where?: InputMaybe<VideoWhereInput>
 }
 
 export type QueryEmailDeliveryAttemptByIdArgs = {
@@ -8690,6 +8721,11 @@ export type SetNewNotificationAssetRootResult = {
   __typename?: 'SetNewNotificationAssetRootResult'
   /** The notification asset root link just set */
   newNotificationAssetRoot: Scalars['String']
+}
+
+export type SetOrUnsetPublicFeedResult = {
+  __typename?: 'SetOrUnsetPublicFeedResult'
+  numberOfEntitiesAffected: Scalars['Int']
 }
 
 export type SetSupportedCategoriesResult = {
@@ -10518,6 +10554,8 @@ export type Video = {
   hasMarketing?: Maybe<Scalars['Boolean']>
   /** Runtime identifier */
   id: Scalars['String']
+  /** Optional boolean flag to indicate if the video should be included in the home feed/page. */
+  includeInHomeFeed?: Maybe<Scalars['Boolean']>
   /** Flag signaling whether a video is censored. */
   isCensored: Scalars['Boolean']
   /** Is comment section enabled (true if enabled) */
@@ -10530,6 +10568,8 @@ export type Video = {
   isPublic?: Maybe<Scalars['Boolean']>
   /** Is reactions feature enabled on video (true if enabled i.e. video can be reacted) */
   isReactionFeatureEnabled: Scalars['Boolean']
+  /** Whether the video is a short format, vertical video (e.g. Youtube Shorts, TikTok, Instagram Reels) */
+  isShort?: Maybe<Scalars['Boolean']>
   /** Video's main langauge */
   language?: Maybe<Scalars['String']>
   /** License under the video is published */
@@ -10818,6 +10858,8 @@ export enum VideoFeaturedInCategoryOrderByInput {
   VideoHasMarketingDesc = 'video_hasMarketing_DESC',
   VideoIdAsc = 'video_id_ASC',
   VideoIdDesc = 'video_id_DESC',
+  VideoIncludeInHomeFeedAsc = 'video_includeInHomeFeed_ASC',
+  VideoIncludeInHomeFeedDesc = 'video_includeInHomeFeed_DESC',
   VideoIsCensoredAsc = 'video_isCensored_ASC',
   VideoIsCensoredDesc = 'video_isCensored_DESC',
   VideoIsCommentSectionEnabledAsc = 'video_isCommentSectionEnabled_ASC',
@@ -10830,6 +10872,8 @@ export enum VideoFeaturedInCategoryOrderByInput {
   VideoIsPublicDesc = 'video_isPublic_DESC',
   VideoIsReactionFeatureEnabledAsc = 'video_isReactionFeatureEnabled_ASC',
   VideoIsReactionFeatureEnabledDesc = 'video_isReactionFeatureEnabled_DESC',
+  VideoIsShortAsc = 'video_isShort_ASC',
+  VideoIsShortDesc = 'video_isShort_DESC',
   VideoLanguageAsc = 'video_language_ASC',
   VideoLanguageDesc = 'video_language_DESC',
   VideoOrionLanguageAsc = 'video_orionLanguage_ASC',
@@ -10940,6 +10984,8 @@ export enum VideoHeroOrderByInput {
   VideoHasMarketingDesc = 'video_hasMarketing_DESC',
   VideoIdAsc = 'video_id_ASC',
   VideoIdDesc = 'video_id_DESC',
+  VideoIncludeInHomeFeedAsc = 'video_includeInHomeFeed_ASC',
+  VideoIncludeInHomeFeedDesc = 'video_includeInHomeFeed_DESC',
   VideoIsCensoredAsc = 'video_isCensored_ASC',
   VideoIsCensoredDesc = 'video_isCensored_DESC',
   VideoIsCommentSectionEnabledAsc = 'video_isCommentSectionEnabled_ASC',
@@ -10952,6 +10998,8 @@ export enum VideoHeroOrderByInput {
   VideoIsPublicDesc = 'video_isPublic_DESC',
   VideoIsReactionFeatureEnabledAsc = 'video_isReactionFeatureEnabled_ASC',
   VideoIsReactionFeatureEnabledDesc = 'video_isReactionFeatureEnabled_DESC',
+  VideoIsShortAsc = 'video_isShort_ASC',
+  VideoIsShortDesc = 'video_isShort_DESC',
   VideoLanguageAsc = 'video_language_ASC',
   VideoLanguageDesc = 'video_language_DESC',
   VideoOrionLanguageAsc = 'video_orionLanguage_ASC',
@@ -11245,6 +11293,8 @@ export enum VideoMediaMetadataOrderByInput {
   VideoHasMarketingDesc = 'video_hasMarketing_DESC',
   VideoIdAsc = 'video_id_ASC',
   VideoIdDesc = 'video_id_DESC',
+  VideoIncludeInHomeFeedAsc = 'video_includeInHomeFeed_ASC',
+  VideoIncludeInHomeFeedDesc = 'video_includeInHomeFeed_DESC',
   VideoIsCensoredAsc = 'video_isCensored_ASC',
   VideoIsCensoredDesc = 'video_isCensored_DESC',
   VideoIsCommentSectionEnabledAsc = 'video_isCommentSectionEnabled_ASC',
@@ -11257,6 +11307,8 @@ export enum VideoMediaMetadataOrderByInput {
   VideoIsPublicDesc = 'video_isPublic_DESC',
   VideoIsReactionFeatureEnabledAsc = 'video_isReactionFeatureEnabled_ASC',
   VideoIsReactionFeatureEnabledDesc = 'video_isReactionFeatureEnabled_DESC',
+  VideoIsShortAsc = 'video_isShort_ASC',
+  VideoIsShortDesc = 'video_isShort_DESC',
   VideoLanguageAsc = 'video_language_ASC',
   VideoLanguageDesc = 'video_language_DESC',
   VideoOrionLanguageAsc = 'video_orionLanguage_ASC',
@@ -11422,6 +11474,8 @@ export enum VideoOrderByInput {
   HasMarketingDesc = 'hasMarketing_DESC',
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
+  IncludeInHomeFeedAsc = 'includeInHomeFeed_ASC',
+  IncludeInHomeFeedDesc = 'includeInHomeFeed_DESC',
   IsCensoredAsc = 'isCensored_ASC',
   IsCensoredDesc = 'isCensored_DESC',
   IsCommentSectionEnabledAsc = 'isCommentSectionEnabled_ASC',
@@ -11434,6 +11488,8 @@ export enum VideoOrderByInput {
   IsPublicDesc = 'isPublic_DESC',
   IsReactionFeatureEnabledAsc = 'isReactionFeatureEnabled_ASC',
   IsReactionFeatureEnabledDesc = 'isReactionFeatureEnabled_DESC',
+  IsShortAsc = 'isShort_ASC',
+  IsShortDesc = 'isShort_DESC',
   LanguageAsc = 'language_ASC',
   LanguageDesc = 'language_DESC',
   LicenseAttributionAsc = 'license_attribution_ASC',
@@ -11606,6 +11662,8 @@ export enum VideoReactionOrderByInput {
   VideoHasMarketingDesc = 'video_hasMarketing_DESC',
   VideoIdAsc = 'video_id_ASC',
   VideoIdDesc = 'video_id_DESC',
+  VideoIncludeInHomeFeedAsc = 'video_includeInHomeFeed_ASC',
+  VideoIncludeInHomeFeedDesc = 'video_includeInHomeFeed_DESC',
   VideoIsCensoredAsc = 'video_isCensored_ASC',
   VideoIsCensoredDesc = 'video_isCensored_DESC',
   VideoIsCommentSectionEnabledAsc = 'video_isCommentSectionEnabled_ASC',
@@ -11618,6 +11676,8 @@ export enum VideoReactionOrderByInput {
   VideoIsPublicDesc = 'video_isPublic_DESC',
   VideoIsReactionFeatureEnabledAsc = 'video_isReactionFeatureEnabled_ASC',
   VideoIsReactionFeatureEnabledDesc = 'video_isReactionFeatureEnabled_DESC',
+  VideoIsShortAsc = 'video_isShort_ASC',
+  VideoIsShortDesc = 'video_isShort_DESC',
   VideoLanguageAsc = 'video_language_ASC',
   VideoLanguageDesc = 'video_language_DESC',
   VideoOrionLanguageAsc = 'video_orionLanguage_ASC',
@@ -11761,6 +11821,8 @@ export enum VideoSubtitleOrderByInput {
   VideoHasMarketingDesc = 'video_hasMarketing_DESC',
   VideoIdAsc = 'video_id_ASC',
   VideoIdDesc = 'video_id_DESC',
+  VideoIncludeInHomeFeedAsc = 'video_includeInHomeFeed_ASC',
+  VideoIncludeInHomeFeedDesc = 'video_includeInHomeFeed_DESC',
   VideoIsCensoredAsc = 'video_isCensored_ASC',
   VideoIsCensoredDesc = 'video_isCensored_DESC',
   VideoIsCommentSectionEnabledAsc = 'video_isCommentSectionEnabled_ASC',
@@ -11773,6 +11835,8 @@ export enum VideoSubtitleOrderByInput {
   VideoIsPublicDesc = 'video_isPublic_DESC',
   VideoIsReactionFeatureEnabledAsc = 'video_isReactionFeatureEnabled_ASC',
   VideoIsReactionFeatureEnabledDesc = 'video_isReactionFeatureEnabled_DESC',
+  VideoIsShortAsc = 'video_isShort_ASC',
+  VideoIsShortDesc = 'video_isShort_DESC',
   VideoLanguageAsc = 'video_language_ASC',
   VideoLanguageDesc = 'video_language_DESC',
   VideoOrionLanguageAsc = 'video_orionLanguage_ASC',
@@ -12060,6 +12124,9 @@ export type VideoWhereInput = {
   id_not_in?: InputMaybe<Array<Scalars['String']>>
   id_not_startsWith?: InputMaybe<Scalars['String']>
   id_startsWith?: InputMaybe<Scalars['String']>
+  includeInHomeFeed_eq?: InputMaybe<Scalars['Boolean']>
+  includeInHomeFeed_isNull?: InputMaybe<Scalars['Boolean']>
+  includeInHomeFeed_not_eq?: InputMaybe<Scalars['Boolean']>
   isCensored_eq?: InputMaybe<Scalars['Boolean']>
   isCensored_isNull?: InputMaybe<Scalars['Boolean']>
   isCensored_not_eq?: InputMaybe<Scalars['Boolean']>
@@ -12078,6 +12145,9 @@ export type VideoWhereInput = {
   isReactionFeatureEnabled_eq?: InputMaybe<Scalars['Boolean']>
   isReactionFeatureEnabled_isNull?: InputMaybe<Scalars['Boolean']>
   isReactionFeatureEnabled_not_eq?: InputMaybe<Scalars['Boolean']>
+  isShort_eq?: InputMaybe<Scalars['Boolean']>
+  isShort_isNull?: InputMaybe<Scalars['Boolean']>
+  isShort_not_eq?: InputMaybe<Scalars['Boolean']>
   language_contains?: InputMaybe<Scalars['String']>
   language_containsInsensitive?: InputMaybe<Scalars['String']>
   language_endsWith?: InputMaybe<Scalars['String']>
