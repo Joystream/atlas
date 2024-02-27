@@ -6,7 +6,6 @@ import { SvgActionLinkUrl, SvgIllustrativePlay } from '@/assets/icons'
 import { Pill } from '@/components/Pill'
 import { absoluteRoutes } from '@/config/routes'
 import { useClipboard } from '@/hooks/useClipboard'
-import { useVideoPreload } from '@/hooks/useVideoPreload'
 import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
 import { SentryLogger } from '@/utils/logs'
 import { formatDurationShort } from '@/utils/time'
@@ -20,24 +19,15 @@ type VideoTileViewerProps = {
   detailsVariant?: VideoDetailsVariant
   direction?: 'vertical' | 'horizontal'
   className?: string
-  prefetch?: boolean
 }
 
-export const VideoTileViewer: FC<VideoTileViewerProps> = ({
-  id,
-  onClick,
-  prefetch,
-  detailsVariant,
-  direction,
-  className,
-}) => {
+export const VideoTileViewer: FC<VideoTileViewerProps> = ({ id, onClick, detailsVariant, direction, className }) => {
   const navigate = useNavigate()
   const { video, loading } = useBasicVideo(id ?? '', {
     skip: !id,
     onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTile', error, { video: { id } }),
   })
   const { copyToClipboard } = useClipboard()
-  useVideoPreload(prefetch ? video?.media?.resolvedUrls : undefined)
 
   const { avatarPhotoUrls, isLoadingAvatar, isLoadingThumbnail, thumbnailPhotoUrls, videoHref } =
     useVideoTileSharedLogic(video)

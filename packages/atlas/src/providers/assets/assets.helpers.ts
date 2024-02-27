@@ -20,19 +20,24 @@ export type AssetTestOptions = {
   resolveOnlyOnEvents?: (keyof HTMLVideoElementEventMap)[]
 }
 
-export const testAssetDownload = (url: string, type: AssetType | null, opts?: AssetTestOptions): Promise<string> => {
-  return new Promise((_resolve, _reject) => {
+export const testAssetDownload = (
+  url: string,
+  type: AssetType | null,
+  opts?: AssetTestOptions
+): [Promise<string>, (() => void) | null] => {
+  let img: HTMLImageElement | null = null
+  let video: HTMLVideoElement | null = null
+  let cleanup: (() => void) | null = null
+  const videoEvents: (keyof HTMLVideoElementEventMap)[] = opts?.resolveOnlyOnEvents ?? [
+    'loadedmetadata',
+    'loadeddata',
+    'canplay',
+    'progress',
+  ]
+  const assetPromise = new Promise<string>((_resolve, _reject) => {
     const isImageType = type && ['thumbnail', 'avatar', 'cover'].includes(type)
-    let img: HTMLImageElement | null = null
-    let video: HTMLVideoElement | null = null
-    const videoEvents: (keyof HTMLVideoElementEventMap)[] = opts?.resolveOnlyOnEvents ?? [
-      'loadedmetadata',
-      'loadeddata',
-      'canplay',
-      'progress',
-    ]
 
-    const cleanup = () => {
+    cleanup = () => {
       if (img) {
         img.removeEventListener('error', reject)
         img.removeEventListener('load', resolve)
@@ -44,19 +49,23 @@ export const testAssetDownload = (url: string, type: AssetType | null, opts?: As
         videoEvents.forEach((event) => {
           video?.removeEventListener(event, resolve)
         })
+        video.pause()
+        video.preload = 'none'
+        video.setAttribute('src', '')
+        video.load()
         video.remove()
         video = null
       }
     }
 
     const resolve = () => {
-      cleanup()
+      cleanup?.()
 
       _resolve(url)
     }
 
     const reject = (err?: unknown) => {
-      cleanup()
+      cleanup?.()
       _reject(err)
     }
 
@@ -92,6 +101,8 @@ export const testAssetDownload = (url: string, type: AssetType | null, opts?: As
       reject()
     }
   })
+
+  return [assetPromise, cleanup]
 }
 
 export const logDistributorPerformance = async (assetUrl: string, eventEntry: DistributorEventEntry) => {

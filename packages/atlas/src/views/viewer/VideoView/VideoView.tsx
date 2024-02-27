@@ -87,7 +87,6 @@ export const VideoView: FC = () => {
   )
   const [isInView, ref] = useIntersectionObserver()
   const [isCommenting, setIsCommenting] = useState<boolean>(false)
-  const [canPrefetchNew, setCanPrefetchNew] = useState(false)
 
   const mdMatch = useMediaMatch('md')
   const { addVideoView } = useAddVideoView()
@@ -170,9 +169,6 @@ export const VideoView: FC = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleTimeUpdate = useCallback(
     throttle((time) => {
-      if (!canPrefetchNew && time > 5_000) {
-        setCanPrefetchNew(true)
-      }
       if (video?.id) {
         updateWatchedVideos('INTERRUPTED', video.id, time)
       }
@@ -283,7 +279,7 @@ export const VideoView: FC = () => {
               </>
             )}
           </PlayerGridItem>
-          {!isCinematic && <SideItems video={video} loading={loading} canStartPrefetch={canPrefetchNew} />}
+          {!isCinematic && <SideItems video={video} loading={loading} />}
         </PlayerWrapper>
       </PlayerGridWrapper>
       <LimitedWidthContainer>
@@ -304,7 +300,7 @@ export const VideoView: FC = () => {
                 />
               )}
             </GridItem>
-            <SideItems video={video} loading={loading} canStartPrefetch={canPrefetchNew} />
+            <SideItems video={video} loading={loading} />
           </LayoutGrid>
         )}
       </LimitedWidthContainer>
@@ -312,15 +308,7 @@ export const VideoView: FC = () => {
   )
 }
 
-const SideItems = ({
-  video,
-  loading,
-  canStartPrefetch,
-}: {
-  video: ReturnType<typeof useFullVideo>['video']
-  loading: boolean
-  canStartPrefetch: boolean
-}) => {
+const SideItems = ({ video, loading }: { video: ReturnType<typeof useFullVideo>['video']; loading: boolean }) => {
   const { id } = useParams()
   const { openNftPutOnSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement, cancelNftSale } =
     useNftActions()
@@ -359,13 +347,7 @@ const SideItems = ({
               onWithdrawBid={(bid, createdAt) => id && createdAt && bid && withdrawBid(id, bid, createdAt)}
             />
           )}
-      <MoreVideos
-        channelId={channelId}
-        channelName={channelName}
-        videoId={id}
-        type="channel"
-        shouldPrefetch={canStartPrefetch}
-      />
+      <MoreVideos channelId={channelId} channelName={channelName} videoId={id} type="channel" />
       {belongsToCategories?.map((category) => (
         <MoreVideos
           key={category.id}
