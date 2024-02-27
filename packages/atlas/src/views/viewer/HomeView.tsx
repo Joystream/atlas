@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
-import { FC, useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { FC, useState } from 'react'
 
 import { useGetCuratedHompageVideosQuery } from '@/api/queries/__generated__/videos.generated'
 import { Section } from '@/components/Section/Section'
@@ -11,28 +10,14 @@ import { publicCryptoVideoFilter } from '@/config/contentFilter'
 import { useBreakpointKey } from '@/hooks/useBreakpointKey'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
-import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
-import { useAuthStore } from '@/providers/auth/auth.store'
 import { DEFAULT_VIDEO_GRID, sizes } from '@/styles'
 import { createPlaceholderData } from '@/utils/data'
 import { InfiniteLoadingOffsets } from '@/utils/loading.contants'
 
 export const HomeView: FC = () => {
   const [hasMoreVideos, setHasMoreVideos] = useState(true)
-  const location = useLocation()
-  const {
-    actions: { setAuthModalOpenName },
-  } = useAuthStore()
-
   const headTags = useHeadTags()
   const { columns, fetchMore, tiles, loading, skipVideoIds } = useHomeVideos()
-
-  useEffect(() => {
-    if (location.state?.['redirectTo']) {
-      setAuthModalOpenName(getCorrectLoginModal())
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   return (
     <VideoContentTemplate>

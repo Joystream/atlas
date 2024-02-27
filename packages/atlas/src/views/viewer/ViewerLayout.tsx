@@ -15,6 +15,8 @@ import { atlasConfig } from '@/config'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
+import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
+import { useAuthStore } from '@/providers/auth/auth.store'
 import { useSearchStore } from '@/providers/search'
 import { useUser } from '@/providers/user/user.hooks'
 import { media, transitions } from '@/styles'
@@ -82,62 +84,11 @@ const locationToPageName = {
 }
 
 export const ViewerLayout: FC = () => {
+  const { isLoggedIn } = useUser()
+  const navigate = useNavigate()
   const location = useLocation()
   const locationState = location.state as RoutingState
-  const { isLoggedIn } = useUser()
-  const [searchParams] = useSearchParams()
-  const { trackPageView } = useSegmentAnalytics()
-
-  const navigate = useNavigate()
-  const mdMatch = useMediaMatch('md')
-  const searchOpen = useSearchStore((state) => state.searchOpen)
   const displayedLocation = locationState?.overlaidLocation || location
-  const afterGoogleRedirect = useRef<boolean>(false)
-
-  useEffect(() => {
-    if (!location.pathname.includes('studio')) {
-      const pageName =
-        location.pathname === '/'
-          ? 'Homepage'
-          : Object.entries(locationToPageName).find(([key]) => location.pathname.includes(key))?.[1]
-
-      //pages below will be tracked by the view components in order to include the additional params
-      if (['Channel', 'Category', 'Video'].some((page) => pageName?.includes(page))) {
-        return
-      }
-      const [query, referrerChannel, utmSource, utmCampaign, gState, gCode] = [
-        searchParams.get('query'),
-        searchParams.get('referrerId'),
-        searchParams.get('utm_source'),
-        searchParams.get('utm_campaign'),
-        searchParams.get('state'),
-        searchParams.get('code'),
-      ]
-      if (gState || gCode) {
-        afterGoogleRedirect.current = true
-      }
-
-      // had to include this timeout to make sure the page title is updated
-      const trackRequestTimeout = setTimeout(
-        () =>
-          trackPageView(pageName || 'Unknown page', {
-            ...(location.pathname === absoluteRoutes.viewer.ypp()
-              ? {
-                  referrerChannel: referrerChannel || undefined,
-                  utm_source: utmSource || undefined,
-                  utm_campaign: utmCampaign || undefined,
-                }
-              : {}),
-            ...(location.pathname === absoluteRoutes.viewer.search() ? { searchQuery: query } : {}),
-          }),
-        1000
-      )
-
-      return () => {
-        clearTimeout(trackRequestTimeout)
-      }
-    }
-  }, [location.pathname, searchParams, trackPageView])
 
   return (
     <>
@@ -204,7 +155,8 @@ export const ViewerLayout: FC = () => {
           </SwitchTransition>
         </ErrorBoundary>
       </MainContainer>
-      {!mdMatch && !searchOpen && <BottomNav />}
+      <BottomNavWrapper />
+      <MiscUtils />
     </>
   )
 }
@@ -221,3 +173,76 @@ const MainContainer = styled.main`
       : 'var(--size-topbar-height) var(--size-global-horizontal-padding) 0'};
   }
 `
+
+const BottomNavWrapper = () => {
+  const searchOpen = useSearchStore((state) => state.searchOpen)
+  const mdMatch = useMediaMatch('md')
+  if (!mdMatch && !searchOpen) {
+    return <BottomNav />
+  }
+  return null
+}
+
+const MiscUtils = () => {
+  const location = useLocation()
+  const [searchParams] = useSearchParams()
+  const { trackPageView } = useSegmentAnalytics()
+  const {
+    actions: { setAuthModalOpenName },
+  } = useAuthStore()
+  const afterGoogleRedirect = useRef<boolean>(false)
+
+  useEffect(() => {
+    if (location.state?.['redirectTo']) {
+      setAuthModalOpenName(getCorrectLoginModal())
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    if (!location.pathname.includes('studio')) {
+      const pageName =
+        location.pathname === '/'
+          ? 'Homepage'
+          : Object.entries(locationToPageName).find(([key]) => location.pathname.includes(key))?.[1]
+
+      //pages below will be tracked by the view components in order to include the additional params
+      if (['Channel', 'Category', 'Video'].some((page) => pageName?.includes(page))) {
+        return
+      }
+      const [query, referrerChannel, utmSource, utmCampaign, gState, gCode] = [
+        searchParams.get('query'),
+        searchParams.get('referrerId'),
+        searchParams.get('utm_source'),
+        searchParams.get('utm_campaign'),
+        searchParams.get('state'),
+        searchParams.get('code'),
+      ]
+      if (gState || gCode) {
+        afterGoogleRedirect.current = true
+      }
+
+      // had to include this timeout to make sure the page title is updated
+      const trackRequestTimeout = setTimeout(
+        () =>
+          trackPageView(pageName || 'Unknown page', {
+            ...(location.pathname === absoluteRoutes.viewer.ypp()
+              ? {
+                  referrerChannel: referrerChannel || undefined,
+                  utm_source: utmSource || undefined,
+                  utm_campaign: utmCampaign || undefined,
+                }
+              : {}),
+            ...(location.pathname === absoluteRoutes.viewer.search() ? { searchQuery: query } : {}),
+          }),
+        1000
+      )
+
+      return () => {
+        clearTimeout(trackRequestTimeout)
+      }
+    }
+  }, [location.pathname, searchParams, trackPageView])
+
+  return null
+}
