@@ -18,11 +18,9 @@ export const getWalletsList = () => {
 
   const wcWallet = {
     extensionName: 'WalletConnect',
-    // signer: wcWallet.signer,
     title: 'WalletConnect',
-    // getAccounts: wcWallet.getAccounts,
     logo: {
-      src: 'https://walletconnect.com/static/favicon.png',
+      src: 'https://dev.gleev.xyz/favicon.ico',
       alt: 'WalletConnect',
     },
     installed: true,
@@ -31,7 +29,7 @@ export const getWalletsList = () => {
   return [
     ...supportedWallets,
     ...unknownWallets,
-    ...(atlasConfig.features.members.walletConnectProjectId ? [wcWallet] : []),
+    ...(atlasConfig.features.walletConnect.walletConnectProjectId ? [wcWallet] : []),
   ]
 }
 

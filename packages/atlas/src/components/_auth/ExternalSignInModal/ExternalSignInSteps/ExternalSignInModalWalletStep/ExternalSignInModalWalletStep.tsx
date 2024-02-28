@@ -12,6 +12,7 @@ import { useMountEffect } from '@/hooks/useMountEffect'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { UnknownWallet, getWalletsList } from '@/providers/wallet/wallet.helpers'
 import { useWallet } from '@/providers/wallet/wallet.hooks'
+import { isWalletConnectWallet } from '@/providers/wallet/wallet.types'
 import { isMobile } from '@/utils/browser'
 import { capitalizeFirstLetter } from '@/utils/misc'
 
@@ -96,21 +97,20 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
   const selectedWallet = (selectedWalletIdx != null && wallets[selectedWalletIdx]) || null
 
   const handleConfirm = useCallback(async () => {
-    if (selectedWalletIdx < wallets.length && !selectedWallet) return
+    if (!selectedWallet) return
 
     setIsConnecting(true)
     setHasError(false)
 
-    const accounts =
-      selectedWallet?.extensionName === 'WalletConnect'
-        ? await signInWithWalletConnect().catch((err) => {
-            const message = err?.message
-            if (message === 'user_action' || message === 'User rejected.') {
-              setIsConnecting(false)
-              return null
-            }
-          })
-        : await signInToWallet(selectedWallet?.extensionName)
+    const accounts = isWalletConnectWallet(selectedWallet)
+      ? await signInWithWalletConnect().catch((err) => {
+          const message = err?.message
+          if (message === 'user_action' || message === 'User rejected.') {
+            setIsConnecting(false)
+            return null
+          }
+        })
+      : await signInToWallet(selectedWallet?.extensionName)
 
     if (!accounts) {
       if (selectedWallet?.extensionName !== 'WalletConnect') {
@@ -141,12 +141,10 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
     fetchMemberships,
     goToStep,
     selectedWallet,
-    selectedWalletIdx,
     setAuthModalOpenName,
     setAvailableMemberships,
     signInToWallet,
     signInWithWalletConnect,
-    wallets.length,
   ])
 
   const handleSelectWallet = useCallback((idx: number) => {
@@ -178,7 +176,7 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
       to: selectedWallet?.installed ? undefined : selectedWallet?.installUrl,
       onClick: selectedWallet?.installed ? handleConfirm : undefined,
     })
-  }, [handleConfirm, isConnecting, selectedWallet, selectedWalletIdx, setPrimaryButtonProps, wallets.length])
+  }, [handleConfirm, isConnecting, selectedWallet, setPrimaryButtonProps, wallets.length])
 
   return (
     <AuthenticationModalStepTemplate

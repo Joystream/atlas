@@ -5,7 +5,12 @@ import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffec
 import { atlasConfig } from '@/config'
 import { JoystreamContext, JoystreamContextValue } from '@/providers/joystream/joystream.provider'
 import { useWalletStore } from '@/providers/wallet/wallet.store'
-import { SignerWalletAccount, WCWallet, WalletContextValue } from '@/providers/wallet/wallet.types'
+import {
+  SignerWalletAccount,
+  WCWallet,
+  WalletContextValue,
+  isWalletConnectWallet,
+} from '@/providers/wallet/wallet.types'
 import { formatJoystreamAddress } from '@/utils/address'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { retryWalletPromise } from '@/utils/misc'
@@ -25,6 +30,9 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
     setWalletStatus,
   } = useWalletStore((state) => state.actions)
   const joystreamCtx = useContext<JoystreamContextValue | undefined>(JoystreamContext)
+
+  const walletConnectConfig = atlasConfig.features.walletConnect
+  const { name, url, icons, description } = walletConnectConfig.metadata
 
   const [isSignerMetadataOutdated, setIsSignerMetadataOutdated] = useState(false)
 
@@ -58,13 +66,13 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
     const chainId = `polkadot:${genesisHash?.replace('0x', '').substring(0, 32)}` as `polkadot:${string}`
 
     const walletConnectParams: WalletConnectConfiguration = {
-      projectId: atlasConfig.features.members.walletConnectProjectId || '',
+      projectId: walletConnectConfig.walletConnectProjectId || '',
       relayUrl: 'wss://relay.walletconnect.com',
       metadata: {
-        name: 'Joystream demo app',
-        description: 'Joystream Wallet-Connect',
-        url: '#',
-        icons: ['https://walletconnect.com/static/favicon.png'],
+        name: name || '',
+        description: description || '',
+        url: url || '',
+        icons: icons || [],
       },
       chainIds: [chainId],
       optionalChainIds: [chainId],
@@ -76,7 +84,7 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
     }
 
     return walletConnectParams
-  }, [joystreamCtx?.joystream])
+  }, [description, icons, joystreamCtx?.joystream, name, url, walletConnectConfig.walletConnectProjectId])
 
   const initSignerWallet = useCallback(
     async (walletName: string): Promise<SignerWalletAccount[] | null> => {
@@ -126,7 +134,6 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
     await wcWallet.connect()
     const accounts = await wcWallet.getAccounts()
     const accountsWithWallet = accounts
-      // .filter(filterUnsupportedAccounts)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .map((account: any) => {
         return {
@@ -146,6 +153,7 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
         alt: 'WalletConnect',
       },
       ...wcWallet,
+      subscribeAccounts: wcWallet.subscribeAccounts.bind(wcWallet),
     } as WCWallet
     setWallet(storeWallet)
     return accountsWithWallet
@@ -181,7 +189,7 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
     const chainMetadata = await joystreamCtx?.joystream?.getChainMetadata()
 
     // @ts-ignore edit wallet type
-    if (!wallet || wallet.type === 'WALLET_CONNECT') {
+    if (!wallet || isWalletConnectWallet(wallet)) {
       return
     }
 

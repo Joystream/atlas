@@ -102,9 +102,15 @@ export const LogInModal = () => {
       }}
       additionalActionsNode={
         !isLoading && (
-          <Button variant="tertiary" onClick={() => setAuthModalOpenName(undefined)}>
-            Close
-          </Button>
+          <FlexBox justifyContent="space-between">
+            <Button variant="tertiary" onClick={() => setAuthModalOpenName(undefined)}>
+              Close
+            </Button>
+
+            <Button variant="secondary" onClick={() => setAuthModalOpenName('externalLogIn')}>
+              Use local wallet
+            </Button>
+          </FlexBox>
         )
       }
     >
@@ -117,9 +123,6 @@ export const LogInModal = () => {
                 Use your {atlasConfig.general.appName} account.{' '}
                 <TextButton onClick={() => setAuthModalOpenName('signUp')}>Create account</TextButton>
               </span>
-              <div>
-                <TextButton onClick={() => setAuthModalOpenName('externalLogIn')}>Use local wallet</TextButton>
-              </div>
             </FlexBox>
           }
           hasNavigatedBack
