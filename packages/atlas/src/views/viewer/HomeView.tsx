@@ -71,7 +71,12 @@ const useHomeVideos = () => {
     notifyOnNetworkStatusChange: true,
     skip: !columns,
     variables: {
-      where: { ...publicCryptoVideoFilter, includeInHomeFeed_eq: true, isShort_not_eq: undefined },
+      where: {
+        ...publicCryptoVideoFilter,
+        orionLanguage_in: undefined,
+        includeInHomeFeed_eq: true,
+        isShort_not_eq: undefined,
+      },
       skipVideoIds: ['-1'],
       limit: columns * initialRowsToLoad,
     },
