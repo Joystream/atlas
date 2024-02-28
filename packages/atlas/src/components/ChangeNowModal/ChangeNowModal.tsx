@@ -1,6 +1,7 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 import { SvgAlertsInformative32 } from '@/assets/icons'
+import { SwapExpired } from '@/components/ChangeNowModal/steps/SwapExpired'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 
@@ -16,7 +17,7 @@ type ChangeNowModalProps = {
 }
 
 export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
-  const [step, setStep] = useState(ChangeNowModalStep.INFO)
+  const [step, setStep] = useState(ChangeNowModalStep.PROGRESS)
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogButtonProps>({ text: 'Select wallet' }) // start with sensible default so that there are no jumps after first effect runs
   const formData = useRef<FormData | null>(null)
 
@@ -27,18 +28,28 @@ export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
         onClick: () => setStep(ChangeNowModalStep.FORM),
       })
     }
+
+    if (step === ChangeNowModalStep.SWAP_EXPIRED) {
+      setPrimaryButtonProps({
+        text: 'Try again',
+        onClick: () => setStep(ChangeNowModalStep.FORM),
+      })
+    }
   }, [step, type])
 
-  const secondaryButton =
-    step === ChangeNowModalStep.INFO
-      ? {
-          text: 'Cancel',
-          onClick: () => onClose(),
-        }
-      : {
-          text: 'Back',
-          onClick: () => setStep((prev) => prev - 1),
-        }
+  const secondaryButton = useMemo(() => {
+    if (ChangeNowModalStep.INFO || ChangeNowModalStep.SWAP_EXPIRED) {
+      return {
+        text: 'Cancel',
+        onClick: () => onClose(),
+      }
+    }
+
+    return {
+      text: 'Back',
+      onClick: () => setStep((prev) => prev - 1),
+    }
+  }, [onClose])
 
   const commonProps = {
     setPrimaryButtonProps,
@@ -49,7 +60,7 @@ export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
   return (
     <DialogModal
       title={
-        type === 'topup' && step === ChangeNowModalStep.INFO ? (
+        (type === 'topup' && step === ChangeNowModalStep.INFO) || step === ChangeNowModalStep.SWAP_EXPIRED ? (
           <SvgAlertsInformative32 />
         ) : type === 'sell' ? (
           'Cashout JOY'
@@ -58,8 +69,8 @@ export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
         )
       }
       show
-      dividers={step !== ChangeNowModalStep.INFO}
-      onExitClick={() => undefined}
+      dividers={![ChangeNowModalStep.INFO, ChangeNowModalStep.SWAP_EXPIRED].includes(step)}
+      onExitClick={step === ChangeNowModalStep.SWAP_EXPIRED ? undefined : () => undefined}
       primaryButton={primaryButtonProps}
       secondaryButton={secondaryButton}
     >
@@ -78,6 +89,7 @@ export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
         <SummaryStep {...commonProps} formData={formData.current} />
       )}
       {step === ChangeNowModalStep.PROGRESS && <ProgressStep />}
+      {step === ChangeNowModalStep.SWAP_EXPIRED && <SwapExpired />}
     </DialogModal>
   )
 }

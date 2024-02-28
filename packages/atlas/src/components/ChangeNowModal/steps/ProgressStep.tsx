@@ -27,7 +27,7 @@ const successText = (
 )
 
 export const ProgressStep = () => {
-  const txStep = 3
+  const txStep = 0
   const [, txDescription] = steps[txStep] ?? []
   return (
     <FlexBox gap={6} flow="column">

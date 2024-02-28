@@ -37,65 +37,21 @@ type FormStepProps = {
   initialValues: FormData | null
 } & CommonProps
 
-export const FormStep = ({ goToStep, setPrimaryButtonProps, onSubmit, type, initialValues }: FormStepProps) => {
+export const FormStep = ({ setPrimaryButtonProps, onSubmit, type, initialValues }: FormStepProps) => {
   const { displaySnackbar } = useSnackbar()
   const [isLoadingRate, setIsLoadingRate] = useState<'to' | 'from' | null>(null)
-  const { data, isLoading } = useQuery('changenow-currency', () => changeNowService.getAvailableCurrencies())
   const debouncedExchangeEstimation = useRef<DebouncedFunc<
     (amount: number, type: 'from' | 'to') => Promise<void>
   > | null>(null)
-
-  const {
-    control,
-    watch,
-    clearErrors,
-    formState: { errors },
-    handleSubmit,
-    setValue,
-    setError,
-  } = useForm<FormData>({
-    defaultValues: initialValues ?? {
-      from: {
-        amount: undefined,
-        currency: type === 'sell' ? JOYSTREAM_CHANGENOW_LEGACY_TICKER : undefined,
-      },
-      to: {
-        amount: undefined,
-        currency: type !== 'sell' ? JOYSTREAM_CHANGENOW_LEGACY_TICKER : undefined,
-      },
-    },
-  })
-
-  useMountEffect(() => {
-    setPrimaryButtonProps({
-      text: 'Next',
-      onClick: () =>
-        handleSubmit(onSubmit, (errors) => {
-          console.log(errors, 'Xd')
-        })(),
-    })
-  })
-
-  const hasInitialValues = !!initialValues
-  useEffect(() => {
-    if (hasInitialValues && debouncedExchangeEstimation.current) {
-      console.log('calc')
-      debouncedExchangeEstimation.current(initialValues?.from.amount, 'from')
-    }
-  }, [hasInitialValues, initialValues?.from.amount])
-
-  const currencyOptions = useMemo(() => {
-    return data?.map((curr) => ({
-      ...curr,
-      value: curr.legacyTicker,
-      label: curr.ticker.toUpperCase(),
-      caption: curr.name,
-      nodeStart: curr.image ? <img src={curr.image} alt={curr.ticker} /> : <SvgJoyTokenPrimary16 />,
-    }))
-  }, [data])
-
-  useEffect(() => {
-    if (currencyOptions) {
+  const { data } = useQuery('changenow-currency', () => changeNowService.getAvailableCurrencies(), {
+    onSuccess: (data) => {
+      const currencyOptions = data.map((curr) => ({
+        ...curr,
+        value: curr.legacyTicker,
+        label: curr.ticker.toUpperCase(),
+        caption: curr.name,
+        nodeStart: curr.image ? <img src={curr.image} alt={curr.ticker} /> : <SvgJoyTokenPrimary16 />,
+      }))
       debouncedExchangeEstimation.current = debounce(async (amount: number, direction: 'from' | 'to') => {
         const isDirectionFrom = direction === 'from'
         setIsLoadingRate(isDirectionFrom ? 'to' : 'from')
@@ -136,8 +92,54 @@ export const FormStep = ({ goToStep, setPrimaryButtonProps, onSubmit, type, init
           setIsLoadingRate(null)
         }
       }, 500)
-    }
-  }, [currencyOptions, displaySnackbar, setError, setValue, type, watch])
+
+      const hasInitialValues = !!initialValues
+      if (hasInitialValues && debouncedExchangeEstimation.current) {
+        debouncedExchangeEstimation.current(initialValues?.from.amount, 'from')
+      }
+    },
+  })
+
+  const {
+    control,
+    watch,
+    clearErrors,
+    formState: { errors },
+    handleSubmit,
+    setValue,
+    setError,
+  } = useForm<FormData>({
+    defaultValues: initialValues ?? {
+      from: {
+        amount: undefined,
+        currency: type === 'sell' ? JOYSTREAM_CHANGENOW_LEGACY_TICKER : undefined,
+      },
+      to: {
+        amount: undefined,
+        currency: type !== 'sell' ? JOYSTREAM_CHANGENOW_LEGACY_TICKER : undefined,
+      },
+    },
+  })
+
+  useMountEffect(() => {
+    setPrimaryButtonProps({
+      text: 'Next',
+      onClick: () =>
+        handleSubmit(onSubmit, (errors) => {
+          console.log(errors, 'Xd')
+        })(),
+    })
+  })
+
+  const currencyOptions = useMemo(() => {
+    return data?.map((curr) => ({
+      ...curr,
+      value: curr.legacyTicker,
+      label: curr.ticker.toUpperCase(),
+      caption: curr.name,
+      nodeStart: curr.image ? <img src={curr.image} alt={curr.ticker} /> : <SvgJoyTokenPrimary16 />,
+    }))
+  }, [data])
 
   useEffect(() => {
     if (initialValues?.validUntil && new Date(initialValues.validUntil).getTime() < Date.now() && currencyOptions) {
@@ -187,48 +189,50 @@ export const FormStep = ({ goToStep, setPrimaryButtonProps, onSubmit, type, init
         }}
       />
 
-      <Controller
-        name="to"
-        control={control}
-        render={({ field: { value, onChange } }) => {
-          return (
-            <FormField label="Receiving" error={errors.to?.message}>
-              <CurrencyInput
-                placeholder="10"
-                disabled={isLoadingRate === 'to'}
-                currencies={currencyOptions}
-                isLoading={isLoadingRate === 'to'}
-                initialCurrency={
-                  initialValues?.to.currency && currencyOptions
-                    ? currencyOptions.find((curr) => curr.legacyTicker === initialValues.to.currency)
-                    : undefined
-                }
-                value={value.amount}
-                lockedCurrency={type === 'buy' ? JOYSTREAM_CHANGENOW_LEGACY_TICKER : undefined}
-                onChange={(amount) => {
-                  onChange({ ...value, amount })
-                  clearErrors()
-                  if (amount) {
-                    debouncedExchangeEstimation.current?.(amount, 'to')
+      <FlexBox flow="column" gap={4}>
+        <Controller
+          name="to"
+          control={control}
+          render={({ field: { value, onChange } }) => {
+            return (
+              <FormField label="Receiving" error={errors.to?.message}>
+                <CurrencyInput
+                  placeholder="10"
+                  disabled={isLoadingRate === 'to'}
+                  currencies={currencyOptions}
+                  isLoading={isLoadingRate === 'to'}
+                  initialCurrency={
+                    initialValues?.to.currency && currencyOptions
+                      ? currencyOptions.find((curr) => curr.legacyTicker === initialValues.to.currency)
+                      : undefined
                   }
-                }}
-                onCurrencySelect={(currency) => {
-                  onChange({ ...value, currency })
-                  clearErrors()
-                  if (value.amount) {
-                    debouncedExchangeEstimation.current?.(value.amount, 'to')
-                  }
-                }}
-              />
-            </FormField>
-          )
-        }}
-      />
-      {from.currency && to.currency && (
-        <Text variant="t200" as="p" color={isLoadingRate ? 'colorTextMuted' : 'colorText'}>
-          Estimated rate: 1 {from.currency.toUpperCase()} ~ {to.amount / from.amount} {to.currency.toUpperCase()}
-        </Text>
-      )}
+                  value={value.amount}
+                  lockedCurrency={type === 'buy' ? JOYSTREAM_CHANGENOW_LEGACY_TICKER : undefined}
+                  onChange={(amount) => {
+                    onChange({ ...value, amount })
+                    clearErrors()
+                    if (amount) {
+                      debouncedExchangeEstimation.current?.(amount, 'to')
+                    }
+                  }}
+                  onCurrencySelect={(currency) => {
+                    onChange({ ...value, currency })
+                    clearErrors()
+                    if (value.amount) {
+                      debouncedExchangeEstimation.current?.(value.amount, 'to')
+                    }
+                  }}
+                />
+              </FormField>
+            )
+          }}
+        />
+        {from.currency && to.currency && (
+          <Text variant="t200" as="p" color={isLoadingRate ? 'colorTextMuted' : 'colorText'}>
+            Estimated rate: 1 {from.currency.toUpperCase()} ~ {to.amount / from.amount} {to.currency.toUpperCase()}
+          </Text>
+        )}
+      </FlexBox>
     </FlexBox>
   )
 }

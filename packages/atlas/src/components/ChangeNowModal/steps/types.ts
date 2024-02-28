@@ -5,6 +5,7 @@ export enum ChangeNowModalStep {
   FORM,
   SUMMARY,
   PROGRESS,
+  SWAP_EXPIRED,
 }
 
 export type TransactionType = 'buy' | 'sell' | 'topup'

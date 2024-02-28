@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { SvgActionArrowRight, SvgJoyTokenPrimary24 } from '@/assets/icons'
-import { CommonProps } from '@/components/ChangeNowModal/steps/types'
+import { ChangeNowModalStep, CommonProps } from '@/components/ChangeNowModal/steps/types'
 import { FlexBox } from '@/components/FlexBox'
 import { Text } from '@/components/Text'
 import { TextButton } from '@/components/_buttons/Button'
@@ -22,10 +22,10 @@ export type SummaryStepProps = {
   formData: FormData
 } & CommonProps
 
-export const SummaryStep = ({ formData, setPrimaryButtonProps }: SummaryStepProps) => {
+export const SummaryStep = ({ formData, setPrimaryButtonProps, goToStep }: SummaryStepProps) => {
   const [termsAccepted, setTermsAccepted] = useState(false)
   const [error, setError] = useState('')
-  const [timeDiff, setTimeDiff] = useState(0)
+  const [timeDiff, setTimeDiff] = useState<number | undefined>(undefined)
   const { activeMembership } = useUser()
   const { data: currencies } = useQuery('changenow-currency', () => changeNowService.getAvailableCurrencies())
   const { estimatedArrival, to, from, rateId, validUntil } = formData
@@ -35,13 +35,19 @@ export const SummaryStep = ({ formData, setPrimaryButtonProps }: SummaryStepProp
       text: 'Next',
       onClick: () => {
         if (termsAccepted) {
+          if (validUntil) {
+            const timeDiff = getTimeDiffInSeconds(new Date(validUntil))
+            if (timeDiff < 10) {
+              goToStep(ChangeNowModalStep.SWAP_EXPIRED)
+            }
+          }
           // transction
         } else {
           setError('You have to accept terms of service')
         }
       },
     })
-  }, [setPrimaryButtonProps, termsAccepted])
+  }, [goToStep, setPrimaryButtonProps, termsAccepted, validUntil])
 
   useMountEffect(() => {
     if (!validUntil) {
@@ -104,8 +110,8 @@ export const SummaryStep = ({ formData, setPrimaryButtonProps }: SummaryStepProp
         <Text variant="t200" as="p" color="colorText">
           Rate valid for
         </Text>
-        <Text variant="t200" as="p">
-          {formatDurationShort(timeDiff)}
+        <Text variant="t200" as="p" color={timeDiff !== undefined && timeDiff < 10 ? 'colorTextError' : undefined}>
+          {timeDiff !== undefined ? formatDurationShort(timeDiff) : '-'}
         </Text>
       </FlexBox>
 
