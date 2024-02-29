@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { SvgActionArrowRight, SvgJoyTokenPrimary24 } from '@/assets/icons'
@@ -10,9 +10,15 @@ import { TextButton } from '@/components/_buttons/Button'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { absoluteRoutes } from '@/config/routes'
 import { useMountEffect } from '@/hooks/useMountEffect'
+import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
+import { useAuth } from '@/providers/auth/auth.hooks'
+import { useJoystream } from '@/providers/joystream'
+import { useSnackbar } from '@/providers/snackbars'
+import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { cVar, sizes } from '@/styles'
 import { changeNowService } from '@/utils/ChangeNowService'
+import { formatJoystreamAddress } from '@/utils/address'
 import { shortenString } from '@/utils/misc'
 import { formatDurationShort, getTimeDiffInSeconds } from '@/utils/time'
 
@@ -20,34 +26,119 @@ import { FormData } from './FormStep'
 
 export type SummaryStepProps = {
   formData: FormData
+  setTransactionId: (id: string) => void
 } & CommonProps
 
-export const SummaryStep = ({ formData, setPrimaryButtonProps, goToStep }: SummaryStepProps) => {
+export const SummaryStep = ({
+  formData,
+  setPrimaryButtonProps,
+  goToStep,
+  type,
+  setTransactionId,
+}: SummaryStepProps) => {
   const [termsAccepted, setTermsAccepted] = useState(false)
   const [error, setError] = useState('')
   const [timeDiff, setTimeDiff] = useState<number | undefined>(undefined)
   const { activeMembership } = useUser()
+  const { currentUser } = useAuth()
   const { data: currencies } = useQuery('changenow-currency', () => changeNowService.getAvailableCurrencies())
   const { estimatedArrival, to, from, rateId, validUntil } = formData
+  const { displaySnackbar } = useSnackbar()
+  const handleTransaction = useTransaction()
+  const { joystream, proxyCallback } = useJoystream()
+
+  const onTransactionSubmit = useCallback(async () => {
+    const fromCurrency = currencies?.find((curr) => curr.legacyTicker === from.currency)
+    const toCurrency = currencies?.find((curr) => curr.legacyTicker === to.currency)
+
+    if (!activeMembership || !rateId || !fromCurrency || !toCurrency) {
+      return
+    }
+    const isSellingJoy = type === 'sell'
+    const refundAddress = isSellingJoy ? activeMembership.controllerAccount : undefined
+    const txData = await changeNowService
+      .createExchangeTransaction({
+        refundAddress,
+        type: isSellingJoy ? 'sell' : 'buy',
+        amount: isSellingJoy ? from.amount : to.amount,
+        currency: isSellingJoy ? toCurrency : fromCurrency,
+        contactEmail: currentUser?.email,
+        addressToBePaid: isSellingJoy ? '' : activeMembership.controllerAccount,
+        rateId: rateId,
+        userId: currentUser?.id,
+      })
+      .then((res) => res.data)
+      .catch(() => {
+        displaySnackbar({
+          title: 'Transaction creation failed',
+          description: 'Please try again, if the problem persists contact support.',
+        })
+      })
+
+    if (!txData) {
+      return
+    }
+
+    setTransactionId(txData.id)
+
+    if (type === 'sell') {
+      if (!joystream) {
+        return
+      }
+
+      await handleTransaction({
+        disableQNSync: true,
+        txFactory: async (updateStatus) =>
+          (
+            await joystream.extrinsics
+          ).sendFunds(
+            formatJoystreamAddress(txData.payingAddress),
+            tokenNumberToHapiBn(to.amount).toString(),
+            proxyCallback(updateStatus)
+          ),
+        onTxSync: async () => {
+          goToStep(ChangeNowModalStep.PROGRESS)
+        },
+      })
+    } else {
+      goToStep(ChangeNowModalStep.PROGRESS)
+    }
+  }, [
+    activeMembership,
+    currencies,
+    currentUser?.email,
+    currentUser?.id,
+    displaySnackbar,
+    from.amount,
+    from.currency,
+    goToStep,
+    handleTransaction,
+    joystream,
+    proxyCallback,
+    rateId,
+    setTransactionId,
+    to.amount,
+    to.currency,
+    type,
+  ])
 
   useEffect(() => {
     setPrimaryButtonProps({
       text: 'Next',
-      onClick: () => {
-        if (termsAccepted) {
-          if (validUntil) {
-            const timeDiff = getTimeDiffInSeconds(new Date(validUntil))
-            if (timeDiff < 10) {
-              goToStep(ChangeNowModalStep.SWAP_EXPIRED)
-            }
+      onClick: async () => {
+        if (termsAccepted && validUntil) {
+          const timeDiff = getTimeDiffInSeconds(new Date(validUntil))
+          if (timeDiff < 10) {
+            goToStep(ChangeNowModalStep.SWAP_EXPIRED)
+            return
           }
-          // transction
+          onTransactionSubmit()
         } else {
           setError('You have to accept terms of service')
         }
       },
     })
-  }, [goToStep, setPrimaryButtonProps, termsAccepted, validUntil])
+  }, [goToStep, onTransactionSubmit, setPrimaryButtonProps, termsAccepted, validUntil])
 
   useMountEffect(() => {
     if (!validUntil) {

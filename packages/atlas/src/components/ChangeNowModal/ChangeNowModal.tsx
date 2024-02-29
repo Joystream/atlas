@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 import { SvgAlertsInformative32 } from '@/assets/icons'
 import { SwapExpired } from '@/components/ChangeNowModal/steps/SwapExpired'
@@ -17,9 +17,10 @@ type ChangeNowModalProps = {
 }
 
 export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
-  const [step, setStep] = useState(ChangeNowModalStep.PROGRESS)
+  const [step, setStep] = useState(ChangeNowModalStep.INFO)
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogButtonProps>({ text: 'Select wallet' }) // start with sensible default so that there are no jumps after first effect runs
   const formData = useRef<FormData | null>(null)
+  const transactionId = useRef<string | null>(null)
 
   useLayoutEffect(() => {
     if (step === ChangeNowModalStep.INFO) {
@@ -38,7 +39,7 @@ export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
   }, [step, type])
 
   const secondaryButton = useMemo(() => {
-    if (ChangeNowModalStep.INFO || ChangeNowModalStep.SWAP_EXPIRED) {
+    if ([ChangeNowModalStep.INFO, ChangeNowModalStep.SWAP_EXPIRED].includes(step)) {
       return {
         text: 'Cancel',
         onClick: () => onClose(),
@@ -49,7 +50,17 @@ export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
       text: 'Back',
       onClick: () => setStep((prev) => prev - 1),
     }
-  }, [onClose])
+  }, [onClose, step])
+
+  const handleFormData = useCallback((data: FormData) => {
+    formData.current = data
+    setStep(ChangeNowModalStep.SUMMARY)
+  }, [])
+
+  const handleTransactionId = useCallback((id: string) => {
+    transactionId.current = id
+    setStep(ChangeNowModalStep.PROGRESS)
+  }, [])
 
   const commonProps = {
     setPrimaryButtonProps,
@@ -76,17 +87,10 @@ export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
     >
       {step === ChangeNowModalStep.INFO && <InformationStep {...commonProps} />}
       {step === ChangeNowModalStep.FORM && (
-        <FormStep
-          {...commonProps}
-          initialValues={formData.current}
-          onSubmit={(data) => {
-            formData.current = data
-            setStep(ChangeNowModalStep.SUMMARY)
-          }}
-        />
+        <FormStep {...commonProps} initialValues={formData.current} onSubmit={handleFormData} />
       )}
       {step === ChangeNowModalStep.SUMMARY && formData.current && (
-        <SummaryStep {...commonProps} formData={formData.current} />
+        <SummaryStep {...commonProps} formData={formData.current} setTransactionId={handleTransactionId} />
       )}
       {step === ChangeNowModalStep.PROGRESS && <ProgressStep />}
       {step === ChangeNowModalStep.SWAP_EXPIRED && <SwapExpired />}
