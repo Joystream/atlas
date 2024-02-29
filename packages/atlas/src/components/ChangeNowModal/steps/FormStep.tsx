@@ -13,7 +13,6 @@ import { ComboBox, ComboBoxProps } from '@/components/_inputs/ComboBox'
 import { FormField } from '@/components/_inputs/FormField'
 import { TokenInput, TokenInputProps } from '@/components/_inputs/TokenInput'
 import { Spinner } from '@/components/_loaders/Spinner'
-import { useMountEffect } from '@/hooks/useMountEffect'
 import { useSnackbar } from '@/providers/snackbars'
 import { square } from '@/styles'
 import { Currency, JOYSTREAM_CHANGENOW_LEGACY_TICKER, changeNowService } from '@/utils/ChangeNowService'
@@ -30,6 +29,7 @@ export type FormData = {
   estimatedArrival: string | null
   rateId: string | null
   validUntil: string | null
+  serverError?: string
 }
 
 type FormStepProps = {
@@ -76,9 +76,9 @@ export const FormStep = ({ setPrimaryButtonProps, onSubmit, type, initialValues 
           setValue('validUntil', data.validUntil)
         } catch (e) {
           if (isAxiosError(e) && e.response?.data.message && e.response.status === 400) {
-            setError(`${direction}`, {
+            setError('serverError', {
               message: changeNowService.sanitizeApiErrorMessage(e.response.data.message),
-              type: 'custom',
+              type: direction,
             })
             return
           }
@@ -121,15 +121,15 @@ export const FormStep = ({ setPrimaryButtonProps, onSubmit, type, initialValues 
     },
   })
 
-  useMountEffect(() => {
+  useEffect(() => {
     setPrimaryButtonProps({
       text: 'Next',
-      onClick: () =>
-        handleSubmit(onSubmit, (errors) => {
-          console.log(errors, 'Xd')
-        })(),
+      disabled: !!isLoadingRate,
+      onClick: () => {
+        handleSubmit(onSubmit)()
+      },
     })
-  })
+  }, [onSubmit, setPrimaryButtonProps, handleSubmit, isLoadingRate])
 
   const currencyOptions = useMemo(() => {
     return data?.map((curr) => ({
@@ -154,9 +154,29 @@ export const FormStep = ({ setPrimaryButtonProps, onSubmit, type, initialValues 
       <Controller
         name="from"
         control={control}
+        rules={{
+          validate: async (value) => {
+            if (!value.amount) {
+              return 'Please provide amount'
+            }
+
+            if (!value.currency) {
+              return 'Please choose currency'
+            }
+          },
+        }}
         render={({ field: { value, onChange } }) => {
           return (
-            <FormField label="Paying" error={errors.from?.message}>
+            <FormField
+              label="Paying"
+              error={
+                errors.serverError
+                  ? errors.serverError?.type === 'from'
+                    ? errors.serverError?.message
+                    : undefined
+                  : errors.from?.message
+              }
+            >
               <CurrencyInput
                 placeholder="10"
                 currencies={currencyOptions}
@@ -193,9 +213,29 @@ export const FormStep = ({ setPrimaryButtonProps, onSubmit, type, initialValues 
         <Controller
           name="to"
           control={control}
+          rules={{
+            validate: async (value) => {
+              if (!value.amount) {
+                return 'Please provide amount'
+              }
+
+              if (!value.currency) {
+                return 'Please choose currency'
+              }
+            },
+          }}
           render={({ field: { value, onChange } }) => {
             return (
-              <FormField label="Receiving" error={errors.to?.message}>
+              <FormField
+                label="Receiving"
+                error={
+                  errors.serverError
+                    ? errors.serverError?.type === 'to'
+                      ? errors.serverError?.message
+                      : undefined
+                    : errors.to?.message
+                }
+              >
                 <CurrencyInput
                   placeholder="10"
                   disabled={isLoadingRate === 'to'}
