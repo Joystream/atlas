@@ -32,7 +32,7 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
   const joystreamCtx = useContext<JoystreamContextValue | undefined>(JoystreamContext)
 
   const walletConnectConfig = atlasConfig.features.walletConnect
-  const { name, url, icons, description } = walletConnectConfig.metadata
+  const { name, icons, description } = walletConnectConfig.metadata
 
   const [isSignerMetadataOutdated, setIsSignerMetadataOutdated] = useState(false)
 
