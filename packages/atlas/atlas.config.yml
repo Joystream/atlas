@@ -274,7 +274,6 @@ features:
     metadata:
       name: Atlas
       description: Web3 video streaming platform
-      url: \#
       icons: ['https://dev.gleev.xyz/favicon.ico']
   playback:
     playbackRates: [2, 1.5, 1.25, 1, 0.5, 0.25] # Playback rates available in the player

@@ -126,7 +126,6 @@ export const configSchema = z.object({
       metadata: z.object({
         name: z.string().nullable(),
         description: z.string().nullable(),
-        url: z.string().nullable(),
         icons: z.array(z.string()).nullable(),
       }),
     }),

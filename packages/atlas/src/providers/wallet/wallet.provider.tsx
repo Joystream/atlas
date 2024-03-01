@@ -71,7 +71,7 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
       metadata: {
         name: name || '',
         description: description || '',
-        url: url || '',
+        url: `${window.location.protocol}//${location.host}`,
         icons: icons || [],
       },
       chainIds: [chainId],
