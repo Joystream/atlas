@@ -84,7 +84,7 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
     }
 
     return walletConnectParams
-  }, [description, icons, joystreamCtx?.joystream, name, url, walletConnectConfig.walletConnectProjectId])
+  }, [description, icons, joystreamCtx?.joystream, name, walletConnectConfig.walletConnectProjectId])
 
   const initSignerWallet = useCallback(
     async (walletName: string): Promise<SignerWalletAccount[] | null> => {
