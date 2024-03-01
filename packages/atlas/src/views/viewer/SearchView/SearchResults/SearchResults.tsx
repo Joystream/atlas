@@ -1,42 +1,28 @@
-import { FC, memo, useEffect, useMemo, useState } from 'react'
+import { FC, memo } from 'react'
 
 import { SvgActionFilters } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-import { Tabs } from '@/components/Tabs'
+import { Section } from '@/components/Section/Section'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ViewWrapper } from '@/components/ViewWrapper'
 import { Button } from '@/components/_buttons/Button'
-import { ChannelGrid } from '@/components/_channel/ChannelGrid'
-import { SkeletonLoaderVideoGrid } from '@/components/_loaders/SkeletonLoaderVideoGrid'
-import { VideoGrid } from '@/components/_video/VideoGrid'
+import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSearchResults } from '@/hooks/useSearchResults'
 import { useSearchStore } from '@/providers/search'
+import { InfiniteLoadingOffsets } from '@/utils/loading.contants'
 
-import {
-  FiltersWrapper,
-  PaddingWrapper,
-  Results,
-  SearchControls,
-  StyledPagination,
-  StyledSelect,
-} from './SearchResults.styles'
+import { FiltersWrapper, PaddingWrapper, Results, SearchControls, StyledSelect } from './SearchResults.styles'
 
 type SearchResultsProps = {
   query: string
 }
-const tabs = ['Videos', 'Channels']
-
-const INITIAL_NUMBER_OF_RESULTS = 20
 
 export const SearchResults: FC<SearchResultsProps> = memo(({ query }) => {
   const smMatch = useMediaMatch('sm')
-  const [selectedTabIndex, setSelectedTabIndex] = useState(0)
-  const [numberOfColumns, setNumberOfColumns] = useState(1)
-  const [page, setPage] = useState(0)
   const filtersBarLogic = useFiltersBar()
   const {
     setVideoWhereInput,
@@ -45,52 +31,12 @@ export const SearchResults: FC<SearchResultsProps> = memo(({ query }) => {
     videoWhereInput,
   } = filtersBarLogic
 
-  const numberOfFullyFilledRows = numberOfColumns ? Math.ceil(INITIAL_NUMBER_OF_RESULTS / numberOfColumns) : 6
-  const numberOfResults =
-    INITIAL_NUMBER_OF_RESULTS % numberOfColumns === 0
-      ? INITIAL_NUMBER_OF_RESULTS
-      : numberOfColumns * numberOfFullyFilledRows
   const { videos, channels, loading, error } = useSearchResults({
     searchQuery: query,
-    videoWhereInput: selectedTabIndex === 0 ? videoWhereInput : undefined,
-    first: numberOfResults,
+    videoWhereInput,
+    first: 5,
   })
-
-  const refetch = selectedTabIndex === 0 ? videos.refetch : channels.refetch
   const { setSearchOpen, setSearchQuery } = useSearchStore((state) => state.actions)
-
-  useEffect(() => {
-    if (selectedTabIndex === 1) {
-      setIsFiltersOpen(false)
-    }
-  }, [selectedTabIndex, setIsFiltersOpen])
-
-  const paginationData = useMemo(() => {
-    return {
-      pageInfo: selectedTabIndex === 0 ? videos.pageInfo : channels.pageInfo,
-      totalCount: selectedTabIndex === 0 ? videos.totalCount : channels.totalCount,
-      type: selectedTabIndex === 0 ? 'videos' : 'channels',
-    }
-  }, [channels.pageInfo, channels.totalCount, selectedTabIndex, videos.pageInfo, videos.totalCount])
-
-  const handlePageChange = (page: number) => {
-    const fetchMore = selectedTabIndex === 0 ? videos.fetchMore : channels.fetchMore
-    const { totalCount, pageInfo } = paginationData
-    const items = selectedTabIndex === 0 ? videos.items : channels.items
-    setPage(page)
-    if (
-      !!items.length &&
-      page * numberOfResults + numberOfResults > items?.length &&
-      items?.length < (totalCount ?? 0)
-    ) {
-      fetchMore({
-        variables: {
-          first: page * numberOfResults + numberOfResults * 2 - items.length,
-          after: pageInfo?.endCursor,
-        },
-      })
-    }
-  }
 
   const handleSelectLanguage = (selectedLanguage: unknown) => {
     setLanguage(selectedLanguage as string | null | undefined)
@@ -104,40 +50,19 @@ export const SearchResults: FC<SearchResultsProps> = memo(({ query }) => {
     setIsFiltersOpen((state) => !state)
   }
 
-  useEffect(() => {
-    setPage(0)
-  }, [query])
-
-  useEffect(() => {
-    setPage(0)
-    refetch()
-  }, [refetch, selectedTabIndex])
-
   if (error) {
     return <ViewErrorFallback />
   }
 
-  const mappedTabs = tabs.map((tab) => ({ name: tab }))
-
-  const showEmptyFallback =
-    !loading &&
-    ((videos.items.length === 0 && selectedTabIndex === 0) ||
-      (channels.items.length === 0 && selectedTabIndex === 1)) &&
-    !!query
-
-  const sliceStart = page * numberOfResults
-  const sliceEnd = page * numberOfResults + numberOfResults
-  const paginatedVideos = videos.items.slice(sliceStart, sliceEnd)
-  const paginatedChannels = channels.items.slice(sliceStart, sliceEnd)
-  const placeHoldersCount = numberOfColumns * numberOfFullyFilledRows
+  const showEmptyFallback = !loading && videos.items.length === 0 && channels.items.length === 0 && !!query
+  const { pageInfo, items: videoItems, fetchMore } = videos
 
   return (
     <ViewWrapper>
       <SearchControls>
         <PaddingWrapper filtersOpen={isFiltersOpen}>
-          <Tabs tabs={mappedTabs} onSelectTab={setSelectedTabIndex} initialIndex={0} />
           <FiltersWrapper>
-            {smMatch && selectedTabIndex === 0 && (
+            {smMatch && (
               <StyledSelect
                 onChange={handleSelectLanguage}
                 size="medium"
@@ -145,17 +70,15 @@ export const SearchResults: FC<SearchResultsProps> = memo(({ query }) => {
                 items={[{ name: 'All languages', value: 'undefined' }, ...atlasConfig.derived.languagesSelectValues]}
               />
             )}
-            {selectedTabIndex === 0 && (
-              <Button
-                icon={<SvgActionFilters />}
-                iconPlacement="left"
-                variant="secondary"
-                badge={canClearAllFilters}
-                onClick={toggleFilters}
-              >
-                {smMatch && 'Filters'}
-              </Button>
-            )}
+            <Button
+              icon={<SvgActionFilters />}
+              iconPlacement="left"
+              variant="secondary"
+              badge={canClearAllFilters}
+              onClick={toggleFilters}
+            >
+              {smMatch && 'Filters'}
+            </Button>
           </FiltersWrapper>
         </PaddingWrapper>
         <FiltersBar {...filtersBarLogic} activeFilters={['categories', 'date', 'length', 'other', 'language']} />
@@ -164,7 +87,7 @@ export const SearchResults: FC<SearchResultsProps> = memo(({ query }) => {
         <LimitedWidthContainer big>
           {showEmptyFallback ? (
             <EmptyFallback
-              title={`No ${selectedTabIndex === 0 ? 'videos' : 'channels'} found`}
+              title="No results found"
               subtitle="Please, try using different search terms or change your filtering criteria"
               button={
                 <Button
@@ -180,38 +103,33 @@ export const SearchResults: FC<SearchResultsProps> = memo(({ query }) => {
               }
             />
           ) : (
-            <>
-              {selectedTabIndex === 0 &&
-                (loading ? (
-                  <SkeletonLoaderVideoGrid
-                    videosCount={placeHoldersCount}
-                    onResize={(sizes) => {
-                      setNumberOfColumns(sizes.length)
-                    }}
-                  />
-                ) : (
-                  <VideoGrid videos={paginatedVideos} />
-                ))}
-              {selectedTabIndex === 1 &&
-                (loading ? (
-                  <SkeletonLoaderVideoGrid
-                    videosCount={placeHoldersCount}
-                    onResize={(sizes) => {
-                      setNumberOfColumns(sizes.length)
-                    }}
-                  />
-                ) : (
-                  <ChannelGrid channels={paginatedChannels} repeat="fill" />
-                ))}
-            </>
+            <Section
+              contentProps={{
+                type: 'grid',
+                grid: {
+                  xxs: {
+                    columns: 1,
+                  },
+                },
+                children: videoItems?.map((video, idx) => (
+                  <VideoTileViewer direction="horizontal" detailsVariant="withChannelName" id={video.id} key={idx} />
+                )),
+              }}
+              footerProps={{
+                reachedEnd: !pageInfo?.hasNextPage,
+                fetchMore: async () => {
+                  if (pageInfo?.hasNextPage) {
+                    await fetchMore({
+                      variables: { first: 4, after: pageInfo.endCursor },
+                    })
+                  }
+                  return
+                },
+                type: 'infinite',
+                loadingTriggerOffset: InfiniteLoadingOffsets.VideoTile,
+              }}
+            />
           )}
-          <StyledPagination
-            onChangePage={handlePageChange}
-            page={page}
-            totalCount={paginationData.totalCount}
-            itemsPerPage={numberOfResults}
-            maxPaginationLinks={7}
-          />
         </LimitedWidthContainer>
       </Results>
     </ViewWrapper>
