@@ -8,7 +8,7 @@ import { DialogModal } from '@/components/_overlays/DialogModal'
 import { FormData, FormStep } from './steps/FormStep'
 import { InformationStep } from './steps/InformationStep'
 import { ProgressStep } from './steps/ProgressStep'
-import { SummaryStep } from './steps/SummaryStep'
+import { SummaryStep, TransactionData } from './steps/SummaryStep'
 import { ChangeNowModalStep, TransactionType } from './steps/types'
 
 type ChangeNowModalProps = {
@@ -20,7 +20,7 @@ export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
   const [step, setStep] = useState(ChangeNowModalStep.INFO)
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogButtonProps>({ text: 'Select wallet' }) // start with sensible default so that there are no jumps after first effect runs
   const formData = useRef<FormData | null>(null)
-  const transactionId = useRef<string | null>(null)
+  const transactionData = useRef<TransactionData | null>(null)
 
   useLayoutEffect(() => {
     if (step === ChangeNowModalStep.INFO) {
@@ -57,8 +57,8 @@ export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
     setStep(ChangeNowModalStep.SUMMARY)
   }, [])
 
-  const handleTransactionId = useCallback((id: string) => {
-    transactionId.current = id
+  const handleTransactionData = useCallback((data: TransactionData) => {
+    transactionData.current = data
     setStep(ChangeNowModalStep.PROGRESS)
   }, [])
 
@@ -90,9 +90,11 @@ export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
         <FormStep {...commonProps} initialValues={formData.current} onSubmit={handleFormData} />
       )}
       {step === ChangeNowModalStep.SUMMARY && formData.current && (
-        <SummaryStep {...commonProps} formData={formData.current} setTransactionId={handleTransactionId} />
+        <SummaryStep {...commonProps} formData={formData.current} setTransactionData={handleTransactionData} />
       )}
-      {step === ChangeNowModalStep.PROGRESS && <ProgressStep />}
+      {step === ChangeNowModalStep.PROGRESS && transactionData.current && (
+        <ProgressStep {...commonProps} transactionData={transactionData.current} />
+      )}
       {step === ChangeNowModalStep.SWAP_EXPIRED && <SwapExpired />}
     </DialogModal>
   )

@@ -26,15 +26,20 @@ import { FormData } from './FormStep'
 
 export type SummaryStepProps = {
   formData: FormData
-  setTransactionId: (id: string) => void
+  setTransactionData: (id: TransactionData) => void
 } & CommonProps
+
+export type TransactionData = {
+  id: string
+  addressToBePaid: string
+}
 
 export const SummaryStep = ({
   formData,
   setPrimaryButtonProps,
   goToStep,
   type,
-  setTransactionId,
+  setTransactionData,
 }: SummaryStepProps) => {
   const [termsAccepted, setTermsAccepted] = useState(false)
   const [error, setError] = useState('')
@@ -79,7 +84,10 @@ export const SummaryStep = ({
       return
     }
 
-    setTransactionId(txData.id)
+    setTransactionData({
+      id: txData.id,
+      addressToBePaid: txData.payingAddress,
+    })
 
     if (type === 'sell') {
       if (!joystream) {
@@ -116,7 +124,7 @@ export const SummaryStep = ({
     joystream,
     proxyCallback,
     rateId,
-    setTransactionId,
+    setTransactionData,
     to.amount,
     to.currency,
     type,

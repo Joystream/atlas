@@ -145,7 +145,7 @@ export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ type, ...res
                   }}
                   footerProps={{
                     type: 'infinite',
-                    reachedEnd: !pageInfo?.hasNextPage ?? true,
+                    reachedEnd: !pageInfo?.hasNextPage,
                     fetchMore: async () => {
                       await fetchMore({
                         variables: {
