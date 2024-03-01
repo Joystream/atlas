@@ -42,7 +42,8 @@ export const Result: FC<ResultProps> = ({
   )
   const { url: videoThumbnail, isLoading: isLoadingThumbnail } = useGetAssetUrl(
     video?.thumbnailPhoto?.resolvedUrls,
-    'thumbnail'
+    'thumbnail',
+    {}
   )
   const to = useMemo(() => {
     if (video) {

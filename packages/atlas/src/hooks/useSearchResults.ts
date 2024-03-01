@@ -61,9 +61,6 @@ export const useSearchResults = ({
       ...commonOptions,
       skipCountQuery: true,
       onError: (error) => SentryLogger.error('Failed to fetch video search results', 'SearchResults', error),
-      onCompleted: () => {
-        console.log('videosLoading', videosLoading)
-      },
     }
   )
 
