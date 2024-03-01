@@ -105,7 +105,7 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
     const accounts = isWalletConnectWallet(selectedWallet)
       ? await signInWithWalletConnect().catch((err) => {
           const message = err?.message
-          if (message === 'user_action' || message === 'User rejected.') {
+          if (message === 'user_action' || err?.code >= 4000) {
             setIsConnecting(false)
             return null
           }
