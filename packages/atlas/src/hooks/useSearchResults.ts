@@ -75,7 +75,7 @@ export const useSearchResults = ({
     networkStatus: channelsNetworkStatus,
   } = useBasicChannelsConnection(
     {
-      first,
+      first: 1,
       where: {
         title_containsInsensitive: text,
         isPublic_eq: true,

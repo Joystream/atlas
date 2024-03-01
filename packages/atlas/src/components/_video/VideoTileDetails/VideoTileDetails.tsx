@@ -91,7 +91,12 @@ export const VideoTileDetails: FC<VideoTileDetailsProps> = ({
               <SkeletonLoader height={24} width="60%" />
             ) : (
               <LinkWrapper to={videoHref} state={linkState}>
-                <VideoTitle as="h3" onClick={onVideoTitleClick} variant={size === 'medium' ? 'h400' : 'h300'}>
+                <VideoTitle
+                  as="h3"
+                  onClick={onVideoTitleClick}
+                  variant={size === 'medium' ? 'h400' : 'h300'}
+                  clampAfterLine={1}
+                >
                   {videoTitle}
                 </VideoTitle>
               </LinkWrapper>
