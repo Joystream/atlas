@@ -1,18 +1,28 @@
+import { css } from '@emotion/react'
+import styled from '@emotion/styled'
 import { FC, memo } from 'react'
+import { Link } from 'react-router-dom'
 
+import { useBasicChannel } from '@/api/hooks/channel'
 import { SvgActionFilters } from '@/assets/icons'
+import { Avatar } from '@/components/Avatar'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
+import { FlexBox } from '@/components/FlexBox'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Section } from '@/components/Section/Section'
+import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ViewWrapper } from '@/components/ViewWrapper'
 import { Button } from '@/components/_buttons/Button'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { atlasConfig } from '@/config'
+import { absoluteRoutes } from '@/config/routes'
+import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSearchResults } from '@/hooks/useSearchResults'
 import { useSearchStore } from '@/providers/search'
+import { cVar, sizes, square } from '@/styles'
 import { InfiniteLoadingOffsets } from '@/utils/loading.contants'
 
 import { FiltersWrapper, PaddingWrapper, Results, SearchControls, StyledSelect } from './SearchResults.styles'
@@ -111,9 +121,14 @@ export const SearchResults: FC<SearchResultsProps> = memo(({ query }) => {
                     columns: 1,
                   },
                 },
-                children: videoItems?.map((video, idx) => (
-                  <VideoTileViewer direction="horizontal" detailsVariant="withChannelName" id={video.id} key={idx} />
-                )),
+                children: [
+                  ...(channels.items[0]
+                    ? [<ChannelResultTile key="channel-result" channelId={channels.items[0].id} />]
+                    : []),
+                  ...(videoItems?.map((video, idx) => (
+                    <VideoTileViewer direction="horizontal" detailsVariant="withChannelName" id={video.id} key={idx} />
+                  )) ?? []),
+                ],
               }}
               footerProps={{
                 reachedEnd: !pageInfo?.hasNextPage,
@@ -136,3 +151,83 @@ export const SearchResults: FC<SearchResultsProps> = memo(({ query }) => {
   )
 })
 SearchResults.displayName = 'SearchResults'
+
+const ChannelResultTile = ({ channelId }: { channelId: string }) => {
+  const { channel } = useBasicChannel(channelId)
+  const { toggleFollowing, isFollowing } = useHandleFollowChannel(channelId, channel?.title)
+
+  return (
+    <Container>
+      <ChannelCardArticle>
+        <ChannelCardAnchor to={absoluteRoutes.viewer.channel(channelId)}>
+          <StyledAvatar assetUrls={channel?.avatarPhoto?.resolvedUrls} />
+        </ChannelCardAnchor>
+      </ChannelCardArticle>
+
+      <FlexBox flow="column" gap={2}>
+        <Text variant="h500" as="h3">
+          {channel?.title}
+        </Text>
+        <Text variant="t300" as="p" color="colorText">
+          {channel?.followsNum ?? '-'} followers
+        </Text>
+        <Text variant="t300" as="p" color="colorText" clampAfterLine={2}>
+          {channel?.description}
+        </Text>
+      </FlexBox>
+
+      <Button variant="secondary" onClick={toggleFollowing}>
+        {isFollowing ? 'Unfollow' : 'Follow'}
+      </Button>
+    </Container>
+  )
+}
+
+export const StyledAvatar = styled(Avatar)`
+  ${square('136px')}
+`
+
+export const ChannelCardAnchor = styled(Link)`
+  width: 100%;
+  text-decoration: none;
+  align-items: center;
+  transition: ${cVar('animationTransitionFast')} box;
+  transition-property: transform, box-shadow;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  background-color: ${cVar('colorBackgroundMuted')};
+  padding: ${sizes(6)} 0;
+`
+
+export const ChannelCardArticle = styled.article<{ activeDisabled?: boolean }>`
+  position: relative;
+  display: flex;
+  min-width: 160px;
+
+  :hover {
+    > a {
+      transform: translate(-${sizes(2)}, -${sizes(2)});
+      box-shadow: ${sizes(2)} ${sizes(2)} 0 ${cVar('colorCoreBlue500')};
+      opacity: 0.7;
+    }
+  }
+
+  :active {
+    > a {
+      ${({ activeDisabled }) =>
+        !activeDisabled &&
+        css`
+          transform: translate(0, 0);
+          box-shadow: ${sizes(0)} ${sizes(0)} 0 ${cVar('colorCoreBlue500')};
+        `}
+    }
+  }
+`
+
+const Container = styled.div`
+  display: grid;
+  grid-template-columns: minmax(160px, 320px) 1fr auto;
+  grid-column-gap: ${sizes(8)};
+  align-items: center;
+`
