@@ -12,7 +12,7 @@ export const VideoTileContainer = styled.div<{ direction: 'vertical' | 'horizont
       ? css`
           display: grid;
           width: 100%;
-          grid-template-columns: minmax(160px, 320px) 1fr;
+          grid-template-columns: min(40%, 360px) 1fr;
 
           ${VideoTitle} {
             -webkit-line-clamp: 2;
