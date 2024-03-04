@@ -109,7 +109,13 @@ export const useGetAssetUrl = (urls: string[] | undefined | null, type: AssetTyp
       return
     }
 
-    if (!urls || (url && urls.includes(url)) || (!url && !urls.length)) {
+    if (!urls) {
+      setUrl(undefined)
+      setIsLoading(false)
+      return
+    }
+
+    if (url && urls.includes(url)) {
       setIsLoading(false)
       return
     }
