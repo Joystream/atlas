@@ -2,13 +2,14 @@ import { FC } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { useBasicChannel } from '@/api/hooks/channel'
+import { useGetChannelFollowsQuery } from '@/api/queries/__generated__/accounts.generated'
 import { SvgActionNewChannel } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
 import { IconWrapper } from '@/components/IconWrapper'
 import { Text } from '@/components/Text'
 import { NavItem, NavItemProps } from '@/components/_navigation/NavItem'
 import { absoluteRoutes } from '@/config/routes'
-import { FollowedChannel } from '@/providers/personalData/types'
+import { useUser } from '@/providers/user/user.hooks'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
@@ -57,18 +58,25 @@ export const ChannelNavItem: FC<NavItemProps & ChannelNavItemProps> = ({
 }
 
 type FollowedChannelsProps = {
-  followedChannels: FollowedChannel[]
   expanded: boolean
   onClick: () => void
   onChannelNotFound?: (id: string) => void
 }
 
-export const FollowedChannels: FC<FollowedChannelsProps> = ({
-  followedChannels,
-  expanded,
-  onClick,
-  onChannelNotFound,
-}) => {
+export const FollowedChannels: FC<FollowedChannelsProps> = ({ expanded, onClick, onChannelNotFound }) => {
+  const { accountId } = useUser()
+  const { data } = useGetChannelFollowsQuery({
+    variables: {
+      where: {
+        user: {
+          account: {
+            id_eq: accountId,
+          },
+        },
+      },
+    },
+    skip: !accountId,
+  })
   return (
     <CSSTransition
       in={expanded}
@@ -82,15 +90,15 @@ export const FollowedChannels: FC<FollowedChannelsProps> = ({
         </ChannelsTitle>
         <ChannelsWrapper>
           <ChannelsList>
-            {followedChannels.map(({ id }) => (
+            {data?.channelFollows.map(({ channelId }) => (
               <ChannelNavItem
-                id={id}
-                to={absoluteRoutes.viewer.channel(id)}
+                id={channelId}
+                to={absoluteRoutes.viewer.channel(channelId)}
                 expanded={expanded}
                 onClick={onClick}
                 isSecondary={true}
                 onChannelNotFound={onChannelNotFound}
-                key={id}
+                key={channelId}
               />
             ))}
           </ChannelsList>

@@ -2,11 +2,10 @@ import { round } from 'lodash-es'
 
 import { createStore } from '@/utils/store'
 
-import { DismissedMessage, FollowedChannel, RecentSearch, WatchedVideo, WatchedVideoStatus } from './types'
+import { DismissedMessage, RecentSearch, WatchedVideo, WatchedVideoStatus } from './types'
 
 export type PersonalDataStoreState = {
   watchedVideos: WatchedVideo[]
-  followedChannels: FollowedChannel[]
   recentSearches: RecentSearch[]
   dismissedMessages: DismissedMessage[]
   currentVolume: number
@@ -23,7 +22,6 @@ export type PersonalDataStoreState = {
 
 const WHITELIST: (keyof PersonalDataStoreState)[] = [
   'watchedVideos',
-  'followedChannels',
   'recentSearches',
   'dismissedMessages',
   'currentVolume',
@@ -39,8 +37,6 @@ const WHITELIST: (keyof PersonalDataStoreState)[] = [
 
 export type PersonalDataStoreActions = {
   updateWatchedVideos: (__typename: WatchedVideoStatus, id: string, timestamp?: number) => void
-  unfollowChannel: (id: string) => void
-  followChannel: (id: string) => void
   addRecentSearch: (title: string) => void
   deleteRecentSearch: (title: string) => void
   updateDismissedMessages: (id: string, add?: boolean) => void
@@ -61,7 +57,6 @@ export type PersonalDataStoreActions = {
 const initialState: PersonalDataStoreState = {
   cachedVolume: 0,
   watchedVideos: [],
-  followedChannels: [],
   recentSearches: [],
   dismissedMessages: [],
   currentVolume: 1,
@@ -88,22 +83,6 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
           } else {
             const index = state.watchedVideos.findIndex((v) => v.id === id)
             if (index !== -1) state.watchedVideos[index] = { __typename, id, timestamp }
-          }
-        })
-      },
-      followChannel: (id) => {
-        set((state) => {
-          const isFollowing = state.followedChannels.some((channel) => channel.id === id)
-          if (!isFollowing) {
-            state.followedChannels.push({ id })
-          }
-        })
-      },
-      unfollowChannel: (id) => {
-        set((state) => {
-          const isFollowing = state.followedChannels.some((channel) => channel.id === id)
-          if (isFollowing) {
-            state.followedChannels = state.followedChannels.filter((channel) => channel.id !== id)
           }
         })
       },
