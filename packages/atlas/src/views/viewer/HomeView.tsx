@@ -1,23 +1,26 @@
 import styled from '@emotion/styled'
-import { FC, useState } from 'react'
+import { FC } from 'react'
 
-import { useGetCuratedHompageVideosQuery } from '@/api/queries/__generated__/videos.generated'
+import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
+import {
+  GetBasicVideosConnectionLightweightDocument,
+  useGetCuratedHompageVideosQuery,
+} from '@/api/queries/__generated__/videos.generated'
 import { Section } from '@/components/Section/Section'
 import { ReferralsBanner } from '@/components/_referrals/ReferralsBanner/ReferralsBanner'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { publicCryptoVideoFilter } from '@/config/contentFilter'
-import { useBreakpointKey } from '@/hooks/useBreakpointKey'
 import { useHeadTags } from '@/hooks/useHeadTags'
+import { useInfiniteVideoGrid } from '@/hooks/useInfiniteVideoGrid'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { DEFAULT_VIDEO_GRID, sizes } from '@/styles'
 import { createPlaceholderData } from '@/utils/data'
 import { InfiniteLoadingOffsets } from '@/utils/loading.contants'
 
 export const HomeView: FC = () => {
-  const [hasMoreVideos, setHasMoreVideos] = useState(true)
   const headTags = useHeadTags()
-  const { columns, fetchMore, tiles, loading, skipVideoIds } = useHomeVideos()
+  const { columns, fetchMore, tiles, loading, pageInfo } = useHomeVideos()
 
   return (
     <VideoContentTemplate>
@@ -30,22 +33,11 @@ export const HomeView: FC = () => {
           children: tiles?.map((video, idx) => <VideoTileViewer id={video.id} key={idx} />),
         }}
         footerProps={{
-          reachedEnd: !hasMoreVideos,
+          reachedEnd: !pageInfo?.hasNextPage,
           fetchMore: async () => {
-            if (hasMoreVideos && !loading) {
+            if (!loading) {
               await fetchMore({
-                variables: { limit: columns * 4, skipVideoIds },
-                updateQuery: (prev, { fetchMoreResult }) => {
-                  if (!fetchMoreResult.dumbPublicFeedVideos.length) {
-                    setHasMoreVideos(false)
-                  }
-                  fetchMoreResult.dumbPublicFeedVideos = [
-                    ...(prev.dumbPublicFeedVideos ?? []),
-                    ...fetchMoreResult.dumbPublicFeedVideos,
-                  ]
-
-                  return fetchMoreResult
-                },
+                variables: { first: columns * 4, after: pageInfo?.endCursor },
               })
             }
             return
@@ -64,12 +56,8 @@ const StyledSection = styled(Section)`
 
 const useHomeVideos = () => {
   const initialRowsToLoad = useVideoGridRows('main')
-  const [skipVideoIds, setSkipVideoIds] = useState<string[]>(['-1'])
-  const breakPointKey = useBreakpointKey()
-  const columns = (breakPointKey && DEFAULT_VIDEO_GRID[breakPointKey]?.columns) ?? 0
-  const { data, loading, fetchMore } = useGetCuratedHompageVideosQuery({
+  const { data, loading } = useGetCuratedHompageVideosQuery({
     notifyOnNetworkStatusChange: true,
-    skip: !columns,
     variables: {
       where: {
         ...publicCryptoVideoFilter,
@@ -78,17 +66,22 @@ const useHomeVideos = () => {
         isShort_not_eq: undefined,
       },
       skipVideoIds: ['-1'],
-      limit: columns * initialRowsToLoad,
     },
-    onCompleted: (result) => {
-      if (result.dumbPublicFeedVideos.length) setSkipVideoIds(result.dumbPublicFeedVideos.map((video) => video.id))
+  })
+
+  const { columns, fetchMore, pageInfo, tiles } = useInfiniteVideoGrid({
+    query: GetBasicVideosConnectionLightweightDocument,
+    variables: {
+      where: publicCryptoVideoFilter,
+      orderBy: VideoOrderByInput.VideoRelevanceDesc,
+      first: 1,
     },
   })
 
   const firstLoad = !data?.dumbPublicFeedVideos && loading
   const firstLoadPlaceholders = firstLoad ? createPlaceholderData(columns * initialRowsToLoad) : []
 
-  const displayedItems = data?.dumbPublicFeedVideos || []
+  const displayedItems = [...(data?.dumbPublicFeedVideos || []), ...(tiles || [])]
   const nextLoadPlaceholders = createPlaceholderData(columns * 4)
 
   return {
@@ -96,6 +89,6 @@ const useHomeVideos = () => {
     fetchMore,
     columns,
     loading,
-    skipVideoIds,
+    pageInfo,
   }
 }
