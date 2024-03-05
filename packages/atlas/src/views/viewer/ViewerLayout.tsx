@@ -40,9 +40,9 @@ const MembershipSettingsView = lazy(() =>
 const NotFoundView = lazy(() => import('./NotFoundView').then((module) => ({ default: module.NotFoundView })))
 const SearchView = lazy(() => import('./SearchView').then((module) => ({ default: module.SearchView })))
 const CuratorView = lazy(() => import('./CuratorView').then((module) => ({ default: module.CuratorView })))
-const CuratorHomepage = lazy(() => import('./CuratorHomepage').then((module) => ({ default: module.CuratorView })))
+const CuratorHomepage = lazy(() => import('./CuratorHomepage').then((module) => ({ default: module.CuratorHomepage })))
 const VideoView = lazy(() => import('./VideoView').then((module) => ({ default: module.VideoView })))
-const PortfolioView = lazy(() => import('./PortfolioView').then((module) => ({ default: module.VideoView })))
+const PortfolioView = lazy(() => import('./PortfolioView').then((module) => ({ default: module.PortfolioView })))
 const ReferralsView = lazy(() =>
   import('@/views/global/ReferralsView').then((module) => ({ default: module.ReferralsView }))
 )
@@ -150,10 +150,10 @@ export const ViewerLayout: FC = () => {
                     }
                   />
                   <Route
-                      path={absoluteRoutes.viewer.portfolio()}
-                      element={
-                        <PrivateRoute showWhen={isLoggedIn} element={<PortfolioView />} redirectTo={ENTRY_POINT_ROUTE} />
-                      }
+                    path={absoluteRoutes.viewer.portfolio()}
+                    element={
+                      <PrivateRoute showWhen={isLoggedIn} element={<PortfolioView />} redirectTo={ENTRY_POINT_ROUTE} />
+                    }
                   />
                   <Route path="*" element={<NotFoundView />} />
                 </Routes>

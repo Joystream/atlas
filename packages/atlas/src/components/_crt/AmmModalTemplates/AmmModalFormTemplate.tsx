@@ -10,7 +10,7 @@ import { TokenInput } from '@/components/_inputs/TokenInput'
 import { useTokenPrice } from '@/providers/joystream'
 
 type AmmModalFormTemplateProps = {
-  validation?: Validate<number>
+  validation?: Validate<number, { tokenAmount: number }>
   maxValue?: number
   pricePerUnit?: number
   control: Control<{ tokenAmount: number }>

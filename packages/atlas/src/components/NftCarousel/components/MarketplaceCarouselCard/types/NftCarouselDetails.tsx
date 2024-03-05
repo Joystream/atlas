@@ -20,6 +20,7 @@ import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { DetailsContent } from '@/components/_nft/NftTile'
 import { BackgroundVideoPlayer } from '@/components/_video/BackgroundVideoPlayer'
+import { VideoPoster, VideoWrapper } from '@/components/_video/BackgroundVideoPlayer/BackgroundVideoPlayer.styles'
 import { absoluteRoutes } from '@/config/routes'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useDebounceValue } from '@/hooks/useDebounceValue'
@@ -42,7 +43,6 @@ export const NftCarouselDetails = ({
   const navigate = useNavigate()
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
   const nftStatus = getNftStatus(nft, nft?.video)
-  const debouncedActive = useDebounceValue(active, 500)
 
   const ownerAvatarUrls =
     nft.owner.__typename === 'NftOwnerChannel'
@@ -236,25 +236,31 @@ export const VideoCardWrapper = ({
   details,
 }: VideoCardWrapperProps) => {
   const [isPaused, setIsPaused] = useState(!active)
+  const debouncedActive = useDebounceValue(active, 500)
 
   return (
-    <Container isActive={active}>
+    <Container>
       <VideoContainer>
-        <BackgroundVideoPlayer
-          videoId={videoId}
-          withFade={active}
-          autoPlay={active}
-          playing={active}
-          muted={true}
-          onPause={() => setIsPaused(true)}
-          onPlay={() => setIsPaused(false)}
-          preload="auto"
-          src={mediaUrls ?? undefined}
-          poster={thumbnailUrls ?? undefined}
-          handleActions={active}
-          videoPlaytime={30}
-          onEnded={goNextSlide}
-        />
+        {active ? (
+          <BackgroundVideoPlayer
+            videoId={videoId}
+            withFade={active ? debouncedActive : active}
+            playing={active ? debouncedActive : active}
+            muted={true}
+            onPause={() => setIsPaused(true)}
+            onPlay={() => setIsPaused(false)}
+            preload="auto"
+            src={mediaUrls ?? undefined}
+            poster={thumbnailUrls ?? undefined}
+            handleActions={active ? debouncedActive : active}
+            videoPlaytime={30}
+            onEnded={goNextSlide}
+          />
+        ) : (
+          <VideoWrapper>
+            <VideoPoster resolvedUrls={thumbnailUrls ?? undefined} type="cover" alt="" />
+          </VideoWrapper>
+        )}
       </VideoContainer>
       {active && (
         <CSSTransition in={active} timeout={100} classNames={transitions.names.fade} unmountOnExit>
