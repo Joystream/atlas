@@ -429,7 +429,7 @@ export type GetRevenueShareDividendQueryVariables = Types.Exact<{
 
 export type GetRevenueShareDividendQuery = {
   __typename?: 'Query'
-  getShareDividend: { __typename?: 'GetShareDividendsResult'; dividendJoyAmount: number }
+  getShareDividend: { __typename?: 'GetShareDividendsResult'; dividendJoyAmount: string }
 }
 
 export type GetHistoricalTokenAllocationQueryVariables = Types.Exact<{

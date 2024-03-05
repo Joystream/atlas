@@ -89,6 +89,7 @@ export type GetFullVideoQuery = {
       description?: string | null
       isPublic?: boolean | null
       cumulativeRewardClaimed: string
+      cumulativeRevenue: string
       isCensored: boolean
       language?: string | null
       id: string
@@ -166,6 +167,7 @@ export type GetFullVideoQuery = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
       } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
     }
     license?: {
       __typename?: 'License'
@@ -193,6 +195,7 @@ export type GetFullVideoQuery = {
               followsNum: number
               rewardAccount: string
               channelStateBloatBond: string
+              cumulativeRevenue: string
               ownerMember?: {
                 __typename?: 'Membership'
                 id: string
@@ -244,6 +247,7 @@ export type GetFullVideoQuery = {
                   | { __typename: 'DataObjectTypeVideoThumbnail' }
                   | null
               } | null
+              creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
             }
           }
         | {
@@ -495,6 +499,7 @@ export type GetBasicVideosConnectionQuery = {
           followsNum: number
           rewardAccount: string
           channelStateBloatBond: string
+          cumulativeRevenue: string
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -513,6 +518,7 @@ export type GetBasicVideosConnectionQuery = {
               | { __typename: 'DataObjectTypeVideoThumbnail' }
               | null
           } | null
+          creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
         }
         nft?: { __typename?: 'OwnedNft'; id: string } | null
         thumbnailPhoto?: {
@@ -579,6 +585,7 @@ export type GetBasicVideosConnectionLightweightQuery = {
           followsNum: number
           rewardAccount: string
           channelStateBloatBond: string
+          cumulativeRevenue: string
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -597,6 +604,7 @@ export type GetBasicVideosConnectionLightweightQuery = {
               | { __typename: 'DataObjectTypeVideoThumbnail' }
               | null
           } | null
+          creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
         }
         nft?: { __typename?: 'OwnedNft'; id: string } | null
         thumbnailPhoto?: {
@@ -711,6 +719,7 @@ export type GetFullVideosConnectionQuery = {
           description?: string | null
           isPublic?: boolean | null
           cumulativeRewardClaimed: string
+          cumulativeRevenue: string
           isCensored: boolean
           language?: string | null
           id: string
@@ -788,6 +797,7 @@ export type GetFullVideosConnectionQuery = {
               | { __typename: 'DataObjectTypeVideoThumbnail' }
               | null
           } | null
+          creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
         }
         license?: {
           __typename?: 'License'
@@ -815,6 +825,7 @@ export type GetFullVideosConnectionQuery = {
                   followsNum: number
                   rewardAccount: string
                   channelStateBloatBond: string
+                  cumulativeRevenue: string
                   ownerMember?: {
                     __typename?: 'Membership'
                     id: string
@@ -865,6 +876,10 @@ export type GetFullVideosConnectionQuery = {
                       | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                       | null
+                  } | null
+                  creatorToken?: {
+                    __typename?: 'TokenChannel'
+                    token: { __typename?: 'CreatorToken'; id: string }
                   } | null
                 }
               }
@@ -1115,6 +1130,7 @@ export type GetBasicVideosQuery = {
       followsNum: number
       rewardAccount: string
       channelStateBloatBond: string
+      cumulativeRevenue: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -1133,6 +1149,7 @@ export type GetBasicVideosQuery = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
       } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
     }
     nft?: { __typename?: 'OwnedNft'; id: string } | null
     thumbnailPhoto?: {
@@ -1273,6 +1290,7 @@ export type GetFullVideosQuery = {
       description?: string | null
       isPublic?: boolean | null
       cumulativeRewardClaimed: string
+      cumulativeRevenue: string
       isCensored: boolean
       language?: string | null
       id: string
@@ -1350,6 +1368,7 @@ export type GetFullVideosQuery = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
       } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
     }
     license?: {
       __typename?: 'License'
@@ -1377,6 +1396,7 @@ export type GetFullVideosQuery = {
               followsNum: number
               rewardAccount: string
               channelStateBloatBond: string
+              cumulativeRevenue: string
               ownerMember?: {
                 __typename?: 'Membership'
                 id: string
@@ -1428,6 +1448,7 @@ export type GetFullVideosQuery = {
                   | { __typename: 'DataObjectTypeVideoThumbnail' }
                   | null
               } | null
+              creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
             }
           }
         | {
@@ -1681,6 +1702,7 @@ export type GetMostViewedVideosConnectionQuery = {
           followsNum: number
           rewardAccount: string
           channelStateBloatBond: string
+          cumulativeRevenue: string
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -1699,6 +1721,7 @@ export type GetMostViewedVideosConnectionQuery = {
               | { __typename: 'DataObjectTypeVideoThumbnail' }
               | null
           } | null
+          creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
         }
         nft?: { __typename?: 'OwnedNft'; id: string } | null
         thumbnailPhoto?: {
@@ -1768,6 +1791,7 @@ export type GetCuratedHompageVideosQuery = {
       followsNum: number
       rewardAccount: string
       channelStateBloatBond: string
+      cumulativeRevenue: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -1786,6 +1810,7 @@ export type GetCuratedHompageVideosQuery = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
       } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
     }
     nft?: { __typename?: 'OwnedNft'; id: string } | null
     thumbnailPhoto?: {
