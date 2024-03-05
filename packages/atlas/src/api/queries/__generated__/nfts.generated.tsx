@@ -1,5 +1,5 @@
-import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
+import { gql } from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
 import {
@@ -40,6 +40,7 @@ export type GetNftQuery = {
         followsNum: number
         rewardAccount: string
         channelStateBloatBond: string
+        cumulativeRevenue: string
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -58,6 +59,7 @@ export type GetNftQuery = {
             | { __typename: 'DataObjectTypeVideoThumbnail' }
             | null
         } | null
+        creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
       }
       media?: {
         __typename?: 'StorageDataObject'
@@ -98,6 +100,7 @@ export type GetNftQuery = {
             followsNum: number
             rewardAccount: string
             channelStateBloatBond: string
+            cumulativeRevenue: string
             ownerMember?: {
               __typename?: 'Membership'
               id: string
@@ -149,6 +152,7 @@ export type GetNftQuery = {
                 | { __typename: 'DataObjectTypeVideoThumbnail' }
                 | null
             } | null
+            creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
           }
         }
       | {
@@ -368,6 +372,7 @@ export type GetNftsQuery = {
         followsNum: number
         rewardAccount: string
         channelStateBloatBond: string
+        cumulativeRevenue: string
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -386,6 +391,7 @@ export type GetNftsQuery = {
             | { __typename: 'DataObjectTypeVideoThumbnail' }
             | null
         } | null
+        creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
       }
       media?: {
         __typename?: 'StorageDataObject'
@@ -426,6 +432,7 @@ export type GetNftsQuery = {
             followsNum: number
             rewardAccount: string
             channelStateBloatBond: string
+            cumulativeRevenue: string
             ownerMember?: {
               __typename?: 'Membership'
               id: string
@@ -477,6 +484,7 @@ export type GetNftsQuery = {
                 | { __typename: 'DataObjectTypeVideoThumbnail' }
                 | null
             } | null
+            creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
           }
         }
       | {
@@ -701,6 +709,7 @@ export type GetNftsConnectionQuery = {
             followsNum: number
             rewardAccount: string
             channelStateBloatBond: string
+            cumulativeRevenue: string
             avatarPhoto?: {
               __typename?: 'StorageDataObject'
               id: string
@@ -719,6 +728,7 @@ export type GetNftsConnectionQuery = {
                 | { __typename: 'DataObjectTypeVideoThumbnail' }
                 | null
             } | null
+            creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
           }
           media?: {
             __typename?: 'StorageDataObject'
@@ -759,6 +769,7 @@ export type GetNftsConnectionQuery = {
                 followsNum: number
                 rewardAccount: string
                 channelStateBloatBond: string
+                cumulativeRevenue: string
                 ownerMember?: {
                   __typename?: 'Membership'
                   id: string
@@ -809,6 +820,10 @@ export type GetNftsConnectionQuery = {
                     | { __typename: 'DataObjectTypeVideoSubtitle' }
                     | { __typename: 'DataObjectTypeVideoThumbnail' }
                     | null
+                } | null
+                creatorToken?: {
+                  __typename?: 'TokenChannel'
+                  token: { __typename?: 'CreatorToken'; id: string }
                 } | null
               }
             }
@@ -1058,6 +1073,7 @@ export type GetFeaturedNftsVideosQuery = {
         followsNum: number
         rewardAccount: string
         channelStateBloatBond: string
+        cumulativeRevenue: string
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -1076,6 +1092,7 @@ export type GetFeaturedNftsVideosQuery = {
             | { __typename: 'DataObjectTypeVideoThumbnail' }
             | null
         } | null
+        creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
       }
       nft?: { __typename?: 'OwnedNft'; id: string } | null
       thumbnailPhoto?: {
@@ -1109,6 +1126,7 @@ export type GetFeaturedNftsVideosQuery = {
             followsNum: number
             rewardAccount: string
             channelStateBloatBond: string
+            cumulativeRevenue: string
             ownerMember?: {
               __typename?: 'Membership'
               id: string
@@ -1160,6 +1178,7 @@ export type GetFeaturedNftsVideosQuery = {
                 | { __typename: 'DataObjectTypeVideoThumbnail' }
                 | null
             } | null
+            creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
           }
         }
       | {
