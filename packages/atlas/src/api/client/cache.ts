@@ -85,8 +85,9 @@ const getChannelKeyArgs = (args: Partial<QueryChannelsConnectionArgs> | null) =>
   const sortingArray = args?.orderBy != null ? (Array.isArray(args.orderBy) ? args.orderBy : [args.orderBy]) : []
   const sorting = stringifyValue(sortingArray)
   const titleContains = args?.where?.title_contains || ''
+  const titleContainsInsensitive = args?.where?.title_containsInsensitive || ''
 
-  return `${language}:${idIn}:${sorting}:${titleContains}`
+  return `${language}:${idIn}:${sorting}:${titleContains}:${titleContainsInsensitive}`
 }
 
 const getCommentKeyArgs = (

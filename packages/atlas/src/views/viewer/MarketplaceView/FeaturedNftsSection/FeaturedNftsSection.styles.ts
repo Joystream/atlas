@@ -17,10 +17,21 @@ export const PreviewWrapper = styled.div`
   display: flex;
   padding: ${sizes(5)};
   align-items: center;
-  justify-content: center;
   height: 164px;
   background: ${cVar('colorBackgroundMutedAlpha')};
   box-shadow: ${cVar('effectDividersBottom')}, ${cVar('effectDividersTop')};
   width: 100%;
   margin-bottom: ${sizes(5)};
+
+  p {
+    text-align: center;
+  }
+
+  > * {
+    width: 100%;
+  }
+
+  .tile-container > * {
+    grid-template-columns: 165px 1fr;
+  }
 `

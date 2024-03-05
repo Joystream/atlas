@@ -15,9 +15,7 @@ import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
 import { useAuthStore } from '@/providers/auth/auth.store'
-import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user/user.hooks'
-import { ConsoleLogger } from '@/utils/logs'
 
 import { FollowedChannels } from './FollowedChannels'
 
@@ -58,18 +56,11 @@ export const viewerNavItems = [
 ]
 export const SidenavViewer: FC = () => {
   const [expanded, setExpanded] = useState(false)
-  const followedChannels = usePersonalDataStore((state) => state.followedChannels)
-  const unFollow = usePersonalDataStore((state) => state.actions.unfollowChannel)
   const { activeMembership } = useUser()
   const {
     actions: { setAuthModalOpenName },
   } = useAuthStore()
   const hasAtLeastOneChannel = !!activeMembership?.channels.length && activeMembership?.channels.length >= 1
-
-  const handleChannelNotFound = (id: string) => {
-    ConsoleLogger.warn(`Followed channel not found, removing id: ${id}`)
-    unFollow(id)
-  }
 
   const { isLoggedIn } = useUser()
 
@@ -103,14 +94,7 @@ export const SidenavViewer: FC = () => {
       logoNode={<AppLogo variant="full" height={32} width={undefined} />}
       logoLinkUrl={absoluteRoutes.viewer.index()}
       items={viewerNavItems}
-      additionalContent={
-        <FollowedChannels
-          onClick={() => setExpanded(false)}
-          onChannelNotFound={handleChannelNotFound}
-          followedChannels={followedChannels}
-          expanded={expanded}
-        />
-      }
+      additionalContent={<FollowedChannels onClick={() => setExpanded(false)} expanded={expanded} />}
       buttonsContent={buttonsContent}
     />
   )

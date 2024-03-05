@@ -1,5 +1,5 @@
-import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
+import { gql } from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
 import {
@@ -473,6 +473,7 @@ export type GetBasicVideosConnectionQuery = {
         __typename?: 'Video'
         id: string
         title?: string | null
+        description?: string | null
         viewsNum: number
         createdAt: Date
         duration?: number | null
@@ -556,6 +557,7 @@ export type GetBasicVideosConnectionLightweightQuery = {
         __typename?: 'Video'
         id: string
         title?: string | null
+        description?: string | null
         viewsNum: number
         createdAt: Date
         duration?: number | null
@@ -1091,6 +1093,7 @@ export type GetBasicVideosQuery = {
     __typename?: 'Video'
     id: string
     title?: string | null
+    description?: string | null
     viewsNum: number
     createdAt: Date
     duration?: number | null
@@ -1656,6 +1659,7 @@ export type GetMostViewedVideosConnectionQuery = {
         __typename?: 'Video'
         id: string
         title?: string | null
+        description?: string | null
         viewsNum: number
         createdAt: Date
         duration?: number | null
@@ -1742,6 +1746,7 @@ export type GetCuratedHompageVideosQuery = {
     __typename?: 'Video'
     id: string
     title?: string | null
+    description?: string | null
     viewsNum: number
     createdAt: Date
     duration?: number | null
