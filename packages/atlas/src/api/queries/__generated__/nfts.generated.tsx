@@ -1,5 +1,5 @@
-import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
+import { gql } from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
 import {
@@ -26,6 +26,7 @@ export type GetNftQuery = {
       __typename?: 'Video'
       id: string
       title?: string | null
+      description?: string | null
       viewsNum: number
       createdAt: Date
       duration?: number | null
@@ -354,6 +355,7 @@ export type GetNftsQuery = {
       __typename?: 'Video'
       id: string
       title?: string | null
+      description?: string | null
       viewsNum: number
       createdAt: Date
       duration?: number | null
@@ -687,6 +689,7 @@ export type GetNftsConnectionQuery = {
           __typename?: 'Video'
           id: string
           title?: string | null
+          description?: string | null
           viewsNum: number
           createdAt: Date
           duration?: number | null
@@ -1026,6 +1029,7 @@ export type GetFeaturedNftsVideosQuery = {
       __typename?: 'Video'
       id: string
       title?: string | null
+      description?: string | null
       viewsNum: number
       createdAt: Date
       duration?: number | null

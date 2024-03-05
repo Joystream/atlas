@@ -18,6 +18,7 @@ export type GetVideoHeroQuery = {
       __typename?: 'Video'
       id: string
       title?: string | null
+      description?: string | null
       viewsNum: number
       createdAt: Date
       duration?: number | null
