@@ -138,6 +138,7 @@ export const SearchResults: FC<SearchResultsProps> = memo(({ query }) => {
                       direction={smMatch ? 'horizontal' : 'vertical'}
                       detailsVariant="withChannelName"
                       id={video.id}
+                      showDescription={smMatch}
                       key={idx}
                     />
                   )) ?? []),
@@ -199,11 +200,11 @@ const ChannelResultTile = ({
         <Text variant="h500" as="h3">
           {channel?.title}
         </Text>
-        <Text variant="t300" as="p" color="colorText">
+        <Text variant="t200" as="p" color="colorText">
           {channel?.followsNum ?? '-'} followers
         </Text>
         {isHorizontal && (
-          <Text variant="t300" as="p" color="colorText" clampAfterLine={2}>
+          <Text variant="t200" as="p" color="colorText" clampAfterLine={2}>
             {channel?.description}
           </Text>
         )}
@@ -287,6 +288,6 @@ export const ChannelCardArticle = styled.article<{ activeDisabled?: boolean }>`
 const Container = styled.div<{ isHorizontal: boolean }>`
   display: grid;
   grid-template-columns: ${(props) => (props.isHorizontal ? 'min(40%, 360px) 1fr auto' : '1fr')};
-  grid-column-gap: ${sizes(8)};
+  grid-column-gap: ${sizes(4)};
   align-items: center;
 `

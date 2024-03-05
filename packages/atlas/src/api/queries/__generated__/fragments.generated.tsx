@@ -450,6 +450,7 @@ export type BasicVideoFieldsFragment = {
   __typename?: 'Video'
   id: string
   title?: string | null
+  description?: string | null
   viewsNum: number
   createdAt: Date
   duration?: number | null
@@ -1215,6 +1216,7 @@ export type FullNftFieldsFragment = {
     __typename?: 'Video'
     id: string
     title?: string | null
+    description?: string | null
     viewsNum: number
     createdAt: Date
     duration?: number | null
@@ -2495,6 +2497,7 @@ export const BasicVideoFieldsFragmentDoc = gql`
   fragment BasicVideoFields on Video {
     id
     title
+    description
     viewsNum
     createdAt
     duration

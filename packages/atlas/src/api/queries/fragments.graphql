@@ -157,6 +157,7 @@ fragment SubtitlesFields on VideoSubtitle {
 fragment BasicVideoFields on Video {
   id
   title
+  description
   viewsNum # CHANGE: Instead of `views` (which is now a One-to-Many field)
   createdAt
   duration

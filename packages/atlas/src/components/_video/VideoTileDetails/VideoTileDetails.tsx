@@ -46,6 +46,7 @@ export type VideoTileDetailsProps = {
   type?: 'video' | 'playlist'
   playlistUrl?: string
   isPublisher?: boolean
+  description?: string
 }
 
 export const VideoTileDetails: FC<VideoTileDetailsProps> = ({
@@ -55,6 +56,7 @@ export const VideoTileDetails: FC<VideoTileDetailsProps> = ({
   videoHref,
   linkState,
   views,
+  description,
   createdAt,
   channelTitle,
   channelHref,
@@ -140,6 +142,9 @@ export const VideoTileDetails: FC<VideoTileDetailsProps> = ({
                   )}
                 </>
               )}
+              <Text variant="t200" as="p" color="colorText" clampAfterLine={2}>
+                {description}
+              </Text>
             </VideoMetaContainer>
           </VideoInfoContainer>
         </CSSTransition>

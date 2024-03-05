@@ -37,6 +37,7 @@ export const VideoTile: FC<VideoTileProps> = memo(
     channelHref,
     onChannelAvatarClick,
     kebabMenuItems,
+    description,
     onClick,
     slots,
     videoHref,
@@ -117,6 +118,7 @@ export const VideoTile: FC<VideoTileProps> = memo(
           type={type}
           playlistUrl={playlistUrl}
           isPublisher={isPublisher}
+          description={direction === 'horizontal' ? description : undefined}
         />
       </VideoTileContainer>
     )

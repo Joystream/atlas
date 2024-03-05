@@ -18,10 +18,18 @@ type VideoTileViewerProps = {
   onClick?: () => void
   detailsVariant?: VideoDetailsVariant
   direction?: 'vertical' | 'horizontal'
+  showDescription?: boolean
   className?: string
 }
 
-export const VideoTileViewer: FC<VideoTileViewerProps> = ({ id, onClick, detailsVariant, direction, className }) => {
+export const VideoTileViewer: FC<VideoTileViewerProps> = ({
+  id,
+  onClick,
+  detailsVariant,
+  direction,
+  className,
+  showDescription,
+}) => {
   const navigate = useNavigate()
   const { video, loading } = useBasicVideo(id ?? '', {
     skip: !id,
@@ -88,6 +96,7 @@ export const VideoTileViewer: FC<VideoTileViewerProps> = ({ id, onClick, details
       videoTitle={video?.title}
       kebabMenuItems={contextMenuItems}
       direction={direction}
+      description={showDescription ? video?.description ?? undefined : undefined}
     />
   )
 }
