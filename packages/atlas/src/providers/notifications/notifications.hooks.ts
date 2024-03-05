@@ -226,6 +226,8 @@ const parseNotificationType = (notificationType: NotificationType): Notification
     case 'ChannelVerified':
     case 'ChannelSuspended':
       return toNotificationData(notificationType, {})
+    default:
+      throw new Error('Unsuporrted notification type')
   }
 }
 

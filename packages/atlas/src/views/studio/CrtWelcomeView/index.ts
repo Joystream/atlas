@@ -1,1 +1,1 @@
-export * from './CrtWelcomeView'
+export { CrtWelcomeView } from './CrtWelcomeView'
