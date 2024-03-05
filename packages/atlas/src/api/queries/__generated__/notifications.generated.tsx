@@ -79,6 +79,15 @@ export type GetNotificationsConnectionQuery = {
               videoId: string
               videoTitle: string
             }
+          | { __typename: 'CreatorTokenIssued' }
+          | { __typename: 'CreatorTokenMarketBurn' }
+          | { __typename: 'CreatorTokenMarketMint' }
+          | { __typename: 'CreatorTokenMarketStarted' }
+          | { __typename: 'CreatorTokenRevenueShareEnded' }
+          | { __typename: 'CreatorTokenRevenueSharePlanned' }
+          | { __typename: 'CreatorTokenRevenueShareStarted' }
+          | { __typename: 'CreatorTokenSaleMint' }
+          | { __typename: 'CreatorTokenSaleStarted' }
           | { __typename: 'DirectChannelPaymentByMember'; amount: string; payerId: string; payerHandle: string }
           | {
               __typename: 'HigherBidPlaced'
@@ -833,6 +842,7 @@ export type GetNftHistoryQuery = {
                   }
                 }
           }
+        | { __typename?: 'ChannelAssetsDeletedByModeratorEventData' }
         | { __typename?: 'ChannelCreatedEventData' }
         | { __typename?: 'ChannelFundsWithdrawnEventData' }
         | { __typename?: 'ChannelPaymentMadeEventData' }
@@ -842,6 +852,13 @@ export type GetNftHistoryQuery = {
         | { __typename?: 'CommentCreatedEventData' }
         | { __typename?: 'CommentReactionEventData' }
         | { __typename?: 'CommentTextUpdatedEventData' }
+        | { __typename?: 'CreatorTokenIssuedEventData' }
+        | { __typename?: 'CreatorTokenMarketBurnEventData' }
+        | { __typename?: 'CreatorTokenMarketMintEventData' }
+        | { __typename?: 'CreatorTokenMarketStartedEventData' }
+        | { __typename?: 'CreatorTokenRevenueSplitIssuedEventData' }
+        | { __typename?: 'CreatorTokenSaleMintEventData' }
+        | { __typename?: 'CreatorTokenSaleStartedEventData' }
         | {
             __typename?: 'EnglishAuctionSettledEventData'
             previousNftOwner:
@@ -1430,6 +1447,7 @@ export type GetNftHistoryQuery = {
                   }
                 }
           }
+        | { __typename?: 'VideoAssetsDeletedByModeratorEventData' }
         | { __typename?: 'VideoCreatedEventData' }
         | { __typename?: 'VideoReactionEventData' }
     }
@@ -2176,6 +2194,7 @@ export type GetNftActivitiesQuery = {
                       }
                     }
               }
+            | { __typename?: 'ChannelAssetsDeletedByModeratorEventData' }
             | { __typename?: 'ChannelCreatedEventData' }
             | { __typename?: 'ChannelFundsWithdrawnEventData' }
             | { __typename?: 'ChannelPaymentMadeEventData' }
@@ -2185,6 +2204,13 @@ export type GetNftActivitiesQuery = {
             | { __typename?: 'CommentCreatedEventData' }
             | { __typename?: 'CommentReactionEventData' }
             | { __typename?: 'CommentTextUpdatedEventData' }
+            | { __typename?: 'CreatorTokenIssuedEventData' }
+            | { __typename?: 'CreatorTokenMarketBurnEventData' }
+            | { __typename?: 'CreatorTokenMarketMintEventData' }
+            | { __typename?: 'CreatorTokenMarketStartedEventData' }
+            | { __typename?: 'CreatorTokenRevenueSplitIssuedEventData' }
+            | { __typename?: 'CreatorTokenSaleMintEventData' }
+            | { __typename?: 'CreatorTokenSaleStartedEventData' }
             | {
                 __typename?: 'EnglishAuctionSettledEventData'
                 previousNftOwner:
@@ -3038,6 +3064,7 @@ export type GetNftActivitiesQuery = {
                       }
                     }
               }
+            | { __typename?: 'VideoAssetsDeletedByModeratorEventData' }
             | { __typename?: 'VideoCreatedEventData' }
             | { __typename?: 'VideoReactionEventData' }
         }
