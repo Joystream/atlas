@@ -36,10 +36,10 @@ const ChannelNotificationsView = lazy(() =>
   }))
 )
 const CrtDashboard = lazy(() =>
-    import('@/views/studio/CrtDashboard').then((module) => ({ default: module.CrtWelcomeView }))
+  import('@/views/studio/CrtDashboard').then((module) => ({ default: module.CrtDashboard }))
 )
 const CrtTokenEditView = lazy(() =>
-  import('@/views/studio/CrtTokenEditView').then((module) => ({ default: module.CrtPreviewEditView }))
+  import('@/views/studio/CrtTokenEditView').then((module) => ({ default: module.CrtTokenEditView }))
 )
 const CrtWelcomeView = lazy(() =>
   import('@/views/studio/CrtWelcomeView').then((module) => ({ default: module.CrtWelcomeView }))
@@ -200,35 +200,35 @@ const _StudioLayout = () => {
                   element={<PrivateRoute element={<MyVideosView />} showWhen={channelSet} redirectTo={SIGN_IN_ROUTE} />}
                 />
                 <Route
-                    path={relativeRoutes.studio.crt()}
-                    element={
-                      <PrivateRoute
-                          isLoadingAuthData={false}
-                          element={<CrtWelcomeView />}
-                          isAuth={channelSet && !hasToken}
-                          redirectTo={!channelSet ? ENTRY_POINT_ROUTE : absoluteRoutes.studio.crtDashboard()}
-                      />
-                    }
+                  path={relativeRoutes.studio.crt()}
+                  element={
+                    <PrivateRoute
+                      isLoadingAuthData={false}
+                      element={<CrtWelcomeView />}
+                      showWhen={channelSet && !hasToken}
+                      redirectTo={!channelSet ? ENTRY_POINT_ROUTE : absoluteRoutes.studio.crtDashboard()}
+                    />
+                  }
                 />
                 <Route
-                    path={relativeRoutes.studio.crtDashboard()}
-                    element={
-                      <PrivateRoute
-                          element={<CrtDashboard />}
-                          showWhen={channelSet && hasToken}
-                          redirectTo={!channelSet ? ENTRY_POINT_ROUTE : absoluteRoutes.studio.crt()}
-                      />
-                    }
+                  path={relativeRoutes.studio.crtDashboard()}
+                  element={
+                    <PrivateRoute
+                      element={<CrtDashboard />}
+                      showWhen={channelSet && hasToken}
+                      redirectTo={!channelSet ? ENTRY_POINT_ROUTE : absoluteRoutes.studio.crt()}
+                    />
+                  }
                 />
                 <Route
-                    path={relativeRoutes.studio.crtTokenEdit()}
-                    element={
-                      <PrivateRoute
-                          element={<CrtTokenEditView />}
-                          showWhen={channelSet && hasToken}
-                          redirectTo={!channelSet ? ENTRY_POINT_ROUTE : absoluteRoutes.studio.crt()}
-                      />
-                    }
+                  path={relativeRoutes.studio.crtTokenEdit()}
+                  element={
+                    <PrivateRoute
+                      element={<CrtTokenEditView />}
+                      showWhen={channelSet && hasToken}
+                      redirectTo={!channelSet ? ENTRY_POINT_ROUTE : absoluteRoutes.studio.crt()}
+                    />
+                  }
                 />
                 <Route
                   path={relativeRoutes.studio.channelNotifications()}

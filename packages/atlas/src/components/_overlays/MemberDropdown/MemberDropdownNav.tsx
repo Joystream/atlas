@@ -283,7 +283,7 @@ type ListItemOptionsProps = {
   hasAtLeastOneChannel?: boolean
   closeDropdown?: () => void
   unseenNotificationsCounts?: UseNotifications['unseenNotificationsCounts']
-  listItems: [ListItemProps, ListItemProps] | [ListItemProps]
+  listItems: ListItemProps[]
 }
 const ListItemOptions: FC<ListItemOptionsProps> = ({
   publisher,
