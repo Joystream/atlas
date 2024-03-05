@@ -64,7 +64,7 @@ export const VideoPicker = ({ setSelectedVideo, selectedVideo, className }: Vide
       />
       {data?.videos[0] ? (
         <ThumbnailContainer>
-          <ThumbnailImage resolvedUrls={data?.videos[0].thumbnailPhoto?.resolvedUrls} />
+          <ThumbnailImage resolvedUrls={data?.videos[0].thumbnailPhoto?.resolvedUrls} type="thumbnail" />
           <ThumbnailOverlay onClick={() => setSelectedVideo(null)}>
             <SvgActionTrash />
             <Text variant="t300" as="p">

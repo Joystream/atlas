@@ -152,7 +152,7 @@ export const ClaimShareModal = ({ onClose, show, tokenId }: ClaimShareModalProps
               <SkeletonLoader height={30} width={90} />
             ) : (
               <NumberFormat
-                value={dividendData?.getShareDividend.dividendJoyAmount ?? 0}
+                value={new BN(dividendData?.getShareDividend.dividendJoyAmount ?? 0)}
                 variant="h300"
                 as="p"
                 withDenomination="before"

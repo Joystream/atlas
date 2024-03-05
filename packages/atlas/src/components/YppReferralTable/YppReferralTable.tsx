@@ -3,7 +3,6 @@ import { useMemo } from 'react'
 import { FlexBox } from '@/components/FlexBox'
 import { Table, TableProps } from '@/components/Table'
 import { DateBlockCell, LoadingChannelCell } from '@/components/Table/Table.cells'
-import { OverflowTableWrapper } from '@/components/Table/Table.styles'
 import { Text } from '@/components/Text'
 import { RightAlignText, TierWrapper } from '@/components/YppReferralTable/YppReferralTable.styles'
 import { getTierIcon } from '@/components/_ypp/YppDashboardTier'
@@ -29,17 +28,20 @@ export const YppReferralTable = ({ isLoading, data }: YppReferralTableProps) => 
   const mappedData: TableProps['data'] = useMemo(
     () =>
       data.map((entry) => ({
-          date: <DateBlockCell type="date" date={entry.date} />,
-          channel: <LoadingChannelCell channelId={entry.channelId} />,
+        date: <DateBlockCell type="date" date={entry.date} />,
+        channel: <LoadingChannelCell channelId={entry.channelId} />,
         tier: <Tier yppStatus={entry.status} />,
         reward: <Reward yppStatus={entry.status} signupTimestamp={entry.date.getTime()} />,
       })),
     [data]
   )
   return (
-    <OverflowTableWrapper minWidth={700}>
-      <Table title="Channels you referred" columns={COLUMNS} data={isLoading ? tableLoadingData : mappedData} />
-    </OverflowTableWrapper>
+    <Table
+      minWidth={700}
+      title="Channels you referred"
+      columns={COLUMNS}
+      data={isLoading ? tableLoadingData : mappedData}
+    />
   )
 }
 

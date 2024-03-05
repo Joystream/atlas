@@ -4,7 +4,7 @@ import { ReactNode } from 'react'
 
 import { useBasicChannel } from '@/api/hooks/channel'
 import { useMemberships } from '@/api/hooks/membership'
-import { GetExtendedBasicChannelsQuery } from '@/api/queries/__generated__/channels.generated'
+import { GetBasicChannelsQuery } from '@/api/queries/__generated__/channels.generated'
 import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { Avatar } from '@/components/Avatar'
 import { DateTimeBlock } from '@/components/DateTimeBlock'
@@ -23,12 +23,12 @@ import { SentryLogger } from '@/utils/logs'
 
 export const DateBlockCell = DateTimeBlock
 
-export const ChannelCell = ({ channel }: { channel?: GetExtendedBasicChannelsQuery['extendedChannels'][number] }) => {
+export const ChannelCell = ({ channel }: { channel?: GetBasicChannelsQuery['channels'][number] }) => {
   return (
-    <StyledLink to={absoluteRoutes.viewer.channel(channel?.channel.id)}>
+    <StyledLink to={absoluteRoutes.viewer.channel(channel?.id)}>
       <SenderItem
-        nodeStart={<Avatar assetUrls={channel?.channel.avatarPhoto?.resolvedUrls} size={32} />}
-        label={channel?.channel.title}
+        nodeStart={<Avatar assetUrls={channel?.avatarPhoto?.resolvedUrls} size={32} />}
+        label={channel?.title}
         isInteractive={false}
       />
     </StyledLink>
@@ -36,7 +36,7 @@ export const ChannelCell = ({ channel }: { channel?: GetExtendedBasicChannelsQue
 }
 
 export const LoadingChannelCell = ({ channelId }: { channelId: string }) => {
-  const { extendedChannel, loading } = useBasicChannel(channelId, {
+  const { channel, loading } = useBasicChannel(channelId, {
     onError: (error) => SentryLogger.error('Failed to fetch memberships', 'ActiveUserProvider', error),
   })
 
@@ -49,7 +49,7 @@ export const LoadingChannelCell = ({ channelId }: { channelId: string }) => {
     )
   }
 
-  return <ChannelCell channel={extendedChannel} />
+  return <ChannelCell channel={channel} />
 }
 
 export const MemberCell = ({
