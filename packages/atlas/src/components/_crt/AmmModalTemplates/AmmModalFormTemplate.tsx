@@ -47,7 +47,7 @@ export const AmmModalFormTemplate = ({
             <FormField error={error}>
               <TokenInput
                 value={field.value}
-                onChange={field.onChange}
+                onChange={(value) => field.onChange(Math.round(value ?? 0))}
                 placeholder="0"
                 nodeEnd={
                   pricePerUnit ? (

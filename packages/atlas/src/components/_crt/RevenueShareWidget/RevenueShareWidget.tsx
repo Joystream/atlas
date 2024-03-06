@@ -2,7 +2,7 @@ import BN from 'bn.js'
 import { ReactElement, useCallback, useState } from 'react'
 
 import { GetTokenRevenueSharesQuery } from '@/api/queries/__generated__/creatorTokens.generated'
-import { SvgActionCalendar, SvgJoyTokenMonochrome16 } from '@/assets/icons'
+import { SvgActionCalendar, SvgActionLock, SvgJoyTokenMonochrome16 } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
 import { FlexBox } from '@/components/FlexBox'
 import { Information } from '@/components/Information'
@@ -53,19 +53,19 @@ export const RevenueShareWidget = ({ tokenName, tokenId, revenueShare, memberId 
     switch (status) {
       case 'active':
         return (
-          <Button fullWidth onClick={() => setOpenClaimShareModal(true)}>
-            Claim your share
-          </Button>
+          <FlexBox justifyContent="end">
+            <Button onClick={() => setOpenClaimShareModal(true)}>Claim your share</Button>
+          </FlexBox>
         )
       case 'unlock':
         return (
-          <Button fullWidth onClick={handleUnlockStake}>
-            Unlock tokens
-          </Button>
+          <FlexBox justifyContent="end">
+            <Button onClick={handleUnlockStake}>Unlock tokens</Button>
+          </FlexBox>
         )
       case 'upcoming':
         return (
-          <FlexBox alignItems="center">
+          <FlexBox width="100%" justifyContent="end" alignItems="center">
             <SvgActionCalendar />
             <Text variant="t200-strong" as="p">
               Upcoming
@@ -75,8 +75,8 @@ export const RevenueShareWidget = ({ tokenName, tokenId, revenueShare, memberId 
         )
       case 'locked':
         return (
-          <FlexBox alignItems="center">
-            <SvgActionCalendar />
+          <FlexBox width="100%" justifyContent="end" alignItems="center">
+            <SvgActionLock />
             <Text variant="t200-strong" as="p">
               Locked
             </Text>
@@ -97,7 +97,7 @@ export const RevenueShareWidget = ({ tokenName, tokenId, revenueShare, memberId 
         <ClaimShareModal onClose={() => setOpenClaimShareModal(false)} show={openClaimShareModal} tokenId={tokenId} />
       )}
 
-      <Wrapper isActive={['active', 'unlocked'].includes(status)} gap={2} alignItems="center">
+      <Wrapper isActive={['active', 'unlock'].includes(status)} gap={2} alignItems="center">
         <InfoBox>
           <Detail title="TOKEN NAME">
             <FlexBox>
@@ -119,7 +119,16 @@ export const RevenueShareWidget = ({ tokenName, tokenId, revenueShare, memberId 
           </Detail>
 
           <Detail title="YOUR TOKENS">
-            <NumberFormat value={+(tokenBalance ?? 0)} as="p" variant="t300" withToken customTicker={`$${tokenName}`} />
+            <FlexBox alignItems="center">
+              <NumberFormat
+                value={+(tokenBalance ?? 0)}
+                as="p"
+                variant="t300"
+                withToken
+                customTicker={`$${tokenName}`}
+              />
+              {['locked', 'unlock'].includes(status) ? <SvgActionLock /> : null}
+            </FlexBox>
           </Detail>
 
           <Detail

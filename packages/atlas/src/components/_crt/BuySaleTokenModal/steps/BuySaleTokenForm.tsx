@@ -111,7 +111,7 @@ export const BuySaleTokenForm = ({ tokenId, setPrimaryButtonProps, onSubmit }: B
         <FormField label="Tokens to spend">
           <TokenInput
             value={tokens}
-            onChange={setTokens}
+            onChange={(number) => setTokens(Math.floor(number ?? 0))}
             placeholder="0"
             nodeEnd={
               <FlexBox gap={2} alignItems="baseline">
