@@ -1,3 +1,4 @@
+import { useApolloClient } from '@apollo/client'
 import styled from '@emotion/styled'
 import BN from 'bn.js'
 import { useNavigate } from 'react-router'
@@ -39,6 +40,7 @@ export const RevenueShareParticipationWidget = ({
   const { displaySnackbar } = useSnackbar()
   const handleTransaction = useTransaction()
   const navigate = useNavigate()
+  const client = useApolloClient()
   const memberStake = revenueShare.stakers.find((staker) => staker.account.member.id === memberId)
   const status = revenueShare
     ? getRevenueShareStatusForMember({
@@ -70,6 +72,13 @@ export const RevenueShareParticipationWidget = ({
           actionText: 'Go to my portfolio',
           onActionClick: () => navigate(absoluteRoutes.viewer.portfolio()),
         })
+        client.refetchQueries({ include: 'active' }).catch(() => {
+          displaySnackbar({
+            title: 'Failed to refersh data',
+            description: 'Please reload your page to get latest data.',
+            iconType: 'error',
+          })
+        })
       },
       onError: () => {
         SentryLogger.error('Failed to exit revenue share', 'RevenueShareParticipationWidget', {
@@ -96,13 +105,13 @@ export const RevenueShareParticipationWidget = ({
       case 'unlock':
         return (
           <Button size="small" onClick={handleExitRevenueShare}>
-            Claim tokens
+            Recover tokens
           </Button>
         )
       case 'locked':
         return <StyledPill icon={<SvgActionCheck />} size="large" label="Staked your tokens" />
       case 'past':
-        return <StyledPill icon={<SvgActionCheck />} size="large" label="Tokens claimed" />
+        return <StyledPill icon={<SvgActionCheck />} size="large" label="Tokens recovered" />
       case 'inactive':
       case 'finalized':
         return <div />
@@ -191,7 +200,7 @@ export const RevenueShareProgress = ({ revenueShare, hasEnded, token }: RevenueS
 
       <ProgressBar
         color={hasEnded ? cVar('colorCoreNeutral700Lighten') : cVar('colorBackgroundPrimary')}
-        progress={Math.round((revenueShare.stakers.length / token.accountsNum) * 100)}
+        progress={new BN(revenueShare.claimed).muln(100).div(new BN(revenueShare.allocation)).toNumber()}
       />
     </FlexBox>
   )

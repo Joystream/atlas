@@ -31,7 +31,7 @@ export const Content = styled.div<{ withButton?: boolean }>`
     align-items: center;
     ${(props) => (props.withButton ? 'grid-template-columns: 1fr auto;' : '')}
   }
-  
+
   ${media.lg} {
     gap: 0;
   }

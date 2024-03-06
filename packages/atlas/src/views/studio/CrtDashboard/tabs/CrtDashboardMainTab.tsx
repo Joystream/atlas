@@ -56,7 +56,7 @@ const steps: ProgressWidgetProps['steps'] = [
 ]
 
 export const CrtDashboardMainTab = ({ token, onTabChange, hasOpenedMarket }: CrtDashboardMainTabProps) => {
-  const { memberId } = useUser()
+  const { memberId, activeChannel } = useUser()
   const smMatch = useMediaMatch('sm')
   const { data, loading: loadingTokenHolders } = useGetCreatorTokenHoldersQuery({
     variables: {
@@ -174,7 +174,7 @@ export const CrtDashboardMainTab = ({ token, onTabChange, hasOpenedMarket }: Crt
           }}
           customNode={
             <NumberFormat
-              value={69}
+              value={new BN(activeChannel?.cumulativeRevenue ?? 0)}
               as="span"
               icon={<StyledSvgJoyTokenMonochrome24 />}
               withDenomination

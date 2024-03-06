@@ -23,9 +23,9 @@ export type SellTokenModalProps = {
   show: boolean
 }
 
-export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) => {
+export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenModalProps) => {
   const [step, setStep] = useState<'form' | 'summary'>('form')
-  const { control, watch, handleSubmit, formState } = useForm<{ tokenAmount: number }>()
+  const { control, watch, handleSubmit, formState, reset } = useForm<{ tokenAmount: number }>()
   const { memberId } = useUser()
   const tokenAmount = watch('tokenAmount') || 0
   const { joystream, proxyCallback } = useJoystream()
@@ -45,11 +45,17 @@ export const SellTokenModal = ({ tokenId, onClose, show }: SellTokenModalProps) 
   const title = data?.creatorTokenById?.symbol ?? 'N/A'
   const { tokenBalance: userTokenBalance } = useGetTokenBalance(tokenId)
 
+  const onClose = useCallback(() => {
+    reset({ tokenAmount: 0 })
+    setStep('form')
+    _onClose()
+  }, [_onClose, reset])
+
   const calculateSlippageAmount = useCallback(
     (amount: number) => {
       const currentAmm = data?.creatorTokenById?.ammCurves.find((amm) => !amm.finalized)
       return calcSellMarketPricePerToken(
-        currentAmm?.mintedByAmm,
+        currentAmm ? +currentAmm.mintedByAmm - +currentAmm.burnedByAmm : undefined,
         currentAmm?.ammSlopeParameter,
         currentAmm?.ammInitPrice,
         amount
