@@ -66,6 +66,10 @@ export const MarketDrawer = ({ show, onClose, tokenName }: CrtMarketSaleViewProp
     setActiveStep(MARKET_STEPS.market)
   }, [])
 
+  const onSuccess = useCallback(() => {
+    setShowSuccessModal(true)
+  }, [])
+
   const stepContent = () => {
     switch (activeStep) {
       case MARKET_STEPS.market:
@@ -89,10 +93,7 @@ export const MarketDrawer = ({ show, onClose, tokenName }: CrtMarketSaleViewProp
             setSecondaryButtonProps={setSecondaryButtonProps}
             handleBackClick={handleBackClick}
             handleCloseModal={onClose}
-            onSuccess={() => {
-              setShowSuccessModal(true)
-              onClose()
-            }}
+            onSuccess={onSuccess}
           />
         )
     }
@@ -140,6 +141,7 @@ export const MarketDrawer = ({ show, onClose, tokenName }: CrtMarketSaleViewProp
           onClick: () => {
             client.refetchQueries({ include: 'active' })
             setShowSuccessModal(false)
+            onClose()
           },
         }}
       />
