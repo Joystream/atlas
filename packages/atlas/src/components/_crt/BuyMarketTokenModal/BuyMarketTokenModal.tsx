@@ -39,7 +39,7 @@ enum BUY_MARKET_TOKEN_STEPS {
   success,
 }
 
-export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModalProps) => {
+export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySaleTokenModalProps) => {
   const { memberId } = useUser()
   const navigate = useNavigate()
   const [activeStep, setActiveStep] = useState(BUY_MARKET_TOKEN_STEPS.form)
@@ -78,6 +78,12 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
 
+  const onClose = useCallback(() => {
+    reset({ tokenAmount: 0 })
+    setActiveStep(BUY_MARKET_TOKEN_STEPS.form)
+    _onClose()
+  }, [_onClose, reset])
+
   const secondaryButton = useMemo(() => {
     switch (activeStep) {
       case BUY_MARKET_TOKEN_STEPS.conditions:
@@ -113,7 +119,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
       }
 
       return calcBuyMarketPricePerToken(
-        currentAmm.mintedByAmm,
+        +currentAmm.mintedByAmm - +currentAmm.burnedByAmm,
         currentAmm.ammSlopeParameter,
         currentAmm.ammInitPrice,
         amount
@@ -287,12 +293,6 @@ export const BuyMarketTokenModal = ({ tokenId, onClose, show }: BuySaleTokenModa
     ],
     [calculateRequiredHapi, fullFee, pricePerUnit, tokenTitle, tokenAmount]
   )
-
-  useEffect(() => {
-    if (!show) {
-      reset({ tokenAmount: 0 })
-    }
-  }, [reset, show])
 
   useEffect(() => {
     if (activeStep === BUY_MARKET_TOKEN_STEPS.form) {

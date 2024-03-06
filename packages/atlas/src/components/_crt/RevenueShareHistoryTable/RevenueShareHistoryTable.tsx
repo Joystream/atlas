@@ -21,7 +21,8 @@ export type RevenueShareHistoryTableProps = {
   data: {
     endsAtBlock: number
     totalParticipants: number
-    claimed: number
+    claimed: BN
+    allocation: BN
     stakers: FullCreatorTokenFragment['revenueShares'][number]['stakers']
   }[]
 }
@@ -32,6 +33,7 @@ export const RevenueShareHistoryTable = ({ data }: RevenueShareHistoryTableProps
   const mappedData = useMemo(() => {
     return data.map((row) => {
       const memberStake = new BN(row.stakers.find((staker) => staker.account.member.id === memberId)?.earnings ?? 0)
+
       return {
         endDate: <DateBlockCell type="block" block={row.endsAtBlock} />,
         participants: (
@@ -42,15 +44,15 @@ export const RevenueShareHistoryTable = ({ data }: RevenueShareHistoryTableProps
             </Text>
           </Text>
         ),
-        total: <TokenAmount tokenAmount={new BN(row.claimed)} />,
+        total: <TokenAmount tokenAmount={row.claimed} />,
         userClaimed: <TokenAmount tokenAmount={memberStake} />,
-        holdersClaimed: <TokenAmount tokenAmount={memberStake.sub(new BN(row.claimed))} />,
-        unclaimed: 'N/A',
+        holdersClaimed: <TokenAmount tokenAmount={row.claimed.sub(memberStake)} />,
+        unclaimed: <TokenAmount tokenAmount={row.allocation.sub(row.claimed)} />,
       }
     })
   }, [data, memberId])
 
-  return <StyledTable minWidth={900} columns={COLUMNS} data={mappedData} />
+  return <StyledTable minWidth={900} title="Revenue share history" columns={COLUMNS} data={mappedData} />
 }
 
 const StyledTable = styled(Table)`
