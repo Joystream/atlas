@@ -5,9 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.15.2] - 2024-03-07
+
+### Added
+
+- Short video filtering
+- New search UI
+
+### Fixed
+
+- Overall performance improvements
+- Asset download improvements
+
+### Changed
+
+- Error message on login
+- Homepage feed is now semi curated
+
 ## [4.15.1] - 2024-02-22
 
-## Added
+### Added
 
 - Page for curators
 - Video preloading for homepage and video view
@@ -23,7 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [4.15.0] - 2024-02-09
 
-## Added
+### Added
 
 - Request response time logging
 
