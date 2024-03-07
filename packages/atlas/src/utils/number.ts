@@ -6,8 +6,12 @@ export const getRandomIntInclusive = (min: number, max: number) => {
 }
 
 const numberFormatter = new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 })
+const smallDecimalFormatter = new Intl.NumberFormat('en-US', { maximumFractionDigits: 6 })
+
 export const formatNumber = (num: number): string => {
   return numberFormatter.format(num).replaceAll(',', ' ')
 }
+
+export const formatSmallDecimal = (num: number): string => smallDecimalFormatter.format(num).replaceAll(',', ' ')
 
 export const permillToPercentage = (permill: number) => permill / PERMILL_PER_PERCENT

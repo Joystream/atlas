@@ -9,6 +9,7 @@ import {
   useGetFullCreatorTokenQuery,
 } from '@/api/queries/__generated__/creatorTokens.generated'
 import { NumberFormat } from '@/components/NumberFormat'
+import { Text } from '@/components/Text'
 import { AmmModalFormTemplate } from '@/components/_crt/AmmModalTemplates'
 import { AmmModalSummaryTemplate } from '@/components/_crt/AmmModalTemplates/AmmModalSummaryTemplate'
 import { BuyMarketTokenSuccess } from '@/components/_crt/BuyMarketTokenModal/steps/BuyMarketTokenSuccess'
@@ -16,6 +17,7 @@ import { DialogProps } from '@/components/_overlays/Dialog'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { HAPI_TO_JOY_RATE } from '@/joystream-lib/config'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { useFee, useJoystream, useSubscribeAccountBalance } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
@@ -23,6 +25,7 @@ import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { calcBuyMarketPricePerToken } from '@/utils/crts'
 import { SentryLogger } from '@/utils/logs'
+import { formatSmallDecimal, permillToPercentage } from '@/utils/number'
 
 import { BuyMarketTokenConditions } from './steps/BuyMarketTokenConditions'
 
@@ -173,7 +176,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
         } else {
           setActiveStep(BUY_MARKET_TOKEN_STEPS.success)
         }
-        client.refetchQueries({ include: 'all' })
+        client.refetchQueries({ include: 'active' })
       },
       onError: () => {
         setActiveStep(BUY_MARKET_TOKEN_STEPS.form)
@@ -205,8 +208,38 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
     tokenTitle,
   ])
 
-  const formDetails = useMemo(
-    () => [
+  const formDetails = useMemo(() => {
+    const requiredHapi = calculateRequiredHapi(tokenAmount)
+    const percentageOfTotalSupply = data?.creatorTokenById
+      ? (tokenAmount / (+(data.creatorTokenById.totalSupply || 1) + tokenAmount)) * 100
+      : // ? new BN(tokenAmount).muln(100).div(new BN(data.creatorTokenById.totalSupply).addn(tokenAmount)).toNumber()
+        0
+    console.log(percentageOfTotalSupply)
+
+    return [
+      {
+        title: 'Percentage of total supply',
+        tooltipText: 'Percentage of total supply of the token that will be bought.',
+        content: (
+          <Text variant="h300" as="h3">
+            {formatSmallDecimal(percentageOfTotalSupply)}%
+          </Text>
+        ),
+      },
+      {
+        title: 'Percentage of revenue',
+        tooltipText: 'Percentage of token creator revenue that will be bought through the tokens.',
+        content: (
+          <Text variant="h300" as="h3">
+            {data?.creatorTokenById?.revenueShareRatioPermill
+              ? formatSmallDecimal(
+                  percentageOfTotalSupply * (permillToPercentage(data.creatorTokenById.revenueShareRatioPermill) / 100)
+                )
+              : 0}
+            %
+          </Text>
+        ),
+      },
       {
         title: 'Available balance',
         content: <NumberFormat value={accountBalance ?? 0} as="p" variant="t200" withDenomination="before" withToken />,
@@ -216,32 +249,25 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
         title: 'You will pay',
         content: (
           <NumberFormat
-            value={hapiBnToTokenNumber(calculateRequiredHapi(tokenAmount) ?? new BN(0))}
+            value={hapiBnToTokenNumber(requiredHapi ?? new BN(0))}
             as="p"
             variant="h300"
             withDenomination="before"
+            format={(requiredHapi ?? new BN(0)).gte(new BN(HAPI_TO_JOY_RATE).muln(1_000_000)) ? 'short' : undefined}
             withToken
           />
         ),
         tooltipText: 'Estimated price that will be payed for tokens.',
       },
-    ],
-    [accountBalance, calculateRequiredHapi, tokenAmount]
-  )
+    ]
+  }, [accountBalance, calculateRequiredHapi, data?.creatorTokenById, tokenAmount])
 
-  const summaryDetails = useMemo(
-    () => [
+  const summaryDetails = useMemo(() => {
+    const requiredHapi = calculateRequiredHapi(tokenAmount)
+    return [
       {
         title: 'Purchase',
-        content: (
-          <NumberFormat
-            value={calculateRequiredHapi(tokenAmount) ?? 0}
-            as="p"
-            variant="t200"
-            withToken
-            withDenomination="before"
-          />
-        ),
+        content: <NumberFormat value={requiredHapi ?? 0} as="p" variant="t200" withToken withDenomination="before" />,
         tooltipText: 'Price for all the tokens.',
       },
       {
@@ -266,7 +292,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
         title: 'Total',
         content: (
           <NumberFormat
-            value={fullFee.add(calculateRequiredHapi(tokenAmount) ?? new BN(0))}
+            value={fullFee.add(requiredHapi ?? new BN(0))}
             as="p"
             variant="t200"
             withToken
@@ -290,9 +316,8 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
         ),
         tooltipText: 'Amount of tokens current membership will receive.',
       },
-    ],
-    [calculateRequiredHapi, fullFee, pricePerUnit, tokenTitle, tokenAmount]
-  )
+    ]
+  }, [calculateRequiredHapi, fullFee, pricePerUnit, tokenTitle, tokenAmount])
 
   useEffect(() => {
     if (activeStep === BUY_MARKET_TOKEN_STEPS.form) {

@@ -4,16 +4,16 @@ export const calcBuyMarketPricePerToken = (
   mintedByAmm?: string | number,
   ammSlopeParameter?: string,
   ammInitPrice?: string,
-  amount = 1
+  amount: number | string = 1
 ) => {
-  if (!mintedByAmm || !ammSlopeParameter || !ammInitPrice) return
-
+  if (mintedByAmm === undefined || !ammSlopeParameter || !ammInitPrice) return
+  const bnAmount = new BN(amount)
   const totalSupply = new BN(mintedByAmm)
   const allocation = totalSupply
-    .addn(amount)
+    .add(bnAmount)
     .pow(new BN(2))
     .sub(totalSupply.pow(new BN(2)))
-  return new BN(ammSlopeParameter).muln(0.5).mul(allocation).add(new BN(ammInitPrice).muln(amount))
+  return new BN(ammSlopeParameter).muln(0.5).mul(allocation).add(new BN(ammInitPrice).mul(bnAmount))
 }
 
 export const calcSellMarketPricePerToken = (
