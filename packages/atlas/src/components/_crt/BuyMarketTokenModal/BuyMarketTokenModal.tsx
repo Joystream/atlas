@@ -212,9 +212,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
     const requiredHapi = calculateRequiredHapi(tokenAmount)
     const percentageOfTotalSupply = data?.creatorTokenById
       ? (tokenAmount / (+(data.creatorTokenById.totalSupply || 1) + tokenAmount)) * 100
-      : // ? new BN(tokenAmount).muln(100).div(new BN(data.creatorTokenById.totalSupply).addn(tokenAmount)).toNumber()
-        0
-    console.log(percentageOfTotalSupply)
+      : 0
 
     return [
       {

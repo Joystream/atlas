@@ -1,3 +1,4 @@
+import { useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
 import { useCallback, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -40,6 +41,7 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
       SentryLogger.error('Failed to fetch token data', 'SellTokenModal', { error })
     },
   })
+  const client = useApolloClient()
 
   const currentAmm = data?.creatorTokenById?.ammCurves.find((amm) => !amm.finalized)
   const title = data?.creatorTokenById?.symbol ?? 'N/A'
@@ -190,6 +192,7 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
           } received`,
           description: `You will find it in your portfolio.`,
         })
+        client.refetchQueries({ include: 'active' })
         onClose()
       },
     })
