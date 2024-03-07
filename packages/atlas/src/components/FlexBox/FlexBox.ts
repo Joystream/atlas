@@ -10,6 +10,7 @@ export type FlexBoxProps = {
   justifyContent?: string
   equalChildren?: boolean
   width?: string | number
+  height?: string | number
   marginTop?: number
 }
 
@@ -22,6 +23,7 @@ export const FlexBox = styled.div<FlexBoxProps>`
     align-items: ${props.alignItems ?? 'start'};
     justify-content: ${props.justifyContent ?? 'start'};
     width: ${props.width ?? '100%'};
+    height: ${props.height ?? 'unset'};
   `}
 
   ${(props) =>

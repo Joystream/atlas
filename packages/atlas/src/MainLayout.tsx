@@ -45,6 +45,21 @@ const LoadablePlaygroundLayout = loadable(
 )
 
 export const MainLayout: FC = () => {
+  return (
+    <>
+      <CookiePopover />
+      <MiscUtils />
+      <Routes>
+        <Route path={BASE_PATHS.viewer + '/*'} element={<ViewerLayout />} />
+        <Route path={BASE_PATHS.legal + '/*'} element={<LegalLayout />} />
+        <Route path={BASE_PATHS.studio + '/*'} element={<LoadableStudioLayout />} />
+        <Route path={BASE_PATHS.playground + '/*'} element={<LoadablePlaygroundLayout />} />
+      </Routes>
+    </>
+  )
+}
+
+const MiscUtils = () => {
   useTimeMismatchWarning()
   const scrollPosition = useRef<number>(0)
   const location = useLocation()
@@ -111,15 +126,5 @@ export const MainLayout: FC = () => {
     }, parseInt(transitions.timings.routing) + ROUTING_ANIMATION_OFFSET)
   }, [location, cachedLocation, locationState, navigationType, clearOverlays])
 
-  return (
-    <>
-      <CookiePopover />
-      <Routes>
-        <Route path={BASE_PATHS.viewer + '/*'} element={<ViewerLayout />} />
-        <Route path={BASE_PATHS.legal + '/*'} element={<LegalLayout />} />
-        <Route path={BASE_PATHS.studio + '/*'} element={<LoadableStudioLayout />} />
-        <Route path={BASE_PATHS.playground + '/*'} element={<LoadablePlaygroundLayout />} />
-      </Routes>
-    </>
-  )
+  return null
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { atlasConfig } from '@/config'
 import { AssetTestOptions, logDistributorPerformance, testAssetDownload } from '@/providers/assets/assets.helpers'
@@ -10,6 +10,7 @@ import { ConsoleLogger, DistributorEventEntry, SentryLogger, UserEventsLogger } 
 import { withTimeout } from '@/utils/misc'
 
 const workingUrlMap = new Map<string, string>()
+const assetsWithNoDistributions: string[] = []
 
 export const getSingleAssetUrl = async (
   urls: string[] | null | undefined,
@@ -18,7 +19,7 @@ export const getSingleAssetUrl = async (
   timeout?: number,
   opts?: AssetTestOptions
 ): Promise<string | undefined> => {
-  if (!urls || !urls.length) {
+  if (!urls || !urls.length || (id && assetsWithNoDistributions.includes(id))) {
     return
   }
 
@@ -34,7 +35,7 @@ export const getSingleAssetUrl = async (
       dataObjectType: type || undefined,
       resolvedUrl: distributionAssetUrl,
     }
-    const assetTestPromise = testAssetDownload(distributionAssetUrl, type, opts)
+    const [assetTestPromise, cleanup] = testAssetDownload(distributionAssetUrl, type, opts)
     const assetTestPromiseWithTimeout = withTimeout(
       assetTestPromise,
       timeout ?? atlasConfig.storage.assetResponseTimeout
@@ -51,6 +52,7 @@ export const getSingleAssetUrl = async (
 
       return distributionAssetUrl
     } catch (err) {
+      cleanup?.()
       if (err instanceof MediaError) {
         let codec = ''
         if (type === 'video' && !mobile) {
@@ -74,7 +76,7 @@ export const getSingleAssetUrl = async (
   return new Promise((res) => {
     const promises: Promise<string>[] = []
     for (const distributionAssetUrl of urls) {
-      const assetTestPromise = testAssetDownload(distributionAssetUrl, type)
+      const [assetTestPromise] = testAssetDownload(distributionAssetUrl, type)
       promises.push(assetTestPromise)
     }
 
@@ -90,6 +92,7 @@ export const getSingleAssetUrl = async (
           urls,
           error,
         })
+        return undefined
       })
   })
 }
@@ -97,28 +100,48 @@ export const getSingleAssetUrl = async (
 export const useGetAssetUrl = (urls: string[] | undefined | null, type: AssetType | null, opts?: AssetTestOptions) => {
   const [url, setUrl] = useState<string | undefined>(undefined)
   const [isLoading, setIsLoading] = useState(true)
+  const assetPromise = useRef<Promise<string | undefined> | null>(null)
   const { userBenchmarkTime } = useOperatorsContext()
   const id = urls?.[0]?.split('/').pop()
   useEffect(() => {
-    if (!urls || (url && urls.includes(url)) || (!url && !urls.length)) {
+    // nothing should be done if old promise is still pending
+    if (assetPromise.current) {
+      return
+    }
+
+    if (!urls) {
+      setUrl(undefined)
       setIsLoading(false)
       return
     }
+
+    if (url && urls.includes(url)) {
+      setIsLoading(false)
+      return
+    }
+
     const init = async () => {
       setUrl(undefined)
       setIsLoading(true)
-      const resolvedUrl = await getSingleAssetUrl(urls, id, type, userBenchmarkTime.current ?? undefined, opts)
+      assetPromise.current = getSingleAssetUrl(
+        urls,
+        id,
+        type,
+        type === 'video' ? 10_000 : userBenchmarkTime.current ?? undefined,
+        opts
+      )
+      const resolvedUrl = await assetPromise.current
+      assetPromise.current = null
+
       setIsLoading(false)
       if (resolvedUrl) {
         setUrl(resolvedUrl)
+      } else if (id) {
+        assetsWithNoDistributions.push(id)
       }
     }
 
     init()
-
-    return () => {
-      setIsLoading(false)
-    }
   }, [id, opts, type, url, urls, userBenchmarkTime])
 
   return { url, isLoading }

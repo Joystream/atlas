@@ -212,7 +212,9 @@ export const RecentSearchItemWrapper = styled.div`
 
 export const ResultThumbnail = styled.img<{ rounded?: boolean }>`
   ${({ rounded }) => `
+    min-width: ${rounded ? '32px' : '64px'};
     width: ${rounded ? '32px' : '64px'};
+    min-height: ${rounded ? '32px' : '40px'};
     height: ${rounded ? '32px' : '40px'};
     border-radius: ${rounded ? '50%' : '2px'};
   `};
@@ -225,6 +227,7 @@ export const StyledSvgAvatarSilhouette = styled(SvgAvatarSilhouette)`
 `
 
 export const StyledSkeletonLoader = styled(SkeletonLoader)`
+  min-width: ${(props) => props.width};
   margin-right: ${sizes(4)};
 `
 

@@ -26,10 +26,10 @@ export const SearchControls = styled.div`
 `
 
 export const Results = styled.div<{ filtersOpen: boolean }>`
-  padding-top: ${sizes(30)};
+  padding-top: ${sizes(20)};
   padding-bottom: ${sizes(12)};
   ${media.sm} {
-    padding-top: ${({ filtersOpen }) => sizes(filtersOpen ? 48 : 30)};
+    padding-top: ${({ filtersOpen }) => sizes(filtersOpen ? 36 : 20)};
     transition: padding-top ${transitions.timings.routing} ${transitions.easing};
   }
 `
@@ -38,6 +38,7 @@ export const FiltersWrapper = styled.div`
   display: flex;
   margin-left: auto;
   align-items: center;
+  padding: ${sizes(2)} 0;
 `
 
 export const StyledSelect = styled(Select)`

@@ -22,7 +22,7 @@ async function fetchPartialContent(url: string, range: { start: number; end: num
 
 export const getVideoCodec = async (url: string): string => {
   const fetchRange = { start: 0, end: 8192 }
-  const arrayBuffer = await fetchPartialContent(url, fetchRange)
+  const arrayBuffer = await fetchPartialContent(url, fetchRange).catch(() => undefined)
   if (arrayBuffer) {
     try {
       arrayBuffer.fileStart = 0
