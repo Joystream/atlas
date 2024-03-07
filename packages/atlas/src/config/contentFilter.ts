@@ -22,6 +22,7 @@ export const publicCryptoVideoFilter: VideoWhereInput = {
   isPublic_eq: true,
   isCensored_eq: false,
   isShort_not_eq: true,
+  isShortDerived_isNull: true,
   orionLanguage_in: [...(browserLanguage ? [browserLanguage] : []), 'en'],
   media: {
     isAccepted_eq: true,

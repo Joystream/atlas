@@ -2467,6 +2467,8 @@ export enum CommentOrderByInput {
   VideoIsPublicDesc = 'video_isPublic_DESC',
   VideoIsReactionFeatureEnabledAsc = 'video_isReactionFeatureEnabled_ASC',
   VideoIsReactionFeatureEnabledDesc = 'video_isReactionFeatureEnabled_DESC',
+  VideoIsShortDerivedAsc = 'video_isShortDerived_ASC',
+  VideoIsShortDerivedDesc = 'video_isShortDerived_DESC',
   VideoIsShortAsc = 'video_isShort_ASC',
   VideoIsShortDesc = 'video_isShort_DESC',
   VideoLanguageAsc = 'video_language_ASC',
@@ -2592,6 +2594,8 @@ export enum CommentReactionOrderByInput {
   VideoIsPublicDesc = 'video_isPublic_DESC',
   VideoIsReactionFeatureEnabledAsc = 'video_isReactionFeatureEnabled_ASC',
   VideoIsReactionFeatureEnabledDesc = 'video_isReactionFeatureEnabled_DESC',
+  VideoIsShortDerivedAsc = 'video_isShortDerived_ASC',
+  VideoIsShortDerivedDesc = 'video_isShortDerived_DESC',
   VideoIsShortAsc = 'video_isShort_ASC',
   VideoIsShortDesc = 'video_isShort_DESC',
   VideoLanguageAsc = 'video_language_ASC',
@@ -6508,6 +6512,8 @@ export enum OwnedNftOrderByInput {
   VideoIsPublicDesc = 'video_isPublic_DESC',
   VideoIsReactionFeatureEnabledAsc = 'video_isReactionFeatureEnabled_ASC',
   VideoIsReactionFeatureEnabledDesc = 'video_isReactionFeatureEnabled_DESC',
+  VideoIsShortDerivedAsc = 'video_isShortDerived_ASC',
+  VideoIsShortDerivedDesc = 'video_isShortDerived_DESC',
   VideoIsShortAsc = 'video_isShort_ASC',
   VideoIsShortDesc = 'video_isShort_DESC',
   VideoLanguageAsc = 'video_language_ASC',
@@ -10570,6 +10576,8 @@ export type Video = {
   isReactionFeatureEnabled: Scalars['Boolean']
   /** Whether the video is a short format, vertical video (e.g. Youtube Shorts, TikTok, Instagram Reels) */
   isShort?: Maybe<Scalars['Boolean']>
+  /** Whether the video is a short format, vertical video, and it derived based on video dimension (i.e. was not set in metadata) */
+  isShortDerived?: Maybe<Scalars['Boolean']>
   /** Video's main langauge */
   language?: Maybe<Scalars['String']>
   /** License under the video is published */
@@ -10872,6 +10880,8 @@ export enum VideoFeaturedInCategoryOrderByInput {
   VideoIsPublicDesc = 'video_isPublic_DESC',
   VideoIsReactionFeatureEnabledAsc = 'video_isReactionFeatureEnabled_ASC',
   VideoIsReactionFeatureEnabledDesc = 'video_isReactionFeatureEnabled_DESC',
+  VideoIsShortDerivedAsc = 'video_isShortDerived_ASC',
+  VideoIsShortDerivedDesc = 'video_isShortDerived_DESC',
   VideoIsShortAsc = 'video_isShort_ASC',
   VideoIsShortDesc = 'video_isShort_DESC',
   VideoLanguageAsc = 'video_language_ASC',
@@ -10998,6 +11008,8 @@ export enum VideoHeroOrderByInput {
   VideoIsPublicDesc = 'video_isPublic_DESC',
   VideoIsReactionFeatureEnabledAsc = 'video_isReactionFeatureEnabled_ASC',
   VideoIsReactionFeatureEnabledDesc = 'video_isReactionFeatureEnabled_DESC',
+  VideoIsShortDerivedAsc = 'video_isShortDerived_ASC',
+  VideoIsShortDerivedDesc = 'video_isShortDerived_DESC',
   VideoIsShortAsc = 'video_isShort_ASC',
   VideoIsShortDesc = 'video_isShort_DESC',
   VideoLanguageAsc = 'video_language_ASC',
@@ -11307,6 +11319,8 @@ export enum VideoMediaMetadataOrderByInput {
   VideoIsPublicDesc = 'video_isPublic_DESC',
   VideoIsReactionFeatureEnabledAsc = 'video_isReactionFeatureEnabled_ASC',
   VideoIsReactionFeatureEnabledDesc = 'video_isReactionFeatureEnabled_DESC',
+  VideoIsShortDerivedAsc = 'video_isShortDerived_ASC',
+  VideoIsShortDerivedDesc = 'video_isShortDerived_DESC',
   VideoIsShortAsc = 'video_isShort_ASC',
   VideoIsShortDesc = 'video_isShort_DESC',
   VideoLanguageAsc = 'video_language_ASC',
@@ -11488,6 +11502,8 @@ export enum VideoOrderByInput {
   IsPublicDesc = 'isPublic_DESC',
   IsReactionFeatureEnabledAsc = 'isReactionFeatureEnabled_ASC',
   IsReactionFeatureEnabledDesc = 'isReactionFeatureEnabled_DESC',
+  IsShortDerivedAsc = 'isShortDerived_ASC',
+  IsShortDerivedDesc = 'isShortDerived_DESC',
   IsShortAsc = 'isShort_ASC',
   IsShortDesc = 'isShort_DESC',
   LanguageAsc = 'language_ASC',
@@ -11676,6 +11692,8 @@ export enum VideoReactionOrderByInput {
   VideoIsPublicDesc = 'video_isPublic_DESC',
   VideoIsReactionFeatureEnabledAsc = 'video_isReactionFeatureEnabled_ASC',
   VideoIsReactionFeatureEnabledDesc = 'video_isReactionFeatureEnabled_DESC',
+  VideoIsShortDerivedAsc = 'video_isShortDerived_ASC',
+  VideoIsShortDerivedDesc = 'video_isShortDerived_DESC',
   VideoIsShortAsc = 'video_isShort_ASC',
   VideoIsShortDesc = 'video_isShort_DESC',
   VideoLanguageAsc = 'video_language_ASC',
@@ -11835,6 +11853,8 @@ export enum VideoSubtitleOrderByInput {
   VideoIsPublicDesc = 'video_isPublic_DESC',
   VideoIsReactionFeatureEnabledAsc = 'video_isReactionFeatureEnabled_ASC',
   VideoIsReactionFeatureEnabledDesc = 'video_isReactionFeatureEnabled_DESC',
+  VideoIsShortDerivedAsc = 'video_isShortDerived_ASC',
+  VideoIsShortDerivedDesc = 'video_isShortDerived_DESC',
   VideoIsShortAsc = 'video_isShort_ASC',
   VideoIsShortDesc = 'video_isShort_DESC',
   VideoLanguageAsc = 'video_language_ASC',
@@ -12145,6 +12165,9 @@ export type VideoWhereInput = {
   isReactionFeatureEnabled_eq?: InputMaybe<Scalars['Boolean']>
   isReactionFeatureEnabled_isNull?: InputMaybe<Scalars['Boolean']>
   isReactionFeatureEnabled_not_eq?: InputMaybe<Scalars['Boolean']>
+  isShortDerived_eq?: InputMaybe<Scalars['Boolean']>
+  isShortDerived_isNull?: InputMaybe<Scalars['Boolean']>
+  isShortDerived_not_eq?: InputMaybe<Scalars['Boolean']>
   isShort_eq?: InputMaybe<Scalars['Boolean']>
   isShort_isNull?: InputMaybe<Scalars['Boolean']>
   isShort_not_eq?: InputMaybe<Scalars['Boolean']>
