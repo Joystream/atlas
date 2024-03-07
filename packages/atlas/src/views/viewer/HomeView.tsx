@@ -63,18 +63,22 @@ const useHomeVideos = () => {
         ...publicCryptoVideoFilter,
         orionLanguage_in: undefined,
         includeInHomeFeed_eq: true,
-        isShort_not_eq: undefined,
       },
       skipVideoIds: ['-1'],
     },
   })
-
+  const avoidIds = data?.dumbPublicFeedVideos ? data.dumbPublicFeedVideos?.map((video) => video.id) : undefined
   const { columns, fetchMore, pageInfo, tiles } = useInfiniteVideoGrid({
     query: GetBasicVideosConnectionLightweightDocument,
     variables: {
-      where: publicCryptoVideoFilter,
+      where: {
+        ...publicCryptoVideoFilter,
+        id_not_in: avoidIds,
+      },
       orderBy: VideoOrderByInput.VideoRelevanceDesc,
-      first: 1,
+    },
+    options: {
+      skip: !avoidIds,
     },
   })
 
@@ -82,10 +86,9 @@ const useHomeVideos = () => {
   const firstLoadPlaceholders = firstLoad ? createPlaceholderData(columns * initialRowsToLoad) : []
 
   const displayedItems = [...(data?.dumbPublicFeedVideos || []), ...(tiles || [])]
-  const nextLoadPlaceholders = createPlaceholderData(columns * 4)
 
   return {
-    tiles: [...firstLoadPlaceholders, ...displayedItems, ...(loading ? nextLoadPlaceholders : [])],
+    tiles: [...firstLoadPlaceholders, ...displayedItems],
     fetchMore,
     columns,
     loading,

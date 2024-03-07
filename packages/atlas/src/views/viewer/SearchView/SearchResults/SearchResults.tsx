@@ -96,7 +96,7 @@ export const SearchResults: FC<SearchResultsProps> = memo(({ query }) => {
         <FiltersBar {...filtersBarLogic} activeFilters={['categories', 'date', 'length', 'other', 'language']} />
       </SearchControls>
       <Results filtersOpen={isFiltersOpen}>
-        <LimitedWidthContainer big>
+        <LimitedWidthContainer>
           {showEmptyFallback ? (
             <EmptyFallback
               title="No results found"
