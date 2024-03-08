@@ -8,7 +8,7 @@ import { Button } from '@/components/_buttons/Button'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { displayCategoriesLookup } from '@/config/categories'
-import { publicCryptoVideoFilter } from '@/config/contentFilter'
+import { getPublicCryptoVideoFilter, singlePublicCryptoVideoFilter } from '@/config/contentFilter'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { createPlaceholderData } from '@/utils/data'
@@ -37,13 +37,13 @@ export const MoreVideos: FC<MoreVideosProps> = ({
   const videoCategories = categoryId ? displayCategoriesLookup[categoryId].videoCategories : undefined
   const where =
     type === 'channel'
-      ? { ...publicCryptoVideoFilter, channel: { ...publicCryptoVideoFilter.channel, id_eq: channelId } }
-      : {
-          ...publicCryptoVideoFilter,
+      ? getPublicCryptoVideoFilter({ channel: { ...singlePublicCryptoVideoFilter.channel, id_eq: channelId } })
+      : getPublicCryptoVideoFilter({
           category: {
             id_in: videoCategories,
           },
-        }
+        })
+
   // we fetch +1 because we need to filter duplicated video
   const { videos = [], loading } = useBasicVideos(
     {

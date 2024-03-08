@@ -9,7 +9,7 @@ import { EmptyFallback } from '@/components/EmptyFallback'
 import { Section } from '@/components/Section/Section'
 import { Button } from '@/components/_buttons/Button'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
-import { publicCryptoVideoFilter } from '@/config/contentFilter'
+import { getPublicCryptoVideoFilter } from '@/config/contentFilter'
 import { absoluteRoutes } from '@/config/routes'
 import { useInfiniteVideoGrid } from '@/hooks/useInfiniteVideoGrid'
 import { DEFAULT_VIDEO_GRID } from '@/styles'
@@ -27,12 +27,11 @@ export const CategoryVideos: FC<CategoryVideosProps> = ({ categoriesId }) => {
   const { tiles, pageInfo, fetchMore, columns } = useInfiniteVideoGrid<GetBasicVideosConnectionQuery>({
     query: GetBasicVideosConnectionDocument,
     variables: {
-      where: {
-        ...publicCryptoVideoFilter,
+      where: getPublicCryptoVideoFilter({
         category: {
           id_in: categoriesId,
         },
-      },
+      }),
       orderBy: VideoOrderByInput.VideoRelevanceDesc,
     },
   })

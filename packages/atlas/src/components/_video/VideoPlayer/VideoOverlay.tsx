@@ -5,7 +5,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { useBasicVideos } from '@/api/hooks/video'
 import { VideoOrderByInput, VideoWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { BasicVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
-import { publicCryptoVideoFilter } from '@/config/contentFilter'
+import { getPublicCryptoVideoFilter } from '@/config/contentFilter'
 import { cVar, transitions } from '@/styles'
 import { getRandomIntInclusive } from '@/utils/number'
 
@@ -41,13 +41,12 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
   const commonFiltersFactory = (where?: VideoWhereInput) => ({
     limit: 1,
     orderBy: VideoOrderByInput.CreatedAtAsc,
-    where: {
-      ...publicCryptoVideoFilter,
+    where: getPublicCryptoVideoFilter({
       channel: {
         id_eq: channelId,
       },
       ...where,
-    },
+    }),
   })
   const { videos: newerVideos, loading: loadingNewestVideos } = useBasicVideos(
     commonFiltersFactory({ createdAt_gt: currentVideoCreatedAt })

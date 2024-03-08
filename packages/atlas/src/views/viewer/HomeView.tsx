@@ -10,7 +10,7 @@ import { Section } from '@/components/Section/Section'
 import { ReferralsBanner } from '@/components/_referrals/ReferralsBanner/ReferralsBanner'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
-import { publicCryptoVideoFilter } from '@/config/contentFilter'
+import { getPublicCryptoVideoFilter } from '@/config/contentFilter'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useInfiniteVideoGrid } from '@/hooks/useInfiniteVideoGrid'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
@@ -59,11 +59,10 @@ const useHomeVideos = () => {
   const { data, loading } = useGetCuratedHompageVideosQuery({
     notifyOnNetworkStatusChange: true,
     variables: {
-      where: {
-        ...publicCryptoVideoFilter,
+      where: getPublicCryptoVideoFilter({
         orionLanguage_in: undefined,
         includeInHomeFeed_eq: true,
-      },
+      }),
       skipVideoIds: ['-1'],
     },
   })
@@ -71,10 +70,9 @@ const useHomeVideos = () => {
   const { columns, fetchMore, pageInfo, tiles } = useInfiniteVideoGrid({
     query: GetBasicVideosConnectionLightweightDocument,
     variables: {
-      where: {
-        ...publicCryptoVideoFilter,
+      where: getPublicCryptoVideoFilter({
         id_not_in: avoidIds,
-      },
+      }),
       orderBy: VideoOrderByInput.VideoRelevanceDesc,
     },
     options: {
