@@ -16,14 +16,12 @@ export const cancelledVideoFilter: VideoWhereInput = {
   },
 }
 
-const browserLanguage = navigator.language?.split('-')[0]
+// const browserLanguage = navigator.language?.split('-')[0]
 
-export const publicCryptoVideoFilter: VideoWhereInput = {
+export const singlePublicCryptoVideoFilter: VideoWhereInput = {
   isPublic_eq: true,
   isCensored_eq: false,
-  isShort_not_eq: true,
-  isShortDerived_isNull: true,
-  orionLanguage_in: [...(browserLanguage ? [browserLanguage] : []), 'en'],
+  // orionLanguage_in: [...(browserLanguage ? [browserLanguage] : []), 'en'],
   media: {
     isAccepted_eq: true,
   },
@@ -34,3 +32,20 @@ export const publicCryptoVideoFilter: VideoWhereInput = {
     isPublic_eq: true,
   },
 }
+
+export const getPublicCryptoVideoFilter = (extraWhere?: VideoWhereInput): VideoWhereInput => ({
+  OR: [
+    {
+      ...singlePublicCryptoVideoFilter,
+      isShort_not_eq: true,
+      isShortDerived_isNull: true,
+      ...(extraWhere ?? {}),
+    },
+    {
+      ...singlePublicCryptoVideoFilter,
+      isShort_isNull: true,
+      isShortDerived_isNull: true,
+      ...(extraWhere ?? {}),
+    },
+  ],
+})
