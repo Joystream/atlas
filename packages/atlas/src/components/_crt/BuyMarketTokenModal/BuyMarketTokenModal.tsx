@@ -43,7 +43,7 @@ enum BUY_MARKET_TOKEN_STEPS {
 }
 
 export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySaleTokenModalProps) => {
-  const { memberId } = useUser()
+  const { memberId, memberChannels } = useUser()
   const navigate = useNavigate()
   const [activeStep, setActiveStep] = useState(BUY_MARKET_TOKEN_STEPS.form)
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogProps['primaryButton']>()
@@ -213,6 +213,14 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
     const percentageOfTotalSupply = data?.creatorTokenById
       ? (tokenAmount / (+(data.creatorTokenById.totalSupply || 1) + tokenAmount)) * 100
       : 0
+    const isOwner = memberChannels?.some((channel) => channel.id === data?.creatorTokenById?.channel?.channel.id)
+    const userRevenueParticipation = data?.creatorTokenById?.revenueShareRatioPermill
+      ? percentageOfTotalSupply *
+        ((isOwner
+          ? 100 - permillToPercentage(data.creatorTokenById.revenueShareRatioPermill)
+          : permillToPercentage(data.creatorTokenById.revenueShareRatioPermill)) /
+          100)
+      : 0
 
     return [
       {
@@ -229,12 +237,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
         tooltipText: 'Percentage of token creator revenue that will be bought through the tokens.',
         content: (
           <Text variant="h300" as="h3">
-            {data?.creatorTokenById?.revenueShareRatioPermill
-              ? formatSmallDecimal(
-                  percentageOfTotalSupply * (permillToPercentage(data.creatorTokenById.revenueShareRatioPermill) / 100)
-                )
-              : 0}
-            %
+            {data?.creatorTokenById?.revenueShareRatioPermill ? formatSmallDecimal(userRevenueParticipation) : 0}%
           </Text>
         ),
       },
@@ -258,7 +261,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
         tooltipText: 'Estimated price that will be payed for tokens.',
       },
     ]
-  }, [accountBalance, calculateRequiredHapi, data?.creatorTokenById, tokenAmount])
+  }, [accountBalance, calculateRequiredHapi, data?.creatorTokenById, memberChannels, tokenAmount])
 
   const summaryDetails = useMemo(() => {
     const requiredHapi = calculateRequiredHapi(tokenAmount)
