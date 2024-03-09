@@ -57,5 +57,66 @@ export type NotificationData =
   | { type: 'VideoLiked'; memberId: string; memberHandle: string; videoId: string; videoTitle: string }
   | { type: 'VideoDisliked'; memberId: string; memberHandle: string; videoId: string; videoTitle: string }
   | { type: 'VideoExcluded'; videoTitle: string }
+  | {
+      type: 'CreatorTokenRevenueSharePlanned'
+      plannedAt: Date
+      channelId: string
+      tokenSymbol: string
+      channelTitle: string
+    }
+  | {
+      type: 'CreatorTokenRevenueShareStarted'
+      channelId: string
+      tokenSymbol: string
+      channelTitle: string
+    }
+  | {
+      type: 'CreatorTokenRevenueShareEnded'
+      channelId: string
+      tokenSymbol: string
+      channelTitle: string
+    }
+  | {
+      type: 'CreatorTokenMarketStarted'
+      channelId: string
+      tokenSymbol: string
+      channelTitle: string
+    }
+  | {
+      type: 'CreatorTokenSaleStarted'
+      channelId: string
+      tokenSymbol: string
+      channelTitle: string
+    }
+  | {
+      type: 'CreatorTokenIssued'
+      channelId: string
+      tokenSymbol: string
+      channelTitle: string
+    }
+  | {
+      type: 'CreatorTokenMarketMint'
+      mintedTokenAmount: string
+      tokenSymbol: string
+      minterHandle: string
+      minterId: string
+      paiedJoyAmount: string
+    }
+  | {
+      type: 'CreatorTokenMarketBurn'
+      burnedTokenAmount: string
+      tokenSymbol: string
+      burnerHandle: string
+      burnerId: string
+      receivedJoyAmount: string
+    }
+  | {
+      type: 'CreatorTokenSaleMint'
+      mintedTokenAmount: string
+      tokenSymbol: string
+      minterHandle: string
+      minterId: string
+      paiedJoyAmount: string
+    }
 
 type AuctionType = 'AuctionTypeEnglish' | 'AuctionTypeOpen'
