@@ -50,7 +50,12 @@ export const MoreVideos: FC<MoreVideosProps> = ({
       where,
       limit: NUMBER_OF_VIDEOS + 1,
     },
-    { skip: !where.category?.id_in && !where.channel?.id_eq }
+    {
+      skip:
+        'OR' in where
+          ? !where.OR?.some((partialWhere) => !!(partialWhere.category?.id_in || partialWhere.channel?.id_eq))
+          : !where.category?.id_in && !where.channel?.id_eq,
+    }
   )
   const displayedItems = loading ? [] : videos.filter((video) => video.id !== videoId).slice(0, NUMBER_OF_VIDEOS)
   const placeholderItems = loading && !videos.length ? createPlaceholderData(NUMBER_OF_VIDEOS) : []
