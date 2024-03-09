@@ -41,6 +41,7 @@ const getVideoKeyArgs = (
   const durationLte = args?.where?.duration_gte || ''
   const titleContains = args?.where?.title_contains || ''
   const titleContainsInsensitive = args?.where?.title_containsInsensitive || ''
+  const OR = stringifyValue(args?.where?.OR)
 
   const sortingArray = args?.orderBy != null ? (Array.isArray(args.orderBy) ? args.orderBy : [args.orderBy]) : []
   const sorting = stringifyValue(sortingArray)
@@ -50,7 +51,7 @@ const getVideoKeyArgs = (
     return `${createdAtGte}:${channel}`
   }
 
-  return `${onlyCount}:${channel}:${category}:${nft}:${language}:${createdAtGte}:${createdAtLte}:${isPublic}:${idEq}:${idIn}:${sorting}:${durationGte}:${durationLte}:${titleContains}:${titleContainsInsensitive}:${offset}:${createdAtGt}:${createdAtLt}`
+  return `${onlyCount}:${channel}:${category}:${nft}:${language}:${createdAtGte}:${createdAtLte}:${isPublic}:${idEq}:${idIn}:${sorting}:${durationGte}:${durationLte}:${titleContains}:${titleContainsInsensitive}:${offset}:${createdAtGt}:${createdAtLt}:${OR}`
 }
 
 const getNftKeyArgs = (
