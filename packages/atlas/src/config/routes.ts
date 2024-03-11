@@ -11,6 +11,7 @@ export type MemberSettingsTabs = 'Public profile' | 'Wallet' | 'Notifications'
 export type MemberTabs = 'NFTs' | 'Activity' | 'About'
 export type ChannelTabs = 'Videos' | 'Token' | 'NFTs' | 'Information'
 export type MyChannelTabs = 'General' | 'Notifications'
+export type CrtDashboardTabs = 'Dashboard' | 'Market' | 'Holders' | 'Revenue share'
 
 const withQueryParameters = (basePath: string, query: Record<string, string | boolean> = {}) => {
   if (Object.values(query).length) {
@@ -63,7 +64,7 @@ export const relativeRoutes = {
     myChannel: (query?: { [QUERY_PARAMS.TAB]?: MyChannelTabs }) => withQueryParameters('channel', query),
     videos: () => 'videos',
     crt: () => 'crt',
-    crtDashboard: () => 'crt-dashboard',
+    crtDashboard: (query?: { [QUERY_PARAMS.TAB]?: CrtDashboardTabs }) => withQueryParameters('crt-dashboard', query),
     crtTokenEdit: () => 'crt/edit',
     videoWorkspace: () => 'video-workspace',
     uploads: () => 'uploads',
