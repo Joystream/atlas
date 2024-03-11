@@ -235,8 +235,6 @@ const parseNotificationType = (notificationType: NotificationType): Notification
     case 'CreatorTokenMarketBurn':
     case 'CreatorTokenSaleMint':
       return toNotificationData(notificationType, {})
-    default:
-      throw new Error('Unsuporrted notification type')
   }
 }
 

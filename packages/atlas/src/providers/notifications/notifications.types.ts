@@ -5,7 +5,7 @@ export type NotificationData =
   // Members
   | { type: 'ChannelCreated'; channelId: string; channelTitle: string }
   | {
-      type: 'CommentReply'
+      type: 'CommentReply' | 'ReactionToComment'
       memberId: string
       memberHandle: string
       videoId: string
@@ -13,19 +13,14 @@ export type NotificationData =
       commentId: string
     }
   | {
-      type: 'ReactionToComment'
-      memberId: string
-      memberHandle: string
+      type: 'VideoPosted' | 'NewNftOnSale' | 'NewAuction'
+      channelId: string
+      channelTitle: string
       videoId: string
       videoTitle: string
-      commentId: string
     }
-  | { type: 'VideoPosted'; channelId: string; channelTitle: string; videoId: string; videoTitle: string }
-  | { type: 'NewNftOnSale'; channelId: string; channelTitle: string; videoId: string; videoTitle: string }
-  | { type: 'NewAuction'; channelId: string; channelTitle: string; videoId: string; videoTitle: string }
   | { type: 'HigherBidPlaced'; newBidderId: string; newBidderHandle: string; videoId: string; videoTitle: string }
-  | { type: 'AuctionWon'; auction: AuctionType; videoId: string; videoTitle: string }
-  | { type: 'AuctionLost'; auction: AuctionType; videoId: string; videoTitle: string }
+  | { type: 'AuctionWon' | 'AuctionLost'; auction: AuctionType; videoId: string; videoTitle: string }
 
   // Channels
   | { type: 'ChannelExcluded' }
@@ -54,8 +49,13 @@ export type NotificationData =
   | { type: 'NftFeaturedOnMarketPlace'; videoId: string; videoTitle: string }
   | { type: 'NftPurchased'; buyerId: string; buyerHandle: string; price: BN; videoTitle: string; videoId: string }
   | { type: 'NftRoyaltyPaid'; amount: BN; videoId: string; videoTitle: string }
-  | { type: 'VideoLiked'; memberId: string; memberHandle: string; videoId: string; videoTitle: string }
-  | { type: 'VideoDisliked'; memberId: string; memberHandle: string; videoId: string; videoTitle: string }
+  | {
+      type: 'VideoLiked' | 'VideoDisliked'
+      memberId: string
+      memberHandle: string
+      videoId: string
+      videoTitle: string
+    }
   | { type: 'VideoExcluded'; videoTitle: string }
   | {
       type: 'CreatorTokenRevenueSharePlanned'
@@ -65,31 +65,12 @@ export type NotificationData =
       channelTitle: string
     }
   | {
-      type: 'CreatorTokenRevenueShareStarted'
-      channelId: string
-      tokenSymbol: string
-      channelTitle: string
-    }
-  | {
-      type: 'CreatorTokenRevenueShareEnded'
-      channelId: string
-      tokenSymbol: string
-      channelTitle: string
-    }
-  | {
-      type: 'CreatorTokenMarketStarted'
-      channelId: string
-      tokenSymbol: string
-      channelTitle: string
-    }
-  | {
-      type: 'CreatorTokenSaleStarted'
-      channelId: string
-      tokenSymbol: string
-      channelTitle: string
-    }
-  | {
-      type: 'CreatorTokenIssued'
+      type:
+        | 'CreatorTokenIssued'
+        | 'CreatorTokenSaleStarted'
+        | 'CreatorTokenMarketStarted'
+        | 'CreatorTokenRevenueShareEnded'
+        | 'CreatorTokenRevenueShareStarted'
       channelId: string
       tokenSymbol: string
       channelTitle: string
