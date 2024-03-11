@@ -188,13 +188,11 @@ query GetNotificationsConnection($recipient: RecipientTypeWhereInput!, $first: I
             tokenSymbol
           }
 
-
           ... on CreatorTokenMarketStarted {
             tokenSymbol
             channelTitle
             channelId
           }
-
 
           ... on CreatorTokenMarketMint {
             tokenSymbol
@@ -228,7 +226,6 @@ query GetNotificationsConnection($recipient: RecipientTypeWhereInput!, $first: I
             channelTitle
             channelId
           }
-
         }
       }
     }
