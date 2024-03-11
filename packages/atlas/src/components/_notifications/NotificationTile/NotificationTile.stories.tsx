@@ -80,6 +80,7 @@ const Template: StoryFn<any> = (args) => {
     memberId: '0',
     accountId: '0',
     channelId: '0',
+    memberChannels: [],
   }
 
   const mocks = [

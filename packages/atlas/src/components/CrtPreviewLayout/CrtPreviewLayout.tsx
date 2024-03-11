@@ -52,9 +52,9 @@ export const getTokenDetails = (token: FullCreatorTokenFragment, cumulativeReven
     details.push({
       caption: 'REV. SHARE',
       content: `${permillToPercentage(token.revenueShareRatioPermill)}%`,
-      tooltipText: `This is a percentage of revenue that creator claims after each revenue share - Channel: ${permillToPercentage(
+      tooltipText: `This is a percentage of revenue that creator claims after each revenue share - Holders: ${permillToPercentage(
         token.revenueShareRatioPermill
-      )}%, Holders: ${100 - permillToPercentage(token.revenueShareRatioPermill)}%.`,
+      )}%, Channel: ${100 - permillToPercentage(token.revenueShareRatioPermill)}%.`,
     })
 
   if (token.annualCreatorRewardPermill)
