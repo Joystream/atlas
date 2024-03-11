@@ -4350,7 +4350,7 @@ __metadata:
     storybook: 7.0.7
     style-dictionary: ^3.7.1
     subscriptions-transport-ws: ^0.11.0
-    swiper: 11.0.4
+    swiper: ^9.1.1
     twemoji: ^14.0.2
     use-draggable-scroll: ^0.1.0
     use-resize-observer: ^9.1.0
@@ -20743,6 +20743,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ssr-window@npm:^4.0.2":
+  version: 4.0.2
+  resolution: "ssr-window@npm:4.0.2"
+  checksum: df182600927f4f3225224cf8c02338ea637c9750519505bbfb9a9236741a2a7ec088386fb948bca7b447b8303d9109e7dc7672e3de041c79ac2a0e03665af7d2
+  languageName: node
+  linkType: hard
+
 "ssri@npm:^9.0.0":
   version: 9.0.1
   resolution: "ssri@npm:9.0.1"
@@ -21222,10 +21229,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swiper@npm:11.0.4":
-  version: 11.0.4
-  resolution: "swiper@npm:11.0.4"
-  checksum: 520a4c0c1aeb94eadc5c2cf52ae4a479a2c7fc416ed15a7623135c4f1b0dc9ad255c2d0c1ec8e7a138e685ac37e95668aebfbd5a8d86887326a08e8b683bed51
+"swiper@npm:^9.1.1":
+  version: 9.4.1
+  resolution: "swiper@npm:9.4.1"
+  dependencies:
+    ssr-window: ^4.0.2
+  checksum: 1180b3b766f25cbe636fafbb56adbddf8a240077c504a335a62d1773f4452df1bd9ca09bccfe86478c3b9401879c4e8f7ed3824e74299f8b48953e8fc7f08bc3
   languageName: node
   linkType: hard
 
