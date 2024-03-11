@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { ReactElement, ReactNode, useMemo } from 'react'
 
 import { useGetChannelAvatarQuery } from '@/api/queries/__generated__/channels.generated'
@@ -5,6 +6,7 @@ import { useGetMembershipsAvatarQuery } from '@/api/queries/__generated__/member
 import {
   SvgActionAddVideo,
   SvgActionCouncil,
+  SvgActionCreatorToken,
   SvgActionDislikeOutline,
   SvgActionInformative,
   SvgActionLikeOutline,
@@ -14,7 +16,8 @@ import {
   SvgActionRevenueShare,
 } from '@/assets/icons'
 import { NumberFormat } from '@/components/NumberFormat'
-import { ChannelTabs, absoluteRoutes } from '@/config/routes'
+import { ChannelTabs, CrtDashboardTabs, absoluteRoutes } from '@/config/routes'
+import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useJoystreamStore } from '@/providers/joystream/joystream.store'
 import { NotificationRecord } from '@/providers/notifications/notifications.types'
@@ -461,10 +464,13 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         text: <div>{tokenAmount} were withdrawn from your channel account</div>,
       }
     }
+
+    // CRTs
+
     case 'CreatorTokenIssued': {
       const { channelId, channelTitle, tokenSymbol } = notification
       return {
-        icon: getIcon('payout'),
+        icon: getIcon('crt'),
         link: getLink('channel-page', [channelId, 'Token']),
         avatar: { type: 'channel', params: [channelId] },
         text: (
@@ -477,7 +483,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     case 'CreatorTokenMarketStarted': {
       const { channelId, channelTitle, tokenSymbol } = notification
       return {
-        icon: getIcon('payout'),
+        icon: getIcon('crt'),
         link: getLink('channel-page', [channelId, 'Token']),
         avatar: { type: 'channel', params: [channelId] },
         text: (
@@ -490,7 +496,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     case 'CreatorTokenSaleStarted': {
       const { channelId, channelTitle, tokenSymbol } = notification
       return {
-        icon: getIcon('payout'),
+        icon: getIcon('crt'),
         link: getLink('channel-page', [channelId, 'Token']),
         avatar: { type: 'channel', params: [channelId] },
         text: (
@@ -503,7 +509,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     case 'CreatorTokenRevenueSharePlanned': {
       const { channelId, channelTitle, tokenSymbol, plannedAt } = notification
       return {
-        icon: getIcon('payout'),
+        icon: getIcon('crt'),
         link: getLink('channel-page', [channelId, 'Token']),
         avatar: { type: 'channel', params: [channelId] },
         text: (
@@ -516,7 +522,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     case 'CreatorTokenRevenueShareStarted': {
       const { channelId, channelTitle, tokenSymbol } = notification
       return {
-        icon: getIcon('payout'),
+        icon: getIcon('crt'),
         link: getLink('channel-page', [channelId, 'Token']),
         avatar: { type: 'channel', params: [channelId] },
         text: (
@@ -529,7 +535,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     case 'CreatorTokenRevenueShareEnded': {
       const { channelId, channelTitle, tokenSymbol } = notification
       return {
-        icon: getIcon('payout'),
+        icon: getIcon('crt'),
         link: getLink('channel-page', [channelId, 'Token']),
         avatar: { type: 'channel', params: [channelId] },
         text: (
@@ -543,16 +549,16 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     case 'CreatorTokenSaleMint': {
       const { mintedTokenAmount, tokenSymbol, minterHandle, paiedJoyAmount, minterId } = notification
       const { sessionTokenPrice } = useJoystreamStore.getState()
+      const joyValue = hapiBnToTokenNumber(new BN(paiedJoyAmount), true)
       return {
-        icon: getIcon('payout'),
-        link: getLink('channel-page', ['', 'Token']),
+        icon: getIcon('crt'),
+        link: getLink('crt-dashboard', [notification.type === 'CreatorTokenMarketMint' ? 'Market' : 'Sale']),
         avatar: { type: 'membership', params: [minterId] },
         text: (
           <div>
             {minterHandle} purchased {mintedTokenAmount} ${tokenSymbol} on token{' '}
             {notification.type === 'CreatorTokenMarketMint' ? 'market' : 'sale'} for ($
-            {sessionTokenPrice ? formatNumber(Number(mintedTokenAmount) * sessionTokenPrice) : '-'}) {paiedJoyAmount}{' '}
-            $JOY{' '}
+            {sessionTokenPrice ? formatNumber(joyValue * sessionTokenPrice) : '-'}) {joyValue} $JOY{' '}
           </div>
         ),
       }
@@ -560,15 +566,16 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
     case 'CreatorTokenMarketBurn': {
       const { burnedTokenAmount, tokenSymbol, burnerHandle, receivedJoyAmount, burnerId } = notification
       const { sessionTokenPrice } = useJoystreamStore.getState()
+      const joyValue = hapiBnToTokenNumber(new BN(receivedJoyAmount), true)
+
       return {
-        icon: getIcon('payout'),
-        link: getLink('channel-page', ['', 'Token']),
+        icon: getIcon('crt'),
+        link: getLink('crt-dashboard', ['Market']),
         avatar: { type: 'membership', params: [burnerId] },
         text: (
           <div>
             {burnerHandle} sold {burnedTokenAmount} ${tokenSymbol} on token market for ($
-            {sessionTokenPrice ? formatNumber(Number(burnedTokenAmount) * sessionTokenPrice) : '-'}) {receivedJoyAmount}{' '}
-            $JOY{' '}
+            {sessionTokenPrice ? formatNumber(joyValue * sessionTokenPrice) : '-'}) {joyValue} $JOY{' '}
           </div>
         ),
       }
@@ -577,6 +584,7 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
 }
 
 type NotificationIconType =
+  | 'crt'
   | 'like'
   | 'dislike'
   | 'follow'
@@ -599,6 +607,7 @@ const notificationIconMapper: Record<NotificationIconType, [ReactElement, 'red' 
   payout: [<SvgActionRevenueShare key={1} />, 'green'],
   warning: [<SvgActionInformative key={1} />, 'gray'],
   video: [<SvgActionAddVideo key={1} />, 'blue'],
+  crt: [<SvgActionCreatorToken key={1} />, 'green'],
 }
 
 const getIcon = (iconType: NotificationIconType) => {
@@ -620,6 +629,7 @@ type LinkType =
   | 'member-page'
   | 'ypp-dashboard'
   | 'payments-page'
+  | 'crt-dashboard'
 
 const getLink = (type: LinkType, params: string[] = []): string => {
   switch (type) {
@@ -643,6 +653,9 @@ const getLink = (type: LinkType, params: string[] = []): string => {
 
     case 'payments-page':
       return absoluteRoutes.studio.payments()
+
+    case 'crt-dashboard':
+      return absoluteRoutes.studio.crtDashboard({ tab: params[0] as CrtDashboardTabs })
 
     case 'ypp-dashboard':
       return absoluteRoutes.viewer.yppDashboard()
