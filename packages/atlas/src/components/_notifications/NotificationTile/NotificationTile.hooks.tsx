@@ -14,10 +14,13 @@ import {
   SvgActionRevenueShare,
 } from '@/assets/icons'
 import { NumberFormat } from '@/components/NumberFormat'
-import { absoluteRoutes } from '@/config/routes'
+import { ChannelTabs, absoluteRoutes } from '@/config/routes'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
+import { useJoystreamStore } from '@/providers/joystream/joystream.store'
 import { NotificationRecord } from '@/providers/notifications/notifications.types'
 import { useUser } from '@/providers/user/user.hooks'
+import { formatNumber } from '@/utils/number'
+import { formatDateTimeAt } from '@/utils/time'
 
 import { IconContainer } from './NotificationTile.styles'
 
@@ -458,6 +461,118 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         text: <div>{tokenAmount} were withdrawn from your channel account</div>,
       }
     }
+    case 'CreatorTokenIssued': {
+      const { channelId, channelTitle, tokenSymbol } = notification
+      return {
+        icon: getIcon('payout'),
+        link: getLink('channel-page', [channelId, 'Token']),
+        avatar: { type: 'channel', params: [channelId] },
+        text: (
+          <div>
+            {channelTitle} issued a creator token for their channel called ${tokenSymbol}.
+          </div>
+        ),
+      }
+    }
+    case 'CreatorTokenMarketStarted': {
+      const { channelId, channelTitle, tokenSymbol } = notification
+      return {
+        icon: getIcon('payout'),
+        link: getLink('channel-page', [channelId, 'Token']),
+        avatar: { type: 'channel', params: [channelId] },
+        text: (
+          <div>
+            {channelTitle} started a market for ${tokenSymbol} token.{' '}
+          </div>
+        ),
+      }
+    }
+    case 'CreatorTokenSaleStarted': {
+      const { channelId, channelTitle, tokenSymbol } = notification
+      return {
+        icon: getIcon('payout'),
+        link: getLink('channel-page', [channelId, 'Token']),
+        avatar: { type: 'channel', params: [channelId] },
+        text: (
+          <div>
+            {channelTitle} started a sale of ${tokenSymbol} token.{' '}
+          </div>
+        ),
+      }
+    }
+    case 'CreatorTokenRevenueSharePlanned': {
+      const { channelId, channelTitle, tokenSymbol, plannedAt } = notification
+      return {
+        icon: getIcon('payout'),
+        link: getLink('channel-page', [channelId, 'Token']),
+        avatar: { type: 'channel', params: [channelId] },
+        text: (
+          <div>
+            {channelTitle} planned revenue share for ${tokenSymbol} token starting at: {formatDateTimeAt(plannedAt)}.
+          </div>
+        ),
+      }
+    }
+    case 'CreatorTokenRevenueShareStarted': {
+      const { channelId, channelTitle, tokenSymbol } = notification
+      return {
+        icon: getIcon('payout'),
+        link: getLink('channel-page', [channelId, 'Token']),
+        avatar: { type: 'channel', params: [channelId] },
+        text: (
+          <div>
+            {channelTitle} started a revenue share for ${tokenSymbol} token. Go and claim your share now!{' '}
+          </div>
+        ),
+      }
+    }
+    case 'CreatorTokenRevenueShareEnded': {
+      const { channelId, channelTitle, tokenSymbol } = notification
+      return {
+        icon: getIcon('payout'),
+        link: getLink('channel-page', [channelId, 'Token']),
+        avatar: { type: 'channel', params: [channelId] },
+        text: (
+          <div>
+            {channelTitle} ended a revenue share for ${tokenSymbol} token. Unlock your locked tokens!{' '}
+          </div>
+        ),
+      }
+    }
+    case 'CreatorTokenMarketMint':
+    case 'CreatorTokenSaleMint': {
+      const { mintedTokenAmount, tokenSymbol, minterHandle, paiedJoyAmount, minterId } = notification
+      const { sessionTokenPrice } = useJoystreamStore.getState()
+      return {
+        icon: getIcon('payout'),
+        link: getLink('channel-page', ['', 'Token']),
+        avatar: { type: 'membership', params: [minterId] },
+        text: (
+          <div>
+            {minterHandle} purchased {mintedTokenAmount} ${tokenSymbol} on token{' '}
+            {notification.type === 'CreatorTokenMarketMint' ? 'market' : 'sale'} for ($
+            {sessionTokenPrice ? formatNumber(Number(mintedTokenAmount) * sessionTokenPrice) : '-'}) {paiedJoyAmount}{' '}
+            $JOY{' '}
+          </div>
+        ),
+      }
+    }
+    case 'CreatorTokenMarketBurn': {
+      const { burnedTokenAmount, tokenSymbol, burnerHandle, receivedJoyAmount, burnerId } = notification
+      const { sessionTokenPrice } = useJoystreamStore.getState()
+      return {
+        icon: getIcon('payout'),
+        link: getLink('channel-page', ['', 'Token']),
+        avatar: { type: 'membership', params: [burnerId] },
+        text: (
+          <div>
+            {burnerHandle} sold {burnedTokenAmount} ${tokenSymbol} on token market for ($
+            {sessionTokenPrice ? formatNumber(Number(burnedTokenAmount) * sessionTokenPrice) : '-'}) {receivedJoyAmount}{' '}
+            $JOY{' '}
+          </div>
+        ),
+      }
+    }
   }
 }
 
@@ -515,7 +630,7 @@ const getLink = (type: LinkType, params: string[] = []): string => {
       return absoluteRoutes.viewer.video(params[0], { nftWidget: true })
 
     case 'channel-page':
-      return absoluteRoutes.viewer.channel(params[0])
+      return absoluteRoutes.viewer.channel(params[0], { tab: params[1] as ChannelTabs })
 
     case 'member-page':
       return absoluteRoutes.viewer.memberById(params[0])
