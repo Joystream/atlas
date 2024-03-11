@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
+import { Navigation, Pagination } from 'swiper'
 import 'swiper/css'
-import { Navigation, Pagination } from 'swiper/modules'
 import { SwiperProps, SwiperSlide } from 'swiper/react'
 import { Swiper as SwiperType } from 'swiper/types'
 
