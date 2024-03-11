@@ -102,7 +102,8 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
         displaySnackbar({
           iconType: 'warning',
           title: 'Cannot start revenue share',
-          description: 'There are no assets on the channel that could be shared with holders.',
+          description:
+            'Your channel reward account must have positive JOY balance. YPP, NFT sales and DAO rewards result in channel rewards.',
         })
         return
       }

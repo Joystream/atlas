@@ -263,7 +263,8 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
             if (!value || value < 1) {
               return 'You need to sell at least one token'
             }
-            if (value > +(currentAmm?.mintedByAmm ?? 0)) return 'You cannot sell more tokens than minted'
+            if (value > +(currentAmm?.mintedByAmm ?? 0))
+              return 'You cannot sell more tokens than available in the market'
             if (value > userTokenBalance) return 'Amount exceeds your account balance'
             return true
           }}
