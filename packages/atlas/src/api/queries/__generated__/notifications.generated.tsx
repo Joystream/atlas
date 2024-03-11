@@ -79,15 +79,52 @@ export type GetNotificationsConnectionQuery = {
               videoId: string
               videoTitle: string
             }
-          | { __typename: 'CreatorTokenIssued' }
-          | { __typename: 'CreatorTokenMarketBurn' }
-          | { __typename: 'CreatorTokenMarketMint' }
-          | { __typename: 'CreatorTokenMarketStarted' }
-          | { __typename: 'CreatorTokenRevenueShareEnded' }
-          | { __typename: 'CreatorTokenRevenueSharePlanned' }
-          | { __typename: 'CreatorTokenRevenueShareStarted' }
-          | { __typename: 'CreatorTokenSaleMint' }
-          | { __typename: 'CreatorTokenSaleStarted' }
+          | { __typename: 'CreatorTokenIssued'; channelId: string; channelTitle: string; tokenSymbol: string }
+          | {
+              __typename: 'CreatorTokenMarketBurn'
+              tokenSymbol: string
+              burnedTokenAmount: string
+              burnerHandle: string
+              receivedJoyAmount: string
+              burnerId: string
+            }
+          | {
+              __typename: 'CreatorTokenMarketMint'
+              tokenSymbol: string
+              mintedTokenAmount: string
+              minterHandle: string
+              minterId: string
+              paiedJoyAmount: string
+            }
+          | { __typename: 'CreatorTokenMarketStarted'; tokenSymbol: string; channelTitle: string; channelId: string }
+          | {
+              __typename: 'CreatorTokenRevenueShareEnded'
+              channelId: string
+              channelTitle: string
+              tokenSymbol: string
+            }
+          | {
+              __typename: 'CreatorTokenRevenueSharePlanned'
+              channelId: string
+              channelTitle: string
+              tokenSymbol: string
+              plannedAt: number
+            }
+          | {
+              __typename: 'CreatorTokenRevenueShareStarted'
+              channelId: string
+              channelTitle: string
+              tokenSymbol: string
+            }
+          | {
+              __typename: 'CreatorTokenSaleMint'
+              tokenSymbol: string
+              mintedTokenAmount: string
+              minterHandle: string
+              minterId: string
+              paiedJoyAmount: string
+            }
+          | { __typename: 'CreatorTokenSaleStarted'; tokenSymbol: string; channelTitle: string; channelId: string }
           | { __typename: 'DirectChannelPaymentByMember'; amount: string; payerId: string; payerHandle: string }
           | {
               __typename: 'HigherBidPlaced'
@@ -3264,6 +3301,61 @@ export const GetNotificationsConnectionDocument = gql`
             }
             ... on ChannelFundsWithdrawn {
               amount
+            }
+            ... on CreatorTokenIssued {
+              channelId
+              channelTitle
+              tokenSymbol
+            }
+            ... on CreatorTokenRevenueSharePlanned {
+              channelId
+              channelTitle
+              tokenSymbol
+              plannedAt
+            }
+            ... on CreatorTokenRevenueShareStarted {
+              channelId
+              channelTitle
+              tokenSymbol
+            }
+            ... on CreatorTokenRevenueShareEnded {
+              channelId
+              channelTitle
+              tokenSymbol
+            }
+            ... on CreatorTokenMarketStarted {
+              tokenSymbol
+              channelTitle
+              channelId
+            }
+            ... on CreatorTokenMarketMint {
+              tokenSymbol
+              mintedTokenAmount
+              tokenSymbol
+              minterHandle
+              minterId
+              paiedJoyAmount
+            }
+            ... on CreatorTokenMarketBurn {
+              tokenSymbol
+              burnedTokenAmount
+              tokenSymbol
+              burnerHandle
+              receivedJoyAmount
+              burnerId
+            }
+            ... on CreatorTokenSaleMint {
+              tokenSymbol
+              mintedTokenAmount
+              tokenSymbol
+              minterHandle
+              minterId
+              paiedJoyAmount
+            }
+            ... on CreatorTokenSaleStarted {
+              tokenSymbol
+              channelTitle
+              channelId
             }
           }
         }
