@@ -81,6 +81,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   const contextValue: UserContextValue = useMemo(
     () => ({
       memberships: memberships || [],
+      memberChannels: activeMembership?.channels ?? null,
       membershipsLoading,
       activeMembership,
       activeChannel,

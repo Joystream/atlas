@@ -16,6 +16,10 @@ const isPropValid = (prop: string) => prop !== 'minSlideWidth'
 export const StyledSwiper = styled(Swiper, { shouldForwardProp: isPropValid })<StyledSwiperProps>`
   width: 100%;
 
+  .swiper-slide {
+    height: unset;
+  }
+
   .swiper-pagination {
     display: flex;
     justify-content: center;

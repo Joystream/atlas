@@ -238,6 +238,7 @@ export type GetFullCreatorTokenQuery = {
       createdIn: number
       finalized: boolean
       participantsNum: number
+      potentialParticipantsNum?: number | null
       startingAt: number
       token: { __typename?: 'CreatorToken'; id: string; symbol?: string | null }
       stakers: Array<{
@@ -491,6 +492,7 @@ export type GetTokenRevenueSharesQuery = {
     createdIn: number
     finalized: boolean
     participantsNum: number
+    potentialParticipantsNum?: number | null
     startingAt: number
     token: { __typename?: 'CreatorToken'; id: string; symbol?: string | null }
     stakers: Array<{
