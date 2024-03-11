@@ -96,7 +96,7 @@
     "retry-axios": "^3.0.0",
     "scroll-lock": "^2.1.5",
     "subscriptions-transport-ws": "^0.11.0",
-    "swiper": "11.0.4",
+    "swiper": "^9.1.1",
     "twemoji": "^14.0.2",
     "use-draggable-scroll": "^0.1.0",
     "use-resize-observer": "^9.1.0",
