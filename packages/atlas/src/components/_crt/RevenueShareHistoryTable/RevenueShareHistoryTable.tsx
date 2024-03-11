@@ -21,6 +21,7 @@ export type RevenueShareHistoryTableProps = {
   data: {
     endsAtBlock: number
     totalParticipants: number
+    potentialParticipants: number | null
     claimed: BN
     allocation: BN
     stakers: FullCreatorTokenFragment['revenueShares'][number]['stakers']
@@ -33,14 +34,14 @@ export const RevenueShareHistoryTable = ({ data }: RevenueShareHistoryTableProps
   const mappedData = useMemo(() => {
     return data.map((row) => {
       const memberStake = new BN(row.stakers.find((staker) => staker.account.member.id === memberId)?.earnings ?? 0)
-
+      const potentialParticipants = row.potentialParticipants
       return {
         endDate: <DateBlockCell type="block" block={row.endsAtBlock} />,
         participants: (
           <Text variant="t100" as="span">
-            {row.stakers.length}/x
+            {row.stakers.length}/{potentialParticipants ?? 'N/A'}
             <Text variant="t100" as="p" color="colorText">
-              (x%)
+              {potentialParticipants ? `(${row.stakers.length / potentialParticipants}%)` : ''}
             </Text>
           </Text>
         ),

@@ -8,6 +8,7 @@ export type UserContextValue = {
   membershipsLoading: boolean
   activeMembership: Membership | null
   activeChannel: Membership['channels'][number] | null
+  memberChannels: Membership['channels'] | null
   setActiveChannel: (channelId: string) => void
   refetchUserMemberships: ReturnType<typeof useMemberships>['refetch']
   memberId: string | null

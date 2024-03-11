@@ -1,5 +1,6 @@
 import BN from 'bn.js'
 
+import { CreatorTokenOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { useGetBasicCreatorTokensQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { MarketplaceCarousel } from '@/components/NftCarousel/MarketplaceCarousel'
@@ -15,7 +16,19 @@ import { responsive } from '../FeaturedNftsSection/FeaturedNftsSection'
 
 export const MarketplaceCrtTab = () => {
   const mdMatch = useMediaMatch('md')
-  const { data, loading } = useGetBasicCreatorTokensQuery({})
+  const { data, loading } = useGetBasicCreatorTokensQuery({
+    variables: {
+      where: {
+        isFeatured_eq: true,
+        trailerVideo_every: {
+          id_isNull: false,
+        },
+      },
+      limit: 10,
+      orderBy: CreatorTokenOrderByInput.CurrentAmmSaleMintedByAmmDesc,
+    },
+  })
+
   const featuredCrts =
     data?.creatorTokens
       .slice(5)
