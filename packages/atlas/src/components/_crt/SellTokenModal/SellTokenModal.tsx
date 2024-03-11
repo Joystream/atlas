@@ -74,7 +74,6 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
   const pricePerUnit = priceForAllToken / (tokenAmount || 1)
 
   const formDetails = useMemo(() => {
-    // const requiredHapi = calculateRequiredHapi(tokenAmount)
     const percentageOfTotalSupply = data?.creatorTokenById
       ? (tokenAmount / +(data.creatorTokenById.totalSupply || 1)) * 100
       : 0
