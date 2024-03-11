@@ -127,7 +127,7 @@ const MarketDetails = ({ token }: { token: FullCreatorTokenFragment }) => {
     [token]
   )
   return (
-    <>
+    <FlexBox flow="column" gap={3}>
       <DetailsContent
         caption="PRICE PER UNIT"
         content={calculateSlippageAmount(1) ?? 0}
@@ -150,6 +150,6 @@ const MarketDetails = ({ token }: { token: FullCreatorTokenFragment }) => {
         </Text>
         <Information text="An automated market maker (AMM) is an algorithm that helps to buy and sell tokens by using price curves which automatically set prices and match buyers and sellers." />
       </SupplyLine>
-    </>
+    </FlexBox>
   )
 }

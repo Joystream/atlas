@@ -1,9 +1,11 @@
+import { useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
 import { useCallback, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { useGetFullCreatorTokenQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { NumberFormat, formatNumberShort } from '@/components/NumberFormat'
+import { Text } from '@/components/Text'
 import { AmmModalFormTemplate } from '@/components/_crt/AmmModalTemplates'
 import { AmmModalSummaryTemplate } from '@/components/_crt/AmmModalTemplates/AmmModalSummaryTemplate'
 import { DialogModal } from '@/components/_overlays/DialogModal'
@@ -16,6 +18,7 @@ import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { calcSellMarketPricePerToken } from '@/utils/crts'
 import { SentryLogger } from '@/utils/logs'
+import { formatSmallDecimal, permillToPercentage } from '@/utils/number'
 
 export type SellTokenModalProps = {
   tokenId: string
@@ -26,7 +29,7 @@ export type SellTokenModalProps = {
 export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenModalProps) => {
   const [step, setStep] = useState<'form' | 'summary'>('form')
   const { control, watch, handleSubmit, formState, reset } = useForm<{ tokenAmount: number }>()
-  const { memberId } = useUser()
+  const { memberId, memberChannels } = useUser()
   const tokenAmount = watch('tokenAmount') || 0
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
@@ -40,6 +43,7 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
       SentryLogger.error('Failed to fetch token data', 'SellTokenModal', { error })
     },
   })
+  const client = useApolloClient()
 
   const currentAmm = data?.creatorTokenById?.ammCurves.find((amm) => !amm.finalized)
   const title = data?.creatorTokenById?.symbol ?? 'N/A'
@@ -69,8 +73,37 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
   }, [tokenAmount, calculateSlippageAmount])
   const pricePerUnit = priceForAllToken / (tokenAmount || 1)
 
-  const formDetails = useMemo(
-    () => [
+  const formDetails = useMemo(() => {
+    const percentageOfTotalSupply = data?.creatorTokenById
+      ? (tokenAmount / +(data.creatorTokenById.totalSupply || 1)) * 100
+      : 0
+    const isOwner = memberChannels?.some((channel) => channel.id === data?.creatorTokenById?.channel?.channel.id)
+    const userRevenueParticipation = data?.creatorTokenById?.revenueShareRatioPermill
+      ? percentageOfTotalSupply *
+        ((isOwner
+          ? 100 - permillToPercentage(data.creatorTokenById.revenueShareRatioPermill)
+          : permillToPercentage(data.creatorTokenById.revenueShareRatioPermill)) /
+          100)
+      : 0
+    return [
+      {
+        title: 'Percentage of total supply',
+        tooltipText: 'Percentage of total supply of the token that will be sold.',
+        content: (
+          <Text variant="h300" as="h3">
+            {formatSmallDecimal(percentageOfTotalSupply)}%
+          </Text>
+        ),
+      },
+      {
+        title: 'Percentage of revenue',
+        tooltipText: 'Percentage of token creator revenue that will be sold through the tokens.',
+        content: (
+          <Text variant="h300" as="h3">
+            {data?.creatorTokenById?.revenueShareRatioPermill ? formatSmallDecimal(userRevenueParticipation) : 0}%
+          </Text>
+        ),
+      },
       {
         title: 'Available balance',
         content: (
@@ -99,9 +132,8 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
         ),
         tooltipText: `Amount of ${atlasConfig.joystream.tokenTicker} that you will receive for your tokens.`,
       },
-    ],
-    [priceForAllToken, pricePerUnit, title, tokenAmount, userTokenBalance]
-  )
+    ]
+  }, [data?.creatorTokenById, memberChannels, priceForAllToken, pricePerUnit, title, tokenAmount, userTokenBalance])
 
   const summaryDetails = useMemo(
     () => [
@@ -190,6 +222,7 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
           } received`,
           description: `You will find it in your portfolio.`,
         })
+        client.refetchQueries({ include: 'active' })
         onClose()
       },
     })
@@ -230,7 +263,8 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
             if (!value || value < 1) {
               return 'You need to sell at least one token'
             }
-            if (value > +(currentAmm?.mintedByAmm ?? 0)) return 'You cannot sell more tokens than minted'
+            if (value > +(currentAmm?.mintedByAmm ?? 0))
+              return 'You cannot sell more tokens than available in the market'
             if (value > userTokenBalance) return 'Amount exceeds your account balance'
             return true
           }}
