@@ -527,6 +527,7 @@ fragment BasicRevenueShare on RevenueShare {
   createdIn
   finalized
   participantsNum
+  potentialParticipantsNum
   startingAt
   token {
     id

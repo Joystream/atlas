@@ -2284,6 +2284,7 @@ export type BasicRevenueShareFragment = {
   createdIn: number
   finalized: boolean
   participantsNum: number
+  potentialParticipantsNum?: number | null
   startingAt: number
   token: { __typename?: 'CreatorToken'; id: string; symbol?: string | null }
   stakers: Array<{
@@ -2508,6 +2509,7 @@ export type FullCreatorTokenFragment = {
     createdIn: number
     finalized: boolean
     participantsNum: number
+    potentialParticipantsNum?: number | null
     startingAt: number
     token: { __typename?: 'CreatorToken'; id: string; symbol?: string | null }
     stakers: Array<{
@@ -3226,6 +3228,7 @@ export const BasicRevenueShareFragmentDoc = gql`
     createdIn
     finalized
     participantsNum
+    potentialParticipantsNum
     startingAt
     token {
       id

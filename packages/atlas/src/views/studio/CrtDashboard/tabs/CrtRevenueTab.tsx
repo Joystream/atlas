@@ -122,6 +122,7 @@ export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
                 totalParticipants: revenueShare.participantsNum,
                 endsAtBlock: revenueShare.endsAt,
                 allocation: new BN(revenueShare.allocation ?? 0),
+                potentialParticipants: revenueShare.potentialParticipantsNum ?? null,
               }))}
             />
           </GridItem>
