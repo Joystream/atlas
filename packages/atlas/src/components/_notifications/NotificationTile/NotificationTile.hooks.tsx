@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { ReactElement, ReactNode, useMemo } from 'react'
 
 import { useGetChannelAvatarQuery } from '@/api/queries/__generated__/channels.generated'
@@ -5,6 +6,7 @@ import { useGetMembershipsAvatarQuery } from '@/api/queries/__generated__/member
 import {
   SvgActionAddVideo,
   SvgActionCouncil,
+  SvgActionCreatorToken,
   SvgActionDislikeOutline,
   SvgActionInformative,
   SvgActionLikeOutline,
@@ -14,10 +16,14 @@ import {
   SvgActionRevenueShare,
 } from '@/assets/icons'
 import { NumberFormat } from '@/components/NumberFormat'
-import { absoluteRoutes } from '@/config/routes'
+import { ChannelTabs, CrtDashboardTabs, absoluteRoutes } from '@/config/routes'
+import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
+import { useJoystreamStore } from '@/providers/joystream/joystream.store'
 import { NotificationRecord } from '@/providers/notifications/notifications.types'
 import { useUser } from '@/providers/user/user.hooks'
+import { formatNumber } from '@/utils/number'
+import { formatDateTimeAt } from '@/utils/time'
 
 import { IconContainer } from './NotificationTile.styles'
 
@@ -458,10 +464,127 @@ const getNotificationUX = (notification: NotificationRecord, channelTitle?: stri
         text: <div>{tokenAmount} were withdrawn from your channel account</div>,
       }
     }
+
+    // CRTs
+
+    case 'CreatorTokenIssued': {
+      const { channelId, channelTitle, tokenSymbol } = notification
+      return {
+        icon: getIcon('crt'),
+        link: getLink('channel-page', [channelId, 'Token']),
+        avatar: { type: 'channel', params: [channelId] },
+        text: (
+          <div>
+            {channelTitle} issued a creator token for their channel called ${tokenSymbol}.
+          </div>
+        ),
+      }
+    }
+    case 'CreatorTokenMarketStarted': {
+      const { channelId, channelTitle, tokenSymbol } = notification
+      return {
+        icon: getIcon('crt'),
+        link: getLink('channel-page', [channelId, 'Token']),
+        avatar: { type: 'channel', params: [channelId] },
+        text: (
+          <div>
+            {channelTitle} started a market for ${tokenSymbol} token.{' '}
+          </div>
+        ),
+      }
+    }
+    case 'CreatorTokenSaleStarted': {
+      const { channelId, channelTitle, tokenSymbol } = notification
+      return {
+        icon: getIcon('crt'),
+        link: getLink('channel-page', [channelId, 'Token']),
+        avatar: { type: 'channel', params: [channelId] },
+        text: (
+          <div>
+            {channelTitle} started a sale of ${tokenSymbol} token.{' '}
+          </div>
+        ),
+      }
+    }
+    case 'CreatorTokenRevenueSharePlanned': {
+      const { channelId, channelTitle, tokenSymbol, plannedAt } = notification
+      return {
+        icon: getIcon('crt'),
+        link: getLink('channel-page', [channelId, 'Token']),
+        avatar: { type: 'channel', params: [channelId] },
+        text: (
+          <div>
+            {channelTitle} planned revenue share for ${tokenSymbol} token starting at: {formatDateTimeAt(plannedAt)}.
+          </div>
+        ),
+      }
+    }
+    case 'CreatorTokenRevenueShareStarted': {
+      const { channelId, channelTitle, tokenSymbol } = notification
+      return {
+        icon: getIcon('crt'),
+        link: getLink('channel-page', [channelId, 'Token']),
+        avatar: { type: 'channel', params: [channelId] },
+        text: (
+          <div>
+            {channelTitle} started a revenue share for ${tokenSymbol} token. Go and claim your share now!{' '}
+          </div>
+        ),
+      }
+    }
+    case 'CreatorTokenRevenueShareEnded': {
+      const { channelId, channelTitle, tokenSymbol } = notification
+      return {
+        icon: getIcon('crt'),
+        link: getLink('channel-page', [channelId, 'Token']),
+        avatar: { type: 'channel', params: [channelId] },
+        text: (
+          <div>
+            {channelTitle} ended a revenue share for ${tokenSymbol} token. Unlock your locked tokens!{' '}
+          </div>
+        ),
+      }
+    }
+    case 'CreatorTokenMarketMint':
+    case 'CreatorTokenSaleMint': {
+      const { mintedTokenAmount, tokenSymbol, minterHandle, paiedJoyAmount, minterId } = notification
+      const { sessionTokenPrice } = useJoystreamStore.getState()
+      const joyValue = hapiBnToTokenNumber(new BN(paiedJoyAmount), true)
+      return {
+        icon: getIcon('crt'),
+        link: getLink('crt-dashboard', [notification.type === 'CreatorTokenMarketMint' ? 'Market' : 'Sale']),
+        avatar: { type: 'membership', params: [minterId] },
+        text: (
+          <div>
+            {minterHandle} purchased {mintedTokenAmount} ${tokenSymbol} on token{' '}
+            {notification.type === 'CreatorTokenMarketMint' ? 'market' : 'sale'} for ($
+            {sessionTokenPrice ? formatNumber(joyValue * sessionTokenPrice) : '-'}) {joyValue} $JOY{' '}
+          </div>
+        ),
+      }
+    }
+    case 'CreatorTokenMarketBurn': {
+      const { burnedTokenAmount, tokenSymbol, burnerHandle, receivedJoyAmount, burnerId } = notification
+      const { sessionTokenPrice } = useJoystreamStore.getState()
+      const joyValue = hapiBnToTokenNumber(new BN(receivedJoyAmount), true)
+
+      return {
+        icon: getIcon('crt'),
+        link: getLink('crt-dashboard', ['Market']),
+        avatar: { type: 'membership', params: [burnerId] },
+        text: (
+          <div>
+            {burnerHandle} sold {burnedTokenAmount} ${tokenSymbol} on token market for ($
+            {sessionTokenPrice ? formatNumber(joyValue * sessionTokenPrice) : '-'}) {joyValue} $JOY{' '}
+          </div>
+        ),
+      }
+    }
   }
 }
 
 type NotificationIconType =
+  | 'crt'
   | 'like'
   | 'dislike'
   | 'follow'
@@ -484,6 +607,7 @@ const notificationIconMapper: Record<NotificationIconType, [ReactElement, 'red' 
   payout: [<SvgActionRevenueShare key={1} />, 'green'],
   warning: [<SvgActionInformative key={1} />, 'gray'],
   video: [<SvgActionAddVideo key={1} />, 'blue'],
+  crt: [<SvgActionCreatorToken key={1} />, 'green'],
 }
 
 const getIcon = (iconType: NotificationIconType) => {
@@ -505,6 +629,7 @@ type LinkType =
   | 'member-page'
   | 'ypp-dashboard'
   | 'payments-page'
+  | 'crt-dashboard'
 
 const getLink = (type: LinkType, params: string[] = []): string => {
   switch (type) {
@@ -515,7 +640,7 @@ const getLink = (type: LinkType, params: string[] = []): string => {
       return absoluteRoutes.viewer.video(params[0], { nftWidget: true })
 
     case 'channel-page':
-      return absoluteRoutes.viewer.channel(params[0])
+      return absoluteRoutes.viewer.channel(params[0], { tab: params[1] as ChannelTabs })
 
     case 'member-page':
       return absoluteRoutes.viewer.memberById(params[0])
@@ -528,6 +653,9 @@ const getLink = (type: LinkType, params: string[] = []): string => {
 
     case 'payments-page':
       return absoluteRoutes.studio.payments()
+
+    case 'crt-dashboard':
+      return absoluteRoutes.studio.crtDashboard({ tab: params[0] as CrtDashboardTabs })
 
     case 'ypp-dashboard':
       return absoluteRoutes.viewer.yppDashboard()
