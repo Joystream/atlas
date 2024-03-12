@@ -18,7 +18,7 @@ type ChangeNowModalProps = {
 
 export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
   const [step, setStep] = useState(ChangeNowModalStep.INFO)
-  const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogButtonProps>({ text: 'Select wallet' }) // start with sensible default so that there are no jumps after first effect runs
+  const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogButtonProps | undefined>(undefined)
   const formData = useRef<FormData | null>(null)
   const transactionData = useRef<TransactionData | null>(null)
 
@@ -36,6 +36,10 @@ export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
         onClick: () => setStep(ChangeNowModalStep.FORM),
       })
     }
+
+    if (step === ChangeNowModalStep.PROGRESS) {
+      setPrimaryButtonProps(undefined)
+    }
   }, [step, type])
 
   const secondaryButton = useMemo(() => {
@@ -44,6 +48,10 @@ export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
         text: 'Cancel',
         onClick: () => onClose(),
       }
+    }
+
+    if (step === ChangeNowModalStep.PROGRESS) {
+      return undefined
     }
 
     return {
@@ -65,6 +73,7 @@ export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
   const commonProps = {
     setPrimaryButtonProps,
     goToStep: setStep,
+    onClose,
     type,
   }
 
@@ -79,7 +88,7 @@ export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
           'Buy JOY'
         )
       }
-      show
+      show={true}
       dividers={![ChangeNowModalStep.INFO, ChangeNowModalStep.SWAP_EXPIRED].includes(step)}
       onExitClick={step === ChangeNowModalStep.SWAP_EXPIRED ? undefined : () => undefined}
       primaryButton={primaryButtonProps}

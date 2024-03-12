@@ -31,7 +31,6 @@ export type SummaryStepProps = {
 
 export type TransactionData = {
   id: string
-  addressToBePaid: string
 }
 
 export const SummaryStep = ({
@@ -68,7 +67,7 @@ export const SummaryStep = ({
         amount: isSellingJoy ? from.amount : to.amount,
         currency: isSellingJoy ? toCurrency : fromCurrency,
         contactEmail: currentUser?.email,
-        addressToBePaid: isSellingJoy ? '' : activeMembership.controllerAccount,
+        addressToBePaid: isSellingJoy ? formData.destinationAddress : activeMembership.controllerAccount,
         rateId: rateId,
         userId: currentUser?.id,
       })
@@ -86,7 +85,6 @@ export const SummaryStep = ({
 
     setTransactionData({
       id: txData.id,
-      addressToBePaid: txData.payingAddress,
     })
 
     if (type === 'sell') {
@@ -100,7 +98,7 @@ export const SummaryStep = ({
           (
             await joystream.extrinsics
           ).sendFunds(
-            formatJoystreamAddress(txData.payingAddress),
+            formatJoystreamAddress(txData.payinAddress),
             tokenNumberToHapiBn(to.amount).toString(),
             proxyCallback(updateStatus)
           ),
@@ -192,7 +190,11 @@ export const SummaryStep = ({
           Recipient wallet address
         </Text>
         <Text variant="t200" as="p">
-          {shortenString(activeMembership?.controllerAccount ?? '', 3, 3)}
+          {shortenString(
+            type === 'sell' ? formData.destinationAddress : activeMembership?.controllerAccount ?? '',
+            6,
+            6
+          )}
         </Text>
       </FlexBox>
 

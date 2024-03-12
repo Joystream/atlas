@@ -11,11 +11,17 @@ import { FlexBox } from '@/components/FlexBox'
 import { Text } from '@/components/Text'
 import { ComboBox, ComboBoxProps } from '@/components/_inputs/ComboBox'
 import { FormField } from '@/components/_inputs/FormField'
+import { Input } from '@/components/_inputs/Input'
 import { TokenInput, TokenInputProps } from '@/components/_inputs/TokenInput'
 import { Spinner } from '@/components/_loaders/Spinner'
 import { useSnackbar } from '@/providers/snackbars'
 import { square } from '@/styles'
-import { Currency, JOYSTREAM_CHANGENOW_LEGACY_TICKER, changeNowService } from '@/utils/ChangeNowService'
+import {
+  Currency,
+  JOYSTREAM_CHANGENOW_LEGACY_TICKER,
+  JOYSTREAM_CHANGENOW_TICKER,
+  changeNowService,
+} from '@/utils/ChangeNowService'
 import { SentryLogger } from '@/utils/logs'
 
 type CurrencyInputValues = {
@@ -29,6 +35,7 @@ export type FormData = {
   estimatedArrival: string | null
   rateId: string | null
   validUntil: string | null
+  destinationAddress: string
   serverError?: string
 }
 
@@ -61,6 +68,14 @@ export const FormStep = ({ setPrimaryButtonProps, onSubmit, type, initialValues 
           setIsLoadingRate(null)
           return
         }
+        if (currency.ticker === JOYSTREAM_CHANGENOW_TICKER) {
+          setError('serverError', {
+            message: 'Pick different currency',
+            type: type === 'sell' ? 'to' : 'from',
+          })
+          setIsLoadingRate(null)
+          return
+        }
         try {
           const { data } = await changeNowService.getEstimatedExchangeAmount(
             amount,
@@ -76,8 +91,16 @@ export const FormStep = ({ setPrimaryButtonProps, onSubmit, type, initialValues 
           setValue('validUntil', data.validUntil)
         } catch (e) {
           if (isAxiosError(e) && e.response?.data.message && e.response.status === 400) {
+            const moreInfoRequest = await changeNowService
+              .getExchangeRange(currency, isDirectionFrom ? 'sell' : 'buy')
+              .catch(() => undefined)
+            let sanitizedMessage = changeNowService.sanitizeApiErrorMessage(e.response.data.message)
+            const { data: rangeData } = moreInfoRequest ?? {}
+            if (rangeData?.minAmount && sanitizedMessage.includes('small')) {
+              sanitizedMessage = `Minimal amount is ${rangeData.minAmount} ${currency.legacyTicker.toUpperCase()}`
+            }
             setError('serverError', {
-              message: changeNowService.sanitizeApiErrorMessage(e.response.data.message),
+              message: sanitizedMessage,
               type: direction,
             })
             return
@@ -269,10 +292,44 @@ export const FormStep = ({ setPrimaryButtonProps, onSubmit, type, initialValues 
         />
         {from.currency && to.currency && (
           <Text variant="t200" as="p" color={isLoadingRate ? 'colorTextMuted' : 'colorText'}>
-            Estimated rate: 1 {from.currency.toUpperCase()} ~ {to.amount / from.amount} {to.currency.toUpperCase()}
+            Estimated rate: 1 {from.currency.toUpperCase()} ~ {to.amount / from.amount || 'N/A'}{' '}
+            {to.currency.toUpperCase()}
           </Text>
         )}
       </FlexBox>
+
+      {type === 'sell' ? (
+        <Controller
+          name="destinationAddress"
+          control={control}
+          rules={{
+            validate: async (value) => {
+              if (type === 'sell') {
+                if (!value) {
+                  return 'You must provide destination address'
+                }
+                // const { data } = await changeNowService.validateCurrencyAddress(formValues.to.currency ?? '', value)
+                //
+                // if (!data.result) {
+                //   return 'Address is invalid'
+                // }
+              }
+              return true
+            },
+          }}
+          render={({ field }) => (
+            <FormField
+              label="Recipient wallet"
+              tooltip={{
+                text: 'This is an address where the funds will be send after receiving your payment. Make sure that the address is on the same network as destination currency.',
+              }}
+              error={errors.destinationAddress?.message}
+            >
+              <Input placeholder="Enter payout address" {...field} />
+            </FormField>
+          )}
+        />
+      ) : null}
     </FlexBox>
   )
 }
