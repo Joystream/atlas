@@ -1,3 +1,4 @@
+import { TransactionType } from '@/components/ChangeNowModal/steps/types'
 import { createStore } from '@/utils/store'
 
 import { Transaction } from './transactions.types'
@@ -10,6 +11,7 @@ type ProcessedBlockAction = {
 type TransactionManagerStoreState = {
   blockActions: ProcessedBlockAction[]
   transactions: Record<string, Transaction>
+  changeNowModal: TransactionType | null
 }
 
 type TransactionManagerStoreActions = {
@@ -18,14 +20,17 @@ type TransactionManagerStoreActions = {
   addTransaction: (transaction: Transaction) => void
   updateTransaction: (id: string, transaction: Transaction) => void
   removeTransaction: (id: string) => void
+  setChangeNowModal: (type: TransactionType | null) => void
 }
 
 export const useTransactionManagerStore = createStore<TransactionManagerStoreState, TransactionManagerStoreActions>({
   state: {
     blockActions: [],
     transactions: {},
+    changeNowModal: null,
   },
   actionsFactory: (set) => ({
+    setChangeNowModal: (type) => set((state) => (state.changeNowModal = type)),
     addBlockAction: (action) =>
       set((state) => {
         state.blockActions.push(action)

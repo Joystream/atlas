@@ -14,7 +14,8 @@ import { useTransactionManagerStore } from './transactions.store'
 export const TransactionsManager: FC = () => {
   const {
     transactions,
-    actions: { removeOldBlockActions, removeTransaction },
+    changeNowModal,
+    actions: { removeOldBlockActions, removeTransaction, setChangeNowModal },
   } = useTransactionManagerStore((state) => state)
 
   const userWalletName = useWalletStore((state) => state.wallet?.title)
@@ -101,7 +102,7 @@ export const TransactionsManager: FC = () => {
           errorCode={firstNonMinimizedTransaction.errorCode}
         />
       )}
-      <ChangeNowModal type="sell" onClose={() => undefined} />
+      {changeNowModal ? <ChangeNowModal type={changeNowModal} onClose={() => setChangeNowModal(null)} /> : null}
     </>
   )
 }
