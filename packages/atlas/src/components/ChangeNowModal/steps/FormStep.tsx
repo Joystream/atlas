@@ -141,6 +141,7 @@ export const FormStep = ({ setPrimaryButtonProps, onSubmit, type, initialValues 
         amount: undefined,
         currency: type !== 'sell' ? JOYSTREAM_CHANGENOW_LEGACY_TICKER : undefined,
       },
+      destinationAddress: '',
     },
   })
 

@@ -2,6 +2,7 @@ import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 import { SvgAlertsInformative32 } from '@/assets/icons'
 import { SwapExpired } from '@/components/ChangeNowModal/steps/SwapExpired'
+import { Spinner } from '@/components/_loaders/Spinner'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 
@@ -51,6 +52,13 @@ export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
     }
 
     if (step === ChangeNowModalStep.PROGRESS) {
+      // todo uncomment when portfolio will be available
+      // if (primaryButtonProps) {
+      //   return {
+      //     text: 'Go to dashboard',
+      //     to: absoluteRoutes.studio.portfolio()
+      //   }
+      // }
       return undefined
     }
 
@@ -93,6 +101,7 @@ export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
       onExitClick={step === ChangeNowModalStep.SWAP_EXPIRED ? undefined : () => undefined}
       primaryButton={primaryButtonProps}
       secondaryButton={secondaryButton}
+      additionalActionsNode={step === ChangeNowModalStep.PROGRESS && primaryButtonProps ? <Spinner /> : null}
     >
       {step === ChangeNowModalStep.INFO && <InformationStep {...commonProps} />}
       {step === ChangeNowModalStep.FORM && (
