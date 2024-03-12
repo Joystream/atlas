@@ -41,7 +41,7 @@ type ExchangeTransaction = {
   toAmount: number
   flow: string
   type: string
-  payingAddress: string
+  payinAddress: string
   payoutAddress: string
   fromCurrency: string
   toCurrency: string
@@ -58,15 +58,17 @@ type ExchangeTransactionStatus = {
   depositReceivedAt: string | null
   payinHash: string | null
   amountTo: number
+  expectedAmountTo: number
   amountFrom: number
+  expectedAmountFrom: number
   fromCurrency: string
 }
 
 type TransactionType = 'sell' | 'buy'
 
-const JOYSTREAM_CHANGENOW_TICKER = 'joystream'
+export const JOYSTREAM_CHANGENOW_TICKER = 'joystream'
 export const JOYSTREAM_CHANGENOW_LEGACY_TICKER = 'joy'
-const JOYSTREAM_CHANGENOW_NETWORK = 'polkadot'
+const JOYSTREAM_CHANGENOW_NETWORK = 'joy'
 
 class ChangeNowService {
   private _apiKey
@@ -82,7 +84,12 @@ class ChangeNowService {
     }
 
     const res = await axiosInstance.get<Currency[]>(
-      'https://api.changenow.io/v2/exchange/currencies?active=&flow=standard&buy=&sell='
+      'https://api.changenow.io/v2/exchange/currencies?active=true&flow=fixed-rate&buy=&sell=',
+      {
+        headers: {
+          'x-changenow-api-key': this._apiKey,
+        },
+      }
     )
 
     if (res.data) {
@@ -93,10 +100,10 @@ class ChangeNowService {
   }
 
   sanitizeApiErrorMessage(message: string) {
-    return message.replace('', '')
+    return message.replace('amountTo', 'Amount').replace('amountFrom', 'Amount')
   }
 
-  async getExchangeRange(currency: Currency, type: TransactionType) {
+  getExchangeRange(currency: Currency, type: TransactionType) {
     const isSellingJoy = type === 'sell'
     const fromCurrency = isSellingJoy ? JOYSTREAM_CHANGENOW_TICKER : currency.ticker
     const toCurrency = isSellingJoy ? currency.ticker : JOYSTREAM_CHANGENOW_TICKER
@@ -104,7 +111,7 @@ class ChangeNowService {
     const toNetwork = isSellingJoy ? currency.network : JOYSTREAM_CHANGENOW_NETWORK
 
     return axiosInstance.get<ExchangeRange>(
-      `https://api.changenow.io/v2/exchange/min-amount?fromCurrency=${fromCurrency}&toCurrency=${toCurrency}&fromNetwork=${fromNetwork}&toNetwork=${toNetwork}&flow=standard`,
+      `https://api.changenow.io/v2/exchange/range?fromCurrency=${fromCurrency}&toCurrency=${toCurrency}&fromNetwork=${fromNetwork}&toNetwork=${toNetwork}&flow=fixed-rate`,
       {
         headers: {
           'x-changenow-api-key': this._apiKey,
@@ -113,7 +120,18 @@ class ChangeNowService {
     )
   }
 
-  async getEstimatedExchangeAmount(
+  validateCurrencyAddress(currency: string, address: string) {
+    return axiosInstance.get<{ result: boolean; message: string | null }>(
+      `https://api.changenow.io/v2/validate/address?currency=${currency}&address=${address}`,
+      {
+        headers: {
+          'x-changenow-api-key': this._apiKey,
+        },
+      }
+    )
+  }
+
+  getEstimatedExchangeAmount(
     amount: number,
     currency: Currency,
     type: TransactionType,
@@ -137,7 +155,7 @@ class ChangeNowService {
     )
   }
 
-  async createExchangeTransaction({
+  createExchangeTransaction({
     refundAddress,
     addressToBePaid,
     currency,
@@ -173,7 +191,7 @@ class ChangeNowService {
         fromAmount: String(amount),
         address: addressToBePaid,
         refundAddress,
-        flow: 'standard',
+        flow: 'fixed-rate',
         type: 'direct',
         rateId,
         userId,
@@ -186,7 +204,7 @@ class ChangeNowService {
     )
   }
 
-  async getTransactionStatus(id: string) {
+  getTransactionStatus(id: string) {
     return axiosInstance.get<ExchangeTransactionStatus>(`https://api.changenow.io/v2/exchange/by-id?id=${id}`, {
       headers: {
         'x-changenow-api-key': this._apiKey,

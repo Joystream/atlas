@@ -115,6 +115,7 @@ export const SummaryStep = ({
     currentUser?.email,
     currentUser?.id,
     displaySnackbar,
+    formData.destinationAddress,
     from.amount,
     from.currency,
     goToStep,
