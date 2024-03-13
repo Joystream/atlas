@@ -3,6 +3,7 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { useGetFullCreatorTokenQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { SvgActionLinkUrl, SvgActionMarket, SvgActionShoppingCart, SvgActionWarning } from '@/assets/icons'
 import { ActionDialogButtonProps } from '@/components/ActionBar'
 import { CrtDrawer } from '@/components/CrtDrawer'
@@ -13,6 +14,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useUser } from '@/providers/user/user.hooks'
 import { transitions } from '@/styles'
+import { permillToPercentage } from '@/utils/number'
 
 import { CrtMarketForm } from './MarketDrawer.types'
 import { MarketDrawerPreview } from './MarketDrawerPreview'
@@ -26,12 +28,14 @@ enum MARKET_STEPS {
 const marketStepsNames: string[] = ['Market', 'Sale summary']
 
 export type CrtMarketSaleViewProps = {
-  tokenName: string
+  tokenId: string
   show: boolean
   onClose: () => void
 }
 
-export const MarketDrawer = ({ show, onClose, tokenName }: CrtMarketSaleViewProps) => {
+export const MarketDrawer = ({ show, onClose, tokenId }: CrtMarketSaleViewProps) => {
+  const { data } = useGetFullCreatorTokenQuery({ variables: { id: tokenId } })
+  const { creatorTokenById } = data ?? {}
   const [activeStep, setActiveStep] = useState(MARKET_STEPS.market)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [marketData, setMarketData] = useState<CrtMarketForm>({
@@ -77,7 +81,7 @@ export const MarketDrawer = ({ show, onClose, tokenName }: CrtMarketSaleViewProp
           <MarketStep
             setPrimaryButtonProps={setPrimaryButtonProps}
             setSecondaryButtonProps={setSecondaryButtonProps}
-            tokenName={tokenName}
+            tokenName={creatorTokenById?.symbol ?? ''}
             onClose={onClose}
             formDefaultValue={marketData}
             onNextStep={handleNextStep}
@@ -156,7 +160,18 @@ export const MarketDrawer = ({ show, onClose, tokenName }: CrtMarketSaleViewProp
         }}
         isOpen={show}
         onClose={onClose}
-        preview={<MarketDrawerPreview startingPrice={marketData.price || 1} tokenName={tokenName} />}
+        preview={
+          <MarketDrawerPreview
+            totalSupply={+(creatorTokenById?.totalSupply ?? 0)}
+            holdersRevenueShare={
+              creatorTokenById?.revenueShareRatioPermill
+                ? permillToPercentage(creatorTokenById.revenueShareRatioPermill)
+                : 0
+            }
+            startingPrice={marketData.price || 1}
+            tokenName={creatorTokenById?.symbol ?? ''}
+          />
+        }
       >
         <SwitchTransition mode="out-in">
           <CSSTransition
