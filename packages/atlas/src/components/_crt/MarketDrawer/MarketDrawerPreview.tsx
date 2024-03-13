@@ -18,7 +18,6 @@ import { ChartBox } from './MarketDrawer.styles'
 
 type MarketDrawerPreviewProps = {
   tokenName: string
-  startingPrice: number
   totalSupply: number
   holdersRevenueShare: number
 }

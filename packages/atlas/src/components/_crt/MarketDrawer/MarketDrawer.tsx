@@ -39,7 +39,6 @@ export const MarketDrawer = ({ show, onClose, tokenId }: CrtMarketSaleViewProps)
   const [activeStep, setActiveStep] = useState(MARKET_STEPS.market)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [marketData, setMarketData] = useState<CrtMarketForm>({
-    price: 1,
     tnc: atlasConfig.legal.crtTnc,
     isChecked: true,
   })
@@ -52,16 +51,12 @@ export const MarketDrawer = ({ show, onClose, tokenId }: CrtMarketSaleViewProps)
   const { copyToClipboard } = useClipboard()
 
   const handleNextStep = useCallback(
-    ({ price, tnc }: CrtMarketForm) => {
-      setMarketData({ ...marketData, price, tnc })
+    ({ tnc }: CrtMarketForm) => {
+      setMarketData({ ...marketData, tnc })
       setActiveStep(MARKET_STEPS.saleSummary)
     },
     [marketData]
   )
-
-  const handlePriceChange = useCallback((value: number) => {
-    setMarketData((prev) => ({ ...prev, price: value }))
-  }, [])
 
   const handleBackClick = useCallback(() => {
     flushSync(() => {
@@ -85,19 +80,22 @@ export const MarketDrawer = ({ show, onClose, tokenId }: CrtMarketSaleViewProps)
             onClose={onClose}
             formDefaultValue={marketData}
             onNextStep={handleNextStep}
-            handlePriceChange={handlePriceChange}
           />
         )
       case MARKET_STEPS.saleSummary:
         return (
           <SaleSummaryStep
-            price={marketData.price}
-            tnc={marketData.tnc}
             setPrimaryButtonProps={setPrimaryButtonProps}
             setSecondaryButtonProps={setSecondaryButtonProps}
             handleBackClick={handleBackClick}
             handleCloseModal={onClose}
             onSuccess={onSuccess}
+            totalSupply={+(creatorTokenById?.totalSupply ?? 0)}
+            holdersRevenueShare={
+              creatorTokenById?.revenueShareRatioPermill
+                ? permillToPercentage(creatorTokenById.revenueShareRatioPermill)
+                : 0
+            }
           />
         )
     }
@@ -168,7 +166,6 @@ export const MarketDrawer = ({ show, onClose, tokenId }: CrtMarketSaleViewProps)
                 ? permillToPercentage(creatorTokenById.revenueShareRatioPermill)
                 : 0
             }
-            startingPrice={marketData.price || 1}
             tokenName={creatorTokenById?.symbol ?? ''}
           />
         }

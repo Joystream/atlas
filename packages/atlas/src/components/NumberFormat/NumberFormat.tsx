@@ -9,7 +9,7 @@ import { atlasConfig } from '@/config'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useTokenPrice } from '@/providers/joystream/joystream.hooks'
 import { sizes } from '@/styles'
-import { formatNumber } from '@/utils/number'
+import { formatNumber, formatSmallDecimal } from '@/utils/number'
 
 import { Tooltip } from '../Tooltip'
 
@@ -67,7 +67,7 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
       case 'short':
         formattedValue = internalValue ? (internalValue > 0.01 ? formatNumberShort(internalValue) : `<0.01`) : 0
         formattedDenominatedValue = fiatValue ? (fiatValue > 0.01 ? formatNumberShort(fiatValue) : `<$0.01`) : 0
-        tooltipText = formatNumber(internalValue)
+        tooltipText = formatSmallDecimal(internalValue)
         break
       case 'full':
         formattedValue = tooltipText = formatNumber(internalValue)
