@@ -68,11 +68,11 @@
   },
   "resolutions": {
     "@polkadot/api": "10.1.4",
-    "@polkadot/keyring": "11.1.1",
+    "@polkadot/keyring": "12.6.2",
     "@polkadot/types": "10.1.4",
     "@polkadot/util": "12.6.2",
     "@polkadot/util-crypto": "12.6.2",
-    "@polkadot/networks": "9.5.1",
+    "@polkadot/networks": "12.6.2",
     "@polkadot/x-fetch": "9.5.1",
     "@polkadot/x-global": "9.5.1",
     "@polkadot/x-ws": "9.5.1",
