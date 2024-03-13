@@ -70,9 +70,9 @@ export const createTokenIssuanceSchema = (tokenName: string) =>
     .object({
       creatorIssueAmount: z
         .number({
-          required_error: `Can’t issue less than 1000 $${tokenName} to create a new token.`,
+          required_error: `Please provide the amount of $${tokenName} you want to issue.`,
         })
-        .min(1000, `Can’t issue less than 1000 $${tokenName} to create a new token.`),
+        .max(106_000, `Can’t issue more than 106 000 $${tokenName}.`),
       assuranceType: z.enum(['safe', 'risky', 'secure', 'custom']),
       cliff: z.enum(['0', '1', '3', '6']).nullable(),
       vesting: z.enum(['0', '1', '3', '6']).nullable(),
