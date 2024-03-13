@@ -72,7 +72,7 @@
     "@polkadot/types": "10.7.1",
     "@polkadot/util": "12.6.2",
     "@polkadot/util-crypto": "12.6.2",
-    "@polkadot/networks": "9.5.1",
+    "@polkadot/networks": "12.6.2",
     "@polkadot/x-fetch": "9.5.1",
     "@polkadot/x-global": "9.5.1",
     "@polkadot/x-ws": "9.5.1",
