@@ -8,6 +8,7 @@ import { TransactionData } from '@/components/ChangeNowModal/steps/SummaryStep'
 import { FlexBox } from '@/components/FlexBox'
 import { Step } from '@/components/Step'
 import { Text } from '@/components/Text'
+import { TextButton } from '@/components/_buttons/Button'
 import { CopyAddressButton } from '@/components/_buttons/CopyAddressButton/CopyAddressButton'
 import { atlasConfig } from '@/config'
 import { cVar, sizes, square } from '@/styles'
@@ -142,7 +143,12 @@ export const ProgressStep = ({ transactionData, type, setPrimaryButtonProps }: P
         <Text variant="t200" as="p" color="colorText">
           Exchange ID:
         </Text>
-        <CopyAddressButton address={transactionData.id} />
+        <TextButton
+          variant="secondary"
+          onClick={() => window.open(`https://changenow.io/exchange/txs/${transactionData.id}`, '_blank')}
+        >
+          {transactionData.id}
+        </TextButton>
       </FlexBox>
     </FlexBox>
   )

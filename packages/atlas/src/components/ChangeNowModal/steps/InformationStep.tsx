@@ -9,7 +9,7 @@ import { cVar, sizes } from '@/styles'
 const PROS = [
   [<SvgActionLock key="lock" />, 'No sign up'],
   [<SvgActionHide key="hide" />, 'No KYC'],
-  [<SvgActionClock key="clock" />, 'Only 2-3 minutes'],
+  [<SvgActionClock key="clock" />, 'Only 10-15 minutes'],
   [<SvgActionCreatorToken key="token" />, '900+ cryptos supported'],
 ]
 

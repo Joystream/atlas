@@ -98,7 +98,7 @@ export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
       }
       show={true}
       dividers={![ChangeNowModalStep.INFO, ChangeNowModalStep.SWAP_EXPIRED].includes(step)}
-      onExitClick={step === ChangeNowModalStep.SWAP_EXPIRED ? undefined : () => undefined}
+      onExitClick={step === ChangeNowModalStep.SWAP_EXPIRED ? undefined : () => onClose()}
       primaryButton={primaryButtonProps}
       secondaryButton={secondaryButton}
       additionalActionsNode={step === ChangeNowModalStep.PROGRESS && primaryButtonProps ? <Spinner /> : null}
