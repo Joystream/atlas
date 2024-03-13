@@ -13,6 +13,11 @@ type DistributorEventDetails = {
   distributorUrl?: string | null
 }
 
+type StorageOperatorEventDetails = {
+  storageOperatorId?: string
+  storageOperatorUrl?: string | null
+}
+
 export type DistributorEventMetric = {
   initialResponseTime?: number
   fullResponseTime?: number
@@ -48,7 +53,7 @@ export type DistributorEventEntry = {
   dataObjectId?: string | null
   dataObjectType?: DataObjectType['__typename'] | AssetType
   resolvedUrl?: string
-} & DistributorEventDetails
+} & StorageOperatorEventDetails
 
 type CodecInfo = {
   assetType: string | null
