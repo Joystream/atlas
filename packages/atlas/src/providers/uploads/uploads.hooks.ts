@@ -180,7 +180,7 @@ export const useStartFileUpload = () => {
 
         // only retry on Axios error, otherwise code is to blame
         if (networkFailure) {
-          UserEventsLogger.logDistributorError({ dataObjectId: asset.id, storageOperatorId: uploadOperator.id }, e)
+          UserEventsLogger.logUploadError({ dataObjectId: asset.id, storageOperatorId: uploadOperator.id }, e)
 
           markStorageOperatorFailed(uploadOperator.id)
           const retry = opts?.retry ?? 0

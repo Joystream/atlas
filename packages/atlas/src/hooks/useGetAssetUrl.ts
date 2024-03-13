@@ -34,6 +34,8 @@ export const getSingleAssetUrl = async (
       dataObjectId: id,
       dataObjectType: type || undefined,
       resolvedUrl: distributionAssetUrl,
+      // https://mrbovo.distributor.cc/distributor/api/v1/assets/48451 -> regexp match for https://mrbovo.distributor.cc
+      distributorUrl: distributionAssetUrl.match(/https?:\/\/[^/]+/)?.[0] ?? undefined,
     }
     const [assetTestPromise, cleanup] = testAssetDownload(distributionAssetUrl, type, opts)
     const assetTestPromiseWithTimeout = withTimeout(
