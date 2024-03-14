@@ -1,4 +1,5 @@
 import { axiosInstance } from '@/api/axios'
+import { CHANGENOW_PUBLIC_API_KEY } from '@/config/env'
 
 export type Currency = {
   ticker: string
@@ -213,4 +214,4 @@ class ChangeNowService {
   }
 }
 
-export const changeNowService = new ChangeNowService('')
+export const changeNowService = new ChangeNowService(CHANGENOW_PUBLIC_API_KEY)

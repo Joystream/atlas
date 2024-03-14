@@ -30,7 +30,10 @@ export const useTransactionManagerStore = createStore<TransactionManagerStoreSta
     changeNowModal: null,
   },
   actionsFactory: (set) => ({
-    setChangeNowModal: (type) => set((state) => (state.changeNowModal = type)),
+    setChangeNowModal: (type) =>
+      set((state) => {
+        state.changeNowModal = type
+      }),
     addBlockAction: (action) =>
       set((state) => {
         state.blockActions.push(action)

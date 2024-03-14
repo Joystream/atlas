@@ -209,13 +209,17 @@ export const TokenPortfolioUtils = ({
         appendTo={document.body}
         placement="bottom-end"
         items={[
-          {
-            asButton: true,
-            label: 'Buy',
-            onClick: onBuy,
-            nodeStart: <SvgActionShoppingCart />,
-            disabled: disableBuy,
-          },
+          ...(onBuy
+            ? [
+                {
+                  asButton: true,
+                  label: 'Buy',
+                  onClick: onBuy,
+                  nodeStart: <SvgActionShoppingCart />,
+                  disabled: disableBuy,
+                },
+              ]
+            : []),
           {
             asButton: true,
             label: 'Transfer',
@@ -223,13 +227,17 @@ export const TokenPortfolioUtils = ({
             nodeStart: <SvgActionTransfer />,
             disabled: disableTransfer,
           },
-          {
-            asButton: true,
-            label: 'Sell',
-            onClick: onSell,
-            nodeStart: <SvgActionSell />,
-            disabled: disableSell,
-          },
+          ...(onSell
+            ? [
+                {
+                  asButton: true,
+                  label: 'Sell',
+                  onClick: onSell,
+                  nodeStart: <SvgActionSell />,
+                  disabled: disableSell,
+                },
+              ]
+            : []),
         ]}
         trigger={null}
         triggerTarget={ref}

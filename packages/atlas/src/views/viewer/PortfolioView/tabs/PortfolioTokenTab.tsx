@@ -28,6 +28,7 @@ import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSubscribeAccountBalance, useTokenPrice } from '@/providers/joystream'
 import { useJoystreamStore } from '@/providers/joystream/joystream.store'
+import { useTransactionManagerStore } from '@/providers/transactions/transactions.store'
 import { useUser } from '@/providers/user/user.hooks'
 import { formatNumber } from '@/utils/number'
 import { StyledSvgJoyTokenMonochrome24 } from '@/views/studio/MyPaymentsView/PaymentsOverview/PaymentsOverview.styles'
@@ -40,6 +41,8 @@ const JOY_COLUMNS: TableProps['columns'] = [
   { Header: '', accessor: 'utils', width: 50 },
 ]
 
+const hasChangeNowIntegration = true
+
 const REVENUE_SHARES_PER_REFETCH = 3
 let timestamp = 0
 export const PortfolioTokenTab = () => {
@@ -51,6 +54,7 @@ export const PortfolioTokenTab = () => {
   const [fetchChannelTokenBalance] = useGetChannelTokenBalanceLazyQuery()
   const [showSendDialog, setShowSendDialog] = useState(false)
   const [liquidCrtValue, setLiquidCrtValue] = useState<BN | null>(null)
+  const setChangeNowModal = useTransactionManagerStore((state) => state.actions.setChangeNowModal)
   const toggleSendDialog = () => setShowSendDialog((prevState) => !prevState)
   useEffect(() => {
     if (!timestamp) {
@@ -273,8 +277,8 @@ export const PortfolioTokenTab = () => {
               balance: <NumberFormat variant="t100" value={accountBalance ?? 0} as="p" withToken />,
               utils: (
                 <TokenPortfolioUtils
-                  onBuy={() => window.open('https://www.joystream.org/token/', '_blank')}
-                  onSell={() => window.open('https://www.joystream.org/token/', '_blank')}
+                  onBuy={hasChangeNowIntegration ? () => setChangeNowModal('buy') : undefined}
+                  onSell={hasChangeNowIntegration ? () => setChangeNowModal('sell') : undefined}
                   onTransfer={toggleSendDialog}
                 />
               ),
