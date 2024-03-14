@@ -2,8 +2,7 @@ import { CodegenConfig } from '@graphql-codegen/cli'
 
 import { customSchemaLoader } from './scripts/customSchemaLoader'
 
-const ENV = 'NEXT'
-// const ENV = process.env.VITE_DEFAULT_DATA_ENV?.toUpperCase() || process.env.VITE_ENV?.toUpperCase() || 'PRODUCTION'
+const ENV = process.env.VITE_DEFAULT_DATA_ENV?.toUpperCase() || process.env.VITE_ENV?.toUpperCase() || 'PRODUCTION'
 const schemaUrl = process.env[`VITE_${ENV}_ORION_URL`]
 if (!schemaUrl) throw new Error(`VITE_${ENV}_ORION_URL is not defined`)
 
