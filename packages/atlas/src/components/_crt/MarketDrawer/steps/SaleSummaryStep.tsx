@@ -50,7 +50,7 @@ export const SaleSummaryStep: FC<SaleSummaryProps> = ({
     [holdersRevenueShare, tokenPrice, totalSupply]
   )
   const { fullFee } = useFee('startAmmTx', ['1', '1', joySlopeNumber])
-  console.log('summery slope', joySlopeNumber)
+
   const startingPrice = useMemo(() => {
     return hapiBnToTokenNumber(
       calcBuyMarketPricePerToken('0', String(Math.round(HAPI_TO_JOY_RATE * joySlopeNumber)), '0') ?? new BN(0)
@@ -114,7 +114,7 @@ export const SaleSummaryStep: FC<SaleSummaryProps> = ({
       },
     })
   }, [handleBackClick, handleSubmitTransaction, setPrimaryButtonProps, setSecondaryButtonProps])
-  console.log(startingPrice)
+
   return (
     <ColumnBox gap={2}>
       <Text variant="h500" as="h2" margin={{ bottom: 2 }}>
