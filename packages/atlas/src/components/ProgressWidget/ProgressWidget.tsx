@@ -6,9 +6,13 @@ import {
   SvgActionChevronL,
   SvgActionChevronR,
   SvgActionChevronT,
-  SvgActionPlay,
 } from '@/assets/icons'
 import { Carousel, SwiperInstance } from '@/components/Carousel'
+import { Text } from '@/components/Text'
+import { Button } from '@/components/_buttons/Button'
+import { useDebounceValue } from '@/hooks/useDebounceValue'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
+
 import {
   ColumnBox,
   DetailsDrawer,
@@ -19,12 +23,7 @@ import {
   RowBox,
   StepCardContainer,
   StepNumber,
-} from '@/components/ProgressWidget/ProgressWidget.styles'
-import { Text } from '@/components/Text'
-import { Button } from '@/components/_buttons/Button'
-import { useDebounceValue } from '@/hooks/useDebounceValue'
-import { useMediaMatch } from '@/hooks/useMediaMatch'
-
+} from './ProgressWidget.styles'
 import { getProgressPercentage, responsive } from './ProgressWidget.utils'
 
 type StepProps = {
@@ -148,7 +147,7 @@ type StepCardProps = {
 }
 
 const StepCard = ({ step, status, stepNumber, button }: StepCardProps) => {
-  const smMatch = useMediaMatch('xs')
+  // const smMatch = useMediaMatch('xs')
 
   return (
     <StepCardContainer isActive={status === 'active'}>
@@ -168,9 +167,9 @@ const StepCard = ({ step, status, stepNumber, button }: StepCardProps) => {
 
       <RowBox gap={4} wrap>
         {button}
-        <Button variant="tertiary" fullWidth={!smMatch} _textOnly icon={<SvgActionPlay />} iconPlacement="right">
-          Learn more
-        </Button>
+        {/*<Button variant="tertiary" fullWidth={!smMatch} _textOnly icon={<SvgActionPlay />} iconPlacement="right">*/}
+        {/*  Learn more*/}
+        {/*</Button>*/}
       </RowBox>
     </StepCardContainer>
   )

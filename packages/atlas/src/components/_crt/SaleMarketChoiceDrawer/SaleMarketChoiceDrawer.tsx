@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { ReactElement } from 'react'
 
-import { SvgActionCheck, SvgActionPlay } from '@/assets/icons'
+import { SvgActionCheck } from '@/assets/icons'
 import { SvgPatternAngledLines, SvgPatternCircleLines } from '@/assets/illustrations'
 import { FlexBox } from '@/components/FlexBox'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
@@ -72,9 +72,10 @@ export const SaleMarketChoiceDrawer = ({ isOpen, onClose, onMarketChoice }: Sale
               <OptionCard
                 title="Market"
                 titleAccessory={
-                  <Button _textOnly icon={<SvgActionPlay />}>
-                    Learn more
-                  </Button>
+                  <div />
+                  // <Button _textOnly icon={<SvgActionPlay />}>
+                  //   Learn more
+                  // </Button>
                 }
                 description="An automated market maker (AMM) is an algorithm that helps to buy and sell tokens by using price curves which automatically set prices and match buyers and sellers."
                 points={MARKET_POINTS}

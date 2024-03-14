@@ -1,13 +1,11 @@
 import { FC, useCallback, useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
-import { SvgActionPlay } from '@/assets/icons'
 import { ActionDialogButtonProps } from '@/components/ActionBar'
 import { FlexBox } from '@/components/FlexBox'
 import { NumberFormat } from '@/components/NumberFormat'
 import { ColumnBox } from '@/components/ProgressWidget/ProgressWidget.styles'
 import { Text } from '@/components/Text'
-import { TextButton } from '@/components/_buttons/Button'
 import { CrtMarketForm } from '@/components/_crt/MarketDrawer/MarketDrawer.types'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { FormField } from '@/components/_inputs/FormField'
@@ -103,9 +101,9 @@ export const MarketStep: FC<MarketStepProps> = ({
         <Text variant="h500" as="span" margin={{ right: 4 }}>
           Market
         </Text>
-        <TextButton as="span" icon={<SvgActionPlay />} iconPlacement="left" color="colorTextPrimary">
-          Learn more
-        </TextButton>
+        {/*<TextButton as="span" icon={<SvgActionPlay />} iconPlacement="left" color="colorTextPrimary">*/}
+        {/*  Learn more*/}
+        {/*</TextButton>*/}
       </FlexBox>
       <Text variant="t300" color="colorText" as="p" margin={{ bottom: 4 }}>
         Automated market maker (AMM) will increase ${tokenName} price after each purchase and decrease its price when

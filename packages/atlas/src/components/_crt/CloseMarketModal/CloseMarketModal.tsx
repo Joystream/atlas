@@ -3,12 +3,11 @@ import BN from 'bn.js'
 import { useCallback, useMemo } from 'react'
 
 import { useGetFullCreatorTokenQuery } from '@/api/queries/__generated__/creatorTokens.generated'
-import { SvgActionPlay, SvgAlertsWarning24 } from '@/assets/icons'
+import { SvgAlertsWarning24 } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
 import { FlexBox } from '@/components/FlexBox'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
-import { TextButton } from '@/components/_buttons/Button'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
@@ -172,9 +171,9 @@ export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMar
             To close market you or any other member need to sell enough of ${symbol} tokens to the market to balance the
             amount of tokens minted with this market.
           </Text>
-          <TextButton icon={<SvgActionPlay />} iconPlacement="left">
-            Learn more
-          </TextButton>
+          {/*<TextButton icon={<SvgActionPlay />} iconPlacement="left">*/}
+          {/*  Learn more*/}
+          {/*</TextButton>*/}
         </FlexBox>
 
         {!hasSufficientTokens && (
