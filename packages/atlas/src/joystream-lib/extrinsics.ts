@@ -1150,15 +1150,15 @@ export class JoystreamLibExtrinsics {
           cliffAmountPercentage: createType(
             'Permill',
             new BN(initialCreatorAllocation.cliffAmountPercentage * PERMILL_PER_PERCENT)
-          ) as number,
+          ),
         }),
       })
     )
 
     const params = createType('PalletProjectTokenTokenIssuanceParameters', {
       initialAllocation,
-      patronageRate: createType('Permill', new BN(patronageRate * PERMILL_PER_PERCENT)) as number,
-      revenueSplitRate: createType('Permill', new BN(revenueSplitRate * PERMILL_PER_PERCENT)) as number,
+      patronageRate: createType('Permill', new BN(patronageRate * PERMILL_PER_PERCENT)),
+      revenueSplitRate: createType('Permill', new BN(revenueSplitRate * PERMILL_PER_PERCENT)),
       transferPolicy: createType('PalletProjectTokenTransferPolicyParams', 'Permissionless'),
       metadata: prepareCreatorTokenMetadata({ symbol }),
     })
