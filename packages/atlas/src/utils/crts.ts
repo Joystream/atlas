@@ -69,3 +69,14 @@ export const getRevenueShareStatusForMember = ({
 
   return 'active'
 }
+
+export const calculateSlopeNumberForAmm = (totalSupply: number, holdersRevenueShare: number, tokenPrice: number) => {
+  const divisor = new BN(Math.max(1000, totalSupply / 3))
+    .muln(2)
+    .addn(totalSupply)
+    .pow(new BN(2))
+    .sub(new BN(totalSupply).pow(new BN(2)))
+  const dividend = new BN(10_000).muln((holdersRevenueShare / 100) * 4)
+  const slopeByUSD = dividend.toNumber() / divisor.toNumber()
+  return slopeByUSD / tokenPrice
+}

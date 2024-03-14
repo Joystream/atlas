@@ -101,14 +101,14 @@ export const CrtDashboardMainTab = ({ token, onTabChange, hasOpenedMarket }: Crt
             </Button>
           )
         case 2:
-          return <StartSaleOrMarketButton {...commonProps} tokenName={token.symbol ?? 'N/A'} />
+          return <StartSaleOrMarketButton {...commonProps} tokenId={token.id ?? ''} />
         case 3:
           return <Button {...commonProps}>Start revenue share</Button>
         default:
           return null
       }
     },
-    [currentMemberStep, smMatch, token.symbol]
+    [currentMemberStep, smMatch, token.id]
   )
 
   return (

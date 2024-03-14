@@ -1,55 +1,51 @@
 import { Datum } from '@nivo/line'
 import BN from 'bn.js'
+import { useMemo } from 'react'
 
 import { SvgJoyTokenMonochrome16 } from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox'
-import { NumberFormat, formatNumberShort, formatNumberShortInt } from '@/components/NumberFormat'
+import { NumberFormat, formatNumberShort } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { LineChart, defaultChartTheme } from '@/components/_charts/LineChart'
 import { TooltipBox } from '@/components/_crt/CreateTokenDrawer/steps/styles'
-import { useDebounceValue } from '@/hooks/useDebounceValue'
-import { AMM_DESCO_CURVE_CONST, HAPI_TO_JOY_RATE } from '@/joystream-lib/config'
-import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
+import { HAPI_TO_JOY_RATE } from '@/joystream-lib/config'
+import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useTokenPrice } from '@/providers/joystream'
 import { cVar } from '@/styles'
-import { calcBuyMarketPricePerToken } from '@/utils/crts'
+import { calcBuyMarketPricePerToken, calculateSlopeNumberForAmm } from '@/utils/crts'
 
 import { ChartBox } from './MarketDrawer.styles'
 
 type MarketDrawerPreviewProps = {
   tokenName: string
-  startingPrice: number
+  totalSupply: number
+  holdersRevenueShare: number
 }
 
-const issuedTokens = [1, 10, 10 ** 2, 10 ** 3, 10 ** 4, 10 ** 5]
+const issuedTokens = [0, 10, 10 ** 2, 10 ** 3, 10 ** 4, 10 ** 5]
 
-export const MarketDrawerPreview = ({ tokenName, startingPrice }: MarketDrawerPreviewProps) => {
+export const MarketDrawerPreview = ({ tokenName, holdersRevenueShare, totalSupply }: MarketDrawerPreviewProps) => {
   const { tokenPrice } = useTokenPrice()
-  const debouncedStartingPrice = useDebounceValue(Math.max(0, startingPrice), 500)
-  const slopeNumber = AMM_DESCO_CURVE_CONST / (tokenPrice ?? 1)
-  const chartData: Datum[] = issuedTokens.map((num) => ({
-    x: formatNumberShort(num),
-    y: hapiBnToTokenNumber(
-      calcBuyMarketPricePerToken(
-        String(0),
-        new BN(HAPI_TO_JOY_RATE).muln(slopeNumber).toString(),
-        new BN(num * slopeNumber).mul(new BN(HAPI_TO_JOY_RATE)).toString(),
-        num
-      ) ?? new BN(0)
-    ),
-  }))
+  const slopeNumber = useMemo(() => {
+    return calculateSlopeNumberForAmm(totalSupply, holdersRevenueShare, tokenPrice ?? 1)
+  }, [holdersRevenueShare, tokenPrice, totalSupply])
+
+  const chartData: Datum[] = useMemo(() => {
+    return issuedTokens.map((num) => ({
+      x: formatNumberShort(num),
+      y: hapiBnToTokenNumber(
+        calcBuyMarketPricePerToken(String(num), String(Math.round(HAPI_TO_JOY_RATE * slopeNumber)), '0') ?? new BN(0)
+      ),
+    }))
+  }, [slopeNumber])
 
   const getTickValues = () => [
     ...new Set(
       issuedTokens.map((elem) => {
         const floor = hapiBnToTokenNumber(
-          calcBuyMarketPricePerToken(
-            String(elem),
-            new BN(HAPI_TO_JOY_RATE).muln(AMM_DESCO_CURVE_CONST / (tokenPrice ?? 1)).toString(),
-            String(tokenNumberToHapiBn(debouncedStartingPrice))
-          ) ?? new BN(0)
+          calcBuyMarketPricePerToken(String(elem), String(Math.round(HAPI_TO_JOY_RATE * slopeNumber)), '0') ?? new BN(0)
         )
-        return Math.max(Math.floor(elem / floor), 1) * floor
+        return floor * 1.5
       })
     ),
   ]
@@ -62,7 +58,7 @@ export const MarketDrawerPreview = ({ tokenName, startingPrice }: MarketDrawerPr
             HOW TOKEN PRICE RISES WITH GROWING TOTAL SUPPLY
           </Text>
           <Text variant="t200" as="p" color="colorTextMuted">
-            The more the supply the higher the price.
+            Chart shows price for 1 token at different supply levels created by the market.
           </Text>
         </FlexBox>
         <div className="chart-box">
@@ -92,7 +88,7 @@ export const MarketDrawerPreview = ({ tokenName, startingPrice }: MarketDrawerPr
               tickPadding: 5,
               tickValues: 5,
               ticksPosition: 'before',
-              format: (tick) => formatNumberShortInt(tick),
+              format: (tick) => formatNumberShort(tick),
               // eslint-disable-next-line
               // @ts-ignore
               renderTick: ({ x, y, textX, textY, opacity, textBaseline, value, format }) => {
