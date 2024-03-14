@@ -45,5 +45,5 @@ Default.args = {
   onClose: () => {
     return null
   },
-  tokenName: 'JBC',
+  tokenId: '1',
 }

@@ -14,7 +14,7 @@ import { SubmittableExtrinsic } from '@polkadot/api/types'
 import BN from 'bn.js'
 import Long from 'long'
 
-import { AMM_DESCO_CURVE_CONST, HAPI_TO_JOY_RATE } from '@/joystream-lib/config'
+import { HAPI_TO_JOY_RATE } from '@/joystream-lib/config'
 import { SentryLogger } from '@/utils/logs'
 
 import { getClaimableReward } from './channelPayouts'
@@ -1234,23 +1234,21 @@ export class JoystreamLibExtrinsics {
     return { block }
   }
 
-  startAmmTx = async (memberId: MemberId, channelId: ChannelId, joyUsdRate: number, tokens: number) => {
+  startAmmTx = async (memberId: MemberId, channelId: ChannelId, joySlopeNumber: number) => {
     const member = createType('PalletContentPermissionsContentActor', { Member: parseInt(memberId) })
-    const slopeNumber = AMM_DESCO_CURVE_CONST / joyUsdRate
     return this.api.tx.content.activateAmm(member, parseInt(channelId), {
-      slope: createType('u128', new BN(HAPI_TO_JOY_RATE).muln(slopeNumber)),
-      intercept: createType('u128', new BN(tokens * slopeNumber).mul(new BN(HAPI_TO_JOY_RATE))),
+      slope: createType('u128', new BN(HAPI_TO_JOY_RATE * joySlopeNumber)),
+      intercept: createType('u128', new BN(0)),
     })
   }
 
   startAmm: PublicExtrinsic<typeof this.startAmmTx, ExtrinsicResult> = async (
     memberId,
     channelId,
-    joyUsdRate,
-    tokens,
+    joySlopeNumber,
     cb
   ) => {
-    const tx = await this.startAmmTx(memberId, channelId, joyUsdRate, tokens)
+    const tx = await this.startAmmTx(memberId, channelId, joySlopeNumber)
     const { block } = await this.sendExtrinsic(tx, cb)
     return { block }
   }

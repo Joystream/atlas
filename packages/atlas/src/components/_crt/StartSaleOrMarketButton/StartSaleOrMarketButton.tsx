@@ -7,10 +7,10 @@ import { MarketDrawer } from '@/components/_crt/MarketDrawer'
 import { SaleMarketChoiceDrawer } from '@/components/_crt/SaleMarketChoiceDrawer'
 
 type StartSaleOrMarketButtonProps = {
-  tokenName: string
+  tokenId: string
 } & Omit<ButtonProps, 'onClick' | 'icon'>
 
-export const StartSaleOrMarketButton = ({ tokenName, ...buttonProps }: StartSaleOrMarketButtonProps) => {
+export const StartSaleOrMarketButton = ({ tokenId, ...buttonProps }: StartSaleOrMarketButtonProps) => {
   const [showChoiceDrawer, setShowChoiceDrawer] = useState(false)
   const [showMarketDrawer, setShowMarketDrawer] = useState(false)
   const onMarketClose = useCallback(() => setShowMarketDrawer(false), [])
@@ -31,7 +31,7 @@ export const StartSaleOrMarketButton = ({ tokenName, ...buttonProps }: StartSale
               setShowMarketDrawer(true)
             }}
           />
-          <MarketDrawer tokenName={tokenName} show={showMarketDrawer} onClose={onMarketClose} />
+          <MarketDrawer tokenId={tokenId} show={showMarketDrawer} onClose={onMarketClose} />
         </>,
         document.body
       )}

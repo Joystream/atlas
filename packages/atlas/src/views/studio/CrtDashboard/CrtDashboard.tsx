@@ -93,7 +93,7 @@ export const CrtDashboard = () => {
                     Edit token page
                   </Button>
                   {!hasOpenMarket ? (
-                    <StartSaleOrMarketButton tokenName={creatorTokenById.symbol ?? 'N/A'} />
+                    <StartSaleOrMarketButton tokenId={creatorTokenById.id ?? 'N/A'} />
                   ) : (
                     <CloseMarketButton
                       channelId={activeChannel?.id ?? '-1'}
