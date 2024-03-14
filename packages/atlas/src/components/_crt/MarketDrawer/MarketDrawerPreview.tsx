@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 
 import { SvgJoyTokenMonochrome16 } from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox'
-import { NumberFormat, formatNumberShort, formatNumberShortInt } from '@/components/NumberFormat'
+import { NumberFormat, formatNumberShort } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { LineChart, defaultChartTheme } from '@/components/_charts/LineChart'
 import { TooltipBox } from '@/components/_crt/CreateTokenDrawer/steps/styles'
@@ -88,7 +88,7 @@ export const MarketDrawerPreview = ({ tokenName, holdersRevenueShare, totalSuppl
               tickPadding: 5,
               tickValues: 5,
               ticksPosition: 'before',
-              format: (tick) => formatNumberShortInt(tick),
+              format: (tick) => formatNumberShort(tick),
               // eslint-disable-next-line
               // @ts-ignore
               renderTick: ({ x, y, textX, textY, opacity, textBaseline, value, format }) => {
