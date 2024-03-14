@@ -4,6 +4,8 @@ import { SvgActionClock, SvgActionCreatorToken, SvgActionHide, SvgActionLock } f
 import { CommonProps } from '@/components/ChangeNowModal/steps/types'
 import { FlexBox } from '@/components/FlexBox'
 import { Text } from '@/components/Text'
+import { Checkbox } from '@/components/_inputs/Checkbox'
+import { usePersonalDataStore } from '@/providers/personalData'
 import { cVar, sizes } from '@/styles'
 
 const PROS = [
@@ -26,7 +28,14 @@ const getCopy = (type: CommonProps['type']) => {
   }
 }
 
+export const CHANGE_NOW_DISMISSIBLE_ID = 'change-now'
+
 export const InformationStep = ({ type }: CommonProps) => {
+  const hasDismissedInfo =
+    usePersonalDataStore((state) =>
+      state.dismissedMessages.some((message) => message.id === CHANGE_NOW_DISMISSIBLE_ID)
+    ) && !!CHANGE_NOW_DISMISSIBLE_ID
+  const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
   return (
     <>
       <FlexBox gap={6} flow="column">
@@ -49,6 +58,11 @@ export const InformationStep = ({ type }: CommonProps) => {
             </ProsItem>
           ))}
         </FlexBox>
+        <Checkbox
+          label="Do not show this again"
+          value={hasDismissedInfo}
+          onChange={(value) => updateDismissedMessages(CHANGE_NOW_DISMISSIBLE_ID, value)}
+        />
       </FlexBox>
     </>
   )

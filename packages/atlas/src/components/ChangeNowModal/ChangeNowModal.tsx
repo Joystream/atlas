@@ -5,9 +5,11 @@ import { SwapExpired } from '@/components/ChangeNowModal/steps/SwapExpired'
 import { Spinner } from '@/components/_loaders/Spinner'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
 import { DialogModal } from '@/components/_overlays/DialogModal'
+import { absoluteRoutes } from '@/config/routes'
+import { usePersonalDataStore } from '@/providers/personalData'
 
 import { FormData, FormStep } from './steps/FormStep'
-import { InformationStep } from './steps/InformationStep'
+import { CHANGE_NOW_DISMISSIBLE_ID, InformationStep } from './steps/InformationStep'
 import { ProgressStep } from './steps/ProgressStep'
 import { SummaryStep, TransactionData } from './steps/SummaryStep'
 import { ChangeNowModalStep, TransactionType } from './steps/types'
@@ -18,7 +20,12 @@ type ChangeNowModalProps = {
 }
 
 export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
-  const [step, setStep] = useState(ChangeNowModalStep.INFO)
+  const hasDismissedInfo =
+    usePersonalDataStore((state) =>
+      state.dismissedMessages.some((message) => message.id === CHANGE_NOW_DISMISSIBLE_ID)
+    ) && !!CHANGE_NOW_DISMISSIBLE_ID
+  const shouldOmitInfo = hasDismissedInfo && type !== 'topup'
+  const [step, setStep] = useState(shouldOmitInfo ? ChangeNowModalStep.FORM : ChangeNowModalStep.INFO)
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogButtonProps | undefined>(undefined)
   const formData = useRef<FormData | null>(null)
   const transactionData = useRef<TransactionData | null>(null)
@@ -52,13 +59,16 @@ export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
     }
 
     if (step === ChangeNowModalStep.PROGRESS) {
-      // todo uncomment when portfolio will be available
-      // if (primaryButtonProps) {
-      //   return {
-      //     text: 'Go to dashboard',
-      //     to: absoluteRoutes.studio.portfolio()
-      //   }
-      // }
+      if (primaryButtonProps) {
+        return {
+          text: 'Go to dashboard',
+          to: absoluteRoutes.viewer.portfolio(),
+        }
+      }
+      return undefined
+    }
+
+    if (step === ChangeNowModalStep.FORM && shouldOmitInfo) {
       return undefined
     }
 

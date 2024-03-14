@@ -91,16 +91,8 @@ export const FormStep = ({ setPrimaryButtonProps, onSubmit, type, initialValues 
           setValue('validUntil', data.validUntil)
         } catch (e) {
           if (isAxiosError(e) && e.response?.data.message && e.response.status === 400) {
-            const moreInfoRequest = await changeNowService
-              .getExchangeRange(currency, isDirectionFrom ? 'sell' : 'buy')
-              .catch(() => undefined)
-            let sanitizedMessage = changeNowService.sanitizeApiErrorMessage(e.response.data.message)
-            const { data: rangeData } = moreInfoRequest ?? {}
-            if (rangeData?.minAmount && sanitizedMessage.includes('small')) {
-              sanitizedMessage = `Minimal amount is ${rangeData.minAmount} ${currency.legacyTicker.toUpperCase()}`
-            }
             setError('serverError', {
-              message: sanitizedMessage,
+              message: changeNowService.sanitizeApiErrorMessage(e.response.data.message),
               type: direction,
             })
             return
@@ -381,7 +373,7 @@ const StyledSpinner = styled(Spinner)`
 
 const InputGrid = styled.div`
   display: grid;
-  grid-template-columns: 1fr 150px;
+  grid-template-columns: 1fr 170px;
   width: 100%;
   grid-gap: 2px;
 `

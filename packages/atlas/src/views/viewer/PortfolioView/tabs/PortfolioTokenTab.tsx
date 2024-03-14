@@ -25,7 +25,9 @@ import { RevenueShareWidget, RevenueShareWidgetLoader } from '@/components/_crt/
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { SendFundsDialog } from '@/components/_overlays/SendTransferDialogs'
 import { atlasConfig } from '@/config'
+import { CHANGENOW_PUBLIC_API_KEY } from '@/config/env'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useEnvironmentStore } from '@/providers/environment'
 import { useSubscribeAccountBalance, useTokenPrice } from '@/providers/joystream'
 import { useJoystreamStore } from '@/providers/joystream/joystream.store'
 import { useTransactionManagerStore } from '@/providers/transactions/transactions.store'
@@ -41,11 +43,14 @@ const JOY_COLUMNS: TableProps['columns'] = [
   { Header: '', accessor: 'utils', width: 50 },
 ]
 
-const hasChangeNowIntegration = true
+const _hasChangeNowIntegration = !!CHANGENOW_PUBLIC_API_KEY
 
 const REVENUE_SHARES_PER_REFETCH = 3
 let timestamp = 0
 export const PortfolioTokenTab = () => {
+  const { nodeOverride, defaultDataEnv } = useEnvironmentStore((state) => state)
+  const hasChangeNowIntegration =
+    _hasChangeNowIntegration && (defaultDataEnv === 'production' || nodeOverride === 'production')
   const { memberId } = useUser()
   const { tokenPrice, convertHapiToUSD } = useTokenPrice()
   const { accountBalance } = useSubscribeAccountBalance()
@@ -172,7 +177,7 @@ export const PortfolioTokenTab = () => {
       getLiquidTokensValue()
     }
   }, [getLiquidTokensValue, liquidCrtValue])
-
+  console.log('hasChangeNowIntegration', hasChangeNowIntegration)
   return (
     <>
       <SendFundsDialog show={showSendDialog} onExitClick={toggleSendDialog} accountBalance={accountBalance} />
