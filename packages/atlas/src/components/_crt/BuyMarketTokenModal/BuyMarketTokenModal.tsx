@@ -17,7 +17,6 @@ import { DialogProps } from '@/components/_overlays/Dialog'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { HAPI_TO_JOY_RATE } from '@/joystream-lib/config'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { useFee, useJoystream, useSubscribeAccountBalance } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
@@ -254,7 +253,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
             as="p"
             variant="h300"
             withDenomination="before"
-            format={(requiredHapi ?? new BN(0)).gte(new BN(HAPI_TO_JOY_RATE).muln(1_000_000)) ? 'short' : undefined}
+            format="short"
             withToken
           />
         ),
