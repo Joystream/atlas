@@ -83,7 +83,7 @@ export const CrtRevenueShareWidget = ({ token, onTabSwitch }: CrtHoldersWidgetPr
                 REVENUE SHARE RATIO
               </Text>
               <Text variant="h400" as="p">
-                Channel {permillToPercentage(token.revenueShareRatioPermill)}%, Holders{' '}
+                Holders {permillToPercentage(token.revenueShareRatioPermill)}%, Channel{' '}
                 {100 - permillToPercentage(token.revenueShareRatioPermill)}%
               </Text>
             </FlexBox>
