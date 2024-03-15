@@ -203,7 +203,7 @@ Recommended values — Holders:20%, Channel: 80%."
         <Controller
           name="creatorReward"
           control={control}
-          render={({ field }) => <RatioSlider {...field} max={20} step={2} />}
+          render={({ field }) => <RatioSlider {...field} max={14} step={2} />}
         />
       </FormField>
     </CrtFormWrapper>

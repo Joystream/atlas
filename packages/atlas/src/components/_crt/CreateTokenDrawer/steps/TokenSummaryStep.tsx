@@ -135,7 +135,7 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: Tok
           <RowBox gap={2}>
             <RowBox gap={1}>
               <Text variant="h300" as="span" color="colorText">
-                Channel:
+                Holders:
               </Text>
               <Text variant="h300" as="p" color="colorTextStrong">
                 {form.revenueShare}%
@@ -143,7 +143,7 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: Tok
             </RowBox>
             <RowBox gap={1}>
               <Text variant="h300" as="span" color="colorText">
-                Holders:
+                Channel:
               </Text>
               <Text variant="h300" as="p" color="colorTextStrong">
                 {100 - form.revenueShare}%
