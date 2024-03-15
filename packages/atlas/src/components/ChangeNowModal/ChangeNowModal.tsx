@@ -76,7 +76,7 @@ export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
       text: 'Back',
       onClick: () => setStep((prev) => prev - 1),
     }
-  }, [onClose, step])
+  }, [onClose, primaryButtonProps, shouldOmitInfo, step])
 
   const handleFormData = useCallback((data: FormData) => {
     formData.current = data

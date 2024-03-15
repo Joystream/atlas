@@ -177,7 +177,7 @@ export const PortfolioTokenTab = () => {
       getLiquidTokensValue()
     }
   }, [getLiquidTokensValue, liquidCrtValue])
-  console.log('hasChangeNowIntegration', hasChangeNowIntegration)
+
   return (
     <>
       <SendFundsDialog show={showSendDialog} onExitClick={toggleSendDialog} accountBalance={accountBalance} />
