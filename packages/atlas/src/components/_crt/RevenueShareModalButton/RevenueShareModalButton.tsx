@@ -18,7 +18,7 @@ export const RevenueShareModalButton = ({ token, variant, disabled }: RevenueSha
   return (
     <>
       <Button
-        disabled={disabled || hasOpenedMarket}
+        disabled={disabled}
         variant={variant}
         onClick={() =>
           hasOpenedMarket
