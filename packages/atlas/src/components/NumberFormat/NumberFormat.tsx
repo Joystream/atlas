@@ -55,7 +55,7 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
     const { convertTokensToUSD } = useTokenPrice()
     const internalValue = BN.isBN(value) ? hapiBnToTokenNumber(value) : value
     const fiatValue = convertTokensToUSD(
-      denominationMultiplier ? denominationMultiplier * internalValue : internalValue
+      denominationMultiplier !== undefined ? denominationMultiplier * internalValue : internalValue
     )
     const textRef = useRef<HTMLHeadingElement>(null)
     const denominationRef = useRef<HTMLHeadingElement>(null)

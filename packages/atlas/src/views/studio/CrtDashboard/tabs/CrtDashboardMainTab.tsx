@@ -11,6 +11,7 @@ import { Button, ButtonProps, TextButton } from '@/components/_buttons/Button'
 import { CrtHoldersWidget } from '@/components/_crt/CrtHoldersWidget'
 import { CrtMarketWidget } from '@/components/_crt/CrtMarketWidget'
 import { CrtRevenueShareWidget } from '@/components/_crt/CrtRevenueShareWidget'
+import { RevenueShareModalButton } from '@/components/_crt/RevenueShareModalButton'
 import { StartSaleOrMarketButton } from '@/components/_crt/StartSaleOrMarketButton/StartSaleOrMarketButton'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
@@ -103,12 +104,12 @@ export const CrtDashboardMainTab = ({ token, onTabChange, hasOpenedMarket }: Crt
         case 2:
           return <StartSaleOrMarketButton {...commonProps} tokenId={token.id ?? ''} />
         case 3:
-          return <Button {...commonProps}>Start revenue share</Button>
+          return <RevenueShareModalButton disabled={currentMemberStep < 3} token={token} />
         default:
           return null
       }
     },
-    [currentMemberStep, smMatch, token.id]
+    [currentMemberStep, smMatch, token]
   )
 
   return (
