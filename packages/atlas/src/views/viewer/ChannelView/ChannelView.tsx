@@ -181,7 +181,9 @@ export const ChannelView: FC = () => {
 
   const handleOnResizeGrid = (sizes: number[]) => setTilesPerRow(sizes.length)
 
-  const mappedTabs = TABS.filter((tab) => !!tab).map((tab) => ({ name: tab, badgeNumber: 0 }))
+  const mappedTabs = TABS.filter((tab) => (tab === 'Token' ? !!tab && !!channel?.creatorToken?.token.id : !!tab)).map(
+    (tab) => ({ name: tab, badgeNumber: 0 })
+  )
 
   const getChannelContent = (tab: typeof TABS[number]) => {
     switch (tab) {
