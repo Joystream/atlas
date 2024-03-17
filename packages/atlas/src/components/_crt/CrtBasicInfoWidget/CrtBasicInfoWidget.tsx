@@ -54,7 +54,6 @@ export type CrtMainInfoProps = {
 
 export const CrtMainInfo = ({
   name,
-  description,
   avatar,
   symbol,
   accountsNum,
