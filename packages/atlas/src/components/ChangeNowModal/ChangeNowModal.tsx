@@ -1,6 +1,7 @@
+import styled from '@emotion/styled'
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
-import { SvgAlertsInformative32 } from '@/assets/icons'
+import { SvgAlertsInformative32, SvgLogoChangenow } from '@/assets/icons'
 import { SwapExpired } from '@/components/ChangeNowModal/steps/SwapExpired'
 import { Spinner } from '@/components/_loaders/Spinner'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
@@ -111,7 +112,9 @@ export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
       onExitClick={step === ChangeNowModalStep.SWAP_EXPIRED ? undefined : () => onClose()}
       primaryButton={primaryButtonProps}
       secondaryButton={secondaryButton}
-      additionalActionsNode={step === ChangeNowModalStep.PROGRESS && primaryButtonProps ? <Spinner /> : null}
+      additionalActionsNode={
+        step === ChangeNowModalStep.PROGRESS && !primaryButtonProps ? <Spinner /> : <StyledSvgLogoChangenow />
+      }
     >
       {step === ChangeNowModalStep.INFO && <InformationStep {...commonProps} />}
       {step === ChangeNowModalStep.FORM && (
@@ -127,3 +130,8 @@ export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
     </DialogModal>
   )
 }
+
+const StyledSvgLogoChangenow = styled(SvgLogoChangenow)`
+  height: 30px;
+  width: 60px;
+`

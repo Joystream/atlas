@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { useMemo, useState } from 'react'
+import { ReactElement, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import { useBasicChannel } from '@/api/hooks/channel'
@@ -134,28 +134,28 @@ export const CrtPortfolioTable = ({ data, emptyState, isLoading }: CrtPortfolioT
 
 export const TokenInfo = ({
   tokenTitle,
-  tokenName,
   isVerified,
   channelId,
-}: Pick<PortfolioToken, 'tokenName' | 'tokenTitle' | 'isVerified' | 'channelId'>) => {
+  customAvatar,
+}: Pick<PortfolioToken, 'tokenName' | 'tokenTitle' | 'isVerified' | 'channelId'> & {
+  customAvatar?: ReactElement
+}) => {
   const { channel } = useBasicChannel(channelId ?? '')
   const navigate = useNavigate()
   return (
     <FlexBox minWidth="100px" alignItems="center" gap={2}>
-      <Avatar
-        assetUrls={channel?.avatarPhoto?.resolvedUrls}
-        onClick={() => (channelId ? navigate(absoluteRoutes.viewer.channel(channelId, { tab: 'Token' })) : undefined)}
-      />
-      <FlexBox flow="column" gap={0}>
+      {customAvatar ?? (
+        <Avatar
+          assetUrls={channel?.avatarPhoto?.resolvedUrls}
+          onClick={() => (channelId ? navigate(absoluteRoutes.viewer.channel(channelId, { tab: 'Token' })) : undefined)}
+        />
+      )}
+
+      <FlexBox alignItems="center">
         <Text variant="h200" as="h1">
           {tokenTitle}
         </Text>
-        <FlexBox alignItems="center" gap={1}>
-          <Text variant="t100" as="span" color="colorText">
-            {tokenName}
-          </Text>
-          {isVerified && <SvgActionVerified />}
-        </FlexBox>
+        {isVerified && <SvgActionVerified />}
       </FlexBox>
     </FlexBox>
   )

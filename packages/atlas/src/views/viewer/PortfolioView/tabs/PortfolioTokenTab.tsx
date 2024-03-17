@@ -8,7 +8,7 @@ import {
   useGetTokenRevenueSharesCountQuery,
   useGetTokenRevenueSharesQuery,
 } from '@/api/queries/__generated__/creatorTokens.generated'
-import { SvgActionChevronB } from '@/assets/icons'
+import { SvgActionChevronB, SvgLogoJoystream } from '@/assets/icons'
 import { SvgEmptyStateIllustration } from '@/assets/illustrations'
 import { FlexBox } from '@/components/FlexBox'
 import { NumberFormat } from '@/components/NumberFormat'
@@ -32,6 +32,7 @@ import { useSubscribeAccountBalance, useTokenPrice } from '@/providers/joystream
 import { useJoystreamStore } from '@/providers/joystream/joystream.store'
 import { useTransactionManagerStore } from '@/providers/transactions/transactions.store'
 import { useUser } from '@/providers/user/user.hooks'
+import { cVar, square } from '@/styles'
 import { formatNumber } from '@/utils/number'
 import { StyledSvgJoyTokenMonochrome24 } from '@/views/studio/MyPaymentsView/PaymentsOverview/PaymentsOverview.styles'
 
@@ -267,7 +268,16 @@ export const PortfolioTokenTab = () => {
           data={[
             {
               name: (
-                <TokenInfo tokenName="Joystream" tokenTitle={atlasConfig.joystream.tokenTicker} isVerified={false} />
+                <TokenInfo
+                  tokenName="Joystream"
+                  tokenTitle={atlasConfig.joystream.tokenTicker}
+                  isVerified
+                  customAvatar={
+                    <JoystreamLogoWrapper>
+                      <SvgLogoJoystream />
+                    </JoystreamLogoWrapper>
+                  }
+                />
               ),
               price: (
                 <Text variant="t100" as="p">
@@ -329,5 +339,18 @@ const StyledTable = styled(Table)`
     > div {
       align-items: end;
     }
+  }
+`
+
+export const JoystreamLogoWrapper = styled.div`
+  ${square(32)};
+
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background-color: ${cVar('colorBackgroundPrimary')};
+
+  svg {
+    ${square(20)};
   }
 `
