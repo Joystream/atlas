@@ -25,6 +25,11 @@ export type CloseMarketModalProps = {
   show: boolean
   onClose: () => void
 }
+// Current runtime maximum number of exceeding tokens in AMM is 1% of total supply.
+// Assuming x - supply of tokens beside AMM, y - AMM tokens supply (minted - burned) and at the same time the threshold
+// we get following formula (for this scenario it's enough if it just equals)
+// 1% * (x + y) = y   -->   x / 99 = y
+const TRESHOLD_RATIO = 99
 
 export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMarketModalProps) => {
   const { memberId } = useUser()
@@ -42,9 +47,11 @@ export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMar
   const { displaySnackbar } = useSnackbar()
   const handleTransaction = useTransaction()
   const client = useApolloClient()
-  const thresholdAmount = data?.creatorTokenById ? Math.floor(+data.creatorTokenById.totalSupply * 0.01) : 0
   const ammBalance = data?.creatorTokenById?.currentAmmSale
     ? +data.creatorTokenById.currentAmmSale.mintedByAmm - +data.creatorTokenById.currentAmmSale.burnedByAmm
+    : 0
+  const thresholdAmount = data?.creatorTokenById
+    ? Math.floor((+data.creatorTokenById.totalSupply - ammBalance) / TRESHOLD_RATIO)
     : 0
   const hasSufficientTokens = tokenBalance >= ammBalance - thresholdAmount
   const amountToSell = Math.max(0, Math.floor(ammBalance - thresholdAmount))
@@ -90,6 +97,7 @@ export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMar
           })
         },
         onError: () => {
+          client.refetchQueries({ include: 'active' })
           SentryLogger.error('Failed to close market', 'CloseMarketModal', { joystream, channelId, memberId })
           displaySnackbar({
             iconType: 'error',
