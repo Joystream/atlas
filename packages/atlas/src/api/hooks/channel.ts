@@ -30,6 +30,7 @@ import {
   useUnfollowChannelMutation,
 } from '@/api/queries/__generated__/channels.generated'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
+import { useAuth } from '@/providers/auth/auth.hooks'
 
 export const useBasicChannel = (
   id: string,
@@ -143,6 +144,7 @@ export const useMostPaidChannels = (): { channels: PayeeChannel[] | undefined; l
 
 export const useFollowChannel = (opts?: MutationHookOptions<FollowChannelMutation>) => {
   const [followChannel, rest] = useFollowChannelMutation()
+  const { refetchCurrentUser } = useAuth()
   const { trackChannelFollow } = useSegmentAnalytics()
   return {
     followChannel: (id: string) => {
@@ -151,6 +153,9 @@ export const useFollowChannel = (opts?: MutationHookOptions<FollowChannelMutatio
         ...opts,
         variables: {
           channelId: id,
+        },
+        onCompleted: () => {
+          refetchCurrentUser().catch(() => undefined)
         },
         update: (cache, mutationResult) => {
           cache.modify({
@@ -171,12 +176,17 @@ export const useFollowChannel = (opts?: MutationHookOptions<FollowChannelMutatio
 
 export const useUnfollowChannel = (opts?: MutationHookOptions<UnfollowChannelMutation>) => {
   const [unfollowChannel, rest] = useUnfollowChannelMutation()
+  const { refetchCurrentUser } = useAuth()
+
   return {
     unfollowChannel: (id: string) =>
       unfollowChannel({
         ...opts,
         variables: {
           channelId: id,
+        },
+        onCompleted: () => {
+          refetchCurrentUser().catch(() => undefined)
         },
         update: (cache, mutationResult) => {
           cache.modify({

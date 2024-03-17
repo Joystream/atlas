@@ -5,6 +5,10 @@ query GetCurrentAccount {
     isEmailConfirmed
     joystreamAccount
     membershipId
+    followedChannels {
+      channelId
+      timestamp
+    }
   }
 }
 

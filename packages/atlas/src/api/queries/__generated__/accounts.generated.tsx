@@ -15,6 +15,7 @@ export type GetCurrentAccountQuery = {
     isEmailConfirmed: boolean
     joystreamAccount: string
     membershipId: string
+    followedChannels: Array<{ __typename?: 'FollowedChannel'; channelId: string; timestamp: string }>
   }
 }
 
@@ -42,6 +43,10 @@ export const GetCurrentAccountDocument = gql`
       isEmailConfirmed
       joystreamAccount
       membershipId
+      followedChannels {
+        channelId
+        timestamp
+      }
     }
   }
 `
