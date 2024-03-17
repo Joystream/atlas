@@ -124,6 +124,8 @@ export const CrtPortfolioTable = ({ data, emptyState, isLoading }: CrtPortfolioT
       <StyledTable
         minWidth={730}
         isEmpty={!mappingData.length}
+        /*todo add pagination*/
+        pageSize={mappingData.length || undefined}
         columns={COLUMNS}
         data={isLoading ? tableLoadingData : mappingData}
         emptyState={emptyState}
