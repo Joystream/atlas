@@ -1,31 +1,17 @@
 import { useCallback } from 'react'
 
 import { useFollowChannel, useUnfollowChannel } from '@/api/hooks/channel'
-import { useGetChannelFollowsQuery } from '@/api/queries/__generated__/accounts.generated'
+import { useAuth } from '@/providers/auth/auth.hooks'
 import { useConfirmationModal } from '@/providers/confirmationModal'
-import { useUser } from '@/providers/user/user.hooks'
 import { SentryLogger } from '@/utils/logs'
 
 export const useHandleFollowChannel = (channelId?: string, channelTitle?: string | null) => {
   const [openUnfollowDialog, closeUnfollowDialog] = useConfirmationModal()
   const { followChannel } = useFollowChannel()
-  const { accountId } = useUser()
+  const { currentUser } = useAuth()
   const { unfollowChannel } = useUnfollowChannel()
-  const { data } = useGetChannelFollowsQuery({
-    variables: {
-      where: {
-        channelId_eq: channelId,
-        user: {
-          account: {
-            id_eq: accountId,
-          },
-        },
-      },
-      limit: 1,
-    },
-    skip: !accountId || !channelTitle || !channelId,
-  })
-  const follow = !!data?.channelFollows.length
+
+  const follow = currentUser?.followedChannels.some((followage) => followage.channelId === channelId)
 
   const toggleFollowing = useCallback(async () => {
     if (!channelId || !channelTitle) {
