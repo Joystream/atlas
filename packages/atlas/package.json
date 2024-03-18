@@ -73,6 +73,7 @@
     "mp4box": "^0.5.2",
     "multihashes": "^4.0.3",
     "postcss-syntax": "^0.36.2",
+    "qrcode.react": "^3.1.0",
     "rc-slider": "^10.1.0",
     "react": "^18.2.0",
     "react-datepicker": "^4.8.0",

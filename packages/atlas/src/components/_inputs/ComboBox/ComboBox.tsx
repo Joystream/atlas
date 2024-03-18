@@ -20,6 +20,8 @@ type ModifiedListItemProps = ListItemProps & {
 
 export type ComboBoxProps<T = unknown> = {
   items?: (ModifiedListItemProps & T)[]
+  initialSelectedItem?: ModifiedListItemProps & T
+  selectedItem?: ModifiedListItemProps & T
   processing?: boolean
   onSelectedItemChange?: (item?: ModifiedListItemProps & T) => void
   onInputValueChange?: (item?: string) => void | Promise<void>
@@ -39,6 +41,8 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
     resetOnSelect,
     notFoundNode,
     error,
+    initialSelectedItem,
+    selectedItem,
     value,
     ...textFieldProps
   } = props
@@ -54,7 +58,7 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
 
   useEffect(() => {
     if (items) {
-      setInputItems(items)
+      setInputItems(items.slice(0, 10))
     }
   }, [items, value])
 
@@ -69,6 +73,8 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
     inputValue,
     setInputValue,
   } = useCombobox({
+    initialSelectedItem,
+    selectedItem,
     items: inputItems,
     itemToString: (item) => (item ? (item.label as string) : ''),
     onSelectedItemChange: ({ selectedItem }) => {
@@ -82,11 +88,18 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
       }
     },
     onInputValueChange: ({ inputValue }) => {
-      const filteredItems = items.filter(
-        (item) => (item.label as string)?.toLowerCase().startsWith(inputValue?.toLowerCase() || '') && !item.isSeparator
-      )
-      setInputItems(inputValue?.length ? uniqBy(filteredItems, 'label') : items)
       onInputValueChange?.(inputValue)
+      new Promise(() => {
+        const filteredItems = items
+          .filter(
+            (item) =>
+              ((item.label as string)?.toLowerCase().startsWith(inputValue?.toLowerCase() || '') ||
+                (item.caption as string)?.toLowerCase().startsWith(inputValue?.toLowerCase() || '')) &&
+              !item.isSeparator
+          )
+          .slice(0, 20)
+        setInputItems(inputValue?.length ? uniqBy(filteredItems, 'label') : items.slice(0, 20))
+      })
     },
     onIsOpenChange: () => {
       update?.()
@@ -98,6 +111,12 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
       setInputValue(value as string)
     }
   }, [setInputValue, value])
+
+  useEffect(() => {
+    if (selectedItem && !isOpen) {
+      setInputValue(selectedItem.label)
+    }
+  }, [isOpen, selectedItem, setInputValue])
 
   const noItemsFound = isOpen && !error && inputItems.length === 0 && !processing && notFoundNode && inputValue
 
