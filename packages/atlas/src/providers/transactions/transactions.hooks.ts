@@ -54,9 +54,8 @@ type HandleTransactionFn = <T extends ExtrinsicResult>(opts: HandleTransactionOp
 const WALLETS_WITH_METADATA = ['talisman', 'polkadot-js', 'subwallet-js']
 
 export const useTransaction = (): HandleTransactionFn => {
-  const { addBlockAction, addTransaction, updateTransaction, removeTransaction } = useTransactionManagerStore(
-    (state) => state.actions
-  )
+  const { addBlockAction, addTransaction, updateTransaction, removeTransaction, setChangeNowModal } =
+    useTransactionManagerStore((state) => state.actions)
   const navigate = useNavigate()
 
   const [openOngoingTransactionModal, closeOngoingTransactionModal] = useConfirmationModal()
@@ -115,12 +114,7 @@ export const useTransaction = (): HandleTransactionFn => {
       }
 
       if (fee && totalBalance?.lt(fee)) {
-        displaySnackbar({
-          title: 'Not enough funds',
-          description:
-            "You don't have enough funds to cover blockchain transaction fee for this operation. Please, top up your account balance and try again.",
-          iconType: 'error',
-        })
+        setChangeNowModal('topup')
         return false
       }
 
@@ -365,6 +359,7 @@ export const useTransaction = (): HandleTransactionFn => {
       nodeConnectionStatus,
       openOngoingTransactionModal,
       removeTransaction,
+      setChangeNowModal,
       skipSignerMetadataUpdate,
       totalBalance,
       updateSignerMetadata,
