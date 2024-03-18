@@ -31,6 +31,7 @@ export type SummaryStepProps = {
 
 export type TransactionData = {
   id: string
+  hasAutomaticTransactionSucceeded?: boolean
 }
 
 export const SummaryStep = ({
@@ -87,7 +88,7 @@ export const SummaryStep = ({
       id: txData.id,
     })
 
-    if (type === 'sell') {
+    if (isSellingJoy) {
       if (!joystream) {
         return
       }
@@ -99,10 +100,14 @@ export const SummaryStep = ({
             await joystream.extrinsics
           ).sendFunds(
             formatJoystreamAddress(txData.payinAddress),
-            tokenNumberToHapiBn(to.amount).toString(),
+            tokenNumberToHapiBn(txData.fromAmount).toString(),
             proxyCallback(updateStatus)
           ),
         onTxSync: async () => {
+          setTransactionData({
+            id: txData.id,
+            hasAutomaticTransactionSucceeded: true,
+          })
           goToStep(ChangeNowModalStep.PROGRESS)
         },
       })

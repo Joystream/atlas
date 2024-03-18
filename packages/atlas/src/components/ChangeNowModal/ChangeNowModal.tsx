@@ -2,12 +2,14 @@ import styled from '@emotion/styled'
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 import { SvgAlertsInformative32, SvgLogoChangenow } from '@/assets/icons'
+import { FailedStep } from '@/components/ChangeNowModal/steps/FailedStep'
 import { SwapExpired } from '@/components/ChangeNowModal/steps/SwapExpired'
 import { Spinner } from '@/components/_loaders/Spinner'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { absoluteRoutes } from '@/config/routes'
 import { usePersonalDataStore } from '@/providers/personalData'
+import { cVar } from '@/styles'
 
 import { FormData, FormStep } from './steps/FormStep'
 import { CHANGE_NOW_DISMISSIBLE_ID, InformationStep } from './steps/InformationStep'
@@ -46,13 +48,20 @@ export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
       })
     }
 
+    if (step === ChangeNowModalStep.FAILED) {
+      setPrimaryButtonProps({
+        text: 'Try again',
+        onClick: () => setStep(ChangeNowModalStep.FORM),
+      })
+    }
+
     if (step === ChangeNowModalStep.PROGRESS) {
       setPrimaryButtonProps(undefined)
     }
   }, [step, type])
 
   const secondaryButton = useMemo(() => {
-    if ([ChangeNowModalStep.INFO, ChangeNowModalStep.SWAP_EXPIRED].includes(step)) {
+    if ([ChangeNowModalStep.INFO, ChangeNowModalStep.SWAP_EXPIRED, ChangeNowModalStep.FAILED].includes(step)) {
       return {
         text: 'Cancel',
         onClick: () => onClose(),
@@ -99,21 +108,26 @@ export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
   return (
     <DialogModal
       title={
-        (type === 'topup' && step === ChangeNowModalStep.INFO) || step === ChangeNowModalStep.SWAP_EXPIRED ? (
-          <SvgAlertsInformative32 />
+        (type === 'topup' && step === ChangeNowModalStep.INFO) ||
+        [ChangeNowModalStep.SWAP_EXPIRED, ChangeNowModalStep.FAILED].includes(step) ? (
+          <StyledSvgAlertsInformative32 isFailed={step === ChangeNowModalStep.FAILED} />
         ) : type === 'sell' ? (
           'Cashout JOY'
         ) : (
           'Buy JOY'
         )
       }
-      show={true}
-      dividers={![ChangeNowModalStep.INFO, ChangeNowModalStep.SWAP_EXPIRED].includes(step)}
+      show
+      dividers={![ChangeNowModalStep.INFO, ChangeNowModalStep.SWAP_EXPIRED, ChangeNowModalStep.FAILED].includes(step)}
       onExitClick={step === ChangeNowModalStep.SWAP_EXPIRED ? undefined : () => onClose()}
-      primaryButton={primaryButtonProps}
+      primaryButton={
+        primaryButtonProps
+          ? { ...primaryButtonProps, variant: step === ChangeNowModalStep.FAILED ? 'destructive' : 'primary' }
+          : undefined
+      }
       secondaryButton={secondaryButton}
       additionalActionsNode={
-        step === ChangeNowModalStep.PROGRESS && !primaryButtonProps ? <Spinner /> : <StyledSvgLogoChangenow />
+        step === ChangeNowModalStep.PROGRESS && !primaryButtonProps ? <StyledSpinner /> : <StyledSvgLogoChangenow />
       }
     >
       {step === ChangeNowModalStep.INFO && <InformationStep {...commonProps} />}
@@ -127,9 +141,24 @@ export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
         <ProgressStep {...commonProps} transactionData={transactionData.current} />
       )}
       {step === ChangeNowModalStep.SWAP_EXPIRED && <SwapExpired />}
+      {step === ChangeNowModalStep.FAILED && transactionData.current && (
+        <FailedStep {...commonProps} transactionData={transactionData.current} />
+      )}
     </DialogModal>
   )
 }
+
+const StyledSvgAlertsInformative32 = styled(SvgAlertsInformative32)<{ isFailed: boolean }>`
+  padding: 1px;
+
+  path {
+    fill: ${({ isFailed }) => (isFailed ? cVar('colorTextError') : 'unset')};
+  }
+`
+
+const StyledSpinner = styled(Spinner)`
+  margin: 0;
+`
 
 const StyledSvgLogoChangenow = styled(SvgLogoChangenow)`
   height: 30px;

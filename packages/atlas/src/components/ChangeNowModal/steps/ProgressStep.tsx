@@ -14,12 +14,12 @@ import { atlasConfig } from '@/config'
 import { cVar, sizes, square } from '@/styles'
 import { changeNowService } from '@/utils/ChangeNowService'
 
-import { CommonProps } from './types'
+import { ChangeNowModalStep, CommonProps } from './types'
 
 const sellSteps = [
   [
     'Awaiting payment',
-    'Transaction is being confirmed by ChangeNOW. If automatic transaction failed create a new exchange after 20 minutes or make a transfer manually.',
+    'Transaction is being processed by ChangeNOW. If automatic transaction failed create a new exchange after 20 minutes or make a transfer manually.',
   ],
   ['Confirming payment', 'We have seen your transaction. It is now being confirmed by ChangeNOW.'],
   ['Exchanging', 'Your transaction has been confirmed. The exchange process is currently underway.'],
@@ -50,7 +50,7 @@ type ProgressStepProps = {
   transactionData: TransactionData
 } & CommonProps
 
-export const ProgressStep = ({ transactionData, type, setPrimaryButtonProps }: ProgressStepProps) => {
+export const ProgressStep = ({ transactionData, type, setPrimaryButtonProps, goToStep }: ProgressStepProps) => {
   const [retry, setRetry] = useState(true)
   const isSellingJoy = type === 'sell'
   const steps = isSellingJoy ? sellSteps : buySteps
@@ -58,7 +58,12 @@ export const ProgressStep = ({ transactionData, type, setPrimaryButtonProps }: P
     ['getTransactionStatus', transactionData.id],
     () => changeNowService.getTransactionStatus(transactionData.id).then((res) => res.data),
     {
-      refetchInterval: retry ? 10_000 : undefined,
+      refetchInterval: retry ? 20_000 : undefined,
+      onSuccess: (data) => {
+        if (data.status === 'failed') {
+          goToStep(ChangeNowModalStep.FAILED)
+        }
+      },
     }
   )
 
@@ -71,14 +76,15 @@ export const ProgressStep = ({ transactionData, type, setPrimaryButtonProps }: P
     switch (data.status) {
       case 'new':
       case 'waiting':
-        step = 0
-        extraContent = (
+        step = transactionData.hasAutomaticTransactionSucceeded ? 1 : 0
+        // hasAutomaticTransactionSucceeded will only be true if tx succeeded and user is selling joys
+        extraContent = transactionData.hasAutomaticTransactionSucceeded ? null : (
           <FlexBox flow="column" gap={4}>
             <FlexBox flow="column">
               <FlexBox alignItems="center">
-                <Text variant="h400" as="h4" color="colorText">
+                <SingleRowText variant="h400" as="h4" color="colorText">
                   Amount to send:
-                </Text>
+                </SingleRowText>
                 <Text variant="h400" as="h4">
                   {data.amountFrom ?? data.expectedAmountFrom}{' '}
                   {isSellingJoy ? atlasConfig.joystream.tokenTicker : data.fromCurrency.toUpperCase()}
@@ -86,9 +92,9 @@ export const ProgressStep = ({ transactionData, type, setPrimaryButtonProps }: P
               </FlexBox>
 
               <FlexBox alignItems="center">
-                <Text variant="h400" as="h4" color="colorText">
+                <SingleRowText variant="h400" as="h4" color="colorText">
                   Payment address:
-                </Text>
+                </SingleRowText>
                 <CopyAddressButton size="big" address={data.payinAddress} truncate={false} />
               </FlexBox>
             </FlexBox>
@@ -118,7 +124,7 @@ export const ProgressStep = ({ transactionData, type, setPrimaryButtonProps }: P
         extraContent = successText
     }
     return [step, steps[step]?.[1], extraContent]
-  }, [data, isSellingJoy, setPrimaryButtonProps, steps])
+  }, [data, isSellingJoy, setPrimaryButtonProps, steps, transactionData.hasAutomaticTransactionSucceeded])
 
   return (
     <FlexBox gap={6} flow="column">
@@ -157,6 +163,10 @@ export const ProgressStep = ({ transactionData, type, setPrimaryButtonProps }: P
 const StyledStep = styled(Step)`
   width: auto;
   margin-left: ${sizes(2)};
+`
+
+const SingleRowText = styled(Text)`
+  white-space: nowrap;
 `
 
 const StepperContainer = styled.div`
