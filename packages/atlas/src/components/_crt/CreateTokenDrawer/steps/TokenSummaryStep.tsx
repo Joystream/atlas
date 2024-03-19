@@ -47,6 +47,7 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: Tok
     form.vesting,
     form.firstPayout,
   ]
+
   const { fullFee } = useFee('issueCreatorTokenTx', [
     memberId ?? '1',
     channelId ?? '1',
@@ -169,14 +170,14 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: Tok
             </Text>
           </SectionRow>
         )}
-        {typeof cliff !== 'object' && (
+        {!!cliff && (
           <>
             <SectionRow
               title="Cliff"
               tooltipText="Cliff is a period of time that locks your channel tokens from being sold or transferred."
             >
               <Text variant="h300" as="p" color="colorTextStrong">
-                {Number(cliff) === 0 ? 'No vesting' : pluralizeNoun(Number(cliff), 'month')}
+                {pluralizeNoun(Number(cliff), 'month')}
               </Text>
             </SectionRow>
             {cliffBanner}

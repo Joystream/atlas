@@ -92,7 +92,7 @@ export const ChannelView: FC = () => {
   // This hook has to come before useRedirectMigratedContent so it doesn't messes it's navigate call
   const initialRender = useRef(true)
   useEffect(() => {
-    if (initialRender.current) {
+    if (initialRender.current && !loading) {
       const tabIndex = filteredTabs.findIndex((t) => t === currentTabName)
       if (tabIndex === -1) setSearchParams({ 'tab': 'Videos' }, { replace: true })
       initialRender.current = false

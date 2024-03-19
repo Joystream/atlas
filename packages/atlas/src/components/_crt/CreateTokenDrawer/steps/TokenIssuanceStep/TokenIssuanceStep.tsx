@@ -93,8 +93,6 @@ export const TokenIssuanceStep = ({
 
   const getAssuranceDetails = () => {
     switch (assuranceType) {
-      case 'secure':
-        return cliffBanner
       case 'custom':
         return (
           <>
@@ -188,10 +186,10 @@ export const TokenIssuanceStep = ({
       <PreviewContainer>
         <FlexBox gap={2} flow="column">
           <Text variant="h100" as="h1">
-            How your tokens will unlock over time
+            Assurance preview
           </Text>
           <Text variant="t200" as="p" color="colorTextMuted">
-            You will get a part of your tokens now and get full amount by the end of the vesting duration.
+            You can preview assurance types by clicking them in the form.
           </Text>
         </FlexBox>
         <div className="chart-box">
@@ -242,13 +240,13 @@ export const TokenIssuanceStep = ({
 
   return (
     <CrtFormWrapper
-      title="Token issuance"
+      title="Token minting"
       learnMoreLink=""
-      subtitle="At this stage you can issue as many tokens as you want. The more tokens you have in circulation, the less each individual token sold or purchased will impact the token's price if sold on public market."
+      subtitle="At this step you can choose how many tokens you want to mint. The more tokens you have in circulation, the less each individual token sold or purchased will impact the token's price if sold on public market."
     >
       <FormField
         label="Tokens issued to your wallet"
-        description="Decide how many tokens you want to create for yourself. This amount cannot be changed later. You will be able to sell these tokens to your audience directly or enable a public sale, where others can mint more of your channel tokens in exchange for JOYs."
+        description="Decide how many tokens you want to create for yourself. This amount cannot be changed later. After creation the only way to get more tokens is to buy them from own market."
         error={errors.creatorIssueAmount?.message}
       >
         <Controller

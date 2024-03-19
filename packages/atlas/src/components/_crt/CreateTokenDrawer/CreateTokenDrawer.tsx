@@ -23,7 +23,7 @@ const CREATOR_TOKEN_INITIAL_DATA: CreateTokenForm = {
   isOpen: true,
   revenueShare: 20,
   creatorReward: 10,
-  creatorIssueAmount: undefined,
+  creatorIssueAmount: 10_000,
   assuranceType: 'safe',
   cliff: null,
   vesting: null,

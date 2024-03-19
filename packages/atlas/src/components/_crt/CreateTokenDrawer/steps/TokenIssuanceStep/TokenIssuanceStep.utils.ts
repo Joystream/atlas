@@ -5,24 +5,18 @@ import { IssuanceStepForm } from '@/components/_crt/CreateTokenDrawer/CreateToke
 
 export const assuranceOptions = [
   {
-    label: 'Secure',
-    caption:
-      '6 months cliff & 1 year vesting. You won’t receive any tokens now. You will receive 50% of tokens after 6 months of cliff.',
-    value: 'secure',
-  },
-  {
     label: 'Safe (Default)',
-    caption: 'No cliff & 6 months vesting. You will receive 50% of tokens now.',
+    caption: 'You will receive 50% of issued tokens now and the rest will unlock gradually over 6 months.',
     value: 'safe',
   },
   {
     label: 'Risky',
-    caption: 'No cliff & No vesting. You receive all tokens now.',
+    caption: 'You receive all issued tokens instantly.',
     value: 'risky',
   },
   {
     label: 'Custom',
-    caption: 'Set your own custom cliff, vesting and first payout.',
+    caption: 'Set your own custom cliff, vesting and initial payout.',
     value: 'custom',
   },
 ]
@@ -72,7 +66,8 @@ export const createTokenIssuanceSchema = (tokenName: string) =>
         .number({
           required_error: `Please provide the amount of $${tokenName} you want to issue.`,
         })
-        .max(106_000, `Can’t issue more than 106 000 $${tokenName}.`),
+        .min(3_000, `Can’t issue less than 3 000 $${tokenName}.`)
+        .max(100_000, `Can’t issue more than 100 000 $${tokenName}.`),
       assuranceType: z.enum(['safe', 'risky', 'secure', 'custom']),
       cliff: z.enum(['0', '1', '3', '6']).nullable(),
       vesting: z.enum(['0', '1', '3', '6']).nullable(),
@@ -182,8 +177,6 @@ export const generateChartData = (cliffTime: number, vestingTime: number, firstP
 
 export const getDataBasedOnType = (type: IssuanceStepForm['assuranceType']): [number, number, number] | null => {
   switch (type) {
-    case 'secure':
-      return [6, 12, 50]
     case 'safe':
       return [0, 6, 50]
     case 'risky':

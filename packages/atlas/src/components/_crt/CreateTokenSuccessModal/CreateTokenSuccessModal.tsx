@@ -39,10 +39,9 @@ export const CreateTokenSuccessModal = ({ tokenName, show }: CreateTokenSuccessM
           icon={<SvgActionNewTab />}
           iconPlacement="right"
           disabled={!channelId}
+          to={absoluteRoutes.viewer.channel(channelId ?? '-1', { tab: 'Token' })}
           onClick={() => {
-            client.refetchQueries({ include: 'active' }).then(() => {
-              navigate(absoluteRoutes.viewer.channel(channelId ?? '-1', { tab: 'Token' }))
-            })
+            client.refetchQueries({ include: 'active' })
           }}
         >
           View your token page
