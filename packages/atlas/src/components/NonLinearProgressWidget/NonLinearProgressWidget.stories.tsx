@@ -1,16 +1,16 @@
 import { Meta, StoryFn } from '@storybook/react'
 
-import { ProgressWidget, ProgressWidgetProps } from '@/components/ProgressWidget/ProgressWidget'
+import { NonLinearProgressWidget, NonLinearProgressWidgetProps } from '@/components/NonLinearProgressWidget'
 import { Text } from '@/components/Text'
 
 import { Button, TextButton } from '../_buttons/Button'
 
 export default {
-  title: 'CRT/ProgressWidget',
-  component: ProgressWidget,
-} as Meta<ProgressWidgetProps>
+  title: 'CRT/NonLinearProgressWidget',
+  component: NonLinearProgressWidget,
+} as Meta<NonLinearProgressWidgetProps>
 
-const steps: ProgressWidgetProps['steps'] = [
+const steps: NonLinearProgressWidgetProps['steps'] = [
   {
     title: 'Create token',
     description: 'Create own token and share it with your viewers!',
@@ -25,7 +25,7 @@ const steps: ProgressWidgetProps['steps'] = [
   },
 ]
 
-const Template: StoryFn<ProgressWidgetProps> = (args) => <ProgressWidget {...args} />
+const Template: StoryFn<NonLinearProgressWidgetProps> = (args) => <NonLinearProgressWidget {...args} />
 
 export const Default = Template.bind({})
 Default.args = {

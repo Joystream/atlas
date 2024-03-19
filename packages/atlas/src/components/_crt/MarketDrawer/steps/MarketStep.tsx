@@ -3,7 +3,7 @@ import { Controller, useForm } from 'react-hook-form'
 
 import { ActionDialogButtonProps } from '@/components/ActionBar'
 import { FlexBox } from '@/components/FlexBox'
-import { ColumnBox } from '@/components/ProgressWidget/ProgressWidget.styles'
+import { ColumnBox } from '@/components/NonLinearProgressWidget/NonLinearProgressWidget.styles'
 import { Text } from '@/components/Text'
 import { CrtMarketForm } from '@/components/_crt/MarketDrawer/MarketDrawer.types'
 import { Checkbox } from '@/components/_inputs/Checkbox'
