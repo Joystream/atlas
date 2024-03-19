@@ -111,7 +111,7 @@ export const useGetAssetUrl = (urls: string[] | undefined | null, type: AssetTyp
       return
     }
 
-    if (!urls) {
+    if (!urls || !urls.length) {
       setUrl(undefined)
       setIsLoading(false)
       return
