@@ -49,6 +49,7 @@ export const AmmModalFormTemplate = ({
                 value={field.value}
                 onChange={(value) => field.onChange(Math.round(value ?? 0))}
                 placeholder="0"
+                maxValue={maxValue}
                 nodeEnd={
                   pricePerUnit ? (
                     <Text variant="t300" as="p" color="colorTextMuted">

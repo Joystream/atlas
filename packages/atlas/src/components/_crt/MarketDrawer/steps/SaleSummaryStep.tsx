@@ -1,4 +1,3 @@
-import { useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
 import { FC, useCallback, useEffect, useMemo } from 'react'
 
@@ -44,7 +43,6 @@ export const SaleSummaryStep: FC<SaleSummaryProps> = ({
   const { displaySnackbar } = useSnackbar()
   const { joystream, proxyCallback } = useJoystream()
   const { memberId, channelId } = useUser()
-  const client = useApolloClient()
   const joySlopeNumber = useMemo(
     () => calculateSlopeNumberForAmm(totalSupply, holdersRevenueShare, tokenPrice ?? 1),
     [holdersRevenueShare, tokenPrice, totalSupply]
