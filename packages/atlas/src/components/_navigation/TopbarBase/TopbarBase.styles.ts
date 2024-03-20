@@ -30,10 +30,22 @@ export const Header = styled.header`
 
 export const LogoLink = styled(Link)`
   display: flex;
+  gap: ${sizes(2)};
+  width: fit-content;
   align-items: center;
   text-decoration: none;
 
   /* increase the clickable area */
   padding: 16px;
   margin: -16px;
+
+  h4 {
+    white-space: nowrap;
+  }
+`
+
+export const LogoDivider = styled.div`
+  background-color: ${cVar('colorBackgroundStrongAlpha')};
+  width: 1px;
+  height: 24px;
 `
