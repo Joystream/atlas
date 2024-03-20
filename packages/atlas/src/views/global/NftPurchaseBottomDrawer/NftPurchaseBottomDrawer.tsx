@@ -278,9 +278,10 @@ export const NftPurchaseBottomDrawer: FC = () => {
 
   useEffect(() => {
     if (!isOpen) {
-      setValue('bid', NaN)
+      setValue('bid', userBid?.amount ? hapiBnToTokenNumber(userBid.amount) : NaN)
     }
-  }, [isOpen, setValue])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, setValue, userBid?.amount.toString()])
 
   const { isLoadingAsset: userBidAvatarLoading, urls: userBidAvatarUrls } = getMemberAvatar(userBid?.bidder)
   const { isLoadingAsset: topBidderAvatarLoading, urls: topBidderAvatarUrls } = getMemberAvatar(topBidder)
@@ -476,7 +477,10 @@ export const NftPurchaseBottomDrawer: FC = () => {
                           value >= minimumBid ? true : 'Your bid must be higher than the minimum bid',
                         bidTooHigh: (value) => {
                           return accountBalance == null ||
-                            value + hapiBnToTokenNumber(transactionFee) > hapiBnToTokenNumber(accountBalance)
+                            value -
+                              hapiBnToTokenNumber(new BN(userBid?.amount ?? 0)) +
+                              hapiBnToTokenNumber(transactionFee) >
+                              hapiBnToTokenNumber(accountBalance)
                             ? 'You do not have enough funds to place this bid'
                             : true
                         },
@@ -566,12 +570,16 @@ export const NftPurchaseBottomDrawer: FC = () => {
             </Text>
             <Row>
               <Text as="span" variant="t100" color={hasInsufficientFunds ? 'colorTextError' : 'colorText'}>
-                Your balance
+                {type !== 'buy_now' && !isBuyNowClicked && userBid?.amount ? 'Available bid balance' : 'Your balance'}
               </Text>
               {accountBalance != null ? (
                 <NumberFormat
                   as="span"
-                  value={accountBalance}
+                  value={
+                    type !== 'buy_now' && !isBuyNowClicked
+                      ? accountBalance.add(new BN(userBid?.amount ?? 0))
+                      : accountBalance
+                  }
                   withToken
                   variant="t100"
                   color={hasInsufficientFunds ? 'colorTextError' : 'colorText'}
