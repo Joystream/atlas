@@ -43,7 +43,6 @@ export const StartMarketModal = ({ onClose, show, tokenId }: StartMarketModalPro
   })
   const { creatorTokenById } = data ?? {}
   const navigate = useNavigate()
-  const symbol = data?.creatorTokenById?.symbol
   const { joystream, proxyCallback } = useJoystream()
   const { displaySnackbar } = useSnackbar()
   const handleTransaction = useTransaction()
@@ -170,8 +169,9 @@ export const StartMarketModal = ({ onClose, show, tokenId }: StartMarketModalPro
         <FlexBox flow="column" gap={6}>
           <FlexBox flow="column" gap={2}>
             <Text variant="t200" as="p" color="colorText">
-              To close market you or any other member need to sell enough of ${symbol} tokens to the market to balance
-              the amount of tokens minted with this market.
+              When the price goes up you can sell your tokens at a profit. The more buyers you have had, the higher will
+              be the profit when you are closing the market. However to close the market you'd need to sell all of the
+              tokens purchased by others from the initial supply you minted for yourself already.
             </Text>
           </FlexBox>
           <FlexBox flow="column" gap={2}>

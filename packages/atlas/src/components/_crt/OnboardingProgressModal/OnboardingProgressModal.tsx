@@ -17,7 +17,10 @@ import { useOverlayManager } from '@/providers/overlayManager'
 const data = {
   master: {
     title: 'Congratulations on becoming a token master!',
-    description: 'Now you now something!',
+    description:
+      'Now you are ready to share your token with community and make profits from the market. \n' +
+      '\n' +
+      'One more step to go before token expert, which will grant you featuring on our marketplace and special privileges with the project in the future!',
   },
   expert: {
     title: 'Congratulations on becoming a token expert!',

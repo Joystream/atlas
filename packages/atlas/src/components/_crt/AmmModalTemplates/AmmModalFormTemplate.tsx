@@ -20,6 +20,7 @@ type AmmModalFormTemplateProps = {
     tooltipText?: string
   }[]
   error?: string
+  showTresholdButtons?: boolean
 }
 
 export const AmmModalFormTemplate = ({
@@ -29,6 +30,7 @@ export const AmmModalFormTemplate = ({
   details,
   control,
   error,
+  showTresholdButtons,
 }: AmmModalFormTemplateProps) => {
   const { convertTokensToUSD } = useTokenPrice()
 
@@ -59,7 +61,7 @@ export const AmmModalFormTemplate = ({
                 }
               />
             </FormField>
-            {typeof maxValue === 'number' ? (
+            {showTresholdButtons && typeof maxValue === 'number' ? (
               <FlexBox gap={2} width="100%" equalChildren>
                 <Button size="small" variant="secondary" onClick={() => field.onChange(Math.round(maxValue * 0.25))}>
                   25%

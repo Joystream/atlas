@@ -158,12 +158,11 @@ export const CrtDashboardMainTab = ({ token, onTabChange, hasOpenedMarket }: Crt
   )
 }
 
-const TOKEN_MASTER_MODAL_ID = 'token-master-modal'
-const TOKEN_EXPERT_MODAL_ID = 'token-expert-modal'
-const TOKEN_ONBOARDING_ID = 'token-onboarding'
-
 const DashboardTokenProgress = ({ token }: Pick<CrtDashboardMainTabProps, 'token'>) => {
   const smMatch = useMediaMatch('sm')
+  const TOKEN_MASTER_MODAL_ID = `token-master-modal-${token.id}`
+  const TOKEN_EXPERT_MODAL_ID = `token-expert-modal-${token.id}`
+  const TOKEN_ONBOARDING_ID = `token-onboarding-${token.id}`
   const dismissedMesages = usePersonalDataStore((state) => state.dismissedMessages)
   const [progressModal, setProgressModal] = useState<OnboardingProgressModalProps['type'] | null>(null)
   const hasDismissedTokenMasterModal = dismissedMesages.some((message) => message.id === TOKEN_MASTER_MODAL_ID)
@@ -209,7 +208,7 @@ const DashboardTokenProgress = ({ token }: Pick<CrtDashboardMainTabProps, 'token
             </Button>
           )
         case 2:
-          return <StartSaleOrMarketButton {...commonProps} disabled={!!token.currentAmmSale} tokenId={token.id ?? ''} />
+          return <StartSaleOrMarketButton {...commonProps} token={token} />
         case 3:
           return <RevenueShareModalButton {...commonProps} token={token} />
         default:
@@ -252,7 +251,8 @@ const DashboardTokenProgress = ({ token }: Pick<CrtDashboardMainTabProps, 'token
   )
   const numberOfFinishedSteps = steps.filter((step) => step.finished).length
   const memberTokenTitle =
-    numberOfFinishedSteps < 2 ? 'Token Owner' : numberOfFinishedSteps < 4 ? 'Token Master' : 'Token Expert'
+    numberOfFinishedSteps < 3 ? 'Token Owner' : numberOfFinishedSteps < 4 ? 'Token Master' : 'Token Expert'
+  const stepsToNextTitle = numberOfFinishedSteps < 3 ? 3 - numberOfFinishedSteps : 4 - numberOfFinishedSteps
 
   useEffect(() => {
     if (numberOfFinishedSteps >= 2 && numberOfFinishedSteps < 4) {
@@ -288,10 +288,9 @@ const DashboardTokenProgress = ({ token }: Pick<CrtDashboardMainTabProps, 'token
           goalComponent={
             currentMemberStep < 4 ? (
               <Text variant="t200" as="p">
-                Complete {steps.length - numberOfFinishedSteps} more{' '}
-                {steps.length - currentMemberStep > 1 ? 'steps' : 'step'} to achieve{' '}
+                Complete {stepsToNextTitle} more {stepsToNextTitle > 1 ? 'steps' : 'step'} to achieve{' '}
                 <Text variant="t200-strong" as="span" color="colorTextPrimary">
-                  Token {numberOfFinishedSteps / steps.length >= 0.5 ? 'Expert' : 'Master'}
+                  Token {numberOfFinishedSteps >= 3 ? 'Expert' : 'Master'}
                 </Text>
               </Text>
             ) : null

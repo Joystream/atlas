@@ -1,22 +1,50 @@
 import { useCallback, useState } from 'react'
 import { createPortal, flushSync } from 'react-dom'
 
+import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgActionSell } from '@/assets/icons'
 import { Button, ButtonProps } from '@/components/_buttons/Button'
 import { SaleMarketChoiceDrawer } from '@/components/_crt/SaleMarketChoiceDrawer'
 import { StartMarketModal } from '@/components/_crt/StartMarketModal'
+import { useSnackbar } from '@/providers/snackbars'
 
 type StartSaleOrMarketButtonProps = {
-  tokenId: string
+  token: FullCreatorTokenFragment
 } & Omit<ButtonProps, 'onClick' | 'icon'>
 
-export const StartSaleOrMarketButton = ({ tokenId, ...buttonProps }: StartSaleOrMarketButtonProps) => {
+export const StartSaleOrMarketButton = ({ token, ...buttonProps }: StartSaleOrMarketButtonProps) => {
+  const { displaySnackbar } = useSnackbar()
   const [showChoiceDrawer, setShowChoiceDrawer] = useState(false)
   const [showMarketDrawer, setShowMarketDrawer] = useState(false)
   const onMarketClose = useCallback(() => setShowMarketDrawer(false), [])
+  const hasOpenedMarket = !!token.currentAmmSale
+  const hasOpenedRevenueShare = token.revenueShares.some((revenueShare) => !revenueShare.finalized)
+
   return (
     <>
-      <Button {...buttonProps} onClick={() => setShowChoiceDrawer(true)} icon={<SvgActionSell />}>
+      <Button
+        {...buttonProps}
+        onClick={() => {
+          if (hasOpenedMarket) {
+            displaySnackbar({
+              title: 'You already have active market',
+              iconType: 'info',
+            })
+            return
+          }
+
+          if (hasOpenedRevenueShare) {
+            displaySnackbar({
+              title: 'You cannot start a market while the revenue share is active',
+              iconType: 'info',
+            })
+            return
+          }
+
+          setShowChoiceDrawer(true)
+        }}
+        icon={<SvgActionSell />}
+      >
         Start sale or market
       </Button>
       {createPortal(
@@ -31,7 +59,7 @@ export const StartSaleOrMarketButton = ({ tokenId, ...buttonProps }: StartSaleOr
               setShowMarketDrawer(true)
             }}
           />
-          <StartMarketModal tokenId={tokenId} show={showMarketDrawer} onClose={onMarketClose} />
+          <StartMarketModal tokenId={token.id} show={showMarketDrawer} onClose={onMarketClose} />
           {/*<MarketDrawer tokenId={tokenId} show={showMarketDrawer} onClose={onMarketClose} />*/}
         </>,
         document.body

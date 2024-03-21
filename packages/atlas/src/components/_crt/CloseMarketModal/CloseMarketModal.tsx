@@ -154,7 +154,7 @@ export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMar
   ])
 
   const priceForAllToken = useMemo(() => {
-    return hapiBnToTokenNumber(calculateSlippageAmount(Math.max(amountToSell, 1)) ?? new BN(0))
+    return hapiBnToTokenNumber(calculateSlippageAmount(Math.max(amountToSell, 0)) ?? new BN(0))
   }, [amountToSell, calculateSlippageAmount])
 
   return (
@@ -176,8 +176,7 @@ export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMar
       <FlexBox flow="column" gap={6}>
         <FlexBox flow="column" gap={2}>
           <Text variant="t200" as="p" color="colorText">
-            To close market you or any other member need to sell enough of ${symbol} tokens to the market to balance the
-            amount of tokens minted with this market.
+            To close the market you must sell enough tokens to balance out the purchased amount.
           </Text>
           {/*<TextButton icon={<SvgActionPlay />} iconPlacement="left">*/}
           {/*  Learn more*/}
@@ -196,27 +195,25 @@ export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMar
         {amountToSell ? (
           <Banner
             icon={<SvgAlertsWarning24 />}
-            description="You will have to sign two transactions, the first one to sell your tokens, the second to close the market"
+            description="Selling and closing will be done in two subsequent transactions."
             borderColor={cVar('colorTextCaution')}
           />
         ) : null}
 
         <FlexBox flow="column" gap={2}>
-          {amountToSell ? (
-            <FlexBox alignItems="center" justifyContent="space-between">
-              <Text variant="t100" as="p" color="colorTextCaution">
-                You need to sell
-              </Text>
-              <NumberFormat
-                value={amountToSell}
-                as="p"
-                variant="t100"
-                withToken
-                customTicker={`$${symbol}`}
-                color="colorTextCaution"
-              />
-            </FlexBox>
-          ) : null}
+          <FlexBox alignItems="center" justifyContent="space-between">
+            <Text variant="t100" as="p" color={amountToSell ? 'colorTextCaution' : 'colorText'}>
+              Tokens to sell for the closure
+            </Text>
+            <NumberFormat
+              value={amountToSell ?? 0}
+              as="p"
+              variant="t100"
+              withToken
+              customTicker={`$${symbol}`}
+              color={amountToSell ? 'colorTextCaution' : 'colorText'}
+            />
+          </FlexBox>
 
           <FlexBox alignItems="center" justifyContent="space-between">
             <Text variant="t100" as="p" color="colorText">

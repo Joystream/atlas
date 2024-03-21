@@ -259,6 +259,7 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
           pricePerUnit={pricePerUnit}
           maxValue={Math.min(+(currentAmm?.mintedByAmm ?? 0), userTokenBalance)}
           details={formDetails}
+          showTresholdButtons
           validation={(value) => {
             if (!value || value < 1) {
               return 'You need to sell at least one token'

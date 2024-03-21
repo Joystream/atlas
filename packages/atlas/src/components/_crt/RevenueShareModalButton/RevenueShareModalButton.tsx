@@ -15,15 +15,18 @@ export const RevenueShareModalButton = ({ token, variant, disabled }: RevenueSha
   const [openRevenueShareModal, setOpenRevenueShareModal] = useState(false)
   const { displaySnackbar } = useSnackbar()
   const hasOpenedMarket = !!token.currentAmmSale
+  const hasOpenedRevenueShare = token.revenueShares.some((revenueShare) => !revenueShare.finalized)
   return (
     <>
       <Button
         disabled={disabled}
         variant={variant}
         onClick={() =>
-          hasOpenedMarket
+          hasOpenedMarket || hasOpenedRevenueShare
             ? displaySnackbar({
-                title: 'You can not start a revenue share while the market is open',
+                title: hasOpenedRevenueShare
+                  ? 'You already have active revenue share'
+                  : 'You can not start a revenue share while the market is open',
                 iconType: 'info',
               })
             : setOpenRevenueShareModal(true)
