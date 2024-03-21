@@ -3,8 +3,8 @@ import { createPortal, flushSync } from 'react-dom'
 
 import { SvgActionSell } from '@/assets/icons'
 import { Button, ButtonProps } from '@/components/_buttons/Button'
-import { MarketDrawer } from '@/components/_crt/MarketDrawer'
 import { SaleMarketChoiceDrawer } from '@/components/_crt/SaleMarketChoiceDrawer'
+import { StartMarketModal } from '@/components/_crt/StartMarketModal'
 
 type StartSaleOrMarketButtonProps = {
   tokenId: string
@@ -31,7 +31,8 @@ export const StartSaleOrMarketButton = ({ tokenId, ...buttonProps }: StartSaleOr
               setShowMarketDrawer(true)
             }}
           />
-          <MarketDrawer tokenId={tokenId} show={showMarketDrawer} onClose={onMarketClose} />
+          <StartMarketModal tokenId={tokenId} show={showMarketDrawer} onClose={onMarketClose} />
+          {/*<MarketDrawer tokenId={tokenId} show={showMarketDrawer} onClose={onMarketClose} />*/}
         </>,
         document.body
       )}
