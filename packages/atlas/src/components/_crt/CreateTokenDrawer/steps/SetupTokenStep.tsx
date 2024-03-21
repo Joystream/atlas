@@ -25,14 +25,14 @@ import { CommonStepProps } from './types'
 
 const accessOptions = [
   {
-    label: 'Anyone',
-    caption: 'Everyone can own your token.',
+    label: 'Open',
+    caption: 'Anyone can buy, hold and sell your tokens.',
     icon: <SvgActionUnlocked />,
     value: true,
   },
   {
     label: 'Invite only',
-    caption: 'Only members on allowlist can own your token. ',
+    caption: 'Only members that you choose can buy your token.',
     icon: <SvgActionLock />,
     value: false,
     disabled: true,
@@ -79,8 +79,7 @@ export const SetupTokenStep = ({ setPrimaryButtonProps, onSubmit, form, setPrevi
                 avoidIconStyling
                 caption="REVENUE SHARE"
                 content={`${watchedForm.revenueShare}%`}
-                tooltipText="The % ratio of how much channel revenue gets distributed among all token holders vs the % ratio of what get's transferred to channel owners (yours) account when the revenue share is initiated.
-           Annual creator reward Annual creator reward aka patronage, that is earned by channel owner for managing channel.Tokens issued in your walletTotal number of tokens issuedCliffPeriod of time during which no tokens can be issued. After the cliff has passed, initial allocation happens.Vesting periodPeriod of time after cliff during which all your tokens become vested, meaning that they can be spent or transferred.First payotAmount of tokens that become transferable, after the clif and before the vesting period starts."
+                tooltipText="Revenue share allows token holders to claim part of channels earnings proportionate to their ownership of channel tokens supply. Channel owner creates time-bound revenue claiming periods, and token holders stake creator tokens they have for the duration of such period in exchange of receiving JOY tokens, thereby receive portion of channel earnings."
                 tileSize={smMatch ? 'big' : 'bigSmall'}
                 withDenomination
               />
@@ -88,7 +87,7 @@ export const SetupTokenStep = ({ setPrimaryButtonProps, onSubmit, form, setPrevi
                 avoidIconStyling
                 caption="CREATOR REWARD"
                 content={`${watchedForm.creatorReward}%`}
-                tooltipText="Additional tokens you will be earning every year for managing your creator tokens defined as % from total token supply. If you and all your holders have 10,000 tokens and patronage rate is set to 10%, your annual reward will be 1000 tokens."
+                tooltipText="Percentage of total supply that gets automatically minted and added to the channel account. It acts like channel inflation per year and high number here decreases the value of existing tokens. From token holder perspective 5% would mean that in 5 years a holder of 100 tokens has  its value similar to 78 tokens now, so a reduction in value of 28%."
                 tileSize={smMatch ? 'big' : 'bigSmall'}
                 withDenomination
               />
@@ -112,7 +111,11 @@ export const SetupTokenStep = ({ setPrimaryButtonProps, onSubmit, form, setPrevi
   }, [setPreview, smMatch, titleRef, watchedForm.creatorReward, watchedForm.name, watchedForm.revenueShare])
 
   return (
-    <CrtFormWrapper title="Set up your token" subtitle="Enter basic token information and settings." learnMoreLink="">
+    <CrtFormWrapper
+      title="Set up Token Parameters"
+      subtitle="Enter basic token information and settings."
+      learnMoreLink=""
+    >
       <Controller
         name="name"
         control={control}
@@ -137,7 +140,7 @@ export const SetupTokenStep = ({ setPrimaryButtonProps, onSubmit, form, setPrevi
         render={({ field }) => (
           <FormField
             label="Name"
-            description="Choose name for your token to be displayed on your token page, tokens marketplace and in your buyers’ portfolio."
+            description="Displayed on the Marketplace and in Portfolios. 5 letters max."
             error={errors.name?.message}
           >
             <Input
@@ -156,7 +159,7 @@ export const SetupTokenStep = ({ setPrimaryButtonProps, onSubmit, form, setPrevi
         )}
       />
 
-      <FormField label="Access" description="Define if everyone can buy your token or only selected memebers.">
+      <FormField label="Ownership permission" description="Choose between open and controlled ownership.">
         <Controller
           name="isOpen"
           control={control}
@@ -166,9 +169,14 @@ export const SetupTokenStep = ({ setPrimaryButtonProps, onSubmit, form, setPrevi
         />
       </FormField>
       <FormField
-        label="Revenue share with holders"
-        description="Define the share of your channel revenue that goes to yourself vs shared with your token holders.
-Recommended values — Holders:20%, Channel: 80%."
+        label="Revenue share"
+        description="Choose revenue sharing ratio between your channel and token holders. Aim for at least of 50% for your channel."
+        tooltip={{
+          text:
+            'Revenue share allows token holders to claim part of channels earnings proportionate to their ownership of channel tokens supply. ' +
+            'Channel owner creates time-bound revenue claiming periods, and token holders stake creator tokens they have for the duration of such period in exchange of receiving JOY tokens, thereby receive portion of channel earnings. ' +
+            'Here you set up the maximum % of the channel reward account balance that can be claimed by your token holders, the rest gets immediately moved to channel controller account and withdrawn.',
+        }}
       >
         <Controller
           name="revenueShare"
@@ -201,19 +209,19 @@ Recommended values — Holders:20%, Channel: 80%."
         />
       </FormField>
       <FormField
-        label="Annual creator reward"
+        label="Channel reward"
         tooltip={{
           text:
             'Here you have a chance to set up how much will you be earning from your tokens in % terms from the total supply. Total token supply means all tokens that were ever minted, owned by yourself and all of your token holders collectively.\n' +
             '\n' +
             'This revenue increment is calculated on every block and can be claimed any time. Non-profit projects may choose to set this closer to 0%. We cap this at 14% as everything above this figure may considered to be way above the market convention and sends the wrong signal to the buyers and holders.',
         }}
-        description="Define your own reward for managing the tokens. 10% means that if you have 10000k of tokens exist and this amount does not change, an additional 1k tokens will get minted and added to your wallet gradually over the course of 1 year."
+        description="Earn rewards for running your channel through automatic tokens minting. Choose the annual percentage of new tokens added to the existing supply, and they will be gradually added to your channels balance over the year. Caution: This works like inflation, so creating many tokens will reduce the value of existing ones."
       >
         <Controller
           name="creatorReward"
           control={control}
-          render={({ field }) => <RatioSlider {...field} max={14} step={2} />}
+          render={({ field }) => <RatioSlider {...field} max={14} step={1} />}
         />
       </FormField>
     </CrtFormWrapper>

@@ -18,7 +18,7 @@ export const CrtWelcomeView = () => {
         headTagTitle="Creator tokens"
         title="Ready to create your channel token?"
         pageTitle="Creator tokens"
-        subtitle="Create your very own channel token, sell it on your own terms and share your success with your token holders."
+        subtitle="Convert your viewers to investors, explore new ways to engage with community and monetize your content."
         type="crt"
         buttons={[
           { children: 'Create token', size: 'large', onClick: () => setShowDrawer(true) },

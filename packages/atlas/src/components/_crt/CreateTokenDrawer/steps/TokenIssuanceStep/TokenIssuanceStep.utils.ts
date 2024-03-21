@@ -5,13 +5,13 @@ import { IssuanceStepForm } from '@/components/_crt/CreateTokenDrawer/CreateToke
 
 export const assuranceOptions = [
   {
-    label: 'Safe (Default)',
-    caption: 'You will receive 50% of issued tokens now and the rest will unlock gradually over 6 months.',
+    label: 'Default',
+    caption: 'You will receive 25% of issued tokens now and the rest will unlock gradually over 2 years.',
     value: 'safe',
   },
   {
     label: 'Risky',
-    caption: 'You receive all issued tokens instantly.',
+    caption: 'You receive all tokens as unlocked right away.',
     value: 'risky',
   },
   {
@@ -178,7 +178,7 @@ export const generateChartData = (cliffTime: number, vestingTime: number, firstP
 export const getDataBasedOnType = (type: IssuanceStepForm['assuranceType']): [number, number, number] | null => {
   switch (type) {
     case 'safe':
-      return [0, 6, 50]
+      return [0, 24, 25]
     case 'risky':
       return [0, 0, 100]
     case 'custom':

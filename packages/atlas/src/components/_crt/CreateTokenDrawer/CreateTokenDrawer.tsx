@@ -16,13 +16,13 @@ enum CREATE_TOKEN_STEPS {
   summary,
 }
 
-const steps: string[] = ['Set up token', 'Tokens issuance', 'Token summary']
+const steps: string[] = ['Parameters', 'Supply', 'Summary']
 
 const CREATOR_TOKEN_INITIAL_DATA: CreateTokenForm = {
   name: '',
   isOpen: true,
   revenueShare: 20,
-  creatorReward: 10,
+  creatorReward: 4,
   creatorIssueAmount: 10_000,
   assuranceType: 'safe',
   cliff: null,

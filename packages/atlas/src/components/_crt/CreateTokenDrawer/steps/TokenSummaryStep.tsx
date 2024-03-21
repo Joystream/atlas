@@ -12,7 +12,7 @@ import { useFee, useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
-import { sizes } from '@/styles'
+import { sizes, square } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 import { pluralizeNoun } from '@/utils/misc'
 import { formatNumber } from '@/utils/number'
@@ -107,10 +107,10 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: Tok
   })
 
   return (
-    <CrtFormWrapper title="Set up your token" subtitle="" learnMoreLink="">
+    <CrtFormWrapper title="Token Summary" subtitle="" learnMoreLink="">
       <Section>
         <Text variant="h400" as="h4">
-          Token settings
+          Review token settings
         </Text>
         <SectionRow
           title="Name"
@@ -121,17 +121,20 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: Tok
           </Text>
         </SectionRow>
         <SectionRow
-          title="Access"
+          title="Ownership permission"
           tooltipText="Token can be accessed and purchased by any member, or strictly limited to members added to your token whitelist."
         >
           <Text variant="h300" as="p" color="colorTextStrong">
-            {form.isOpen ? 'Anyone' : 'Invite only'}
+            {form.isOpen ? 'Open' : 'Invite only'}
           </Text>
         </SectionRow>
         <SectionRow
-          title="Revenue share with holders"
-          tooltipText="The % ratio of how much channel revenue gets distributed among all token holders vs the % ratio of what get's transferred to channel owners (yours) account when the revenue share is initiated.
-           Annual creator reward Annual creator reward aka patronage, that is earned by channel owner for managing channel.Tokens issued in your walletTotal number of tokens issuedCliffPeriod of time during which no tokens can be issued. After the cliff has passed, initial allocation happens.Vesting periodPeriod of time after cliff during which all your tokens become vested, meaning that they can be spent or transferred.First payotAmount of tokens that become transferable, after the clif and before the vesting period starts."
+          title="Revenue share"
+          tooltipText={
+            'Revenue share allows token holders to claim part of channels earnings proportionate to their ownership of channel tokens supply. ' +
+            'Channel owner creates time-bound revenue claiming periods, and token holders stake creator tokens they have for the duration of such period in exchange of receiving JOY tokens, thereby receive portion of channel earnings. ' +
+            'Here you set up the maximum % of the channel reward account balance that can be claimed by your token holders, the rest gets immediately moved to channel controller account and withdrawn.'
+          }
         >
           <RowBox gap={2}>
             <RowBox gap={1}>
@@ -173,20 +176,20 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: Tok
         {!!cliff && (
           <>
             <SectionRow
-              title="Cliff"
-              tooltipText="Cliff is a period of time that locks your channel tokens from being sold or transferred."
+              title="Fully locked period"
+              tooltipText="This signals to your investors that they can be 100% sure the token price on the market during this period will be exclusively impacted by market conditions. This is a strong signal of integrity."
             >
               <Text variant="h300" as="p" color="colorTextStrong">
                 {pluralizeNoun(Number(cliff), 'month')}
               </Text>
             </SectionRow>
-            {cliffBanner}
+            {/*{cliffBanner}*/}
           </>
         )}
         {typeof vesting !== 'object' && (
           <SectionRow
             title="Vesting period"
-            tooltipText="All tokens minted that are not part of the first payout get unlocked gradually over the course of the vesting period. Vesting period starts after the cliff has passed."
+            tooltipText="Longer vesting periods signal longer term intentions and prevent from making mistakes with tokens pricing and transfers."
           >
             <Text variant="h300" as="p" color="colorTextStrong">
               {Number(vesting) === 0 ? 'No vesting' : pluralizeNoun(Number(vesting), 'month')}
@@ -196,7 +199,7 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: Tok
         {!!(form.creatorIssueAmount && payout) && (
           <SectionRow
             title="First payout"
-            tooltipText="A portion of your own tokens that will be released to you right after cliff period."
+            tooltipText="A portion of your tokens that will be available for trading after locked period expires."
           >
             <RowBox gap={2}>
               <Text variant="h300" as="p" color="colorText">
@@ -245,6 +248,10 @@ const RowBox = styled.div<{ gap: number }>`
   display: flex;
   gap: ${(props) => sizes(props.gap)};
   align-items: center;
+
+  svg {
+    ${square(18)};
+  }
 `
 
 const SectionRowContainer = styled.div`
