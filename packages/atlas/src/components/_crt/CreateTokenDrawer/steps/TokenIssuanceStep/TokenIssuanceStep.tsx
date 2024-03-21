@@ -34,8 +34,8 @@ import { PreviewContainer, TooltipBox } from '../styles'
 const cliffBanner = (
   <Banner
     icon={<SvgAlertsInformative24 />}
-    title="You will not be able to start a sale before the cliff ends"
-    description="On sale you can sell your own preminted tokens for your own price and receive revenue right after the sale. By putting your tokens under the cliff you won’t be able to use sale until cliff ends. "
+    title="You will not be able to start a sale before the locked period ends"
+    description="On sale you can sell your own preminted tokens for your own price and receive revenue right after the sale. By putting your tokens under the locked period you won’t be able to use sale until it ends. "
     // actionButton={{
     //   text: 'Learn more',
     //   _textOnly: true,

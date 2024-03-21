@@ -39,22 +39,20 @@ type CrtDashboardMainTabProps = {
 
 const _steps: NonLinearProgressWidgetProps['steps'] = [
   {
-    title: 'Create token',
-    description: 'Create own token and share it with your viewers!',
+    title: 'Create Token',
+    description: 'Set up the basic parameters and mint your token.',
   },
   {
-    title: 'Add token details',
-    description: 'Help your buyers understand your token purpose and value by customising the public token page.',
+    title: 'Edit Public Page',
+    description: 'Explain your token purpose on the public token page and share it with community!',
   },
   {
-    title: 'Start a sale or market',
-    description:
-      'Selling your tokens will allow you to raise funds for your project and share your revenue with your followers.',
+    title: 'Start Token Market',
+    description: 'Make your token purchasable by starting the market.',
   },
   {
-    title: 'Start your first revenue share',
-    description:
-      'This way you will be able to access your own channel earnings and share a part of it with your followers.',
+    title: 'Start Revenue Share',
+    description: 'Claim your channel revenue and share with your investors.',
   },
 ]
 
