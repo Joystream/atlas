@@ -21,7 +21,7 @@ const steps: string[] = ['Parameters', 'Supply', 'Summary']
 const CREATOR_TOKEN_INITIAL_DATA: CreateTokenForm = {
   name: '',
   isOpen: true,
-  revenueShare: 20,
+  revenueShare: 50,
   creatorReward: 4,
   creatorIssueAmount: 10_000,
   assuranceType: 'safe',
