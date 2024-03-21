@@ -132,7 +132,7 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: Tok
           tooltipText={
             'Revenue share allows token holders to claim part of channels earnings proportionate to their ownership of channel tokens supply. ' +
             'Channel owner creates time-bound revenue claiming periods, and token holders stake creator tokens they have for the duration of such period in exchange of receiving JOY tokens, thereby receive portion of channel earnings. ' +
-            'Here you set up the maximum % of the channel reward account balance that can be claimed by your token holders, the rest gets immediately moved to channel controller account and withdrawn.'
+            'Here you set up the maximum % of the channel reward account balance that can be claimed by your token holders, the rest gets immediately moved to channel controller account and can be withdrawn.'
           }
         >
           <RowBox gap={2}>
