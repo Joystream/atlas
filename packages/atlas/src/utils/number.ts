@@ -6,7 +6,7 @@ export const getRandomIntInclusive = (min: number, max: number) => {
 }
 
 const numberFormatter = new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 })
-const smallDecimalFormatter = new Intl.NumberFormat('en-US', { maximumFractionDigits: 6 })
+const smallDecimalFormatter = new Intl.NumberFormat('en-US', { maximumFractionDigits: 10 })
 
 export const formatNumber = (num: number): string => {
   return numberFormatter.format(num).replaceAll(',', ' ')

@@ -20,6 +20,7 @@ import { cVar, sizes } from '@/styles'
 import { changeNowService } from '@/utils/ChangeNowService'
 import { formatJoystreamAddress } from '@/utils/address'
 import { shortenString } from '@/utils/misc'
+import { formatSmallDecimal } from '@/utils/number'
 import { formatDurationShort, getTimeDiffInSeconds } from '@/utils/time'
 
 import { FormData } from './FormStep'
@@ -43,6 +44,7 @@ export const SummaryStep = ({
 }: SummaryStepProps) => {
   const [termsAccepted, setTermsAccepted] = useState(false)
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
   const [timeDiff, setTimeDiff] = useState<number | undefined>(undefined)
   const { activeMembership } = useUser()
   const { currentUser } = useAuth()
@@ -61,6 +63,7 @@ export const SummaryStep = ({
     }
     const isSellingJoy = type === 'sell'
     const refundAddress = isSellingJoy ? activeMembership.controllerAccount : undefined
+    setLoading(true)
     const txData = await changeNowService
       .createExchangeTransaction({
         refundAddress,
@@ -74,6 +77,7 @@ export const SummaryStep = ({
       })
       .then((res) => res.data)
       .catch(() => {
+        setLoading(false)
         displaySnackbar({
           title: 'Transaction creation failed',
           description: 'Please try again, if the problem persists contact support.',
@@ -81,6 +85,7 @@ export const SummaryStep = ({
       })
 
     if (!txData) {
+      setLoading(false)
       return
     }
 
@@ -110,6 +115,9 @@ export const SummaryStep = ({
           })
           goToStep(ChangeNowModalStep.PROGRESS)
         },
+        onError: () => {
+          setLoading(false)
+        },
       })
     } else {
       goToStep(ChangeNowModalStep.PROGRESS)
@@ -136,7 +144,8 @@ export const SummaryStep = ({
 
   useEffect(() => {
     setPrimaryButtonProps({
-      text: 'Next',
+      text: loading ? 'Next' : 'Waiting...',
+      disabled: loading,
       onClick: async () => {
         if (termsAccepted && validUntil) {
           const timeDiff = getTimeDiffInSeconds(new Date(validUntil))
@@ -150,7 +159,7 @@ export const SummaryStep = ({
         }
       },
     })
-  }, [goToStep, onTransactionSubmit, setPrimaryButtonProps, termsAccepted, validUntil])
+  }, [goToStep, loading, onTransactionSubmit, setPrimaryButtonProps, termsAccepted, validUntil])
 
   useMountEffect(() => {
     if (!validUntil) {
@@ -204,14 +213,16 @@ export const SummaryStep = ({
         </Text>
       </FlexBox>
 
-      <FlexBox width="100%" justifyContent="space-between">
-        <Text variant="t200" as="p" color="colorText">
-          Estimated Arrival
-        </Text>
-        <Text variant="t200" as="p">
-          {estimatedArrival ? new Date(estimatedArrival).toDateString() : 'N/A'}
-        </Text>
-      </FlexBox>
+      {estimatedArrival ? (
+        <FlexBox width="100%" justifyContent="space-between">
+          <Text variant="t200" as="p" color="colorText">
+            Estimated Arrival
+          </Text>
+          <Text variant="t200" as="p">
+            {new Date(estimatedArrival).toDateString()}
+          </Text>
+        </FlexBox>
+      ) : null}
 
       <FlexBox width="100%" justifyContent="space-between">
         <Text variant="t200" as="p" color="colorText">
@@ -227,7 +238,7 @@ export const SummaryStep = ({
           Estimated Rate
         </Text>
         <Text variant="t200" as="p">
-          1 {fromTicker} ~ {to.amount / from.amount} {toTicker}
+          1 {fromTicker} ~ {formatSmallDecimal(to.amount / from.amount)} {toTicker}
         </Text>
       </FlexBox>
 

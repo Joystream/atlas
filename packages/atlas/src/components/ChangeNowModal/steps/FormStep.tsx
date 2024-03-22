@@ -14,6 +14,8 @@ import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { TokenInput, TokenInputProps } from '@/components/_inputs/TokenInput'
 import { Spinner } from '@/components/_loaders/Spinner'
+import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
+import { useSubscribeAccountBalance } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { square } from '@/styles'
 import {
@@ -23,6 +25,7 @@ import {
   changeNowService,
 } from '@/utils/ChangeNowService'
 import { SentryLogger } from '@/utils/logs'
+import { formatSmallDecimal } from '@/utils/number'
 
 type CurrencyInputValues = {
   amount: number
@@ -46,10 +49,13 @@ type FormStepProps = {
 
 export const FormStep = ({ setPrimaryButtonProps, onSubmit, type, initialValues }: FormStepProps) => {
   const { displaySnackbar } = useSnackbar()
+  const { accountBalance } = useSubscribeAccountBalance()
   const [isLoadingRate, setIsLoadingRate] = useState<'to' | 'from' | null>(null)
   const debouncedExchangeEstimation = useRef<DebouncedFunc<
     (amount: number, type: 'from' | 'to') => Promise<void>
   > | null>(null)
+  const isSellingJoy = type === 'sell'
+
   const { data } = useQuery('changenow-currency', () => changeNowService.getAvailableCurrencies(), {
     onSuccess: (data) => {
       const currencyOptions = data.map((curr) => ({
@@ -179,6 +185,12 @@ export const FormStep = ({ setPrimaryButtonProps, onSubmit, type, initialValues 
             if (!value.currency) {
               return 'Please choose currency'
             }
+
+            if (isSellingJoy && accountBalance) {
+              if (value.amount > hapiBnToTokenNumber(accountBalance)) {
+                return 'Amount exceeds your balance'
+              }
+            }
           },
         }}
         render={({ field: { value, onChange } }) => {
@@ -285,7 +297,7 @@ export const FormStep = ({ setPrimaryButtonProps, onSubmit, type, initialValues 
         />
         {from.currency && to.currency && (
           <Text variant="t200" as="p" color={isLoadingRate ? 'colorTextMuted' : 'colorText'}>
-            Estimated rate: 1 {from.currency.toUpperCase()} ~ {to.amount / from.amount || 'N/A'}{' '}
+            Estimated rate: 1 {from.currency.toUpperCase()} ~ {formatSmallDecimal(to.amount / from.amount) || 'N/A'}{' '}
             {to.currency.toUpperCase()}
           </Text>
         )}

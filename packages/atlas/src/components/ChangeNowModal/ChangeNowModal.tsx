@@ -72,6 +72,7 @@ export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
       if (primaryButtonProps) {
         return {
           text: 'Go to dashboard',
+          onClick: () => onClose(),
           to: absoluteRoutes.viewer.portfolio(),
         }
       }

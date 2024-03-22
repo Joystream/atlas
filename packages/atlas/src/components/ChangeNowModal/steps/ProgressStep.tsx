@@ -50,7 +50,13 @@ type ProgressStepProps = {
   transactionData: TransactionData
 } & CommonProps
 
-export const ProgressStep = ({ transactionData, type, setPrimaryButtonProps, goToStep }: ProgressStepProps) => {
+export const ProgressStep = ({
+  transactionData,
+  type,
+  setPrimaryButtonProps,
+  goToStep,
+  onClose,
+}: ProgressStepProps) => {
   const [retry, setRetry] = useState(true)
   const isSellingJoy = type === 'sell'
   const steps = isSellingJoy ? sellSteps : buySteps
@@ -118,13 +124,13 @@ export const ProgressStep = ({ transactionData, type, setPrimaryButtonProps, goT
         setRetry(false)
         setPrimaryButtonProps({
           text: 'Close',
-          onClick: () => undefined,
+          onClick: () => onClose(),
         })
         step = steps.length
         extraContent = successText
     }
     return [step, steps[step]?.[1], extraContent]
-  }, [data, isSellingJoy, setPrimaryButtonProps, steps, transactionData.hasAutomaticTransactionSucceeded])
+  }, [data, isSellingJoy, onClose, setPrimaryButtonProps, steps, transactionData.hasAutomaticTransactionSucceeded])
 
   return (
     <FlexBox gap={6} flow="column">
