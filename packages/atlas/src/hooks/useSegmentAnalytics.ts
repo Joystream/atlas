@@ -366,6 +366,61 @@ export const useSegmentAnalytics = () => {
     analytics.reset()
   }, [analytics])
 
+  /// CRT events
+
+  const trackTokenMintingStarted = useCallback(
+    (channelId: string) => {
+      analytics.track('Token minting flow started', {
+        channelId,
+      })
+    },
+    [analytics]
+  )
+
+  const trackTokenMintingCompleted = useCallback(
+    (channelId: string, tokenTicker: string, initSupply: string, safetyOption: string) => {
+      analytics.track('Token minting completed', {
+        channelId,
+        tokenTicker,
+        initSupply,
+        safetyOption,
+      })
+    },
+    [analytics]
+  )
+
+  const trackAMMStarted = useCallback(
+    (tokenTicker: string, channelId: string) => {
+      analytics.track('Token Market Opened', {
+        tokenTicker,
+        channelId,
+      })
+    },
+    [analytics]
+  )
+
+  const trackAMMClosed = useCallback(
+    (tokenTicker: string, channelId: string) => {
+      analytics.track('Token Market Closed', {
+        tokenTicker,
+        channelId,
+      })
+    },
+    [analytics]
+  )
+
+  const trackAMMTokensPurchased = useCallback(
+    (tokenTicker: string, channelId: string, crtAmount: string, joyPaid: string) => {
+      analytics.track('Token Market Purchase', {
+        tokenTicker,
+        channelId,
+        crtAmount,
+        joyPaid,
+      })
+    },
+    [analytics]
+  )
+
   const runNextQueueEvent = useCallback(async () => {
     const queueEvent = playbackEventsQueue.current.shift()
     if (!queueEvent) {
@@ -404,6 +459,9 @@ export const useSegmentAnalytics = () => {
   return {
     addEventToQueue,
     identifyUser,
+    trackAMMClosed,
+    trackAMMStarted,
+    trackAMMTokensPurchased,
     trackAllNftFilterUpdated,
     trackChannelCreation,
     trackChannelFollow,
@@ -425,6 +483,8 @@ export const useSegmentAnalytics = () => {
     trackPageView,
     trackPublishAndUploadClicked,
     trackReferralLinkGenerated,
+    trackTokenMintingCompleted,
+    trackTokenMintingStarted,
     trackUploadVideoClicked,
     trackVideoPlaybackCompleted,
     trackVideoPlaybackPaused,

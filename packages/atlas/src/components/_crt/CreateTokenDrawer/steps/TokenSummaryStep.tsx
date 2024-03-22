@@ -8,6 +8,7 @@ import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
 import { CrtFormWrapper } from '@/components/_crt/CrtFormWrapper'
 import { useMountEffect } from '@/hooks/useMountEffect'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useFee, useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
@@ -42,6 +43,7 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: Tok
   const { channelId, memberId } = useUser()
   const { displaySnackbar } = useSnackbar()
   const handleTransaction = useTransaction()
+  const { trackTokenMintingCompleted } = useSegmentAnalytics()
   const [cliff, vesting, payout] = getDataBasedOnType(form.assuranceType) ?? [
     form.cliff,
     form.vesting,
@@ -83,6 +85,7 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: Tok
           proxyCallback(handleUpdate)
         ),
       onTxSync: async () => {
+        trackTokenMintingCompleted(channelId, form.name, String(form.creatorIssueAmount ?? 0), form.assuranceType)
         onSuccess()
       },
       snackbarSuccessMessage: {
