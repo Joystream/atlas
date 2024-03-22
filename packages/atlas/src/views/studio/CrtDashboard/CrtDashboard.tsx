@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import { useGetFullCreatorTokenQuery } from '@/api/queries/__generated__/creatorTokens.generated'
@@ -15,6 +15,7 @@ import { Loader } from '@/components/_loaders/Loader'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useMountEffect } from '@/hooks/useMountEffect'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useUser } from '@/providers/user/user.hooks'
 import { SentryLogger } from '@/utils/logs'
 import {
@@ -47,6 +48,7 @@ export const CrtDashboard = () => {
       SentryLogger.error('Failed to fetch creator token', 'CrtDashboard', error)
     },
   })
+  const { trackPageView } = useSegmentAnalytics()
 
   const hasOpenMarket = data?.creatorTokenById?.ammCurves.some((curve) => !curve.finalized)
   const mappedTabs = TABS.filter((tab) => (hasOpenMarket ? true : tab !== 'Market')).map((tab) => ({ name: tab }))
@@ -60,6 +62,10 @@ export const CrtDashboard = () => {
   useMountEffect(() => {
     if (currentTab === -1) setSearchParams({ 'tab': '0' }, { replace: true })
   })
+
+  useEffect(() => {
+    trackPageView('CRT Dashboard', { tab: TABS[currentTab] })
+  }, [currentTab, trackPageView])
 
   const activeRevenueShare = data?.creatorTokenById?.revenueShares.find((revenueShare) => !revenueShare.finalized)
   const { creatorTokenById } = data ?? {}

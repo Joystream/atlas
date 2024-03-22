@@ -69,6 +69,7 @@ const locationToPageName = {
   '/channel': 'Channel',
   '/videos': 'Videos',
   '/crt-welcome': 'CRT Welcome',
+  '/crt-dashboard': 'CRT Dashboard',
   '/crt-preview-edit': 'CRT Preview Edit',
   '/crt-preview': 'CRT Preview',
   'video-workspace': 'Video workspace',
@@ -122,8 +123,8 @@ const _StudioLayout = () => {
   useEffect(() => {
     const pageName = Object.entries(locationToPageName).find(([key]) => location.pathname.includes(key))?.[1]
 
-    //dashboard is tracked by the view component in order to include tabs info
-    if (pageName === 'YPP Dashboard') {
+    //dashboard is tracked by the view component in order to include tabs info. Same for the CRT dashboard
+    if (pageName === 'YPP Dashboard' || pageName === 'CRT Dashboard') {
       return
     }
 

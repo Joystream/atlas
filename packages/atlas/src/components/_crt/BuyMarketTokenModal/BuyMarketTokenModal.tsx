@@ -17,6 +17,7 @@ import { DialogProps } from '@/components/_overlays/Dialog'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { useFee, useJoystream, useSubscribeAccountBalance } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
@@ -77,6 +78,8 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
   const currentAmm = data?.creatorTokenById?.ammCurves.find((amm) => !amm.finalized)
   const smMatch = useMediaMatch('sm')
   const { displaySnackbar } = useSnackbar()
+  const { channelId } = useUser()
+  const { trackAMMTokensPurchased } = useSegmentAnalytics()
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
 
@@ -164,6 +167,12 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
         ),
       onTxSync: async () => {
         if (memberTokenAccount?.tokenAccounts.length) {
+          trackAMMTokensPurchased(
+            data?.creatorTokenById?.symbol ?? 'N/A',
+            channelId ?? 'N/A',
+            String(tokenAmount),
+            String(priceForAllToken)
+          )
           displaySnackbar({
             iconType: 'success',
             title: `${tokenAmount} $${tokenTitle} purchased`,
@@ -193,7 +202,9 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
     })
   }, [
     calculateRequiredHapi,
+    channelId,
     client,
+    data?.creatorTokenById?.symbol,
     displaySnackbar,
     handleTransaction,
     joystream,
@@ -201,10 +212,12 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
     memberTokenAccount?.tokenAccounts.length,
     navigate,
     onClose,
+    priceForAllToken,
     proxyCallback,
     tokenAmount,
     tokenId,
     tokenTitle,
+    trackAMMTokensPurchased,
   ])
 
   const formDetails = useMemo(() => {
