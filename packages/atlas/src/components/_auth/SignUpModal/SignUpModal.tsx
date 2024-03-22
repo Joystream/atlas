@@ -65,7 +65,10 @@ export const SignUpModal = () => {
   const setYppModalOpenName = useYppStore((state) => state.actions.setYppModalOpenName)
   const setYtResponseData = useYppStore((state) => state.actions.setYtResponseData)
   const referrerChannelId = useYppStore((state) => state.referrerId)
-  const { anonymousUserId } = useAuthStore()
+  const {
+    anonymousUserId,
+    actions: { setAnonymousUserId },
+  } = useAuthStore()
   const { displaySnackbar } = useSnackbar()
 
   const { generateUniqueMemberHandleBasedOnInput } = useUniqueMemberHandle()
@@ -141,8 +144,16 @@ export const SignUpModal = () => {
         if (error === RegisterError.SessionRequired) {
           if (!haveTriedCreateSession.current) {
             haveTriedCreateSession.current = true
-            handleAnonymousAuth(anonymousUserId).then(() => {
-              handleOrionAccountCreation()
+            const anonymousReq = (id: string | null) =>
+              handleAnonymousAuth(id).then((userId) => {
+                setAnonymousUserId(userId ?? null)
+                handleOrionAccountCreation()
+              })
+            anonymousReq(anonymousUserId).catch((e) => {
+              if (e.response.status === 401) {
+                setAnonymousUserId(null)
+                anonymousReq(null)
+              }
             })
           } else {
             displaySnackbar({
@@ -176,6 +187,7 @@ export const SignUpModal = () => {
     goToNextStep,
     goToStep,
     referrerChannelId,
+    setAnonymousUserId,
     setAuthModalOpenName,
     setYppModalOpenName,
     setYtResponseData,

@@ -1,7 +1,10 @@
+import BN from 'bn.js'
 import { FC, ReactElement, ReactNode, memo, useEffect, useId, useMemo, useRef, useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
 import { SvgActionMore, SvgActionNotForSale } from '@/assets/icons'
+import { FlexBox } from '@/components/FlexBox'
+import { Information } from '@/components/Information'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { ListItemProps } from '@/components/ListItem'
 import { NumberFormat } from '@/components/NumberFormat'
@@ -252,17 +255,22 @@ export const NftTileDetails: FC<NftTileDetailsProps> = memo(
 
 NftTileDetails.displayName = 'NftTileDetails'
 
-type DetailsContentProps = {
+export type DetailsContentProps = {
   caption: string
   icon?: ReactNode
   avoidIconStyling?: boolean
-  content: number | string | ReactElement | ReactElement[]
+  content: number | BN | string | ReactElement | ReactElement[]
   secondary?: boolean
   tileSize: TileSize | undefined
   withDenomination?: boolean
+  denominationMultiplier?: number
+  customTicker?: string
+  withToken?: boolean
+  tooltipText?: string
+  className?: string
 }
 export const DetailsContent: FC<DetailsContentProps> = memo(
-  ({ tileSize, caption, icon, content, secondary, avoidIconStyling, withDenomination }) => {
+  ({ tileSize, caption, icon, content, className, secondary, avoidIconStyling, tooltipText, ...numberFormatProps }) => {
     const getSize = () => {
       switch (tileSize) {
         case 'small':
@@ -278,25 +286,28 @@ export const DetailsContent: FC<DetailsContentProps> = memo(
     }
 
     return (
-      <div>
-        <Text as="span" variant={getSize().title} color="colorText">
-          {caption}
-        </Text>
+      <div className={className}>
+        <FlexBox width="auto" alignItems="center">
+          <Text as="span" variant={getSize().title} color="colorText">
+            {caption}
+          </Text>
+          {tooltipText && <Information text={tooltipText} />}
+        </FlexBox>
         <DetailsContentWrapper avoidIconStyling={avoidIconStyling} secondary={secondary}>
           {typeof content === 'string' && icon}{' '}
           {typeof content === 'string' ? (
             <Text as="span" variant={getSize().content} color={secondary ? 'colorText' : undefined}>
               {content}
             </Text>
-          ) : typeof content === 'number' ? (
+          ) : BN.isBN(content) || typeof content === 'number' ? (
             <NumberFormat
               as="span"
+              {...numberFormatProps}
               icon={icon}
               value={content}
               format="short"
               variant={getSize().content}
               color={secondary ? 'colorText' : undefined}
-              withDenomination={withDenomination}
             />
           ) : (
             content

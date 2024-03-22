@@ -6,10 +6,6 @@ export type WatchedVideo = {
   timestamp?: number
 }
 
-export type FollowedChannel = {
-  id: string
-}
-
 export type RecentSearch = {
   title: string
 }

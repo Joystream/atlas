@@ -65,14 +65,8 @@ const DISABLE_VIEWS = true
 
 export const VideoView: FC = () => {
   const { id } = useParams()
-  const { memberId, isLoggedIn } = useUser()
-  const [showReportDialog, setShowReportDialog] = useState(false)
-  const [reactionFee, setReactionFee] = useState<BN | undefined>()
   const [availableTracks, setAvailableTracks] = useState<AvailableTrack[]>([])
-  const { openNftPutOnSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement, cancelNftSale } =
-    useNftActions()
   const { trackPageView } = useSegmentAnalytics()
-  const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
   const { loading, video, error } = useFullVideo(
     id ?? '',
     {
@@ -92,12 +86,7 @@ export const VideoView: FC = () => {
     }
   )
   const [isInView, ref] = useIntersectionObserver()
-  const [videoReactionProcessing, setVideoReactionProcessing] = useState(false)
   const [isCommenting, setIsCommenting] = useState<boolean>(false)
-  const nftWidgetProps = useNftWidget(video)
-  const { likeOrDislikeVideo } = useReactionTransactions()
-  const { withdrawBid } = useNftTransactions()
-  const { trackLikeAdded, trackDislikeAdded } = useSegmentAnalytics()
 
   const mdMatch = useMediaMatch('md')
   const { addVideoView } = useAddVideoView()
@@ -106,10 +95,6 @@ export const VideoView: FC = () => {
     cinematicView,
     actions: { updateWatchedVideos },
   } = usePersonalDataStore((state) => state)
-  const videoCategory = video?.category ? video.category.id : null
-  const belongsToCategories = videoCategory
-    ? displayCategories.filter((category) => category.videoCategories.includes(videoCategory))
-    : null
 
   const { anyOverlaysOpen } = useOverlayManager()
   const { ref: playerRef, inView: isPlayerInView } = useInView()
@@ -168,34 +153,16 @@ export const VideoView: FC = () => {
 
   const [isShareDialogOpen, setShareDialogOpen] = useState(false)
 
+  const handleShare = useCallback(() => {
+    setShareDialogOpen(true)
+  }, [])
+
   const savedVideoTimestamp = watchedVideos?.find((v) => v.id === video?.id)?.timestamp
   const startTimestamp = useVideoStartTimestamp(video?.duration, savedVideoTimestamp)
 
   const channelId = video?.channel?.id
-  const channelName = video?.channel?.title
   const videoId = video?.id
-  const numberOfLikes = video?.reactions.filter(({ reaction }) => reaction === 'LIKE').length
-  const numberOfDislikes = video?.reactions.filter(({ reaction }) => reaction === 'UNLIKE').length
   const videoNotAvailable = !loading && !video
-
-  const reactionStepperState = useMemo(() => {
-    if (!video) {
-      return 'loading'
-    }
-    if (videoReactionProcessing) {
-      return 'processing'
-    }
-    const myReaction = video?.reactions.find(({ member: { id } }) => id === memberId)
-    if (myReaction) {
-      if (myReaction.reaction === 'LIKE') {
-        return 'liked'
-      }
-      if (myReaction.reaction === 'UNLIKE') {
-        return 'disliked'
-      }
-    }
-    return 'default'
-  }, [memberId, videoReactionProcessing, video])
 
   // Save the video timestamp
   // disabling eslint for this line since debounce is an external fn and eslint can't figure out its args, so it will complain.
@@ -215,40 +182,6 @@ export const VideoView: FC = () => {
       updateWatchedVideos('COMPLETED', video?.id)
     }
   }, [video?.id, handleTimeUpdate, updateWatchedVideos])
-
-  const { getTxFee: getReactionFee } = useFee('reactToVideoTx')
-
-  const handleCalculateFeeForPopover = async (reaction: VideoReaction) => {
-    if (!memberId || !video?.id) return
-    const fee = await getReactionFee([memberId, video?.id, reaction])
-    setReactionFee(fee)
-  }
-
-  const handleReact = useCallback(
-    async (reaction: VideoReaction) => {
-      if (video?.id) {
-        setVideoReactionProcessing(true)
-        const fee = reactionFee || (await getReactionFee([memberId || '', video?.id, reaction]))
-        const reacted = await likeOrDislikeVideo(video.id, reaction, video.title, fee)
-        reaction === 'like'
-          ? trackLikeAdded(video.id, memberId ?? 'no data')
-          : trackDislikeAdded(video.id, memberId ?? 'no data')
-        setVideoReactionProcessing(false)
-        return reacted
-      }
-      return false
-    },
-    [
-      getReactionFee,
-      likeOrDislikeVideo,
-      memberId,
-      reactionFee,
-      trackLikeAdded,
-      trackDislikeAdded,
-      video?.id,
-      video?.title,
-    ]
-  )
 
   // use Media Session API to provide rich metadata to the browser
   useEffect(() => {
@@ -273,10 +206,6 @@ export const VideoView: FC = () => {
     }
   }, [thumbnailUrls, video])
 
-  const handleShare = () => {
-    setShareDialogOpen(true)
-  }
-
   const handleAddVideoView = useCallback(() => {
     if (!videoId || !channelId) {
       return
@@ -295,7 +224,108 @@ export const VideoView: FC = () => {
   }
 
   const isCinematic = cinematicView || !mdMatch
-  const sideItems = (
+  return (
+    <>
+      {headTags}
+      <PlayerGridWrapper cinematicView={isCinematic}>
+        <PlayerWrapper cinematicView={isCinematic}>
+          <PlayerGridItem colSpan={{ xxs: 12, md: cinematicView ? 12 : 8 }}>
+            <PlayerContainer
+              ref={ref}
+              className={transitions.names.slide}
+              cinematicView={cinematicView}
+              noVideo={videoNotAvailable}
+            >
+              {videoNotAvailable ? (
+                <VideoUnavailableError isCinematic={isCinematic} />
+              ) : !loading && video ? (
+                <MinimizedPlayer
+                  author={video.channel.title}
+                  title={video.title}
+                  isInView={isInView}
+                  onCloseShareDialog={() => setShareDialogOpen(false)}
+                  onAddVideoView={handleAddVideoView}
+                  isShareDialogOpen={isShareDialogOpen}
+                  isVideoPending={!video?.media?.isAccepted}
+                  videoId={video?.id}
+                  autoplay
+                  videoUrls={mediaUrls}
+                  onEnd={handleVideoEnd}
+                  onTimeUpdated={handleTimeUpdate}
+                  startTime={startTimestamp}
+                  isPlayNextDisabled={pausePlayNext}
+                  ref={playerRef}
+                  availableTextTracks={availableTracks}
+                />
+              ) : (
+                <PlayerSkeletonLoader />
+              )}
+            </PlayerContainer>
+            {!isCinematic && (
+              <>
+                {!videoNotAvailable ? (
+                  <DetailsItems video={video} handleShare={handleShare} />
+                ) : mdMatch ? (
+                  <BlockedVideoGradientPlaceholder />
+                ) : null}
+                {!videoNotAvailable && (
+                  <CommentsSection
+                    video={video}
+                    videoLoading={loading}
+                    disabled={video ? !video?.isCommentSectionEnabled : undefined}
+                    onCommentInputFocus={setIsCommenting}
+                  />
+                )}
+              </>
+            )}
+          </PlayerGridItem>
+          {!isCinematic && <SideItems video={video} loading={loading} />}
+        </PlayerWrapper>
+      </PlayerGridWrapper>
+      <LimitedWidthContainer>
+        {isCinematic && !(!mdMatch && videoNotAvailable) && (
+          <LayoutGrid>
+            <GridItem className={transitions.names.slide} colSpan={{ xxs: 12, md: cinematicView ? 8 : 12 }}>
+              {!videoNotAvailable ? (
+                <DetailsItems video={video} handleShare={handleShare} />
+              ) : mdMatch ? (
+                <BlockedVideoGradientPlaceholder />
+              ) : null}
+              {!videoNotAvailable && (
+                <CommentsSection
+                  video={video}
+                  videoLoading={loading}
+                  disabled={video ? !video?.isCommentSectionEnabled : undefined}
+                  onCommentInputFocus={setIsCommenting}
+                />
+              )}
+            </GridItem>
+            <SideItems video={video} loading={loading} />
+          </LayoutGrid>
+        )}
+      </LimitedWidthContainer>
+    </>
+  )
+}
+
+const SideItems = ({ video, loading }: { video: ReturnType<typeof useFullVideo>['video']; loading: boolean }) => {
+  const { id } = useParams()
+  const { openNftPutOnSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement, cancelNftSale } =
+    useNftActions()
+  const channelId = video?.channel?.id
+  const channelName = video?.channel?.title
+  const videoNotAvailable = !loading && !video
+
+  const nftWidgetProps = useNftWidget(video)
+  const { withdrawBid } = useNftTransactions()
+
+  const mdMatch = useMediaMatch('md')
+  const { cinematicView } = usePersonalDataStore((state) => state)
+  const videoCategory = video?.category ? video.category.id : null
+  const belongsToCategories = videoCategory
+    ? displayCategories.filter((category) => category.videoCategories.includes(videoCategory))
+    : null
+  return (
     <GridItem colSpan={{ xxs: 12, md: 4 }}>
       {videoNotAvailable
         ? mdMatch && (
@@ -329,10 +359,88 @@ export const VideoView: FC = () => {
       ))}
     </GridItem>
   )
+}
 
-  const detailsItems = videoNotAvailable ? (
-    mdMatch && <BlockedVideoGradientPlaceholder />
-  ) : (
+const DetailsItems = ({
+  video,
+  handleShare,
+}: {
+  video: ReturnType<typeof useFullVideo>['video']
+  handleShare: () => void
+}) => {
+  const mdMatch = useMediaMatch('md')
+
+  const { memberId, isLoggedIn } = useUser()
+  const [showReportDialog, setShowReportDialog] = useState(false)
+  const [reactionFee, setReactionFee] = useState<BN | undefined>()
+  const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
+
+  const channelId = video?.channel?.id
+  const numberOfLikes = video?.reactions.filter(({ reaction }) => reaction === 'LIKE').length
+  const numberOfDislikes = video?.reactions.filter(({ reaction }) => reaction === 'UNLIKE').length
+  const videoCategory = video?.category ? video.category.id : null
+
+  const [videoReactionProcessing, setVideoReactionProcessing] = useState(false)
+  const { likeOrDislikeVideo } = useReactionTransactions()
+  const { trackLikeAdded, trackDislikeAdded } = useSegmentAnalytics()
+  const belongsToCategories = videoCategory
+    ? displayCategories.filter((category) => category.videoCategories.includes(videoCategory))
+    : null
+
+  const { getTxFee: getReactionFee } = useFee('reactToVideoTx')
+
+  const reactionStepperState = useMemo(() => {
+    if (!video) {
+      return 'loading'
+    }
+    if (videoReactionProcessing) {
+      return 'processing'
+    }
+    const myReaction = video?.reactions.find(({ member: { id } }) => id === memberId)
+    if (myReaction) {
+      if (myReaction.reaction === 'LIKE') {
+        return 'liked'
+      }
+      if (myReaction.reaction === 'UNLIKE') {
+        return 'disliked'
+      }
+    }
+    return 'default'
+  }, [memberId, videoReactionProcessing, video])
+
+  const handleCalculateFeeForPopover = async (reaction: VideoReaction) => {
+    if (!memberId || !video?.id) return
+    const fee = await getReactionFee([memberId, video?.id, reaction])
+    setReactionFee(fee)
+  }
+
+  const handleReact = useCallback(
+    async (reaction: VideoReaction) => {
+      if (video?.id) {
+        setVideoReactionProcessing(true)
+        const fee = reactionFee || (await getReactionFee([memberId || '', video?.id, reaction]))
+        const reacted = await likeOrDislikeVideo(video.id, reaction, video.title, fee)
+        reaction === 'like'
+          ? trackLikeAdded(video.id, memberId ?? 'no data')
+          : trackDislikeAdded(video.id, memberId ?? 'no data')
+        setVideoReactionProcessing(false)
+        return reacted
+      }
+      return false
+    },
+    [
+      getReactionFee,
+      likeOrDislikeVideo,
+      memberId,
+      reactionFee,
+      trackLikeAdded,
+      trackDislikeAdded,
+      video?.id,
+      video?.title,
+    ]
+  )
+
+  return (
     <>
       <TitleContainer>
         {video ? (
@@ -404,81 +512,6 @@ export const VideoView: FC = () => {
         <ChannelLink followButton id={channelId} textVariant="h300" avatarSize={40} />
       </ChannelContainer>
       <VideoDetails video={video} categoryData={belongsToCategories} />
-    </>
-  )
-
-  return (
-    <>
-      {headTags}
-      <PlayerGridWrapper cinematicView={isCinematic}>
-        <PlayerWrapper cinematicView={isCinematic}>
-          <PlayerGridItem colSpan={{ xxs: 12, md: cinematicView ? 12 : 8 }}>
-            <PlayerContainer
-              ref={ref}
-              className={transitions.names.slide}
-              cinematicView={cinematicView}
-              noVideo={videoNotAvailable}
-            >
-              {videoNotAvailable ? (
-                <VideoUnavailableError isCinematic={isCinematic} />
-              ) : !loading && video ? (
-                <MinimizedPlayer
-                  author={video.channel.title}
-                  title={video.title}
-                  isInView={isInView}
-                  onCloseShareDialog={() => setShareDialogOpen(false)}
-                  onAddVideoView={handleAddVideoView}
-                  isShareDialogOpen={isShareDialogOpen}
-                  isVideoPending={!video?.media?.isAccepted}
-                  videoId={video?.id}
-                  autoplay
-                  videoUrls={mediaUrls}
-                  onEnd={handleVideoEnd}
-                  onTimeUpdated={handleTimeUpdate}
-                  startTime={startTimestamp}
-                  isPlayNextDisabled={pausePlayNext}
-                  ref={playerRef}
-                  availableTextTracks={availableTracks}
-                />
-              ) : (
-                <PlayerSkeletonLoader />
-              )}
-            </PlayerContainer>
-            {!isCinematic && (
-              <>
-                {detailsItems}
-                {!videoNotAvailable && (
-                  <CommentsSection
-                    video={video}
-                    videoLoading={loading}
-                    disabled={video ? !video?.isCommentSectionEnabled : undefined}
-                    onCommentInputFocus={setIsCommenting}
-                  />
-                )}
-              </>
-            )}
-          </PlayerGridItem>
-          {!isCinematic && sideItems}
-        </PlayerWrapper>
-      </PlayerGridWrapper>
-      <LimitedWidthContainer>
-        {isCinematic && !(!mdMatch && videoNotAvailable) && (
-          <LayoutGrid>
-            <GridItem className={transitions.names.slide} colSpan={{ xxs: 12, md: cinematicView ? 8 : 12 }}>
-              {detailsItems}
-              {!videoNotAvailable && (
-                <CommentsSection
-                  video={video}
-                  videoLoading={loading}
-                  disabled={video ? !video?.isCommentSectionEnabled : undefined}
-                  onCommentInputFocus={setIsCommenting}
-                />
-              )}
-            </GridItem>
-            {sideItems}
-          </LayoutGrid>
-        )}
-      </LimitedWidthContainer>
     </>
   )
 }

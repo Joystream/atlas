@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { useCallback, useMemo, useState } from 'react'
 
+import { GetBasicCreatorTokensQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { GetFeaturedNftsVideosQuery } from '@/api/queries/__generated__/nfts.generated'
 import { Carousel, CarouselProps, SwiperInstance } from '@/components/Carousel'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
@@ -9,14 +10,19 @@ import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { breakpoints, media } from '@/styles'
 
 import { MarketplaceCarouselCard } from './components/MarketplaceCarouselCard'
-import { NftCarouselItem } from './components/NftCarouselItem/NftCarouselItem'
+import { MarketplaceCarouselItem } from './components/MarketplaceCarouselItem/MarketplaceCarouselItem'
 
 type NftCarouselType = {
   type: 'nft'
-  nfts?: GetFeaturedNftsVideosQuery['ownedNfts']
+  nfts: GetFeaturedNftsVideosQuery['ownedNfts']
 }
 
-type MarketplaceCarouselTypes = NftCarouselType
+type CrtCarouselType = {
+  type: 'crt'
+  crts: GetBasicCreatorTokensQuery['creatorTokens']
+}
+
+type MarketplaceCarouselTypes = NftCarouselType | CrtCarouselType
 
 export type MarketplaceCarouselProps = MarketplaceCarouselTypes & {
   carouselProps?: Omit<CarouselProps, 'children'>
@@ -38,16 +44,16 @@ export const MarketplaceCarousel = ({ carouselProps, isLoading, ...rest }: Marke
   const mdMatch = useMediaMatch('md')
 
   const handleNextSlide = useCallback(
-    (slideIndex: string, nft?: GetFeaturedNftsVideosQuery['ownedNfts'][number]) => {
-      trackNFTCarouselNext(slideIndex, nft?.id)
+    <T extends { id?: string }>(slideIndex: string, item?: T) => {
+      trackNFTCarouselNext(slideIndex, item?.id)
       glider?.slideNext()
     },
     [glider, trackNFTCarouselNext]
   )
 
   const handlePrevSlide = useCallback(
-    (slideIndex: string, nft?: GetFeaturedNftsVideosQuery['ownedNfts'][number]) => {
-      trackNFTCarouselPrev(slideIndex, nft?.id)
+    <T extends { id?: string }>(slideIndex: string, item?: T) => {
+      trackNFTCarouselPrev(slideIndex, item?.id)
       glider?.slidePrev()
     },
     [glider, trackNFTCarouselPrev]
@@ -65,7 +71,7 @@ export const MarketplaceCarousel = ({ carouselProps, isLoading, ...rest }: Marke
 
     if (rest.type === 'nft' && rest.nfts && glider) {
       return rest.nfts.map((nft, idx) => (
-        <NftCarouselItem
+        <MarketplaceCarouselItem
           key={idx}
           onClick={(dir) => (dir === '>' ? handleNextSlide(idx.toString(), nft) : handlePrevSlide(idx.toString(), nft))}
         >
@@ -77,14 +83,32 @@ export const MarketplaceCarousel = ({ carouselProps, isLoading, ...rest }: Marke
               nft={nft}
             />
           )}
-        </NftCarouselItem>
+        </MarketplaceCarouselItem>
+      ))
+    }
+
+    if (rest.type === 'crt' && rest.crts && glider) {
+      return rest.crts.map((crt, idx) => (
+        <MarketplaceCarouselItem
+          key={idx}
+          onClick={(dir) => (dir === '>' ? handleNextSlide(idx.toString(), crt) : handlePrevSlide(idx.toString(), crt))}
+        >
+          {(isActive) => (
+            <MarketplaceCarouselCard
+              slideNext={() => handleNextSlide(idx.toString(), crt)}
+              active={isActive}
+              type="crt"
+              crt={crt}
+            />
+          )}
+        </MarketplaceCarouselItem>
       ))
     }
 
     return [null]
-  }, [isLoading, rest.type, rest.nfts, glider, handleNextSlide, handlePrevSlide])
+  }, [isLoading, rest, glider, handleNextSlide, handlePrevSlide])
 
-  if (!isLoading && (!rest.nfts || rest.nfts.length < 4)) {
+  if (!isLoading && ((rest.type === 'nft' && rest.nfts.length < 4) || (rest.type === 'crt' && rest.crts.length < 4))) {
     return null
   }
 

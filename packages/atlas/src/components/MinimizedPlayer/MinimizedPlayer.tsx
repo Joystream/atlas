@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useState } from 'react'
+import { forwardRef, useEffect, useMemo, useState } from 'react'
 
 import { VideoPlayer, VideoPlayerProps } from '@/components/_video/VideoPlayer'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -30,23 +30,26 @@ export const MinimizedPlayer = forwardRef<HTMLVideoElement, MiniVideoProps>(
 
     const inView = isAllowed && mdMatch && !wasPausedOnTop ? isInView || forceExit || hasError : true
 
+    const actions = useMemo(
+      () => ({
+        onPause: () => {
+          setIsPaused(true)
+          videoPlayerProps.onPause?.()
+        },
+        onPlay: () => {
+          setIsPaused(false)
+          videoPlayerProps.onPlay?.()
+        },
+        onError: () => setHasError(true),
+        onMinimizedExit: () => setForceExit(true),
+      }),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [videoPlayerProps.onPlay, videoPlayerProps.onPause]
+    )
+
     return (
       <Wrapper isInView={inView}>
-        <VideoPlayer
-          ref={ref}
-          isMinimized={!inView}
-          onPause={() => {
-            setIsPaused(true)
-            videoPlayerProps.onPause?.()
-          }}
-          onPlay={() => {
-            setIsPaused(false)
-            videoPlayerProps.onPlay?.()
-          }}
-          onError={() => setHasError(true)}
-          onMinimizedExit={() => setForceExit(true)}
-          {...videoPlayerProps}
-        />
+        <VideoPlayer ref={ref} isMinimized={!inView} {...actions} {...videoPlayerProps} />
       </Wrapper>
     )
   }

@@ -42,7 +42,8 @@ export const Result: FC<ResultProps> = ({
   )
   const { url: videoThumbnail, isLoading: isLoadingThumbnail } = useGetAssetUrl(
     video?.thumbnailPhoto?.resolvedUrls,
-    'thumbnail'
+    'thumbnail',
+    {}
   )
   const to = useMemo(() => {
     if (video) {
@@ -66,7 +67,7 @@ export const Result: FC<ResultProps> = ({
   return (
     <ResultWrapper to={to} selected={selected} handleSelectedItem={onSelected} selectedItem={selectedItem}>
       <ResultContent>
-        {loading && (video ? isLoadingThumbnail : isLoadingAvatar) ? (
+        {loading || (video ? isLoadingThumbnail : isLoadingAvatar) ? (
           <StyledSkeletonLoader width={video ? '64px' : '32px'} height={video ? '40px' : '32px'} rounded={!!channel} />
         ) : channel && !thumbnailUrl ? (
           <StyledSvgAvatarSilhouette width={32} height={32} />

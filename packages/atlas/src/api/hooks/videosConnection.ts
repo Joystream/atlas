@@ -10,14 +10,19 @@ import {
   useGetVideosCountQuery,
 } from '@/api/queries/__generated__/videos.generated'
 
+type UseBasicVideosConnectionOptions = {
+  skipCountQuery?: boolean
+} & QueryHookOptions<GetBasicVideosConnectionQuery>
+
 export const useBasicVideosConnection = (
   variables?: GetBasicVideosConnectionQueryVariables,
-  opts?: QueryHookOptions<GetBasicVideosConnectionQuery>
+  opts?: UseBasicVideosConnectionOptions
 ) => {
   const { data: countData } = useGetVideosCountQuery({
     variables: {
       where: variables?.where,
     },
+    skip: opts?.skipCountQuery,
   })
   const { data, ...rest } = useGetBasicVideosConnectionQuery({
     ...opts,

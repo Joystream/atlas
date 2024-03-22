@@ -25,8 +25,14 @@ fragment BasicChannelFields on Channel {
   followsNum # CHANGE: Instead of `follows` (which is now a One-to-Many field)
   rewardAccount
   channelStateBloatBond
+  cumulativeRevenue
   avatarPhoto {
     ...StorageDataObjectFields
+  }
+  creatorToken {
+    token {
+      id
+    }
   }
 }
 
@@ -36,6 +42,7 @@ fragment FullChannelFields on Channel {
   description
   isPublic
   cumulativeRewardClaimed
+  cumulativeRevenue
   isCensored
   language # CHANGE: Language is no longer a separate entity
   ownerMember {
@@ -157,11 +164,20 @@ fragment SubtitlesFields on VideoSubtitle {
 fragment BasicVideoFields on Video {
   id
   title
+  description
   viewsNum # CHANGE: Instead of `views` (which is now a One-to-Many field)
   createdAt
   duration
   reactionsCount
   commentsCount
+  media {
+    id
+    isAccepted
+    storageBag {
+      id
+    }
+    resolvedUrls
+  }
   channel {
     ...BasicChannelFields
   }
@@ -462,5 +478,188 @@ fragment BasicVideoActivityFields on Video {
   title
   thumbnailPhoto {
     ...StorageDataObjectFields
+  }
+}
+
+fragment BasicCreatorTokenHolder on TokenAccount {
+  id
+  stakedAmount
+  deleted
+  totalAmount
+  member {
+    ...BasicMembershipFields
+  }
+  token {
+    id
+    symbol
+    status
+    lastPrice
+    channel {
+      ... on TokenChannel {
+        id
+        channel {
+          id
+        }
+      }
+    }
+  }
+  vestingSchedules {
+    id
+    totalVestingAmount
+    vestingSource {
+      __typename
+    }
+    vesting {
+      id
+      endsAt
+      cliffBlock
+      cliffDurationBlocks
+      cliffRatioPermill
+      vestingDurationBlocks
+    }
+  }
+}
+
+fragment BasicRevenueShare on RevenueShare {
+  id
+  allocation
+  claimed
+  endsAt
+  createdIn
+  finalized
+  participantsNum
+  potentialParticipantsNum
+  startingAt
+  token {
+    id
+    symbol
+  }
+  stakers {
+    id
+    stakedAmount
+    recovered
+    earnings
+    createdIn
+    account {
+      member {
+        id
+      }
+    }
+  }
+}
+
+fragment BasicCreatorToken on CreatorToken {
+  id
+  accountsNum
+  symbol
+  isInviteOnly
+  deissued
+  status
+  createdAt
+  lastPrice
+  totalSupply
+  description
+  trailerVideo {
+    id
+    video {
+      id
+      media {
+        ...StorageDataObjectFields
+      }
+      thumbnailPhoto {
+        ...StorageDataObjectFields
+      }
+    }
+  }
+  currentAmmSale {
+    id
+    burnedByAmm
+    mintedByAmm
+  }
+  currentSale {
+    id
+    tokensSold
+    endsAt
+  }
+  channel {
+    ... on TokenChannel {
+      id
+      channel {
+        ...BasicChannelFields
+      }
+    }
+  }
+  avatar {
+    ... on TokenAvatarObject {
+      avatarObject {
+        ...StorageDataObjectFields
+      }
+    }
+    ... on TokenAvatarUri {
+      avatarUri
+    }
+  }
+}
+
+fragment FullCreatorToken on CreatorToken {
+  ...BasicCreatorToken
+  annualCreatorRewardPermill
+  revenueShareRatioPermill
+  description
+  revenueShareRatioPermill
+  ammCurves {
+    id
+    finalized
+    ammInitPrice
+    burnedByAmm
+    mintedByAmm
+    ammSlopeParameter
+  }
+  sales {
+    id
+    maxAmountPerMember
+    pricePerUnit
+    tokensSold
+    finalized
+  }
+  benefits {
+    id
+    description
+    title
+    displayOrder
+    emojiCode
+  }
+  totalSupply
+  trailerVideo {
+    id
+    video {
+      id
+      title
+    }
+  }
+  revenueShares {
+    ...BasicRevenueShare
+  }
+}
+
+fragment FullAmmCurve on AmmCurve {
+  id
+  ammSlopeParameter
+  mintedByAmm
+  burnedByAmm
+  ammInitPrice
+  finalized
+  transactions {
+    id
+    createdIn
+    pricePaid
+    pricePerUnit
+    transactionType
+    quantity
+    account {
+      member {
+        id
+      }
+    }
   }
 }

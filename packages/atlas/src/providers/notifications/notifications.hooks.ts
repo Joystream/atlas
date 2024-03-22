@@ -225,6 +225,15 @@ const parseNotificationType = (notificationType: NotificationType): Notification
     case 'VideoDisliked':
     case 'ChannelVerified':
     case 'ChannelSuspended':
+    case 'CreatorTokenRevenueSharePlanned':
+    case 'CreatorTokenRevenueShareStarted':
+    case 'CreatorTokenRevenueShareEnded':
+    case 'CreatorTokenSaleStarted':
+    case 'CreatorTokenMarketStarted':
+    case 'CreatorTokenIssued':
+    case 'CreatorTokenMarketMint':
+    case 'CreatorTokenMarketBurn':
+    case 'CreatorTokenSaleMint':
       return toNotificationData(notificationType, {})
   }
 }

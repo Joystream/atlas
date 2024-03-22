@@ -35,11 +35,11 @@ const ChannelNotificationsView = lazy(() =>
     default: module.ChannelNotificationsView,
   }))
 )
-const CrtPreviewEditView = lazy(() =>
-  import('@/views/studio/CrtPreviewEditView').then((module) => ({ default: module.CrtPreviewEditView }))
+const CrtDashboard = lazy(() =>
+  import('@/views/studio/CrtDashboard').then((module) => ({ default: module.CrtDashboard }))
 )
-const CrtPreviewView = lazy(() =>
-  import('@/views/studio/CrtPreviewView').then((module) => ({ default: module.CrtPreviewView }))
+const CrtTokenEditView = lazy(() =>
+  import('@/views/studio/CrtTokenEditView').then((module) => ({ default: module.CrtTokenEditView }))
 )
 const CrtWelcomeView = lazy(() =>
   import('@/views/studio/CrtWelcomeView').then((module) => ({ default: module.CrtWelcomeView }))
@@ -86,9 +86,8 @@ const _StudioLayout = () => {
   const displayedLocation = useVideoWorkspaceRouting()
   const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
-  const { channelId, memberships, membershipsLoading, activeMembership } = useUser()
+  const { channelId, memberships, membershipsLoading, activeMembership, activeChannel } = useUser()
   const { isAuthenticating } = useAuth()
-
   const [openUnsupportedBrowserDialog, closeUnsupportedBrowserDialog] = useConfirmationModal()
   const [enterLocation] = useState(location.pathname)
   const isMembershipLoaded = !membershipsLoading && !isAuthenticating
@@ -98,6 +97,7 @@ const _StudioLayout = () => {
   const channelSet = !!(channelId && activeMembership?.channels.find((channel) => channel.id === channelId))
   const { isLoading } = useGetYppSyncedChannels()
   const isLoadingYPPData = isLoading || membershipsLoading || isAuthenticating
+  const hasToken = !!(activeChannel && activeChannel.creatorToken?.token.id)
 
   useLayoutEffect(() => {
     if (!isAllowedBrowser()) {
@@ -200,21 +200,34 @@ const _StudioLayout = () => {
                   element={<PrivateRoute element={<MyVideosView />} showWhen={channelSet} redirectTo={SIGN_IN_ROUTE} />}
                 />
                 <Route
-                  path={relativeRoutes.studio.crtWelcome()}
+                  path={relativeRoutes.studio.crt()}
                   element={
-                    <PrivateRoute element={<CrtWelcomeView />} showWhen={channelSet} redirectTo={SIGN_IN_ROUTE} />
+                    <PrivateRoute
+                      isLoadingAuthData={false}
+                      element={<CrtWelcomeView />}
+                      showWhen={channelSet && !hasToken}
+                      redirectTo={!channelSet ? ENTRY_POINT_ROUTE : absoluteRoutes.studio.crtDashboard()}
+                    />
                   }
                 />
                 <Route
-                  path={relativeRoutes.studio.crtTokenPreview()}
+                  path={relativeRoutes.studio.crtDashboard()}
                   element={
-                    <PrivateRoute element={<CrtPreviewView />} showWhen={channelSet} redirectTo={SIGN_IN_ROUTE} />
+                    <PrivateRoute
+                      element={<CrtDashboard />}
+                      showWhen={channelSet && hasToken}
+                      redirectTo={!channelSet ? ENTRY_POINT_ROUTE : absoluteRoutes.studio.crt()}
+                    />
                   }
                 />
                 <Route
-                  path={relativeRoutes.studio.crtTokenPreviewEdit()}
+                  path={relativeRoutes.studio.crtTokenEdit()}
                   element={
-                    <PrivateRoute element={<CrtPreviewEditView />} showWhen={channelSet} redirectTo={SIGN_IN_ROUTE} />
+                    <PrivateRoute
+                      element={<CrtTokenEditView />}
+                      showWhen={channelSet && hasToken}
+                      redirectTo={!channelSet ? ENTRY_POINT_ROUTE : absoluteRoutes.studio.crt()}
+                    />
                   }
                 />
                 <Route

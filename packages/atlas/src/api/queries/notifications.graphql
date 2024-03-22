@@ -161,6 +161,71 @@ query GetNotificationsConnection($recipient: RecipientTypeWhereInput!, $first: I
           ... on ChannelFundsWithdrawn {
             amount
           }
+
+          # CRTS
+          ... on CreatorTokenIssued {
+            channelId
+            channelTitle
+            tokenSymbol
+          }
+
+          ... on CreatorTokenRevenueSharePlanned {
+            channelId
+            channelTitle
+            tokenSymbol
+            plannedAt
+          }
+
+          ... on CreatorTokenRevenueShareStarted {
+            channelId
+            channelTitle
+            tokenSymbol
+          }
+
+          ... on CreatorTokenRevenueShareEnded {
+            channelId
+            channelTitle
+            tokenSymbol
+          }
+
+          ... on CreatorTokenMarketStarted {
+            tokenSymbol
+            channelTitle
+            channelId
+          }
+
+          ... on CreatorTokenMarketMint {
+            tokenSymbol
+            mintedTokenAmount
+            tokenSymbol
+            minterHandle
+            minterId
+            paiedJoyAmount
+          }
+
+          ... on CreatorTokenMarketBurn {
+            tokenSymbol
+            burnedTokenAmount
+            tokenSymbol
+            burnerHandle
+            receivedJoyAmount
+            burnerId
+          }
+
+          ... on CreatorTokenSaleMint {
+            tokenSymbol
+            mintedTokenAmount
+            tokenSymbol
+            minterHandle
+            minterId
+            paiedJoyAmount
+          }
+
+          ... on CreatorTokenSaleStarted {
+            tokenSymbol
+            channelTitle
+            channelId
+          }
         }
       }
     }

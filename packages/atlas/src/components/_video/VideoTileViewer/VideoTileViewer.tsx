@@ -1,4 +1,4 @@
-import { FC, useCallback } from 'react'
+import { FC, useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router'
 
 import { useBasicVideo } from '@/api/hooks/video'
@@ -18,10 +18,18 @@ type VideoTileViewerProps = {
   onClick?: () => void
   detailsVariant?: VideoDetailsVariant
   direction?: 'vertical' | 'horizontal'
+  showDescription?: boolean
   className?: string
 }
 
-export const VideoTileViewer: FC<VideoTileViewerProps> = ({ id, onClick, detailsVariant, direction, className }) => {
+export const VideoTileViewer: FC<VideoTileViewerProps> = ({
+  id,
+  onClick,
+  detailsVariant,
+  direction,
+  className,
+  showDescription,
+}) => {
   const navigate = useNavigate()
   const { video, loading } = useBasicVideo(id ?? '', {
     skip: !id,
@@ -34,17 +42,39 @@ export const VideoTileViewer: FC<VideoTileViewerProps> = ({ id, onClick, details
 
   const channelHref = absoluteRoutes.viewer.channel(video?.channel.id)
 
-  const handleCopyVideoURLClick = useCallback(() => {
-    copyToClipboard(videoHref ? location.origin + videoHref : '', 'Video URL copied to clipboard')
-  }, [videoHref, copyToClipboard])
+  const contextMenuItems = useMemo(
+    () => [
+      {
+        nodeStart: <SvgActionLinkUrl />,
+        onClick: () => copyToClipboard(videoHref ? location.origin + videoHref : '', 'Video URL copied to clipboard'),
+        label: 'Copy video URL',
+      },
+    ],
+    [copyToClipboard, videoHref]
+  )
 
-  const contextMenuItems = [
-    {
-      nodeStart: <SvgActionLinkUrl />,
-      onClick: handleCopyVideoURLClick,
-      label: 'Copy video URL',
-    },
-  ]
+  const isNft = !!video?.nft
+  const slots = useMemo(
+    () => ({
+      bottomRight: {
+        element: video?.duration ? (
+          <Pill variant="overlay" label={formatDurationShort(video?.duration)} title="Video duration" />
+        ) : null,
+      },
+      bottomLeft: isNft
+        ? {
+            element: <Pill label="NFT" variant="overlay" title="NFT" />,
+          }
+        : undefined,
+      center: {
+        element: <SvgIllustrativePlay />,
+        type: 'hover',
+      } as const,
+    }),
+    [isNft, video?.duration]
+  )
+
+  const onAvatarClick = useCallback(() => navigate(channelHref), [channelHref, navigate])
 
   return (
     <VideoTile
@@ -53,35 +83,20 @@ export const VideoTileViewer: FC<VideoTileViewerProps> = ({ id, onClick, details
       detailsVariant={detailsVariant}
       videoHref={videoHref}
       channelHref={channelHref}
-      onChannelAvatarClick={() => navigate(channelHref)}
+      onChannelAvatarClick={onAvatarClick}
       loadingDetails={loading || !video}
       loadingThumbnail={isLoadingThumbnail}
       thumbnailUrls={thumbnailPhotoUrls}
       views={video?.viewsNum}
       createdAt={video?.createdAt}
-      slots={{
-        bottomRight: {
-          element: video?.duration ? (
-            <Pill variant="overlay" label={formatDurationShort(video?.duration)} title="Video duration" />
-          ) : null,
-        },
-        bottomLeft:
-          video && video?.nft
-            ? {
-                element: <Pill label="NFT" variant="overlay" title="NFT" />,
-              }
-            : undefined,
-        center: {
-          element: <SvgIllustrativePlay />,
-          type: 'hover',
-        },
-      }}
+      slots={slots}
       channelAvatarUrls={avatarPhotoUrls}
       loadingAvatar={isLoadingAvatar}
       channelTitle={video?.channel?.title}
       videoTitle={video?.title}
       kebabMenuItems={contextMenuItems}
       direction={direction}
+      description={showDescription ? video?.description ?? undefined : undefined}
     />
   )
 }

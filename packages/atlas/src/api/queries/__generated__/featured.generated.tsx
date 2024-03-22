@@ -18,11 +18,19 @@ export type GetVideoHeroQuery = {
       __typename?: 'Video'
       id: string
       title?: string | null
+      description?: string | null
       viewsNum: number
       createdAt: Date
       duration?: number | null
       reactionsCount: number
       commentsCount: number
+      media?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        isAccepted: boolean
+        resolvedUrls: Array<string>
+        storageBag: { __typename?: 'StorageBag'; id: string }
+      } | null
       channel: {
         __typename?: 'Channel'
         id: string
@@ -32,6 +40,7 @@ export type GetVideoHeroQuery = {
         followsNum: number
         rewardAccount: string
         channelStateBloatBond: string
+        cumulativeRevenue: string
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -50,6 +59,7 @@ export type GetVideoHeroQuery = {
             | { __typename: 'DataObjectTypeVideoThumbnail' }
             | null
         } | null
+        creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
       }
       nft?: { __typename?: 'OwnedNft'; id: string } | null
       thumbnailPhoto?: {
@@ -103,6 +113,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
           followsNum: number
           rewardAccount: string
           channelStateBloatBond: string
+          cumulativeRevenue: string
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -121,6 +132,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
               | { __typename: 'DataObjectTypeVideoThumbnail' }
               | null
           } | null
+          creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
         }
         thumbnailPhoto?: {
           __typename?: 'StorageDataObject'
@@ -202,6 +214,7 @@ export type GetCategoryFeaturedVideosQuery = {
           followsNum: number
           rewardAccount: string
           channelStateBloatBond: string
+          cumulativeRevenue: string
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -220,6 +233,7 @@ export type GetCategoryFeaturedVideosQuery = {
               | { __typename: 'DataObjectTypeVideoThumbnail' }
               | null
           } | null
+          creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
         }
         thumbnailPhoto?: {
           __typename?: 'StorageDataObject'

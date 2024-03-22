@@ -27,6 +27,7 @@ export type StepProps = {
   onDelete?: () => void
   className?: string
   showOtherStepsOnMobile?: boolean
+  hideStepNumberText?: boolean
 }
 
 export const Step = forwardRef<HTMLDivElement, StepProps>(
@@ -40,6 +41,7 @@ export const Step = forwardRef<HTMLDivElement, StepProps>(
       onDelete,
       className,
       variant = 'current',
+      hideStepNumberText,
       showOtherStepsOnMobile,
     },
     ref
@@ -84,9 +86,11 @@ export const Step = forwardRef<HTMLDivElement, StepProps>(
             </StepNumber>
           )}
           <StepDetails>
-            <Overhead as="span" variant="t100" color="colorText">
-              Step {number}
-            </Overhead>
+            {!hideStepNumberText ? (
+              <Overhead as="span" variant="t100" color="colorText">
+                Step {number}
+              </Overhead>
+            ) : null}
             <StepTitle as="span" variant="t100-strong" color={variant !== 'current' ? 'colorText' : undefined}>
               {title}
             </StepTitle>

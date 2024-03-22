@@ -27,7 +27,7 @@ export const YppDashboardReferralsTab = () => {
       data?.data.map((channelData) => {
         return {
           date: new Date(channelData.createdAt),
-          channel: String(channelData.joystreamChannelId),
+          channelId: String(channelData.joystreamChannelId),
           status: channelData.yppStatus,
         }
       }) ?? [],

@@ -1,0 +1,51 @@
+import { Fragment, MutableRefObject, ReactNode } from 'react'
+
+import { SvgActionChevronR } from '@/assets/icons'
+import { BottomDrawerProps } from '@/components/_overlays/BottomDrawer'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
+
+import {
+  Container,
+  FormContainer,
+  PreviewContainer,
+  StepContainer,
+  StepWrapper,
+  StyledBottomDrawer,
+  StyledStep,
+} from './CrtDrawer.styles'
+
+export type CrtDrawerProps<T = string> = {
+  children?: ReactNode
+  preview?: ReactNode
+  steps: T[]
+  activeStep: number
+  formWrapperRef?: MutableRefObject<HTMLDivElement | null>
+} & BottomDrawerProps
+export const CrtDrawer = ({ children, preview, steps, activeStep, formWrapperRef, ...drawerProps }: CrtDrawerProps) => {
+  const smMatch = useMediaMatch('sm')
+  return (
+    <StyledBottomDrawer {...drawerProps}>
+      <Container>
+        <FormContainer ref={formWrapperRef}>
+          <StepWrapper>
+            <StepContainer>
+              {steps.map((step, idx) => (
+                <Fragment key={idx}>
+                  {idx > 0 ? <SvgActionChevronR /> : null}
+                  <StyledStep
+                    showOtherStepsOnMobile
+                    title={step}
+                    number={idx + 1}
+                    variant={idx + 1 < activeStep ? 'completed' : idx === activeStep ? 'current' : 'future'}
+                  />
+                </Fragment>
+              ))}
+            </StepContainer>
+          </StepWrapper>
+          {children}
+        </FormContainer>
+        {smMatch && <PreviewContainer>{preview}</PreviewContainer>}
+      </Container>
+    </StyledBottomDrawer>
+  )
+}

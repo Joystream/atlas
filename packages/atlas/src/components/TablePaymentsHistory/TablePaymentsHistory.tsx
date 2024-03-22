@@ -12,16 +12,12 @@ import { absoluteRoutes } from '@/config/routes'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { SentryLogger } from '@/utils/logs'
 import { shortenString } from '@/utils/misc'
-import { formatNumber } from '@/utils/number'
-import { formatDateTime } from '@/utils/time'
 
 import {
   DialogText,
   JoystreamSvgWrapper,
   SenderItem,
-  StyledJoyTokenIcon,
   StyledLink,
-  StyledNumberFormat,
   TextWrapper,
   TypeIconWrapper,
   TypeWrapper,
@@ -33,6 +29,8 @@ import {
   tableEmptyState,
   tableLoadingData,
 } from './TablePaymentsHistory.utils'
+
+import { DateBlockCell, TokenAmount } from '../Table/Table.cells'
 
 export type PaymentHistory = {
   type: PaymentType
@@ -53,7 +51,7 @@ export const TablePaymentsHistory: FC<TablePaymentsHistoryProps> = ({ data, isLo
   const mappedData: TableProps['data'] = useMemo(
     () =>
       data.map((data) => ({
-        date: <Date date={data.date} block={data.block} />,
+        date: <DateBlockCell type="date" date={data.date} />,
         type: <Type type={data.type} />,
         amount: <TokenAmount tokenAmount={data.amount} />,
         sender: <Sender sender={data.sender} />,
@@ -71,6 +69,7 @@ export const TablePaymentsHistory: FC<TablePaymentsHistoryProps> = ({ data, isLo
         </DialogText>
       </DialogModal>
       <Table
+        minWidth={900}
         title="History"
         columns={COLUMNS}
         data={isLoading ? tableLoadingData : mappedData}
@@ -144,19 +143,6 @@ const Sender = ({ sender }: { sender: PaymentHistory['sender'] }) => {
   }
 }
 
-const Date = ({ date, block }: { date: Date; block: number }) => {
-  return (
-    <>
-      <Text as="p" variant="t200-strong">
-        {formatDateTime(date)}
-      </Text>
-      <Text as="p" variant="t100" margin={{ top: 1 }} color="colorText">
-        {formatNumber(block || 0)} block
-      </Text>
-    </>
-  )
-}
-
 const Type = ({ type }: { type: PaymentType }) => {
   return (
     <TypeWrapper>
@@ -165,20 +151,5 @@ const Type = ({ type }: { type: PaymentType }) => {
         {paymentTypeMappings[type].title}
       </Text>
     </TypeWrapper>
-  )
-}
-
-const TokenAmount = ({ tokenAmount }: { tokenAmount: BN }) => {
-  const isNegative = tokenAmount.isNeg()
-  return (
-    <StyledNumberFormat
-      icon={<StyledJoyTokenIcon variant="gray" error={isNegative} />}
-      variant="t200-strong"
-      as="p"
-      value={tokenAmount}
-      format="short"
-      color={isNegative ? 'colorTextError' : 'colorTextStrong'}
-      withDenomination
-    />
   )
 }

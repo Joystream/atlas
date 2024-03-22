@@ -9,7 +9,9 @@ export const BASE_PATHS = {
 
 export type MemberSettingsTabs = 'Public profile' | 'Wallet' | 'Notifications'
 export type MemberTabs = 'NFTs' | 'Activity' | 'About'
+export type ChannelTabs = 'Videos' | 'Token' | 'NFTs' | 'Information'
 export type MyChannelTabs = 'General' | 'Notifications'
+export type CrtDashboardTabs = 'Dashboard' | 'Market' | 'Holders' | 'Revenue share'
 
 const withQueryParameters = (basePath: string, query: Record<string, string | boolean> = {}) => {
   if (Object.values(query).length) {
@@ -27,12 +29,15 @@ export const relativeRoutes = {
     video: (id = ':id') => `video/${id}`,
   },
   viewer: {
+    curatorView: () => 'curator-view',
+    curatorHomepage: () => 'curator-homepage',
     index: () => '',
     signin: () => 'signin',
     discover: () => 'discover',
+    portfolio: () => 'portfolio',
     category: (id = ':id') => `category/${id}`,
     search: (query?: { [QUERY_PARAMS.SEARCH]?: string }) => withQueryParameters('search', query),
-    channel: (id = ':id') => `channel/${id}`,
+    channel: (id = ':id', query?: { [QUERY_PARAMS.TAB]?: ChannelTabs }) => withQueryParameters(`channel/${id}`, query),
     channels: () => 'channels',
     video: (id = ':id', query?: { [QUERY_PARAMS.COMMENT_ID]?: string; [QUERY_PARAMS.NFT_WIDGET]?: boolean }) =>
       withQueryParameters(`video/${id}`, query),
@@ -58,9 +63,9 @@ export const relativeRoutes = {
     index: () => '',
     myChannel: (query?: { [QUERY_PARAMS.TAB]?: MyChannelTabs }) => withQueryParameters('channel', query),
     videos: () => 'videos',
-    crtWelcome: () => 'crt-welcome',
-    crtTokenPreview: () => 'crt-preview',
-    crtTokenPreviewEdit: () => 'crt-preview-edit',
+    crt: () => 'crt',
+    crtDashboard: (query?: { [QUERY_PARAMS.TAB]?: CrtDashboardTabs }) => withQueryParameters('crt-dashboard', query),
+    crtTokenEdit: () => 'crt/edit',
     videoWorkspace: () => 'video-workspace',
     uploads: () => 'uploads',
     signIn: () => 'signin',

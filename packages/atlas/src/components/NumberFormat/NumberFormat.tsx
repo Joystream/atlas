@@ -8,8 +8,8 @@ import { Text, TextProps, TextVariant } from '@/components/Text'
 import { atlasConfig } from '@/config'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useTokenPrice } from '@/providers/joystream/joystream.hooks'
-import { cVar, sizes } from '@/styles'
-import { formatNumber } from '@/utils/number'
+import { sizes } from '@/styles'
+import { formatNumber, formatSmallDecimal } from '@/utils/number'
 
 import { Tooltip } from '../Tooltip'
 
@@ -24,7 +24,9 @@ export type NumberFormatProps = {
   isNegative?: boolean
   icon?: ReactNode
   withDenomination?: boolean | 'horizontal' | 'vertical' | 'before' | 'after'
+  denominationMultiplier?: number
   denominationAlign?: 'left' | 'right'
+  customTicker?: string
 } & Omit<TextProps, 'children' | 'variant'>
 
 const TEXT_DENOMINATION_ALIGNMENTS: NumberFormatProps['withDenomination'][] = ['before', 'after']
@@ -41,8 +43,10 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
       isNegative,
       color,
       withDenomination: _withDenomination,
+      denominationMultiplier,
       denominationAlign = 'left',
       icon,
+      customTicker,
       ...textProps
     },
     ref
@@ -50,7 +54,9 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
     const withDenomination = atlasConfig.joystream.tokenPriceFeedUrl ? _withDenomination : undefined
     const { convertTokensToUSD } = useTokenPrice()
     const internalValue = BN.isBN(value) ? hapiBnToTokenNumber(value) : value
-    const fiatValue = convertTokensToUSD(internalValue)
+    const fiatValue = convertTokensToUSD(
+      denominationMultiplier ? denominationMultiplier * internalValue : internalValue
+    )
     const textRef = useRef<HTMLHeadingElement>(null)
     const denominationRef = useRef<HTMLHeadingElement>(null)
     const bnValue = new BN(value)
@@ -61,7 +67,7 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
       case 'short':
         formattedValue = internalValue ? (internalValue > 0.01 ? formatNumberShort(internalValue) : `<0.01`) : 0
         formattedDenominatedValue = fiatValue ? (fiatValue > 0.01 ? formatNumberShort(fiatValue) : `<$0.01`) : 0
-        tooltipText = formatNumber(internalValue)
+        tooltipText = formatSmallDecimal(internalValue)
         break
       case 'full':
         formattedValue = tooltipText = formatNumber(internalValue)
@@ -76,7 +82,6 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
           .replaceAll(',', ' ')
         break
     }
-
     const hasDecimals = internalValue - Math.floor(internalValue) !== 0
     const hasTooltip =
       withTooltip &&
@@ -100,10 +105,10 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
           {...textProps}
           color={bnValue.isNeg() || isNegative ? 'colorTextError' : color}
           variant={variant}
-          withToken={withToken}
           ref={mergeRefs([ref, textRef])}
         >
           {displayedValue ? <span>{displayedValue}</span> : <span>{formattedValue}</span>}
+          {withToken ? (customTicker ? ` ${customTicker}` : ` ${atlasConfig.joystream.tokenTicker}`) : null}
         </StyledText>
         {withDenomination === 'after' && (
           <Text
@@ -175,18 +180,6 @@ export const ContentContainer = styled.div`
 
 const StyledText = styled(Text)<TextProps & Pick<NumberFormatProps, 'withToken'>>`
   display: inline-block;
-  ${({ withToken }) =>
-    withToken &&
-    css`
-      &::after {
-        content: ' ${atlasConfig.joystream.tokenTicker}';
-        ${withToken === 'small' &&
-        css`
-          font-size: 0.62em;
-          color: ${cVar('colorTextMuted')};
-        `}
-      }
-    `}
 `
 
 const Denomination = styled(Text)<{ align: 'right' | 'left' }>`
@@ -230,6 +223,12 @@ const numberCompactFormatter = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 2,
 })
 
+const numberIntFormatter = new Intl.NumberFormat('en-US', {
+  notation: 'compact',
+  compactDisplay: 'short',
+  maximumFractionDigits: 0,
+})
+
 const dollarSmallNumberFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
@@ -237,8 +236,12 @@ const dollarSmallNumberFormatter = new Intl.NumberFormat('en-US', {
   maximumSignificantDigits: 3,
 })
 
-const formatNumberShort = (num: number): string => {
+export const formatNumberShort = (num: number): string => {
   return numberCompactFormatter.format(num).replaceAll(',', ' ')
+}
+
+export const formatNumberShortInt = (num: number): string => {
+  return numberIntFormatter.format(num).replaceAll(',', ' ')
 }
 
 const formatDollars = (num: number) => dollarSmallNumberFormatter.format(num).replaceAll(',', ' ')

@@ -1,5 +1,5 @@
 import { debounce } from 'lodash-es'
-import { FC, MouseEvent, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { FC, MouseEvent, memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { SPECIAL_CHARACTERS } from '@/config/regex'
@@ -44,7 +44,7 @@ export const SearchBox: FC<SearchBoxProps> = memo(
     onMouseMove,
     hasFocus,
   }) => {
-    const { channels, videos, loading } = useSearchResults({ searchQuery, first: 3, fetchPolicy: 'no-cache' })
+    const { channels, videos, loading } = useSearchResults({ searchQuery, first: 3, fetchPolicy: 'network-only' })
     const { recentSearches, deleteRecentSearch } = usePersonalDataStore((state) => ({
       recentSearches: state.recentSearches,
       deleteRecentSearch: state.actions.deleteRecentSearch,
@@ -54,7 +54,7 @@ export const SearchBox: FC<SearchBoxProps> = memo(
     const [visualViewportHeight, setVisualViewportHeight] = useState(window.visualViewport?.height || 0)
 
     // Calculate searchbox height whether keyboard is open or not
-    useEffect(() => {
+    useLayoutEffect(() => {
       const debouncedVisualViewportChange = debounce(() => {
         setVisualViewportHeight(window.visualViewport?.height ?? 0)
       }, 100)

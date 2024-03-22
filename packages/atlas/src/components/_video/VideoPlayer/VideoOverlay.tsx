@@ -5,7 +5,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { useBasicVideos } from '@/api/hooks/video'
 import { VideoOrderByInput, VideoWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { BasicVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
-import { publicCryptoVideoFilter } from '@/config/contentFilter'
+import { getPublicCryptoVideoFilter } from '@/config/contentFilter'
 import { cVar, transitions } from '@/styles'
 import { getRandomIntInclusive } from '@/utils/number'
 
@@ -23,6 +23,7 @@ type VideoOverlayProps = {
   playRandomVideoOnEnded?: boolean
   isMinimized?: boolean
   currentVideoCreatedAt?: Date
+  hideEndOverlay?: boolean
 }
 
 export const VideoOverlay: FC<VideoOverlayProps> = ({
@@ -36,18 +37,18 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
   isMinimized,
   playRandomVideoOnEnded = true,
   currentVideoCreatedAt,
+  hideEndOverlay = false,
 }) => {
   const [randomNextVideo, setRandomNextVideo] = useState<BasicVideoFieldsFragment | null>(null)
   const commonFiltersFactory = (where?: VideoWhereInput) => ({
     limit: 1,
     orderBy: VideoOrderByInput.CreatedAtAsc,
-    where: {
-      ...publicCryptoVideoFilter,
+    where: getPublicCryptoVideoFilter({
       channel: {
         id_eq: channelId,
       },
       ...where,
-    },
+    }),
   })
   const { videos: newerVideos, loading: loadingNewestVideos } = useBasicVideos(
     commonFiltersFactory({ createdAt_gt: currentVideoCreatedAt })
@@ -80,7 +81,7 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
         <div>
           {playerState === 'pending' && <InactiveOverlay />}
           {playerState === 'loading' && <LoadingOverlay />}
-          {!isMinimized && playerState === 'ended' && (
+          {!hideEndOverlay && !isMinimized && playerState === 'ended' && (
             <EndingOverlay
               isFullScreen={isFullScreen}
               isEnded={true}

@@ -11,6 +11,8 @@ type StudioEntrypointProps = {
   enterLocation: string
 }
 
+export const INITIAL_ROUTES = [absoluteRoutes.studio.index(), absoluteRoutes.studio.signIn()]
+
 export const StudioEntrypoint: FC<StudioEntrypointProps> = ({ enterLocation }) => {
   const { channelId, isLoggedIn, activeMembership } = useUser()
 
@@ -26,11 +28,11 @@ export const StudioEntrypoint: FC<StudioEntrypointProps> = ({ enterLocation }) =
     if (!activeMembership?.channels.length) {
       return <Navigate to={absoluteRoutes.studio.signIn()} replace />
     }
-    return <Navigate to={enterLocation || DEFAULT_ROUTE} replace />
+    return <Navigate to={INITIAL_ROUTES.includes(enterLocation) ? DEFAULT_ROUTE : enterLocation} replace />
   }
 
   if (channelSet) {
-    return <Navigate to={DEFAULT_ROUTE} replace />
+    return <Navigate to={INITIAL_ROUTES.includes(enterLocation) ? DEFAULT_ROUTE : enterLocation} replace />
   }
 
   return <StudioLoading />
