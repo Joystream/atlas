@@ -109,15 +109,15 @@ export const StartMarketModal = ({ onClose, show, tokenId }: StartMarketModalPro
   const successDetails = useMemo(
     () => [
       {
-        text: 'You can buy and sell your own tokens on the token market too!',
+        text: 'The more buyers you have had, the higher will be the profit when you are closing the market.',
         icon: <SvgActionMarket />,
       },
       {
-        text: "You are not earning royalties from other people's transactions on your token.",
+        text: "You are no earning royalties from other people's transactions on your token.",
         icon: <SvgActionWarning />,
       },
       {
-        text: 'Share the link to the token page with an open market so people can go and buy your token.',
+        text: 'Share the link to the token page  with an open market so people can go and buy your token.',
         icon: <SvgActionShoppingCart />,
         actionNode: (
           <TextButton
@@ -169,9 +169,9 @@ export const StartMarketModal = ({ onClose, show, tokenId }: StartMarketModalPro
         <FlexBox flow="column" gap={6}>
           <FlexBox flow="column" gap={2}>
             <Text variant="t200" as="p" color="colorText">
-              When the price goes up you can sell your tokens at a profit. The more buyers you have had, the higher will
-              be the profit when you are closing the market. However to close the market you'd need to sell all of the
-              tokens purchased by others from the initial supply you minted for yourself already.
+              When someone makes the purchase on the market, new tokens are minted and price goes up. To close the
+              market you need to return the minted tokens back to the market by selling the ones you already own. The
+              more people purchased your token before you close the market, the higher the profits when closing.
             </Text>
           </FlexBox>
           <FlexBox flow="column" gap={2}>

@@ -16,7 +16,7 @@ export const assuranceOptions = [
   },
   {
     label: 'Custom',
-    caption: 'Set your own custom cliff, vesting and initial payout.',
+    caption: 'Set custom locked period, vesting and first payout.',
     value: 'custom',
   },
 ]
@@ -27,16 +27,20 @@ export const vestingOptions = [
     name: 'No vesting',
   },
   {
-    value: '1',
-    name: '1 month',
-  },
-  {
-    value: '3',
-    name: '3 months',
-  },
-  {
     value: '6',
     name: '6 months',
+  },
+  {
+    value: '12',
+    name: '12 months',
+  },
+  {
+    value: '24',
+    name: '24 months',
+  },
+  {
+    value: '48',
+    name: '48 months',
   },
 ]
 

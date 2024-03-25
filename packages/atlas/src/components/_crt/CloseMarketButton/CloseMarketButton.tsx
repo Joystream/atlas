@@ -17,7 +17,7 @@ export const CloseMarketButton = ({ channelId, disabled, fullWidth, tokenId }: C
     <>
       <Button
         icon={<SvgActionNotForSale />}
-        variant="destructive-secondary"
+        variant="secondary"
         disabled={disabled}
         onClick={() => setShowModal(true)}
         fullWidth={fullWidth}

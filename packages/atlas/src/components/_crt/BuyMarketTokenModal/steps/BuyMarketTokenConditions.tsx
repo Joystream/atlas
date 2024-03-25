@@ -57,10 +57,6 @@ export const BuyMarketTokenConditions = ({ setPrimaryButtonProps, onSubmit }: Bu
   return (
     <Container>
       <FlexBox flow="column" gap={6} style={{ position: 'relative' }}>
-        <Text variant="h400" as="h4">
-          Holders terms
-        </Text>
-
         <FlexBox flow="column" gap={2}>
           {DETAILS.map((row) => (
             <FlexBox key={row.title} flow="column">

@@ -284,7 +284,7 @@ High Supply (100k):
       </FormField>
       <FormField
         label="Tokens unlock schedule"
-        description="Add cliff & vesting for your own tokens to make your followers feel more secure when investing in your channel."
+        description="Tokens unlock schedule shows what % of the tokens can be transferred or sold on the market over time. Click through the options to see them on the preview chart."
         tooltip={{
           text:
             'Different options presented below correspond to different level of token safety projected to your potential buyers. ' +

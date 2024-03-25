@@ -355,6 +355,15 @@ export const ChannelView: FC = () => {
                 >
                   Manage videos
                 </StyledButton>
+                {!!channel?.creatorToken?.token.id && (
+                  <StyledButton
+                    variant="secondary"
+                    onClick={() => id && setActiveChannel(id)}
+                    to={absoluteRoutes.studio.crtDashboard()}
+                  >
+                    Manage token
+                  </StyledButton>
+                )}
               </>
             ) : (
               <>
