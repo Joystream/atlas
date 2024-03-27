@@ -10,6 +10,7 @@ import { SvgActionCheck, SvgActionFilters, SvgActionFlag, SvgActionMore, SvgActi
 import { ChannelTitle } from '@/components/ChannelTitle'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
+import { FlexBox } from '@/components/FlexBox'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { NumberFormat } from '@/components/NumberFormat'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
@@ -338,71 +339,69 @@ export const ChannelView: FC = () => {
           {smMatch || mappedChannelNftCollectors.length === 0 ? null : (
             <CollectorsBox collectors={mappedChannelNftCollectors} maxShowedCollectors={4} />
           )}
-          <StyledButtonContainer>
-            {isChannelOwner ? (
-              <>
+          {isChannelOwner ? (
+            <StyledButtonContainer>
+              <StyledButton
+                variant="secondary"
+                onClick={() => id && setActiveChannel(id)}
+                to={absoluteRoutes.studio.myChannel()}
+              >
+                Customize channel
+              </StyledButton>
+              <StyledButton
+                variant="secondary"
+                onClick={() => id && setActiveChannel(id)}
+                to={absoluteRoutes.studio.videos()}
+              >
+                Manage videos
+              </StyledButton>
+              {!!channel?.creatorToken?.token.id && (
                 <StyledButton
                   variant="secondary"
                   onClick={() => id && setActiveChannel(id)}
-                  to={absoluteRoutes.studio.myChannel()}
+                  to={absoluteRoutes.studio.crtDashboard()}
                 >
-                  Customize channel
+                  Manage token
                 </StyledButton>
+              )}
+            </StyledButtonContainer>
+          ) : (
+            <FlexBox width="100%">
+              <ProtectedActionWrapper
+                title="You want to follow this channel?"
+                description={`Sign in to follow ${channel?.title}`}
+              >
                 <StyledButton
-                  variant="secondary"
-                  onClick={() => id && setActiveChannel(id)}
-                  to={absoluteRoutes.studio.videos()}
+                  icon={isFollowing ? <SvgActionCheck /> : <SvgActionPlus />}
+                  variant={isFollowing ? 'secondary' : 'primary'}
+                  onClick={toggleFollowing}
+                  size="large"
                 >
-                  Manage videos
+                  {isFollowing ? 'Unfollow' : 'Follow'}
                 </StyledButton>
-                {!!channel?.creatorToken?.token.id && (
-                  <StyledButton
-                    variant="secondary"
-                    onClick={() => id && setActiveChannel(id)}
-                    to={absoluteRoutes.studio.crtDashboard()}
-                  >
-                    Manage token
-                  </StyledButton>
-                )}
-              </>
-            ) : (
-              <>
-                <ProtectedActionWrapper
-                  title="You want to follow this channel?"
-                  description={`Sign in to follow ${channel?.title}`}
-                >
-                  <StyledButton
-                    icon={isFollowing ? <SvgActionCheck /> : <SvgActionPlus />}
-                    variant={isFollowing ? 'secondary' : 'primary'}
-                    onClick={toggleFollowing}
-                    size="large"
-                  >
-                    {isFollowing ? 'Unfollow' : 'Follow'}
-                  </StyledButton>
-                </ProtectedActionWrapper>
-                <ContextMenu
-                  placement="bottom-end"
-                  items={[
-                    {
-                      onClick: () => setShowReportDialog(true),
-                      label: 'Report channel',
-                      nodeStart: <SvgActionFlag />,
-                    },
-                  ]}
-                  trigger={<Button icon={<SvgActionMore />} variant="tertiary" size="large" />}
-                />
-              </>
-            )}
-
-            {channel?.id && (
-              <ReportModal
-                show={showReportDialog}
-                onClose={() => setShowReportDialog(false)}
-                entityId={channel?.id}
-                type="channel"
+              </ProtectedActionWrapper>
+              <ContextMenu
+                placement="bottom-end"
+                items={[
+                  {
+                    onClick: () => setShowReportDialog(true),
+                    label: 'Report channel',
+                    nodeStart: <SvgActionFlag />,
+                  },
+                ]}
+                trigger={<Button icon={<SvgActionMore />} variant="tertiary" size="large" />}
               />
-            )}
-          </StyledButtonContainer>
+            </FlexBox>
+          )}
+
+          {channel?.id && (
+            <ReportModal
+              show={showReportDialog}
+              onClose={() => setShowReportDialog(false)}
+              entityId={channel?.id}
+              type="channel"
+            />
+          )}
         </TitleSection>
         <TabsWrapper isFiltersOpen={isFiltersOpen}>
           <TabsContainer tab={currentTab}>
