@@ -255,7 +255,7 @@ const DashboardTokenProgress = ({ token }: Pick<CrtDashboardMainTabProps, 'token
   const stepsToNextTitle = numberOfFinishedSteps < 3 ? 3 - numberOfFinishedSteps : 4 - numberOfFinishedSteps
 
   useEffect(() => {
-    if (numberOfFinishedSteps >= 2 && numberOfFinishedSteps < 4) {
+    if (numberOfFinishedSteps >= 3 && numberOfFinishedSteps < 4) {
       setProgressModal('master')
     } else if (numberOfFinishedSteps >= 4) {
       setProgressModal('expert')
