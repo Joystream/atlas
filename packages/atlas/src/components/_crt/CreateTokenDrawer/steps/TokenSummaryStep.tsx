@@ -55,7 +55,7 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: Tok
     form.revenueShare,
     {
       amount: String(form.creatorIssueAmount ?? 0),
-      cliffAmountPercentage: payout ?? 0,
+      cliffAmountPercentage: 100 - (payout ?? 0),
       blocksBeforeCliff: cliff ? monthDurationToBlocks(+cliff) : 0,
       vestingDuration: vesting ? monthDurationToBlocks(+vesting) : 0,
     },
@@ -76,7 +76,7 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: Tok
           form.revenueShare,
           {
             amount: String(form.creatorIssueAmount ?? 0),
-            cliffAmountPercentage: payout ?? 0,
+            cliffAmountPercentage: 100 - (payout ?? 0),
             vestingDuration: vesting ? monthDurationToBlocks(+vesting) : 0,
             blocksBeforeCliff: cliff ? monthDurationToBlocks(+cliff) : 0,
           },
