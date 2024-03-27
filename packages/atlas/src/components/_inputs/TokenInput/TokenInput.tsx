@@ -51,7 +51,7 @@ const _TokenInput: ForwardRefRenderFunction<HTMLInputElement, TokenInputProps> =
         const valueStr = event.target.value
         const valueNum = event.target.valueAsNumber
 
-        if (valueStr.length < MAX_LENGTH && valueNum < (maxValue || Number.MAX_SAFE_INTEGER)) {
+        if (valueStr.length < MAX_LENGTH && (valueNum || 0) <= (maxValue || Number.MAX_SAFE_INTEGER)) {
           setInternalValue(valueStr)
           onChange(valueNum)
         }
