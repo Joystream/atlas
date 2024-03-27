@@ -47,7 +47,7 @@ export const vestingOptions = [
 export const cliffOptions = [
   {
     value: '0',
-    name: 'No cliff',
+    name: 'No locked period',
   },
   {
     value: '1',

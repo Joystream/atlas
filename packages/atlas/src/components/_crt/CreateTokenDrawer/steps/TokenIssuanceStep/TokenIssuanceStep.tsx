@@ -225,6 +225,11 @@ export const TokenIssuanceStep = ({
               format: (tick) => `${tick}%`,
             }}
             gridYValues={[0, 25, 50, 75, 100]}
+            axisBottom={{
+              tickSize: 5,
+              tickPadding: 5,
+              format: (tick) => (tick.slice(0, -1) % 2 === 0 ? tick : ''),
+            }}
             data={[
               {
                 id: 1,
