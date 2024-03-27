@@ -29,7 +29,7 @@ export type CloseMarketModalProps = {
 // Assuming x - supply of tokens beside AMM, y - AMM tokens supply (minted - burned) and at the same time the threshold
 // we get following formula (for this scenario it's enough if it just equals)
 // 1% * (x + y) = y   -->   x / 99 = y
-const TRESHOLD_RATIO = 99
+const TRESHOLD_RATIO = 100
 
 export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMarketModalProps) => {
   const { memberId } = useUser()
@@ -50,9 +50,12 @@ export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMar
   const ammBalance = data?.creatorTokenById?.currentAmmSale
     ? +data.creatorTokenById.currentAmmSale.mintedByAmm - +data.creatorTokenById.currentAmmSale.burnedByAmm
     : 0
-  const thresholdAmount = data?.creatorTokenById
-    ? Math.floor((+data.creatorTokenById.totalSupply - ammBalance) / TRESHOLD_RATIO)
-    : 0
+  const thresholdAmount =
+    TRESHOLD_RATIO < 100
+      ? data?.creatorTokenById
+        ? Math.floor((+data.creatorTokenById.totalSupply - ammBalance) / TRESHOLD_RATIO)
+        : 0
+      : 0
   const hasSufficientTokens = tokenBalance >= ammBalance - thresholdAmount
   const amountToSell = Math.max(0, Math.floor(ammBalance - thresholdAmount))
 
