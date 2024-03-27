@@ -10,6 +10,7 @@ import { SetupStepForm } from '@/components/_crt/CreateTokenDrawer/CreateTokenDr
 import {
   BottomPlaceholder,
   LeftPlaceholder,
+  Shadow,
   WidgetPreviewContainer,
 } from '@/components/_crt/CreateTokenDrawer/steps/styles'
 import { CrtFormWrapper } from '@/components/_crt/CrtFormWrapper'
@@ -66,47 +67,50 @@ export const SetupTokenStep = ({ setPrimaryButtonProps, onSubmit, form, setPrevi
 
   useLayoutEffect(() => {
     setPreview(
-      <WidgetPreviewContainer>
-        <LeftPlaceholder />
-        <WidgetTile
-          title={<span ref={setTitleRef}>${watchedForm.name || 'BTC'}</span>}
-          titleVariant="h700"
-          titleColor="colorText"
-          customNode={
-            <FlexBox gap={5}>
-              <Tooltip reference={titleRef} text="Token name" placement="top-start" />
-              <DetailsContent
-                avoidIconStyling
-                caption="REVENUE SHARE"
-                content={`${watchedForm.revenueShare}%`}
-                tooltipText="Revenue share allows token holders to claim part of channels earnings proportionate to their ownership of channel tokens supply. Channel owner creates time-bound revenue claiming periods, and token holders stake creator tokens they have for the duration of such period in exchange of receiving JOY tokens, thereby receive portion of channel earnings."
-                tileSize={smMatch ? 'big' : 'bigSmall'}
-                withDenomination
+      <>
+        <Shadow />
+        <WidgetPreviewContainer>
+          <LeftPlaceholder />
+          <WidgetTile
+            title={<span ref={setTitleRef}>${watchedForm.name || 'BTC'}</span>}
+            titleVariant="h700"
+            titleColor="colorText"
+            customNode={
+              <FlexBox gap={5}>
+                <Tooltip reference={titleRef} text="Token name" placement="top-start" />
+                <DetailsContent
+                  avoidIconStyling
+                  caption="REVENUE SHARE"
+                  content={`${watchedForm.revenueShare}%`}
+                  tooltipText="Revenue share allows token holders to claim part of channels earnings proportionate to their ownership of channel tokens supply. Channel owner creates time-bound revenue claiming periods, and token holders stake creator tokens they have for the duration of such period in exchange of receiving JOY tokens, thereby receive portion of channel earnings."
+                  tileSize={smMatch ? 'big' : 'bigSmall'}
+                  withDenomination
+                />
+                <DetailsContent
+                  avoidIconStyling
+                  caption="CREATOR REWARD"
+                  content={`${watchedForm.creatorReward}%`}
+                  tooltipText="Percentage of total supply that gets automatically minted and added to the channel account. It acts like channel inflation per year and high number here decreases the value of existing tokens. From token holder perspective 5% would mean that in 5 years a holder of 100 tokens has  its value similar to 78 tokens now, so a reduction in value of 28%."
+                  tileSize={smMatch ? 'big' : 'bigSmall'}
+                  withDenomination
+                />
+              </FlexBox>
+            }
+          />
+          <BottomPlaceholder>
+            <svg xmlns="http://www.w3.org/2000/svg" width="371" height="163" viewBox="0 0 371 163" fill="none">
+              <path
+                d="M0 41C0 34.3726 5.37258 29 12 29C18.6274 29 24 34.3726 24 41C24 47.6274 18.6274 53 12 53C5.37258 53 0 47.6274 0 41Z"
+                fill="#181C20"
               />
-              <DetailsContent
-                avoidIconStyling
-                caption="CREATOR REWARD"
-                content={`${watchedForm.creatorReward}%`}
-                tooltipText="Percentage of total supply that gets automatically minted and added to the channel account. It acts like channel inflation per year and high number here decreases the value of existing tokens. From token holder perspective 5% would mean that in 5 years a holder of 100 tokens has  its value similar to 78 tokens now, so a reduction in value of 28%."
-                tileSize={smMatch ? 'big' : 'bigSmall'}
-                withDenomination
-              />
-            </FlexBox>
-          }
-        />
-        <BottomPlaceholder>
-          <svg xmlns="http://www.w3.org/2000/svg" width="371" height="163" viewBox="0 0 371 163" fill="none">
-            <path
-              d="M0 41C0 34.3726 5.37258 29 12 29C18.6274 29 24 34.3726 24 41C24 47.6274 18.6274 53 12 53C5.37258 53 0 47.6274 0 41Z"
-              fill="#181C20"
-            />
-            <path d="M0 0H91V16H0V0Z" fill="#181C20" />
-            <path d="M0 69H49V85H0V69Z" fill="#181C20" />
-            <path d="M36 25H147V57H36V25Z" fill="#181C20" />
-            <path d="M0 109H371V163H0V109Z" fill="#14171B" />
-          </svg>
-        </BottomPlaceholder>
-      </WidgetPreviewContainer>
+              <path d="M0 0H91V16H0V0Z" fill="#181C20" />
+              <path d="M0 69H49V85H0V69Z" fill="#181C20" />
+              <path d="M36 25H147V57H36V25Z" fill="#181C20" />
+              <path d="M0 109H371V163H0V109Z" fill="#14171B" />
+            </svg>
+          </BottomPlaceholder>
+        </WidgetPreviewContainer>
+      </>
     )
   }, [setPreview, smMatch, titleRef, watchedForm.creatorReward, watchedForm.name, watchedForm.revenueShare])
 
