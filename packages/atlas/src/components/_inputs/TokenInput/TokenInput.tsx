@@ -8,13 +8,14 @@ import { useTokenPrice } from '@/providers/joystream'
 
 export type TokenInputProps = {
   value: number | null | undefined
+  maxValue?: number
   onChange: (value: number | null) => void
 } & Omit<InputProps, 'value' | 'onChange'>
 
 const MAX_LENGTH = 15
 
 const _TokenInput: ForwardRefRenderFunction<HTMLInputElement, TokenInputProps> = (
-  { value, onChange, nodeEnd, nodeStart, ...rest },
+  { value, onChange, nodeEnd, nodeStart, maxValue, ...rest },
   ref
 ) => {
   const valueBN = value && tokenNumberToHapiBn(value)
@@ -50,7 +51,7 @@ const _TokenInput: ForwardRefRenderFunction<HTMLInputElement, TokenInputProps> =
         const valueStr = event.target.value
         const valueNum = event.target.valueAsNumber
 
-        if (valueStr.length < MAX_LENGTH) {
+        if (valueStr.length < MAX_LENGTH && (valueNum || 0) <= (maxValue || Number.MAX_SAFE_INTEGER)) {
           setInternalValue(valueStr)
           onChange(valueNum)
         }

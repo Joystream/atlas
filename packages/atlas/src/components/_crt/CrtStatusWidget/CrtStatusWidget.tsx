@@ -48,7 +48,7 @@ export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({ token }) => {
     <Widget
       title={status === 'inactive' ? 'Status' : ''}
       customNode={
-        <>
+        <FlexBox width="100%" flow="column" gap={4}>
           {status === 'inactive' ? <InactiveDetails /> : status === 'market' ? <MarketDetails token={token} /> : null}
 
           <StatisticsContainer>
@@ -99,7 +99,7 @@ export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({ token }) => {
               />
             </Drawer>
           </StatisticsContainer>
-        </>
+        </FlexBox>
       }
     />
   )

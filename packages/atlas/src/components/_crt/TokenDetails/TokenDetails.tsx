@@ -58,7 +58,13 @@ export const TokenDetails = ({ about, videoId, benefits }: TokenDetailsProps) =>
       {!loading ? (
         video ? (
           <VideoBox>
-            <VideoPlayer videoId={videoId} hideEndOverlay isMinimized={false} videoUrls={video?.media?.resolvedUrls} />
+            <VideoPlayer
+              videoId={videoId}
+              hideEndOverlay
+              isMinimized={false}
+              videoUrls={video?.media?.resolvedUrls}
+              posterUrls={video?.thumbnailPhoto?.resolvedUrls}
+            />
           </VideoBox>
         ) : null
       ) : (

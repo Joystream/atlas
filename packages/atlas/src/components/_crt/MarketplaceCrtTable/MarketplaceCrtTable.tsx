@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { useMemo } from 'react'
+import { useNavigate } from 'react-router'
 
 import { TokenStatus } from '@/api/queries/__generated__/baseTypes.generated'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
@@ -8,6 +9,7 @@ import { Table, TableProps } from '@/components/Table'
 import { ColumnBox } from '@/components/Table/Table.styles'
 import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { absoluteRoutes } from '@/config/routes'
 import { cVar } from '@/styles'
 import { pluralizeNoun } from '@/utils/misc'
 import { formatDate } from '@/utils/time'
@@ -53,9 +55,16 @@ export type MarketplaceCrtTableProps = {
   data: MarketplaceToken[]
   isLoading: boolean
   emptyState?: TableProps['emptyState']
-}
+} & Pick<TableProps, 'pagination' | 'pageSize'>
 
-export const MarketplaceCrtTable = ({ data, emptyState, isLoading }: MarketplaceCrtTableProps) => {
+export const MarketplaceCrtTable = ({
+  data,
+  emptyState,
+  isLoading,
+  pagination,
+  pageSize,
+}: MarketplaceCrtTableProps) => {
+  const navigate = useNavigate()
   const mappingData = useMemo(() => {
     return data.map((row) => ({
       token: <TokenInfo {...row} />,
@@ -90,16 +99,20 @@ export const MarketplaceCrtTable = ({ data, emptyState, isLoading }: Marketplace
       ),
     }))
   }, [data])
-  // todo add pagination after qa-v6 is merged
+
   return (
     <>
       <StyledTable
+        onRowClick={(rowIdx) => {
+          navigate(absoluteRoutes.viewer.channel(data[rowIdx].channelId, { tab: 'Token' }))
+        }}
         minWidth={730}
         isEmpty={!mappingData.length}
         columns={COLUMNS}
         data={isLoading ? tableLoadingData : mappingData}
         emptyState={emptyState}
-        pageSize={10}
+        pageSize={pageSize}
+        pagination={pagination}
       />
     </>
   )

@@ -1,15 +1,19 @@
 import { useMemo } from 'react'
+import { useParams } from 'react-router-dom'
 
 import { useGetFullCreatorTokenQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { getTokenDetails } from '@/components/CrtPreviewLayout'
+import { EmptyFallback } from '@/components/EmptyFallback'
 import { FlexBox } from '@/components/FlexBox'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
+import { Button } from '@/components/_buttons/Button'
 import { CrtBasicInfoWidget } from '@/components/_crt/CrtBasicInfoWidget'
 import { CrtStatusWidget } from '@/components/_crt/CrtStatusWidget'
 import { HoldersWidget } from '@/components/_crt/HoldersWidget'
 import { RevenueShareStateWidget } from '@/components/_crt/RevenueShareStateWidget'
 import { TokenDetails } from '@/components/_crt/TokenDetails/TokenDetails'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useUser } from '@/providers/user/user.hooks'
 
@@ -21,12 +25,15 @@ type ChannelTokenProps = {
 
 export const ChannelToken = ({ tokenId, memberId, cumulativeRevenue }: ChannelTokenProps) => {
   const lgMatch = useMediaMatch('lg')
+  const { id } = useParams()
   const { isLoggedIn } = useUser()
   const { data, loading: loadingToken } = useGetFullCreatorTokenQuery({
     variables: {
       id: tokenId ?? '',
     },
   })
+  const { activeMembership, setActiveChannel } = useUser()
+  const isChannelOwner = activeMembership?.channels.some((channel) => channel.id === id)
 
   const basicDetails = useMemo(() => {
     if (data?.creatorTokenById) {
@@ -37,6 +44,26 @@ export const ChannelToken = ({ tokenId, memberId, cumulativeRevenue }: ChannelTo
 
   const { creatorTokenById: token } = data ?? {}
   const activeRevenueShare = token?.revenueShares.find((revenueShare) => !revenueShare.finalized)
+
+  if (!data?.creatorTokenById && !loadingToken) {
+    return (
+      <EmptyFallback
+        title="No token created"
+        subtitle="Create your own token and share it with your viewers!"
+        button={
+          <Button
+            variant="secondary"
+            onClick={() => (isChannelOwner ? setActiveChannel(id as string) : undefined)}
+            to={absoluteRoutes.studio.crt()}
+            size="large"
+          >
+            Create own token
+          </Button>
+        }
+        variant="large"
+      />
+    )
+  }
 
   return (
     <LayoutGrid>

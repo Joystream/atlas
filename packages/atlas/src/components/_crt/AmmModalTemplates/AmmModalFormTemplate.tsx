@@ -20,6 +20,7 @@ type AmmModalFormTemplateProps = {
     tooltipText?: string
   }[]
   error?: string
+  showTresholdButtons?: boolean
 }
 
 export const AmmModalFormTemplate = ({
@@ -29,6 +30,7 @@ export const AmmModalFormTemplate = ({
   details,
   control,
   error,
+  showTresholdButtons,
 }: AmmModalFormTemplateProps) => {
   const { convertTokensToUSD } = useTokenPrice()
 
@@ -42,40 +44,42 @@ export const AmmModalFormTemplate = ({
             ...(validation ? { valid: validation } : {}),
           },
         }}
-        render={({ field }) => (
-          <FlexBox gap={2} flow="column" width="100%">
-            <FormField error={error}>
-              <TokenInput
-                value={field.value}
-                onChange={(value) => field.onChange(Math.round(value ?? 0))}
-                placeholder="0"
-                nodeEnd={
-                  pricePerUnit ? (
-                    <Text variant="t300" as="p" color="colorTextMuted">
-                      ${convertTokensToUSD((field.value || 0) * pricePerUnit)?.toFixed(2)}
-                    </Text>
-                  ) : null
-                }
-              />
-            </FormField>
-            {typeof maxValue === 'number' ? (
-              <FlexBox gap={2} width="100%" equalChildren>
-                <Button size="small" variant="secondary" onClick={() => field.onChange(Math.round(maxValue * 0.25))}>
-                  25%
-                </Button>
-                <Button size="small" variant="secondary" onClick={() => field.onChange(Math.round(maxValue * 0.5))}>
-                  50%
-                </Button>
-                <Button size="small" variant="secondary" onClick={() => field.onChange(Math.round(maxValue * 0.75))}>
-                  75%
-                </Button>
-                <Button size="small" variant="secondary" onClick={() => field.onChange(maxValue)}>
-                  100%
-                </Button>
-              </FlexBox>
-            ) : null}
-          </FlexBox>
-        )}
+        render={({ field }) => {
+          return (
+            <FlexBox gap={2} flow="column" width="100%">
+              <FormField error={error}>
+                <TokenInput
+                  value={field.value}
+                  onChange={(value) => field.onChange(value ? Math.round(value) : value)}
+                  placeholder="0"
+                  nodeEnd={
+                    pricePerUnit ? (
+                      <Text variant="t300" as="p" color="colorTextMuted">
+                        ${convertTokensToUSD((field.value || 0) * pricePerUnit)?.toFixed(2)}
+                      </Text>
+                    ) : null
+                  }
+                />
+              </FormField>
+              {showTresholdButtons && typeof maxValue === 'number' ? (
+                <FlexBox gap={2} width="100%" equalChildren>
+                  <Button size="small" variant="secondary" onClick={() => field.onChange(Math.round(maxValue * 0.25))}>
+                    25%
+                  </Button>
+                  <Button size="small" variant="secondary" onClick={() => field.onChange(Math.round(maxValue * 0.5))}>
+                    50%
+                  </Button>
+                  <Button size="small" variant="secondary" onClick={() => field.onChange(Math.round(maxValue * 0.75))}>
+                    75%
+                  </Button>
+                  <Button size="small" variant="secondary" onClick={() => field.onChange(maxValue)}>
+                    100%
+                  </Button>
+                </FlexBox>
+              ) : null}
+            </FlexBox>
+          )
+        }}
       />
 
       <FlexBox flow="column" gap={2}>

@@ -44,7 +44,7 @@ export const getTokenDetails = (token: FullCreatorTokenFragment, cumulativeReven
       caption: 'TOTAL REV.',
       content: new BN(cumulativeRevenue),
       icon: <JoyTokenIcon size={16} variant="silver" />,
-      tooltipText: 'Total revenue this channel made from DAO earnings, NFT sales and royalties.',
+      tooltipText: 'Total cumulative revenue of this channel on Joystream to date.',
       withDenomination: true,
     })
 
@@ -52,24 +52,22 @@ export const getTokenDetails = (token: FullCreatorTokenFragment, cumulativeReven
     details.push({
       caption: 'REV. SHARE',
       content: `${permillToPercentage(token.revenueShareRatioPermill)}%`,
-      tooltipText: `This is a percentage of revenue that creator claims after each revenue share - Holders: ${permillToPercentage(
-        token.revenueShareRatioPermill
-      )}%, Channel: ${100 - permillToPercentage(token.revenueShareRatioPermill)}%.`,
+      tooltipText: `Percentage of the future revenue that channel shares with token holders. Each token holder can claim amount of revenue proportionate to their ownership of the channel tokens supply.`,
     })
 
   if (token.annualCreatorRewardPermill)
     details.push({
-      caption: 'AN. REWARD',
+      caption: 'INFLATION',
       content: `${permillToPercentage(token.annualCreatorRewardPermill)}%`,
       tooltipText:
-        'This is how much creator will be earning annually from their tokens in % terms from the total supply.',
+        'This percentage of the token supply gets minted every year and paid to creator for channel management.',
     })
 
   if (token.totalSupply)
     details.push({
       caption: 'TOTAL SUPPLY',
       content: +token.totalSupply,
-      tooltipText: `This is a total supply of all $${token.symbol} tokens owned by token holders. `,
+      tooltipText: `Total amount of tokens owned by all holders.`,
       withToken: true,
       customTicker: `$${token.symbol}`,
     })

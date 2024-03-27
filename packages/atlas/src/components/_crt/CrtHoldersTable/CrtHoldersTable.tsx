@@ -84,7 +84,7 @@ export const CrtHoldersTable = ({
   return (
     <StyledTable
       onRowClick={(rowIdx) => {
-        navigate(absoluteRoutes.viewer.member(data[rowIdx].memberId))
+        navigate(absoluteRoutes.viewer.memberById(data[rowIdx].memberId))
       }}
       columns={COLUMNS}
       data={isLoading ? tableLoadingData : mappedData}
