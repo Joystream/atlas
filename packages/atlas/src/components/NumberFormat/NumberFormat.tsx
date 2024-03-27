@@ -15,7 +15,7 @@ import { Tooltip } from '../Tooltip'
 
 export type NumberFormatProps = {
   value: BN | number
-  format?: 'full' | 'short' | 'dollar'
+  format?: 'full' | 'short' | 'dollar' | 'smallDecimal'
   withTooltip?: boolean
   withToken?: boolean | 'small'
   children?: never
@@ -55,7 +55,7 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
     const { convertTokensToUSD } = useTokenPrice()
     const internalValue = BN.isBN(value) ? hapiBnToTokenNumber(value) : value
     const fiatValue = convertTokensToUSD(
-      denominationMultiplier ? denominationMultiplier * internalValue : internalValue
+      denominationMultiplier !== undefined ? denominationMultiplier * internalValue : internalValue
     )
     const textRef = useRef<HTMLHeadingElement>(null)
     const denominationRef = useRef<HTMLHeadingElement>(null)
@@ -68,6 +68,10 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
         formattedValue = internalValue ? (internalValue > 0.01 ? formatNumberShort(internalValue) : `<0.01`) : 0
         formattedDenominatedValue = fiatValue ? (fiatValue > 0.01 ? formatNumberShort(fiatValue) : `<$0.01`) : 0
         tooltipText = formatSmallDecimal(internalValue)
+        break
+      case 'smallDecimal':
+        formattedValue = internalValue ? formatSmallDecimal(internalValue) : 0
+        formattedDenominatedValue = fiatValue ? formatSmallDecimal(fiatValue) : 0
         break
       case 'full':
         formattedValue = tooltipText = formatNumber(internalValue)

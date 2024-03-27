@@ -28,6 +28,7 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { absoluteRoutes } from '@/config/routes'
 import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
+import { usePagination } from '@/views/viewer/ChannelView/ChannelView.hooks'
 
 export const tableLoadingData = Array.from({ length: 5 }, () => ({
   token: (
@@ -72,12 +73,14 @@ export type CrtPortfolioTableProps = {
 }
 
 export const CrtPortfolioTable = ({ data, emptyState, isLoading }: CrtPortfolioTableProps) => {
+  const { currentPage, setCurrentPage } = usePagination(0)
+  const [perPage, setPerPage] = useState(10)
   const [showBuyModal, setShowBuyModal] = useState(false)
   const [showSellModal, setShowSellModal] = useState(false)
   const [tokenId, setTokenId] = useState<string | null>(null)
 
   const mappingData = useMemo(() => {
-    return data.map((row) => ({
+    return [...data].slice(currentPage * perPage, currentPage * perPage + perPage).map((row) => ({
       token: <TokenInfo {...row} />,
       status: <CrtStatus status={row.status} />,
       transferable: (
@@ -115,7 +118,7 @@ export const CrtPortfolioTable = ({ data, emptyState, isLoading }: CrtPortfolioT
         />
       ),
     }))
-  }, [data])
+  }, [currentPage, data, perPage])
 
   return (
     <>
@@ -123,10 +126,19 @@ export const CrtPortfolioTable = ({ data, emptyState, isLoading }: CrtPortfolioT
       {tokenId && <SellTokenModal tokenId={tokenId} show={showSellModal} onClose={() => setShowSellModal(false)} />}
       <StyledTable
         minWidth={730}
-        isEmpty={!mappingData.length}
+        isEmpty={!data.length}
+        /*todo add pagination*/
+        pageSize={data.length || undefined}
         columns={COLUMNS}
         data={isLoading ? tableLoadingData : mappingData}
         emptyState={emptyState}
+        pagination={{
+          setPerPage,
+          totalCount: data.length,
+          itemsPerPage: perPage,
+          page: currentPage,
+          onChangePage: setCurrentPage,
+        }}
       />
     </>
   )

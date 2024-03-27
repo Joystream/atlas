@@ -2,15 +2,16 @@ import { useMemo } from 'react'
 
 import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { useGetMembershipsQuery } from '@/api/queries/__generated__/memberships.generated'
-import { SvgActionChevronR, SvgActionRevenueShare } from '@/assets/icons'
+import { SvgActionChevronR } from '@/assets/icons'
 import { SvgRevenueSharePlaceholder } from '@/assets/illustrations'
 import { Avatar } from '@/components/Avatar'
 import { FlexBox } from '@/components/FlexBox'
 import { Text } from '@/components/Text'
 import { TextTimer } from '@/components/TextTimer/TextTimer'
-import { Button, TextButton } from '@/components/_buttons/Button'
+import { TextButton } from '@/components/_buttons/Button'
 import { CloseRevenueShareButton } from '@/components/_crt/CloseRevenueShareButton'
 import { Widget } from '@/components/_crt/CrtStatusWidget/CrtStatusWidget.styles'
+import { RevenueShareModalButton } from '@/components/_crt/RevenueShareModalButton'
 import { RevenueShareProgress } from '@/components/_crt/RevenueShareParticipationWidget/RevenueShareParticipationWidget'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
@@ -83,7 +84,7 @@ export const CrtRevenueShareWidget = ({ token, onTabSwitch }: CrtHoldersWidgetPr
                 REVENUE SHARE RATIO
               </Text>
               <Text variant="h400" as="p">
-                Channel {permillToPercentage(token.revenueShareRatioPermill)}%, Holders{' '}
+                Holders {permillToPercentage(token.revenueShareRatioPermill)}%, Channel{' '}
                 {100 - permillToPercentage(token.revenueShareRatioPermill)}%
               </Text>
             </FlexBox>
@@ -112,7 +113,7 @@ export const CrtRevenueShareWidget = ({ token, onTabSwitch }: CrtHoldersWidgetPr
           </FlexBox>
 
           {status === 'inactive' || !activeRevenueShare ? (
-            <EmptyState />
+            <EmptyState token={token} />
           ) : (
             <RevenueShareProgress token={token} revenueShare={activeRevenueShare} hasEnded={status === 'past'} />
           )}
@@ -128,16 +129,14 @@ export const CrtRevenueShareWidget = ({ token, onTabSwitch }: CrtHoldersWidgetPr
   )
 }
 
-const EmptyState = () => {
+const EmptyState = ({ token }: { token: FullCreatorTokenFragment }) => {
   return (
     <EmptyStateBox justifyContent="center" alignItems="center" flow="column">
       <SvgRevenueSharePlaceholder />
       <Text variant="t200" as="p" color="colorText" margin={{ top: 6, bottom: 2 }}>
         There is no ongoing share of revenue. Click start revenue share to withdraw your share and get your tokens.
       </Text>
-      <Button variant="secondary" icon={<SvgActionRevenueShare />}>
-        Start revenue share
-      </Button>
+      <RevenueShareModalButton variant="secondary" token={token} />
     </EmptyStateBox>
   )
 }

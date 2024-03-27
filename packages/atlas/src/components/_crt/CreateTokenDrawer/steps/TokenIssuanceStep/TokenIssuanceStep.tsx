@@ -34,8 +34,8 @@ import { PreviewContainer, TooltipBox } from '../styles'
 const cliffBanner = (
   <Banner
     icon={<SvgAlertsInformative24 />}
-    title="You will not be able to start a sale before the cliff ends"
-    description="On sale you can sell your own preminted tokens for your own price and receive revenue right after the sale. By putting your tokens under the cliff you won’t be able to use sale until cliff ends. "
+    title="You will not be able to start a sale before the locked period ends"
+    description="On sale you can sell your own preminted tokens for your own price and receive revenue right after the sale. By putting your tokens under the locked period you won’t be able to use sale until it ends. "
     // actionButton={{
     //   text: 'Learn more',
     //   _textOnly: true,
@@ -93,16 +93,14 @@ export const TokenIssuanceStep = ({
 
   const getAssuranceDetails = () => {
     switch (assuranceType) {
-      case 'secure':
-        return cliffBanner
       case 'custom':
         return (
           <>
             <FormField
-              label="Cliff"
-              description="Cliff is a period of time that locks your token from being able to sell or transfer."
+              label="Fully locked period"
+              description="During this time tokens from initial allocation cannot be sold or transferred."
               tooltip={{
-                text: 'If you want to obtain extra security during first few weeks or months from minting your tokens, you may choose to set up a longer cliff. Some choose to focus on the marketing campaign and build up the momentum before tokens get unlocked and can be sold to the audience.',
+                text: 'This signals to your investors that they can be 100% sure the token price on the market during this period will be exclusively impacted by market conditions. This is a strong signal of integrity.',
               }}
               error={errors.cliff?.message}
             >
@@ -115,9 +113,9 @@ export const TokenIssuanceStep = ({
             {customCliff && customCliff !== '0' ? cliffBanner : null}
             <FormField
               label="Vesting period"
-              description="All tokens minted that are not part of the first payout get unlocked gradually over the course of the vesting period. Vesting period starts after the cliff has passed."
+              description="Period during all minted tokens get fully unlocked."
               tooltip={{
-                text: 'Do you want your tokens to be gradually available for you to sell, sending the signal to your audience that this project is aimed on long term success? Then choose longer vesting.',
+                text: 'Longer vesting periods signal longer term intentions and prevent from making mistakes with tokens pricing and transfers.',
               }}
               error={errors.vesting?.message}
             >
@@ -130,9 +128,9 @@ export const TokenIssuanceStep = ({
             {customVesting && customVesting !== '0' ? (
               <FormField
                 label="First payout"
-                description="A portion of your own tokens that will be released to you right after cliff period."
+                description="A portion of your tokens that will be available for trading after locked period expires."
                 tooltip={{
-                  text: 'Do you want to send the signal to your token buyers that only a portion of all created tokens is possible to get sold and the rest will get unlocked over time, signalling about long term goals of your project? Then we advise you to choose amount less than 50% here.',
+                  text: 'We suggest to choose a value less than 50%.',
                 }}
                 error={errors.firstPayout?.message}
               >
@@ -188,10 +186,10 @@ export const TokenIssuanceStep = ({
       <PreviewContainer>
         <FlexBox gap={2} flow="column">
           <Text variant="h100" as="h1">
-            How your tokens will unlock over time
+            Tokens unlock schedule preview
           </Text>
           <Text variant="t200" as="p" color="colorTextMuted">
-            You will get a part of your tokens now and get full amount by the end of the vesting duration.
+            Hover over the chart to see how many tokens will get unlocked at any time in the future.
           </Text>
         </FlexBox>
         <div className="chart-box">
@@ -227,6 +225,11 @@ export const TokenIssuanceStep = ({
               format: (tick) => `${tick}%`,
             }}
             gridYValues={[0, 25, 50, 75, 100]}
+            axisBottom={{
+              tickSize: 5,
+              tickPadding: 5,
+              format: (tick) => (tick.slice(0, -1) % 2 === 0 ? tick : ''),
+            }}
             data={[
               {
                 id: 1,
@@ -242,13 +245,30 @@ export const TokenIssuanceStep = ({
 
   return (
     <CrtFormWrapper
-      title="Token issuance"
+      title="Token Initial Supply"
       learnMoreLink=""
-      subtitle="At this stage you can issue as many tokens as you want. The more tokens you have in circulation, the less each individual token sold or purchased will impact the token's price if sold on public market."
+      subtitle="Choose number of tokens minted for your channel right away and their unlocking period."
     >
       <FormField
-        label="Tokens issued to your wallet"
-        description="Decide how many tokens you want to create for yourself. This amount cannot be changed later. You will be able to sell these tokens to your audience directly or enable a public sale, where others can mint more of your channel tokens in exchange for JOYs."
+        label="Channel tokens initial supply"
+        description="Define how many tokens tokens to mint right away for your channel. Implications of this choice are explained in the tooltip."
+        tooltip={{
+          text: `
+Low Supply (3k):
+
+- Higher value per token due to scarcity.
+- Attracts investors seeking exclusivity.
+- Could lead to lower liquidity (harder to buy/sell).
+- Potential for price appreciation as demand grows
+
+High Supply (100k):
+
+- Lower value per token due to abundance.
+- More accessible to a broader investor base.
+- Supports a more active and inclusive market.
+- Lesser impact on token value from new issuances or rewards.
+        `,
+        }}
         error={errors.creatorIssueAmount?.message}
       >
         <Controller
@@ -268,8 +288,8 @@ export const TokenIssuanceStep = ({
         />
       </FormField>
       <FormField
-        label="Token assurances"
-        description="Add cliff & vesting for your own tokens to make your followers feel more secure when investing in your channel."
+        label="Tokens unlock schedule"
+        description="Tokens unlock schedule shows what % of the tokens can be transferred or sold on the market over time. Click through the options to see them on the preview chart."
         tooltip={{
           text:
             'Different options presented below correspond to different level of token safety projected to your potential buyers. ' +

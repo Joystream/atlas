@@ -54,7 +54,6 @@ export type CrtMainInfoProps = {
 
 export const CrtMainInfo = ({
   name,
-  description,
   avatar,
   symbol,
   accountsNum,
@@ -86,16 +85,6 @@ export const CrtMainInfo = ({
           {pluralizeNoun(accountsNum ?? 0, 'holder')}
         </Text>
       </FlexBox>
-      <Text
-        className="description-text"
-        variant={isSmall ? 't100' : 't200'}
-        as="h3"
-        margin={{ top: 4 }}
-        color="colorText"
-        clampAfterLine={3}
-      >
-        {description}
-      </Text>
     </TopSection>
   )
 }

@@ -104,15 +104,15 @@ export const MarketDrawer = ({ show, onClose, tokenId }: CrtMarketSaleViewProps)
   const successDetails = useMemo(
     () => [
       {
-        text: 'You can buy and sell your own tokens on the token market too!',
+        text: 'The more buyers you have had, the higher will be the profit when you are closing the market.',
         icon: <SvgActionMarket />,
       },
       {
-        text: 'You don’t earn any royalties from the transactions of other members on the market.',
+        text: "You are no earning royalties from other people's transactions on your token.",
         icon: <SvgActionWarning />,
       },
       {
-        text: 'Members can now buy and sale your tokens on your token page. Share the link to the market with them to let everyone know about it.',
+        text: 'Share the link to the token page  with an open market so people can go and buy your token.',
         icon: <SvgActionShoppingCart />,
         actionNode: (
           <TextButton

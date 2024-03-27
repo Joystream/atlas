@@ -7,7 +7,6 @@ import { Controller, useForm } from 'react-hook-form'
 import { useGetFullCreatorTokenLazyQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgActionClock, SvgActionCreatorToken, SvgActionLinkUrl, SvgActionPayment } from '@/assets/icons'
-import { Banner } from '@/components/Banner'
 import { FlexBox } from '@/components/FlexBox/FlexBox'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
@@ -228,14 +227,14 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
         content: (
           <FlexBox alignItems="baseline" width="fit-content">
             <NumberFormat
-              value={channelBalance?.muln(1 - patronageRate) ?? 0}
+              value={channelBalance?.muln(patronageRate) ?? 0}
               as="p"
               variant="t200"
               withToken
               withDenomination="before"
             />
             <Text variant="t200" as="p">
-              ({Math.round((1 - patronageRate) * 100)}%)
+              ({Math.round(patronageRate * 100)}%)
             </Text>
           </FlexBox>
         ),
@@ -251,14 +250,14 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
         content: (
           <FlexBox alignItems="baseline" width="fit-content">
             <NumberFormat
-              value={channelBalance?.muln(patronageRate) ?? 0}
+              value={channelBalance?.muln(1 - patronageRate) ?? 0}
               as="p"
               variant="h300"
               withToken
               withDenomination="before"
             />
             <Text variant="t200" as="p">
-              ({Math.round(patronageRate * 100)}%)
+              ({Math.round((1 - patronageRate) * 100)}%)
             </Text>
           </FlexBox>
         ),
@@ -379,10 +378,6 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
               )}
             />
           </FlexBox>
-          <Banner
-            title="All tokens will be shared"
-            description="The only way to do the revenue share right now is to share all of your available balance."
-          />
           <FlexBox flow="column" gap={2}>
             {details.map((row) => (
               <FlexBox key={row.title} alignItems="center" justifyContent="space-between">

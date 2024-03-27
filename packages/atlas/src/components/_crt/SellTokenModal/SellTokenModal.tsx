@@ -45,7 +45,8 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
   })
   const client = useApolloClient()
 
-  const currentAmm = data?.creatorTokenById?.ammCurves.find((amm) => !amm.finalized)
+  const currentAmm = data?.creatorTokenById?.currentAmmSale
+  const ammBalance = currentAmm ? +currentAmm.mintedByAmm - +currentAmm.burnedByAmm : 0
   const title = data?.creatorTokenById?.symbol ?? 'N/A'
   const { tokenBalance: userTokenBalance } = useGetTokenBalance(tokenId)
 
@@ -59,13 +60,13 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
     (amount: number) => {
       const currentAmm = data?.creatorTokenById?.ammCurves.find((amm) => !amm.finalized)
       return calcSellMarketPricePerToken(
-        currentAmm ? +currentAmm.mintedByAmm - +currentAmm.burnedByAmm : undefined,
+        currentAmm ? ammBalance : undefined,
         currentAmm?.ammSlopeParameter,
         currentAmm?.ammInitPrice,
         amount
       )
     },
-    [data?.creatorTokenById]
+    [ammBalance, data?.creatorTokenById?.ammCurves]
   )
 
   const priceForAllToken = useMemo(() => {
@@ -257,15 +258,15 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
           control={control}
           error={formState.errors.tokenAmount?.message}
           pricePerUnit={pricePerUnit}
-          maxValue={Math.min(+(currentAmm?.mintedByAmm ?? 0), userTokenBalance)}
+          maxValue={Math.min(ammBalance, userTokenBalance)}
           details={formDetails}
+          showTresholdButtons
           validation={(value) => {
             if (!value || value < 1) {
-              return 'You need to sell at least one token'
+              return 'You need to sell at least one token.'
             }
-            if (value > +(currentAmm?.mintedByAmm ?? 0))
-              return 'You cannot sell more tokens than available in the market'
-            if (value > userTokenBalance) return 'Amount exceeds your account balance'
+            if (value > ammBalance) return `There is only ${ammBalance} $${title} available in the market.`
+            if (value > userTokenBalance) return `Amount exceeds your account balance of ${userTokenBalance} $${title}.`
             return true
           }}
         />

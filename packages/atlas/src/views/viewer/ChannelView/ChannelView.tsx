@@ -10,6 +10,7 @@ import { SvgActionCheck, SvgActionFilters, SvgActionFlag, SvgActionMore, SvgActi
 import { ChannelTitle } from '@/components/ChannelTitle'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
+import { FlexBox } from '@/components/FlexBox'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { NumberFormat } from '@/components/NumberFormat'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
@@ -73,22 +74,7 @@ export const ChannelView: FC = () => {
   const { activeMembership, setActiveChannel } = useUser()
 
   const tilesPerPage = videoRows * tilesPerRow
-
-  // At mount set the tab from the search params
-  // This hook has to come before useRedirectMigratedContent so it doesn't messes it's navigate call
-  const initialRender = useRef(true)
-  useEffect(() => {
-    if (initialRender.current) {
-      const tabIndex = TABS.findIndex((t) => t === currentTabName)
-      if (tabIndex === -1) setSearchParams({ 'tab': 'Videos' }, { replace: true })
-      initialRender.current = false
-    }
-  })
-
-  const smMatch = useMediaMatch('sm')
-  const mdMatch = useMediaMatch('md')
   const { id } = useParams()
-  const isChannelOwner = activeMembership?.channels.some((channel) => channel.id === id)
   const {
     channel,
     activeVideosCount,
@@ -98,6 +84,25 @@ export const ChannelView: FC = () => {
     skip: !id,
     onError: (error) => SentryLogger.error('Failed to fetch channel', 'ChannelView', error, { channel: { id } }),
   })
+  const isChannelOwner = activeMembership?.channels.some((channel) => channel.id === id)
+  const filteredTabs = TABS.filter((tab) =>
+    tab === 'Token' ? !!tab && (isChannelOwner || !!channel?.creatorToken?.token.id) : !!tab
+  )
+
+  // At mount set the tab from the search params
+  // This hook has to come before useRedirectMigratedContent so it doesn't messes it's navigate call
+  const initialRender = useRef(true)
+  useEffect(() => {
+    if (initialRender.current && !loading) {
+      const tabIndex = filteredTabs.findIndex((t) => t === currentTabName)
+      if (tabIndex === -1) setSearchParams({ 'tab': 'Videos' }, { replace: true })
+      initialRender.current = false
+    }
+  })
+
+  const smMatch = useMediaMatch('sm')
+  const mdMatch = useMediaMatch('md')
+
   const {
     foundVideos,
     loadingSearch,
@@ -129,7 +134,7 @@ export const ChannelView: FC = () => {
   const { channelNftCollectors } = useChannelNftCollectors({ channelId: id || '' })
 
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(id, channel?.title)
-  const [currentTab, setCurrentTab] = useState<typeof TABS[number]>(TABS[0])
+  const [currentTab, setCurrentTab] = useState<typeof TABS[number]>(filteredTabs[0])
 
   const { url: avatarPhotoUrl } = useGetAssetUrl(channel?.avatarPhoto?.resolvedUrls, 'avatar')
 
@@ -171,17 +176,17 @@ export const ChannelView: FC = () => {
   const headTags = useHeadTags(channel?.title, channelMetaTags)
 
   const handleSetCurrentTab = async (tab: number) => {
-    if (TABS[tab] === 'Videos' && isSearching) {
+    if (filteredTabs[tab] === 'Videos' && isSearching) {
       setIsSearchingInputOpen(false)
     }
     setIsSearching(false)
     setSearchQuery('')
-    setSearchParams({ tab: TABS[tab] }, { replace: true })
+    setSearchParams({ tab: filteredTabs[tab] }, { replace: true })
   }
 
   const handleOnResizeGrid = (sizes: number[]) => setTilesPerRow(sizes.length)
 
-  const mappedTabs = TABS.filter((tab) => !!tab).map((tab) => ({ name: tab, badgeNumber: 0 }))
+  const mappedTabs = filteredTabs.map((tab) => ({ name: tab, badgeNumber: 0 }))
 
   const getChannelContent = (tab: typeof TABS[number]) => {
     switch (tab) {
@@ -334,67 +339,74 @@ export const ChannelView: FC = () => {
           {smMatch || mappedChannelNftCollectors.length === 0 ? null : (
             <CollectorsBox collectors={mappedChannelNftCollectors} maxShowedCollectors={4} />
           )}
-          <StyledButtonContainer>
-            {isChannelOwner ? (
-              <>
+          {isChannelOwner ? (
+            <StyledButtonContainer>
+              <StyledButton
+                variant="secondary"
+                onClick={() => id && setActiveChannel(id)}
+                to={absoluteRoutes.studio.myChannel()}
+              >
+                Customize channel
+              </StyledButton>
+              <StyledButton
+                variant="secondary"
+                onClick={() => id && setActiveChannel(id)}
+                to={absoluteRoutes.studio.videos()}
+              >
+                Manage videos
+              </StyledButton>
+              {!!channel?.creatorToken?.token.id && (
                 <StyledButton
                   variant="secondary"
                   onClick={() => id && setActiveChannel(id)}
-                  to={absoluteRoutes.studio.myChannel()}
+                  to={absoluteRoutes.studio.crtDashboard()}
                 >
-                  Customize channel
+                  Manage token
                 </StyledButton>
+              )}
+            </StyledButtonContainer>
+          ) : (
+            <FlexBox width="100%">
+              <ProtectedActionWrapper
+                title="You want to follow this channel?"
+                description={`Sign in to follow ${channel?.title}`}
+              >
                 <StyledButton
-                  variant="secondary"
-                  onClick={() => id && setActiveChannel(id)}
-                  to={absoluteRoutes.studio.videos()}
+                  icon={isFollowing ? <SvgActionCheck /> : <SvgActionPlus />}
+                  variant={isFollowing ? 'secondary' : 'primary'}
+                  onClick={toggleFollowing}
+                  size="large"
                 >
-                  Manage videos
+                  {isFollowing ? 'Unfollow' : 'Follow'}
                 </StyledButton>
-              </>
-            ) : (
-              <>
-                <ProtectedActionWrapper
-                  title="You want to follow this channel?"
-                  description={`Sign in to follow ${channel?.title}`}
-                >
-                  <StyledButton
-                    icon={isFollowing ? <SvgActionCheck /> : <SvgActionPlus />}
-                    variant={isFollowing ? 'secondary' : 'primary'}
-                    onClick={toggleFollowing}
-                    size="large"
-                  >
-                    {isFollowing ? 'Unfollow' : 'Follow'}
-                  </StyledButton>
-                </ProtectedActionWrapper>
-                <ContextMenu
-                  placement="bottom-end"
-                  items={[
-                    {
-                      onClick: () => setShowReportDialog(true),
-                      label: 'Report channel',
-                      nodeStart: <SvgActionFlag />,
-                    },
-                  ]}
-                  trigger={<Button icon={<SvgActionMore />} variant="tertiary" size="large" />}
-                />
-              </>
-            )}
-
-            {channel?.id && (
-              <ReportModal
-                show={showReportDialog}
-                onClose={() => setShowReportDialog(false)}
-                entityId={channel?.id}
-                type="channel"
+              </ProtectedActionWrapper>
+              <ContextMenu
+                placement="bottom-end"
+                items={[
+                  {
+                    onClick: () => setShowReportDialog(true),
+                    label: 'Report channel',
+                    nodeStart: <SvgActionFlag />,
+                  },
+                ]}
+                trigger={<Button icon={<SvgActionMore />} variant="tertiary" size="large" />}
               />
-            )}
-          </StyledButtonContainer>
+            </FlexBox>
+          )}
+
+          {channel?.id && (
+            <ReportModal
+              show={showReportDialog}
+              onClose={() => setShowReportDialog(false)}
+              entityId={channel?.id}
+              type="channel"
+            />
+          )}
         </TitleSection>
         <TabsWrapper isFiltersOpen={isFiltersOpen}>
           <TabsContainer tab={currentTab}>
             <StyledTabs
-              selected={TABS.findIndex((x) => x === currentTab)}
+              selected={filteredTabs.findIndex((x) => x === currentTab)}
               initialIndex={0}
               tabs={mappedTabs}
               onSelectTab={handleSetCurrentTab}

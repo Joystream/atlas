@@ -5,24 +5,18 @@ import { IssuanceStepForm } from '@/components/_crt/CreateTokenDrawer/CreateToke
 
 export const assuranceOptions = [
   {
-    label: 'Secure',
-    caption:
-      '6 months cliff & 1 year vesting. You won’t receive any tokens now. You will receive 50% of tokens after 6 months of cliff.',
-    value: 'secure',
-  },
-  {
-    label: 'Safe (Default)',
-    caption: 'No cliff & 6 months vesting. You will receive 50% of tokens now.',
+    label: 'Default',
+    caption: 'You will receive 25% of issued tokens now and the rest will unlock gradually over 2 years.',
     value: 'safe',
   },
   {
     label: 'Risky',
-    caption: 'No cliff & No vesting. You receive all tokens now.',
+    caption: 'You receive all tokens as unlocked right away.',
     value: 'risky',
   },
   {
     label: 'Custom',
-    caption: 'Set your own custom cliff, vesting and first payout.',
+    caption: 'Set custom locked period, vesting and first payout.',
     value: 'custom',
   },
 ]
@@ -33,23 +27,27 @@ export const vestingOptions = [
     name: 'No vesting',
   },
   {
-    value: '1',
-    name: '1 month',
-  },
-  {
-    value: '3',
-    name: '3 months',
-  },
-  {
     value: '6',
     name: '6 months',
+  },
+  {
+    value: '12',
+    name: '12 months',
+  },
+  {
+    value: '24',
+    name: '24 months',
+  },
+  {
+    value: '48',
+    name: '48 months',
   },
 ]
 
 export const cliffOptions = [
   {
     value: '0',
-    name: 'No cliff',
+    name: 'No locked period',
   },
   {
     value: '1',
@@ -72,7 +70,8 @@ export const createTokenIssuanceSchema = (tokenName: string) =>
         .number({
           required_error: `Please provide the amount of $${tokenName} you want to issue.`,
         })
-        .max(106_000, `Can’t issue more than 106 000 $${tokenName}.`),
+        .min(3_000, `Can’t issue less than 3 000 $${tokenName}.`)
+        .max(100_000, `Can’t issue more than 100 000 $${tokenName}.`),
       assuranceType: z.enum(['safe', 'risky', 'secure', 'custom']),
       cliff: z.enum(['0', '1', '3', '6']).nullable(),
       vesting: z.enum(['0', '1', '3', '6']).nullable(),
@@ -182,10 +181,8 @@ export const generateChartData = (cliffTime: number, vestingTime: number, firstP
 
 export const getDataBasedOnType = (type: IssuanceStepForm['assuranceType']): [number, number, number] | null => {
   switch (type) {
-    case 'secure':
-      return [6, 12, 50]
     case 'safe':
-      return [0, 6, 50]
+      return [0, 24, 25]
     case 'risky':
       return [0, 0, 100]
     case 'custom':

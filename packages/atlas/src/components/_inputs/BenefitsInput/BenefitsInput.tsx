@@ -48,7 +48,7 @@ export const BenefitsInput = <T extends FieldValues>({ control, name }: Benefits
         )
       })}
       <Button
-        variant="tertiary"
+        variant="secondary"
         icon={<SvgActionPlus />}
         onClick={() => append({ title: '', description: '' } as FieldArray<T, FieldArrayPath<T>>)}
       >

@@ -1,12 +1,11 @@
-import { useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
 import { FC, useCallback, useEffect, useMemo } from 'react'
 
 import { SvgAlertsInformative24 } from '@/assets/icons'
 import { ActionDialogButtonProps } from '@/components/ActionBar'
 import { FlexBox } from '@/components/FlexBox'
+import { ColumnBox } from '@/components/NonLinearProgressWidget/NonLinearProgressWidget.styles'
 import { NumberFormat } from '@/components/NumberFormat'
-import { ColumnBox } from '@/components/ProgressWidget/ProgressWidget.styles'
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
 import { HDivider } from '@/components/_crt/MarketDrawer/MarketDrawer.styles'
@@ -44,7 +43,6 @@ export const SaleSummaryStep: FC<SaleSummaryProps> = ({
   const { displaySnackbar } = useSnackbar()
   const { joystream, proxyCallback } = useJoystream()
   const { memberId, channelId } = useUser()
-  const client = useApolloClient()
   const joySlopeNumber = useMemo(
     () => calculateSlopeNumberForAmm(totalSupply, holdersRevenueShare, tokenPrice ?? 1),
     [holdersRevenueShare, tokenPrice, totalSupply]
@@ -71,7 +69,6 @@ export const SaleSummaryStep: FC<SaleSummaryProps> = ({
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).startAmm(memberId, channelId, joySlopeNumber, proxyCallback(updateStatus)),
       onTxSync: async () => {
-        client.refetchQueries({ include: 'active' })
         onSuccess()
       },
       onError: () => {
@@ -89,7 +86,6 @@ export const SaleSummaryStep: FC<SaleSummaryProps> = ({
     })
   }, [
     channelId,
-    client,
     displaySnackbar,
     handleCloseModal,
     handleTransaction,

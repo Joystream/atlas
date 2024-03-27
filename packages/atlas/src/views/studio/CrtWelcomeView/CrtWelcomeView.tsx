@@ -18,7 +18,7 @@ export const CrtWelcomeView = () => {
         headTagTitle="Creator tokens"
         title="Ready to create your channel token?"
         pageTitle="Creator tokens"
-        subtitle="Create your very own channel token, sell it on your own terms and share your success with your token holders."
+        subtitle="Convert your viewers to investors, explore new ways to engage with community and monetize your content."
         type="crt"
         buttons={[
           { children: 'Create token', size: 'large', onClick: () => setShowDrawer(true) },
@@ -26,7 +26,7 @@ export const CrtWelcomeView = () => {
             children: 'Learn more',
             size: 'large',
             variant: 'tertiary',
-            to: '',
+            to: 'https://joystream.notion.site/Creator-Tokens-afb46f9b7f7444979114fc768eddd820?pvs=4',
             _textOnly: true,
             icon: <SvgActionPlay />,
           },

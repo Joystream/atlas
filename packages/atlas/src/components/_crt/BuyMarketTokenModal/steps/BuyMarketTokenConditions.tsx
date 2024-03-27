@@ -4,26 +4,32 @@ import { useEffect, useState } from 'react'
 import { FlexBox } from '@/components/FlexBox/FlexBox'
 import { Text } from '@/components/Text'
 import { Checkbox } from '@/components/_inputs/Checkbox'
+import { atlasConfig } from '@/config'
 import { cVar, media, sizes } from '@/styles'
 
 import { CommonProps } from './types'
 
 const DETAILS = [
   {
-    title: 'Introduction',
-    content:
-      'Aliquet et mauris mi id at pulvinar. Odio augue tristique nibh vitae lorem. Id scelerisque sit malesuada id vitae turpis ipsum. Maecenas fermentum diam volutpat eget tellus interdum sit. Et porttitor rhoncus laoreet velit. Magna adipiscing pulvinar phasellus urna bibendum venenatis consequat volutpat. A netus magna in imperdiet convallis sem augue vivamus.',
+    title: '',
+    content: `These Terms and Conditions ("Terms") govern your use of the Creator Token feature on ${atlasConfig.general.appName} platform ("Platform"). By accessing or using this feature, you agree to these Terms. If you do not agree to these Terms, you may not purchase or sell any creator tokens.`,
   },
   {
-    title: 'Scope of Terms',
-    content:
-      'Etiam egestas nec quis turpis eros mattis in ac quam. Laoreet aliquam dui viverra pretium massa. Auctor diam neque blandit tincidunt nibh odio nunc non varius. Arcu viverra pretium aliquet vel nulla mi vel diam laoreet.',
+    title: 'Liability Limitation',
+    content: `- ${atlasConfig.general.appName} shall not be liable for any claims, including loss of value, arising from the minting, sale, or ownership of tokens on the platform.
+- ${atlasConfig.general.appName} shall not be liable for any disputes between creators, token holders, and the platform regarding token ownership, revenue sharing, or any other related matters.
+- Specific risks and scenarios that ${atlasConfig.general.appName} seeks to limit liability for include Joystream native token JOY value fluctuations, platform downtime, disputes over token sales, and scenarios where creators or holders get diluted above their expectations.`,
   },
   {
-    title: 'Purpose of Tokens',
-    content:
-      'Risus libero donec et venenatis. Auctor posuere purus orci habitasse aliquet. At nibh in duis est. Laoreet egestas tempor non eu. Justo pretium vulputate tellus condimentum vel sit tellus enim sed.\n' +
-      'Ultricies erat mauris cursus augue pretium tristique ullamcorper aliquam enim. Placerat eget hendrerit convallis arcu fermentum mi pretium.',
+    title: 'Dispute Resolution',
+    content: `Any disputes between creators, token holders, and ${atlasConfig.general.appName} shall be resolved through arbitration, in accordance with the rules and procedures set forth by the Joystream DAO.`,
+  },
+  {
+    title: 'General Provisions',
+    content: `- Users of ${atlasConfig.general.appName} acknowledge that the platform and services are provided "as is" and "as available" without warranties of any kind.
+- The platform is not liable or obliged to make payments and, in case of errors, will seek to provide support in reconciliation of payments but is not obliged for channel rewards.
+- In case of disputes over content quality and qualification for rewards, the platform has no liability to compensate the channels, and payouts are made at the total discretion of the ${atlasConfig.general.appName} App operator and the JS Genesis AS team.
+    `,
   },
 ]
 
@@ -51,10 +57,6 @@ export const BuyMarketTokenConditions = ({ setPrimaryButtonProps, onSubmit }: Bu
   return (
     <Container>
       <FlexBox flow="column" gap={6} style={{ position: 'relative' }}>
-        <Text variant="h400" as="h4">
-          Holders terms
-        </Text>
-
         <FlexBox flow="column" gap={2}>
           {DETAILS.map((row) => (
             <FlexBox key={row.title} flow="column">

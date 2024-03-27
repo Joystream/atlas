@@ -33,6 +33,8 @@ export const ToggleContainer = styled.div`
   }
 `
 export const StatisticsContainer = styled.div`
+  width: 100%;
+
   ::before {
     content: '';
     display: block;

@@ -141,15 +141,13 @@ export const StyledButtonContainer = styled.div`
   display: grid;
   gap: ${sizes(2)};
   align-items: center;
+  grid-template-columns: 1fr;
 
-  /* 1fr - follow button, auto - kebab menu */
-  grid-template-columns: 1fr auto;
-
-  ${media.sm} {
+  ${media.md} {
     width: auto;
     grid-column: initial;
     align-self: center;
-    grid-template-columns: auto auto;
+    grid-template-columns: auto auto auto;
   }
 `
 
