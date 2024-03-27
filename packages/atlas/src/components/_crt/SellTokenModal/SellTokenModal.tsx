@@ -263,10 +263,10 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
           showTresholdButtons
           validation={(value) => {
             if (!value || value < 1) {
-              return 'You need to sell at least one token'
+              return 'You need to sell at least one token.'
             }
-            if (value > ammBalance) return 'You cannot sell more tokens than available in the market'
-            if (value > userTokenBalance) return 'Amount exceeds your account balance'
+            if (value > ammBalance) return `There is only ${ammBalance} $${title} available in the market.`
+            if (value > userTokenBalance) return `Amount exceeds your account balance of ${userTokenBalance} $${title}.`
             return true
           }}
         />
