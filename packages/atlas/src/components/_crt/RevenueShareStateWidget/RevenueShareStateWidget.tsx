@@ -1,6 +1,7 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 
 import { GetTokenRevenueSharesQuery } from '@/api/queries/__generated__/creatorTokens.generated'
+import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgActionCalendar, SvgActionChevronR } from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox'
 import { Information } from '@/components/Information'
@@ -8,7 +9,7 @@ import { Text } from '@/components/Text'
 import { TextTimer } from '@/components/TextTimer/TextTimer'
 import { WidgetTile } from '@/components/WidgetTile'
 import { Button, TextButton } from '@/components/_buttons/Button'
-import { ClaimShareModal } from '@/components/_crt/ClaimShareModal'
+import { ClaimRevenueShareButton } from '@/components/_crt/ClaimRevenueShareButton/ClaimRevenueShareButton'
 import { absoluteRoutes } from '@/config/routes'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useUnlockTokenStake } from '@/hooks/useUnlockTokenStake'
@@ -19,7 +20,7 @@ type RevenueShareStateWidgetProps = {
   revenueShare?: GetTokenRevenueSharesQuery['revenueShares'][number]
   className?: string
   withLink?: boolean
-  tokenId?: string
+  token?: FullCreatorTokenFragment
   tokenSymbol?: string
 }
 
@@ -27,12 +28,11 @@ export const RevenueShareStateWidget = ({
   className,
   withLink,
   revenueShare,
-  tokenId,
+  token,
   tokenSymbol,
 }: RevenueShareStateWidgetProps) => {
   const { memberId } = useUser()
   const { startingAt, endsAt, stakers } = revenueShare ?? { startingAt: 0, endsAt: 0 }
-  const [openClaimShareModal, setOpenClaimShareModal] = useState(false)
   const { currentBlock } = useBlockTimeEstimation()
   const unlockStakeTx = useUnlockTokenStake()
   const memberStake = stakers?.find((stakers) => stakers.account.member.id === memberId)
@@ -57,22 +57,18 @@ export const RevenueShareStateWidget = ({
   })
 
   const memberActionNode = useMemo(() => {
-    if (!tokenId || !tokenSymbol || !memberId) {
+    if (!token || !tokenSymbol || !memberId) {
       return
     }
     switch (memberStatus) {
       case 'active':
-        return (
-          <Button fullWidth onClick={() => setOpenClaimShareModal(true)}>
-            Claim your share
-          </Button>
-        )
+        return <ClaimRevenueShareButton fullWidth token={token} />
       case 'unlock':
         return (
           <Button
             fullWidth
             onClick={() => {
-              unlockStakeTx(memberId, tokenId, tokenSymbol)
+              unlockStakeTx(memberId, token.id, tokenSymbol)
             }}
           >
             Unlock tokens
@@ -99,13 +95,10 @@ export const RevenueShareStateWidget = ({
           </FlexBox>
         )
     }
-  }, [memberId, memberStatus, tokenId, tokenSymbol, unlockStakeTx])
+  }, [memberId, memberStatus, token, tokenSymbol, unlockStakeTx])
 
   return (
     <>
-      {openClaimShareModal && (
-        <ClaimShareModal onClose={() => setOpenClaimShareModal(false)} show={openClaimShareModal} tokenId={tokenId} />
-      )}
       <WidgetTile
         className={className}
         title={

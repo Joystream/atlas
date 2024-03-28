@@ -10,6 +10,7 @@ import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
 import { Button } from '@/components/_buttons/Button'
+import { ClaimRevenueShareButton } from '@/components/_crt/ClaimRevenueShareButton/ClaimRevenueShareButton'
 import { absoluteRoutes } from '@/config/routes'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useJoystream } from '@/providers/joystream'
@@ -25,14 +26,9 @@ import { formatNumber } from '@/utils/number'
 export type RevenueShareParticipationWidgetProps = {
   revenueShare: FullCreatorTokenFragment['revenueShares'][number]
   token: FullCreatorTokenFragment
-  onClaimShare: () => void
 }
 
-export const RevenueShareParticipationWidget = ({
-  revenueShare,
-  onClaimShare,
-  token,
-}: RevenueShareParticipationWidgetProps) => {
+export const RevenueShareParticipationWidget = ({ revenueShare, token }: RevenueShareParticipationWidgetProps) => {
   const { memberId } = useUser()
   const { currentBlock } = useJoystreamStore()
   const hasEnded = revenueShare.endsAt < currentBlock
@@ -98,9 +94,10 @@ export const RevenueShareParticipationWidget = ({
     switch (status) {
       case 'active':
         return (
-          <Button size="small" variant="secondary" onClick={onClaimShare}>
-            Stake your tokens
-          </Button>
+          // <Button size="small" variant="secondary" onClick={onClaimShare}>
+          //   Stake your tokens
+          // </Button>
+          <ClaimRevenueShareButton token={token} size="small" variant="secondary" />
         )
       case 'unlock':
         return (

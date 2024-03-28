@@ -111,7 +111,7 @@ export const ChannelToken = ({ tokenId, memberId, cumulativeRevenue }: ChannelTo
               <RevenueShareStateWidget
                 withLink={isLoggedIn}
                 revenueShare={activeRevenueShare}
-                tokenId={token?.id}
+                token={token ?? undefined}
                 tokenSymbol={token?.symbol ?? 'N/A'}
               />
             )
