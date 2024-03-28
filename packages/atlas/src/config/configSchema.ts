@@ -122,6 +122,14 @@ export const configSchema = z.object({
       avatarServiceUrl: z.string(),
       hcaptchaSiteKey: z.string().nullable(),
     }),
+    walletConnect: z.object({
+      walletConnectProjectId: z.string().nullable(),
+      metadata: z.object({
+        name: z.string().nullable(),
+        description: z.string().nullable(),
+        icons: z.array(z.string()).nullable(),
+      }),
+    }),
     playback: z.object({ playbackRates: z.array(z.number()) }),
     comments: z.object({
       reactions: z.array(z.object({ id: z.number(), emoji: z.string(), name: z.string() })),

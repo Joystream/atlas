@@ -5,11 +5,17 @@ import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffec
 import { atlasConfig } from '@/config'
 import { JoystreamContext, JoystreamContextValue } from '@/providers/joystream/joystream.provider'
 import { useWalletStore } from '@/providers/wallet/wallet.store'
-import { SignerWalletAccount, WalletContextValue } from '@/providers/wallet/wallet.types'
+import {
+  SignerWalletAccount,
+  WCWallet,
+  WalletContextValue,
+  isWalletConnectWallet,
+} from '@/providers/wallet/wallet.types'
 import { formatJoystreamAddress } from '@/utils/address'
-import { SentryLogger } from '@/utils/logs'
+import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { retryWalletPromise } from '@/utils/misc'
 
+import { WalletConnectConfiguration, WalletConnectWallet } from './tmpwallet'
 import { filterUnsupportedAccounts, getWalletsList } from './wallet.helpers'
 
 const WalletContext = createContext<undefined | WalletContextValue>(undefined)
@@ -24,6 +30,9 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
     setWalletStatus,
   } = useWalletStore((state) => state.actions)
   const joystreamCtx = useContext<JoystreamContextValue | undefined>(JoystreamContext)
+
+  const walletConnectConfig = atlasConfig.features.walletConnect
+  const { name, icons, description } = walletConnectConfig.metadata
 
   const [isSignerMetadataOutdated, setIsSignerMetadataOutdated] = useState(false)
 
@@ -41,6 +50,41 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
     },
     [_setWalletAccounts]
   )
+
+  const getWalletConnectParams = useCallback(async () => {
+    const chainMetadata = await joystreamCtx?.joystream?.getChainMetadata()
+
+    const genesisHash = chainMetadata?.genesisHash
+
+    if (!genesisHash) {
+      SentryLogger.error(
+        'WalletConnect Config error',
+        'wallet.provider.tsx',
+        'No genesis hash found in chain metadata. WalletConnect configuration is incorrect'
+      )
+    }
+    const chainId = `polkadot:${genesisHash?.replace('0x', '').substring(0, 32)}` as `polkadot:${string}`
+
+    const walletConnectParams: WalletConnectConfiguration = {
+      projectId: walletConnectConfig.walletConnectProjectId || '',
+      relayUrl: 'wss://relay.walletconnect.com',
+      metadata: {
+        name: name || '',
+        description: description || '',
+        url: `${window.location.protocol}//${location.host}`,
+        icons: icons || [],
+      },
+      chainIds: [chainId],
+      optionalChainIds: [chainId],
+
+      onSessionDelete: () => {
+        // do something when session is removed
+        ConsoleLogger.log('WalletConnect session deleted')
+      },
+    }
+
+    return walletConnectParams
+  }, [description, icons, joystreamCtx?.joystream, name, walletConnectConfig.walletConnectProjectId])
 
   const initSignerWallet = useCallback(
     async (walletName: string): Promise<SignerWalletAccount[] | null> => {
@@ -84,6 +128,36 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
     },
     [setWallet, setWalletAccounts, setWalletStatus]
   )
+  const signInWithWalletConnect = useCallback(async () => {
+    const walletConnectParams = await getWalletConnectParams()
+    const wcWallet = new WalletConnectWallet(walletConnectParams, atlasConfig.general.appName)
+    await wcWallet.connect()
+    const accounts = await wcWallet.getAccounts()
+    const accountsWithWallet = accounts
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .map((account: any) => {
+        return {
+          ...account,
+          address: formatJoystreamAddress(account.address),
+          source: 'WalletConnect',
+          wallet: wcWallet,
+          signer: wcWallet.signer,
+        }
+      })
+
+    setWalletAccounts(accountsWithWallet)
+    const storeWallet = {
+      extensionName: 'WalletConnect',
+      logo: {
+        src: 'https://walletconnect.com/static/favicon.png',
+        alt: 'WalletConnect',
+      },
+      ...wcWallet,
+      subscribeAccounts: wcWallet.subscribeAccounts.bind(wcWallet),
+    } as WCWallet
+    setWallet(storeWallet)
+    return accountsWithWallet
+  }, [getWalletConnectParams, setWallet, setWalletAccounts])
 
   const signInToWallet = useCallback(
     async (walletName?: string, invokedAutomatically?: boolean): Promise<SignerWalletAccount[] | null> => {
@@ -92,7 +166,11 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
       }
 
       try {
-        const initializedAccounts = await (!invokedAutomatically
+        const walletType = walletName === 'WalletConnect' ? 'WALLET_CONNECT' : 'INJECTED'
+
+        const initializedAccounts = await (walletType === 'WALLET_CONNECT'
+          ? signInWithWalletConnect()
+          : !invokedAutomatically
           ? initSignerWallet(walletName)
           : retryWalletPromise(() => initSignerWallet(walletName), 1000, 5000))
         if (initializedAccounts === null) {
@@ -104,13 +182,18 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
         return null
       }
     },
-    [initSignerWallet]
+    [initSignerWallet, signInWithWalletConnect]
   )
 
   const checkSignerStatus = useCallback(async () => {
     const chainMetadata = await joystreamCtx?.joystream?.getChainMetadata()
 
-    if (wallet?.extension.metadata && chainMetadata) {
+    // @ts-ignore edit wallet type
+    if (!wallet || isWalletConnectWallet(wallet)) {
+      return
+    }
+
+    if (wallet?.extension?.metadata && chainMetadata) {
       const [localGenesisHash, localSpecVersion] = lastChainMetadataVersion ?? ['', 0]
 
       // update was skipped
@@ -133,12 +216,13 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
       const isOutdated = currentChain.specVersion < chainMetadata.specVersion
       setIsSignerMetadataOutdated(isOutdated)
     }
-  }, [joystreamCtx?.joystream, lastChainMetadataVersion, wallet?.extension.metadata])
+  }, [joystreamCtx?.joystream, lastChainMetadataVersion, wallet])
 
   const updateSignerMetadata = useCallback(async () => {
     const chainMetadata = await joystreamCtx?.joystream?.getChainMetadata()
-    return wallet?.extension.metadata.provide(chainMetadata)
-  }, [joystreamCtx?.joystream, wallet?.extension.metadata])
+    if (!wallet) return
+    return wallet?.extension.metadata.provider(chainMetadata)
+  }, [joystreamCtx?.joystream, wallet])
 
   const skipSignerMetadataUpdate = useCallback(async () => {
     const chainMetadata = await joystreamCtx?.joystream?.getChainMetadata()
@@ -184,8 +268,9 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
       isSignerMetadataOutdated,
       updateSignerMetadata,
       skipSignerMetadataUpdate,
+      signInWithWalletConnect,
     }),
-    [signInToWallet, isSignerMetadataOutdated, updateSignerMetadata, skipSignerMetadataUpdate]
+    [signInToWallet, isSignerMetadataOutdated, updateSignerMetadata, skipSignerMetadataUpdate, signInWithWalletConnect]
   )
 
   // if (error) {

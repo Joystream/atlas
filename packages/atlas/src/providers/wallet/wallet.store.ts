@@ -30,7 +30,7 @@ export const useWalletStore = createStore<WalletStoreState, WalletStoreActions>(
       setWallet: (wallet) => {
         set((state) => {
           state.wallet = wallet
-          state.lastUsedWalletName = wallet.extensionName
+          state.lastUsedWalletName = wallet.extensionName || null
         })
       },
       setWalletAccounts: (accounts) => {

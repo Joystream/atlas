@@ -270,6 +270,12 @@ features:
   members:
     avatarServiceUrl: '$VITE_AVATAR_SERVICE_URL' # URL for avatar service - used to upload member's avatar
     hcaptchaSiteKey: '$VITE_HCAPTCHA_SITE_KEY' # Site key for hCaptcha - used to verify users are not bots when creating memberships - depends on hCaptcha being enabled in the faucet
+  walletConnect:
+    walletConnectProjectId: '$VITE_WALLET_CONNECT_PROJECT_ID' # WalletConnect project ID - used to connect to WalletConnect
+    metadata:
+      name: Atlas
+      description: Web3 video streaming platform
+      icons: ['https://dev.gleev.xyz/favicon.ico']
   playback:
     playbackRates: [2, 1.5, 1.25, 1, 0.5, 0.25] # Playback rates available in the player
   comments:
