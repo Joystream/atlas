@@ -283,7 +283,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
         <ClaimShareModal
           onClose={() => {
             setOpenClaimShareModal(false)
-            client.refetchQueries({ include: 'active' })
+            client.refetchQueries({ include: 'all' })
           }}
           show={openClaimShareModal}
           tokenId={localTokenData.creatorTokenById.id}
@@ -299,7 +299,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
           onClick: () => {
             setShowSuccessModal(false)
             // at this point user won't stake tokens, so we can refetch with cache and close modal
-            client.refetchQueries({ include: 'active' })
+            client.refetchQueries({ include: 'all' })
           },
         }}
       />

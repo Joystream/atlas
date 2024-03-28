@@ -175,7 +175,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
         } else {
           setActiveStep(BUY_MARKET_TOKEN_STEPS.success)
         }
-        client.refetchQueries({ include: 'active' })
+        client.refetchQueries({ include: 'all' })
       },
       onError: () => {
         setActiveStep(BUY_MARKET_TOKEN_STEPS.form)

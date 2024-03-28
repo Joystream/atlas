@@ -223,7 +223,7 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
           } received`,
           description: `You will find it in your portfolio.`,
         })
-        client.refetchQueries({ include: 'active' })
+        client.refetchQueries({ include: 'all' })
         onClose()
       },
     })

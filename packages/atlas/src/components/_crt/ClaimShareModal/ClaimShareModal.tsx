@@ -81,7 +81,7 @@ export const ClaimShareModal = ({ onClose, show, tokenId }: ClaimShareModalProps
           iconType: 'success',
         })
         onClose()
-        client.refetchQueries({ include: 'active' })
+        client.refetchQueries({ include: 'all' })
       },
       onError: () => {
         SentryLogger.error('Failed to claim share transaction', 'ClaimShareModal', {

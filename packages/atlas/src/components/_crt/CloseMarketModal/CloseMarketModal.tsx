@@ -91,7 +91,7 @@ export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMar
             title: 'Market closed',
           })
           onClose()
-          client.refetchQueries({ include: 'active' }).catch(() => {
+          client.refetchQueries({ include: 'all' }).catch(() => {
             displaySnackbar({
               title: 'Data update failed',
               description: 'Please refresh the page to get live data',
@@ -100,7 +100,7 @@ export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMar
           })
         },
         onError: () => {
-          client.refetchQueries({ include: 'active' })
+          client.refetchQueries({ include: 'all' })
           SentryLogger.error('Failed to close market', 'CloseMarketModal', { joystream, channelId, memberId })
           displaySnackbar({
             iconType: 'error',

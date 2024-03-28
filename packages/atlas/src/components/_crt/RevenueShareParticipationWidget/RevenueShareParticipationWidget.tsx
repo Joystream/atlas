@@ -72,7 +72,7 @@ export const RevenueShareParticipationWidget = ({
           actionText: 'Go to my portfolio',
           onActionClick: () => navigate(absoluteRoutes.viewer.portfolio()),
         })
-        client.refetchQueries({ include: 'active' }).catch(() => {
+        client.refetchQueries({ include: 'all' }).catch(() => {
           displaySnackbar({
             title: 'Failed to refersh data',
             description: 'Please reload your page to get latest data.',
