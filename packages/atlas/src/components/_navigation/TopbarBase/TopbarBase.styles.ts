@@ -23,7 +23,7 @@ export const Header = styled.header`
   ${media.md} {
     display: grid;
     grid-template-rows: auto;
-    grid-template-columns: 1fr minmax(480px, 1fr) 1fr;
+    grid-template-columns: auto 1fr minmax(480px, 1fr) 1fr;
     padding: ${sizes(4)} ${sizes(8)} ${sizes(4)} calc(var(--size-sidenav-width-collapsed) + ${sizes(8)});
   }
 `
@@ -38,6 +38,7 @@ export const LogoLink = styled(Link)`
   /* increase the clickable area */
   padding: 16px;
   margin: -16px;
+  margin-right: ${sizes(-2)};
 
   h4 {
     white-space: nowrap;
