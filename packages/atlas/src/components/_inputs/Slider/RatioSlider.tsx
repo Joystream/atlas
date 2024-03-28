@@ -28,9 +28,9 @@ export const RatioSlider = forwardRef<HTMLInputElement, RatioSliderProps>(
           : (evt) => onChange?.(Number(evt.target.value)),
       [controlledValue, onChange]
     )
-
-    const length = max - min
-    const valuePercent = `${(value / length) * 100}%`
+    const length = max
+    const numberOfSteps = length / step
+    const valuePercent = `${(value / step / numberOfSteps) * 100}%`
 
     const steps = useMemo(() => {
       const stepPercent = (step / length) * 100
@@ -58,7 +58,7 @@ export const RatioSlider = forwardRef<HTMLInputElement, RatioSliderProps>(
 
             <g className="steps">
               {steps.map((x, index) => {
-                const cls = Math.min(index * step, max) <= value ? 'active' : ''
+                const cls = Math.min(Math.max((index + 1) * step, min), max) <= value ? 'active' : ''
                 return <line key={index} className={cls} x1={x} x2={x} y1={sizes(3 / 2)} y2={sizes(9 / 2)} radius={4} />
               })}
             </g>

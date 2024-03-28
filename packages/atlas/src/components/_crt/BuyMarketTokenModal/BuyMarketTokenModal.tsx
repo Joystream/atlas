@@ -175,7 +175,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
         } else {
           setActiveStep(BUY_MARKET_TOKEN_STEPS.success)
         }
-        client.refetchQueries({ include: 'active' })
+        client.refetchQueries({ include: 'all' })
       },
       onError: () => {
         setActiveStep(BUY_MARKET_TOKEN_STEPS.form)
@@ -281,7 +281,8 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
             withDenomination="before"
           />
         ),
-        tooltipText: 'Price for a single token divided by the token amount.',
+        tooltipText:
+          'Price of each incremental unit purchased or sold depends on overall quantity of tokens transacted, the actual average price per unit for the entire purchase or sale will differ from the price displayed for the first unit transacted.',
       },
       {
         title: 'Fee',

@@ -28,7 +28,7 @@ export const CreateTokenSuccessModal = ({ tokenName, show }: CreateTokenSuccessM
       primaryButton={{
         text: 'Go to dashboard',
         onClick: () => {
-          client.refetchQueries({ include: 'active' }).then(() => {
+          client.refetchQueries({ include: 'all' }).then(() => {
             navigate(absoluteRoutes.studio.crtDashboard())
           })
         },
@@ -41,7 +41,7 @@ export const CreateTokenSuccessModal = ({ tokenName, show }: CreateTokenSuccessM
           disabled={!channelId}
           to={absoluteRoutes.viewer.channel(channelId ?? '-1', { tab: 'Token' })}
           onClick={() => {
-            client.refetchQueries({ include: 'active' })
+            client.refetchQueries({ include: 'all' })
           }}
         >
           View your token page

@@ -109,7 +109,7 @@ export const CrtTokenEditView = () => {
           title: 'Success',
           iconType: 'success',
         })
-        client.refetchQueries({ include: 'active' })
+        client.refetchQueries({ include: 'all' })
       },
       onError: () => {
         displaySnackbar({

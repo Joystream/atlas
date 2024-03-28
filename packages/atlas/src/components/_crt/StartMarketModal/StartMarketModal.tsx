@@ -146,7 +146,7 @@ export const StartMarketModal = ({ onClose, show, tokenId }: StartMarketModalPro
         primaryButton={{
           text: 'Continue',
           onClick: () => {
-            client.refetchQueries({ include: 'active' })
+            client.refetchQueries({ include: 'all' })
             navigate(absoluteRoutes.studio.crtDashboard({ tab: 'Market' }))
             setShowSuccessModal(false)
             onClose()

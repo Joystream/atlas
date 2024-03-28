@@ -31,7 +31,7 @@ export const AllTokensSection = () => {
       createdAt: new Date(createdAt),
       totalRevenue: 0,
       holdersNum: accountsNum,
-      isVerified: true,
+      isVerified: false,
       marketCap: lastPrice && totalSupply ? hapiBnToTokenNumber(new BN(lastPrice).mul(new BN(totalSupply))) ?? 0 : 0,
       status,
       channelId: channel?.channel.id ?? '',

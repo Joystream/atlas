@@ -141,7 +141,7 @@ export const MarketDrawer = ({ show, onClose, tokenId }: CrtMarketSaleViewProps)
         primaryButton={{
           text: 'Continue',
           onClick: () => {
-            client.refetchQueries({ include: 'active' })
+            client.refetchQueries({ include: 'all' })
             setShowSuccessModal(false)
             onClose()
           },

@@ -43,7 +43,7 @@ export const CloseRevenueShareButton = ({
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).finalizeRevenueSplit(memberId, channelId, proxyCallback(updateStatus)),
       onTxSync: async (data) => {
-        client.refetchQueries({ include: 'active' })
+        client.refetchQueries({ include: 'all' })
         displaySnackbar({
           title: 'Revenue share is closed',
           description: `Remaining unclaimed ${hapiBnToTokenNumber(new BN(data.amount))} ${

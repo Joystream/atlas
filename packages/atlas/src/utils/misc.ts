@@ -19,7 +19,7 @@ export const withTimeout = async <T, P>(promise: Promise<T> | Promise<T>[], time
 }
 
 export const pluralizeNoun = (count: number, noun: string, formatCount?: boolean, suffix = 's') =>
-  `${formatCount ? formatNumber(count) : count} ${noun}${count > 1 ? suffix : ''}`
+  `${formatCount ? formatNumber(count) : count} ${noun}${count !== 1 ? suffix : ''}`
 
 export const wait = (milliseconds: number): Promise<void> =>
   new Promise((resolve) => {

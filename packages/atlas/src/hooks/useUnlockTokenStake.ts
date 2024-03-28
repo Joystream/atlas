@@ -21,7 +21,7 @@ export const useUnlockTokenStake = () => {
         txFactory: async (updateStatus) =>
           (await joystream.extrinsics).exitRevenueSplit(tokenId, memberId, proxyCallback(updateStatus)),
         onTxSync: async (data) => {
-          client.refetchQueries({ include: 'active' })
+          client.refetchQueries({ include: 'all' })
           displaySnackbar({
             title: `${data.amount} $${tokenSymbol} unlocked`,
             iconType: 'success',
