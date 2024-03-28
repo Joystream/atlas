@@ -163,7 +163,11 @@ export const TokenInfo = ({
         />
       )}
 
-      <FlexBox alignItems="center">
+      <FlexBox
+        onClick={() => (channelId ? navigate(absoluteRoutes.viewer.channel(channelId, { tab: 'Token' })) : undefined)}
+        className="pointer"
+        alignItems="center"
+      >
         <Text variant="h200" as="h1">
           {tokenTitle}
         </Text>

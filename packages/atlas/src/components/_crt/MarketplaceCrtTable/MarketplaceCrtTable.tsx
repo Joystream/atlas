@@ -9,7 +9,6 @@ import { Table, TableProps } from '@/components/Table'
 import { ColumnBox } from '@/components/Table/Table.styles'
 import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { absoluteRoutes } from '@/config/routes'
 import { cVar } from '@/styles'
 import { pluralizeNoun } from '@/utils/misc'
 import { formatDate } from '@/utils/time'
@@ -103,9 +102,6 @@ export const MarketplaceCrtTable = ({
   return (
     <>
       <StyledTable
-        onRowClick={(rowIdx) => {
-          navigate(absoluteRoutes.viewer.channel(data[rowIdx].channelId, { tab: 'Token' }))
-        }}
         minWidth={730}
         isEmpty={!mappingData.length}
         columns={COLUMNS}
