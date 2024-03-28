@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import { useMemo } from 'react'
-import { useNavigate } from 'react-router'
 
 import { TokenStatus } from '@/api/queries/__generated__/baseTypes.generated'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
@@ -63,7 +62,6 @@ export const MarketplaceCrtTable = ({
   pagination,
   pageSize,
 }: MarketplaceCrtTableProps) => {
-  const navigate = useNavigate()
   const mappingData = useMemo(() => {
     return data.map((row) => ({
       token: <TokenInfo {...row} />,

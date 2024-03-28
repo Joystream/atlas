@@ -14,7 +14,7 @@ export type RevenueShareModalButtonProps = {
 export const RevenueShareModalButton = ({ token, variant, disabled }: RevenueShareModalButtonProps) => {
   const [openRevenueShareModal, setOpenRevenueShareModal] = useState(false)
   const { displaySnackbar } = useSnackbar()
-  const hasOpenedMarket = !!token.currentAmmSale
+  // const hasOpenedMarket = !!token.currentAmmSale
   const hasOpenedRevenueShare = token.revenueShares.some((revenueShare) => !revenueShare.finalized)
   return (
     <>
@@ -22,7 +22,7 @@ export const RevenueShareModalButton = ({ token, variant, disabled }: RevenueSha
         disabled={disabled}
         variant={variant}
         onClick={() =>
-          hasOpenedMarket || hasOpenedRevenueShare
+          hasOpenedRevenueShare
             ? displaySnackbar({
                 title: hasOpenedRevenueShare
                   ? 'You already have active revenue share'
