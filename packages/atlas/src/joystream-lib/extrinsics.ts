@@ -1237,7 +1237,7 @@ export class JoystreamLibExtrinsics {
   startAmmTx = async (memberId: MemberId, channelId: ChannelId, joySlopeNumber: number) => {
     const member = createType('PalletContentPermissionsContentActor', { Member: parseInt(memberId) })
     return this.api.tx.content.activateAmm(member, parseInt(channelId), {
-      slope: createType('u128', new BN(HAPI_TO_JOY_RATE * joySlopeNumber)),
+      slope: createType('u128', BN.max(new BN(HAPI_TO_JOY_RATE * joySlopeNumber), new BN(1))),
       intercept: createType('u128', new BN(0)),
     })
   }
