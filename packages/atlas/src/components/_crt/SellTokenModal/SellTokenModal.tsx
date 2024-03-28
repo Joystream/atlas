@@ -164,7 +164,8 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
             withDenomination="before"
           />
         ),
-        tooltipText: 'Averaged price per token.',
+        tooltipText:
+          'Price of each incremental unit purchased or sold depends on overall quantity of tokens transacted, the actual average price per unit for the entire purchase or sale will differ from the price displayed for the first unit transacted.',
       },
       {
         title: 'Fee',

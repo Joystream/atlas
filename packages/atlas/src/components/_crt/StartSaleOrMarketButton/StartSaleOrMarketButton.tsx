@@ -18,7 +18,7 @@ export const StartSaleOrMarketButton = ({ token, ...buttonProps }: StartSaleOrMa
   const [showMarketDrawer, setShowMarketDrawer] = useState(false)
   const onMarketClose = useCallback(() => setShowMarketDrawer(false), [])
   const hasOpenedMarket = !!token.currentAmmSale
-  const hasOpenedRevenueShare = token.revenueShares.some((revenueShare) => !revenueShare.finalized)
+  // const hasOpenedRevenueShare = token.revenueShares.some((revenueShare) => !revenueShare.finalized)
 
   return (
     <>
@@ -33,13 +33,13 @@ export const StartSaleOrMarketButton = ({ token, ...buttonProps }: StartSaleOrMa
             return
           }
 
-          if (hasOpenedRevenueShare) {
-            displaySnackbar({
-              title: 'You cannot start a market while the revenue share is active',
-              iconType: 'info',
-            })
-            return
-          }
+          // if (hasOpenedRevenueShare) {
+          //   displaySnackbar({
+          //     title: 'You cannot start a market while the revenue share is active',
+          //     iconType: 'info',
+          //   })
+          //   return
+          // }
 
           setShowChoiceDrawer(true)
         }}
