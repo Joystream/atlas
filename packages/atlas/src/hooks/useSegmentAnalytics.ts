@@ -378,9 +378,10 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackTokenMintingCompleted = useCallback(
-    (channelId: string, tokenTicker: string, initSupply: string, safetyOption: string) => {
+    (channelId: string, tokenId: string, tokenTicker: string, initSupply: string, safetyOption: string) => {
       analytics.track('Token minting completed', {
         channelId,
+        tokenId,
         tokenTicker,
         initSupply,
         safetyOption,
@@ -390,8 +391,9 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackAMMStarted = useCallback(
-    (tokenTicker: string, channelId: string) => {
+    (tokenId: string, tokenTicker: string, channelId: string) => {
       analytics.track('Token Market Opened', {
+        tokenId,
         tokenTicker,
         channelId,
       })
@@ -400,8 +402,9 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackAMMClosed = useCallback(
-    (tokenTicker: string, channelId: string) => {
+    (tokenId: string, tokenTicker: string, channelId: string) => {
       analytics.track('Token Market Closed', {
+        tokenId,
         tokenTicker,
         channelId,
       })
@@ -410,8 +413,9 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackAMMTokensPurchased = useCallback(
-    (tokenTicker: string, channelId: string, crtAmount: string, joyPaid: string) => {
+    (tokenId: string, tokenTicker: string, channelId: string, crtAmount: string, joyPaid: string) => {
       analytics.track('Token Market Purchase', {
+        tokenId,
         tokenTicker,
         channelId,
         crtAmount,

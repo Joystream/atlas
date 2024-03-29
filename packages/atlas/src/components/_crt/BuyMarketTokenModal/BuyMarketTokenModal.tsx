@@ -168,6 +168,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
       onTxSync: async () => {
         if (memberTokenAccount?.tokenAccounts.length) {
           trackAMMTokensPurchased(
+            data?.creatorTokenById?.id ?? 'N/A',
             data?.creatorTokenById?.symbol ?? 'N/A',
             channelId ?? 'N/A',
             String(tokenAmount),
@@ -204,6 +205,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
     calculateRequiredHapi,
     channelId,
     client,
+    data?.creatorTokenById?.id,
     data?.creatorTokenById?.symbol,
     displaySnackbar,
     handleTransaction,

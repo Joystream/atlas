@@ -160,6 +160,9 @@ export type JoinRevenueSplitResult = {
   dividendAmount: string
   stakedAmount: string
 } & ExtrinsicResult
+export type TokenIssuedResult = {
+  tokenId: TokenId
+} & ExtrinsicResult
 
 type TxMethodsFromClass<T> = T extends `${infer _}Tx` ? T : never
 

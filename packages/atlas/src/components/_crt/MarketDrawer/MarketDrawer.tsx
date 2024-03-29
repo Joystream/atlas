@@ -68,9 +68,9 @@ export const MarketDrawer = ({ show, onClose, tokenId }: CrtMarketSaleViewProps)
   }, [])
 
   const onSuccess = useCallback(() => {
-    trackAMMStarted(creatorTokenById?.symbol ?? 'N/A', channelId ?? 'N/A')
+    trackAMMStarted(tokenId, creatorTokenById?.symbol ?? 'N/A', channelId ?? 'N/A')
     setShowSuccessModal(true)
-  }, [channelId, creatorTokenById?.symbol, trackAMMStarted])
+  }, [channelId, creatorTokenById?.symbol, tokenId, trackAMMStarted])
 
   const stepContent = () => {
     switch (activeStep) {

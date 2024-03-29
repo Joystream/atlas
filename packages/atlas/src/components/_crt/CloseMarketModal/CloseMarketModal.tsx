@@ -78,7 +78,7 @@ export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMar
         txFactory: async (updateStatus) =>
           (await joystream.extrinsics).closeAmm(memberId, channelId, proxyCallback(updateStatus)),
         onTxSync: async () => {
-          trackAMMClosed(symbol ?? 'N/A', channelId)
+          trackAMMClosed(tokenId ?? 'N/A', symbol ?? 'N/A', channelId)
           displaySnackbar({
             iconType: 'success',
             title: 'Market closed',
