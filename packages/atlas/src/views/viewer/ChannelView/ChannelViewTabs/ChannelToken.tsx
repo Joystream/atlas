@@ -120,6 +120,7 @@ export const ChannelToken = ({ tokenId, memberId, cumulativeRevenue }: ChannelTo
           <HoldersWidget
             totalSupply={+(token?.totalSupply ?? 0)}
             tokenId={tokenId ?? ''}
+            tokenSymbol={token?.symbol ?? ''}
             ownerId={memberId ?? ''}
             totalHolders={token?.accountsNum ?? 0}
           />
