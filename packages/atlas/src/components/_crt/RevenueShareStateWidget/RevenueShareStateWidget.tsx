@@ -81,7 +81,7 @@ export const RevenueShareStateWidget = ({
             <Text variant="t200-strong" as="p">
               Upcoming
             </Text>
-            <Information text="lorem ipsum" />
+            <Information text="Revenue share was scheduled by the creator. Wait for the start to stake tokens and claim your share of the revenue." />
           </FlexBox>
         )
       case 'locked':
@@ -91,7 +91,7 @@ export const RevenueShareStateWidget = ({
             <Text variant="t200-strong" as="p">
               Locked
             </Text>
-            <Information text="lorem ipsum" />
+            <Information text="Your tokens have been locked and revenue share received. Wait for the revenue share end to unlock tokens." />
           </FlexBox>
         )
     }

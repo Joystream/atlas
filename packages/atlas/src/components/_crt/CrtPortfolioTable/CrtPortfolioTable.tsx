@@ -48,7 +48,7 @@ const COLUMNS: TableProps['columns'] = [
   { Header: 'Token', accessor: 'token', width: 150 },
   { Header: 'Status', accessor: 'status', width: 200 },
   { Header: 'Transferable', accessor: 'transferable', width: 100 },
-  { Header: 'Vested', accessor: 'vested', width: 100 },
+  { Header: 'Staked', accessor: 'staked', width: 100 },
   { Header: 'Total', accessor: 'total', width: 100 },
   { Header: '', accessor: 'utils', width: 70 },
 ]
@@ -58,7 +58,7 @@ export type PortfolioToken = {
   tokenName: string
   isVerified: boolean
   status: TokenStatus
-  vested: number
+  staked: number
   total: number
   tokenId: string
   memberId: string
@@ -89,10 +89,10 @@ export const CrtPortfolioTable = ({ data, emptyState, isLoading }: CrtPortfolioT
           <TransferableBalance memberId={row.memberId} tokenId={row.tokenId} ticker={`${row.tokenTitle}`} />
         </FlexBox>
       ),
-      vested: (
+      staked: (
         <FlexBox width="auto" alignItems="center" gap={1}>
           {row.hasStaked && <SvgActionLock />}
-          <NumberFormat value={row.vested} as="p" withToken customTicker={`$${row.tokenTitle}`} />
+          <NumberFormat value={row.staked} as="p" withToken customTicker={`$${row.tokenTitle}`} />
         </FlexBox>
       ),
       total: (

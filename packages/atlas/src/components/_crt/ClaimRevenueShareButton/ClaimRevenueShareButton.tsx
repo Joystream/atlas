@@ -27,7 +27,8 @@ export const ClaimRevenueShareButton = ({ token, ...btnProps }: ClaimRevenueShar
             })
             return
           }
-          setOpenClaimShareModal(false)
+
+          setOpenClaimShareModal(true)
         }}
       >
         Stake your tokens

@@ -96,9 +96,9 @@ export const CrtDashboardMainTab = ({ token, onTabChange, hasOpenedMarket }: Crt
           }
         />
         <WidgetTile
-          title="Locked"
+          title="Staked"
           tooltip={{
-            text: 'Tokens locked for certain actions like revenue shares.',
+            text: 'Tokens staked for certain actions like revenue shares.',
           }}
           customNode={
             loadingTokenHolders ? (

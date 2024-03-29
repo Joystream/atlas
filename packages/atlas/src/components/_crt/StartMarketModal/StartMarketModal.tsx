@@ -113,7 +113,7 @@ export const StartMarketModal = ({ onClose, show, tokenId }: StartMarketModalPro
         icon: <SvgActionMarket />,
       },
       {
-        text: "You are no earning royalties from other people's transactions on your token.",
+        text: "You are not earning royalties from other people's transactions on your token.",
         icon: <SvgActionWarning />,
       },
       {

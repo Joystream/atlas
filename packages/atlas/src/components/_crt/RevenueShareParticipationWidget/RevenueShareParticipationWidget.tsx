@@ -93,12 +93,7 @@ export const RevenueShareParticipationWidget = ({ revenueShare, token }: Revenue
   const actionNode = () => {
     switch (status) {
       case 'active':
-        return (
-          // <Button size="small" variant="secondary" onClick={onClaimShare}>
-          //   Stake your tokens
-          // </Button>
-          <ClaimRevenueShareButton token={token} size="small" variant="secondary" />
-        )
+        return <ClaimRevenueShareButton token={token} size="small" variant="secondary" />
       case 'unlock':
         return (
           <Button size="small" onClick={handleExitRevenueShare}>
@@ -108,7 +103,7 @@ export const RevenueShareParticipationWidget = ({ revenueShare, token }: Revenue
       case 'locked':
         return <StyledPill icon={<SvgActionCheck />} size="large" label="Staked your tokens" />
       case 'past':
-        return <StyledPill icon={<SvgActionCheck />} size="large" label="Tokens recovered" />
+        return memberStake ? <StyledPill icon={<SvgActionCheck />} size="large" label="Tokens recovered" /> : null
       case 'inactive':
       case 'finalized':
         return <div />
@@ -197,7 +192,7 @@ export const RevenueShareProgress = ({ revenueShare, hasEnded, token }: RevenueS
 
       <ProgressBar
         color={hasEnded ? cVar('colorCoreNeutral700Lighten') : cVar('colorBackgroundPrimary')}
-        progress={new BN(revenueShare.claimed).muln(100).div(new BN(revenueShare.allocation)).toNumber()}
+        progress={Math.round((revenueShare.stakers.length / token.accountsNum) * 100)}
       />
     </FlexBox>
   )

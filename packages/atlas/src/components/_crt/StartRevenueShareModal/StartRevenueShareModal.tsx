@@ -242,7 +242,6 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
       {
         title: 'Transaction fee',
         content: <NumberFormat value={fullFee} as="p" variant="t200" withDenomination="before" withToken />,
-        tooltipText: 'Lorem ipsum',
       },
       {
         title: 'You will receive',
