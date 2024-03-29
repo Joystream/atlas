@@ -3545,6 +3545,8 @@ export type CreatorTokenMarketBurn = {
   burnerHandle: Scalars['String']
   /** id of member that burned tokens */
   burnerId: Scalars['String']
+  /** channel title for notification avatar */
+  channelId: Scalars['String']
   /** amount of joy that user received for burning */
   receivedJoyAmount: Scalars['BigInt']
   /** symbol of the token */
@@ -3561,6 +3563,8 @@ export type CreatorTokenMarketBurnEventData = {
 
 export type CreatorTokenMarketMint = {
   __typename?: 'CreatorTokenMarketMint'
+  /** channel title for notification avatar */
+  channelId: Scalars['String']
   /** amount of tokens that user minted */
   mintedTokenAmount: Scalars['BigInt']
   /** handle of member that minted tokens */
@@ -3744,6 +3748,8 @@ export type CreatorTokenRevenueSplitIssuedEventData = {
 
 export type CreatorTokenSaleMint = {
   __typename?: 'CreatorTokenSaleMint'
+  /** channel title for notification avatar */
+  channelId: Scalars['String']
   /** amount of tokens that user minted */
   mintedTokenAmount: Scalars['BigInt']
   /** handle of member that minted tokens */
