@@ -11,6 +11,7 @@ import { AmmModalSummaryTemplate } from '@/components/_crt/AmmModalTemplates/Amm
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
 import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { useFee, useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
@@ -29,10 +30,11 @@ export type SellTokenModalProps = {
 export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenModalProps) => {
   const [step, setStep] = useState<'form' | 'summary'>('form')
   const { control, watch, handleSubmit, formState, reset } = useForm<{ tokenAmount: number }>()
-  const { memberId, memberChannels } = useUser()
+  const { memberId, memberChannels, channelId } = useUser()
   const tokenAmount = watch('tokenAmount') || 0
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
+  const { trackAMMTokensSold } = useSegmentAnalytics()
   const { displaySnackbar } = useSnackbar()
   const { fullFee } = useFee('sellTokenOnMarketTx', ['1', '1', '2', '10000000'])
   const { data, loading } = useGetFullCreatorTokenQuery({
@@ -213,13 +215,18 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
           iconType: 'error',
         })
       },
-      onTxSync: async () => {
-        // todo add joys from rpc event
+      onTxSync: async ({ receivedAmount }) => {
+        const joyAmountReceived = hapiBnToTokenNumber(new BN(receivedAmount))
+        trackAMMTokensSold(
+          tokenId,
+          data?.creatorTokenById?.symbol ?? 'N/A',
+          channelId ?? 'N/A',
+          tokenAmount.toString(),
+          joyAmountReceived.toString()
+        )
         displaySnackbar({
           iconType: 'success',
-          title: `${formatNumberShort((tokenAmount * priceForAllToken) / tokenAmount)} ${
-            atlasConfig.joystream.tokenTicker
-          } received`,
+          title: `${formatNumberShort(joyAmountReceived)} ${atlasConfig.joystream.tokenTicker} received`,
           description: `You will find it in your portfolio.`,
         })
         client.refetchQueries({ include: 'active' })

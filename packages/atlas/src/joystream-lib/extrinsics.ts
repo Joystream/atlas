@@ -62,6 +62,7 @@ import {
   RawMetadataProcessorFn,
   SendExtrinsicResult,
   StringifiedNumber,
+  TokenAMMSoldResult,
   TokenId,
   TokenIssuedResult,
   TxMethodName,
@@ -1224,7 +1225,7 @@ export class JoystreamLibExtrinsics {
     )
   }
 
-  sellTokenOnMarket: PublicExtrinsic<typeof this.sellTokenOnMarketTx, ExtrinsicResult> = async (
+  sellTokenOnMarket: PublicExtrinsic<typeof this.sellTokenOnMarketTx, TokenAMMSoldResult> = async (
     tokenId,
     memberId,
     amount,
@@ -1232,8 +1233,9 @@ export class JoystreamLibExtrinsics {
     cb
   ) => {
     const tx = await this.sellTokenOnMarketTx(tokenId, memberId, amount, slippageAmount)
-    const { block } = await this.sendExtrinsic(tx, cb)
-    return { block }
+    const { block, getEventData } = await this.sendExtrinsic(tx, cb)
+    const receivedAmount = getEventData('projectToken', 'TokensSoldOnAmm')[3].toString()
+    return { block, receivedAmount }
   }
 
   startAmmTx = async (memberId: MemberId, channelId: ChannelId, joySlopeNumber: number) => {

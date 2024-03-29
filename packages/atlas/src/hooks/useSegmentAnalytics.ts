@@ -425,6 +425,19 @@ export const useSegmentAnalytics = () => {
     [analytics]
   )
 
+  const trackAMMTokensSold = useCallback(
+    (tokenId: string, tokenTicker: string, channelId: string, crtAmount: string, joyReceived: string) => {
+      analytics.track('Token Market Sell', {
+        tokenId,
+        tokenTicker,
+        channelId,
+        crtAmount,
+        joyReceived,
+      })
+    },
+    [analytics]
+  )
+
   const runNextQueueEvent = useCallback(async () => {
     const queueEvent = playbackEventsQueue.current.shift()
     if (!queueEvent) {
@@ -466,6 +479,7 @@ export const useSegmentAnalytics = () => {
     trackAMMClosed,
     trackAMMStarted,
     trackAMMTokensPurchased,
+    trackAMMTokensSold,
     trackAllNftFilterUpdated,
     trackChannelCreation,
     trackChannelFollow,
