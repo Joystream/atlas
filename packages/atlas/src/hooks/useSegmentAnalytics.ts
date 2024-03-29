@@ -366,6 +366,78 @@ export const useSegmentAnalytics = () => {
     analytics.reset()
   }, [analytics])
 
+  /// CRT events
+
+  const trackTokenMintingStarted = useCallback(
+    (channelId: string) => {
+      analytics.track('Token minting flow started', {
+        channelId,
+      })
+    },
+    [analytics]
+  )
+
+  const trackTokenMintingCompleted = useCallback(
+    (channelId: string, tokenId: string, tokenTicker: string, initSupply: string, safetyOption: string) => {
+      analytics.track('Token minting completed', {
+        channelId,
+        tokenId,
+        tokenTicker,
+        initSupply,
+        safetyOption,
+      })
+    },
+    [analytics]
+  )
+
+  const trackAMMStarted = useCallback(
+    (tokenId: string, tokenTicker: string, channelId: string) => {
+      analytics.track('Token Market Opened', {
+        tokenId,
+        tokenTicker,
+        channelId,
+      })
+    },
+    [analytics]
+  )
+
+  const trackAMMClosed = useCallback(
+    (tokenId: string, tokenTicker: string, channelId: string) => {
+      analytics.track('Token Market Closed', {
+        tokenId,
+        tokenTicker,
+        channelId,
+      })
+    },
+    [analytics]
+  )
+
+  const trackAMMTokensPurchased = useCallback(
+    (tokenId: string, tokenTicker: string, channelId: string, crtAmount: string, joyPaid: string) => {
+      analytics.track('Token Market Purchase', {
+        tokenId,
+        tokenTicker,
+        channelId,
+        crtAmount,
+        joyPaid,
+      })
+    },
+    [analytics]
+  )
+
+  const trackAMMTokensSold = useCallback(
+    (tokenId: string, tokenTicker: string, channelId: string, crtAmount: string, joyReceived: string) => {
+      analytics.track('Token Market Sell', {
+        tokenId,
+        tokenTicker,
+        channelId,
+        crtAmount,
+        joyReceived,
+      })
+    },
+    [analytics]
+  )
+
   const runNextQueueEvent = useCallback(async () => {
     const queueEvent = playbackEventsQueue.current.shift()
     if (!queueEvent) {
@@ -404,6 +476,10 @@ export const useSegmentAnalytics = () => {
   return {
     addEventToQueue,
     identifyUser,
+    trackAMMClosed,
+    trackAMMStarted,
+    trackAMMTokensPurchased,
+    trackAMMTokensSold,
     trackAllNftFilterUpdated,
     trackChannelCreation,
     trackChannelFollow,
@@ -425,6 +501,8 @@ export const useSegmentAnalytics = () => {
     trackPageView,
     trackPublishAndUploadClicked,
     trackReferralLinkGenerated,
+    trackTokenMintingCompleted,
+    trackTokenMintingStarted,
     trackUploadVideoClicked,
     trackVideoPlaybackCompleted,
     trackVideoPlaybackPaused,

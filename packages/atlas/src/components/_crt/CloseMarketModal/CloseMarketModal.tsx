@@ -10,6 +10,7 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
@@ -45,6 +46,7 @@ export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMar
   const symbol = data?.creatorTokenById?.symbol
   const { joystream, proxyCallback } = useJoystream()
   const { displaySnackbar } = useSnackbar()
+  const { trackAMMClosed } = useSegmentAnalytics()
   const handleTransaction = useTransaction()
   const client = useApolloClient()
   const ammBalance = data?.creatorTokenById?.currentAmmSale
@@ -86,6 +88,7 @@ export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMar
         txFactory: async (updateStatus) =>
           (await joystream.extrinsics).closeAmm(memberId, channelId, proxyCallback(updateStatus)),
         onTxSync: async () => {
+          trackAMMClosed(tokenId ?? 'N/A', symbol ?? 'N/A', channelId)
           displaySnackbar({
             iconType: 'success',
             title: 'Market closed',
@@ -149,9 +152,11 @@ export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMar
     amountToSell,
     handleTransaction,
     proxyCallback,
-    client,
+    trackAMMClosed,
+    symbol,
     displaySnackbar,
     onClose,
+    client,
     calculateSlippageAmount,
     tokenId,
   ])

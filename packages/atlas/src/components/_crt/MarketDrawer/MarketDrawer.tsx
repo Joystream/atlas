@@ -12,6 +12,7 @@ import { SuccessActionModalTemplate } from '@/components/_crt/SuccessActionModal
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useClipboard } from '@/hooks/useClipboard'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useUser } from '@/providers/user/user.hooks'
 import { transitions } from '@/styles'
 import { permillToPercentage } from '@/utils/number'
@@ -49,6 +50,7 @@ export const MarketDrawer = ({ show, onClose, tokenId }: CrtMarketSaleViewProps)
   const { channelId } = useUser()
   const client = useApolloClient()
   const { copyToClipboard } = useClipboard()
+  const { trackAMMStarted } = useSegmentAnalytics()
 
   const handleNextStep = useCallback(
     ({ tnc }: CrtMarketForm) => {
@@ -66,8 +68,9 @@ export const MarketDrawer = ({ show, onClose, tokenId }: CrtMarketSaleViewProps)
   }, [])
 
   const onSuccess = useCallback(() => {
+    trackAMMStarted(tokenId, creatorTokenById?.symbol ?? 'N/A', channelId ?? 'N/A')
     setShowSuccessModal(true)
-  }, [])
+  }, [channelId, creatorTokenById?.symbol, tokenId, trackAMMStarted])
 
   const stepContent = () => {
     switch (activeStep) {
