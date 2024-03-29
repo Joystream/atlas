@@ -126,7 +126,11 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
           : null
 
       if (typeof duration !== 'number' || duration < 0) {
-        displaySnackbar({ title: 'Failed to parse ending date', iconType: 'error', description: 'Please try again.' })
+        displaySnackbar({
+          title: duration && duration < 0 ? 'Revenue share cannot end in the past' : 'Failed to parse ending date',
+          iconType: 'error',
+          description: 'Please try again.',
+        })
         return
       }
 
