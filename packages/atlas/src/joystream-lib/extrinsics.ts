@@ -62,7 +62,9 @@ import {
   RawMetadataProcessorFn,
   SendExtrinsicResult,
   StringifiedNumber,
+  TokenAMMSoldResult,
   TokenId,
+  TokenIssuedResult,
   TxMethodName,
   VideoExtrinsicResult,
   VideoId,
@@ -1165,7 +1167,7 @@ export class JoystreamLibExtrinsics {
     return this.api.tx.content.issueCreatorToken(member, parseInt(channelId), params)
   }
 
-  issueCreatorToken: PublicExtrinsic<typeof this.issueCreatorTokenTx, ExtrinsicResult> = async (
+  issueCreatorToken: PublicExtrinsic<typeof this.issueCreatorTokenTx, TokenIssuedResult> = async (
     memberId,
     channelId,
     symbol,
@@ -1182,9 +1184,10 @@ export class JoystreamLibExtrinsics {
       initialCreatorAllocation,
       revenueSplitRate
     )
-    const { block } = await this.sendExtrinsic(tx, cb)
+    const { block, getEventData } = await this.sendExtrinsic(tx, cb)
+    const tokenId = getEventData('projectToken', 'TokenIssued')[0].toString()
 
-    return { block }
+    return { block, tokenId }
   }
 
   purchaseTokenOnMarketTx = async (tokenId: string, memberId: string, amount: string, slippageAmount: string) => {
@@ -1222,7 +1225,7 @@ export class JoystreamLibExtrinsics {
     )
   }
 
-  sellTokenOnMarket: PublicExtrinsic<typeof this.sellTokenOnMarketTx, ExtrinsicResult> = async (
+  sellTokenOnMarket: PublicExtrinsic<typeof this.sellTokenOnMarketTx, TokenAMMSoldResult> = async (
     tokenId,
     memberId,
     amount,
@@ -1230,8 +1233,9 @@ export class JoystreamLibExtrinsics {
     cb
   ) => {
     const tx = await this.sellTokenOnMarketTx(tokenId, memberId, amount, slippageAmount)
-    const { block } = await this.sendExtrinsic(tx, cb)
-    return { block }
+    const { block, getEventData } = await this.sendExtrinsic(tx, cb)
+    const receivedAmount = getEventData('projectToken', 'TokensSoldOnAmm')[3].toString()
+    return { block, receivedAmount }
   }
 
   startAmmTx = async (memberId: MemberId, channelId: ChannelId, joySlopeNumber: number) => {
