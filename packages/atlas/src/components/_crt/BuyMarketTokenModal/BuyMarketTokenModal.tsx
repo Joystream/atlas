@@ -366,7 +366,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
           control={control}
           details={formDetails}
           pricePerUnit={pricePerUnit}
-          maxValue={10_000_000_000}
+          maxInputValue={10_000_000}
           error={formState.errors.tokenAmount?.message}
           validation={(value) => {
             if (!value || value < 1) return 'You need to buy at least one token'
