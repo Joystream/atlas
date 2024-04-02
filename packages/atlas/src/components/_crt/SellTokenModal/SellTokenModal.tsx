@@ -222,8 +222,8 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
           tokenId,
           data?.creatorTokenById?.symbol ?? 'N/A',
           channelId ?? 'N/A',
-          tokenAmount.toString(),
-          joyAmountReceived.toString()
+          tokenAmount,
+          joyAmountReceived
         )
         displaySnackbar({
           iconType: 'success',

@@ -171,8 +171,8 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
             data?.creatorTokenById?.id ?? 'N/A',
             data?.creatorTokenById?.symbol ?? 'N/A',
             channelId ?? 'N/A',
-            String(tokenAmount),
-            String(priceForAllToken)
+            tokenAmount,
+            priceForAllToken
           )
           displaySnackbar({
             iconType: 'success',
