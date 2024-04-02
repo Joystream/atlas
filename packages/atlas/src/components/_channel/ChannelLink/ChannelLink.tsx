@@ -52,14 +52,8 @@ export const ChannelLink: FC<ChannelLinkProps> = ({
     onCompleted: (data) => !data && onNotFound?.(),
     onError: (error) => SentryLogger.error('Failed to fetch channel', 'ChannelLink', error, { channel: { id } }),
   })
-  const { toggleFollowing, isFollowing } = useHandleFollowChannel(channel?.id, channel?.title)
 
   const displayedChannel = overrideChannel ? overrideChannel : channel
-
-  const handleFollowButtonClick = (e: MouseEvent) => {
-    e.preventDefault()
-    toggleFollowing()
-  }
 
   const _textVariant = textVariant || 't200-strong'
   return (
@@ -98,16 +92,7 @@ export const ChannelLink: FC<ChannelLinkProps> = ({
                   )}
                 </StyledLink>
                 {followButton && (
-                  <FollowButtonWrapper>
-                    <ProtectedActionWrapper
-                      title="You want to follow this channel?"
-                      description={`Sign in to follow ${displayedChannel.title}`}
-                    >
-                      <Button variant="secondary" onClick={handleFollowButtonClick}>
-                        {isFollowing ? 'Unfollow' : 'Follow'}
-                      </Button>
-                    </ProtectedActionWrapper>
-                  </FollowButtonWrapper>
+                  <FollowButton channelId={displayedChannel?.id} title={displayedChannel?.title ?? undefined} />
                 )}
               </TitleWrapper>
             ) : (
@@ -117,5 +102,23 @@ export const ChannelLink: FC<ChannelLinkProps> = ({
         </SwitchTransition>
       )}
     </Container>
+  )
+}
+
+const FollowButton = ({ title, channelId }: { title?: string; channelId?: string }) => {
+  const { toggleFollowing, isFollowing } = useHandleFollowChannel(channelId, title)
+  const handleFollowButtonClick = (e: MouseEvent) => {
+    e.preventDefault()
+    toggleFollowing()
+  }
+
+  return (
+    <FollowButtonWrapper>
+      <ProtectedActionWrapper title="You want to follow this channel?" description={`Sign in to follow ${title}`}>
+        <Button variant="secondary" onClick={handleFollowButtonClick}>
+          {isFollowing ? 'Unfollow' : 'Follow'}
+        </Button>
+      </ProtectedActionWrapper>
+    </FollowButtonWrapper>
   )
 }
