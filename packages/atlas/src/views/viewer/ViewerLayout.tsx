@@ -217,11 +217,12 @@ const MiscUtils = () => {
       if (['Channel', 'Category', 'Video'].some((page) => pageName?.includes(page))) {
         return
       }
-      const [query, referrerChannel, utmSource, utmCampaign, gState, gCode] = [
+      const [query, referrerChannel, utmSource, utmCampaign, utmContent, gState, gCode] = [
         searchParams.get('query'),
         searchParams.get('referrerId'),
         searchParams.get('utm_source'),
         searchParams.get('utm_campaign'),
+        searchParams.get('utm_content'),
         searchParams.get('state'),
         searchParams.get('code'),
       ]
@@ -233,13 +234,10 @@ const MiscUtils = () => {
       const trackRequestTimeout = setTimeout(
         () =>
           trackPageView(pageName || 'Unknown page', {
-            ...(location.pathname === absoluteRoutes.viewer.ypp()
-              ? {
-                  referrerChannel: referrerChannel || undefined,
-                  utm_source: utmSource || undefined,
-                  utm_campaign: utmCampaign || undefined,
-                }
-              : {}),
+            referrerChannel: referrerChannel || undefined,
+            utm_source: utmSource || undefined,
+            utm_campaign: utmCampaign || undefined,
+            utm_content: utmContent || undefined,
             ...(location.pathname === absoluteRoutes.viewer.search() ? { searchQuery: query } : {}),
           }),
         1000

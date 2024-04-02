@@ -100,7 +100,8 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     ytResponseData,
     utmSource,
     utmCampaign,
-    actions: { setYtResponseData, setUtmSource, setUtmCampaign },
+    utmContent,
+    actions: { setYtResponseData, setUtmSource, setUtmCampaign, setUtmContent },
   } = useYppStore((store) => store, shallow)
   const setReferrerId = useYppStore((store) => store.actions.setReferrerId)
   const setShouldContinueYppFlowAfterLogin = useYppStore((store) => store.actions.setShouldContinueYppFlowAfterLogin)
@@ -165,7 +166,10 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     if (searchParams.get('utm_campaign')) {
       setUtmCampaign(searchParams.get('utm_campaign'))
     }
-  }, [searchParams, setUtmCampaign, setUtmSource])
+    if (searchParams.get('utm_content')) {
+      setUtmContent(searchParams.get('utm_content'))
+    }
+  }, [searchParams, setUtmCampaign, setUtmContent, setUtmSource])
 
   useEffect(() => {
     contentRef.current?.scrollTo({ top: 0 })
@@ -312,6 +316,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
             referrerId: data.referrerChannelId,
             utmSource: utmSource || undefined,
             utmCampaign: utmCampaign || undefined,
+            utmContent: utmContent || undefined,
           })
           setReferrerId(null)
           setYtResponseData(null)

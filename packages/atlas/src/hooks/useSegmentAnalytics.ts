@@ -1,4 +1,5 @@
 import { useCallback, useRef } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
 import { useSegmentAnalyticsContext } from '@/providers/segmentAnalytics/useSegmentAnalyticsContext'
 import { YppRequirementsErrorCode } from '@/views/global/YppLandingView/YppAuthorizationModal/YppAuthorizationModal.types'
@@ -19,6 +20,7 @@ type PageViewParams = {
   tab?: string
   utm_source?: string
   utm_campaign?: string
+  utm_content?: string
   isYppFlow?: boolean
 } & VideoPageViewParams &
   ChannelPageViewParams
@@ -50,6 +52,7 @@ type YppOptInParams = {
   referrerId?: string
   utmSource?: string
   utmCampaign?: string
+  utmContent?: string
 }
 
 type IdentifyUserParams = {
@@ -64,21 +67,31 @@ type playbackEventType = 'playbackStarted' | 'playbackPaused' | 'playbackResumed
 
 export const useSegmentAnalytics = () => {
   const { analytics } = useSegmentAnalyticsContext()
+  const [searchParams] = useSearchParams()
 
   const playbackEventsQueue = useRef<{ type: playbackEventType; params: videoPlaybackParams }[]>([])
 
+  const getUTMParams = useCallback(() => {
+    const [referrer, utmSource, utmCampaign] = [
+      searchParams.get('referrerId'),
+      searchParams.get('utm_source'),
+      searchParams.get('utm_campaign'),
+    ]
+    return { referrer, utmSource, utmCampaign }
+  }, [searchParams])
+
   const identifyUser = useCallback(
     (params: IdentifyUserParams) => {
-      analytics.identify(params.email, params)
+      analytics.identify(params.email, { ...params, ...getUTMParams() })
     },
-    [analytics]
+    [analytics, getUTMParams]
   )
 
   const trackPageView = useCallback(
     (name: string, params?: PageViewParams) => {
-      analytics.page(undefined, name, params)
+      analytics.page(undefined, name, { ...params, ...getUTMParams() })
     },
-    [analytics]
+    [analytics, getUTMParams]
   )
 
   const trackYppOptIn = useCallback(
@@ -101,9 +114,10 @@ export const useSegmentAnalytics = () => {
       analytics.track('Membership created', {
         handle,
         email,
+        ...getUTMParams(),
       })
     },
-    [analytics]
+    [analytics, getUTMParams]
   )
 
   const trackChannelCreation = useCallback(

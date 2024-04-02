@@ -7,6 +7,7 @@ type YppStoreState = {
   selectedChannelId: string | null
   utmSource: string | null
   utmCampaign: string | null
+  utmContent: string | null
   yppModalOpenName: YppModalStep
   shouldContinueYppFlowAfterLogin: boolean
   shouldContinueYppFlowAfterCreatingChannel: boolean
@@ -31,6 +32,7 @@ export const useYppStore = createStore<YppStoreState, YppStoreActions>(
       selectedChannelId: null,
       utmSource: null,
       utmCampaign: null,
+      utmContent: null,
       yppModalOpenName: null,
       shouldContinueYppFlowAfterLogin: false,
       shouldContinueYppFlowAfterCreatingChannel: false,
