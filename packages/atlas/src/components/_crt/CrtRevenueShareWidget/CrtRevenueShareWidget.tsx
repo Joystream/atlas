@@ -120,7 +120,7 @@ export const CrtRevenueShareWidget = ({ token, onTabSwitch }: CrtHoldersWidgetPr
 
           {activeRevenueShare ? (
             <FlexBox width="100%" justifyContent="end">
-              <CloseRevenueShareButton disabled={status === 'active'} variant="secondary" />
+              <CloseRevenueShareButton tokenId={token.id} disabled={status === 'active'} variant="secondary" />
             </FlexBox>
           ) : null}
         </FlexBox>
