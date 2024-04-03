@@ -1,4 +1,3 @@
-import { useApolloClient } from '@apollo/client'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
@@ -13,6 +12,7 @@ import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
+import { useNetworkUtils } from '@/providers/networkUtils/networkUtils.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { transitions } from '@/styles'
 import { permillToPercentage } from '@/utils/number'
@@ -43,12 +43,12 @@ export const MarketDrawer = ({ show, onClose, tokenId }: CrtMarketSaleViewProps)
     tnc: atlasConfig.legal.crtTnc,
     isChecked: true,
   })
+  const { refetchCreatorTokenData } = useNetworkUtils()
   const [primaryButtonProps, setPrimaryButtonProps] = useState<ActionDialogButtonProps>({ text: 'Continue' })
   const [secondaryButtonProps, setSecondaryButtonProps] = useState<ActionDialogButtonProps>({ text: 'Back' })
   const [isGoingBack, setIsGoingBack] = useState(false)
   const nodeRef = useRef<HTMLDivElement>(null)
   const { channelId } = useUser()
-  const client = useApolloClient()
   const { copyToClipboard } = useClipboard()
   const { trackAMMStarted } = useSegmentAnalytics()
 
@@ -144,7 +144,7 @@ export const MarketDrawer = ({ show, onClose, tokenId }: CrtMarketSaleViewProps)
         primaryButton={{
           text: 'Continue',
           onClick: () => {
-            client.refetchQueries({ include: 'active' })
+            refetchCreatorTokenData(tokenId)
             setShowSuccessModal(false)
             onClose()
           },
