@@ -1,4 +1,3 @@
-import { useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
 import { useCallback, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -14,6 +13,7 @@ import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { useFee, useJoystream } from '@/providers/joystream'
+import { useNetworkUtils } from '@/providers/networkUtils/networkUtils.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
@@ -29,6 +29,7 @@ export type SellTokenModalProps = {
 
 export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenModalProps) => {
   const [step, setStep] = useState<'form' | 'summary'>('form')
+  const { refetchCreatorTokenData, refetchAllMemberTokenBalanceData } = useNetworkUtils()
   const { control, watch, handleSubmit, formState, reset } = useForm<{ tokenAmount: number }>()
   const { memberId, memberChannels, channelId } = useUser()
   const tokenAmount = watch('tokenAmount') || 0
@@ -45,7 +46,6 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
       SentryLogger.error('Failed to fetch token data', 'SellTokenModal', { error })
     },
   })
-  const client = useApolloClient()
 
   const currentAmm = data?.creatorTokenById?.currentAmmSale
   const ammBalance = currentAmm ? +currentAmm.mintedByAmm - +currentAmm.burnedByAmm : 0
@@ -230,7 +230,8 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
           title: `${formatNumberShort(joyAmountReceived)} ${atlasConfig.joystream.tokenTicker} received`,
           description: `You will find it in your portfolio.`,
         })
-        client.refetchQueries({ include: 'active' })
+        refetchCreatorTokenData(tokenId)
+        refetchAllMemberTokenBalanceData()
         onClose()
       },
     })
