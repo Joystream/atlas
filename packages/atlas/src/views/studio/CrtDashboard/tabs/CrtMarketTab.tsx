@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { useMemo } from 'react'
 
 import { useGetFullAmmCurveQuery } from '@/api/queries/__generated__/creatorTokens.generated'
@@ -10,6 +11,7 @@ import { AmmTransactionsTable } from '@/components/_crt/AmmTransactionsTable/Amm
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { HAPI_TO_JOY_RATE } from '@/joystream-lib/config'
 import { calcBuyMarketPricePerToken } from '@/utils/crts'
 import { SentryLogger } from '@/utils/logs'
 
@@ -49,6 +51,7 @@ export const CrtMarketTab = ({ token }: CrtMarketTabProps) => {
                 value={pricePerUnit ?? 0}
                 icon={<SvgJoyTokenMonochrome24 />}
                 variant="h500"
+                format={pricePerUnit?.gt(new BN(HAPI_TO_JOY_RATE)) ? undefined : 'short'}
                 as="p"
                 withDenomination
               />

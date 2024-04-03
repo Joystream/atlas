@@ -1,4 +1,3 @@
-import { useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
@@ -16,6 +15,7 @@ import { useClipboard } from '@/hooks/useClipboard'
 import { HAPI_TO_JOY_RATE } from '@/joystream-lib/config'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useFee, useJoystream } from '@/providers/joystream'
+import { useNetworkUtils } from '@/providers/networkUtils/networkUtils.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
@@ -33,6 +33,11 @@ export const StartMarketModal = ({ onClose, show, tokenId }: StartMarketModalPro
   const { memberId, channelId } = useUser()
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const { tokenPrice } = useJoystream()
+  const navigate = useNavigate()
+  const { joystream, proxyCallback } = useJoystream()
+  const { displaySnackbar } = useSnackbar()
+  const handleTransaction = useTransaction()
+  const { refetchCreatorTokenData } = useNetworkUtils()
   const { data } = useGetFullCreatorTokenQuery({
     variables: {
       id: tokenId ?? '',
@@ -42,11 +47,7 @@ export const StartMarketModal = ({ onClose, show, tokenId }: StartMarketModalPro
     },
   })
   const { creatorTokenById } = data ?? {}
-  const navigate = useNavigate()
-  const { joystream, proxyCallback } = useJoystream()
-  const { displaySnackbar } = useSnackbar()
-  const handleTransaction = useTransaction()
-  const client = useApolloClient()
+
   const totalSupply = +(creatorTokenById?.totalSupply ?? 0)
   const holdersRevenueShare = creatorTokenById?.revenueShareRatioPermill
     ? permillToPercentage(creatorTokenById.revenueShareRatioPermill)
@@ -146,7 +147,7 @@ export const StartMarketModal = ({ onClose, show, tokenId }: StartMarketModalPro
         primaryButton={{
           text: 'Continue',
           onClick: () => {
-            client.refetchQueries({ include: 'active' })
+            refetchCreatorTokenData(tokenId)
             navigate(absoluteRoutes.studio.crtDashboard({ tab: 'Market' }))
             setShowSuccessModal(false)
             onClose()
