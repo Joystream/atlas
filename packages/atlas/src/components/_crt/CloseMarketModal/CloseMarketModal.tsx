@@ -155,12 +155,12 @@ export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMar
     handleTransaction,
     proxyCallback,
     trackAMMClosed,
+    tokenId,
     symbol,
     displaySnackbar,
     onClose,
-    client,
+    refetchCreatorTokenData,
     calculateSlippageAmount,
-    tokenId,
   ])
 
   const priceForAllToken = useMemo(() => {
