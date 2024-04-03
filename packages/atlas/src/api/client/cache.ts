@@ -273,6 +273,15 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
       })
     )
   },
+  creatorTokenById: (existing, { toReference, args }) => {
+    return (
+      existing ||
+      toReference({
+        __typename: 'CreatorToken',
+        id: args?.id,
+      })
+    )
+  },
   commentById: (existing, { toReference, args }) => {
     return (
       existing ||

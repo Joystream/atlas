@@ -13,6 +13,7 @@ import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useJoystream } from '@/providers/joystream'
+import { useNetworkUtils } from '@/providers/networkUtils/networkUtils.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
@@ -33,6 +34,7 @@ export type CloseMarketModalProps = {
 const TRESHOLD_RATIO = 100
 
 export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMarketModalProps) => {
+  const { refetchCreatorTokenData } = useNetworkUtils()
   const { memberId } = useUser()
   const { data } = useGetFullCreatorTokenQuery({
     variables: {
@@ -94,7 +96,7 @@ export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMar
             title: 'Market closed',
           })
           onClose()
-          client.refetchQueries({ include: 'active' }).catch(() => {
+          refetchCreatorTokenData(tokenId).catch(() => {
             displaySnackbar({
               title: 'Data update failed',
               description: 'Please refresh the page to get live data',
@@ -103,7 +105,7 @@ export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMar
           })
         },
         onError: () => {
-          client.refetchQueries({ include: 'active' })
+          refetchCreatorTokenData(tokenId)
           SentryLogger.error('Failed to close market', 'CloseMarketModal', { joystream, channelId, memberId })
           displaySnackbar({
             iconType: 'error',

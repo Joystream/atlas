@@ -52,13 +52,15 @@ export const CrtDashboard = () => {
 
   const hasOpenMarket = data?.creatorTokenById?.ammCurves.some((curve) => !curve.finalized)
   const mappedTabs = TABS.filter((tab) => (hasOpenMarket ? true : tab !== 'Market')).map((tab) => ({ name: tab }))
-  const currentTab = currentTabName ? getTabIndex(currentTabName, mappedTabs) : 0
+  const currentTab = currentTabName ? Math.max(0, getTabIndex(currentTabName, mappedTabs)) : 0
+
   const handleChangeTab = useCallback(
     (idx: number) => {
       setSearchParams({ tab: mappedTabs[idx].name })
     },
     [mappedTabs, setSearchParams]
   )
+
   useMountEffect(() => {
     if (currentTab === -1) setSearchParams({ 'tab': '0' }, { replace: true })
   })
