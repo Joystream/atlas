@@ -27,7 +27,7 @@ export const useHoldersPagination = (tokenId: string, { initialPageSize = 10 }: 
       SentryLogger.error('Failed to fetch token holders query', 'useHoldersPagination', error)
     },
   })
-  console.log(data)
+
   const { data: holdersCountData, loading: loadingCount } = useGetCreatorTokenHoldersCountQuery({
     variables: {
       where: {

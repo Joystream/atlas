@@ -1,4 +1,3 @@
-import { useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
 
 import {
@@ -17,6 +16,7 @@ import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useFee, useJoystream } from '@/providers/joystream'
+import { useNetworkUtils } from '@/providers/networkUtils/networkUtils.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
@@ -31,6 +31,7 @@ type ClaimShareModalProps = {
 
 export const ClaimShareModal = ({ onClose, show, tokenId }: ClaimShareModalProps) => {
   const { data } = useGetFullCreatorTokenQuery({ variables: { id: tokenId ?? '' }, skip: !tokenId })
+  const { refetchAllMemberTokenBalanceData, refetchCreatorTokenData } = useNetworkUtils()
   const token = data?.creatorTokenById
   const tokenName = token?.symbol ?? 'N/A'
   const { joystream, proxyCallback } = useJoystream()
@@ -41,7 +42,6 @@ export const ClaimShareModal = ({ onClose, show, tokenId }: ClaimShareModalProps
   const { fullFee } = useFee('participateInSplitTx')
   const activeRevenueShare = token?.revenueShares.find((rS) => !rS.finalized)
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
-  const client = useApolloClient()
   const { data: dividendData, loading: loadingDividendData } = useGetRevenueShareDividendQuery({
     variables: {
       tokenId: token?.id ?? '',
@@ -81,7 +81,8 @@ export const ClaimShareModal = ({ onClose, show, tokenId }: ClaimShareModalProps
           iconType: 'success',
         })
         onClose()
-        client.refetchQueries({ include: 'active' })
+        refetchAllMemberTokenBalanceData()
+        refetchCreatorTokenData(token.id)
       },
       onError: () => {
         SentryLogger.error('Failed to claim share transaction', 'ClaimShareModal', {

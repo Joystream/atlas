@@ -45,7 +45,8 @@ enum BUY_MARKET_TOKEN_STEPS {
 export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySaleTokenModalProps) => {
   const { memberId, memberChannels } = useUser()
   const navigate = useNavigate()
-  const { refetchAllMemberTokenHolderQueries, refetchCreatorTokenData } = useNetworkUtils()
+  const { refetchAllMemberTokenHolderQueries, refetchCreatorTokenData, refetchAllMemberTokenBalanceData } =
+    useNetworkUtils()
   const [activeStep, setActiveStep] = useState(BUY_MARKET_TOKEN_STEPS.form)
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogProps['primaryButton']>()
   const amountRef = useRef<number | null>(null)
@@ -185,8 +186,10 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
         } else {
           setActiveStep(BUY_MARKET_TOKEN_STEPS.success)
         }
-        refetchAllMemberTokenHolderQueries()
         refetchCreatorTokenData(tokenId)
+        refetchAllMemberTokenHolderQueries().then(() => {
+          refetchAllMemberTokenBalanceData()
+        })
       },
       onError: () => {
         setActiveStep(BUY_MARKET_TOKEN_STEPS.form)

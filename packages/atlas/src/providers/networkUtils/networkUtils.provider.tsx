@@ -19,6 +19,7 @@ import {
   GetUserCommentsReactionsQueryVariables,
 } from '@/api/queries/__generated__/comments.generated'
 import {
+  GetChannelTokenBalanceDocument,
   GetCreatorTokenHoldersDocument,
   GetCreatorTokenHoldersQuery,
   GetCreatorTokenHoldersQueryVariables,
@@ -171,8 +172,14 @@ export const NetworkUtilsProvider = ({ children }: { children: ReactNode }) => {
     [client]
   )
 
-  const refetchAllMemberTokenHolderQueries = useCallback(() => {
-    client.refetchQueries({ include: [GetCreatorTokenHoldersDocument] })
+  const refetchAllMemberTokenHolderQueries = useCallback(async () => {
+    await client.refetchQueries({ include: [GetCreatorTokenHoldersDocument] })
+  }, [client])
+
+  const refetchAllMemberTokenBalanceData = useCallback(async () => {
+    await client.refetchQueries({
+      include: [GetChannelTokenBalanceDocument],
+    })
   }, [client])
 
   return (
@@ -193,6 +200,7 @@ export const NetworkUtilsProvider = ({ children }: { children: ReactNode }) => {
         refetchCreatorTokenData,
         refetchMemberTokenHolderData,
         refetchAllMemberTokenHolderQueries,
+        refetchAllMemberTokenBalanceData,
       }}
     >
       {children}

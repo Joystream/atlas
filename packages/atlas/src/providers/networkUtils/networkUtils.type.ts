@@ -35,7 +35,8 @@ export type NetworkUtilsContextValue = {
     memberId?: string,
     tokenId?: string
   ) => Promise<ApolloQueryResult<GetCreatorTokenHoldersQuery>>
-  refetchAllMemberTokenHolderQueries: () => void
+  refetchAllMemberTokenHolderQueries: () => Promise<void>
+  refetchAllMemberTokenBalanceData: () => Promise<void>
 }
 
 // Login handler types
