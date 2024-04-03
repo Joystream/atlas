@@ -19,6 +19,9 @@ import {
   GetUserCommentsReactionsQueryVariables,
 } from '@/api/queries/__generated__/comments.generated'
 import {
+  GetCreatorTokenHoldersDocument,
+  GetCreatorTokenHoldersQuery,
+  GetCreatorTokenHoldersQueryVariables,
   GetFullCreatorTokenDocument,
   GetFullCreatorTokenQuery,
   GetFullCreatorTokenQueryVariables,
@@ -149,6 +152,29 @@ export const NetworkUtilsProvider = ({ children }: { children: ReactNode }) => {
     [client]
   )
 
+  const refetchMemberTokenHolderData = useCallback(
+    (memberId?: string, tokenId?: string) =>
+      client.query<GetCreatorTokenHoldersQuery, GetCreatorTokenHoldersQueryVariables>({
+        query: GetCreatorTokenHoldersDocument,
+        variables: {
+          where: {
+            token: {
+              id_eq: tokenId,
+            },
+            member: {
+              id_eq: memberId,
+            },
+          },
+        },
+        fetchPolicy: 'network-only',
+      }),
+    [client]
+  )
+
+  const refetchAllMemberTokenHolderQueries = useCallback(() => {
+    client.refetchQueries({ include: [GetCreatorTokenHoldersDocument] })
+  }, [client])
+
   return (
     <NetworkUtilsContext.Provider
       value={{
@@ -165,6 +191,8 @@ export const NetworkUtilsProvider = ({ children }: { children: ReactNode }) => {
 
         // CRTs
         refetchCreatorTokenData,
+        refetchMemberTokenHolderData,
+        refetchAllMemberTokenHolderQueries,
       }}
     >
       {children}

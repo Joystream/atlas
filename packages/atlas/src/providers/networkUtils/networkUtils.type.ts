@@ -7,7 +7,10 @@ import {
   GetUserCommentsAndVideoCommentsConnectionQuery,
   GetUserCommentsReactionsQuery,
 } from '@/api/queries/__generated__/comments.generated'
-import { GetFullCreatorTokenQuery } from '@/api/queries/__generated__/creatorTokens.generated'
+import {
+  GetCreatorTokenHoldersQuery,
+  GetFullCreatorTokenQuery,
+} from '@/api/queries/__generated__/creatorTokens.generated'
 import { GetNftQuery } from '@/api/queries/__generated__/nfts.generated'
 import { GetFullVideoQuery } from '@/api/queries/__generated__/videos.generated'
 
@@ -28,6 +31,11 @@ export type NetworkUtilsContextValue = {
 
   // CRTs
   refetchCreatorTokenData: (id: string) => Promise<ApolloQueryResult<GetFullCreatorTokenQuery>>
+  refetchMemberTokenHolderData: (
+    memberId?: string,
+    tokenId?: string
+  ) => Promise<ApolloQueryResult<GetCreatorTokenHoldersQuery>>
+  refetchAllMemberTokenHolderQueries: () => void
 }
 
 // Login handler types

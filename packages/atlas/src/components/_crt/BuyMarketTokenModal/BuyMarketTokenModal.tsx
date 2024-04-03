@@ -1,4 +1,3 @@
-import { useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -20,6 +19,7 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { useFee, useJoystream, useSubscribeAccountBalance } from '@/providers/joystream'
+import { useNetworkUtils } from '@/providers/networkUtils/networkUtils.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
@@ -45,6 +45,7 @@ enum BUY_MARKET_TOKEN_STEPS {
 export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySaleTokenModalProps) => {
   const { memberId, memberChannels } = useUser()
   const navigate = useNavigate()
+  const { refetchAllMemberTokenHolderQueries, refetchCreatorTokenData } = useNetworkUtils()
   const [activeStep, setActiveStep] = useState(BUY_MARKET_TOKEN_STEPS.form)
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogProps['primaryButton']>()
   const amountRef = useRef<number | null>(null)
@@ -72,7 +73,6 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
     },
     skip: !memberId,
   })
-  const client = useApolloClient()
   const { accountBalance } = useSubscribeAccountBalance()
   const tokenTitle = data?.creatorTokenById?.symbol ?? 'N/A'
   const currentAmm = data?.creatorTokenById?.ammCurves.find((amm) => !amm.finalized)
@@ -185,7 +185,8 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
         } else {
           setActiveStep(BUY_MARKET_TOKEN_STEPS.success)
         }
-        client.refetchQueries({ include: 'active' })
+        refetchAllMemberTokenHolderQueries()
+        refetchCreatorTokenData(tokenId)
       },
       onError: () => {
         setActiveStep(BUY_MARKET_TOKEN_STEPS.form)
@@ -204,7 +205,6 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
   }, [
     calculateRequiredHapi,
     channelId,
-    client,
     data?.creatorTokenById?.id,
     data?.creatorTokenById?.symbol,
     displaySnackbar,
@@ -216,6 +216,8 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
     onClose,
     priceForAllToken,
     proxyCallback,
+    refetchCreatorTokenData,
+    refetchAllMemberTokenHolderQueries,
     tokenAmount,
     tokenId,
     tokenTitle,
