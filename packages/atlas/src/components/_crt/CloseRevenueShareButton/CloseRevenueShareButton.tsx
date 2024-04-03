@@ -66,7 +66,16 @@ export const CloseRevenueShareButton = ({
         })
       },
     })
-  }, [channelId, displaySnackbar, handleTransaction, joystream, memberId, proxyCallback])
+  }, [
+    channelId,
+    displaySnackbar,
+    handleTransaction,
+    joystream,
+    memberId,
+    proxyCallback,
+    refetchCreatorTokenData,
+    tokenId,
+  ])
 
   if (hideOnInactiveRevenue && currentBlock < (revenueShareEndingBlock ?? 0)) {
     return null

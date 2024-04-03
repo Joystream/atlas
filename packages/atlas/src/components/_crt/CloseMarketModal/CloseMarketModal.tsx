@@ -1,4 +1,3 @@
-import { useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
 import { useCallback, useMemo } from 'react'
 
@@ -50,7 +49,6 @@ export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMar
   const { displaySnackbar } = useSnackbar()
   const { trackAMMClosed } = useSegmentAnalytics()
   const handleTransaction = useTransaction()
-  const client = useApolloClient()
   const ammBalance = data?.creatorTokenById?.currentAmmSale
     ? +data.creatorTokenById.currentAmmSale.mintedByAmm - +data.creatorTokenById.currentAmmSale.burnedByAmm
     : 0

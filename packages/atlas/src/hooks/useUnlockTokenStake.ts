@@ -1,4 +1,3 @@
-import { useApolloClient } from '@apollo/client'
 import { useCallback } from 'react'
 
 import { useJoystream } from '@/providers/joystream'
@@ -11,7 +10,6 @@ export const useUnlockTokenStake = () => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()
-  const client = useApolloClient()
   const { refetchCreatorTokenData, refetchAllMemberTokenBalanceData } = useNetworkUtils()
 
   return useCallback(
