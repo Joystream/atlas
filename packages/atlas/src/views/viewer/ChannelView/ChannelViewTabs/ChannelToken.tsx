@@ -31,6 +31,7 @@ export const ChannelToken = ({ tokenId, memberId, cumulativeRevenue }: ChannelTo
     variables: {
       id: tokenId ?? '',
     },
+    fetchPolicy: 'cache-and-network',
   })
   const { activeMembership, setActiveChannel } = useUser()
   const isChannelOwner = activeMembership?.channels.some((channel) => channel.id === id)

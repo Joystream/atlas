@@ -27,7 +27,7 @@ export const tableLoadingData = Array.from({ length: 5 }, () => ({
 const COLUMNS: TableProps['columns'] = [
   { Header: 'Member', accessor: 'member', width: 4 },
   { Header: 'Total', accessor: 'total', width: 2 },
-  { Header: 'Unlocked', accessor: 'transferable', width: 2 },
+  { Header: 'Unlocked', accessor: 'transferable', width: 3 },
 ]
 
 type CrtHolder = {
@@ -72,14 +72,19 @@ export const CrtHoldersTable = ({
         ),
         total: (
           <FlexBox width="auto" alignItems="center" gap={1}>
-            <NumberFormat format="short" value={row.total} as="p" variant="t200-strong" />
-            <Text variant="t200" as="p" color="colorText">
+            <NumberFormat format="short" value={row.total} as="p" variant="t200" />
+            <Text variant="t200" as="span" color="colorText">
               ({row.allocation}%)
             </Text>
           </FlexBox>
         ),
         transferable: (
-          <TransferableBalance memberId={row.memberId} tokenId={row.tokenId} ticker={`${row.tokenSymbol}`} />
+          <StyledTransferableBalance
+            variant="t200"
+            memberId={row.memberId}
+            tokenId={row.tokenId}
+            ticker={`${row.tokenSymbol}`}
+          />
         ),
       })),
     [data, ownerId]
@@ -99,6 +104,11 @@ export const CrtHoldersTable = ({
     />
   )
 }
+
+const StyledTransferableBalance = styled(TransferableBalance)`
+  text-align: right;
+  white-space: nowrap;
+`
 
 export const StyledTable = styled(Table)`
   tr {

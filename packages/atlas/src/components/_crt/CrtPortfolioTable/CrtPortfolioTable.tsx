@@ -20,7 +20,7 @@ import { FlexBox } from '@/components/FlexBox'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Table, TableProps } from '@/components/Table'
 import { ColumnBox } from '@/components/Table/Table.styles'
-import { Text } from '@/components/Text'
+import { Text, TextVariant } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { BuyMarketTokenModal } from '@/components/_crt/BuyMarketTokenModal'
 import { SellTokenModal } from '@/components/_crt/SellTokenModal'
@@ -266,13 +266,26 @@ export const TransferableBalance = ({
   memberId,
   tokenId,
   ticker,
+  className,
+  variant,
 }: {
   memberId: string
   tokenId: string
   ticker?: string
+  className?: string
+  variant?: TextVariant
 }) => {
   const { tokenBalance } = useGetTokenBalance(tokenId, memberId)
-  return <NumberFormat value={tokenBalance} as="p" withToken customTicker={`$${ticker}`} />
+  return (
+    <NumberFormat
+      className={className}
+      value={tokenBalance}
+      variant={variant}
+      as="p"
+      withToken
+      customTicker={`$${ticker}`}
+    />
+  )
 }
 
 const StyledTable = styled(Table)<{ isEmpty?: boolean }>`

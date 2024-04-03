@@ -85,7 +85,9 @@ export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({ token }) => {
                 avoidIconStyling
                 tileSize={smMatch ? 'big' : 'bigSmall'}
                 caption="Total revenue Shares"
-                content={data?.getCumulativeHistoricalShareAllocation.cumulativeHistoricalAllocation ?? 0}
+                content={hapiBnToTokenNumber(
+                  new BN(data?.getCumulativeHistoricalShareAllocation.cumulativeHistoricalAllocation ?? 0)
+                )}
                 icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
                 withDenomination
               />

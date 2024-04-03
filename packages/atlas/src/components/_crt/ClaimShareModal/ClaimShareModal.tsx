@@ -1,11 +1,13 @@
 import { useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
+import { useEffect } from 'react'
 
 import {
   useGetCreatorTokenHoldersQuery,
   useGetFullCreatorTokenQuery,
   useGetRevenueShareDividendQuery,
 } from '@/api/queries/__generated__/creatorTokens.generated'
+import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgAlertsInformative24 } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
 import { FlexBox } from '@/components/FlexBox'
@@ -27,11 +29,18 @@ type ClaimShareModalProps = {
   show?: boolean
   onClose: () => void
   tokenId?: string
+  token?: FullCreatorTokenFragment
 }
 
-export const ClaimShareModal = ({ onClose, show, tokenId }: ClaimShareModalProps) => {
-  const { data } = useGetFullCreatorTokenQuery({ variables: { id: tokenId ?? '' }, skip: !tokenId })
-  const token = data?.creatorTokenById
+export const ClaimShareModal = ({ onClose, show, tokenId: _tokenId, token: _token }: ClaimShareModalProps) => {
+  const { data, refetch } = useGetFullCreatorTokenQuery({
+    variables: { id: _tokenId ?? '' },
+    skip: !_tokenId || !!_token,
+    notifyOnNetworkStatusChange: true,
+  })
+  const token = _token ?? data?.creatorTokenById
+  const tokenId = _token?.id ?? _tokenId
+
   const tokenName = token?.symbol ?? 'N/A'
   const { joystream, proxyCallback } = useJoystream()
   const { memberId } = useUser()
@@ -41,6 +50,12 @@ export const ClaimShareModal = ({ onClose, show, tokenId }: ClaimShareModalProps
   const activeRevenueShare = token?.revenueShares.find((rS) => !rS.finalized)
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
   const client = useApolloClient()
+
+  useEffect(() => {
+    if (show) {
+      refetch()
+    }
+  }, [refetch, show])
 
   const { data: holderData } = useGetCreatorTokenHoldersQuery({
     variables: {

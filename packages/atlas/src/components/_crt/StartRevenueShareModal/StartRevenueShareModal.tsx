@@ -62,6 +62,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
     variables: {
       id: token.id,
     },
+    notifyOnNetworkStatusChange: true,
     fetchPolicy: 'no-cache',
   })
   const { fullFee } = useFee('issueRevenueSplitTx', ['1', '1', 10000, 10000])
@@ -227,7 +228,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
       },
 
       {
-        title: 'Your holders will receive',
+        title: 'All holders can receive',
         content: (
           <FlexBox alignItems="baseline" width="fit-content">
             <NumberFormat
@@ -289,7 +290,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
             client.refetchQueries({ include: 'all' })
           }}
           show={openClaimShareModal}
-          tokenId={localTokenData.creatorTokenById.id}
+          token={localTokenData.creatorTokenById}
         />
       )}
       <SuccessActionModalTemplate
