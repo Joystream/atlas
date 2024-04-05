@@ -188,6 +188,7 @@ export const SetupTokenStep = ({ setPrimaryButtonProps, onSubmit, form, setPrevi
           render={({ field }) => (
             <RatioSlider
               {...field}
+              min={10}
               description={
                 <FlexBox gap={2}>
                   <FlexBox width="auto" gap={1}>

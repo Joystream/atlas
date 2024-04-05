@@ -79,7 +79,6 @@ export const PortfolioTokenTab = () => {
     skip: !memberId,
   })
   const commonParams = {
-    finalized_eq: false,
     token: {
       id_in: data?.tokenAccounts.map(({ token }) => token.id),
     },
@@ -88,11 +87,13 @@ export const PortfolioTokenTab = () => {
     OR: [
       {
         ...commonParams,
+        finalized_eq: false,
         endsAt_gt: timestamp,
       },
       {
         ...commonParams,
         stakers_some: {
+          recovered_eq: false,
           account: {
             member: {
               id_eq: memberId,
@@ -128,7 +129,7 @@ export const PortfolioTokenTab = () => {
         isVerified: false,
         tokenId: tokenAccount.token.id,
         memberId: memberId ?? '',
-        vested: tokenAccount.vestingSchedules.reduce((prev, next) => prev + Number(next.totalVestingAmount), 0),
+        staked: +(tokenAccount.stakedAmount ?? 0),
         total: +tokenAccount.totalAmount,
         channelId: tokenAccount.token.channel?.channel.id ?? '',
         hasStaked: +tokenAccount.stakedAmount > 0,

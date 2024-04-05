@@ -2,6 +2,7 @@ import BN from 'bn.js'
 
 import { GetChannelPaymentEventsQuery } from '@/api/queries/__generated__/channels.generated'
 import { PaymentHistory } from '@/components/TablePaymentsHistory'
+import { permillToPercentage } from '@/utils/number'
 
 type EventData = GetChannelPaymentEventsQuery['events'][number]['data'] & {
   nftPlatformFeePercentage: number
@@ -23,12 +24,14 @@ const getType = (eventData: EventData): PaymentHistory['type'] => {
       return 'withdrawal'
     case 'ChannelPaymentMadeEventData':
       return 'direct-payment'
+    case 'CreatorTokenRevenueSplitIssuedEventData':
+      return 'revenue-share'
     default:
       throw Error('Unknown event')
   }
 }
 
-const getAmount = (eventData: EventData): BN => {
+const getAmount = (eventData: EventData, memberId: string): BN => {
   switch (eventData.__typename) {
     case 'NftBoughtEventData': {
       if (eventData.previousNftOwner.__typename !== 'NftOwnerChannel') {
@@ -51,6 +54,13 @@ const getAmount = (eventData: EventData): BN => {
     case 'ChannelRewardClaimedEventData':
     case 'ChannelPaymentMadeEventData':
       return new BN(eventData.amount)
+    case 'CreatorTokenRevenueSplitIssuedEventData': {
+      const channelAsStaker = eventData.revenueShare?.stakers.find((staker) => staker.account.member.id === memberId)
+      return new BN(eventData.revenueShare?.allocation ?? 0)
+        .muln(100 - permillToPercentage(eventData.token?.revenueShareRatioPermill ?? 0))
+        .divn(100)
+        .add(new BN(channelAsStaker?.earnings ?? 0))
+    }
     default:
       throw Error('Unknown event')
   }
@@ -70,6 +80,8 @@ const getSender = (eventData: EventData) => {
       return eventData.actor.__typename === 'ContentActorMember' ? eventData.actor.member.controllerAccount : 'council'
     case 'ChannelPaymentMadeEventData':
       return eventData.payer.controllerAccount
+    case 'CreatorTokenRevenueSplitIssuedEventData':
+      return 'own-channel'
     default:
       throw Error('Unknown event')
   }
@@ -96,20 +108,22 @@ const getDescription = (eventData: EventData) => {
       return ''
     case 'ChannelPaymentMadeEventData':
       return eventData.rationale
+    case 'CreatorTokenRevenueSplitIssuedEventData':
+      return ''
     default:
       return undefined
   }
 }
 
 export const mapEventToPaymentHistory =
-  (nftPlatformFeePercentage: number) =>
+  (nftPlatformFeePercentage: number, memberId: string) =>
   (event: GetChannelPaymentEventsQuery['events'][number]): PaymentHistory => {
     const { inBlock, timestamp } = event
     const eventData = { ...event.data, nftPlatformFeePercentage }
     return {
       type: getType(eventData),
       block: inBlock,
-      amount: getAmount(eventData),
+      amount: getAmount(eventData, memberId),
       date: new Date(timestamp),
       description: getDescription(eventData) || '-',
       sender: getSender(eventData),
@@ -123,6 +137,11 @@ export const aggregatePaymentHistory = (arg: PaymentHistory[]) =>
         prev.totalWithdrawn.iadd(next.amount.abs())
         return prev
       }
+      // revenue share is both earned and withdrawn at the time
+      if (next.type === 'revenue-share') {
+        prev.totalWithdrawn.iadd(next.amount.abs())
+      }
+
       prev.totalEarned.iadd(next.amount)
       return prev
     },

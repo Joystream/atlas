@@ -9,7 +9,7 @@ export const useGetTokenBalance = (tokenId?: string, memberId?: string) => {
   const { currentBlock } = useJoystreamStore()
   const [tokenBalance, setTokenBalance] = useState<number | null>(null)
 
-  const { loading } = useGetChannelTokenBalanceQuery({
+  const { loading, refetch } = useGetChannelTokenBalanceQuery({
     variables: {
       tokenId: tokenId ?? '',
       memberId: memberId ?? currentMemberId ?? '',
@@ -30,5 +30,6 @@ export const useGetTokenBalance = (tokenId?: string, memberId?: string) => {
   return {
     tokenBalance: tokenBalance ?? 0,
     isLoading: loading,
+    refetch,
   }
 }

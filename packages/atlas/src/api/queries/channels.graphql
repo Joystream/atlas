@@ -163,6 +163,12 @@ query GetChannelPaymentEvents($channelId: String) {
           }
         }
         { data: { isTypeOf_in: ["ChannelPaymentMadeEventData"], payeeChannel: { id_eq: $channelId } } }
+        {
+          data: {
+            isTypeOf_in: ["CreatorTokenRevenueSplitIssuedEventData"]
+            token: { channel: { channel: { id_eq: $channelId } } }
+          }
+        }
       ]
     }
   ) {
@@ -288,6 +294,25 @@ query GetChannelPaymentEvents($channelId: String) {
         rationale
         payer {
           controllerAccount
+        }
+      }
+      ... on CreatorTokenRevenueSplitIssuedEventData {
+        token {
+          id
+          revenueShareRatioPermill
+        }
+        revenueShare {
+          id
+          allocation
+          startingAt
+          stakers {
+            account {
+              member {
+                id
+              }
+            }
+            earnings
+          }
         }
       }
     }
