@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+import { ProtectedActionWrapper } from '@/components/_auth/ProtectedActionWrapper'
 import { Button } from '@/components/_buttons/Button'
 import { SellTokenModal } from '@/components/_crt/SellTokenModal'
 
@@ -12,9 +13,11 @@ export const SellOnMarketButton = ({ tokenId }: SellOnMarketButtonProps) => {
   return (
     <>
       <SellTokenModal tokenId={tokenId} show={showModal} onClose={() => setShowModal(false)} />
-      <Button variant="secondary" size="large" onClick={() => setShowModal(true)}>
-        Sell
-      </Button>
+      <ProtectedActionWrapper title="You want to sell tokens?" description="Sign in to sell">
+        <Button variant="secondary" fullWidth size="large" onClick={() => setShowModal(true)}>
+          Sell
+        </Button>
+      </ProtectedActionWrapper>
     </>
   )
 }

@@ -20,7 +20,7 @@ import { FlexBox } from '@/components/FlexBox'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Table, TableProps } from '@/components/Table'
 import { ColumnBox } from '@/components/Table/Table.styles'
-import { Text } from '@/components/Text'
+import { Text, TextVariant } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { BuyMarketTokenModal } from '@/components/_crt/BuyMarketTokenModal'
 import { SellTokenModal } from '@/components/_crt/SellTokenModal'
@@ -48,7 +48,7 @@ const COLUMNS: TableProps['columns'] = [
   { Header: 'Token', accessor: 'token', width: 150 },
   { Header: 'Status', accessor: 'status', width: 200 },
   { Header: 'Transferable', accessor: 'transferable', width: 100 },
-  { Header: 'Vested', accessor: 'vested', width: 100 },
+  { Header: 'Staked', accessor: 'staked', width: 100 },
   { Header: 'Total', accessor: 'total', width: 100 },
   { Header: '', accessor: 'utils', width: 70 },
 ]
@@ -58,7 +58,7 @@ export type PortfolioToken = {
   tokenName: string
   isVerified: boolean
   status: TokenStatus
-  vested: number
+  staked: number
   total: number
   tokenId: string
   memberId: string
@@ -89,10 +89,10 @@ export const CrtPortfolioTable = ({ data, emptyState, isLoading }: CrtPortfolioT
           <TransferableBalance memberId={row.memberId} tokenId={row.tokenId} ticker={`${row.tokenTitle}`} />
         </FlexBox>
       ),
-      vested: (
+      staked: (
         <FlexBox width="auto" alignItems="center" gap={1}>
           {row.hasStaked && <SvgActionLock />}
-          <NumberFormat value={row.vested} as="p" withToken customTicker={`$${row.tokenTitle}`} />
+          <NumberFormat value={row.staked} as="p" withToken customTicker={`$${row.tokenTitle}`} />
         </FlexBox>
       ),
       total: (
@@ -163,7 +163,11 @@ export const TokenInfo = ({
         />
       )}
 
-      <FlexBox alignItems="center">
+      <FlexBox
+        onClick={() => (channelId ? navigate(absoluteRoutes.viewer.channel(channelId, { tab: 'Token' })) : undefined)}
+        className="pointer"
+        alignItems="center"
+      >
         <Text variant="h200" as="h1">
           {tokenTitle}
         </Text>
@@ -262,13 +266,26 @@ export const TransferableBalance = ({
   memberId,
   tokenId,
   ticker,
+  className,
+  variant,
 }: {
   memberId: string
   tokenId: string
   ticker?: string
+  className?: string
+  variant?: TextVariant
 }) => {
   const { tokenBalance } = useGetTokenBalance(tokenId, memberId)
-  return <NumberFormat value={tokenBalance} as="p" withToken customTicker={`$${ticker}`} />
+  return (
+    <NumberFormat
+      className={className}
+      value={tokenBalance}
+      variant={variant}
+      as="p"
+      withToken
+      customTicker={`$${ticker}`}
+    />
+  )
 }
 
 const StyledTable = styled(Table)<{ isEmpty?: boolean }>`

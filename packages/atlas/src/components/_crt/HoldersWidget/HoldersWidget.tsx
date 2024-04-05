@@ -14,13 +14,14 @@ import { cVar, sizes } from '@/styles'
 export type HoldersWidgetProps = {
   ownerId: string
   tokenId: string
+  tokenSymbol: string
   totalSupply: number
   totalHolders: number
 }
 
 const TILES_PER_PAGE = 5
 
-export const HoldersWidget = ({ tokenId, ownerId, totalSupply, totalHolders }: HoldersWidgetProps) => {
+export const HoldersWidget = ({ tokenId, ownerId, totalSupply, totalHolders, tokenSymbol }: HoldersWidgetProps) => {
   const [showModal, setShowModal] = useState(false)
   const {
     holders: _holders,
@@ -38,9 +39,10 @@ export const HoldersWidget = ({ tokenId, ownerId, totalSupply, totalHolders }: H
         memberId: holder?.member?.id ?? '',
         total: +holder.totalAmount,
         allocation: totalSupply ? +formatNumberShort((+holder.totalAmount / totalSupply) * 100) : 0,
-        vested: +(holder.vestingSchedules[0]?.totalVestingAmount ?? 0),
+        tokenId,
+        tokenSymbol: tokenSymbol,
       })) ?? [],
-    [_holders, totalSupply]
+    [_holders, tokenId, tokenSymbol, totalSupply]
   )
   const [firstPageHolders, setFirstPageHolders] = useState<typeof holders>([])
 

@@ -10,6 +10,7 @@ import { TextButton } from '@/components/_buttons/Button'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { absoluteRoutes } from '@/config/routes'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
+import { useUser } from '@/providers/user/user.hooks'
 import { SentryLogger } from '@/utils/logs'
 import { shortenString } from '@/utils/misc'
 
@@ -112,6 +113,7 @@ const Sender = ({ sender }: { sender: PaymentHistory['sender'] }) => {
       skip: sender === 'council',
     }
   )
+  const { activeChannel } = useUser()
   const member = memberships?.find((member) => member.controllerAccount === sender)
   const { urls: avatarUrls, isLoadingAsset: avatarLoading } = getMemberAvatar(member)
 
@@ -128,6 +130,17 @@ const Sender = ({ sender }: { sender: PaymentHistory['sender'] }) => {
       />
     )
   }
+
+  if (sender === 'own-channel') {
+    return (
+      <SenderItem
+        nodeStart={<Avatar assetUrls={activeChannel?.avatarPhoto?.resolvedUrls} size={32} />}
+        label="Own channel"
+        isInteractive={false}
+      />
+    )
+  }
+
   if (member) {
     return (
       <StyledLink to={absoluteRoutes.viewer.member(member.handle)}>

@@ -9,6 +9,7 @@ import {
   IllustrationWrapper,
   LottieContainer,
 } from '@/components/_auth/SignUpModal/SignUpSteps/SignUpSuccessStep/SignUpSuccessStep.styles'
+import { TextButton } from '@/components/_buttons/Button'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMountEffect } from '@/hooks/useMountEffect'
@@ -24,8 +25,15 @@ const data = {
   },
   expert: {
     title: 'Congratulations on becoming a token expert!',
-    description:
-      'Now when you know everything about managing your token you close “your progress” section and keep managing token on your own.',
+    // todo export discord link to config
+    description: (
+      <>
+        Congratulations on becoming a token expert! You have qualified for the token expert role and your token can be
+        featured on the marketplace. Reach out in{' '}
+        <TextButton to="https://discord.gg/abUwBfKT">Gleev Creator Discord</TextButton> to claim the token expert role
+        and token featuring!
+      </>
+    ),
   },
 }
 

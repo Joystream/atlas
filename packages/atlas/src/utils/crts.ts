@@ -53,11 +53,12 @@ export const getRevenueShareStatusForMember = ({
   }
 
   if (currentBlock > endingAt) {
-    if (isFinalized) {
-      return 'finalized'
-    }
     if (hasMemberStaked && !hasRecovered) {
       return 'unlock'
+    }
+
+    if (isFinalized) {
+      return 'finalized'
     }
 
     return 'past'
