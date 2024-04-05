@@ -43,6 +43,7 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
       SentryLogger.error('Failed to fetch token data', 'SellTokenModal', { error })
     },
   })
+  const hasActiveRevenueShare = data?.creatorTokenById?.revenueShares.some((rS) => !rS.finalized)
   const client = useApolloClient()
 
   const currentAmm = data?.creatorTokenById?.currentAmmSale
@@ -189,10 +190,19 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
     [calculateSlippageAmount, fullFee, pricePerUnit, title, tokenAmount]
   )
 
-  const onFormSubmit = () =>
+  const onFormSubmit = () => {
+    if (hasActiveRevenueShare) {
+      displaySnackbar({
+        iconType: 'error',
+        title: 'You cannot trade tokens during revenue share.',
+      })
+      return
+    }
+
     handleSubmit(() => {
       setStep('summary')
     })()
+  }
 
   const onTransactionSubmit = async () => {
     const slippageTolerance = calculateSlippageAmount(tokenAmount)

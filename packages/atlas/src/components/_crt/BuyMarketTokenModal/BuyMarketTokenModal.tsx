@@ -58,6 +58,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
       SentryLogger.error('Error while fetching creator token', 'BuyMarketTokenModal', error)
     },
   })
+  const hasActiveRevenueShare = data?.creatorTokenById?.revenueShares.some((rS) => !rS.finalized)
   const { data: memberTokenAccount } = useGetCreatorTokenHoldersQuery({
     variables: {
       where: {
@@ -324,11 +325,19 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
     if (activeStep === BUY_MARKET_TOKEN_STEPS.form) {
       setPrimaryButtonProps({
         text: 'Continue',
-        onClick: () =>
+        onClick: () => {
+          if (hasActiveRevenueShare) {
+            displaySnackbar({
+              iconType: 'error',
+              title: 'You cannot trade tokens during revenue share.',
+            })
+            return
+          }
           handleSubmit((data) => {
             amountRef.current = data.tokenAmount
             setActiveStep(BUY_MARKET_TOKEN_STEPS.conditions)
-          })(),
+          })()
+        },
       })
     }
 
@@ -338,7 +347,14 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
         onClick: onTransactionSubmit,
       })
     }
-  }, [activeStep, data?.creatorTokenById?.symbol, handleSubmit, onTransactionSubmit])
+  }, [
+    activeStep,
+    data?.creatorTokenById?.symbol,
+    displaySnackbar,
+    handleSubmit,
+    hasActiveRevenueShare,
+    onTransactionSubmit,
+  ])
 
   if (!loading && !currentAmm && show) {
     SentryLogger.error('BuyAmmModal invoked on token without active amm', 'BuyMarketTokenModal', {
