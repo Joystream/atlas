@@ -36,11 +36,11 @@ export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
       <GlobalStyles />
       <SegmentAnalyticsProvider>
         <ApolloProvider client={apolloClient}>
-          <NetworkUtilsProvider>
-            <QueryClientProvider client={queryClient}>
-              <WalletProvider>
-                <AuthProvider>
-                  <UserProvider>
+          <QueryClientProvider client={queryClient}>
+            <WalletProvider>
+              <AuthProvider>
+                <UserProvider>
+                  <NetworkUtilsProvider>
                     <OverlayManagerProvider>
                       <ConfirmationModalProvider>
                         <BrowserRouter>
@@ -51,11 +51,11 @@ export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
                         </BrowserRouter>
                       </ConfirmationModalProvider>
                     </OverlayManagerProvider>
-                  </UserProvider>
-                </AuthProvider>
-              </WalletProvider>
-            </QueryClientProvider>
-          </NetworkUtilsProvider>
+                  </NetworkUtilsProvider>
+                </UserProvider>
+              </AuthProvider>
+            </WalletProvider>
+          </QueryClientProvider>
         </ApolloProvider>
       </SegmentAnalyticsProvider>
     </>

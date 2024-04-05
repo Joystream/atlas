@@ -1,5 +1,6 @@
 import { ApolloQueryResult } from '@apollo/client'
 
+import { GetFullChannelQuery } from '@/api/queries/__generated__/channels.generated'
 import {
   GetCommentEditsQuery,
   GetCommentQuery,
@@ -15,6 +16,8 @@ import { GetNftQuery } from '@/api/queries/__generated__/nfts.generated'
 import { GetFullVideoQuery } from '@/api/queries/__generated__/videos.generated'
 
 export type NetworkUtilsContextValue = {
+  // Channel
+  refetchChannel: (channelId: string) => Promise<ApolloQueryResult<GetFullChannelQuery>>
   // Video
   refetchComment: (id: string) => Promise<ApolloQueryResult<GetCommentQuery>>
   refetchEdits: (id: string) => Promise<ApolloQueryResult<GetCommentEditsQuery>>
@@ -22,8 +25,9 @@ export type NetworkUtilsContextValue = {
   refetchReplies: (parentCommentId: string) => Promise<ApolloQueryResult<GetCommentRepliesConnectionQuery>>
   refetchCommentsSection: (
     videoId: string,
-    memberId: string
+    memberId?: string
   ) => Promise<ApolloQueryResult<GetUserCommentsAndVideoCommentsConnectionQuery>>
+  refetchAllCommentsSections: () => Promise<void>
   refetchVideo: (id: string) => Promise<ApolloQueryResult<GetFullVideoQuery>>
 
   // Ntfs

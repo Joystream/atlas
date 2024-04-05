@@ -2,6 +2,11 @@ import { useApolloClient } from '@apollo/client'
 import { ReactNode, createContext, useCallback, useContext } from 'react'
 
 import {
+  GetFullChannelDocument,
+  GetFullChannelQuery,
+  GetFullChannelQueryVariables,
+} from '@/api/queries/__generated__/channels.generated'
+import {
   GetCommentDocument,
   GetCommentEditsDocument,
   GetCommentEditsQuery,
@@ -34,12 +39,29 @@ import {
   GetFullVideoQueryVariables,
 } from '@/api/queries/__generated__/videos.generated'
 import { NetworkUtilsContextValue } from '@/providers/networkUtils/networkUtils.type'
+import { useUser } from '@/providers/user/user.hooks'
 
 const NetworkUtilsContext = createContext<NetworkUtilsContextValue | undefined>(undefined)
 NetworkUtilsContext.displayName = 'NetworkUtilsContext'
 
 export const NetworkUtilsProvider = ({ children }: { children: ReactNode }) => {
   const client = useApolloClient()
+  const { memberId: activeMemberId } = useUser()
+
+  /*      Channel        */
+
+  const refetchChannel = useCallback(
+    (channelId: string) => {
+      return client.query<GetFullChannelQuery, GetFullChannelQueryVariables>({
+        query: GetFullChannelDocument,
+        variables: {
+          id: channelId,
+        },
+        fetchPolicy: 'network-only',
+      })
+    },
+    [client]
+  )
 
   /*      Video        */
 
@@ -74,13 +96,13 @@ export const NetworkUtilsProvider = ({ children }: { children: ReactNode }) => {
       return client.query<GetUserCommentsReactionsQuery, GetUserCommentsReactionsQueryVariables>({
         query: GetUserCommentsReactionsDocument,
         variables: {
-          memberId: memberId || '',
+          memberId: memberId ?? activeMemberId ?? '',
           videoId: videoId,
         },
         fetchPolicy: 'network-only',
       })
     },
-    [client]
+    [activeMemberId, client]
   )
 
   const refetchReplies = useCallback(
@@ -97,21 +119,31 @@ export const NetworkUtilsProvider = ({ children }: { children: ReactNode }) => {
   )
 
   const refetchCommentsSection = useCallback(
-    (videoId: string, memberId: string) => {
+    (videoId: string, memberId?: string) => {
       return client.query<
         GetUserCommentsAndVideoCommentsConnectionQuery,
         GetUserCommentsAndVideoCommentsConnectionQueryVariables
       >({
         query: GetUserCommentsAndVideoCommentsConnectionDocument,
         variables: {
-          memberId: memberId,
+          memberId: memberId ?? activeMemberId,
           videoId: videoId,
         },
         fetchPolicy: 'network-only',
       })
     },
-    [client]
+    [activeMemberId, client]
   )
+
+  const refetchAllCommentsSections = useCallback(async () => {
+    await client.refetchQueries({
+      updateCache: (cache) => {
+        cache.evict({
+          fieldName: 'commentsConnection',
+        })
+      },
+    })
+  }, [client])
 
   const refetchVideo = useCallback(
     (id: string) =>
@@ -185,9 +217,13 @@ export const NetworkUtilsProvider = ({ children }: { children: ReactNode }) => {
   return (
     <NetworkUtilsContext.Provider
       value={{
+        // Channel
+        refetchChannel,
+
         // Videos
         refetchComment,
         refetchCommentsSection,
+        refetchAllCommentsSections,
         refetchEdits,
         refetchReactions,
         refetchReplies,
