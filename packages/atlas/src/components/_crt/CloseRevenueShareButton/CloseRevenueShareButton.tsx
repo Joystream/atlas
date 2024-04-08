@@ -48,7 +48,7 @@ export const CloseRevenueShareButton = ({
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).finalizeRevenueSplit(memberId, channelId, proxyCallback(updateStatus)),
       onTxSync: async (data) => {
-        client.refetchQueries({ include: 'active' })
+        client.refetchQueries({ include: 'all' })
         trackRevenueShareClosed(channelId, token?.id || 'N/A', token?.symbol || 'N/A')
 
         displaySnackbar({

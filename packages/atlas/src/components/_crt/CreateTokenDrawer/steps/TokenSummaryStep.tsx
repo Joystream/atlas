@@ -182,7 +182,7 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: Tok
               tooltipText="This signals to your investors that they can be 100% sure the token price on the market during this period will be exclusively impacted by market conditions. This is a strong signal of integrity."
             >
               <Text variant="h300" as="p" color="colorTextStrong">
-                {pluralizeNoun(Number(cliff), 'month')}
+                {Number(cliff) > 0 ? pluralizeNoun(Number(cliff), 'month') : 'No locked period'}
               </Text>
             </SectionRow>
             {/*{cliffBanner}*/}
@@ -198,7 +198,7 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: Tok
             </Text>
           </SectionRow>
         )}
-        {!!(form.creatorIssueAmount && payout) && (
+        {!!(form.creatorIssueAmount && payout !== undefined) && (
           <SectionRow
             title="First payout"
             tooltipText="A portion of your tokens that will be available for trading after locked period expires."

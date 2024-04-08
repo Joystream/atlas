@@ -8,6 +8,12 @@ import { cVar, sizes } from '@/styles'
 export const Wrapper = styled.div`
   background-color: ${cVar('colorBackgroundMuted')};
   overflow: auto;
+
+  * {
+    .pointer {
+      cursor: pointer;
+    }
+  }
 `
 
 export const TableBase = styled.table`

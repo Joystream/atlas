@@ -38,12 +38,12 @@ export const RevenueShareHistoryTable = ({ data }: RevenueShareHistoryTableProps
       return {
         endDate: <DateBlockCell type="block" block={row.endsAtBlock} />,
         participants: (
-          <Text variant="t100" as="span">
+          <ParticipantsText variant="t100" as="span">
             {row.stakers.length}/{potentialParticipants ?? 'N/A'}
             <Text variant="t100" as="p" color="colorText">
-              {potentialParticipants ? `(${row.stakers.length / potentialParticipants}%)` : ''}
+              {potentialParticipants ? `(${(row.stakers.length / potentialParticipants) * 100}%)` : ''}
             </Text>
-          </Text>
+          </ParticipantsText>
         ),
         total: <TokenAmount tokenAmount={row.claimed} />,
         userClaimed: <TokenAmount tokenAmount={memberStake} />,
@@ -55,6 +55,10 @@ export const RevenueShareHistoryTable = ({ data }: RevenueShareHistoryTableProps
 
   return <StyledTable minWidth={900} title="Revenue share history" columns={COLUMNS} data={mappedData} />
 }
+
+const ParticipantsText = styled(Text)`
+  text-align: right;
+`
 
 const StyledTable = styled(Table)`
   th:not(:nth-child(1)) {

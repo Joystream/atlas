@@ -63,6 +63,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
     variables: {
       id: token.id,
     },
+    notifyOnNetworkStatusChange: true,
     fetchPolicy: 'no-cache',
   })
   const { fullFee } = useFee('issueRevenueSplitTx', ['1', '1', 10000, 10000])
@@ -128,7 +129,11 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
           : null
 
       if (typeof duration !== 'number' || duration < 0) {
-        displaySnackbar({ title: 'Failed to parse ending date', iconType: 'error', description: 'Please try again.' })
+        displaySnackbar({
+          title: duration && duration < 0 ? 'Revenue share cannot end in the past' : 'Failed to parse ending date',
+          iconType: 'error',
+          description: 'Please try again.',
+        })
         return
       }
 
@@ -226,7 +231,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
       },
 
       {
-        title: 'Your holders will receive',
+        title: 'All holders can receive',
         content: (
           <FlexBox alignItems="baseline" width="fit-content">
             <NumberFormat
@@ -245,7 +250,6 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
       {
         title: 'Transaction fee',
         content: <NumberFormat value={fullFee} as="p" variant="t200" withDenomination="before" withToken />,
-        tooltipText: 'Lorem ipsum',
       },
       {
         title: 'You will receive',
@@ -286,10 +290,10 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
         <ClaimShareModal
           onClose={() => {
             setOpenClaimShareModal(false)
-            client.refetchQueries({ include: 'active' })
+            client.refetchQueries({ include: 'all' })
           }}
           show={openClaimShareModal}
-          tokenId={localTokenData.creatorTokenById.id}
+          token={localTokenData.creatorTokenById}
         />
       )}
       <SuccessActionModalTemplate
@@ -302,7 +306,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
           onClick: () => {
             setShowSuccessModal(false)
             // at this point user won't stake tokens, so we can refetch with cache and close modal
-            client.refetchQueries({ include: 'active' })
+            client.refetchQueries({ include: 'all' })
           },
         }}
       />

@@ -51,9 +51,6 @@ export const UploadsManager: FC = () => {
 
   const { getDataObjectsAvailability, dataObjects, startPolling, stopPolling } = useDataObjectsAvailabilityLazy({
     fetchPolicy: 'network-only',
-    onCompleted: () => {
-      startPolling?.(atlasConfig.storage.assetUploadStatusPollingInterval)
-    },
   })
 
   // display snackbar when video upload is complete
@@ -95,8 +92,10 @@ export const UploadsManager: FC = () => {
     if (!processingAssets.length) {
       return
     }
-    getDataObjectsAvailability(processingAssets.map((asset) => asset.id))
-  }, [getDataObjectsAvailability, processingAssets])
+    getDataObjectsAvailability(processingAssets.map((asset) => asset.id)).then(() => {
+      startPolling?.(atlasConfig.storage.assetUploadStatusPollingInterval)
+    })
+  }, [getDataObjectsAvailability, processingAssets, startPolling])
 
   useEffect(() => {
     dataObjects?.forEach((asset) => {

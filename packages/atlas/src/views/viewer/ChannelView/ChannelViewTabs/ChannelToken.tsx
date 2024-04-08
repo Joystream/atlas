@@ -31,6 +31,7 @@ export const ChannelToken = ({ tokenId, memberId, cumulativeRevenue }: ChannelTo
     variables: {
       id: tokenId ?? '',
     },
+    fetchPolicy: 'cache-and-network',
   })
   const { activeMembership, setActiveChannel } = useUser()
   const isChannelOwner = activeMembership?.channels.some((channel) => channel.id === id)
@@ -111,7 +112,7 @@ export const ChannelToken = ({ tokenId, memberId, cumulativeRevenue }: ChannelTo
               <RevenueShareStateWidget
                 withLink={isLoggedIn}
                 revenueShare={activeRevenueShare}
-                tokenId={token?.id}
+                token={token ?? undefined}
                 tokenSymbol={token?.symbol ?? 'N/A'}
               />
             )
@@ -120,6 +121,7 @@ export const ChannelToken = ({ tokenId, memberId, cumulativeRevenue }: ChannelTo
           <HoldersWidget
             totalSupply={+(token?.totalSupply ?? 0)}
             tokenId={tokenId ?? ''}
+            tokenSymbol={token?.symbol ?? ''}
             ownerId={memberId ?? ''}
             totalHolders={token?.accountsNum ?? 0}
           />

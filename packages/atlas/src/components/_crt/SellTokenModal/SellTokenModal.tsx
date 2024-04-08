@@ -45,6 +45,7 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
       SentryLogger.error('Failed to fetch token data', 'SellTokenModal', { error })
     },
   })
+  const hasActiveRevenueShare = data?.creatorTokenById?.revenueShares.some((rS) => !rS.finalized)
   const client = useApolloClient()
 
   const currentAmm = data?.creatorTokenById?.currentAmmSale
@@ -166,7 +167,8 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
             withDenomination="before"
           />
         ),
-        tooltipText: 'Averaged price per token.',
+        tooltipText:
+          'Price of each incremental unit purchased or sold depends on overall quantity of tokens transacted, the actual average price per unit for the entire purchase or sale will differ from the price displayed for the first unit transacted.',
       },
       {
         title: 'Fee',
@@ -190,10 +192,19 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
     [calculateSlippageAmount, fullFee, pricePerUnit, title, tokenAmount]
   )
 
-  const onFormSubmit = () =>
+  const onFormSubmit = () => {
+    if (hasActiveRevenueShare) {
+      displaySnackbar({
+        iconType: 'error',
+        title: 'You cannot trade tokens during revenue share.',
+      })
+      return
+    }
+
     handleSubmit(() => {
       setStep('summary')
     })()
+  }
 
   const onTransactionSubmit = async () => {
     const slippageTolerance = calculateSlippageAmount(tokenAmount)
@@ -230,7 +241,7 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
           title: `${formatNumberShort(joyAmountReceived)} ${atlasConfig.joystream.tokenTicker} received`,
           description: `You will find it in your portfolio.`,
         })
-        client.refetchQueries({ include: 'active' })
+        client.refetchQueries({ include: 'all' })
         onClose()
       },
     })
