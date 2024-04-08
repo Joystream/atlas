@@ -120,7 +120,7 @@ export const CrtRevenueShareWidget = ({ token, onTabSwitch }: CrtHoldersWidgetPr
 
           {activeRevenueShare ? (
             <FlexBox width="100%" justifyContent="end">
-              <CloseRevenueShareButton disabled={status === 'active'} variant="secondary" />
+              <CloseRevenueShareButton disabled={status === 'active'} />
             </FlexBox>
           ) : null}
         </FlexBox>
@@ -136,7 +136,7 @@ const EmptyState = ({ token }: { token: FullCreatorTokenFragment }) => {
       <Text variant="t200" as="p" color="colorText" margin={{ top: 6, bottom: 2 }}>
         There is no ongoing share of revenue. Click start revenue share to withdraw your share and get your tokens.
       </Text>
-      <RevenueShareModalButton variant="secondary" token={token} />
+      <RevenueShareModalButton token={token} />
     </EmptyStateBox>
   )
 }

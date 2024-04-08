@@ -133,13 +133,9 @@ export const mapEventToPaymentHistory =
 export const aggregatePaymentHistory = (arg: PaymentHistory[]) =>
   arg.reduce(
     (prev, next) => {
-      if (next.type === 'withdrawal') {
+      if (['withdrawal', 'revenue-share'].includes(next.type)) {
         prev.totalWithdrawn.iadd(next.amount.abs())
         return prev
-      }
-      // revenue share is both earned and withdrawn at the time
-      if (next.type === 'revenue-share') {
-        prev.totalWithdrawn.iadd(next.amount.abs())
       }
 
       prev.totalEarned.iadd(next.amount)

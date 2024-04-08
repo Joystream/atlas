@@ -16,6 +16,7 @@ import { BuyMarketTokenSuccess } from '@/components/_crt/BuyMarketTokenModal/ste
 import { DialogProps } from '@/components/_overlays/Dialog'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { absoluteRoutes } from '@/config/routes'
+import { useDismissibleAction } from '@/hooks/useDismissibleAction'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
@@ -27,7 +28,7 @@ import { calcBuyMarketPricePerToken } from '@/utils/crts'
 import { SentryLogger } from '@/utils/logs'
 import { formatSmallDecimal, permillToPercentage } from '@/utils/number'
 
-import { BuyMarketTokenConditions } from './steps/BuyMarketTokenConditions'
+import { BuyMarketTokenConditions, CONDITIONS_ACTION_ID } from './steps/BuyMarketTokenConditions'
 
 export type BuySaleTokenModalProps = {
   tokenId: string
@@ -45,6 +46,7 @@ enum BUY_MARKET_TOKEN_STEPS {
 export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySaleTokenModalProps) => {
   const { memberId, memberChannels } = useUser()
   const navigate = useNavigate()
+  const [hasAcceptedConditions, handleUpdateAction] = useDismissibleAction(CONDITIONS_ACTION_ID)
   const [activeStep, setActiveStep] = useState(BUY_MARKET_TOKEN_STEPS.form)
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogProps['primaryButton']>()
   const amountRef = useRef<number | null>(null)
@@ -175,6 +177,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
             String(tokenAmount),
             String(priceForAllToken)
           )
+          handleUpdateAction(true)
           displaySnackbar({
             iconType: 'success',
             title: `${tokenAmount} $${tokenTitle} purchased`,
@@ -210,6 +213,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
     data?.creatorTokenById?.symbol,
     displaySnackbar,
     handleTransaction,
+    handleUpdateAction,
     joystream,
     memberId,
     memberTokenAccount?.tokenAccounts.length,
@@ -350,7 +354,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
           }
           handleSubmit((data) => {
             amountRef.current = data.tokenAmount
-            setActiveStep(BUY_MARKET_TOKEN_STEPS.conditions)
+            setActiveStep(hasAcceptedConditions ? BUY_MARKET_TOKEN_STEPS.summary : BUY_MARKET_TOKEN_STEPS.conditions)
           })()
         },
       })
@@ -367,6 +371,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
     data?.creatorTokenById?.symbol,
     displaySnackbar,
     handleSubmit,
+    hasAcceptedConditions,
     hasActiveRevenueShare,
     onTransactionSubmit,
   ])

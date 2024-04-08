@@ -37,6 +37,8 @@ type BuySaleTokenTermsProps = {
   onSubmit: () => void
 } & CommonProps
 
+export const CONDITIONS_ACTION_ID = 'buy-amm-conditions'
+
 export const BuyMarketTokenConditions = ({ setPrimaryButtonProps, onSubmit }: BuySaleTokenTermsProps) => {
   const [isChecked, setIsChecked] = useState(false)
   const [checkboxError, setCheckboxError] = useState('')
