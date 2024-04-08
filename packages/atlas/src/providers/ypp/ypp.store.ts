@@ -19,6 +19,7 @@ type YppStoreActions = {
   setSelectedChannelId: (selectedChannelId: string | null) => void
   setUtmSource: (utmSource: string | null) => void
   setUtmCampaign: (utmCampaign: string | null) => void
+  setUtmContent: (utmContent: string | null) => void
   setYppModalOpenName: (modal: YppModalStep) => void
   setShouldContinueYppFlowAfterLogin: (shouldContinueYppFlow: boolean) => void
   setShouldContinueYppFlowAfterCreatingChannel: (shouldContinueYppFlow: boolean) => void
@@ -57,6 +58,11 @@ export const useYppStore = createStore<YppStoreState, YppStoreActions>(
       setUtmCampaign: (utmCampaign) => {
         set((state) => {
           state.utmCampaign = utmCampaign
+        })
+      },
+      setUtmContent: (utmContent) => {
+        set((state) => {
+          state.utmContent = utmContent
         })
       },
       setYppModalOpenName: (modal) => {
