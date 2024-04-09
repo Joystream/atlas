@@ -66,6 +66,7 @@ const Template: StoryFn<any> = (args) => {
     memberHandle: args.memberHandle,
     videoId: 'video',
     videoTitle: args.videoTitle,
+    refetchAction: undefined,
   }
 
   const member = { metadata: { avatar: { __typename: 'AvatarUri', avatarUri: args.memberAvatarUrl } } } as Membership

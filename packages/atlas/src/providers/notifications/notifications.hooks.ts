@@ -14,11 +14,13 @@ import {
   useGetNotificationsCountQuery,
 } from '@/api/queries/__generated__/notifications.generated'
 import { absoluteRoutes } from '@/config/routes'
+import { useNetworkUtils } from '@/providers/networkUtils/networkUtils.hooks'
+import { NetworkUtilsContextValue } from '@/providers/networkUtils/networkUtils.type'
 import { useUser } from '@/providers/user/user.hooks'
 import { whenDefined } from '@/utils/misc'
 
 import { NotificationsStoreState, RecipientType, useNotificationStore } from './notifications.store'
-import { NotificationData, NotificationRecord } from './notifications.types'
+import { NotificationData, NotificationRecord, NotificationRefetchActionType } from './notifications.types'
 
 type UnseenNotificationsCounts = {
   member?: number
@@ -35,10 +37,13 @@ export type UseNotifications = Pick<QueryResult<GetNotificationsConnectionQuery>
   recipient: RecipientTypeWhereInput | undefined
 }
 
+const refetchedNotifications = new Map<string, number>()
+
 export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkStatusChange'>): UseNotifications => {
   const { pathname } = useLocation()
   const isStudio = pathname.search(absoluteRoutes.studio.index()) !== -1
   const { channelId, memberId } = useUser()
+  const networkUtils = useNetworkUtils()
 
   const recipientType: RecipientType = isStudio ? 'ChannelRecipient' : 'MemberRecipient'
   const recipientId = isStudio ? channelId : memberId
@@ -82,16 +87,28 @@ export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkS
   const [optimisticRead, setOptimisticRead] = useState<string[]>([])
   const notifications: NotificationRecord[] = useMemo(
     () =>
-      rawNotifications.map(
-        ({ node: { id, createdAt, status, notificationType } }): NotificationRecord => ({
+      rawNotifications.map(({ node: { id, createdAt, status, notificationType } }): NotificationRecord => {
+        const notificationData = parseNotificationType(notificationType as NotificationType)
+
+        return {
           id,
           date: new Date(createdAt),
           read: status.__typename === 'Read' || optimisticRead.includes(id),
-          ...parseNotificationType(notificationType as NotificationType),
-        })
-      ),
+          ...notificationData,
+        }
+      }),
     [rawNotifications, optimisticRead]
   )
+
+  useEffect(() => {
+    notifications.forEach(({ refetchAction, id }) => {
+      if (refetchAction && !refetchedNotifications.has(id)) {
+        const refetchFn = networkUtils[refetchAction.name]
+        refetchedNotifications.set(id, 1)
+        refetchFn(...(refetchAction.args as Parameters<typeof refetchFn>))
+      }
+    })
+  }, [networkUtils, notifications])
 
   const markNotificationsAsRead = useCallback(
     async (notifications: NotificationRecord[]) => {
@@ -203,28 +220,68 @@ const parseNotificationType = (notificationType: NotificationType): Notification
 
     // case 'EnglishAuctionSettled':
     case 'NftPurchased':
-      return toNotificationData(notificationType, { price: new BN(notificationType.price) })
+      return toNotificationData(
+        notificationType,
+        { price: new BN(notificationType.price) },
+        {
+          name: 'refetchNftData',
+          args: [notificationType.videoId],
+        }
+      )
 
     case 'AuctionWon':
     case 'AuctionLost':
-      return toNotificationData(notificationType, { auction: notificationType.type.__typename })
+      return toNotificationData(
+        notificationType,
+        { auction: notificationType.type.__typename },
+        {
+          name: 'refetchNftData',
+          args: [notificationType.videoId],
+        }
+      )
 
-    case 'ChannelCreated':
+    case 'VideoLiked':
+    case 'VideoDisliked':
+      return toNotificationData(
+        notificationType,
+        {},
+        {
+          name: 'refetchVideo',
+          args: [notificationType.videoId],
+        }
+      )
+    case 'CommentPostedToVideo':
+      return toNotificationData(
+        notificationType,
+        {},
+        {
+          name: 'refetchAllCommentsSections',
+          args: [],
+        }
+      )
     case 'CommentReply':
     case 'ReactionToComment':
-    case 'VideoPosted':
+      return toNotificationData(notificationType, {} as never, {
+        name: 'refetchComment',
+        args: [notificationType.commentId],
+      })
+    case 'HigherBidPlaced':
     case 'NewNftOnSale':
     case 'NewAuction':
-    case 'HigherBidPlaced':
+      return toNotificationData(notificationType, {} as never, {
+        name: 'refetchNftData',
+        args: [notificationType.videoId],
+      })
+
     case 'ChannelExcluded':
     case 'VideoExcluded':
     case 'NftFeaturedOnMarketPlace':
     case 'NewChannelFollower':
-    case 'CommentPostedToVideo':
-    case 'VideoLiked':
-    case 'VideoDisliked':
     case 'ChannelVerified':
     case 'ChannelSuspended':
+    case 'ChannelCreated':
+    case 'VideoPosted':
+      return toNotificationData(notificationType, {})
     case 'CreatorTokenRevenueSharePlanned':
     case 'CreatorTokenRevenueShareStarted':
     case 'CreatorTokenRevenueShareEnded':
@@ -234,17 +291,29 @@ const parseNotificationType = (notificationType: NotificationType): Notification
     case 'CreatorTokenMarketMint':
     case 'CreatorTokenMarketBurn':
     case 'CreatorTokenSaleMint':
-      return toNotificationData(notificationType, {})
+      return toNotificationData(
+        notificationType,
+        {},
+        {
+          name: 'refetchCreatorTokenData',
+          args: [notificationType.tokenId],
+        }
+      )
   }
 }
 
 type TypenameOf<T> = T extends { __typename: infer Typename } ? Typename : never
 type NotifDataOfType<T> = NotificationData extends infer D ? (D extends { type: T } ? D : never) : never
 
-const toNotificationData = <T extends NotificationType, R extends NotifDataOfType<TypenameOf<T>>>(
+const toNotificationData = <
+  T extends NotificationType,
+  R extends NotifDataOfType<TypenameOf<T>>,
+  U extends keyof NetworkUtilsContextValue
+>(
   notificationType: T,
-  data: Partial<R>
+  data: Partial<R>,
+  refetchAction?: NotificationRefetchActionType<U>
 ) => {
   const { __typename, ...rest } = notificationType
-  return { ...rest, ...data, type: __typename as T['__typename'] } as unknown as R
+  return { ...rest, ...data, type: __typename as T['__typename'], refetchAction } as unknown as R
 }

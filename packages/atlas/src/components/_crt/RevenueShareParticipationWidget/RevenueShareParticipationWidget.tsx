@@ -1,4 +1,3 @@
-import { useApolloClient } from '@apollo/client'
 import styled from '@emotion/styled'
 import BN from 'bn.js'
 import { useNavigate } from 'react-router'
@@ -15,6 +14,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useJoystream } from '@/providers/joystream'
 import { useJoystreamStore } from '@/providers/joystream/joystream.store'
+import { useNetworkUtils } from '@/providers/networkUtils/networkUtils.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
@@ -36,7 +36,7 @@ export const RevenueShareParticipationWidget = ({ revenueShare, token }: Revenue
   const { displaySnackbar } = useSnackbar()
   const handleTransaction = useTransaction()
   const navigate = useNavigate()
-  const client = useApolloClient()
+  const { refetchCreatorTokenData, refetchAllMemberTokenBalanceData } = useNetworkUtils()
   const memberStake = revenueShare.stakers.find((staker) => staker.account.member.id === memberId)
   const status = revenueShare
     ? getRevenueShareStatusForMember({
@@ -68,9 +68,10 @@ export const RevenueShareParticipationWidget = ({ revenueShare, token }: Revenue
           actionText: 'Go to my portfolio',
           onActionClick: () => navigate(absoluteRoutes.viewer.portfolio()),
         })
-        client.refetchQueries({ include: 'all' }).catch(() => {
+        refetchAllMemberTokenBalanceData()
+        refetchCreatorTokenData(token.id).catch(() => {
           displaySnackbar({
-            title: 'Failed to refersh data',
+            title: 'Failed to refresh data',
             description: 'Please reload your page to get latest data.',
             iconType: 'error',
           })

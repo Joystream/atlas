@@ -1,4 +1,3 @@
-import { useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
 import { useCallback, useMemo } from 'react'
 
@@ -13,6 +12,7 @@ import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useJoystream } from '@/providers/joystream'
+import { useNetworkUtils } from '@/providers/networkUtils/networkUtils.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
@@ -33,6 +33,7 @@ export type CloseMarketModalProps = {
 const TRESHOLD_RATIO = 100
 
 export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMarketModalProps) => {
+  const { refetchCreatorTokenData } = useNetworkUtils()
   const { memberId } = useUser()
   const { data } = useGetFullCreatorTokenQuery({
     variables: {
@@ -48,7 +49,6 @@ export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMar
   const { displaySnackbar } = useSnackbar()
   const { trackAMMClosed } = useSegmentAnalytics()
   const handleTransaction = useTransaction()
-  const client = useApolloClient()
   const ammBalance = data?.creatorTokenById?.currentAmmSale
     ? +data.creatorTokenById.currentAmmSale.mintedByAmm - +data.creatorTokenById.currentAmmSale.burnedByAmm
     : 0
@@ -94,7 +94,7 @@ export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMar
             title: 'Market closed',
           })
           onClose()
-          client.refetchQueries({ include: 'all' }).catch(() => {
+          refetchCreatorTokenData(tokenId).catch(() => {
             displaySnackbar({
               title: 'Data update failed',
               description: 'Please refresh the page to get live data',
@@ -103,7 +103,7 @@ export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMar
           })
         },
         onError: () => {
-          client.refetchQueries({ include: 'all' })
+          refetchCreatorTokenData(tokenId)
           SentryLogger.error('Failed to close market', 'CloseMarketModal', { joystream, channelId, memberId })
           displaySnackbar({
             iconType: 'error',
@@ -153,12 +153,12 @@ export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMar
     handleTransaction,
     proxyCallback,
     trackAMMClosed,
+    tokenId,
     symbol,
     displaySnackbar,
     onClose,
-    client,
+    refetchCreatorTokenData,
     calculateSlippageAmount,
-    tokenId,
   ])
 
   const priceForAllToken = useMemo(() => {

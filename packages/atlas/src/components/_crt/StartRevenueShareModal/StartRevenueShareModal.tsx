@@ -1,4 +1,3 @@
-import { useApolloClient } from '@apollo/client'
 import styled from '@emotion/styled'
 import { BN } from 'bn.js'
 import { useCallback, useMemo, useState } from 'react'
@@ -22,6 +21,7 @@ import { useClipboard } from '@/hooks/useClipboard'
 import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useFee, useJoystream, useSubscribeAccountBalance } from '@/providers/joystream'
+import { useNetworkUtils } from '@/providers/networkUtils/networkUtils.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
@@ -52,7 +52,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
   const [showSuccessModal, setShowSuccessModal] = useState(false)
 
   const { joystream, proxyCallback } = useJoystream()
-  const client = useApolloClient()
+  const { refetchCreatorTokenData } = useNetworkUtils()
   const { memberId, channelId, activeChannel } = useUser()
   const { displaySnackbar } = useSnackbar()
   const handleTransaction = useTransaction()
@@ -290,7 +290,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
         <ClaimShareModal
           onClose={() => {
             setOpenClaimShareModal(false)
-            client.refetchQueries({ include: 'all' })
+            refetchCreatorTokenData(localTokenData.creatorTokenById?.id ?? '')
           }}
           show={openClaimShareModal}
           token={localTokenData.creatorTokenById}
@@ -305,8 +305,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
           text: 'Continue',
           onClick: () => {
             setShowSuccessModal(false)
-            // at this point user won't stake tokens, so we can refetch with cache and close modal
-            client.refetchQueries({ include: 'all' })
+            refetchCreatorTokenData(localTokenData?.creatorTokenById?.id ?? '')
           },
         }}
       />

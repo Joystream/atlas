@@ -23,7 +23,6 @@ import { Drawer, StatisticsContainer, SupplyLine, ToggleContainer, Widget } from
 export type CrtStatusWidgetProps = {
   token: FullCreatorTokenFragment
 }
-// todo: total revenue
 export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({ token }) => {
   const drawer = useRef<HTMLDivElement>(null)
   const [isExpanded, expand] = useState(false)

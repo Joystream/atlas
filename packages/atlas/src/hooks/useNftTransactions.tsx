@@ -3,11 +3,11 @@ import BN from 'bn.js'
 import { useCallback } from 'react'
 
 import { GetBidsDocument } from '@/api/queries/__generated__/bids.generated'
-import { GetNftDocument, GetNftQuery, GetNftQueryVariables } from '@/api/queries/__generated__/nfts.generated'
 import { NumberFormat } from '@/components/NumberFormat'
 import { NftSaleType } from '@/joystream-lib/types'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useJoystream } from '@/providers/joystream'
+import { useNetworkUtils } from '@/providers/networkUtils/networkUtils.hooks'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { formatDateTime } from '@/utils/time'
@@ -18,19 +18,7 @@ export const useNftTransactions = () => {
   const handleTransaction = useTransaction()
   const [openModal, closeModal] = useConfirmationModal()
   const client = useApolloClient()
-
-  const refetchNftData = useCallback(
-    (id: string) => {
-      client.query<GetNftQuery, GetNftQueryVariables>({
-        query: GetNftDocument,
-        variables: {
-          id,
-        },
-        fetchPolicy: 'network-only',
-      })
-    },
-    [client]
-  )
+  const { refetchNftData } = useNetworkUtils()
 
   const withdrawBid = useCallback(
     (id: string, userBidAmount: BN, userBidCreatedAt: Date) => {
