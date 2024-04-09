@@ -79,6 +79,7 @@ const locationToPageName = {
   '/member/': 'Member',
   '/notifications': 'Notifications',
   '/marketplace': 'Marketplace',
+  '/portfolio': 'Portfolio',
   '/ypp': 'YPP landing page',
   '/ypp-dashboard': 'YPP Dashboard',
   '/referrals': 'Referrals Landing page',

@@ -72,6 +72,8 @@ const locationToPageName = {
   '/crt-dashboard': 'CRT Dashboard',
   '/crt-preview-edit': 'CRT Preview Edit',
   '/crt-preview': 'CRT Preview',
+  '/crt/edit': 'CRT Edit',
+  '/crt': 'CRT Landing',
   'video-workspace': 'Video workspace',
   '/uploads': 'Uploads',
   '/signin': 'Sign in',

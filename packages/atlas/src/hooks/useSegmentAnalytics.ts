@@ -392,7 +392,7 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackTokenMintingCompleted = useCallback(
-    (channelId: string, tokenId: string, tokenTicker: string, initSupply: string, safetyOption: string) => {
+    (channelId: string, tokenId: string, tokenTicker: string, initSupply: number, safetyOption: string) => {
       analytics.track('Token minting completed', {
         channelId,
         tokenId,
@@ -427,7 +427,7 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackAMMTokensPurchased = useCallback(
-    (tokenId: string, tokenTicker: string, channelId: string, crtAmount: string, joyPaid: string) => {
+    (tokenId: string, tokenTicker: string, channelId: string, crtAmount: number, joyPaid: number) => {
       analytics.track('Token Market Purchase', {
         tokenId,
         tokenTicker,
@@ -440,13 +440,35 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackAMMTokensSold = useCallback(
-    (tokenId: string, tokenTicker: string, channelId: string, crtAmount: string, joyReceived: string) => {
+    (tokenId: string, tokenTicker: string, channelId: string, crtAmount: number, joyReceived: number) => {
       analytics.track('Token Market Sell', {
         tokenId,
         tokenTicker,
         channelId,
         crtAmount,
         joyReceived,
+      })
+    },
+    [analytics]
+  )
+
+  const trackRevenueShareStarted = useCallback(
+    (channelId: string, tokenId: string, tokenTicker: string) => {
+      analytics.track('Revenue Share Started', {
+        channelId,
+        tokenId,
+        tokenTicker,
+      })
+    },
+    [analytics]
+  )
+
+  const trackRevenueShareClosed = useCallback(
+    (channelId: string, tokenId: string, tokenTicker: string) => {
+      analytics.track('Revenue Share Closed', {
+        channelId,
+        tokenId,
+        tokenTicker,
       })
     },
     [analytics]
@@ -515,6 +537,8 @@ export const useSegmentAnalytics = () => {
     trackPageView,
     trackPublishAndUploadClicked,
     trackReferralLinkGenerated,
+    trackRevenueShareClosed,
+    trackRevenueShareStarted,
     trackTokenMintingCompleted,
     trackTokenMintingStarted,
     trackUploadVideoClicked,
