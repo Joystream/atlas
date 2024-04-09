@@ -26,6 +26,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useFee, useJoystream, useSubscribeAccountBalance } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
@@ -72,6 +73,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
     fetchPolicy: 'no-cache',
   })
   const { fullFee } = useFee('issueRevenueSplitTx', ['1', '1', 10000, 10000])
+  const { trackRevenueShareStarted } = useSegmentAnalytics()
 
   const memoizedChannelStateBloatBond = useMemo(() => {
     return new BN(activeChannel?.channelStateBloatBond || 0)
@@ -156,6 +158,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
             onClose()
             setShowSuccessModal(true)
           })
+          trackRevenueShareStarted(channelId, token.id, token.symbol || 'N/A')
         },
         onError: () => {
           displaySnackbar({

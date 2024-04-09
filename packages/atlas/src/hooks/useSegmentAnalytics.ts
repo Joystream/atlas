@@ -1,4 +1,5 @@
 import { useCallback, useRef } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
 import { useSegmentAnalyticsContext } from '@/providers/segmentAnalytics/useSegmentAnalyticsContext'
 import { YppRequirementsErrorCode } from '@/views/global/YppLandingView/YppAuthorizationModal/YppAuthorizationModal.types'
@@ -19,6 +20,7 @@ type PageViewParams = {
   tab?: string
   utm_source?: string
   utm_campaign?: string
+  utm_content?: string
   isYppFlow?: boolean
 } & VideoPageViewParams &
   ChannelPageViewParams
@@ -50,6 +52,7 @@ type YppOptInParams = {
   referrerId?: string
   utmSource?: string
   utmCampaign?: string
+  utmContent?: string
 }
 
 type IdentifyUserParams = {
@@ -64,21 +67,31 @@ type playbackEventType = 'playbackStarted' | 'playbackPaused' | 'playbackResumed
 
 export const useSegmentAnalytics = () => {
   const { analytics } = useSegmentAnalyticsContext()
+  const [searchParams] = useSearchParams()
 
   const playbackEventsQueue = useRef<{ type: playbackEventType; params: videoPlaybackParams }[]>([])
 
+  const getUTMParams = useCallback(() => {
+    const [referrer, utmSource, utmCampaign] = [
+      searchParams.get('referrerId'),
+      searchParams.get('utm_source'),
+      searchParams.get('utm_campaign'),
+    ]
+    return { referrer, utmSource, utmCampaign }
+  }, [searchParams])
+
   const identifyUser = useCallback(
     (params: IdentifyUserParams) => {
-      analytics.identify(params.email, params)
+      analytics.identify(params.email, { ...params, ...getUTMParams() })
     },
-    [analytics]
+    [analytics, getUTMParams]
   )
 
   const trackPageView = useCallback(
     (name: string, params?: PageViewParams) => {
-      analytics.page(undefined, name, params)
+      analytics.page(undefined, name, { ...params, ...getUTMParams() })
     },
-    [analytics]
+    [analytics, getUTMParams]
   )
 
   const trackYppOptIn = useCallback(
@@ -101,9 +114,10 @@ export const useSegmentAnalytics = () => {
       analytics.track('Membership created', {
         handle,
         email,
+        ...getUTMParams(),
       })
     },
-    [analytics]
+    [analytics, getUTMParams]
   )
 
   const trackChannelCreation = useCallback(
@@ -378,7 +392,7 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackTokenMintingCompleted = useCallback(
-    (channelId: string, tokenId: string, tokenTicker: string, initSupply: string, safetyOption: string) => {
+    (channelId: string, tokenId: string, tokenTicker: string, initSupply: number, safetyOption: string) => {
       analytics.track('Token minting completed', {
         channelId,
         tokenId,
@@ -413,7 +427,7 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackAMMTokensPurchased = useCallback(
-    (tokenId: string, tokenTicker: string, channelId: string, crtAmount: string, joyPaid: string) => {
+    (tokenId: string, tokenTicker: string, channelId: string, crtAmount: number, joyPaid: number) => {
       analytics.track('Token Market Purchase', {
         tokenId,
         tokenTicker,
@@ -426,13 +440,35 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackAMMTokensSold = useCallback(
-    (tokenId: string, tokenTicker: string, channelId: string, crtAmount: string, joyReceived: string) => {
+    (tokenId: string, tokenTicker: string, channelId: string, crtAmount: number, joyReceived: number) => {
       analytics.track('Token Market Sell', {
         tokenId,
         tokenTicker,
         channelId,
         crtAmount,
         joyReceived,
+      })
+    },
+    [analytics]
+  )
+
+  const trackRevenueShareStarted = useCallback(
+    (channelId: string, tokenId: string, tokenTicker: string) => {
+      analytics.track('Revenue Share Started', {
+        channelId,
+        tokenId,
+        tokenTicker,
+      })
+    },
+    [analytics]
+  )
+
+  const trackRevenueShareClosed = useCallback(
+    (channelId: string, tokenId: string, tokenTicker: string) => {
+      analytics.track('Revenue Share Closed', {
+        channelId,
+        tokenId,
+        tokenTicker,
       })
     },
     [analytics]
@@ -501,6 +537,8 @@ export const useSegmentAnalytics = () => {
     trackPageView,
     trackPublishAndUploadClicked,
     trackReferralLinkGenerated,
+    trackRevenueShareClosed,
+    trackRevenueShareStarted,
     trackTokenMintingCompleted,
     trackTokenMintingStarted,
     trackUploadVideoClicked,

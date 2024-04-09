@@ -1,10 +1,11 @@
 import styled from '@emotion/styled'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { SvgActionCreatorToken, SvgActionPlay } from '@/assets/icons'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { PageTabs } from '@/components/PageTabs'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { sizes } from '@/styles'
 import { PortfolioNftTab } from '@/views/viewer/PortfolioView/tabs/PortfolioNftTab'
 import { PortfolioTokenTab } from '@/views/viewer/PortfolioView/tabs/PortfolioTokenTab'
@@ -25,6 +26,11 @@ const TABS = [
 export const PortfolioView = () => {
   const [tab, setTab] = useState(0)
   const smMatch = useMediaMatch('sm')
+  const { trackPageView } = useSegmentAnalytics()
+
+  useEffect(() => {
+    trackPageView('Portfolio', { tab: TABS[tab].name })
+  }, [tab, trackPageView])
 
   return (
     <>

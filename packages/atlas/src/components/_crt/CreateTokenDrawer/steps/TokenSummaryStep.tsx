@@ -85,13 +85,7 @@ export const TokenSummaryStep = ({ setPrimaryButtonProps, form, onSuccess }: Tok
           proxyCallback(handleUpdate)
         ),
       onTxSync: async ({ tokenId }) => {
-        trackTokenMintingCompleted(
-          channelId,
-          tokenId,
-          form.name,
-          String(form.creatorIssueAmount ?? 0),
-          form.assuranceType
-        )
+        trackTokenMintingCompleted(channelId, tokenId, form.name, form.creatorIssueAmount ?? 0, form.assuranceType)
         onSuccess()
       },
       snackbarSuccessMessage: {
