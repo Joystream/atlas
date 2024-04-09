@@ -290,8 +290,7 @@ const parseNotificationType = (notificationType: NotificationType): Notification
         {},
         {
           name: 'refetchCreatorTokenData',
-          // todo add tokenId to orion notification event
-          args: ['1'],
+          args: [notificationType.tokenId],
         }
       )
   }
