@@ -79,11 +79,18 @@ export type GetNotificationsConnectionQuery = {
               videoId: string
               videoTitle: string
             }
-          | { __typename: 'CreatorTokenIssued'; channelId: string; channelTitle: string; tokenSymbol: string }
+          | {
+              __typename: 'CreatorTokenIssued'
+              channelId: string
+              channelTitle: string
+              tokenSymbol: string
+              tokenId: string
+            }
           | {
               __typename: 'CreatorTokenMarketBurn'
               tokenSymbol: string
               burnedTokenAmount: string
+              tokenId: string
               burnerHandle: string
               receivedJoyAmount: string
               burnerId: string
@@ -92,22 +99,31 @@ export type GetNotificationsConnectionQuery = {
               __typename: 'CreatorTokenMarketMint'
               tokenSymbol: string
               mintedTokenAmount: string
+              tokenId: string
               minterHandle: string
               minterId: string
               paiedJoyAmount: string
             }
-          | { __typename: 'CreatorTokenMarketStarted'; tokenSymbol: string; channelTitle: string; channelId: string }
+          | {
+              __typename: 'CreatorTokenMarketStarted'
+              tokenSymbol: string
+              tokenId: string
+              channelTitle: string
+              channelId: string
+            }
           | {
               __typename: 'CreatorTokenRevenueShareEnded'
               channelId: string
               channelTitle: string
               tokenSymbol: string
+              tokenId: string
             }
           | {
               __typename: 'CreatorTokenRevenueSharePlanned'
               channelId: string
               channelTitle: string
               tokenSymbol: string
+              tokenId: string
               plannedAt: number
             }
           | {
@@ -115,16 +131,24 @@ export type GetNotificationsConnectionQuery = {
               channelId: string
               channelTitle: string
               tokenSymbol: string
+              tokenId: string
             }
           | {
               __typename: 'CreatorTokenSaleMint'
               tokenSymbol: string
+              tokenId: string
               mintedTokenAmount: string
               minterHandle: string
               minterId: string
               paiedJoyAmount: string
             }
-          | { __typename: 'CreatorTokenSaleStarted'; tokenSymbol: string; channelTitle: string; channelId: string }
+          | {
+              __typename: 'CreatorTokenSaleStarted'
+              tokenSymbol: string
+              tokenId: string
+              channelTitle: string
+              channelId: string
+            }
           | { __typename: 'DirectChannelPaymentByMember'; amount: string; payerId: string; payerHandle: string }
           | {
               __typename: 'HigherBidPlaced'
@@ -3306,25 +3330,30 @@ export const GetNotificationsConnectionDocument = gql`
               channelId
               channelTitle
               tokenSymbol
+              tokenId
             }
             ... on CreatorTokenRevenueSharePlanned {
               channelId
               channelTitle
               tokenSymbol
+              tokenId
               plannedAt
             }
             ... on CreatorTokenRevenueShareStarted {
               channelId
               channelTitle
               tokenSymbol
+              tokenId
             }
             ... on CreatorTokenRevenueShareEnded {
               channelId
               channelTitle
               tokenSymbol
+              tokenId
             }
             ... on CreatorTokenMarketStarted {
               tokenSymbol
+              tokenId
               channelTitle
               channelId
             }
@@ -3332,6 +3361,7 @@ export const GetNotificationsConnectionDocument = gql`
               tokenSymbol
               mintedTokenAmount
               tokenSymbol
+              tokenId
               minterHandle
               minterId
               paiedJoyAmount
@@ -3340,12 +3370,14 @@ export const GetNotificationsConnectionDocument = gql`
               tokenSymbol
               burnedTokenAmount
               tokenSymbol
+              tokenId
               burnerHandle
               receivedJoyAmount
               burnerId
             }
             ... on CreatorTokenSaleMint {
               tokenSymbol
+              tokenId
               mintedTokenAmount
               tokenSymbol
               minterHandle
@@ -3354,6 +3386,7 @@ export const GetNotificationsConnectionDocument = gql`
             }
             ... on CreatorTokenSaleStarted {
               tokenSymbol
+              tokenId
               channelTitle
               channelId
             }

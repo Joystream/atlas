@@ -1,33 +1,11 @@
-import { useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router'
 
-import {
-  GetCommentDocument,
-  GetCommentEditsDocument,
-  GetCommentEditsQuery,
-  GetCommentEditsQueryVariables,
-  GetCommentQuery,
-  GetCommentQueryVariables,
-  GetCommentRepliesConnectionDocument,
-  GetCommentRepliesConnectionQuery,
-  GetCommentRepliesConnectionQueryVariables,
-  GetUserCommentsAndVideoCommentsConnectionDocument,
-  GetUserCommentsAndVideoCommentsConnectionQuery,
-  GetUserCommentsAndVideoCommentsConnectionQueryVariables,
-  GetUserCommentsReactionsDocument,
-  GetUserCommentsReactionsQuery,
-  GetUserCommentsReactionsQueryVariables,
-} from '@/api/queries/__generated__/comments.generated'
-import {
-  GetFullVideoDocument,
-  GetFullVideoQuery,
-  GetFullVideoQueryVariables,
-} from '@/api/queries/__generated__/videos.generated'
 import { absoluteRoutes } from '@/config/routes'
 import { CommentReaction, VideoReaction } from '@/joystream-lib/types'
 import { useJoystream } from '@/providers/joystream'
+import { useNetworkUtils } from '@/providers/networkUtils/networkUtils.hooks'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
@@ -35,91 +13,10 @@ import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 export const useReactionTransactions = () => {
   const { memberId } = useUser()
   const { joystream, proxyCallback } = useJoystream()
+  const { refetchReactions, refetchComment, refetchCommentsSection, refetchReplies, refetchVideo, refetchEdits } =
+    useNetworkUtils()
   const handleTransaction = useTransaction()
   const navigate = useNavigate()
-  const client = useApolloClient()
-
-  const refetchComment = useCallback(
-    (id: string) => {
-      return client.query<GetCommentQuery, GetCommentQueryVariables>({
-        query: GetCommentDocument,
-        variables: {
-          commentId: id,
-        },
-        fetchPolicy: 'network-only',
-      })
-    },
-    [client]
-  )
-
-  const refetchEdits = useCallback(
-    (id: string) => {
-      return client.query<GetCommentEditsQuery, GetCommentEditsQueryVariables>({
-        query: GetCommentEditsDocument,
-        variables: {
-          commentId: id,
-        },
-        fetchPolicy: 'network-only',
-      })
-    },
-    [client]
-  )
-
-  const refetchReactions = useCallback(
-    (videoId: string) => {
-      return client.query<GetUserCommentsReactionsQuery, GetUserCommentsReactionsQueryVariables>({
-        query: GetUserCommentsReactionsDocument,
-        variables: {
-          memberId: memberId || '',
-          videoId: videoId,
-        },
-        fetchPolicy: 'network-only',
-      })
-    },
-    [memberId, client]
-  )
-
-  const refetchReplies = useCallback(
-    (parentCommentId: string) => {
-      return client.query<GetCommentRepliesConnectionQuery, GetCommentRepliesConnectionQueryVariables>({
-        query: GetCommentRepliesConnectionDocument,
-        variables: {
-          parentCommentId,
-        },
-        fetchPolicy: 'network-only',
-      })
-    },
-    [client]
-  )
-
-  const refetchCommentsSection = useCallback(
-    (videoId: string) => {
-      return client.query<
-        GetUserCommentsAndVideoCommentsConnectionQuery,
-        GetUserCommentsAndVideoCommentsConnectionQueryVariables
-      >({
-        query: GetUserCommentsAndVideoCommentsConnectionDocument,
-        variables: {
-          memberId: memberId,
-          videoId: videoId,
-        },
-        fetchPolicy: 'network-only',
-      })
-    },
-    [memberId, client]
-  )
-
-  const refetchVideo = useCallback(
-    (id: string) =>
-      client.query<GetFullVideoQuery, GetFullVideoQueryVariables>({
-        query: GetFullVideoDocument,
-        variables: {
-          id,
-        },
-        fetchPolicy: 'network-only',
-      }),
-    [client]
-  )
 
   const addComment = useCallback(
     async ({
@@ -164,7 +61,7 @@ export const useReactionTransactions = () => {
             ])
           } else {
             // if the comment was top-level, refetch the comments section query (will take care of separating user comments)
-            await Promise.all([refetchCommentsSection(videoId), refetchVideo(videoId)])
+            await Promise.all([refetchCommentsSection(videoId, memberId), refetchVideo(videoId)])
           }
         },
         minimized: {
