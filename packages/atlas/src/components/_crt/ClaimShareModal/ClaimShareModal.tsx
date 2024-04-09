@@ -1,4 +1,3 @@
-import { useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
 import { useEffect } from 'react'
 
@@ -19,6 +18,7 @@ import { atlasConfig } from '@/config'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useFee, useJoystream } from '@/providers/joystream'
+import { useNetworkUtils } from '@/providers/networkUtils/networkUtils.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
@@ -38,6 +38,7 @@ export const ClaimShareModal = ({ onClose, show, tokenId: _tokenId, token: _toke
     skip: !_tokenId || !!_token,
     notifyOnNetworkStatusChange: true,
   })
+  const { refetchAllMemberTokenBalanceData, refetchCreatorTokenData } = useNetworkUtils()
   const token = _token ?? data?.creatorTokenById
   const tokenId = _token?.id ?? _tokenId
 
@@ -49,7 +50,6 @@ export const ClaimShareModal = ({ onClose, show, tokenId: _tokenId, token: _toke
   const { fullFee } = useFee('participateInSplitTx')
   const activeRevenueShare = token?.revenueShares.find((rS) => !rS.finalized)
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
-  const client = useApolloClient()
 
   useEffect(() => {
     if (show) {
@@ -111,7 +111,8 @@ export const ClaimShareModal = ({ onClose, show, tokenId: _tokenId, token: _toke
           iconType: 'success',
         })
         onClose()
-        client.refetchQueries({ include: 'all' })
+        refetchAllMemberTokenBalanceData()
+        refetchCreatorTokenData(token.id)
       },
       onError: () => {
         SentryLogger.error('Failed to claim share transaction', 'ClaimShareModal', {

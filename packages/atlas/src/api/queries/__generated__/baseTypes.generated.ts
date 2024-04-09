@@ -3527,6 +3527,8 @@ export type CreatorTokenIssued = {
   channelId: Scalars['String']
   /** channel title for notification text */
   channelTitle: Scalars['String']
+  /** id of the token */
+  tokenId: Scalars['String']
   /** symbol of the token */
   tokenSymbol: Scalars['String']
 }
@@ -3549,6 +3551,8 @@ export type CreatorTokenMarketBurn = {
   channelId: Scalars['String']
   /** amount of joy that user received for burning */
   receivedJoyAmount: Scalars['BigInt']
+  /** id of the token */
+  tokenId: Scalars['String']
   /** symbol of the token */
   tokenSymbol: Scalars['String']
 }
@@ -3573,6 +3577,8 @@ export type CreatorTokenMarketMint = {
   minterId: Scalars['String']
   /** amount of joy that user used for minting */
   paiedJoyAmount: Scalars['BigInt']
+  /** id of the token */
+  tokenId: Scalars['String']
   /** symbol of the token */
   tokenSymbol: Scalars['String']
 }
@@ -3591,6 +3597,8 @@ export type CreatorTokenMarketStarted = {
   channelId: Scalars['String']
   /** channel title for notification text */
   channelTitle: Scalars['String']
+  /** id of the token */
+  tokenId: Scalars['String']
   /** symbol of the token */
   tokenSymbol: Scalars['String']
 }
@@ -3720,6 +3728,8 @@ export type CreatorTokenRevenueSharePlanned = {
   plannedAt: Scalars['Int']
   /** id of created revenue share to verify its' viability in future */
   revenueShareId: Scalars['String']
+  /** id of the token */
+  tokenId: Scalars['String']
   /** symbol of the token */
   tokenSymbol: Scalars['String']
 }
@@ -3758,6 +3768,8 @@ export type CreatorTokenSaleMint = {
   minterId: Scalars['String']
   /** amount of joy that user used for minting */
   paiedJoyAmount: Scalars['BigInt']
+  /** id of the token */
+  tokenId: Scalars['String']
   /** symbol of the token */
   tokenSymbol: Scalars['String']
 }
@@ -3776,6 +3788,8 @@ export type CreatorTokenSaleStarted = {
   channelId: Scalars['String']
   /** channel title for notification text */
   channelTitle: Scalars['String']
+  /** id of the token */
+  tokenId: Scalars['String']
   /** symbol of the token */
   tokenSymbol: Scalars['String']
 }
@@ -5696,7 +5710,7 @@ export type GetAccountTransferrableBalanceResult = {
 
 export type GetCumulativeHistoricalShareAllocationResult = {
   __typename?: 'GetCumulativeHistoricalShareAllocationResult'
-  cumulativeHistoricalAllocation: Scalars['Int']
+  cumulativeHistoricalAllocation: Scalars['String']
 }
 
 export type GetShareDividendsResult = {
