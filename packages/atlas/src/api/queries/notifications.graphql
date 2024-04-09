@@ -167,12 +167,14 @@ query GetNotificationsConnection($recipient: RecipientTypeWhereInput!, $first: I
             channelId
             channelTitle
             tokenSymbol
+            tokenId
           }
 
           ... on CreatorTokenRevenueSharePlanned {
             channelId
             channelTitle
             tokenSymbol
+            tokenId
             plannedAt
           }
 
@@ -180,16 +182,19 @@ query GetNotificationsConnection($recipient: RecipientTypeWhereInput!, $first: I
             channelId
             channelTitle
             tokenSymbol
+            tokenId
           }
 
           ... on CreatorTokenRevenueShareEnded {
             channelId
             channelTitle
             tokenSymbol
+            tokenId
           }
 
           ... on CreatorTokenMarketStarted {
             tokenSymbol
+            tokenId
             channelTitle
             channelId
           }
@@ -198,6 +203,7 @@ query GetNotificationsConnection($recipient: RecipientTypeWhereInput!, $first: I
             tokenSymbol
             mintedTokenAmount
             tokenSymbol
+            tokenId
             minterHandle
             minterId
             paiedJoyAmount
@@ -207,6 +213,7 @@ query GetNotificationsConnection($recipient: RecipientTypeWhereInput!, $first: I
             tokenSymbol
             burnedTokenAmount
             tokenSymbol
+            tokenId
             burnerHandle
             receivedJoyAmount
             burnerId
@@ -214,6 +221,7 @@ query GetNotificationsConnection($recipient: RecipientTypeWhereInput!, $first: I
 
           ... on CreatorTokenSaleMint {
             tokenSymbol
+            tokenId
             mintedTokenAmount
             tokenSymbol
             minterHandle
@@ -223,6 +231,7 @@ query GetNotificationsConnection($recipient: RecipientTypeWhereInput!, $first: I
 
           ... on CreatorTokenSaleStarted {
             tokenSymbol
+            tokenId
             channelTitle
             channelId
           }
