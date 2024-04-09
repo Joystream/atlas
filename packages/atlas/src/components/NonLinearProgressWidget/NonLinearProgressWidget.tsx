@@ -105,7 +105,7 @@ export const NonLinearProgressWidget = ({
             )}
           </RowBox>
           <Carousel
-            initialSlide={activeStep + 1}
+            initialSlide={activeStep}
             spaceBetween={12}
             navigation
             dotsVisible
