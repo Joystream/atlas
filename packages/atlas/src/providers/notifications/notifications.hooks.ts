@@ -89,11 +89,7 @@ export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkS
     () =>
       rawNotifications.map(({ node: { id, createdAt, status, notificationType } }): NotificationRecord => {
         const notificationData = parseNotificationType(notificationType as NotificationType)
-        if (notificationData.refetchAction && !refetchedNotifications.has(id)) {
-          const refetchFn = networkUtils[notificationData.refetchAction.name]
-          refetchedNotifications.set(id, 1)
-          refetchFn(...(notificationData.refetchAction.args as Parameters<typeof refetchFn>))
-        }
+
         return {
           id,
           date: new Date(createdAt),
@@ -101,8 +97,18 @@ export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkS
           ...notificationData,
         }
       }),
-    [rawNotifications, optimisticRead, networkUtils]
+    [rawNotifications, optimisticRead]
   )
+
+  useEffect(() => {
+    notifications.forEach(({ refetchAction, id }) => {
+      if (refetchAction && !refetchedNotifications.has(id)) {
+        const refetchFn = networkUtils[refetchAction.name]
+        refetchedNotifications.set(id, 1)
+        refetchFn(...(refetchAction.args as Parameters<typeof refetchFn>))
+      }
+    })
+  }, [networkUtils, notifications])
 
   const markNotificationsAsRead = useCallback(
     async (notifications: NotificationRecord[]) => {
