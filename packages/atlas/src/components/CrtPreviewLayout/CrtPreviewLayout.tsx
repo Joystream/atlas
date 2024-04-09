@@ -150,6 +150,7 @@ export const CrtPreviewLayout = ({
         <HoldersWidget
           totalSupply={+(token?.totalSupply ?? 0)}
           totalHolders={token?.accountsNum ?? 0}
+          tokenSymbol={token?.symbol ?? ''}
           tokenId={token?.id ?? '-1'}
           ownerId={memberId ?? ''}
         />

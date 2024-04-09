@@ -61,6 +61,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
       SentryLogger.error('Error while fetching creator token', 'BuyMarketTokenModal', error)
     },
   })
+  const hasActiveRevenueShare = data?.creatorTokenById?.revenueShares.some((rS) => !rS.finalized)
   const { data: memberTokenAccount } = useGetCreatorTokenHoldersQuery({
     variables: {
       where: {
@@ -172,8 +173,8 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
             data?.creatorTokenById?.id ?? 'N/A',
             data?.creatorTokenById?.symbol ?? 'N/A',
             channelId ?? 'N/A',
-            String(tokenAmount),
-            String(priceForAllToken)
+            tokenAmount,
+            priceForAllToken
           )
           displaySnackbar({
             iconType: 'success',
@@ -302,7 +303,8 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
             withDenomination="before"
           />
         ),
-        tooltipText: 'Price for a single token divided by the token amount.',
+        tooltipText:
+          'Price of each incremental unit purchased or sold depends on overall quantity of tokens transacted, the actual average price per unit for the entire purchase or sale will differ from the price displayed for the first unit transacted.',
       },
       {
         title: 'Fee',
@@ -344,11 +346,19 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
     if (activeStep === BUY_MARKET_TOKEN_STEPS.form) {
       setPrimaryButtonProps({
         text: 'Continue',
-        onClick: () =>
+        onClick: () => {
+          if (hasActiveRevenueShare) {
+            displaySnackbar({
+              iconType: 'error',
+              title: 'You cannot trade tokens during revenue share.',
+            })
+            return
+          }
           handleSubmit((data) => {
             amountRef.current = data.tokenAmount
             setActiveStep(BUY_MARKET_TOKEN_STEPS.conditions)
-          })(),
+          })()
+        },
       })
     }
 
@@ -358,7 +368,14 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
         onClick: onTransactionSubmit,
       })
     }
-  }, [activeStep, data?.creatorTokenById?.symbol, handleSubmit, onTransactionSubmit])
+  }, [
+    activeStep,
+    data?.creatorTokenById?.symbol,
+    displaySnackbar,
+    handleSubmit,
+    hasActiveRevenueShare,
+    onTransactionSubmit,
+  ])
 
   if (!loading && !currentAmm && show) {
     SentryLogger.error('BuyAmmModal invoked on token without active amm', 'BuyMarketTokenModal', {
@@ -386,7 +403,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
           control={control}
           details={formDetails}
           pricePerUnit={pricePerUnit}
-          maxValue={10_000_000_000}
+          maxInputValue={10_000_000}
           error={formState.errors.tokenAmount?.message}
           validation={(value) => {
             if (!value || value < 1) return 'You need to buy at least one token'

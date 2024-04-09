@@ -111,7 +111,7 @@ export const MarketDrawer = ({ show, onClose, tokenId }: CrtMarketSaleViewProps)
         icon: <SvgActionMarket />,
       },
       {
-        text: "You are no earning royalties from other people's transactions on your token.",
+        text: "You are not earning royalties from other people's transactions on your token.",
         icon: <SvgActionWarning />,
       },
       {

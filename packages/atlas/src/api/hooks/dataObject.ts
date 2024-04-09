@@ -11,7 +11,7 @@ export const useDataObjectsAvailabilityLazy = (opts?: QueryHookOptions<GetDataOb
 
   const _getDataObjectsAvailability = useCallback(
     (ids: string[]) => {
-      getDataObjectsAvailability({
+      return getDataObjectsAvailability({
         variables: {
           id_in: ids,
         },

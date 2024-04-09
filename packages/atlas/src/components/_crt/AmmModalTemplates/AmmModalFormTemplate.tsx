@@ -20,6 +20,7 @@ type AmmModalFormTemplateProps = {
     tooltipText?: string
   }[]
   error?: string
+  maxInputValue?: number
   showTresholdButtons?: boolean
 }
 
@@ -31,6 +32,7 @@ export const AmmModalFormTemplate = ({
   control,
   error,
   showTresholdButtons,
+  maxInputValue,
 }: AmmModalFormTemplateProps) => {
   const { convertTokensToUSD } = useTokenPrice()
 
@@ -52,6 +54,7 @@ export const AmmModalFormTemplate = ({
                   value={field.value}
                   onChange={(value) => field.onChange(value ? Math.round(value) : value)}
                   placeholder="0"
+                  maxValue={maxInputValue}
                   nodeEnd={
                     pricePerUnit ? (
                       <Text variant="t300" as="p" color="colorTextMuted">

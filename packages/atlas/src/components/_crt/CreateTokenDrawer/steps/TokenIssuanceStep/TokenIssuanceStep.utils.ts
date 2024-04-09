@@ -73,19 +73,20 @@ export const createTokenIssuanceSchema = (tokenName: string) =>
         .min(3_000, `Can’t issue less than 3 000 $${tokenName}.`)
         .max(100_000, `Can’t issue more than 100 000 $${tokenName}.`),
       assuranceType: z.enum(['safe', 'risky', 'secure', 'custom']),
-      cliff: z.enum(['0', '1', '3', '6']).nullable(),
-      vesting: z.enum(['0', '1', '3', '6']).nullable(),
+      cliff: z.string().nullable(),
+      vesting: z.string().nullable(),
       firstPayout: z
         .number()
-        .positive('Payout cannot be a negative number.')
+        .min(0, 'Payout cannot be a negative number.')
         .max(100, 'Payout cannot exceed 100%.')
         .optional(),
     })
     .refine(
       (data) => {
-        if (['1', '3', '6'].includes(data.vesting ?? '')) {
-          return !!data.firstPayout
+        if (data.vesting) {
+          return data.firstPayout !== undefined
         }
+
         return true
       },
       {
@@ -102,7 +103,7 @@ export const createTokenIssuanceSchema = (tokenName: string) =>
       },
       {
         path: ['cliff'],
-        message: 'Select cliff for your token.',
+        message: 'Select locked period for your token.',
       }
     )
     .refine(

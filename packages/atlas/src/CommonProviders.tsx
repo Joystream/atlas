@@ -34,30 +34,30 @@ export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
   return (
     <>
       <GlobalStyles />
-      <SegmentAnalyticsProvider>
-        <ApolloProvider client={apolloClient}>
-          <QueryClientProvider client={queryClient}>
-            <WalletProvider>
-              <AuthProvider>
-                <UserProvider>
-                  <NetworkUtilsProvider>
-                    <OverlayManagerProvider>
-                      <ConfirmationModalProvider>
-                        <BrowserRouter>
+      <BrowserRouter>
+        <SegmentAnalyticsProvider>
+          <ApolloProvider client={apolloClient}>
+            <QueryClientProvider client={queryClient}>
+              <WalletProvider>
+                <AuthProvider>
+                  <UserProvider>
+                    <NetworkUtilsProvider>
+                      <OverlayManagerProvider>
+                        <ConfirmationModalProvider>
                           <AdminModal />
                           <MaintenanceWrapper>
                             <OperatorsContextProvider>{children}</OperatorsContextProvider>
                           </MaintenanceWrapper>
-                        </BrowserRouter>
-                      </ConfirmationModalProvider>
-                    </OverlayManagerProvider>
-                  </NetworkUtilsProvider>
-                </UserProvider>
-              </AuthProvider>
-            </WalletProvider>
-          </QueryClientProvider>
-        </ApolloProvider>
-      </SegmentAnalyticsProvider>
+                        </ConfirmationModalProvider>
+                      </OverlayManagerProvider>
+                    </NetworkUtilsProvider>
+                  </UserProvider>
+                </AuthProvider>
+              </WalletProvider>
+            </QueryClientProvider>
+          </ApolloProvider>
+        </SegmentAnalyticsProvider>
+      </BrowserRouter>
     </>
   )
 }

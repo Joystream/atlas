@@ -119,7 +119,7 @@ export const CrtDashboard = () => {
                     <RevenueShareModalButton token={creatorTokenById} />
                   ) : (
                     <CloseRevenueShareButton
-                      tokenId={creatorTokenById.id}
+                      token={creatorTokenById}
                       hideOnInactiveRevenue
                       revenueShareEndingBlock={activeRevenueShare.endsAt}
                     />

@@ -1,8 +1,10 @@
 import BN from 'bn.js'
 import { useCallback } from 'react'
 
+import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { Button, ButtonProps } from '@/components/_buttons/Button'
 import { atlasConfig } from '@/config'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useJoystream } from '@/providers/joystream'
 import { useJoystreamStore } from '@/providers/joystream/joystream.store'
@@ -15,15 +17,15 @@ import { SentryLogger } from '@/utils/logs'
 type CloseRevenueShareButtonProps = {
   revenueShareEndingBlock?: number
   hideOnInactiveRevenue?: boolean
-  tokenId: string
+  token?: FullCreatorTokenFragment
 } & Pick<ButtonProps, 'variant' | 'disabled'>
 
 export const CloseRevenueShareButton = ({
   variant,
   disabled,
   hideOnInactiveRevenue,
-  tokenId,
   revenueShareEndingBlock,
+  token,
 }: CloseRevenueShareButtonProps) => {
   const { joystream, proxyCallback } = useJoystream()
   const { channelId, memberId } = useUser()
@@ -31,6 +33,7 @@ export const CloseRevenueShareButton = ({
   const { displaySnackbar } = useSnackbar()
   const { currentBlock } = useJoystreamStore()
   const { refetchCreatorTokenData } = useNetworkUtils()
+  const { trackRevenueShareClosed } = useSegmentAnalytics()
 
   const finalizeRevenueShare = useCallback(() => {
     if (!joystream || !memberId || !channelId) {
@@ -45,7 +48,9 @@ export const CloseRevenueShareButton = ({
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).finalizeRevenueSplit(memberId, channelId, proxyCallback(updateStatus)),
       onTxSync: async (data) => {
-        refetchCreatorTokenData(tokenId)
+        refetchCreatorTokenData(token?.id ?? '')
+        trackRevenueShareClosed(channelId, token?.id || 'N/A', token?.symbol || 'N/A')
+
         displaySnackbar({
           title: 'Revenue share is closed',
           description: `Remaining unclaimed ${hapiBnToTokenNumber(new BN(data.amount))} ${
@@ -74,7 +79,9 @@ export const CloseRevenueShareButton = ({
     memberId,
     proxyCallback,
     refetchCreatorTokenData,
-    tokenId,
+    token?.id,
+    token?.symbol,
+    trackRevenueShareClosed,
   ])
 
   if (hideOnInactiveRevenue && currentBlock < (revenueShareEndingBlock ?? 0)) {

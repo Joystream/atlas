@@ -1,9 +1,12 @@
 import BN from 'bn.js'
+import { useEffect } from 'react'
 
 import {
+  useGetCreatorTokenHoldersQuery,
   useGetFullCreatorTokenQuery,
   useGetRevenueShareDividendQuery,
 } from '@/api/queries/__generated__/creatorTokens.generated'
+import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgAlertsInformative24 } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
 import { FlexBox } from '@/components/FlexBox'
@@ -13,7 +16,6 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
-import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useFee, useJoystream } from '@/providers/joystream'
 import { useNetworkUtils } from '@/providers/networkUtils/networkUtils.hooks'
@@ -27,36 +29,64 @@ type ClaimShareModalProps = {
   show?: boolean
   onClose: () => void
   tokenId?: string
+  token?: FullCreatorTokenFragment
 }
 
-export const ClaimShareModal = ({ onClose, show, tokenId }: ClaimShareModalProps) => {
-  const { data } = useGetFullCreatorTokenQuery({ variables: { id: tokenId ?? '' }, skip: !tokenId })
+export const ClaimShareModal = ({ onClose, show, tokenId: _tokenId, token: _token }: ClaimShareModalProps) => {
+  const { data, refetch } = useGetFullCreatorTokenQuery({
+    variables: { id: _tokenId ?? '' },
+    skip: !_tokenId || !!_token,
+    notifyOnNetworkStatusChange: true,
+  })
   const { refetchAllMemberTokenBalanceData, refetchCreatorTokenData } = useNetworkUtils()
-  const token = data?.creatorTokenById
+  const token = _token ?? data?.creatorTokenById
+  const tokenId = _token?.id ?? _tokenId
+
   const tokenName = token?.symbol ?? 'N/A'
   const { joystream, proxyCallback } = useJoystream()
   const { memberId } = useUser()
   const { displaySnackbar } = useSnackbar()
   const handleTransaction = useTransaction()
-  const { tokenBalance } = useGetTokenBalance(token?.id, memberId ?? '')
   const { fullFee } = useFee('participateInSplitTx')
   const activeRevenueShare = token?.revenueShares.find((rS) => !rS.finalized)
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
+
+  useEffect(() => {
+    if (show) {
+      refetch()
+    }
+  }, [refetch, show])
+
+  const { data: holderData } = useGetCreatorTokenHoldersQuery({
+    variables: {
+      where: {
+        token: {
+          id_eq: tokenId,
+        },
+        member: {
+          id_eq: memberId,
+        },
+      },
+    },
+    skip: !memberId || !tokenId,
+  })
+  const { totalAmount, stakedAmount } = holderData?.tokenAccounts[0] ?? {}
+  const stakableBalance = totalAmount && stakedAmount ? +totalAmount - +stakedAmount : 0
   const { data: dividendData, loading: loadingDividendData } = useGetRevenueShareDividendQuery({
     variables: {
       tokenId: token?.id ?? '',
-      stakingAmount: tokenBalance,
+      stakingAmount: stakableBalance,
     },
-    skip: !tokenBalance || !token,
+    skip: !stakableBalance || !token,
   })
 
   const onSubmit = async () => {
-    if (!joystream || !token || !memberId || !tokenBalance || !activeRevenueShare) {
+    if (!joystream || !token || !memberId || !stakableBalance || !activeRevenueShare) {
       SentryLogger.error('Failed to submit claim share transaction', 'ClaimShareModal', {
         joystream,
         token,
         memberId,
-        tokenBalance,
+        stakableBalance,
         activeRevenueShare,
       })
       return
@@ -66,7 +96,7 @@ export const ClaimShareModal = ({ onClose, show, tokenId }: ClaimShareModalProps
         (await joystream.extrinsics).participateInSplit(
           token.id,
           memberId,
-          String(tokenBalance),
+          String(stakableBalance),
           proxyCallback(updateStatus)
         ),
       fee: fullFee,
@@ -89,7 +119,7 @@ export const ClaimShareModal = ({ onClose, show, tokenId }: ClaimShareModalProps
           joystream,
           token,
           memberId,
-          tokenBalance,
+          stakableBalance,
           activeRevenueShare,
         })
         displaySnackbar({
@@ -127,7 +157,7 @@ export const ClaimShareModal = ({ onClose, show, tokenId }: ClaimShareModalProps
               You will lock
             </Text>
             <NumberFormat
-              value={tokenBalance}
+              value={stakableBalance}
               variant="t100"
               as="p"
               color="colorText"

@@ -1,7 +1,8 @@
 import { FC, PropsWithChildren, ReactNode } from 'react'
 
 import { AppLogo } from '@/components/AppLogo'
-import { Text } from '@/components/Text'
+import { FlexBox } from '@/components/FlexBox'
+import { TextButton } from '@/components/_buttons/Button'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { Header, LogoDivider, LogoLink } from './TopbarBase.styles'
@@ -23,14 +24,16 @@ export const TopbarBase: FC<TopbarBaseProps> = ({ children, fullLogoNode, logoLi
       {!noLogo && (
         <LogoLink to={logoLinkUrl}>
           {mdMatch ? fullLogoNode : <AppLogo variant="short" height={32} width={undefined} />}
-          {xsMatch && <LogoDivider />}
-          {xsMatch && (
-            <Text variant="h200" as="h4" color="colorTextMuted" margin={{ right: 2 }}>
-              {smMatch ? 'Powered' : ''} by Joystream
-            </Text>
-          )}
         </LogoLink>
       )}
+      <FlexBox gap={2} alignItems="center">
+        {xsMatch && <LogoDivider />}
+        {xsMatch && (
+          <TextButton to="https://www.joystream.org/" variant="tertiary">
+            {smMatch ? 'Powered' : ''} by Joystream
+          </TextButton>
+        )}
+      </FlexBox>
       {children}
     </Header>
   )
