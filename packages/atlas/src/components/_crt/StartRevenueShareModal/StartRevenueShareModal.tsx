@@ -6,7 +6,13 @@ import { Controller, useForm } from 'react-hook-form'
 
 import { useGetFullCreatorTokenLazyQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
-import { SvgActionClock, SvgActionCreatorToken, SvgActionLinkUrl, SvgActionPayment } from '@/assets/icons'
+import {
+  SvgActionArrowRight,
+  SvgActionClock,
+  SvgActionCreatorToken,
+  SvgActionLinkUrl,
+  SvgActionPayment,
+} from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox/FlexBox'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
@@ -170,6 +176,10 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
   const successDetails = useMemo(() => {
     if (localTokenData?.creatorTokenById) {
       return [
+        {
+          text: "Your channel's revenue share is already transferred from channel rewards account to your member's account.",
+          icon: <SvgActionArrowRight />,
+        },
         {
           text: 'If any tokens remain unclaimed at the end of the revenue share period those will be returned to your channel balance.',
           icon: <SvgActionPayment />,
