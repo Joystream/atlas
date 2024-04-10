@@ -11,6 +11,8 @@ import { Text } from '@/components/Text'
 import { TextButton } from '@/components/_buttons/Button'
 import { CopyAddressButton } from '@/components/_buttons/CopyAddressButton/CopyAddressButton'
 import { atlasConfig } from '@/config'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
+import { useUser } from '@/providers/user/user.hooks'
 import { cVar, sizes, square } from '@/styles'
 import { changeNowService } from '@/utils/ChangeNowService'
 
@@ -60,6 +62,8 @@ export const ProgressStep = ({
   const [retry, setRetry] = useState(true)
   const isSellingJoy = type === 'sell'
   const steps = isSellingJoy ? sellSteps : buySteps
+  const { trackChangenowTokenSold, trackChangenowTokenBought } = useSegmentAnalytics()
+  const { memberId } = useUser()
   const { data } = useQuery(
     ['getTransactionStatus', transactionData.id],
     () => changeNowService.getTransactionStatus(transactionData.id).then((res) => res.data),
@@ -122,6 +126,9 @@ export const ProgressStep = ({
         break
       case 'finished':
         setRetry(false)
+        isSellingJoy
+          ? trackChangenowTokenSold(atlasConfig.joystream.tokenTicker, memberId || 'N/A', data.amountTo)
+          : trackChangenowTokenBought(atlasConfig.joystream.tokenTicker, memberId || 'N/A', data.amountFrom)
         setPrimaryButtonProps({
           text: 'Close',
           onClick: () => onClose(),
@@ -130,7 +137,17 @@ export const ProgressStep = ({
         extraContent = successText
     }
     return [step, steps[step]?.[1], extraContent]
-  }, [data, isSellingJoy, onClose, setPrimaryButtonProps, steps, transactionData.hasAutomaticTransactionSucceeded])
+  }, [
+    data,
+    isSellingJoy,
+    memberId,
+    onClose,
+    setPrimaryButtonProps,
+    steps,
+    trackChangenowTokenBought,
+    trackChangenowTokenSold,
+    transactionData.hasAutomaticTransactionSucceeded,
+  ])
 
   return (
     <FlexBox gap={6} flow="column">
