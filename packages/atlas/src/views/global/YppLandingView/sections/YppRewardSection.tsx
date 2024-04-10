@@ -123,10 +123,11 @@ export const YppRewardSection: FC = () => {
               customContent={
                 <TooltipText as="span" variant="t100">
                   {atlasConfig.joystream.tokenTicker} token is a native crypto asset of Joystream blockchain which
-                  powers Gleev. It is used for trading Creator Tokens, NFTs and covering blockchain processing fees. It
-                  is also used for voting on proposals and partaking in council elections.{' '}
+                  powers {atlasConfig.general.appName}. It is used for trading Creator Tokens, NFTs and covering
+                  blockchain processing fees. It is also used for voting on proposals and partaking in council
+                  elections.{' '}
                   <ColorAnchor href="https://www.joystream.org/token/" target="_blank">
-                    Purchase JOY
+                    Purchase {atlasConfig.joystream.tokenTicker}
                   </ColorAnchor>
                 </TooltipText>
               }
