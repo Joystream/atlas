@@ -10,7 +10,8 @@ export const useUnlockTokenStake = () => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()
-  const { refetchCreatorTokenData, refetchAllMemberTokenBalanceData } = useNetworkUtils()
+  const { refetchCreatorTokenData, refetchAllMemberTokenBalanceData, refetchAllMemberTokenHolderQueries } =
+    useNetworkUtils()
 
   return useCallback(
     async (memberId: string, tokenId: string, tokenSymbol: string) => {
@@ -23,6 +24,7 @@ export const useUnlockTokenStake = () => {
         onTxSync: async (data) => {
           refetchCreatorTokenData(tokenId)
           refetchAllMemberTokenBalanceData()
+          refetchAllMemberTokenHolderQueries()
           displaySnackbar({
             title: `${data.amount} $${tokenSymbol} unlocked`,
             iconType: 'success',
@@ -47,6 +49,7 @@ export const useUnlockTokenStake = () => {
       proxyCallback,
       refetchCreatorTokenData,
       refetchAllMemberTokenBalanceData,
+      refetchAllMemberTokenHolderQueries,
       displaySnackbar,
     ]
   )

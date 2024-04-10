@@ -107,7 +107,6 @@ export const PaymentsOverView = () => {
             channel?.creatorToken?.token.id
               ? {
                   text: 'Revenue share',
-                  variant: 'secondary',
                   fullWidth: !mdMatch,
                   onClick: () =>
                     hasOpenedRevenueShare

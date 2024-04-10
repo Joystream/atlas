@@ -2,6 +2,9 @@ import { useApolloClient } from '@apollo/client'
 import { ReactNode, createContext, useCallback, useContext } from 'react'
 
 import {
+  GetChannelPaymentEventsDocument,
+  GetChannelPaymentEventsQuery,
+  GetChannelPaymentEventsQueryVariables,
   GetFullChannelDocument,
   GetFullChannelQuery,
   GetFullChannelQueryVariables,
@@ -56,6 +59,19 @@ export const NetworkUtilsProvider = ({ children }: { children: ReactNode }) => {
         query: GetFullChannelDocument,
         variables: {
           id: channelId,
+        },
+        fetchPolicy: 'network-only',
+      })
+    },
+    [client]
+  )
+
+  const refetchChannelPayments = useCallback(
+    (channelId: string) => {
+      return client.query<GetChannelPaymentEventsQuery, GetChannelPaymentEventsQueryVariables>({
+        query: GetChannelPaymentEventsDocument,
+        variables: {
+          channelId: channelId,
         },
         fetchPolicy: 'network-only',
       })
@@ -219,6 +235,7 @@ export const NetworkUtilsProvider = ({ children }: { children: ReactNode }) => {
       value={{
         // Channel
         refetchChannel,
+        refetchChannelPayments,
 
         // Videos
         refetchComment,
