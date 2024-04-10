@@ -52,7 +52,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
   const [showSuccessModal, setShowSuccessModal] = useState(false)
 
   const { joystream, proxyCallback } = useJoystream()
-  const { refetchCreatorTokenData } = useNetworkUtils()
+  const { refetchCreatorTokenData, refetchChannelPayments } = useNetworkUtils()
   const { memberId, channelId, activeChannel } = useUser()
   const { displaySnackbar } = useSnackbar()
   const handleTransaction = useTransaction()
@@ -147,6 +147,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
             proxyCallback(updateStatus)
           ),
         onTxSync: async () => {
+          refetchChannelPayments(channelId!)
           // we need to refetch token locally to avoid unmount parent modal due to revenue share activation
           refetchToken().then(() => {
             onClose()
@@ -174,11 +175,11 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
     if (localTokenData?.creatorTokenById) {
       return [
         {
-          text: "Your channel's revenue share is already transferred from channel rewards account to your member's account.",
+          text: 'Your membership account is already credited with your portion of channel revenue.',
           icon: <SvgActionArrowRight />,
         },
         {
-          text: 'Tell your holders to stake their token on your token page until the end of revenue share. Unclaimed tokens are returned to channel balance.',
+          text: 'Remind your holders to stake in order to claim their part of revenue. This does not happen automatically.',
           icon: <SvgActionClock />,
           actionNode: (
             <TextButton
@@ -195,7 +196,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
           ),
         },
         {
-          text: `Make sure to stake your own ${tokenBalance} $${localTokenData.creatorTokenById.symbol} to receive your share of revenue.`,
+          text: `Make sure to stake ${tokenBalance} $${localTokenData.creatorTokenById.symbol} your membership owns to claim sharable part of revenue.`,
           icon: <SvgActionCreatorToken />,
           variant: 'warning' as const,
           actionNode: (

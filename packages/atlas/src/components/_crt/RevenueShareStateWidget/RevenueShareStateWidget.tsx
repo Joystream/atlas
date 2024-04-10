@@ -146,7 +146,7 @@ export const RevenueShareStateWidget = ({
           </FlexBox>
         }
         customTopRightNode={
-          withLink ? (
+          withLink && tokenHolderData?.tokenAccounts[0] ? (
             <TextButton icon={<SvgActionChevronR />} iconPlacement="right" to={absoluteRoutes.viewer.portfolio()}>
               See in portfolio
             </TextButton>
