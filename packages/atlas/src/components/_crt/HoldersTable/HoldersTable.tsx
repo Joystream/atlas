@@ -73,8 +73,12 @@ export const HoldersTable = ({ data, currentMemberId, symbol, pagination, pageSi
 }
 
 const TransferableBalance = ({ memberId, tokenId, ticker }: { memberId: string; tokenId: string; ticker?: string }) => {
-  const { tokenBalance } = useGetTokenBalance(tokenId, memberId)
-  return <NumberFormat value={tokenBalance} as="p" withToken customTicker={`$${ticker}`} />
+  const { tokenBalance, isLoading } = useGetTokenBalance(tokenId, memberId)
+  return isLoading ? (
+    <SkeletonLoader height={24} width={48} />
+  ) : (
+    <NumberFormat value={tokenBalance} as="p" withToken customTicker={`$${ticker}`} />
+  )
 }
 
 const StyledTable = styled(Table)`

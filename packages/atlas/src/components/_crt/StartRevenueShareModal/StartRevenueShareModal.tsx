@@ -5,13 +5,7 @@ import { Controller, useForm } from 'react-hook-form'
 
 import { useGetFullCreatorTokenLazyQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
-import {
-  SvgActionArrowRight,
-  SvgActionClock,
-  SvgActionCreatorToken,
-  SvgActionLinkUrl,
-  SvgActionPayment,
-} from '@/assets/icons'
+import { SvgActionArrowRight, SvgActionClock, SvgActionCreatorToken, SvgActionLinkUrl } from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox/FlexBox'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
@@ -184,11 +178,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
           icon: <SvgActionArrowRight />,
         },
         {
-          text: 'If any tokens remain unclaimed at the end of the revenue share period those will be returned to your channel balance.',
-          icon: <SvgActionPayment />,
-        },
-        {
-          text: 'Tell your holders to stake their token on your token page until the end of revenue share.',
+          text: 'Tell your holders to stake their token on your token page until the end of revenue share. Unclaimed tokens are returned to channel balance.',
           icon: <SvgActionClock />,
           actionNode: (
             <TextButton
@@ -245,7 +235,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
         content: (
           <FlexBox alignItems="baseline" width="fit-content">
             <NumberFormat
-              value={channelBalance?.muln(patronageRate) ?? 0}
+              value={channelBalance?.divn(100).muln(patronageRate * 100) ?? 0}
               as="p"
               variant="t200"
               withToken
@@ -267,7 +257,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
         content: (
           <FlexBox alignItems="baseline" width="fit-content">
             <NumberFormat
-              value={channelBalance?.muln(1 - patronageRate) ?? 0}
+              value={channelBalance?.divn(100).muln((1 - patronageRate) * 100) ?? 0}
               as="p"
               variant="h300"
               withToken

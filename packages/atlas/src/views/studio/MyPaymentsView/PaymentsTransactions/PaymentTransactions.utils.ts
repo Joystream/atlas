@@ -55,11 +55,12 @@ const getAmount = (eventData: EventData, memberId: string): BN => {
     case 'ChannelPaymentMadeEventData':
       return new BN(eventData.amount)
     case 'CreatorTokenRevenueSplitIssuedEventData': {
-      const channelAsStaker = eventData.revenueShare?.stakers.find((staker) => staker.account.member.id === memberId)
-      return new BN(eventData.revenueShare?.allocation ?? 0)
-        .muln(100 - permillToPercentage(eventData.token?.revenueShareRatioPermill ?? 0))
-        .divn(100)
-        .add(new BN(channelAsStaker?.earnings ?? 0))
+      if (!eventData.revenueShare) return new BN(0)
+      const tokenRevenueShareRatio = permillToPercentage(eventData.token?.revenueShareRatioPermill ?? 0)
+      const channelAsStaker = eventData.revenueShare.stakers.find((staker) => staker.account.member.id === memberId)
+      const wholeShareAmount = new BN(eventData.revenueShare.allocation).divn(tokenRevenueShareRatio).muln(100)
+      const channelShare = wholeShareAmount.muln(100 - tokenRevenueShareRatio).divn(100)
+      return new BN(channelShare).add(new BN(channelAsStaker?.earnings ?? 0))
     }
     default:
       throw Error('Unknown event')
@@ -87,7 +88,7 @@ const getSender = (eventData: EventData) => {
   }
 }
 
-const getDescription = (eventData: EventData) => {
+const getDescription = (eventData: EventData, memberId: string) => {
   switch (eventData.__typename) {
     case 'NftBoughtEventData': {
       if (eventData.previousNftOwner.__typename !== 'NftOwnerChannel') {
@@ -108,8 +109,10 @@ const getDescription = (eventData: EventData) => {
       return ''
     case 'ChannelPaymentMadeEventData':
       return eventData.rationale
-    case 'CreatorTokenRevenueSplitIssuedEventData':
-      return ''
+    case 'CreatorTokenRevenueSplitIssuedEventData': {
+      const channelAsStaker = eventData.revenueShare?.stakers.find((staker) => staker.account.member.id === memberId)
+      return `Channel share ${channelAsStaker ? 'and token stake' : ''}`
+    }
     default:
       return undefined
   }
@@ -125,7 +128,7 @@ export const mapEventToPaymentHistory =
       block: inBlock,
       amount: getAmount(eventData, memberId),
       date: new Date(timestamp),
-      description: getDescription(eventData) || '-',
+      description: getDescription(eventData, memberId) || '-',
       sender: getSender(eventData),
     }
   }
