@@ -5,7 +5,7 @@ import { Controller, useForm } from 'react-hook-form'
 
 import { useGetFullCreatorTokenLazyQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
-import { SvgActionClock, SvgActionCreatorToken, SvgActionLinkUrl, SvgActionPayment } from '@/assets/icons'
+import { SvgActionArrowRight, SvgActionClock, SvgActionCreatorToken, SvgActionLinkUrl } from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox/FlexBox'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
@@ -52,7 +52,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
   const [showSuccessModal, setShowSuccessModal] = useState(false)
 
   const { joystream, proxyCallback } = useJoystream()
-  const { refetchCreatorTokenData } = useNetworkUtils()
+  const { refetchCreatorTokenData, refetchChannelPayments } = useNetworkUtils()
   const { memberId, channelId, activeChannel } = useUser()
   const { displaySnackbar } = useSnackbar()
   const handleTransaction = useTransaction()
@@ -147,6 +147,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
             proxyCallback(updateStatus)
           ),
         onTxSync: async () => {
+          refetchChannelPayments(channelId!)
           // we need to refetch token locally to avoid unmount parent modal due to revenue share activation
           refetchToken().then(() => {
             onClose()
@@ -174,11 +175,11 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
     if (localTokenData?.creatorTokenById) {
       return [
         {
-          text: 'If any tokens remain unclaimed at the end of the revenue share period those will be returned to your channel balance.',
-          icon: <SvgActionPayment />,
+          text: 'Your membership account is already credited with your portion of channel revenue.',
+          icon: <SvgActionArrowRight />,
         },
         {
-          text: 'Tell your holders to stake their token on your token page until the end of revenue share.',
+          text: 'Remind your holders to stake in order to claim their part of revenue. This does not happen automatically.',
           icon: <SvgActionClock />,
           actionNode: (
             <TextButton
@@ -195,7 +196,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
           ),
         },
         {
-          text: `Make sure to stake your own ${tokenBalance} $${localTokenData.creatorTokenById.symbol} to receive your share of revenue.`,
+          text: `Make sure to stake ${tokenBalance} $${localTokenData.creatorTokenById.symbol} your membership owns to claim sharable part of revenue.`,
           icon: <SvgActionCreatorToken />,
           variant: 'warning' as const,
           actionNode: (
@@ -235,7 +236,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
         content: (
           <FlexBox alignItems="baseline" width="fit-content">
             <NumberFormat
-              value={channelBalance?.muln(patronageRate) ?? 0}
+              value={channelBalance?.divn(100).muln(patronageRate * 100) ?? 0}
               as="p"
               variant="t200"
               withToken
@@ -257,7 +258,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
         content: (
           <FlexBox alignItems="baseline" width="fit-content">
             <NumberFormat
-              value={channelBalance?.muln(1 - patronageRate) ?? 0}
+              value={channelBalance?.divn(100).muln((1 - patronageRate) * 100) ?? 0}
               as="p"
               variant="h300"
               withToken

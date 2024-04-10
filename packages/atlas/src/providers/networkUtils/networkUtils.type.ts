@@ -1,6 +1,6 @@
 import { ApolloQueryResult } from '@apollo/client'
 
-import { GetFullChannelQuery } from '@/api/queries/__generated__/channels.generated'
+import { GetChannelPaymentEventsQuery, GetFullChannelQuery } from '@/api/queries/__generated__/channels.generated'
 import {
   GetCommentEditsQuery,
   GetCommentQuery,
@@ -18,6 +18,7 @@ import { GetFullVideoQuery } from '@/api/queries/__generated__/videos.generated'
 export type NetworkUtilsContextValue = {
   // Channel
   refetchChannel: (channelId: string) => Promise<ApolloQueryResult<GetFullChannelQuery>>
+  refetchChannelPayments: (channelId: string) => Promise<ApolloQueryResult<GetChannelPaymentEventsQuery>>
   // Video
   refetchComment: (id: string) => Promise<ApolloQueryResult<GetCommentQuery>>
   refetchEdits: (id: string) => Promise<ApolloQueryResult<GetCommentEditsQuery>>

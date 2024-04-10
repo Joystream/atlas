@@ -1,6 +1,9 @@
 import { useMemo } from 'react'
 
-import { GetTokenRevenueSharesQuery } from '@/api/queries/__generated__/creatorTokens.generated'
+import {
+  GetTokenRevenueSharesQuery,
+  useGetCreatorTokenHoldersQuery,
+} from '@/api/queries/__generated__/creatorTokens.generated'
 import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgActionCalendar, SvgActionChevronR } from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox'
@@ -36,6 +39,19 @@ export const RevenueShareStateWidget = ({
   const { currentBlock } = useBlockTimeEstimation()
   const unlockStakeTx = useUnlockTokenStake()
   const memberStake = stakers?.find((stakers) => stakers.account.member.id === memberId)
+  const { data: tokenHolderData } = useGetCreatorTokenHoldersQuery({
+    variables: {
+      where: {
+        token: {
+          id_eq: token?.id ?? '',
+        },
+        member: {
+          id_eq: memberId,
+        },
+      },
+    },
+    skip: !token?.id || !memberId,
+  })
   const status = revenueShare
     ? getRevenueShareStatusForMember({
         currentBlock,
@@ -59,7 +75,7 @@ export const RevenueShareStateWidget = ({
     : 'inactive'
 
   const memberActionNode = useMemo(() => {
-    if (!token || !tokenSymbol || !memberId) {
+    if (!token || !tokenSymbol || !memberId || !tokenHolderData?.tokenAccounts[0]) {
       return
     }
     switch (memberStatus) {
@@ -97,7 +113,7 @@ export const RevenueShareStateWidget = ({
           </FlexBox>
         )
     }
-  }, [memberId, memberStatus, token, tokenSymbol, unlockStakeTx])
+  }, [memberId, memberStatus, token, tokenHolderData?.tokenAccounts, tokenSymbol, unlockStakeTx])
 
   return (
     <>
@@ -130,7 +146,7 @@ export const RevenueShareStateWidget = ({
           </FlexBox>
         }
         customTopRightNode={
-          withLink ? (
+          withLink && tokenHolderData?.tokenAccounts[0] ? (
             <TextButton icon={<SvgActionChevronR />} iconPlacement="right" to={absoluteRoutes.viewer.portfolio()}>
               See in portfolio
             </TextButton>

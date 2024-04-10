@@ -39,7 +39,7 @@ export const tableLoadingData = Array.from({ length: 5 }, () => ({
   ),
   status: <SkeletonLoader height={20} width="40%" />,
   transferable: <SkeletonLoader height={20} width="40%" />,
-  vested: <SkeletonLoader height={20} width="40%" />,
+  staked: <SkeletonLoader height={20} width="40%" />,
   total: <SkeletonLoader height={20} width="40%" />,
   utils: null,
 }))

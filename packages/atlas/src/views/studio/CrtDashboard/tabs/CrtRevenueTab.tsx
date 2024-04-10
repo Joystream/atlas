@@ -97,7 +97,7 @@ export const CrtRevenueTab = ({ token }: CrtRevenueTabProps) => {
             <EmptyFallback
               title="No ongoing revenue share"
               subtitle="To witdraw tokens from your channel you have to start revenue share with your holders"
-              button={<RevenueShareModalButton variant="secondary" token={token} />}
+              button={<RevenueShareModalButton token={token} />}
             />
           </GridItem>
         )}

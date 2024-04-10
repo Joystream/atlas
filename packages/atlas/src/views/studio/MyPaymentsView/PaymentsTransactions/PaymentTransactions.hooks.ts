@@ -13,6 +13,7 @@ export const useChannelPaymentsHistory = (channelId: string) => {
     variables: {
       channelId: channelId ?? '-1',
     },
+    fetchPolicy: 'cache-and-network',
     skip: !channelId,
   })
 

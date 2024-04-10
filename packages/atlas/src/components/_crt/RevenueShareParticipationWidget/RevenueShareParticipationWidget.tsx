@@ -94,7 +94,7 @@ export const RevenueShareParticipationWidget = ({ revenueShare, token }: Revenue
   const actionNode = () => {
     switch (status) {
       case 'active':
-        return <ClaimRevenueShareButton token={token} size="small" variant="secondary" />
+        return <ClaimRevenueShareButton token={token} size="small" />
       case 'unlock':
         return (
           <Button size="small" onClick={handleExitRevenueShare}>
