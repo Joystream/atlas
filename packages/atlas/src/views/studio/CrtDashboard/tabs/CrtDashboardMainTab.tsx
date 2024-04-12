@@ -181,11 +181,18 @@ const DashboardTokenProgress = ({ token }: Pick<CrtDashboardMainTabProps, 'token
     : ''
 
   const currentMemberStep = useMemo((): number => {
-    if (!token.description) return 1
+    if (!(token.description || token.benefits.length || token.trailerVideo.length)) return 1
     if (!token.ammCurves.length && !token.sales.length) return 2
     if (!token.revenueShares.length) return 3
     return 4
-  }, [token.description, token.ammCurves.length, token.sales.length, token.revenueShares.length])
+  }, [
+    token.description,
+    token.benefits.length,
+    token.trailerVideo.length,
+    token.ammCurves.length,
+    token.sales.length,
+    token.revenueShares.length,
+  ])
 
   const getButtonForStep = useCallback(
     (stepNo: number) => {

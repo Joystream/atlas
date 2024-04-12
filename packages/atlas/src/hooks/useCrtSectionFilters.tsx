@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 
 import { CreatorTokenOrderByInput, CreatorTokenWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
-import { SvgActionSettings, SvgActionShoppingCart } from '@/assets/icons'
+import { SvgActionShoppingCart } from '@/assets/icons'
 import { FilterButtonOption, SectionFilter } from '@/components/FilterButton'
 
 export const CRT_STATUSES: FilterButtonOption[] = [
@@ -11,12 +11,12 @@ export const CRT_STATUSES: FilterButtonOption[] = [
     applied: false,
     label: 'On market',
   },
-  {
-    value: 'sale',
-    selected: false,
-    applied: false,
-    label: 'On sale',
-  },
+  // {
+  //   value: 'sale',
+  //   selected: false,
+  //   applied: false,
+  //   label: 'On sale',
+  // },
   {
     value: 'inactive',
     selected: false,
@@ -37,7 +37,7 @@ export const FILTERS: SectionFilter[] = [
     type: 'checkbox',
     options: CRT_STATUSES,
   },
-  { name: 'other', type: 'checkbox', options: OTHER_FILTERS, label: 'Other', icon: <SvgActionSettings /> },
+  // { name: 'other', type: 'checkbox', options: OTHER_FILTERS, label: 'Other', icon: <SvgActionSettings /> },
 ]
 
 export const SORTING_FILTERS = [
