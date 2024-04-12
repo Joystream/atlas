@@ -474,6 +474,58 @@ export const useSegmentAnalytics = () => {
     [analytics]
   )
 
+  const trackPortfolioBuyTokenClick = useCallback(
+    (tokenName: string, memberId: string) => {
+      analytics.track('Portfolio buy token clicked', {
+        tokenName,
+        memberId,
+      })
+    },
+    [analytics]
+  )
+
+  const trackPortfolioSellTokenClick = useCallback(
+    (tokenName: string, memberId: string) => {
+      analytics.track('Portfolio sell token clicked', {
+        tokenName,
+        memberId,
+      })
+    },
+    [analytics]
+  )
+
+  const trackPortfolioTransferTokenClick = useCallback(
+    (tokenName: string, memberId: string) => {
+      analytics.track('Portfolio transfer token clicked', {
+        tokenName,
+        memberId,
+      })
+    },
+    [analytics]
+  )
+
+  const trackChangenowTokenBought = useCallback(
+    (tokenName: string, memberId: string, amount: number) => {
+      analytics.track('Changenow token bought', {
+        tokenName,
+        memberId,
+        amount,
+      })
+    },
+    [analytics]
+  )
+
+  const trackChangenowTokenSold = useCallback(
+    (tokenName: string, memberId: string, amount: number) => {
+      analytics.track('Changenow token sold', {
+        tokenName,
+        memberId,
+        amount,
+      })
+    },
+    [analytics]
+  )
+
   const runNextQueueEvent = useCallback(async () => {
     const queueEvent = playbackEventsQueue.current.shift()
     if (!queueEvent) {
@@ -517,6 +569,8 @@ export const useSegmentAnalytics = () => {
     trackAMMTokensPurchased,
     trackAMMTokensSold,
     trackAllNftFilterUpdated,
+    trackChangenowTokenBought,
+    trackChangenowTokenSold,
     trackChannelCreation,
     trackChannelFollow,
     trackClickAuthModalSignInButton,
@@ -535,6 +589,9 @@ export const useSegmentAnalytics = () => {
     trackNftMint,
     trackNftSale,
     trackPageView,
+    trackPortfolioBuyTokenClick,
+    trackPortfolioSellTokenClick,
+    trackPortfolioTransferTokenClick,
     trackPublishAndUploadClicked,
     trackReferralLinkGenerated,
     trackRevenueShareClosed,
