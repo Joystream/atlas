@@ -31,9 +31,18 @@ export type CrtCardProps = {
   size?: 'medium' | 'small'
   status?: CrtSaleTypes
   isLoading?: boolean
+  className?: string
 } & CrtMainInfoProps
 
-export const CrtCard = ({ channelRevenue, marketCap, size, status, isLoading, ...mainInfoProps }: CrtCardProps) => {
+export const CrtCard = ({
+  channelRevenue,
+  marketCap,
+  size,
+  status,
+  isLoading,
+  className,
+  ...mainInfoProps
+}: CrtCardProps) => {
   const isSmall = size === 'small'
   const details = useMemo(() => {
     const baseDetails: {
@@ -55,7 +64,7 @@ export const CrtCard = ({ channelRevenue, marketCap, size, status, isLoading, ..
           <FlexBox alignItems="center" width="fit-content">
             <SvgActionNotForSale />
             <Text variant="h300" as="h3" color="colorText">
-              No active sale
+              No sale
             </Text>
           </FlexBox>
         ),
@@ -156,7 +165,7 @@ export const CrtCard = ({ channelRevenue, marketCap, size, status, isLoading, ..
   }
 
   return (
-    <FlexBox flow="column" gap={0}>
+    <FlexBox className={className} flow="column" gap={0}>
       <CrtMainInfo size={size} {...mainInfoProps}>
         <AvatarBox width="100%" justifyContent="space-between">
           <Avatar
