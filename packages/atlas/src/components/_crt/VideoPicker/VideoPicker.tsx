@@ -110,6 +110,12 @@ const SelectVideoDialog = ({ channelId, onVideoSelection, show, onClose }: Selec
         channel: {
           id_eq: channelId,
         },
+        media: {
+          isAccepted_eq: true,
+        },
+        thumbnailPhoto: {
+          isAccepted_eq: true,
+        },
       },
       limit: 5,
     },

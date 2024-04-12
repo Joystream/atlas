@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import BN from 'bn.js'
 
 import { CreatorTokenOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
@@ -20,19 +21,16 @@ export const MarketplaceCrtTab = () => {
     variables: {
       where: {
         isFeatured_eq: true,
-        trailerVideo_every: {
-          id_isNull: false,
-        },
       },
-      limit: 10,
       orderBy: CreatorTokenOrderByInput.CurrentAmmSaleMintedByAmmDesc,
     },
   })
 
+  const filteredTokens = data?.creatorTokens.filter((token) => !!token.trailerVideo.length).slice(0, 10) ?? []
+
   const featuredCrts =
-    data?.creatorTokens
-      .slice(5)
-      .map(({ id, symbol, channel, totalSupply, accountsNum, lastPrice, currentAmmSale, description, currentSale }) => {
+    filteredTokens.map(
+      ({ id, symbol, channel, totalSupply, accountsNum, lastPrice, currentAmmSale, description, currentSale }) => {
         const status: CrtSaleTypes = currentSale
           ? {
               type: 'sale' as const,
@@ -48,7 +46,7 @@ export const MarketplaceCrtTab = () => {
             }
 
         return (
-          <CrtCard
+          <StyledCrtCard
             key={id}
             status={status}
             symbol={symbol ?? 'N/A'}
@@ -63,11 +61,12 @@ export const MarketplaceCrtTab = () => {
             accountsNum={accountsNum}
           />
         )
-      }) ?? []
+      }
+    ) ?? []
 
   return (
     <>
-      <MarketplaceCarousel type="crt" crts={data?.creatorTokens.slice(6) ?? []} isLoading={loading} />
+      <MarketplaceCarousel type="crt" crts={filteredTokens ?? []} isLoading={loading} />
 
       {featuredCrts.length > 4 && (
         <Section
@@ -94,3 +93,7 @@ export const MarketplaceCrtTab = () => {
     </>
   )
 }
+
+const StyledCrtCard = styled(CrtCard)`
+  min-height: 100%;
+`
