@@ -27,6 +27,7 @@ import { SendFundsDialog } from '@/components/_overlays/SendTransferDialogs'
 import { atlasConfig } from '@/config'
 import { CHANGENOW_PUBLIC_API_KEY } from '@/config/env'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useEnvironmentStore } from '@/providers/environment'
 import { useSubscribeAccountBalance, useTokenPrice } from '@/providers/joystream'
 import { useJoystreamStore } from '@/providers/joystream/joystream.store'
@@ -62,6 +63,9 @@ export const PortfolioTokenTab = () => {
   const [liquidCrtValue, setLiquidCrtValue] = useState<BN | null>(null)
   const setChangeNowModal = useTransactionManagerStore((state) => state.actions.setChangeNowModal)
   const toggleSendDialog = () => setShowSendDialog((prevState) => !prevState)
+  const { trackPortfolioBuyTokenClick, trackPortfolioSellTokenClick, trackPortfolioTransferTokenClick } =
+    useSegmentAnalytics()
+
   useEffect(() => {
     if (!timestamp) {
       timestamp = currentBlock
@@ -293,9 +297,26 @@ export const PortfolioTokenTab = () => {
               balance: <NumberFormat variant="t100" value={accountBalance ?? 0} as="p" withToken />,
               utils: (
                 <TokenPortfolioUtils
-                  onBuy={hasChangeNowIntegration ? () => setChangeNowModal('buy') : undefined}
-                  onSell={hasChangeNowIntegration ? () => setChangeNowModal('sell') : undefined}
-                  onTransfer={toggleSendDialog}
+                  onBuy={
+                    hasChangeNowIntegration
+                      ? () => {
+                          setChangeNowModal('buy')
+                          trackPortfolioBuyTokenClick(atlasConfig.joystream.tokenTicker, memberId || 'N/A')
+                        }
+                      : undefined
+                  }
+                  onSell={
+                    hasChangeNowIntegration
+                      ? () => {
+                          setChangeNowModal('sell')
+                          trackPortfolioSellTokenClick(atlasConfig.joystream.tokenTicker, memberId || 'N/A')
+                        }
+                      : undefined
+                  }
+                  onTransfer={() => {
+                    toggleSendDialog()
+                    trackPortfolioTransferTokenClick(atlasConfig.joystream.tokenTicker, memberId || 'N/A')
+                  }}
                 />
               ),
             },
