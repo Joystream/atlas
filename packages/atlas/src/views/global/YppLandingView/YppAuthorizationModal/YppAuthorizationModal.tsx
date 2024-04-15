@@ -356,9 +356,9 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
   useEffect(() => {
     if (ytRequirementsErrors?.length) {
       trackPageView('YPP Reqs Not Met')
-      trackYppReqsNotMet(ytRequirementsErrors, utmSource, utmCampaign)
+      trackYppReqsNotMet(ytRequirementsErrors, utmSource, utmCampaign, utmContent)
     }
-  }, [trackPageView, trackYppReqsNotMet, utmCampaign, utmSource, ytRequirementsErrors])
+  }, [trackPageView, trackYppReqsNotMet, utmCampaign, utmContent, utmSource, ytRequirementsErrors])
 
   const selectedChannel = useMemo(() => {
     if (!unSyncedChannels || !selectedChannelId) {
@@ -402,7 +402,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
           return {
             text: yppUnsyncedChannels?.length ? 'Continue' : 'Create account',
             onClick: () => {
-              trackClickAuthModalSignUpButton(utmSource, utmCampaign)
+              trackClickAuthModalSignUpButton()
               setSelectedChannelId(yppUnsyncedChannels?.[0]?.id ?? '')
               handleAuthorizeClick(yppUnsyncedChannels?.[0]?.id)
             },
@@ -505,8 +505,6 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     setSelectedChannelId,
     setYppModalOpenName,
     trackClickAuthModalSignUpButton,
-    utmSource,
-    utmCampaign,
     handleAuthorizeClick,
     handleCreateOrUpdateChannel,
   ])
@@ -522,7 +520,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
       return {
         text: 'Sign in',
         onClick: () => {
-          trackClickAuthModalSignInButton(utmSource, utmCampaign)
+          trackClickAuthModalSignInButton()
           setShouldContinueYppFlowAfterLogin(true)
           setYppModalOpenName(null)
           setAuthModalOpenName('logIn')
@@ -553,8 +551,6 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     isSubmitting,
     handleGoBack,
     trackClickAuthModalSignInButton,
-    utmSource,
-    utmCampaign,
     setShouldContinueYppFlowAfterLogin,
     setYppModalOpenName,
     setAuthModalOpenName,

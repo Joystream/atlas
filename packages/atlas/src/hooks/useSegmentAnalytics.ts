@@ -72,12 +72,13 @@ export const useSegmentAnalytics = () => {
   const playbackEventsQueue = useRef<{ type: playbackEventType; params: videoPlaybackParams }[]>([])
 
   const getUTMParams = useCallback(() => {
-    const [referrer, utmSource, utmCampaign] = [
+    const [referrer, utmSource, utmCampaign, utmContent] = [
       searchParams.get('referrerId'),
       searchParams.get('utm_source'),
       searchParams.get('utm_campaign'),
+      searchParams.get('utm_content'),
     ]
-    return { referrer, utmSource, utmCampaign }
+    return { referrer, utm_source: utmSource, utm_campaign: utmCampaign, utm_content: utmContent }
   }, [searchParams])
 
   const identifyUser = useCallback(
@@ -95,7 +96,7 @@ export const useSegmentAnalytics = () => {
   )
 
   const trackYppOptIn = useCallback(
-    ({ handle, email, category, subscribersCount, referrerId, utmSource, utmCampaign }: YppOptInParams) => {
+    ({ handle, email, category, subscribersCount, referrerId, utmSource, utmCampaign, utmContent }: YppOptInParams) => {
       analytics.track('YPP Sign Up Completed', {
         handle,
         email,
@@ -104,6 +105,7 @@ export const useSegmentAnalytics = () => {
         referrerId,
         utm_source: utmSource,
         utm_campaign: utmCampaign,
+        utm_content: utmContent,
       })
     },
     [analytics]
@@ -197,26 +199,17 @@ export const useSegmentAnalytics = () => {
     [analytics]
   )
 
-  const trackClickTopBarSignInButton = useCallback(
-    (utmSource?: string | null, utmCampaign?: string | null) => {
-      analytics.track('Top Nav Sign In Clicked', { utm_source: utmSource, utm_campaign: utmCampaign })
-    },
-    [analytics]
-  )
+  const trackClickTopBarSignInButton = useCallback(() => {
+    analytics.track('Top Nav Sign In Clicked', { ...getUTMParams() })
+  }, [analytics, getUTMParams])
 
-  const trackClickAuthModalSignInButton = useCallback(
-    (utmSource?: string | null, utmCampaign?: string | null) => {
-      analytics.track('YPP Reqs Modal - Sign In Clicked', { utm_source: utmSource, utm_campaign: utmCampaign })
-    },
-    [analytics]
-  )
+  const trackClickAuthModalSignInButton = useCallback(() => {
+    analytics.track('YPP Reqs Modal - Sign In Clicked', { ...getUTMParams() })
+  }, [analytics, getUTMParams])
 
-  const trackClickAuthModalSignUpButton = useCallback(
-    (utmSource?: string | null, utmCampaign?: string | null) => {
-      analytics.track('YPP Reqs Modal - Create Account Clicked', { utm_source: utmSource, utm_campaign: utmCampaign })
-    },
-    [analytics]
-  )
+  const trackClickAuthModalSignUpButton = useCallback(() => {
+    analytics.track('YPP Reqs Modal - Create Account Clicked', { ...getUTMParams() })
+  }, [analytics, getUTMParams])
 
   const trackCommentAdded = useCallback(
     (commentBody: string, videoId: string) => {
@@ -257,20 +250,11 @@ export const useSegmentAnalytics = () => {
     [analytics]
   )
 
-  const trackYppSignInButtonClick = useCallback(
-    (
-      referrer: string | null | undefined,
-      utmSource: string | null | undefined,
-      utmCampaign: string | null | undefined
-    ) => {
-      analytics.track('YPP Landing Sign In w Google Clicked', {
-        referrer,
-        utm_source: utmSource,
-        utm_campaign: utmCampaign,
-      })
-    },
-    [analytics]
-  )
+  const trackYppSignInButtonClick = useCallback(() => {
+    analytics.track('YPP Landing Sign In w Google Clicked', {
+      ...getUTMParams(),
+    })
+  }, [analytics, getUTMParams])
 
   const trackNFTCarouselNext = useCallback(
     (slideId: string, nftId?: string) => {
@@ -369,9 +353,15 @@ export const useSegmentAnalytics = () => {
     (
       errors: YppRequirementsErrorCode[],
       utmSource: string | null | undefined,
-      utmCampaign: string | null | undefined
+      utmCampaign: string | null | undefined,
+      utmContent: string | null | undefined
     ) => {
-      analytics.track('YPP Sign Up Failed - Reqs Not Met', { errors, utmSource, utmCampaign })
+      analytics.track('YPP Sign Up Failed - Reqs Not Met', {
+        errors,
+        utm_source: utmSource,
+        utm_campaign: utmCampaign,
+        utm_content: utmContent,
+      })
     },
     [analytics]
   )
