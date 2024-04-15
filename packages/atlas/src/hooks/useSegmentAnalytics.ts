@@ -72,12 +72,13 @@ export const useSegmentAnalytics = () => {
   const playbackEventsQueue = useRef<{ type: playbackEventType; params: videoPlaybackParams }[]>([])
 
   const getUTMParams = useCallback(() => {
-    const [referrer, utmSource, utmCampaign] = [
+    const [referrer, utmSource, utmCampaign, utmContent] = [
       searchParams.get('referrerId'),
       searchParams.get('utm_source'),
       searchParams.get('utm_campaign'),
+      searchParams.get('utm_content'),
     ]
-    return { referrer, utmSource, utmCampaign }
+    return { referrer, utm_source: utmSource, utm_campaign: utmCampaign, utm_content: utmContent }
   }, [searchParams])
 
   const identifyUser = useCallback(
