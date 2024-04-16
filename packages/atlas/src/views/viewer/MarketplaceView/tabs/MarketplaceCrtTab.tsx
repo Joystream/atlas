@@ -6,7 +6,7 @@ import { useGetBasicCreatorTokensQuery } from '@/api/queries/__generated__/creat
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { MarketplaceCarousel } from '@/components/NftCarousel/MarketplaceCarousel'
 import { Section } from '@/components/Section/Section'
-import { TopSellingChannelsTable } from '@/components/TopSellingChannelsTable'
+import { TopEarningChannels } from '@/components/TopEarningChannels'
 import { AllTokensSection } from '@/components/_crt/AllTokensSection'
 import { CrtCard, CrtSaleTypes } from '@/components/_crt/CrtCard/CrtCard'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -29,7 +29,7 @@ export const MarketplaceCrtTab = () => {
   const filteredTokens = data?.creatorTokens.filter((token) => !!token.trailerVideo.length).slice(0, 10) ?? []
 
   const featuredCrts =
-    filteredTokens.map(
+    data?.creatorTokens.map(
       ({ id, symbol, channel, totalSupply, accountsNum, lastPrice, currentAmmSale, description, currentSale }) => {
         const status: CrtSaleTypes = currentSale
           ? {
@@ -49,6 +49,7 @@ export const MarketplaceCrtTab = () => {
           <StyledCrtCard
             key={id}
             status={status}
+            channelId={channel?.channel.id ?? ''}
             symbol={symbol ?? 'N/A'}
             avatar={channel?.channel.avatarPhoto?.resolvedUrls[0]}
             marketCap={
@@ -86,7 +87,7 @@ export const MarketplaceCrtTab = () => {
       )}
       <TableFullWitdhtWrapper>
         <LimitedWidthContainer big noBottomPadding>
-          <TopSellingChannelsTable withCrtOnly />
+          <TopEarningChannels withCrtOnly />
         </LimitedWidthContainer>
       </TableFullWitdhtWrapper>
       <AllTokensSection />
