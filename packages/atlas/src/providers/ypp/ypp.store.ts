@@ -90,7 +90,7 @@ export const useYppStore = createStore<YppStoreState, YppStoreActions>(
   {
     persist: {
       key: 'ypp',
-      whitelist: ['referrerId', 'utmSource'],
+      whitelist: ['referrerId', 'utmSource', 'utmCampaign', 'utmContent'],
       version: 0,
       migrate: (oldState) => oldState,
     },
