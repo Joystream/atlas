@@ -1,35 +1,36 @@
 import { To } from 'history'
-import { AnimationEvent, ElementType, KeyboardEvent, MouseEvent, PropsWithChildren, ReactNode, forwardRef } from 'react'
+import { ButtonHTMLAttributes, ElementType, PropsWithChildren, ReactNode, forwardRef } from 'react'
 
-import { Text, TextVariant } from '@/components/Text'
+import { TextVariant } from '@/components/Text'
 import { getLinkPropsFromTo } from '@/utils/button'
 
-import { BorderWrapper, ButtonBase, ButtonIconWrapper, ButtonSize, ButtonVariant, IconPlacement } from './Button.styles'
+import {
+  BorderWrapper,
+  ButtonBase,
+  ButtonIconWrapper,
+  ButtonSize,
+  ButtonText,
+  ButtonVariant,
+  IconPlacement,
+} from './Button.styles'
 
-export type ButtonProps = PropsWithChildren<{
-  as?: ElementType
-  icon?: ReactNode
-  iconPlacement?: IconPlacement
-  badge?: boolean | string | number
-  fullWidth?: boolean
-  size?: ButtonSize
-  to?: To
-  openLinkInNewTab?: boolean
-  type?: 'button' | 'submit'
-  variant?: ButtonVariant
-  disabled?: boolean
-  tabIndex?: number
-  className?: string
-  onClick?: (e: MouseEvent<HTMLButtonElement>) => void
-  onMouseEnter?: (e: MouseEvent<HTMLButtonElement>) => void
-  onMouseLeave?: (e: MouseEvent<HTMLButtonElement>) => void
-  onAnimationEnd?: (e: AnimationEvent<HTMLButtonElement>) => void
-  onKeyPress?: (e: KeyboardEvent<HTMLButtonElement>) => void
-  rounded?: boolean
-  // internal
-  _textOnly?: boolean
-  ariaLabel?: string
-}>
+export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> &
+  PropsWithChildren<{
+    as?: ElementType
+    icon?: ReactNode
+    iconPlacement?: IconPlacement
+    badge?: boolean | string | number
+    fullWidth?: boolean
+    size?: ButtonSize
+    to?: To
+    openLinkInNewTab?: boolean
+    type?: 'button' | 'submit'
+    variant?: ButtonVariant
+    rounded?: boolean
+    // internal
+    _textOnly?: boolean
+    ariaLabel?: string
+  }>
 
 const BUTTON_SIZE_TO_TEXT_VARIANT: Record<ButtonSize, TextVariant> = {
   large: 't300-strong',
@@ -84,9 +85,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) =>
           </ButtonIconWrapper>
         )}
         {children && (
-          <Text as="span" variant={BUTTON_SIZE_TO_TEXT_VARIANT[size]} color="inherit">
+          <ButtonText as="span" variant={BUTTON_SIZE_TO_TEXT_VARIANT[size]} color="inherit">
             {children}
-          </Text>
+          </ButtonText>
         )}
         {icon && iconPlacement === 'right' && (
           <ButtonIconWrapper size={size} iconOnly={iconOnly} iconPlacement={iconPlacement}>

@@ -1,10 +1,9 @@
 import { FetchPolicy, NetworkStatus, QueryHookOptions } from '@apollo/client'
-import { debounce } from 'lodash-es'
-import { useEffect, useRef, useState } from 'react'
 
 import { useBasicChannelsConnection } from '@/api/hooks/channelsConnection'
 import { useBasicVideosConnection } from '@/api/hooks/videosConnection'
 import { VideoOrderByInput, VideoWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
+import { useDebounceValue } from '@/hooks/useDebounceValue'
 import { SentryLogger } from '@/utils/logs'
 
 type SearchResultData = {
@@ -23,21 +22,7 @@ export const useSearchResults = ({
   isReady = true,
   fetchPolicy,
 }: SearchResultData) => {
-  const [text, setText] = useState(searchQuery)
-  const [typing, setTyping] = useState(false)
-  const debouncedQuery = useRef(
-    debounce((query: string) => {
-      setText(query)
-      setTyping(false)
-    }, 500)
-  )
-
-  useEffect(() => {
-    if (searchQuery.length) {
-      setTyping(true)
-      debouncedQuery.current(searchQuery)
-    }
-  }, [searchQuery])
+  const text = useDebounceValue(searchQuery, 500)
 
   const commonOptions: QueryHookOptions = {
     fetchPolicy,
@@ -74,6 +59,7 @@ export const useSearchResults = ({
     },
     {
       ...commonOptions,
+      skipCountQuery: true,
       onError: (error) => SentryLogger.error('Failed to fetch video search results', 'SearchResults', error),
     }
   )
@@ -89,7 +75,7 @@ export const useSearchResults = ({
     networkStatus: channelsNetworkStatus,
   } = useBasicChannelsConnection(
     {
-      first,
+      first: 1,
       where: {
         title_containsInsensitive: text,
         isPublic_eq: true,
@@ -120,7 +106,6 @@ export const useSearchResults = ({
     loading:
       videosLoading ||
       channelsLoading ||
-      typing ||
       videosNetworkStatus === NetworkStatus.fetchMore ||
       channelsNetworkStatus === NetworkStatus.fetchMore,
   }

@@ -1,0 +1,75 @@
+query GetBasicCreatorTokens(
+  $where: CreatorTokenWhereInput
+  $orderBy: [CreatorTokenOrderByInput!]
+  $limit: Int
+  $offset: Int
+) {
+  creatorTokens(where: $where, orderBy: $orderBy, limit: $limit, offset: $offset) {
+    ...BasicCreatorToken
+  }
+}
+
+query GetFullCreatorToken($id: String!) {
+  creatorTokenById(id: $id) {
+    ...FullCreatorToken
+  }
+}
+
+query GetCreatorTokensCount($where: CreatorTokenWhereInput) {
+  creatorTokensConnection(where: $where, orderBy: [id_ASC]) {
+    totalCount
+  }
+}
+
+query GetCreatorTokenHolders(
+  $where: TokenAccountWhereInput
+  $orderBy: [TokenAccountOrderByInput!]
+  $limit: Int
+  $offset: Int
+) {
+  tokenAccounts(where: $where, orderBy: $orderBy, offset: $offset, limit: $limit) {
+    ...BasicCreatorTokenHolder
+  }
+}
+
+query GetCreatorTokenHoldersCount($where: TokenAccountWhereInput) {
+  tokenAccountsConnection(where: $where, orderBy: [id_ASC]) {
+    totalCount
+  }
+}
+
+query GetChannelTokenBalance($currentBlockHeight: Int!, $memberId: String!, $tokenId: String!) {
+  getAccountTransferrableBalance(currentBlockHeight: $currentBlockHeight, memberId: $memberId, tokenId: $tokenId) {
+    transferrableCrtAmount
+  }
+}
+
+query GetRevenueShareDividend($stakingAmount: Int!, $tokenId: String!) {
+  getShareDividend(stakingAmount: $stakingAmount, tokenId: $tokenId) {
+    dividendJoyAmount
+  }
+}
+
+query GetHistoricalTokenAllocation($tokenId: String!) {
+  getCumulativeHistoricalShareAllocation(tokenId: $tokenId) {
+    cumulativeHistoricalAllocation
+  }
+}
+
+query GetFullAmmCurve($where: AmmCurveWhereInput, $orderBy: [AmmCurveOrderByInput!], $limit: Int, $offset: Int) {
+  ammCurves(where: $where, orderBy: $orderBy, offset: $offset, limit: $limit) {
+    ...FullAmmCurve
+  }
+}
+
+query GetTokenRevenueShares($where: RevenueShareWhereInput, $limit: Int, $offset: Int) {
+  revenueShares(where: $where, limit: $limit, offset: $offset) {
+    ...BasicRevenueShare
+  }
+}
+
+query GetTokenRevenueSharesCount($where: RevenueShareWhereInput) {
+  revenueSharesConnection(where: $where, orderBy: [id_ASC]) {
+    totalCount
+  }
+}

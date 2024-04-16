@@ -1,6 +1,7 @@
 import { FC, ReactNode } from 'react'
 
-import { Text } from '@/components/Text'
+import { Text, TextVariant } from '@/components/Text'
+import { Color } from '@/components/Text/Text.styles'
 import { TooltipProps } from '@/components/Tooltip'
 import { ButtonProps } from '@/components/_buttons/Button'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
@@ -13,7 +14,7 @@ import { Information } from '../Information'
 
 export type WidgetTileProps = {
   loading?: boolean
-  title: string | number
+  title: string | number | JSX.Element
   button?: { text: string } & Omit<ButtonProps, 'children'>
   text?: string | number
   customNode?: ReactNode
@@ -22,6 +23,9 @@ export type WidgetTileProps = {
   customTopRightNode?: ReactNode
   tooltip?: TooltipProps
   className?: string
+  titleVariant?: TextVariant
+  titleColor?: Color
+  titleBottomMargin?: number
 }
 
 export const WidgetTile: FC<WidgetTileProps> = ({
@@ -35,6 +39,9 @@ export const WidgetTile: FC<WidgetTileProps> = ({
   caption,
   icon,
   className,
+  titleVariant,
+  titleColor,
+  titleBottomMargin,
 }) => {
   const mdMatch = useMediaMatch('md')
   const lgMatch = useMediaMatch('lg')
@@ -55,14 +62,14 @@ export const WidgetTile: FC<WidgetTileProps> = ({
 
   return (
     <Wrapper className={className}>
-      <Title hasTooltip={!!tooltip}>
-        <Text variant="h100" as="p" color="colorText">
+      <Title hasTooltip={!!tooltip} marginBottom={titleBottomMargin}>
+        <Text variant={titleVariant ?? 'h100'} as="p" color={titleColor ?? 'colorText'}>
           {title}
         </Text>
         {withTooltip && <Information {...tooltip} />}
         {withCustomTopRightNode && customTopRightNode}
       </Title>
-      <Content>
+      <Content withButton={!!button}>
         {withCustomNode && customNode}
         {loading && (
           <>

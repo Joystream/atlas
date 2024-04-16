@@ -187,7 +187,9 @@ export const FeatureNftModal: FC<FeatureNftModalProps> = ({ isOpen, onClose }) =
       </StyledFormField>
       <PreviewWrapper>
         {videoId ? (
-          <VideoTileViewer direction="horizontal" id={videoId} detailsVariant="withChannelName" />
+          <span className="tile-container">
+            <VideoTileViewer direction="horizontal" id={videoId} detailsVariant="withChannelName" />
+          </span>
         ) : (
           <Text variant="t200" as="p" color="colorTextMuted">
             Preview of your video will appear here

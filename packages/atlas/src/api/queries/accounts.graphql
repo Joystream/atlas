@@ -5,5 +5,20 @@ query GetCurrentAccount {
     isEmailConfirmed
     joystreamAccount
     membershipId
+    followedChannels {
+      channelId
+      timestamp
+    }
+  }
+}
+
+query GetChannelFollows($where: ChannelFollowWhereInput, $limit: Int) {
+  channelFollows(where: $where, limit: $limit) {
+    id
+    timestamp
+    channelId
+    user {
+      id
+    }
   }
 }

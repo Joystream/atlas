@@ -16,13 +16,28 @@ export const getMemberAvatar = (member?: Pick<BasicMembershipFieldsFragment, 'me
   return { urls: null, isLoadingAsset: avatar !== null }
 }
 
-export const testAssetDownload = (url: string, type: AssetType | null): Promise<string> => {
-  return new Promise((_resolve, _reject) => {
-    const isImageType = type && ['thumbnail', 'avatar', 'cover'].includes(type)
-    let img: HTMLImageElement | null = null
-    let video: HTMLVideoElement | null = null
+export type AssetTestOptions = {
+  resolveOnlyOnEvents?: (keyof HTMLVideoElementEventMap)[]
+}
 
-    const cleanup = () => {
+export const testAssetDownload = (
+  url: string,
+  type: AssetType | null,
+  opts?: AssetTestOptions
+): [Promise<string>, (() => void) | null] => {
+  let img: HTMLImageElement | null = null
+  let video: HTMLVideoElement | null = null
+  let cleanup: (() => void) | null = null
+  const videoEvents: (keyof HTMLVideoElementEventMap)[] = opts?.resolveOnlyOnEvents ?? [
+    'loadedmetadata',
+    'loadeddata',
+    'canplay',
+    'progress',
+  ]
+  const assetPromise = new Promise<string>((_resolve, _reject) => {
+    const isImageType = type && ['thumbnail', 'avatar', 'cover'].includes(type)
+
+    cleanup = () => {
       if (img) {
         img.removeEventListener('error', reject)
         img.removeEventListener('load', resolve)
@@ -31,23 +46,26 @@ export const testAssetDownload = (url: string, type: AssetType | null): Promise<
       }
       if (video) {
         video.removeEventListener('error', reject)
-        video.removeEventListener('loadedmetadata', resolve)
-        video.removeEventListener('loadeddata', resolve)
-        video.removeEventListener('canplay', resolve)
-        video.removeEventListener('progress', resolve)
+        videoEvents.forEach((event) => {
+          video?.removeEventListener(event, resolve)
+        })
+        video.pause()
+        video.preload = 'none'
+        video.setAttribute('src', '')
+        video.load()
         video.remove()
         video = null
       }
     }
 
     const resolve = () => {
-      cleanup()
+      cleanup?.()
 
       _resolve(url)
     }
 
     const reject = (err?: unknown) => {
-      cleanup()
+      cleanup?.()
       _reject(err)
     }
 
@@ -61,10 +79,9 @@ export const testAssetDownload = (url: string, type: AssetType | null): Promise<
       img.src = url
     } else if (type === 'video') {
       video = document.createElement('video')
-      video.addEventListener('loadedmetadata', resolve)
-      video.addEventListener('loadeddata', resolve)
-      video.addEventListener('canplay', resolve)
-      video.addEventListener('progress', resolve)
+      videoEvents.forEach((event) => {
+        video?.addEventListener(event, resolve)
+      })
       video.addEventListener('error', async (err) => {
         if (err.target) {
           reject((err.target as HTMLVideoElement).error)
@@ -84,6 +101,8 @@ export const testAssetDownload = (url: string, type: AssetType | null): Promise<
       reject()
     }
   })
+
+  return [assetPromise, cleanup]
 }
 
 export const logDistributorPerformance = async (assetUrl: string, eventEntry: DistributorEventEntry) => {

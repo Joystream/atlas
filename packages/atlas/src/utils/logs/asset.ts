@@ -13,6 +13,11 @@ type DistributorEventDetails = {
   distributorUrl?: string | null
 }
 
+type StorageOperatorEventDetails = {
+  storageOperatorId?: string
+  storageOperatorUrl?: string | null
+}
+
 export type DistributorEventMetric = {
   initialResponseTime?: number
   fullResponseTime?: number
@@ -44,11 +49,15 @@ type UserLogEvent = {
   [x: string]: unknown
 }
 
-export type DistributorEventEntry = {
+export type DataObjectEventEntry = {
   dataObjectId?: string | null
   dataObjectType?: DataObjectType['__typename'] | AssetType
   resolvedUrl?: string
-} & DistributorEventDetails
+}
+
+export type StorageOperatorEventEntry = DataObjectEventEntry & StorageOperatorEventDetails
+
+export type DistributorEventEntry = DataObjectEventEntry & DistributorEventDetails
 
 type CodecInfo = {
   assetType: string | null
@@ -144,6 +153,15 @@ class _UserEventsLogger {
     this.addErrorEvent(event)
   }
 
+  logUploadError(entry: StorageOperatorEventEntry, error: Error) {
+    const event: UserLogEvent = {
+      type: 'distributor-response-error',
+      ...entry,
+      error: error.message,
+    }
+    this.addErrorEvent(event)
+  }
+
   logDistributorResponseTimeout(entry: DistributorEventEntry) {
     const event: UserPerformanceEvent = {
       type: 'distributor-response-timeout',
@@ -177,7 +195,7 @@ class _UserEventsLogger {
     this.addErrorEvent(event)
   }
 
-  logAssetUploadFailedEvent(entry: DistributorEventEntry, error: Error) {
+  logAssetUploadFailedEvent(entry: StorageOperatorEventEntry, error: Error) {
     const event: UserLogEvent = {
       type: 'asset-upload-failed',
       ...entry,

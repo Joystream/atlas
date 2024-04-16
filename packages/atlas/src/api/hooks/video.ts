@@ -17,7 +17,7 @@ import {
   useGetMostViewedVideosConnectionQuery,
   useGetVideosCountQuery,
 } from '@/api/queries/__generated__/videos.generated'
-import { publicCryptoVideoFilter } from '@/config/contentFilter'
+import { getPublicCryptoVideoFilter } from '@/config/contentFilter'
 
 export const useFullVideo = (
   id: string,
@@ -48,7 +48,7 @@ export const useChannelPreviewVideos = (
   const { data, ...rest } = useGetBasicVideosQuery({
     ...opts,
     variables: {
-      where: { ...publicCryptoVideoFilter, channel: { id_eq: channelId } },
+      where: getPublicCryptoVideoFilter({ channel: { id_eq: channelId } }),
       orderBy: VideoOrderByInput.CreatedAtDesc,
       offset: 0,
       limit: 10,

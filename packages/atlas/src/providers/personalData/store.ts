@@ -2,11 +2,10 @@ import { round } from 'lodash-es'
 
 import { createStore } from '@/utils/store'
 
-import { DismissedMessage, FollowedChannel, RecentSearch, WatchedVideo, WatchedVideoStatus } from './types'
+import { DismissedMessage, RecentSearch, WatchedVideo, WatchedVideoStatus } from './types'
 
 export type PersonalDataStoreState = {
   watchedVideos: WatchedVideo[]
-  followedChannels: FollowedChannel[]
   recentSearches: RecentSearch[]
   dismissedMessages: DismissedMessage[]
   currentVolume: number
@@ -19,12 +18,12 @@ export type PersonalDataStoreState = {
   captionsEnabled: boolean
   captionsLanguage: string | null
   allowMinimizedPleyer: boolean
+  lastUsedChannelId: string | null
   lastGlobalRecommendationId: string | null
 }
 
 const WHITELIST: (keyof PersonalDataStoreState)[] = [
   'watchedVideos',
-  'followedChannels',
   'recentSearches',
   'dismissedMessages',
   'currentVolume',
@@ -36,12 +35,11 @@ const WHITELIST: (keyof PersonalDataStoreState)[] = [
   'autoPlayNext',
   'captionsEnabled',
   'captionsLanguage',
+  'lastUsedChannelId',
 ]
 
 export type PersonalDataStoreActions = {
   updateWatchedVideos: (__typename: WatchedVideoStatus, id: string, timestamp?: number) => void
-  unfollowChannel: (id: string) => void
-  followChannel: (id: string) => void
   addRecentSearch: (title: string) => void
   deleteRecentSearch: (title: string) => void
   updateDismissedMessages: (id: string, add?: boolean) => void
@@ -55,6 +53,7 @@ export type PersonalDataStoreActions = {
   setCaptionsEnabled: (captionsEnabled: boolean) => void
   setMinimizedPlayerAllowed: (allowed: boolean) => void
   setCaptionsLanguage: (captionsLanguage: string | null) => void
+  setLastUsedChannelId: (channelId: string | null) => void
   setGlobalRecommendationId: (recommId: string) => void
   getIsCookiesPopoverVisible: () => boolean
 }
@@ -62,7 +61,6 @@ export type PersonalDataStoreActions = {
 const initialState: PersonalDataStoreState = {
   cachedVolume: 0,
   watchedVideos: [],
-  followedChannels: [],
   recentSearches: [],
   dismissedMessages: [],
   currentVolume: 1,
@@ -74,6 +72,7 @@ const initialState: PersonalDataStoreState = {
   captionsEnabled: false,
   captionsLanguage: null,
   allowMinimizedPleyer: true,
+  lastUsedChannelId: null,
   lastGlobalRecommendationId: null,
 }
 
@@ -81,6 +80,11 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
   {
     state: initialState,
     actionsFactory: (set, get) => ({
+      setLastUsedChannelId: (channelId) => {
+        set((state) => {
+          state.lastUsedChannelId = channelId
+        })
+      },
       setGlobalRecommendationId: (recommId) => {
         set((state) => {
           state.lastGlobalRecommendationId = recommId
@@ -95,22 +99,6 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
           } else {
             const index = state.watchedVideos.findIndex((v) => v.id === id)
             if (index !== -1) state.watchedVideos[index] = { __typename, id, timestamp }
-          }
-        })
-      },
-      followChannel: (id) => {
-        set((state) => {
-          const isFollowing = state.followedChannels.some((channel) => channel.id === id)
-          if (!isFollowing) {
-            state.followedChannels.push({ id })
-          }
-        })
-      },
-      unfollowChannel: (id) => {
-        set((state) => {
-          const isFollowing = state.followedChannels.some((channel) => channel.id === id)
-          if (isFollowing) {
-            state.followedChannels = state.followedChannels.filter((channel) => channel.id !== id)
           }
         })
       },

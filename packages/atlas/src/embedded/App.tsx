@@ -34,8 +34,16 @@ const AnonymousEmbeddedProvider = ({ children }: PropsWithChildren) => {
     const init = async () => {
       const { data } = await lazyCurrentAccountQuery()
       if (!data) {
-        handleAnonymousAuth(anonymousUserId).then((userId) => {
-          setAnonymousUserId(userId ?? null)
+        const anonymousReq = (id: string | null) =>
+          handleAnonymousAuth(id).then((userId) => {
+            setAnonymousUserId(userId ?? null)
+          })
+
+        anonymousReq(anonymousUserId).catch((e) => {
+          if (e.response.status === 401) {
+            setAnonymousUserId(null)
+            anonymousReq(null)
+          }
         })
         return
       }

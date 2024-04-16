@@ -11,10 +11,11 @@ export const VideoTileContainer = styled.div<{ direction: 'vertical' | 'horizont
     direction === 'horizontal'
       ? css`
           display: grid;
-          grid-template-columns: repeat(2, minmax(160px, 320px));
+          width: 100%;
+          grid-template-columns: min(40%, 360px) 1fr;
 
           ${VideoTitle} {
-            -webkit-line-clamp: 3;
+            -webkit-line-clamp: 2;
           }
         `
       : css`

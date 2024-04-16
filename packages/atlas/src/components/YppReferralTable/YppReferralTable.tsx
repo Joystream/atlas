@@ -1,21 +1,13 @@
 import { useMemo } from 'react'
 
-import { useBasicChannel } from '@/api/hooks/channel'
-import { Avatar } from '@/components/Avatar'
 import { FlexBox } from '@/components/FlexBox'
 import { Table, TableProps } from '@/components/Table'
-import { OverflowTableWrapper } from '@/components/Table/Table.styles'
-import { SenderItem, StyledLink } from '@/components/TablePaymentsHistory/TablePaymentsHistory.styles'
+import { DateBlockCell, LoadingChannelCell } from '@/components/Table/Table.cells'
 import { Text } from '@/components/Text'
 import { RightAlignText, TierWrapper } from '@/components/YppReferralTable/YppReferralTable.styles'
 import { getTierIcon } from '@/components/_ypp/YppDashboardTier'
 import { atlasConfig } from '@/config'
-import { absoluteRoutes } from '@/config/routes'
-import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
-import { SentryLogger } from '@/utils/logs'
 import { convertUpperCamelToSentence } from '@/utils/misc'
-import { formatNumber } from '@/utils/number'
-import { formatDateTime } from '@/utils/time'
 import { BOOST_TIMESTAMP, getTierRewards, yppBackendTierToConfig } from '@/utils/ypp'
 import { YppChannelStatus } from '@/views/global/YppLandingView/YppLandingView.types'
 
@@ -23,7 +15,7 @@ import { COLUMNS, tableLoadingData } from './YppReferralTable.utils'
 
 export type YppReferral = {
   date: Date
-  channel: string
+  channelId: string
   status: YppChannelStatus
 }
 
@@ -36,47 +28,20 @@ export const YppReferralTable = ({ isLoading, data }: YppReferralTableProps) => 
   const mappedData: TableProps['data'] = useMemo(
     () =>
       data.map((entry) => ({
-        date: <RegDate date={entry.date} />,
-        channel: <Channel channel={entry.channel} />,
+        date: <DateBlockCell type="date" date={entry.date} />,
+        channel: <LoadingChannelCell channelId={entry.channelId} />,
         tier: <Tier yppStatus={entry.status} />,
         reward: <Reward yppStatus={entry.status} signupTimestamp={entry.date.getTime()} />,
       })),
     [data]
   )
   return (
-    <OverflowTableWrapper minWidth={700}>
-      <Table title="Channels you referred" columns={COLUMNS} data={isLoading ? tableLoadingData : mappedData} />
-    </OverflowTableWrapper>
-  )
-}
-
-const RegDate = ({ date }: { date: Date }) => {
-  const { convertMsTimestampToBlock } = useBlockTimeEstimation()
-  return (
-    <>
-      <Text as="p" variant="t200-strong">
-        {formatDateTime(date)}
-      </Text>
-      <Text as="p" variant="t100" margin={{ top: 1 }} color="colorText">
-        {formatNumber(convertMsTimestampToBlock(date.getTime()) || 0)} block
-      </Text>
-    </>
-  )
-}
-
-const Channel = ({ channel: channelId }: { channel: YppReferral['channel'] }) => {
-  const { channel, loading } = useBasicChannel(channelId, {
-    onError: (error) => SentryLogger.error('Failed to fetch memberships', 'ActiveUserProvider', error),
-  })
-
-  return (
-    <StyledLink to={absoluteRoutes.viewer.channel(channel?.id)}>
-      <SenderItem
-        nodeStart={<Avatar assetUrls={channel?.avatarPhoto?.resolvedUrls} size={32} loading={loading} />}
-        label={channel?.title}
-        isInteractive={false}
-      />
-    </StyledLink>
+    <Table
+      minWidth={700}
+      title="Channels you referred"
+      columns={COLUMNS}
+      data={isLoading ? tableLoadingData : mappedData}
+    />
   )
 }
 

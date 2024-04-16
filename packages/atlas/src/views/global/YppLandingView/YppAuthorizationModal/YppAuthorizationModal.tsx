@@ -100,7 +100,8 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     ytResponseData,
     utmSource,
     utmCampaign,
-    actions: { setYtResponseData, setUtmSource, setUtmCampaign },
+    utmContent,
+    actions: { setYtResponseData, setUtmSource, setUtmCampaign, setUtmContent },
   } = useYppStore((store) => store, shallow)
   const setReferrerId = useYppStore((store) => store.actions.setReferrerId)
   const setShouldContinueYppFlowAfterLogin = useYppStore((store) => store.actions.setShouldContinueYppFlowAfterLogin)
@@ -165,7 +166,10 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     if (searchParams.get('utm_campaign')) {
       setUtmCampaign(searchParams.get('utm_campaign'))
     }
-  }, [searchParams, setUtmCampaign, setUtmSource])
+    if (searchParams.get('utm_content')) {
+      setUtmContent(searchParams.get('utm_content'))
+    }
+  }, [searchParams, setUtmCampaign, setUtmContent, setUtmSource])
 
   useEffect(() => {
     contentRef.current?.scrollTo({ top: 0 })
@@ -203,7 +207,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     [setSelectedChannelId, setYtRequirementsErrors]
   )
 
-  const createOrUpdateChannel = useCreateEditChannelSubmit()
+  const createOrUpdateChannel = useCreateEditChannelSubmit(selectedChannelId ?? undefined)
 
   const handleCreateOrUpdateChannel = detailsFormMethods.handleSubmit(async (data) => {
     setFinalFormData(() => ({
@@ -312,6 +316,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
             referrerId: data.referrerChannelId,
             utmSource: utmSource || undefined,
             utmCampaign: utmCampaign || undefined,
+            utmContent: utmContent || undefined,
           })
           setReferrerId(null)
           setYtResponseData(null)
@@ -351,9 +356,9 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
   useEffect(() => {
     if (ytRequirementsErrors?.length) {
       trackPageView('YPP Reqs Not Met')
-      trackYppReqsNotMet(ytRequirementsErrors, utmSource, utmCampaign)
+      trackYppReqsNotMet(ytRequirementsErrors, utmSource, utmCampaign, utmContent)
     }
-  }, [trackPageView, trackYppReqsNotMet, utmCampaign, utmSource, ytRequirementsErrors])
+  }, [trackPageView, trackYppReqsNotMet, utmCampaign, utmContent, utmSource, ytRequirementsErrors])
 
   const selectedChannel = useMemo(() => {
     if (!unSyncedChannels || !selectedChannelId) {
@@ -397,7 +402,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
           return {
             text: yppUnsyncedChannels?.length ? 'Continue' : 'Create account',
             onClick: () => {
-              trackClickAuthModalSignUpButton(utmSource, utmCampaign)
+              trackClickAuthModalSignUpButton()
               setSelectedChannelId(yppUnsyncedChannels?.[0]?.id ?? '')
               handleAuthorizeClick(yppUnsyncedChannels?.[0]?.id)
             },
@@ -500,8 +505,6 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     setSelectedChannelId,
     setYppModalOpenName,
     trackClickAuthModalSignUpButton,
-    utmSource,
-    utmCampaign,
     handleAuthorizeClick,
     handleCreateOrUpdateChannel,
   ])
@@ -517,7 +520,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
       return {
         text: 'Sign in',
         onClick: () => {
-          trackClickAuthModalSignInButton(utmSource, utmCampaign)
+          trackClickAuthModalSignInButton()
           setShouldContinueYppFlowAfterLogin(true)
           setYppModalOpenName(null)
           setAuthModalOpenName('logIn')
@@ -548,8 +551,6 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
     isSubmitting,
     handleGoBack,
     trackClickAuthModalSignInButton,
-    utmSource,
-    utmCampaign,
     setShouldContinueYppFlowAfterLogin,
     setYppModalOpenName,
     setAuthModalOpenName,

@@ -89,6 +89,7 @@ export type GetFullVideoQuery = {
       description?: string | null
       isPublic?: boolean | null
       cumulativeRewardClaimed: string
+      cumulativeRevenue: string
       isCensored: boolean
       language?: string | null
       id: string
@@ -166,6 +167,7 @@ export type GetFullVideoQuery = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
       } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
     }
     license?: {
       __typename?: 'License'
@@ -193,6 +195,7 @@ export type GetFullVideoQuery = {
               followsNum: number
               rewardAccount: string
               channelStateBloatBond: string
+              cumulativeRevenue: string
               ownerMember?: {
                 __typename?: 'Membership'
                 id: string
@@ -244,6 +247,7 @@ export type GetFullVideoQuery = {
                   | { __typename: 'DataObjectTypeVideoThumbnail' }
                   | null
               } | null
+              creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
             }
           }
         | {
@@ -473,11 +477,19 @@ export type GetBasicVideosConnectionQuery = {
         __typename?: 'Video'
         id: string
         title?: string | null
+        description?: string | null
         viewsNum: number
         createdAt: Date
         duration?: number | null
         reactionsCount: number
         commentsCount: number
+        media?: {
+          __typename?: 'StorageDataObject'
+          id: string
+          isAccepted: boolean
+          resolvedUrls: Array<string>
+          storageBag: { __typename?: 'StorageBag'; id: string }
+        } | null
         channel: {
           __typename?: 'Channel'
           id: string
@@ -487,6 +499,7 @@ export type GetBasicVideosConnectionQuery = {
           followsNum: number
           rewardAccount: string
           channelStateBloatBond: string
+          cumulativeRevenue: string
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -505,6 +518,7 @@ export type GetBasicVideosConnectionQuery = {
               | { __typename: 'DataObjectTypeVideoThumbnail' }
               | null
           } | null
+          creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
         }
         nft?: { __typename?: 'OwnedNft'; id: string } | null
         thumbnailPhoto?: {
@@ -549,11 +563,19 @@ export type GetBasicVideosConnectionLightweightQuery = {
         __typename?: 'Video'
         id: string
         title?: string | null
+        description?: string | null
         viewsNum: number
         createdAt: Date
         duration?: number | null
         reactionsCount: number
         commentsCount: number
+        media?: {
+          __typename?: 'StorageDataObject'
+          id: string
+          isAccepted: boolean
+          resolvedUrls: Array<string>
+          storageBag: { __typename?: 'StorageBag'; id: string }
+        } | null
         channel: {
           __typename?: 'Channel'
           id: string
@@ -563,6 +585,7 @@ export type GetBasicVideosConnectionLightweightQuery = {
           followsNum: number
           rewardAccount: string
           channelStateBloatBond: string
+          cumulativeRevenue: string
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -581,6 +604,7 @@ export type GetBasicVideosConnectionLightweightQuery = {
               | { __typename: 'DataObjectTypeVideoThumbnail' }
               | null
           } | null
+          creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
         }
         nft?: { __typename?: 'OwnedNft'; id: string } | null
         thumbnailPhoto?: {
@@ -695,6 +719,7 @@ export type GetFullVideosConnectionQuery = {
           description?: string | null
           isPublic?: boolean | null
           cumulativeRewardClaimed: string
+          cumulativeRevenue: string
           isCensored: boolean
           language?: string | null
           id: string
@@ -772,6 +797,7 @@ export type GetFullVideosConnectionQuery = {
               | { __typename: 'DataObjectTypeVideoThumbnail' }
               | null
           } | null
+          creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
         }
         license?: {
           __typename?: 'License'
@@ -799,6 +825,7 @@ export type GetFullVideosConnectionQuery = {
                   followsNum: number
                   rewardAccount: string
                   channelStateBloatBond: string
+                  cumulativeRevenue: string
                   ownerMember?: {
                     __typename?: 'Membership'
                     id: string
@@ -849,6 +876,10 @@ export type GetFullVideosConnectionQuery = {
                       | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                       | null
+                  } | null
+                  creatorToken?: {
+                    __typename?: 'TokenChannel'
+                    token: { __typename?: 'CreatorToken'; id: string }
                   } | null
                 }
               }
@@ -1077,11 +1108,19 @@ export type GetBasicVideosQuery = {
     __typename?: 'Video'
     id: string
     title?: string | null
+    description?: string | null
     viewsNum: number
     createdAt: Date
     duration?: number | null
     reactionsCount: number
     commentsCount: number
+    media?: {
+      __typename?: 'StorageDataObject'
+      id: string
+      isAccepted: boolean
+      resolvedUrls: Array<string>
+      storageBag: { __typename?: 'StorageBag'; id: string }
+    } | null
     channel: {
       __typename?: 'Channel'
       id: string
@@ -1091,6 +1130,7 @@ export type GetBasicVideosQuery = {
       followsNum: number
       rewardAccount: string
       channelStateBloatBond: string
+      cumulativeRevenue: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -1109,6 +1149,7 @@ export type GetBasicVideosQuery = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
       } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
     }
     nft?: { __typename?: 'OwnedNft'; id: string } | null
     thumbnailPhoto?: {
@@ -1249,6 +1290,7 @@ export type GetFullVideosQuery = {
       description?: string | null
       isPublic?: boolean | null
       cumulativeRewardClaimed: string
+      cumulativeRevenue: string
       isCensored: boolean
       language?: string | null
       id: string
@@ -1326,6 +1368,7 @@ export type GetFullVideosQuery = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
       } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
     }
     license?: {
       __typename?: 'License'
@@ -1353,6 +1396,7 @@ export type GetFullVideosQuery = {
               followsNum: number
               rewardAccount: string
               channelStateBloatBond: string
+              cumulativeRevenue: string
               ownerMember?: {
                 __typename?: 'Membership'
                 id: string
@@ -1404,6 +1448,7 @@ export type GetFullVideosQuery = {
                   | { __typename: 'DataObjectTypeVideoThumbnail' }
                   | null
               } | null
+              creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
             }
           }
         | {
@@ -1635,11 +1680,19 @@ export type GetMostViewedVideosConnectionQuery = {
         __typename?: 'Video'
         id: string
         title?: string | null
+        description?: string | null
         viewsNum: number
         createdAt: Date
         duration?: number | null
         reactionsCount: number
         commentsCount: number
+        media?: {
+          __typename?: 'StorageDataObject'
+          id: string
+          isAccepted: boolean
+          resolvedUrls: Array<string>
+          storageBag: { __typename?: 'StorageBag'; id: string }
+        } | null
         channel: {
           __typename?: 'Channel'
           id: string
@@ -1649,6 +1702,7 @@ export type GetMostViewedVideosConnectionQuery = {
           followsNum: number
           rewardAccount: string
           channelStateBloatBond: string
+          cumulativeRevenue: string
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -1667,6 +1721,7 @@ export type GetMostViewedVideosConnectionQuery = {
               | { __typename: 'DataObjectTypeVideoThumbnail' }
               | null
           } | null
+          creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
         }
         nft?: { __typename?: 'OwnedNft'; id: string } | null
         thumbnailPhoto?: {
@@ -1702,58 +1757,42 @@ export type GetVideosCountQuery = {
   videosConnection: { __typename?: 'VideosConnection'; totalCount: number }
 }
 
-export type GetHomepageVideosQueryVariables = Types.Exact<{
-  prevRecommId?: Types.InputMaybe<Types.Scalars['String']>
+export type GetCuratedHompageVideosQueryVariables = Types.Exact<{
   limit?: Types.InputMaybe<Types.Scalars['Int']>
   where?: Types.InputMaybe<Types.VideoWhereInput>
-  orderBy?: Types.InputMaybe<Array<Types.VideoOrderByInput> | Types.VideoOrderByInput>
+  skipVideoIds?: Types.InputMaybe<Array<Types.Scalars['String']> | Types.Scalars['String']>
 }>
 
-export type GetHomepageVideosQuery = {
+export type GetCuratedHompageVideosQuery = {
   __typename?: 'Query'
-  homepageVideos: {
-    __typename?: 'RecommendedVideosQuery'
-    numberNextRecommsCalls?: number | null
-    recommId: string
-    video: Array<{
-      __typename?: 'Video'
+  dumbPublicFeedVideos: Array<{
+    __typename?: 'Video'
+    id: string
+    title?: string | null
+    description?: string | null
+    viewsNum: number
+    createdAt: Date
+    duration?: number | null
+    reactionsCount: number
+    commentsCount: number
+    media?: {
+      __typename?: 'StorageDataObject'
+      id: string
+      isAccepted: boolean
+      resolvedUrls: Array<string>
+      storageBag: { __typename?: 'StorageBag'; id: string }
+    } | null
+    channel: {
+      __typename?: 'Channel'
       id: string
       title?: string | null
-      viewsNum: number
+      description?: string | null
       createdAt: Date
-      duration?: number | null
-      reactionsCount: number
-      commentsCount: number
-      channel: {
-        __typename?: 'Channel'
-        id: string
-        title?: string | null
-        description?: string | null
-        createdAt: Date
-        followsNum: number
-        rewardAccount: string
-        channelStateBloatBond: string
-        avatarPhoto?: {
-          __typename?: 'StorageDataObject'
-          id: string
-          resolvedUrls: Array<string>
-          createdAt: Date
-          size: string
-          isAccepted: boolean
-          ipfsHash: string
-          storageBag: { __typename?: 'StorageBag'; id: string }
-          type?:
-            | { __typename: 'DataObjectTypeChannelAvatar' }
-            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-            | { __typename: 'DataObjectTypeVideoMedia' }
-            | { __typename: 'DataObjectTypeVideoSubtitle' }
-            | { __typename: 'DataObjectTypeVideoThumbnail' }
-            | null
-        } | null
-      }
-      nft?: { __typename?: 'OwnedNft'; id: string } | null
-      thumbnailPhoto?: {
+      followsNum: number
+      rewardAccount: string
+      channelStateBloatBond: string
+      cumulativeRevenue: string
+      avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
         resolvedUrls: Array<string>
@@ -1771,154 +1810,28 @@ export type GetHomepageVideosQuery = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
       } | null
-    }>
-  }
-}
-
-export type GetSimiliarVideosQueryVariables = Types.Exact<{
-  videoId: Types.Scalars['String']
-  prevRecommId?: Types.InputMaybe<Types.Scalars['String']>
-  limit?: Types.InputMaybe<Types.Scalars['Int']>
-  where?: Types.InputMaybe<Types.VideoWhereInput>
-  orderBy?: Types.InputMaybe<Array<Types.VideoOrderByInput> | Types.VideoOrderByInput>
-}>
-
-export type GetSimiliarVideosQuery = {
-  __typename?: 'Query'
-  similiarVideos: {
-    __typename?: 'RecommendedVideosQuery'
-    numberNextRecommsCalls?: number | null
-    recommId: string
-    video: Array<{
-      __typename?: 'Video'
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
+    }
+    nft?: { __typename?: 'OwnedNft'; id: string } | null
+    thumbnailPhoto?: {
+      __typename?: 'StorageDataObject'
       id: string
-      title?: string | null
-      viewsNum: number
+      resolvedUrls: Array<string>
       createdAt: Date
-      duration?: number | null
-      reactionsCount: number
-      commentsCount: number
-      channel: {
-        __typename?: 'Channel'
-        id: string
-        title?: string | null
-        description?: string | null
-        createdAt: Date
-        followsNum: number
-        rewardAccount: string
-        channelStateBloatBond: string
-        avatarPhoto?: {
-          __typename?: 'StorageDataObject'
-          id: string
-          resolvedUrls: Array<string>
-          createdAt: Date
-          size: string
-          isAccepted: boolean
-          ipfsHash: string
-          storageBag: { __typename?: 'StorageBag'; id: string }
-          type?:
-            | { __typename: 'DataObjectTypeChannelAvatar' }
-            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-            | { __typename: 'DataObjectTypeVideoMedia' }
-            | { __typename: 'DataObjectTypeVideoSubtitle' }
-            | { __typename: 'DataObjectTypeVideoThumbnail' }
-            | null
-        } | null
-      }
-      nft?: { __typename?: 'OwnedNft'; id: string } | null
-      thumbnailPhoto?: {
-        __typename?: 'StorageDataObject'
-        id: string
-        resolvedUrls: Array<string>
-        createdAt: Date
-        size: string
-        isAccepted: boolean
-        ipfsHash: string
-        storageBag: { __typename?: 'StorageBag'; id: string }
-        type?:
-          | { __typename: 'DataObjectTypeChannelAvatar' }
-          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-          | { __typename: 'DataObjectTypeVideoMedia' }
-          | { __typename: 'DataObjectTypeVideoSubtitle' }
-          | { __typename: 'DataObjectTypeVideoThumbnail' }
-          | null
-      } | null
-    }>
-  }
-}
-
-export type GetNextVideoQueryVariables = Types.Exact<{
-  videoId: Types.Scalars['String']
-  prevRecommId?: Types.InputMaybe<Types.Scalars['String']>
-  where?: Types.InputMaybe<Types.VideoWhereInput>
-}>
-
-export type GetNextVideoQuery = {
-  __typename?: 'Query'
-  nextVideo: {
-    __typename?: 'RecommendedVideosQuery'
-    numberNextRecommsCalls?: number | null
-    recommId: string
-    video: Array<{
-      __typename?: 'Video'
-      id: string
-      title?: string | null
-      viewsNum: number
-      createdAt: Date
-      duration?: number | null
-      reactionsCount: number
-      commentsCount: number
-      channel: {
-        __typename?: 'Channel'
-        id: string
-        title?: string | null
-        description?: string | null
-        createdAt: Date
-        followsNum: number
-        rewardAccount: string
-        channelStateBloatBond: string
-        avatarPhoto?: {
-          __typename?: 'StorageDataObject'
-          id: string
-          resolvedUrls: Array<string>
-          createdAt: Date
-          size: string
-          isAccepted: boolean
-          ipfsHash: string
-          storageBag: { __typename?: 'StorageBag'; id: string }
-          type?:
-            | { __typename: 'DataObjectTypeChannelAvatar' }
-            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-            | { __typename: 'DataObjectTypeVideoMedia' }
-            | { __typename: 'DataObjectTypeVideoSubtitle' }
-            | { __typename: 'DataObjectTypeVideoThumbnail' }
-            | null
-        } | null
-      }
-      nft?: { __typename?: 'OwnedNft'; id: string } | null
-      thumbnailPhoto?: {
-        __typename?: 'StorageDataObject'
-        id: string
-        resolvedUrls: Array<string>
-        createdAt: Date
-        size: string
-        isAccepted: boolean
-        ipfsHash: string
-        storageBag: { __typename?: 'StorageBag'; id: string }
-        type?:
-          | { __typename: 'DataObjectTypeChannelAvatar' }
-          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-          | { __typename: 'DataObjectTypeVideoMedia' }
-          | { __typename: 'DataObjectTypeVideoSubtitle' }
-          | { __typename: 'DataObjectTypeVideoThumbnail' }
-          | null
-      } | null
-    }>
-  }
+      size: string
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type?:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoSubtitle' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+        | null
+    } | null
+  }>
 }
 
 export type AddVideoViewMutationVariables = Types.Exact<{
@@ -2447,159 +2360,57 @@ export function useGetVideosCountLazyQuery(
 export type GetVideosCountQueryHookResult = ReturnType<typeof useGetVideosCountQuery>
 export type GetVideosCountLazyQueryHookResult = ReturnType<typeof useGetVideosCountLazyQuery>
 export type GetVideosCountQueryResult = Apollo.QueryResult<GetVideosCountQuery, GetVideosCountQueryVariables>
-export const GetHomepageVideosDocument = gql`
-  query GetHomepageVideos($prevRecommId: String, $limit: Int, $where: VideoWhereInput, $orderBy: [VideoOrderByInput!]) {
-    homepageVideos(recommId: $prevRecommId, limit: $limit, where: $where, orderBy: $orderBy) {
-      video {
-        ...BasicVideoFields
-      }
-      numberNextRecommsCalls
-      recommId
+export const GetCuratedHompageVideosDocument = gql`
+  query GetCuratedHompageVideos($limit: Int, $where: VideoWhereInput, $skipVideoIds: [String!]) {
+    dumbPublicFeedVideos(limit: $limit, where: $where, skipVideoIds: $skipVideoIds) {
+      ...BasicVideoFields
     }
   }
   ${BasicVideoFieldsFragmentDoc}
 `
 
 /**
- * __useGetHomepageVideosQuery__
+ * __useGetCuratedHompageVideosQuery__
  *
- * To run a query within a React component, call `useGetHomepageVideosQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetHomepageVideosQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetCuratedHompageVideosQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCuratedHompageVideosQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetHomepageVideosQuery({
+ * const { data, loading, error } = useGetCuratedHompageVideosQuery({
  *   variables: {
- *      prevRecommId: // value for 'prevRecommId'
  *      limit: // value for 'limit'
  *      where: // value for 'where'
- *      orderBy: // value for 'orderBy'
+ *      skipVideoIds: // value for 'skipVideoIds'
  *   },
  * });
  */
-export function useGetHomepageVideosQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetHomepageVideosQuery, GetHomepageVideosQueryVariables>
+export function useGetCuratedHompageVideosQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetCuratedHompageVideosQuery, GetCuratedHompageVideosQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetHomepageVideosQuery, GetHomepageVideosQueryVariables>(GetHomepageVideosDocument, options)
-}
-export function useGetHomepageVideosLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetHomepageVideosQuery, GetHomepageVideosQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetHomepageVideosQuery, GetHomepageVideosQueryVariables>(
-    GetHomepageVideosDocument,
+  return Apollo.useQuery<GetCuratedHompageVideosQuery, GetCuratedHompageVideosQueryVariables>(
+    GetCuratedHompageVideosDocument,
     options
   )
 }
-export type GetHomepageVideosQueryHookResult = ReturnType<typeof useGetHomepageVideosQuery>
-export type GetHomepageVideosLazyQueryHookResult = ReturnType<typeof useGetHomepageVideosLazyQuery>
-export type GetHomepageVideosQueryResult = Apollo.QueryResult<GetHomepageVideosQuery, GetHomepageVideosQueryVariables>
-export const GetSimiliarVideosDocument = gql`
-  query GetSimiliarVideos(
-    $videoId: String!
-    $prevRecommId: String
-    $limit: Int
-    $where: VideoWhereInput
-    $orderBy: [VideoOrderByInput!]
-  ) {
-    similiarVideos(recommId: $prevRecommId, videoId: $videoId, limit: $limit, where: $where, orderBy: $orderBy) {
-      video {
-        ...BasicVideoFields
-      }
-      numberNextRecommsCalls
-      recommId
-    }
-  }
-  ${BasicVideoFieldsFragmentDoc}
-`
-
-/**
- * __useGetSimiliarVideosQuery__
- *
- * To run a query within a React component, call `useGetSimiliarVideosQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetSimiliarVideosQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetSimiliarVideosQuery({
- *   variables: {
- *      videoId: // value for 'videoId'
- *      prevRecommId: // value for 'prevRecommId'
- *      limit: // value for 'limit'
- *      where: // value for 'where'
- *      orderBy: // value for 'orderBy'
- *   },
- * });
- */
-export function useGetSimiliarVideosQuery(
-  baseOptions: Apollo.QueryHookOptions<GetSimiliarVideosQuery, GetSimiliarVideosQueryVariables>
+export function useGetCuratedHompageVideosLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetCuratedHompageVideosQuery, GetCuratedHompageVideosQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetSimiliarVideosQuery, GetSimiliarVideosQueryVariables>(GetSimiliarVideosDocument, options)
-}
-export function useGetSimiliarVideosLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetSimiliarVideosQuery, GetSimiliarVideosQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetSimiliarVideosQuery, GetSimiliarVideosQueryVariables>(
-    GetSimiliarVideosDocument,
+  return Apollo.useLazyQuery<GetCuratedHompageVideosQuery, GetCuratedHompageVideosQueryVariables>(
+    GetCuratedHompageVideosDocument,
     options
   )
 }
-export type GetSimiliarVideosQueryHookResult = ReturnType<typeof useGetSimiliarVideosQuery>
-export type GetSimiliarVideosLazyQueryHookResult = ReturnType<typeof useGetSimiliarVideosLazyQuery>
-export type GetSimiliarVideosQueryResult = Apollo.QueryResult<GetSimiliarVideosQuery, GetSimiliarVideosQueryVariables>
-export const GetNextVideoDocument = gql`
-  query GetNextVideo($videoId: String!, $prevRecommId: String, $where: VideoWhereInput) {
-    nextVideo(recommId: $prevRecommId, videoId: $videoId, where: $where) {
-      video {
-        ...BasicVideoFields
-      }
-      numberNextRecommsCalls
-      recommId
-    }
-  }
-  ${BasicVideoFieldsFragmentDoc}
-`
-
-/**
- * __useGetNextVideoQuery__
- *
- * To run a query within a React component, call `useGetNextVideoQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetNextVideoQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetNextVideoQuery({
- *   variables: {
- *      videoId: // value for 'videoId'
- *      prevRecommId: // value for 'prevRecommId'
- *      where: // value for 'where'
- *   },
- * });
- */
-export function useGetNextVideoQuery(
-  baseOptions: Apollo.QueryHookOptions<GetNextVideoQuery, GetNextVideoQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetNextVideoQuery, GetNextVideoQueryVariables>(GetNextVideoDocument, options)
-}
-export function useGetNextVideoLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetNextVideoQuery, GetNextVideoQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetNextVideoQuery, GetNextVideoQueryVariables>(GetNextVideoDocument, options)
-}
-export type GetNextVideoQueryHookResult = ReturnType<typeof useGetNextVideoQuery>
-export type GetNextVideoLazyQueryHookResult = ReturnType<typeof useGetNextVideoLazyQuery>
-export type GetNextVideoQueryResult = Apollo.QueryResult<GetNextVideoQuery, GetNextVideoQueryVariables>
+export type GetCuratedHompageVideosQueryHookResult = ReturnType<typeof useGetCuratedHompageVideosQuery>
+export type GetCuratedHompageVideosLazyQueryHookResult = ReturnType<typeof useGetCuratedHompageVideosLazyQuery>
+export type GetCuratedHompageVideosQueryResult = Apollo.QueryResult<
+  GetCuratedHompageVideosQuery,
+  GetCuratedHompageVideosQueryVariables
+>
 export const AddVideoViewDocument = gql`
   mutation AddVideoView($videoId: String!) {
     addVideoView(videoId: $videoId) {

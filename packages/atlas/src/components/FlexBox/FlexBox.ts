@@ -11,6 +11,9 @@ export type FlexBoxProps = {
   equalChildren?: boolean
   width?: string | number
   marginTop?: number
+  padding?: number
+  height?: string | number
+  minWidth?: string | number
 }
 
 export const FlexBox = styled.div<FlexBoxProps>`
@@ -18,10 +21,13 @@ export const FlexBox = styled.div<FlexBoxProps>`
   ${(props) => css`
     gap: ${sizes(props.gap ?? 1)};
     margin-top: ${sizes(props.marginTop ?? 0)};
+    padding: ${sizes(props.padding ?? 0)};
     flex-direction: ${props.flow ?? 'row'};
     align-items: ${props.alignItems ?? 'start'};
     justify-content: ${props.justifyContent ?? 'start'};
     width: ${props.width ?? '100%'};
+    height: ${props.height ?? 'unset'};
+    min-width: ${props.minWidth ?? 'initial'};
   `}
 
   ${(props) =>

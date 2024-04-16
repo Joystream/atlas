@@ -1,10 +1,13 @@
 import styled from '@emotion/styled'
-import { FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { useGetNextVideoQuery } from '@/api/queries/__generated__/videos.generated'
-import { publicCryptoVideoFilter } from '@/config/contentFilter'
+import { useBasicVideos } from '@/api/hooks/video'
+import { VideoOrderByInput, VideoWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
+import { BasicVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { getPublicCryptoVideoFilter } from '@/config/contentFilter'
 import { cVar, transitions } from '@/styles'
+import { getRandomIntInclusive } from '@/utils/number'
 
 import { EndingOverlay, ErrorOverlay, InactiveOverlay } from './VideoOverlays'
 import { PlayerState } from './utils'
@@ -20,6 +23,7 @@ type VideoOverlayProps = {
   playRandomVideoOnEnded?: boolean
   isMinimized?: boolean
   currentVideoCreatedAt?: Date
+  hideEndOverlay?: boolean
 }
 
 export const VideoOverlay: FC<VideoOverlayProps> = ({
@@ -32,47 +36,49 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
   isPlayNextDisabled,
   isMinimized,
   playRandomVideoOnEnded = true,
+  currentVideoCreatedAt,
+  hideEndOverlay = false,
 }) => {
-  const { data } = useGetNextVideoQuery({
-    variables: {
-      videoId: videoId ?? '',
-      where: {
-        ...publicCryptoVideoFilter,
+  // const { data } = useGetNextVideoQuery({
+  //     variables: {
+  //         videoId: videoId ?? '',
+  //         where: {
+  //             ...publicCryptoVideoFilter,
+  //         },
+  //     },
+  //     skip: !videoId,
+  // })
+  //     randomNextVideo={
+  //         playRandomVideoOnEnded && data?.nextVideo.video.length ? data.nextVideo.video[0] : undefined
+  // }
+  const [randomNextVideo, setRandomNextVideo] = useState<BasicVideoFieldsFragment | null>(null)
+  const commonFiltersFactory = (where?: VideoWhereInput) => ({
+    limit: 1,
+    orderBy: VideoOrderByInput.CreatedAtAsc,
+    where: getPublicCryptoVideoFilter({
+      channel: {
+        id_eq: channelId,
       },
-    },
-    skip: !videoId,
+      ...where,
+    }),
+  })
+  const { videos: newerVideos, loading: loadingNewestVideos } = useBasicVideos(
+    commonFiltersFactory({ createdAt_gt: currentVideoCreatedAt })
+  )
+  const { videos: olderVideos } = useBasicVideos(commonFiltersFactory({ createdAt_lt: currentVideoCreatedAt }), {
+    skip: loadingNewestVideos || !!newerVideos?.length,
   })
 
-  // this might be useful in the future
-  // const [randomNextVideo, setRandomNextVideo] = useState<BasicVideoFieldsFragment | null>(null)
-  // const commonFiltersFactory = (where?: VideoWhereInput) => ({
-  //   limit: 1,
-  //   orderBy: VideoOrderByInput.CreatedAtAsc,
-  //   where: {
-  //     ...publicCryptoVideoFilter,
-  //     channel: {
-  //       id_eq: channelId,
-  //     },
-  //     ...where,
-  //   },
-  // })
-  // const { videos: newerVideos, loading: loadingNewestVideos } = useBasicVideos(
-  //     commonFiltersFactory({ createdAt_gt: currentVideoCreatedAt })
-  // )
-  // const { videos: olderVideos } = useBasicVideos(commonFiltersFactory({ createdAt_lt: currentVideoCreatedAt }), {
-  //   skip: loadingNewestVideos || !!newerVideos?.length,
-  // })
-  //
-  // useEffect(() => {
-  //   const videos = newerVideos?.length ? newerVideos : olderVideos
-  //   if (!videos?.length || videos.length === 0) {
-  //     return
-  //   }
-  //   const filteredVideos = videos.filter((video) => video.id !== videoId)
-  //   const randomNumber = getRandomIntInclusive(0, filteredVideos.length - 1)
-  //
-  //   setRandomNextVideo(filteredVideos[randomNumber])
-  // }, [channelId, currentVideoCreatedAt, newerVideos, olderVideos, videoId])
+  useEffect(() => {
+    const videos = newerVideos?.length ? newerVideos : olderVideos
+    if (!videos?.length || videos.length === 0) {
+      return
+    }
+    const filteredVideos = videos.filter((video) => video.id !== videoId)
+    const randomNumber = getRandomIntInclusive(0, filteredVideos.length - 1)
+
+    setRandomNextVideo(filteredVideos[randomNumber])
+  }, [channelId, currentVideoCreatedAt, newerVideos, olderVideos, videoId])
 
   return (
     <SwitchTransition>
@@ -87,7 +93,7 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
         <div>
           {playerState === 'pending' && <InactiveOverlay />}
           {playerState === 'loading' && <LoadingOverlay />}
-          {!isMinimized && playerState === 'ended' && (
+          {!hideEndOverlay && !isMinimized && playerState === 'ended' && (
             <EndingOverlay
               isFullScreen={isFullScreen}
               isEnded={true}
@@ -95,9 +101,7 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
               onPlayAgain={onPlayAgain}
               channelId={channelId}
               currentThumbnailUrls={currentThumbnailUrls}
-              randomNextVideo={
-                playRandomVideoOnEnded && data?.nextVideo.video.length ? data.nextVideo.video[0] : undefined
-              }
+              randomNextVideo={playRandomVideoOnEnded ? randomNextVideo : undefined}
             />
           )}
           {playerState === 'error' && <ErrorOverlay />}

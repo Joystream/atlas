@@ -3,6 +3,7 @@ import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffec
 import { useMemberships } from '@/api/hooks/membership'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { useJoystream } from '@/providers/joystream/joystream.provider'
+import { usePersonalDataStore } from '@/providers/personalData'
 import { SentryLogger, UserEventsLogger } from '@/utils/logs'
 
 import { UserContextValue } from './user.types'
@@ -14,8 +15,20 @@ UserContext.displayName = 'UserContext'
 
 export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   const { currentUser } = useAuth()
-  const [channelId, setChannelId] = useState<string | null>(null)
   const { setApiActiveAccount } = useJoystream()
+  const {
+    lastUsedChannelId,
+    actions: { setLastUsedChannelId },
+  } = usePersonalDataStore((state) => state)
+  const [channelId, setChannelId] = useState<string | null>(lastUsedChannelId)
+
+  const setActiveChannel = useCallback(
+    (channelId: string) => {
+      setChannelId(channelId)
+      setLastUsedChannelId(channelId)
+    },
+    [setLastUsedChannelId]
+  )
 
   const {
     memberships: currentMemberships,
@@ -36,7 +49,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
             data.memberships?.find((membership) => membership.id === currentUser?.membershipId)) ||
           null
         if (activeMembership && !activeMembership.channels.some((channel) => channel.id === channelId)) {
-          setChannelId(activeMembership.channels[0].id)
+          setActiveChannel(activeMembership.channels[0].id)
         }
       },
       skip: !currentUser,
@@ -81,6 +94,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   const contextValue: UserContextValue = useMemo(
     () => ({
       memberships: memberships || [],
+      memberChannels: activeMembership?.channels ?? null,
       membershipsLoading,
       activeMembership,
       activeChannel,
@@ -88,17 +102,18 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       memberId: currentUser?.membershipId ?? null,
       accountId: currentUser?.joystreamAccount ?? null,
       channelId,
-      setActiveChannel: setChannelId,
+      setActiveChannel,
     }),
     [
       memberships,
-      membershipsLoading,
       activeMembership,
+      membershipsLoading,
       activeChannel,
       refetchUserMemberships,
       currentUser?.membershipId,
       currentUser?.joystreamAccount,
       channelId,
+      setActiveChannel,
     ]
   )
 

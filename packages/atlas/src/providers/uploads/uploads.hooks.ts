@@ -176,29 +176,22 @@ export const useStartFileUpload = () => {
         setAssetStatus({ lastStatus: 'error', progress: 0 })
 
         const axiosError = e as AxiosError
-        const networkFailure = axiosError.isAxiosError && !axiosError.response?.status
-        const providerFailure =
-          axiosError.isAxiosError &&
-          axiosError.response &&
-          axiosError.response.status >= 400 &&
-          axiosError.response.status <= 500
-        if (providerFailure) {
-          SentryLogger.error('Failed to upload asset: provider failure', 'uploadsHooks', e, {
-            asset: { dataObjectId: asset.id, uploadOperator },
-          })
-          UserEventsLogger.logDistributorError({ dataObjectId: asset.id, distributorId: uploadOperator.id }, e)
+        const networkFailure = axiosError.isAxiosError
+
+        // only retry on Axios error, otherwise code is to blame
+        if (networkFailure) {
+          UserEventsLogger.logUploadError({ dataObjectId: asset.id, storageOperatorId: uploadOperator.id }, e)
+
           markStorageOperatorFailed(uploadOperator.id)
+          const retry = opts?.retry ?? 0
+          if (retry < MAX_BUCKET_RETRY) {
+            return startFileUpload(file, asset, { ...opts, retry: retry + 1 })
+          }
         }
 
-        const retry = opts?.retry ?? 0
-        if (retry < MAX_BUCKET_RETRY) {
-          return startFileUpload(file, asset, { ...opts, retry: retry + 1 })
-        }
-
-        networkFailure &&
-          SentryLogger.error('Failed to upload asset: user network failure', 'uploadsHooks', e, {
-            asset: { dataObjectId: asset.id, uploadOperator },
-          })
+        SentryLogger.error('Failed to upload asset', 'uploadsHooks', e, {
+          asset: { dataObjectId: asset.id, uploadOperator },
+        })
 
         const snackbarDescription = networkFailure ? 'Host is not responding' : 'Unexpected error occurred'
 
@@ -206,8 +199,8 @@ export const useStartFileUpload = () => {
           {
             dataObjectId: asset.id,
             dataObjectType: asset.type,
-            distributorId: uploadOperator.id,
-            distributorUrl: uploadOperator.endpoint,
+            storageOperatorId: uploadOperator.id,
+            storageOperatorUrl: uploadOperator.endpoint,
           },
           e
         )

@@ -126,6 +126,12 @@ query GetVideosCount($where: VideoWhereInput) {
   }
 }
 
+query GetCuratedHompageVideos($limit: Int, $where: VideoWhereInput, $skipVideoIds: [String!]) {
+  dumbPublicFeedVideos(limit: $limit, where: $where, skipVideoIds: $skipVideoIds) {
+    ...BasicVideoFields
+  }
+}
+
 query GetHomepageVideos($prevRecommId: String, $limit: Int, $where: VideoWhereInput, $orderBy: [VideoOrderByInput!]) {
   homepageVideos(recommId: $prevRecommId, limit: $limit, where: $where, orderBy: $orderBy) {
     video {

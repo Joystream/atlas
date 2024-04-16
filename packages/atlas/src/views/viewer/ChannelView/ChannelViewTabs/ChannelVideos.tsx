@@ -100,10 +100,10 @@ export const ChannelVideos: FC<ChannelVideosProps> = ({
     <>
       <VideoSection className={transitions.names.slide}>
         {!videosWithPlaceholders.length && isSearching && (
-          <EmptyFallback title={`No videos matching "${searchedText}" query found`} variant="small" />
+          <EmptyFallback title={`No videos matching "${searchedText}" query found`} variant="large" />
         )}
         {!videosWithPlaceholders.length && !isSearching && (
-          <EmptyFallback title="No videos on this channel" variant="small" />
+          <EmptyFallback title="No videos on this channel" variant="large" />
         )}
         <Grid maxColumns={null} onResize={onResize}>
           {videosWithPlaceholders.map((video, idx) => (

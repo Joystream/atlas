@@ -67,12 +67,12 @@
     "typescript": "^5.1.6"
   },
   "resolutions": {
-    "@polkadot/api": "8.9.1",
-    "@polkadot/keyring": "9.5.1",
-    "@polkadot/types": "8.9.1",
-    "@polkadot/util": "9.5.1",
-    "@polkadot/util-crypto": "9.5.1",
-    "@polkadot/networks": "9.5.1",
+    "@polkadot/api": "10.1.4",
+    "@polkadot/keyring": "12.6.2",
+    "@polkadot/types": "10.1.4",
+    "@polkadot/util": "12.6.2",
+    "@polkadot/util-crypto": "12.6.2",
+    "@polkadot/networks": "12.6.2",
     "@polkadot/x-fetch": "9.5.1",
     "@polkadot/x-global": "9.5.1",
     "@polkadot/x-ws": "9.5.1",

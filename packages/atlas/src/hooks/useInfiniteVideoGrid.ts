@@ -36,7 +36,7 @@ export const useInfiniteVideoGrid = <Query extends VideoInfiniteQueries>({
   const { data, loading, fetchMore } = useApolloQuery<Query>(query, {
     ...options,
     notifyOnNetworkStatusChange: true,
-    skip: !columns,
+    skip: options?.skip || !columns,
     variables: {
       ...variables,
       limit: columns * initialRowsToLoad,

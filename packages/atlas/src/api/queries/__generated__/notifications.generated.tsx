@@ -79,6 +79,76 @@ export type GetNotificationsConnectionQuery = {
               videoId: string
               videoTitle: string
             }
+          | {
+              __typename: 'CreatorTokenIssued'
+              channelId: string
+              channelTitle: string
+              tokenSymbol: string
+              tokenId: string
+            }
+          | {
+              __typename: 'CreatorTokenMarketBurn'
+              tokenSymbol: string
+              burnedTokenAmount: string
+              tokenId: string
+              burnerHandle: string
+              receivedJoyAmount: string
+              burnerId: string
+            }
+          | {
+              __typename: 'CreatorTokenMarketMint'
+              tokenSymbol: string
+              mintedTokenAmount: string
+              tokenId: string
+              minterHandle: string
+              minterId: string
+              paiedJoyAmount: string
+            }
+          | {
+              __typename: 'CreatorTokenMarketStarted'
+              tokenSymbol: string
+              tokenId: string
+              channelTitle: string
+              channelId: string
+            }
+          | {
+              __typename: 'CreatorTokenRevenueShareEnded'
+              channelId: string
+              channelTitle: string
+              tokenSymbol: string
+              tokenId: string
+            }
+          | {
+              __typename: 'CreatorTokenRevenueSharePlanned'
+              channelId: string
+              channelTitle: string
+              tokenSymbol: string
+              tokenId: string
+              plannedAt: number
+            }
+          | {
+              __typename: 'CreatorTokenRevenueShareStarted'
+              channelId: string
+              channelTitle: string
+              tokenSymbol: string
+              tokenId: string
+            }
+          | {
+              __typename: 'CreatorTokenSaleMint'
+              tokenSymbol: string
+              tokenId: string
+              mintedTokenAmount: string
+              minterHandle: string
+              minterId: string
+              paiedJoyAmount: string
+            }
+          | {
+              __typename: 'CreatorTokenSaleStarted'
+              tokenSymbol: string
+              tokenId: string
+              channelTitle: string
+              channelId: string
+            }
           | { __typename: 'DirectChannelPaymentByMember'; amount: string; payerId: string; payerHandle: string }
           | {
               __typename: 'HigherBidPlaced'
@@ -833,6 +903,7 @@ export type GetNftHistoryQuery = {
                   }
                 }
           }
+        | { __typename?: 'ChannelAssetsDeletedByModeratorEventData' }
         | { __typename?: 'ChannelCreatedEventData' }
         | { __typename?: 'ChannelFundsWithdrawnEventData' }
         | { __typename?: 'ChannelPaymentMadeEventData' }
@@ -842,6 +913,13 @@ export type GetNftHistoryQuery = {
         | { __typename?: 'CommentCreatedEventData' }
         | { __typename?: 'CommentReactionEventData' }
         | { __typename?: 'CommentTextUpdatedEventData' }
+        | { __typename?: 'CreatorTokenIssuedEventData' }
+        | { __typename?: 'CreatorTokenMarketBurnEventData' }
+        | { __typename?: 'CreatorTokenMarketMintEventData' }
+        | { __typename?: 'CreatorTokenMarketStartedEventData' }
+        | { __typename?: 'CreatorTokenRevenueSplitIssuedEventData' }
+        | { __typename?: 'CreatorTokenSaleMintEventData' }
+        | { __typename?: 'CreatorTokenSaleStartedEventData' }
         | {
             __typename?: 'EnglishAuctionSettledEventData'
             previousNftOwner:
@@ -1430,6 +1508,7 @@ export type GetNftHistoryQuery = {
                   }
                 }
           }
+        | { __typename?: 'VideoAssetsDeletedByModeratorEventData' }
         | { __typename?: 'VideoCreatedEventData' }
         | { __typename?: 'VideoReactionEventData' }
     }
@@ -2176,6 +2255,7 @@ export type GetNftActivitiesQuery = {
                       }
                     }
               }
+            | { __typename?: 'ChannelAssetsDeletedByModeratorEventData' }
             | { __typename?: 'ChannelCreatedEventData' }
             | { __typename?: 'ChannelFundsWithdrawnEventData' }
             | { __typename?: 'ChannelPaymentMadeEventData' }
@@ -2185,6 +2265,13 @@ export type GetNftActivitiesQuery = {
             | { __typename?: 'CommentCreatedEventData' }
             | { __typename?: 'CommentReactionEventData' }
             | { __typename?: 'CommentTextUpdatedEventData' }
+            | { __typename?: 'CreatorTokenIssuedEventData' }
+            | { __typename?: 'CreatorTokenMarketBurnEventData' }
+            | { __typename?: 'CreatorTokenMarketMintEventData' }
+            | { __typename?: 'CreatorTokenMarketStartedEventData' }
+            | { __typename?: 'CreatorTokenRevenueSplitIssuedEventData' }
+            | { __typename?: 'CreatorTokenSaleMintEventData' }
+            | { __typename?: 'CreatorTokenSaleStartedEventData' }
             | {
                 __typename?: 'EnglishAuctionSettledEventData'
                 previousNftOwner:
@@ -3038,6 +3125,7 @@ export type GetNftActivitiesQuery = {
                       }
                     }
               }
+            | { __typename?: 'VideoAssetsDeletedByModeratorEventData' }
             | { __typename?: 'VideoCreatedEventData' }
             | { __typename?: 'VideoReactionEventData' }
         }
@@ -3237,6 +3325,70 @@ export const GetNotificationsConnectionDocument = gql`
             }
             ... on ChannelFundsWithdrawn {
               amount
+            }
+            ... on CreatorTokenIssued {
+              channelId
+              channelTitle
+              tokenSymbol
+              tokenId
+            }
+            ... on CreatorTokenRevenueSharePlanned {
+              channelId
+              channelTitle
+              tokenSymbol
+              tokenId
+              plannedAt
+            }
+            ... on CreatorTokenRevenueShareStarted {
+              channelId
+              channelTitle
+              tokenSymbol
+              tokenId
+            }
+            ... on CreatorTokenRevenueShareEnded {
+              channelId
+              channelTitle
+              tokenSymbol
+              tokenId
+            }
+            ... on CreatorTokenMarketStarted {
+              tokenSymbol
+              tokenId
+              channelTitle
+              channelId
+            }
+            ... on CreatorTokenMarketMint {
+              tokenSymbol
+              mintedTokenAmount
+              tokenSymbol
+              tokenId
+              minterHandle
+              minterId
+              paiedJoyAmount
+            }
+            ... on CreatorTokenMarketBurn {
+              tokenSymbol
+              burnedTokenAmount
+              tokenSymbol
+              tokenId
+              burnerHandle
+              receivedJoyAmount
+              burnerId
+            }
+            ... on CreatorTokenSaleMint {
+              tokenSymbol
+              tokenId
+              mintedTokenAmount
+              tokenSymbol
+              minterHandle
+              minterId
+              paiedJoyAmount
+            }
+            ... on CreatorTokenSaleStarted {
+              tokenSymbol
+              tokenId
+              channelTitle
+              channelId
             }
           }
         }

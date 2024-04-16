@@ -279,6 +279,7 @@ export type GetCommentEditsQuery = {
       | { __typename?: 'BidMadeCompletingAuctionEventData' }
       | { __typename?: 'BuyNowCanceledEventData' }
       | { __typename?: 'BuyNowPriceUpdatedEventData' }
+      | { __typename?: 'ChannelAssetsDeletedByModeratorEventData' }
       | { __typename?: 'ChannelCreatedEventData' }
       | { __typename?: 'ChannelFundsWithdrawnEventData' }
       | { __typename?: 'ChannelPaymentMadeEventData' }
@@ -288,6 +289,13 @@ export type GetCommentEditsQuery = {
       | { __typename?: 'CommentCreatedEventData'; text: string }
       | { __typename?: 'CommentReactionEventData' }
       | { __typename?: 'CommentTextUpdatedEventData'; newText: string }
+      | { __typename?: 'CreatorTokenIssuedEventData' }
+      | { __typename?: 'CreatorTokenMarketBurnEventData' }
+      | { __typename?: 'CreatorTokenMarketMintEventData' }
+      | { __typename?: 'CreatorTokenMarketStartedEventData' }
+      | { __typename?: 'CreatorTokenRevenueSplitIssuedEventData' }
+      | { __typename?: 'CreatorTokenSaleMintEventData' }
+      | { __typename?: 'CreatorTokenSaleStartedEventData' }
       | { __typename?: 'EnglishAuctionSettledEventData' }
       | { __typename?: 'EnglishAuctionStartedEventData' }
       | { __typename?: 'MemberBannedFromChannelEventData' }
@@ -298,6 +306,7 @@ export type GetCommentEditsQuery = {
       | { __typename?: 'NftSellOrderMadeEventData' }
       | { __typename?: 'OpenAuctionBidAcceptedEventData' }
       | { __typename?: 'OpenAuctionStartedEventData' }
+      | { __typename?: 'VideoAssetsDeletedByModeratorEventData' }
       | { __typename?: 'VideoCreatedEventData' }
       | { __typename?: 'VideoReactionEventData' }
   }>

@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import { FC, useState } from 'react'
 
 import { useNfts } from '@/api/hooks/nfts'
@@ -18,7 +19,7 @@ import { createPlaceholderData } from '@/utils/data'
 import { FeatureNftModal } from './FeatureNftModal'
 import { FeaturedNftsWrapper } from './FeaturedNftsSection.styles'
 
-const responsive: CarouselProps['breakpoints'] = {
+export const responsive: CarouselProps['breakpoints'] = {
   [parseInt(breakpoints.xxs)]: {
     slidesPerView: 1.2,
     slidesPerGroup: 1,
@@ -149,7 +150,11 @@ export const FeaturedNftsSection: FC = () => {
             }}
             contentProps={{
               type: 'carousel',
-              children: items.map((nft, idx) => <NftTileViewer isInCarousel nftId={nft.id} key={idx} />),
+              children: items.map((nft, idx) => (
+                <NftTileWrapper key={idx}>
+                  <NftTileViewer isInCarousel nftId={nft.id} />
+                </NftTileWrapper>
+              )),
               spaceBetween: mdMatch ? 24 : 16,
               breakpoints: responsive,
             }}
@@ -176,3 +181,8 @@ export const FeaturedNftsSection: FC = () => {
     </LimitedWidthContainer>
   )
 }
+
+const NftTileWrapper = styled.div`
+  min-height: 100%;
+  display: flex;
+`

@@ -27,6 +27,7 @@ export type BasicChannelFieldsFragment = {
   followsNum: number
   rewardAccount: string
   channelStateBloatBond: string
+  cumulativeRevenue: string
   avatarPhoto?: {
     __typename?: 'StorageDataObject'
     id: string
@@ -45,6 +46,7 @@ export type BasicChannelFieldsFragment = {
       | { __typename: 'DataObjectTypeVideoThumbnail' }
       | null
   } | null
+  creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
 }
 
 export type FullChannelFieldsFragment = {
@@ -53,6 +55,7 @@ export type FullChannelFieldsFragment = {
   description?: string | null
   isPublic?: boolean | null
   cumulativeRewardClaimed: string
+  cumulativeRevenue: string
   isCensored: boolean
   language?: string | null
   id: string
@@ -130,6 +133,7 @@ export type FullChannelFieldsFragment = {
       | { __typename: 'DataObjectTypeVideoThumbnail' }
       | null
   } | null
+  creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
 }
 
 export type ExtendedFullChannelFieldsFragment = {
@@ -141,6 +145,7 @@ export type ExtendedFullChannelFieldsFragment = {
     description?: string | null
     isPublic?: boolean | null
     cumulativeRewardClaimed: string
+    cumulativeRevenue: string
     isCensored: boolean
     language?: string | null
     id: string
@@ -218,6 +223,7 @@ export type ExtendedFullChannelFieldsFragment = {
         | { __typename: 'DataObjectTypeVideoThumbnail' }
         | null
     } | null
+    creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
   }
 }
 
@@ -233,6 +239,7 @@ export type ExtendedBasicChannelFieldsFragment = {
     followsNum: number
     rewardAccount: string
     channelStateBloatBond: string
+    cumulativeRevenue: string
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -251,6 +258,7 @@ export type ExtendedBasicChannelFieldsFragment = {
         | { __typename: 'DataObjectTypeVideoThumbnail' }
         | null
     } | null
+    creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
   }
 }
 
@@ -305,6 +313,7 @@ export type FullMembershipFieldsFragment = {
     followsNum: number
     rewardAccount: string
     channelStateBloatBond: string
+    cumulativeRevenue: string
     coverPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -341,6 +350,7 @@ export type FullMembershipFieldsFragment = {
         | { __typename: 'DataObjectTypeVideoThumbnail' }
         | null
     } | null
+    creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
   }>
   metadata?: {
     __typename?: 'MemberMetadata'
@@ -450,11 +460,19 @@ export type BasicVideoFieldsFragment = {
   __typename?: 'Video'
   id: string
   title?: string | null
+  description?: string | null
   viewsNum: number
   createdAt: Date
   duration?: number | null
   reactionsCount: number
   commentsCount: number
+  media?: {
+    __typename?: 'StorageDataObject'
+    id: string
+    isAccepted: boolean
+    resolvedUrls: Array<string>
+    storageBag: { __typename?: 'StorageBag'; id: string }
+  } | null
   channel: {
     __typename?: 'Channel'
     id: string
@@ -464,6 +482,7 @@ export type BasicVideoFieldsFragment = {
     followsNum: number
     rewardAccount: string
     channelStateBloatBond: string
+    cumulativeRevenue: string
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -482,6 +501,7 @@ export type BasicVideoFieldsFragment = {
         | { __typename: 'DataObjectTypeVideoThumbnail' }
         | null
     } | null
+    creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
   }
   nft?: { __typename?: 'OwnedNft'; id: string } | null
   thumbnailPhoto?: {
@@ -578,6 +598,7 @@ export type FullVideoFieldsFragment = {
     description?: string | null
     isPublic?: boolean | null
     cumulativeRewardClaimed: string
+    cumulativeRevenue: string
     isCensored: boolean
     language?: string | null
     id: string
@@ -655,6 +676,7 @@ export type FullVideoFieldsFragment = {
         | { __typename: 'DataObjectTypeVideoThumbnail' }
         | null
     } | null
+    creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
   }
   license?: {
     __typename?: 'License'
@@ -682,6 +704,7 @@ export type FullVideoFieldsFragment = {
             followsNum: number
             rewardAccount: string
             channelStateBloatBond: string
+            cumulativeRevenue: string
             ownerMember?: {
               __typename?: 'Membership'
               id: string
@@ -733,6 +756,7 @@ export type FullVideoFieldsFragment = {
                 | { __typename: 'DataObjectTypeVideoThumbnail' }
                 | null
             } | null
+            creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
           }
         }
       | {
@@ -962,6 +986,7 @@ export type BasicNftFieldsFragment = {
           followsNum: number
           rewardAccount: string
           channelStateBloatBond: string
+          cumulativeRevenue: string
           ownerMember?: {
             __typename?: 'Membership'
             id: string
@@ -1013,6 +1038,7 @@ export type BasicNftFieldsFragment = {
               | { __typename: 'DataObjectTypeVideoThumbnail' }
               | null
           } | null
+          creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
         }
       }
     | {
@@ -1208,6 +1234,7 @@ export type FullNftFieldsFragment = {
     __typename?: 'Video'
     id: string
     title?: string | null
+    description?: string | null
     viewsNum: number
     createdAt: Date
     duration?: number | null
@@ -1222,6 +1249,7 @@ export type FullNftFieldsFragment = {
       followsNum: number
       rewardAccount: string
       channelStateBloatBond: string
+      cumulativeRevenue: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -1240,7 +1268,15 @@ export type FullNftFieldsFragment = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
       } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
     }
+    media?: {
+      __typename?: 'StorageDataObject'
+      id: string
+      isAccepted: boolean
+      resolvedUrls: Array<string>
+      storageBag: { __typename?: 'StorageBag'; id: string }
+    } | null
     nft?: { __typename?: 'OwnedNft'; id: string } | null
     thumbnailPhoto?: {
       __typename?: 'StorageDataObject'
@@ -1273,6 +1309,7 @@ export type FullNftFieldsFragment = {
           followsNum: number
           rewardAccount: string
           channelStateBloatBond: string
+          cumulativeRevenue: string
           ownerMember?: {
             __typename?: 'Membership'
             id: string
@@ -1324,6 +1361,7 @@ export type FullNftFieldsFragment = {
               | { __typename: 'DataObjectTypeVideoThumbnail' }
               | null
           } | null
+          creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
         }
       }
     | {
@@ -1988,6 +2026,7 @@ export type BasicFeaturedVideoFragment = {
     followsNum: number
     rewardAccount: string
     channelStateBloatBond: string
+    cumulativeRevenue: string
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -2006,6 +2045,7 @@ export type BasicFeaturedVideoFragment = {
         | { __typename: 'DataObjectTypeVideoThumbnail' }
         | null
     } | null
+    creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
   }
   thumbnailPhoto?: {
     __typename?: 'StorageDataObject'
@@ -2076,6 +2116,7 @@ export type BasicVideoFeaturedInCategoryFragment = {
       followsNum: number
       rewardAccount: string
       channelStateBloatBond: string
+      cumulativeRevenue: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -2094,6 +2135,7 @@ export type BasicVideoFeaturedInCategoryFragment = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
       } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
     }
     thumbnailPhoto?: {
       __typename?: 'StorageDataObject'
@@ -2168,6 +2210,402 @@ export type BasicVideoActivityFieldsFragment = {
   } | null
 }
 
+export type BasicCreatorTokenHolderFragment = {
+  __typename?: 'TokenAccount'
+  id: string
+  stakedAmount: string
+  deleted: boolean
+  totalAmount: string
+  member: {
+    __typename?: 'Membership'
+    id: string
+    handle: string
+    metadata?: {
+      __typename?: 'MemberMetadata'
+      about?: string | null
+      avatar?:
+        | {
+            __typename?: 'AvatarObject'
+            avatarObject: {
+              __typename?: 'StorageDataObject'
+              id: string
+              resolvedUrls: Array<string>
+              createdAt: Date
+              size: string
+              isAccepted: boolean
+              ipfsHash: string
+              storageBag: { __typename?: 'StorageBag'; id: string }
+              type?:
+                | { __typename: 'DataObjectTypeChannelAvatar' }
+                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+                | { __typename: 'DataObjectTypeVideoMedia' }
+                | { __typename: 'DataObjectTypeVideoSubtitle' }
+                | { __typename: 'DataObjectTypeVideoThumbnail' }
+                | null
+            }
+          }
+        | { __typename?: 'AvatarUri'; avatarUri: string }
+        | null
+    } | null
+  }
+  token: {
+    __typename?: 'CreatorToken'
+    id: string
+    symbol?: string | null
+    status: Types.TokenStatus
+    lastPrice?: string | null
+    channel?: { __typename?: 'TokenChannel'; id: string; channel: { __typename?: 'Channel'; id: string } } | null
+  }
+  vestingSchedules: Array<{
+    __typename?: 'VestedAccount'
+    id: string
+    totalVestingAmount: string
+    vestingSource:
+      | { __typename: 'InitialIssuanceVestingSource' }
+      | { __typename: 'IssuerTransferVestingSource' }
+      | { __typename: 'SaleVestingSource' }
+    vesting: {
+      __typename?: 'VestingSchedule'
+      id: string
+      endsAt: number
+      cliffBlock: number
+      cliffDurationBlocks: number
+      cliffRatioPermill: number
+      vestingDurationBlocks: number
+    }
+  }>
+}
+
+export type BasicRevenueShareFragment = {
+  __typename?: 'RevenueShare'
+  id: string
+  allocation: string
+  claimed: string
+  endsAt: number
+  createdIn: number
+  finalized: boolean
+  participantsNum: number
+  potentialParticipantsNum?: number | null
+  startingAt: number
+  token: { __typename?: 'CreatorToken'; id: string; symbol?: string | null }
+  stakers: Array<{
+    __typename?: 'RevenueShareParticipation'
+    id: string
+    stakedAmount: string
+    recovered: boolean
+    earnings: string
+    createdIn: number
+    account: { __typename?: 'TokenAccount'; member: { __typename?: 'Membership'; id: string } }
+  }>
+}
+
+export type BasicCreatorTokenFragment = {
+  __typename?: 'CreatorToken'
+  id: string
+  accountsNum: number
+  symbol?: string | null
+  isInviteOnly: boolean
+  deissued: boolean
+  status: Types.TokenStatus
+  createdAt: Date
+  lastPrice?: string | null
+  totalSupply: string
+  description?: string | null
+  trailerVideo: Array<{
+    __typename?: 'TrailerVideo'
+    id: string
+    video: {
+      __typename?: 'Video'
+      id: string
+      media?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        resolvedUrls: Array<string>
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type?:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+          | null
+      } | null
+      thumbnailPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        resolvedUrls: Array<string>
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type?:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+          | null
+      } | null
+    }
+  }>
+  currentAmmSale?: { __typename?: 'AmmCurve'; id: string; burnedByAmm: string; mintedByAmm: string } | null
+  currentSale?: { __typename?: 'Sale'; id: string; tokensSold: string; endsAt: number } | null
+  channel?: {
+    __typename?: 'TokenChannel'
+    id: string
+    channel: {
+      __typename?: 'Channel'
+      id: string
+      title?: string | null
+      description?: string | null
+      createdAt: Date
+      followsNum: number
+      rewardAccount: string
+      channelStateBloatBond: string
+      cumulativeRevenue: string
+      avatarPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        resolvedUrls: Array<string>
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type?:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+          | null
+      } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
+    }
+  } | null
+  avatar?:
+    | {
+        __typename?: 'TokenAvatarObject'
+        avatarObject: {
+          __typename?: 'StorageDataObject'
+          id: string
+          resolvedUrls: Array<string>
+          createdAt: Date
+          size: string
+          isAccepted: boolean
+          ipfsHash: string
+          storageBag: { __typename?: 'StorageBag'; id: string }
+          type?:
+            | { __typename: 'DataObjectTypeChannelAvatar' }
+            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+            | { __typename: 'DataObjectTypeVideoMedia' }
+            | { __typename: 'DataObjectTypeVideoSubtitle' }
+            | { __typename: 'DataObjectTypeVideoThumbnail' }
+            | null
+        }
+      }
+    | { __typename?: 'TokenAvatarUri'; avatarUri: string }
+    | null
+}
+
+export type FullCreatorTokenFragment = {
+  __typename?: 'CreatorToken'
+  annualCreatorRewardPermill: number
+  revenueShareRatioPermill: number
+  description?: string | null
+  totalSupply: string
+  id: string
+  accountsNum: number
+  symbol?: string | null
+  isInviteOnly: boolean
+  deissued: boolean
+  status: Types.TokenStatus
+  createdAt: Date
+  lastPrice?: string | null
+  ammCurves: Array<{
+    __typename?: 'AmmCurve'
+    id: string
+    finalized: boolean
+    ammInitPrice: string
+    burnedByAmm: string
+    mintedByAmm: string
+    ammSlopeParameter: string
+  }>
+  sales: Array<{
+    __typename?: 'Sale'
+    id: string
+    maxAmountPerMember?: string | null
+    pricePerUnit: string
+    tokensSold: string
+    finalized: boolean
+  }>
+  benefits: Array<{
+    __typename?: 'Benefit'
+    id: string
+    description: string
+    title: string
+    displayOrder: number
+    emojiCode?: string | null
+  }>
+  trailerVideo: Array<{
+    __typename?: 'TrailerVideo'
+    id: string
+    video: {
+      __typename?: 'Video'
+      id: string
+      title?: string | null
+      media?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        resolvedUrls: Array<string>
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type?:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+          | null
+      } | null
+      thumbnailPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        resolvedUrls: Array<string>
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type?:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+          | null
+      } | null
+    }
+  }>
+  revenueShares: Array<{
+    __typename?: 'RevenueShare'
+    id: string
+    allocation: string
+    claimed: string
+    endsAt: number
+    createdIn: number
+    finalized: boolean
+    participantsNum: number
+    potentialParticipantsNum?: number | null
+    startingAt: number
+    token: { __typename?: 'CreatorToken'; id: string; symbol?: string | null }
+    stakers: Array<{
+      __typename?: 'RevenueShareParticipation'
+      id: string
+      stakedAmount: string
+      recovered: boolean
+      earnings: string
+      createdIn: number
+      account: { __typename?: 'TokenAccount'; member: { __typename?: 'Membership'; id: string } }
+    }>
+  }>
+  currentAmmSale?: { __typename?: 'AmmCurve'; id: string; burnedByAmm: string; mintedByAmm: string } | null
+  currentSale?: { __typename?: 'Sale'; id: string; tokensSold: string; endsAt: number } | null
+  channel?: {
+    __typename?: 'TokenChannel'
+    id: string
+    channel: {
+      __typename?: 'Channel'
+      id: string
+      title?: string | null
+      description?: string | null
+      createdAt: Date
+      followsNum: number
+      rewardAccount: string
+      channelStateBloatBond: string
+      cumulativeRevenue: string
+      avatarPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        resolvedUrls: Array<string>
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type?:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+          | null
+      } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
+    }
+  } | null
+  avatar?:
+    | {
+        __typename?: 'TokenAvatarObject'
+        avatarObject: {
+          __typename?: 'StorageDataObject'
+          id: string
+          resolvedUrls: Array<string>
+          createdAt: Date
+          size: string
+          isAccepted: boolean
+          ipfsHash: string
+          storageBag: { __typename?: 'StorageBag'; id: string }
+          type?:
+            | { __typename: 'DataObjectTypeChannelAvatar' }
+            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+            | { __typename: 'DataObjectTypeVideoMedia' }
+            | { __typename: 'DataObjectTypeVideoSubtitle' }
+            | { __typename: 'DataObjectTypeVideoThumbnail' }
+            | null
+        }
+      }
+    | { __typename?: 'TokenAvatarUri'; avatarUri: string }
+    | null
+}
+
+export type FullAmmCurveFragment = {
+  __typename?: 'AmmCurve'
+  id: string
+  ammSlopeParameter: string
+  mintedByAmm: string
+  burnedByAmm: string
+  ammInitPrice: string
+  finalized: boolean
+  transactions: Array<{
+    __typename?: 'AmmTransaction'
+    id: string
+    createdIn: number
+    pricePaid: string
+    pricePerUnit: string
+    transactionType: Types.AmmTransactionType
+    quantity: string
+    account: { __typename?: 'TokenAccount'; member: { __typename?: 'Membership'; id: string } }
+  }>
+}
+
 export const ExtendedVideoCategoryFieldsFragmentDoc = gql`
   fragment ExtendedVideoCategoryFields on ExtendedVideoCategory {
     category {
@@ -2213,8 +2651,14 @@ export const BasicChannelFieldsFragmentDoc = gql`
     followsNum
     rewardAccount
     channelStateBloatBond
+    cumulativeRevenue
     avatarPhoto {
       ...StorageDataObjectFields
+    }
+    creatorToken {
+      token {
+        id
+      }
     }
   }
   ${StorageDataObjectFieldsFragmentDoc}
@@ -2246,6 +2690,7 @@ export const FullChannelFieldsFragmentDoc = gql`
     description
     isPublic
     cumulativeRewardClaimed
+    cumulativeRevenue
     isCensored
     language
     ownerMember {
@@ -2481,11 +2926,20 @@ export const BasicVideoFieldsFragmentDoc = gql`
   fragment BasicVideoFields on Video {
     id
     title
+    description
     viewsNum
     createdAt
     duration
     reactionsCount
     commentsCount
+    media {
+      id
+      isAccepted
+      storageBag {
+        id
+      }
+      resolvedUrls
+    }
     channel {
       ...BasicChannelFields
     }
@@ -2670,4 +3124,197 @@ export const BasicVideoActivityFieldsFragmentDoc = gql`
     }
   }
   ${StorageDataObjectFieldsFragmentDoc}
+`
+export const BasicCreatorTokenHolderFragmentDoc = gql`
+  fragment BasicCreatorTokenHolder on TokenAccount {
+    id
+    stakedAmount
+    deleted
+    totalAmount
+    member {
+      ...BasicMembershipFields
+    }
+    token {
+      id
+      symbol
+      status
+      lastPrice
+      channel {
+        ... on TokenChannel {
+          id
+          channel {
+            id
+          }
+        }
+      }
+    }
+    vestingSchedules {
+      id
+      totalVestingAmount
+      vestingSource {
+        __typename
+      }
+      vesting {
+        id
+        endsAt
+        cliffBlock
+        cliffDurationBlocks
+        cliffRatioPermill
+        vestingDurationBlocks
+      }
+    }
+  }
+  ${BasicMembershipFieldsFragmentDoc}
+`
+export const BasicCreatorTokenFragmentDoc = gql`
+  fragment BasicCreatorToken on CreatorToken {
+    id
+    accountsNum
+    symbol
+    isInviteOnly
+    deissued
+    status
+    createdAt
+    lastPrice
+    totalSupply
+    description
+    trailerVideo {
+      id
+      video {
+        id
+        media {
+          ...StorageDataObjectFields
+        }
+        thumbnailPhoto {
+          ...StorageDataObjectFields
+        }
+      }
+    }
+    currentAmmSale {
+      id
+      burnedByAmm
+      mintedByAmm
+    }
+    currentSale {
+      id
+      tokensSold
+      endsAt
+    }
+    channel {
+      ... on TokenChannel {
+        id
+        channel {
+          ...BasicChannelFields
+        }
+      }
+    }
+    avatar {
+      ... on TokenAvatarObject {
+        avatarObject {
+          ...StorageDataObjectFields
+        }
+      }
+      ... on TokenAvatarUri {
+        avatarUri
+      }
+    }
+  }
+  ${StorageDataObjectFieldsFragmentDoc}
+  ${BasicChannelFieldsFragmentDoc}
+`
+export const BasicRevenueShareFragmentDoc = gql`
+  fragment BasicRevenueShare on RevenueShare {
+    id
+    allocation
+    claimed
+    endsAt
+    createdIn
+    finalized
+    participantsNum
+    potentialParticipantsNum
+    startingAt
+    token {
+      id
+      symbol
+    }
+    stakers {
+      id
+      stakedAmount
+      recovered
+      earnings
+      createdIn
+      account {
+        member {
+          id
+        }
+      }
+    }
+  }
+`
+export const FullCreatorTokenFragmentDoc = gql`
+  fragment FullCreatorToken on CreatorToken {
+    ...BasicCreatorToken
+    annualCreatorRewardPermill
+    revenueShareRatioPermill
+    description
+    revenueShareRatioPermill
+    ammCurves {
+      id
+      finalized
+      ammInitPrice
+      burnedByAmm
+      mintedByAmm
+      ammSlopeParameter
+    }
+    sales {
+      id
+      maxAmountPerMember
+      pricePerUnit
+      tokensSold
+      finalized
+    }
+    benefits {
+      id
+      description
+      title
+      displayOrder
+      emojiCode
+    }
+    totalSupply
+    trailerVideo {
+      id
+      video {
+        id
+        title
+      }
+    }
+    revenueShares {
+      ...BasicRevenueShare
+    }
+  }
+  ${BasicCreatorTokenFragmentDoc}
+  ${BasicRevenueShareFragmentDoc}
+`
+export const FullAmmCurveFragmentDoc = gql`
+  fragment FullAmmCurve on AmmCurve {
+    id
+    ammSlopeParameter
+    mintedByAmm
+    burnedByAmm
+    ammInitPrice
+    finalized
+    transactions {
+      id
+      createdIn
+      pricePaid
+      pricePerUnit
+      transactionType
+      quantity
+      account {
+        member {
+          id
+        }
+      }
+    }
+  }
 `

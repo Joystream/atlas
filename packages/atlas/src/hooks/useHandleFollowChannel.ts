@@ -1,21 +1,20 @@
 import { useCallback } from 'react'
 
 import { useFollowChannel, useUnfollowChannel } from '@/api/hooks/channel'
+import { useAuth } from '@/providers/auth/auth.hooks'
 import { useConfirmationModal } from '@/providers/confirmationModal'
-import { usePersonalDataStore } from '@/providers/personalData'
 import { SentryLogger } from '@/utils/logs'
 
-export const useHandleFollowChannel = (id?: string, name?: string | null) => {
+export const useHandleFollowChannel = (channelId?: string, channelTitle?: string | null) => {
   const [openUnfollowDialog, closeUnfollowDialog] = useConfirmationModal()
   const { followChannel } = useFollowChannel()
+  const { currentUser } = useAuth()
   const { unfollowChannel } = useUnfollowChannel()
-  const follow = usePersonalDataStore((state) => state.followedChannels.find((channel) => channel.id === id))
-  const { followChannel: followChannelInStore, unfollowChannel: unfollowChannelInStore } = usePersonalDataStore(
-    (state) => state.actions
-  )
+
+  const follow = currentUser?.followedChannels.some((followage) => followage.channelId === channelId)
 
   const toggleFollowing = useCallback(async () => {
-    if (!id || !name) {
+    if (!channelId || !channelTitle) {
       return
     }
     try {
@@ -23,12 +22,11 @@ export const useHandleFollowChannel = (id?: string, name?: string | null) => {
         openUnfollowDialog({
           type: 'warning',
           title: 'Do you want to unfollow?',
-          description: `Unfollowing ${name} will no longer show new content from this channel on your following page.`,
+          description: `Unfollowing ${channelTitle} will no longer show new content from this channel on your following page.`,
           primaryButton: {
             text: 'Unfollow',
             onClick: () => {
-              unfollowChannelInStore(id)
-              unfollowChannel(id)
+              unfollowChannel(channelId)
               closeUnfollowDialog()
             },
             variant: 'destructive',
@@ -41,25 +39,16 @@ export const useHandleFollowChannel = (id?: string, name?: string | null) => {
           },
         })
       } else {
-        await followChannel(id)
-        followChannelInStore(id)
+        await followChannel(channelId)
       }
     } catch (error) {
-      SentryLogger.error('Failed to update channel following', 'useHandleFollowChannel', error, { channel: { id } })
+      SentryLogger.error('Failed to update channel following', 'useHandleFollowChannel', error, {
+        channel: { channelId },
+      })
     }
-  }, [
-    id,
-    name,
-    follow,
-    openUnfollowDialog,
-    unfollowChannelInStore,
-    unfollowChannel,
-    closeUnfollowDialog,
-    followChannel,
-    followChannelInStore,
-  ])
+  }, [channelId, channelTitle, follow, openUnfollowDialog, unfollowChannel, closeUnfollowDialog, followChannel])
   return {
     toggleFollowing,
-    isFollowing: !!follow,
+    isFollowing: follow,
   }
 }

@@ -2,26 +2,41 @@ import { BN } from 'bn.js'
 import { useMemo, useState } from 'react'
 
 import { useFullChannel } from '@/api/hooks/channel'
+import { useGetFullCreatorTokenQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { SvgAlertsInformative24 } from '@/assets/icons'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
+import { StartRevenueShare } from '@/components/_crt/StartRevenueShareModal'
 import { ClaimChannelPaymentsDialog } from '@/components/_overlays/ClaimChannelPaymentsDialog'
 import { SendFundsDialog } from '@/components/_overlays/SendTransferDialogs'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSubscribeAccountBalance } from '@/providers/joystream'
+import { useSnackbar } from '@/providers/snackbars'
 import { useUser } from '@/providers/user/user.hooks'
 
 import { useChannelPayout } from './PaymentsOverview.hooks'
 import { CustomNodeWrapper, StyledSvgJoyTokenMonochrome24, TilesWrapper } from './PaymentsOverview.styles'
 
 export const PaymentsOverView = () => {
+  const [openRevenueShareModal, setOpenRevenueShareModal] = useState(false)
   const { channelId, activeMembership } = useUser()
+  const { displaySnackbar } = useSnackbar()
   const [showWithdrawDialog, setShowWithdrawDialog] = useState(false)
   const [showClaimDialog, setShowClaimDialog] = useState<boolean>(false)
   const { channel, loading } = useFullChannel(channelId || '')
+  const { data: tokenData } = useGetFullCreatorTokenQuery({
+    variables: {
+      id: channel?.creatorToken?.token.id ?? '',
+    },
+    skip: !channel?.creatorToken?.token.id,
+  })
   const { availableAward, isAwardLoading } = useChannelPayout()
   const { totalBalance } = useSubscribeAccountBalance()
+
+  const hasOpenedRevenueShare = tokenData?.creatorTokenById?.revenueShares.some(
+    (revenueShare) => !revenueShare.finalized
+  )
 
   const memoizedChannelStateBloatBond = useMemo(() => {
     return new BN(channel?.channelStateBloatBond || 0)
@@ -88,14 +103,37 @@ export const PaymentsOverView = () => {
             />
           }
           loading={loading || channelBalance === undefined}
-          button={{
-            text: 'Withdraw',
-            variant: 'secondary',
-            fullWidth: !mdMatch,
-            onClick: () => setShowWithdrawDialog(true),
-          }}
+          button={
+            channel?.creatorToken?.token.id
+              ? {
+                  text: 'Revenue share',
+                  fullWidth: !mdMatch,
+                  onClick: () =>
+                    hasOpenedRevenueShare
+                      ? displaySnackbar({
+                          title: hasOpenedRevenueShare
+                            ? 'You already have active revenue share'
+                            : 'You can not start a revenue share while the market is open',
+                          iconType: 'info',
+                        })
+                      : setOpenRevenueShareModal(true),
+                }
+              : {
+                  text: 'Withdraw',
+                  variant: 'secondary',
+                  fullWidth: !mdMatch,
+                  onClick: () => setShowWithdrawDialog(true),
+                }
+          }
         />
       </TilesWrapper>
+      {tokenData?.creatorTokenById ? (
+        <StartRevenueShare
+          show={openRevenueShareModal}
+          token={tokenData.creatorTokenById}
+          onClose={() => setOpenRevenueShareModal(false)}
+        />
+      ) : null}
     </>
   )
 }

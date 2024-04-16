@@ -11,7 +11,7 @@ import { ComboBox, ComboBoxProps } from '.'
 
 const MEMBERS = [
   {
-    id: 1,
+    id: '1',
     label: 'Klaudiusz',
     thumbnailUrls: ['https://placedog.net/57/32?random=1'],
   },
@@ -125,6 +125,7 @@ export default {
     },
     helperText: 'Some helper text here',
     processing: false,
+    initialSelectedItem: undefined,
   },
 } as Meta<ComboBoxProps>
 
@@ -135,7 +136,7 @@ const Template: StoryFn<ComboBoxProps> = (args) => {
 export const Default = Template.bind({})
 
 type Member = { label: string; thumbnailUrls: string[]; id: string }
-const TemplateWithMembers: StoryFn<ComboBoxProps> = (args) => {
+const TemplateWithMembers: StoryFn<ComboBoxProps<Member>> = (args) => {
   const [selectedMembers, setSelectedMembers] = useState<Member[]>([])
   const [focusedElement, setFocusedElement] = useState<number | null>(null)
 

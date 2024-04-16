@@ -18,6 +18,7 @@ export const configSchema = z.object({
     joystreamLandingPageUrl: z.string(),
     joystreamDiscordUrl: z.string(),
     appContentFocus: z.string().nullable(),
+    crtMaintenanceMode: z.boolean(),
   }),
   storage: z.object({
     assetResponseTimeout: z.number(),
@@ -181,6 +182,7 @@ export const configSchema = z.object({
       .optional(),
   }),
   legal: z.object({
+    crtTnc: z.string(),
     termsOfService: z.string(),
     copyrightPolicy: z.string(),
     privacyPolicy: z.string(),
