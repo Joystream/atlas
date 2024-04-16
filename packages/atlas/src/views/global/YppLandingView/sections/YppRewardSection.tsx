@@ -122,13 +122,13 @@ export const YppRewardSection: FC = () => {
               interactive
               customContent={
                 <TooltipText as="span" variant="t100">
-                  {atlasConfig.joystream.tokenTicker} token is a native crypto asset of Joystream blockchain. It is used
-                  for platform governance, purchasing NFTs, trading creator tokens, and covering blockchain processing
-                  fees. They are listed on{' '}
-                  <ColorAnchor href="https://www.mexc.com/exchange/JOYSTREAM_USDT" target="__blank">
-                    MEXC
-                  </ColorAnchor>{' '}
-                  exchange under "JOYSTREAM" ticker.
+                  {atlasConfig.joystream.tokenTicker} token is a native crypto asset of Joystream blockchain which
+                  powers {atlasConfig.general.appName}. It is used for trading Creator Tokens, NFTs and covering
+                  blockchain processing fees. It is also used for voting on proposals and partaking in council
+                  elections.{' '}
+                  <ColorAnchor href="https://www.joystream.org/token/" target="_blank">
+                    Purchase {atlasConfig.joystream.tokenTicker}
+                  </ColorAnchor>
                 </TooltipText>
               }
               multiline
