@@ -5,7 +5,9 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { useBasicVideos } from '@/api/hooks/video'
 import { VideoOrderByInput, VideoWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { BasicVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { useGetNextVideoQuery } from '@/api/queries/__generated__/videos.generated'
 import { getPublicCryptoVideoFilter } from '@/config/contentFilter'
+import { usePersonalDataStore } from '@/providers/personalData'
 import { cVar, transitions } from '@/styles'
 import { getRandomIntInclusive } from '@/utils/number'
 
@@ -26,6 +28,8 @@ type VideoOverlayProps = {
   hideEndOverlay?: boolean
 }
 
+export const supporting_recommendations = false
+
 export const VideoOverlay: FC<VideoOverlayProps> = ({
   playerState,
   onPlayAgain,
@@ -39,18 +43,9 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
   currentVideoCreatedAt,
   hideEndOverlay = false,
 }) => {
-  // const { data } = useGetNextVideoQuery({
-  //     variables: {
-  //         videoId: videoId ?? '',
-  //         where: {
-  //             ...publicCryptoVideoFilter,
-  //         },
-  //     },
-  //     skip: !videoId,
-  // })
-  //     randomNextVideo={
-  //         playRandomVideoOnEnded && data?.nextVideo.video.length ? data.nextVideo.video[0] : undefined
-  // }
+  const {
+    actions: { setGlobalRecommendationId },
+  } = usePersonalDataStore()
   const [randomNextVideo, setRandomNextVideo] = useState<BasicVideoFieldsFragment | null>(null)
   const commonFiltersFactory = (where?: VideoWhereInput) => ({
     limit: 1,
@@ -63,10 +58,25 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
     }),
   })
   const { videos: newerVideos, loading: loadingNewestVideos } = useBasicVideos(
-    commonFiltersFactory({ createdAt_gt: currentVideoCreatedAt })
+    commonFiltersFactory({ createdAt_gt: currentVideoCreatedAt }),
+    {
+      skip: supporting_recommendations,
+    }
   )
   const { videos: olderVideos } = useBasicVideos(commonFiltersFactory({ createdAt_lt: currentVideoCreatedAt }), {
-    skip: loadingNewestVideos || !!newerVideos?.length,
+    skip: loadingNewestVideos || !!newerVideos?.length || supporting_recommendations,
+  })
+
+  useGetNextVideoQuery({
+    variables: {
+      videoId: videoId ?? '',
+      where: getPublicCryptoVideoFilter(),
+    },
+    skip: !supporting_recommendations || !videoId,
+    onCompleted: (data) => {
+      setRandomNextVideo(data.nextVideo.video[0])
+      setGlobalRecommendationId(data.nextVideo.recommId)
+    },
   })
 
   useEffect(() => {
