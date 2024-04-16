@@ -6,6 +6,7 @@ import { useBasicVideos } from '@/api/hooks/video'
 import { VideoOrderByInput, VideoWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { BasicVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { useGetNextVideoQuery } from '@/api/queries/__generated__/videos.generated'
+import { atlasConfig } from '@/config'
 import { getPublicCryptoVideoFilter } from '@/config/contentFilter'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { cVar, transitions } from '@/styles'
@@ -28,7 +29,7 @@ type VideoOverlayProps = {
   hideEndOverlay?: boolean
 }
 
-export const supporting_recommendations = false
+const usesRecommendations = !!atlasConfig.features.recommendations
 
 export const VideoOverlay: FC<VideoOverlayProps> = ({
   playerState,
@@ -60,11 +61,11 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
   const { videos: newerVideos, loading: loadingNewestVideos } = useBasicVideos(
     commonFiltersFactory({ createdAt_gt: currentVideoCreatedAt }),
     {
-      skip: supporting_recommendations,
+      skip: usesRecommendations,
     }
   )
   const { videos: olderVideos } = useBasicVideos(commonFiltersFactory({ createdAt_lt: currentVideoCreatedAt }), {
-    skip: loadingNewestVideos || !!newerVideos?.length || supporting_recommendations,
+    skip: loadingNewestVideos || !!newerVideos?.length || usesRecommendations,
   })
 
   useGetNextVideoQuery({
@@ -72,7 +73,7 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
       videoId: videoId ?? '',
       where: getPublicCryptoVideoFilter(),
     },
-    skip: !supporting_recommendations || !videoId,
+    skip: !usesRecommendations || !videoId,
     onCompleted: (data) => {
       setRandomNextVideo(data.nextVideo.video[0])
       setGlobalRecommendationId(data.nextVideo.recommId)

@@ -342,8 +342,6 @@ export const VideoView: FC = () => {
   )
 }
 
-const supporting_recommendations = false
-
 const SideItems = ({ video, loading }: { video: ReturnType<typeof useFullVideo>['video']; loading: boolean }) => {
   const { id } = useParams()
   const { openNftPutOnSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement, cancelNftSale } =
@@ -384,7 +382,7 @@ const SideItems = ({ video, loading }: { video: ReturnType<typeof useFullVideo>[
               onWithdrawBid={(bid, createdAt) => id && createdAt && bid && withdrawBid(id, bid, createdAt)}
             />
           )}
-      {supporting_recommendations ? (
+      {atlasConfig.features.recommendations ? (
         <RecommendationBasedMoreVideos videoId={id} />
       ) : (
         <MoreVideos channelId={channelId} channelName={channelName} videoId={id} type="channel" />

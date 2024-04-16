@@ -37,6 +37,7 @@ joystream:
       url: 'ws://localhost:9944'
 
 features:
+  recommendations: false
   ypp:
     yppDelayThreshold: 300 # When the YPP sync backlog exceeds the threshold, Atlas will consider the YPP sync delayed.
     landingPageOgTitle: null # Open graph title for YPP landing page - used in open graph meta tags in HTML

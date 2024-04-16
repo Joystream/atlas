@@ -13,6 +13,7 @@ import { Section } from '@/components/Section/Section'
 import { ReferralsBanner } from '@/components/_referrals/ReferralsBanner/ReferralsBanner'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
+import { atlasConfig } from '@/config'
 import { getPublicCryptoVideoFilter } from '@/config/contentFilter'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useInfiniteVideoGrid } from '@/hooks/useInfiniteVideoGrid'
@@ -25,7 +26,6 @@ import { InteractionsService } from '@/utils/InteractionsService'
 import { createPlaceholderData } from '@/utils/data'
 import { InfiniteLoadingOffsets } from '@/utils/loading.contants'
 
-export const supporting_recommendations = false
 export const HomeView: FC = () => {
   const headTags = useHeadTags()
 
@@ -33,7 +33,7 @@ export const HomeView: FC = () => {
     <VideoContentTemplate>
       <ReferralsBanner />
       {headTags}
-      {supporting_recommendations ? <RecommendationBasedHomepage /> : <DefaultHomepage />}
+      {atlasConfig.features.recommendations ? <RecommendationBasedHomepage /> : <DefaultHomepage />}
     </VideoContentTemplate>
   )
 }
