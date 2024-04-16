@@ -15,8 +15,16 @@ type PortionOptions = {
 
 class _InteractionsService {
   private uri = ''
+  private _enabled = false
   constructor(serviceUri?: string) {
     this.uri = serviceUri ?? ORION_INTERACTIONS_URL
+    if (this.uri) {
+      this._enabled = true
+    }
+  }
+
+  get isEnabled() {
+    return this._enabled
   }
 
   async videoConsumed(videoId: string, options?: ConsummationOptions) {
