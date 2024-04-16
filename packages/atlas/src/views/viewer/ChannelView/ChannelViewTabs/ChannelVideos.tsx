@@ -111,8 +111,15 @@ export const ChannelVideos: FC<ChannelVideosProps> = ({
               key={idx}
               id={video.id}
               onClick={() => {
-                InteractionsService.channelClicked(channelId, { recommId: lastGlobalRecommendationId })
-                video.id && InteractionsService.videoClicked(video.id, { recommId: lastGlobalRecommendationId })
+                InteractionsService.channelClicked(
+                  channelId,
+                  lastGlobalRecommendationId ? { recommId: lastGlobalRecommendationId } : undefined
+                )
+                video.id &&
+                  InteractionsService.videoClicked(
+                    video.id,
+                    lastGlobalRecommendationId ? { recommId: lastGlobalRecommendationId } : undefined
+                  )
               }}
               detailsVariant="withoutChannel"
             />

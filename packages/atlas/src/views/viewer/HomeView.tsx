@@ -116,13 +116,19 @@ const RecommendationBasedHomepage = () => {
             key={video.id}
             onClick={() => {
               if (video.id) {
-                InteractionsService.videoClicked(video.id, { recommId: rawData.homepageVideos.recommId })
+                InteractionsService.videoClicked(
+                  video.id,
+                  rawData.homepageVideos.recommId ? { recommId: rawData.homepageVideos.recommId } : undefined
+                )
                 setGlobalRecommendationId(rawData.homepageVideos.recommId)
               }
             }}
             onChannelClick={() => {
               if ('channel' in video && video?.channel.id) {
-                InteractionsService.channelClicked(video.channel.id)
+                InteractionsService.channelClicked(
+                  video.channel.id,
+                  rawData.homepageVideos.recommId ? { recommId: rawData.homepageVideos.recommId } : undefined
+                )
                 setGlobalRecommendationId(rawData.homepageVideos.recommId)
               }
             }}

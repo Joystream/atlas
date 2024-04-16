@@ -7,6 +7,7 @@ import { useInView } from 'react-intersection-observer'
 import { useParams } from 'react-router-dom'
 
 import { useAddVideoView, useFullVideo } from '@/api/hooks/video'
+import { useGetSimiliarVideosQuery } from '@/api/queries/__generated__/videos.generated'
 import { SvgActionFlag, SvgActionMore, SvgActionShare } from '@/assets/icons'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
@@ -21,6 +22,7 @@ import { NftWidget, useNftWidget } from '@/components/_nft/NftWidget'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { ReportModal } from '@/components/_overlays/ReportModal'
 import { AvailableTrack } from '@/components/_video/VideoPlayer/SettingsButtonWithPopover'
+import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { atlasConfig } from '@/config'
 import { displayCategories } from '@/config/categories'
 import { getSingleAssetUrl } from '@/hooks/useGetAssetUrl'
@@ -38,6 +40,8 @@ import { useOverlayManager } from '@/providers/overlayManager'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user/user.hooks'
 import { transitions } from '@/styles'
+import { InteractionsService } from '@/utils/InteractionsService'
+import { createPlaceholderData } from '@/utils/data'
 import { SentryLogger } from '@/utils/logs'
 import { formatDate } from '@/utils/time'
 
@@ -69,20 +73,7 @@ export const VideoView: FC = () => {
   const [availableTracks, setAvailableTracks] = useState<AvailableTrack[]>([])
   const { trackPageView } = useSegmentAnalytics()
 
-  // const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
-  // const { loading: loadingRecommendations, data } = useGetSimiliarVideosQuery({
-  //   variables: {
-  //     videoId: id ?? '',
-  //     limit: 10,
-  //   },
-  //   skip: !id,
-  // })
-  // const placeholderItems = loadingRecommendations && !data?.similiarVideos.video.length ? createPlaceholderData(10) : []
-  // const displayedRecommendationItems = loadingRecommendations ? [] : data?.similiarVideos.video ?? []
-  // const {
-  //   lastGlobalRecommendationId,
-  //   actions: { setGlobalRecommendationId },
-  // } = usePersonalDataStore()
+  const { lastGlobalRecommendationId } = usePersonalDataStore()
 
   const { loading, video, error } = useFullVideo(
     id ?? '',
@@ -110,9 +101,16 @@ export const VideoView: FC = () => {
       // addVideoView()
     }
     if (milestone === 0.9) {
-      // InteractionsService.videoConsumed(video.id, { recommId: lastGlobalRecommendationId })
+      InteractionsService.videoConsumed(
+        video.id,
+        lastGlobalRecommendationId ? { recommId: lastGlobalRecommendationId } : undefined
+      )
     }
-    // InteractionsService.videoPortion(video.id, { portion: milestone, recommId: lastGlobalRecommendationId })
+
+    InteractionsService.videoPortion(video.id, {
+      portion: milestone,
+      ...(lastGlobalRecommendationId ? { recommId: lastGlobalRecommendationId } : {}),
+    })
   })
   const [isInView, ref] = useIntersectionObserver()
   const [isCommenting, setIsCommenting] = useState<boolean>(false)
@@ -208,21 +206,6 @@ export const VideoView: FC = () => {
   // onTimeUpdate from videojs lib sends an event each 265ms on average
   const handleVideoTick = useCallback((rate: number) => registerVideoTick(265, rate), [registerVideoTick])
 
-  // {[...placeholderItems, ...displayedRecommendationItems].map((video, idx) => (
-  //     <GridItem key={`similiar-videos-${idx}`} colSpan={{ xxs: 12, sm: 6, md: 12 }}>
-  //         <VideoTileViewer
-  //             id={video.id}
-  //             detailsVariant="withChannelName"
-  //             direction={lgMatch ? 'horizontal' : 'vertical'}
-  //             onClick={() => {
-  //                 if (video.id && data) {
-  //                     InteractionsService.videoClicked(video.id, { recommId: data.similiarVideos.recommId })
-  //                     setGlobalRecommendationId(data.similiarVideos.recommId)
-  //                 }
-  //             }}
-  //         />
-  //     </GridItem>
-  // ))}
   const handleVideoEnd = useCallback(() => {
     if (video?.id) {
       handleTimeUpdate.cancel()
@@ -299,7 +282,10 @@ export const VideoView: FC = () => {
                   autoplay
                   videoUrls={mediaUrls}
                   onEnd={handleVideoEnd}
-                  onTimeUpdated={handleTimeUpdate}
+                  onTimeUpdated={(time, rate) => {
+                    handleTimeUpdate(time)
+                    handleVideoTick(rate)
+                  }}
                   startTime={startTimestamp}
                   isPlayNextDisabled={pausePlayNext}
                   ref={playerRef}
@@ -356,10 +342,13 @@ export const VideoView: FC = () => {
   )
 }
 
+const supporting_recommendations = false
+
 const SideItems = ({ video, loading }: { video: ReturnType<typeof useFullVideo>['video']; loading: boolean }) => {
   const { id } = useParams()
   const { openNftPutOnSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement, cancelNftSale } =
     useNftActions()
+
   const channelId = video?.channel?.id
   const channelName = video?.channel?.title
   const videoNotAvailable = !loading && !video
@@ -395,7 +384,12 @@ const SideItems = ({ video, loading }: { video: ReturnType<typeof useFullVideo>[
               onWithdrawBid={(bid, createdAt) => id && createdAt && bid && withdrawBid(id, bid, createdAt)}
             />
           )}
-      <MoreVideos channelId={channelId} channelName={channelName} videoId={id} type="channel" />
+      {supporting_recommendations ? (
+        <RecommendationBasedMoreVideos videoId={id} />
+      ) : (
+        <MoreVideos channelId={channelId} channelName={channelName} videoId={id} type="channel" />
+      )}
+
       {belongsToCategories?.map((category) => (
         <MoreVideos
           key={category.id}
@@ -406,6 +400,45 @@ const SideItems = ({ video, loading }: { video: ReturnType<typeof useFullVideo>[
         />
       ))}
     </GridItem>
+  )
+}
+
+const RecommendationBasedMoreVideos = ({ videoId }: { videoId?: string }) => {
+  const lgMatch = useMediaMatch('lg')
+  const {
+    actions: { setGlobalRecommendationId },
+  } = usePersonalDataStore()
+  const { loading: loadingRecommendations, data } = useGetSimiliarVideosQuery({
+    variables: {
+      videoId: videoId ?? '',
+      limit: 10,
+    },
+    skip: !videoId,
+  })
+  const placeholderItems = loadingRecommendations && !data?.similarVideos.video.length ? createPlaceholderData(10) : []
+  const displayedRecommendationItems = loadingRecommendations ? [] : data?.similarVideos.video ?? []
+
+  return (
+    <>
+      {[...placeholderItems, ...displayedRecommendationItems].map((video, idx) => (
+        <GridItem key={`similar-videos-${idx}`} colSpan={{ xxs: 12, sm: 6, md: 12 }}>
+          <VideoTileViewer
+            id={video.id}
+            detailsVariant="withChannelName"
+            direction={lgMatch ? 'horizontal' : 'vertical'}
+            onClick={() => {
+              if (video.id && data) {
+                InteractionsService.videoClicked(
+                  video.id,
+                  data.similarVideos.recommId ? { recommId: data.similarVideos.recommId } : undefined
+                )
+                setGlobalRecommendationId(data.similarVideos.recommId)
+              }
+            }}
+          />
+        </GridItem>
+      ))}
+    </>
   )
 }
 
