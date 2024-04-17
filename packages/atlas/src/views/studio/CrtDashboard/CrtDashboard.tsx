@@ -39,7 +39,7 @@ const getTabIndex = (tabName: TabsNames, allTabs: { name: TabsNames }[]): number
 export const CrtDashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
-  const { activeChannel } = useUser()
+  const { activeChannel, memberId } = useUser()
   const { data } = useGetFullCreatorTokenQuery({
     variables: {
       id: activeChannel?.creatorToken?.token.id ?? '',
@@ -71,6 +71,9 @@ export const CrtDashboard = () => {
 
   const activeRevenueShare = data?.creatorTokenById?.revenueShares.find((revenueShare) => !revenueShare.finalized)
   const { creatorTokenById } = data ?? {}
+  const hasRecoveredStake = activeRevenueShare?.stakers.some(
+    (staker) => staker.account.member.id === memberId && staker.recovered
+  )
 
   return (
     <LimitedWidthContainer big>
@@ -103,27 +106,24 @@ export const CrtDashboard = () => {
                   {!hasOpenMarket ? (
                     <StartSaleOrMarketButton token={creatorTokenById} />
                   ) : (
-                    <CloseMarketButton
-                      channelId={activeChannel?.id ?? '-1'}
-                      tokenId={data?.creatorTokenById?.id ?? ''}
-                    />
+                    <CloseMarketButton channelId={activeChannel?.id ?? '-1'} tokenId={creatorTokenById?.id ?? ''} />
                   )}
                 </>
               )}
               {currentTab === getTabIndex('Market', mappedTabs) && (
-                <CloseMarketButton channelId={activeChannel?.id ?? '-1'} tokenId={data?.creatorTokenById?.id ?? ''} />
+                <CloseMarketButton channelId={activeChannel?.id ?? '-1'} tokenId={creatorTokenById?.id ?? ''} />
               )}
               {currentTab === getTabIndex('Revenue share', mappedTabs) && (
                 <>
                   {!activeRevenueShare ? (
                     <RevenueShareModalButton token={creatorTokenById} />
-                  ) : (
+                  ) : hasRecoveredStake ? (
                     <CloseRevenueShareButton
                       token={creatorTokenById}
                       hideOnInactiveRevenue
                       revenueShareEndingBlock={activeRevenueShare.endsAt}
                     />
-                  )}
+                  ) : null}
                 </>
               )}
             </>
