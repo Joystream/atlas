@@ -1,6 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { ReactElement, useMemo } from 'react'
+import { Link } from 'react-router-dom'
 
 import { SvgActionAuction, SvgActionMarket, SvgActionNotForSale, SvgActionNotifications } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
@@ -11,6 +12,7 @@ import { Button } from '@/components/_buttons/Button'
 import { CrtMainInfo, CrtMainInfoProps } from '@/components/_crt/CrtBasicInfoWidget'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { DetailsContent, DetailsContentProps } from '@/components/_nft/NftTile'
+import { absoluteRoutes } from '@/config/routes'
 import { cVar, sizes } from '@/styles'
 
 type SaleProps = {
@@ -27,6 +29,7 @@ export type CrtSaleTypes = MarketProps | SaleProps | { type: 'inactive' }
 
 export type CrtCardProps = {
   marketCap?: number
+  channelId: string
   channelRevenue?: number
   size?: 'medium' | 'small'
   status?: CrtSaleTypes
@@ -36,6 +39,7 @@ export type CrtCardProps = {
 
 export const CrtCard = ({
   channelRevenue,
+  channelId,
   marketCap,
   size,
   status,
@@ -165,7 +169,7 @@ export const CrtCard = ({
   }
 
   return (
-    <FlexBox className={className} flow="column" gap={0}>
+    <Container to={absoluteRoutes.viewer.channel(channelId, { tab: 'Token' })} className={className}>
       <CrtMainInfo size={size} {...mainInfoProps}>
         <AvatarBox width="100%" justifyContent="space-between">
           <Avatar
@@ -176,14 +180,26 @@ export const CrtCard = ({
           <Button icon={<SvgActionNotifications />} variant="secondary" rounded size={isSmall ? 'medium' : 'small'} />
         </AvatarBox>
       </CrtMainInfo>
-      <DetailsWrapper size={size}>
+      <DetailsWrapper className="crt-card-details" size={size}>
         {details.map((detail, idx) => (
           <StyledDetailsContent key={idx} {...detail} isInactive={status?.type === 'inactive'} tileSize={size} />
         ))}
       </DetailsWrapper>
-    </FlexBox>
+    </Container>
   )
 }
+
+const Container = styled(Link)`
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+
+  :hover {
+    opacity: 0.85;
+  }
+
+  cursor: pointer;
+`
 
 const StyledDetailsContent = styled(DetailsContent)<{ isInactive?: boolean }>`
   display: flex;

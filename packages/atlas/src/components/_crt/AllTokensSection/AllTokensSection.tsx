@@ -29,7 +29,7 @@ export const AllTokensSection = () => {
   const tableData =
     tokens?.map(({ createdAt, accountsNum, lastPrice, totalSupply, status, symbol, channel }) => ({
       createdAt: new Date(createdAt),
-      totalRevenue: 0,
+      totalRevenue: new BN(channel?.channel.cumulativeRevenue ?? 0),
       holdersNum: accountsNum,
       isVerified: false,
       marketCap: lastPrice && totalSupply ? hapiBnToTokenNumber(new BN(lastPrice).mul(new BN(totalSupply))) ?? 0 : 0,

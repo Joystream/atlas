@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import BN from 'bn.js'
 import { useMemo } from 'react'
 
 import { TokenStatus } from '@/api/queries/__generated__/baseTypes.generated'
@@ -44,7 +45,7 @@ export type MarketplaceToken = {
   status: TokenStatus
   createdAt: Date
   marketCap: number
-  totalRevenue: number
+  totalRevenue: BN
   holdersNum: number
   channelId: string
 }
