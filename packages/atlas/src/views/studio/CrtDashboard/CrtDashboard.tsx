@@ -71,9 +71,8 @@ export const CrtDashboard = () => {
 
   const activeRevenueShare = data?.creatorTokenById?.revenueShares.find((revenueShare) => !revenueShare.finalized)
   const { creatorTokenById } = data ?? {}
-  const hasRecoveredStake = activeRevenueShare?.stakers.some(
-    (staker) => staker.account.member.id === memberId && staker.recovered
-  )
+  const userAsStaker = activeRevenueShare?.stakers.find((staker) => staker.account.member.id === memberId)
+  const hasRecoveredStake = userAsStaker ? userAsStaker.recovered : true
 
   return (
     <LimitedWidthContainer big>
