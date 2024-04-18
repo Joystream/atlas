@@ -4,6 +4,7 @@ import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { SvgAlertsInformative32, SvgLogoChangenow } from '@/assets/icons'
 import { FailedStep } from '@/components/ChangeNowModal/steps/FailedStep'
 import { SwapExpired } from '@/components/ChangeNowModal/steps/SwapExpired'
+import { TransactionTimeout } from '@/components/ChangeNowModal/steps/TransactionTimeout'
 import { Spinner } from '@/components/_loaders/Spinner'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
 import { DialogModal } from '@/components/_overlays/DialogModal'
@@ -61,7 +62,14 @@ export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
   }, [step, type])
 
   const secondaryButton = useMemo(() => {
-    if ([ChangeNowModalStep.INFO, ChangeNowModalStep.SWAP_EXPIRED, ChangeNowModalStep.FAILED].includes(step)) {
+    if (
+      [
+        ChangeNowModalStep.INFO,
+        ChangeNowModalStep.SWAP_EXPIRED,
+        ChangeNowModalStep.TIMEOUT,
+        ChangeNowModalStep.FAILED,
+      ].includes(step)
+    ) {
       return {
         text: 'Cancel',
         onClick: () => onClose(),
@@ -110,8 +118,10 @@ export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
     <DialogModal
       title={
         (type === 'topup' && step === ChangeNowModalStep.INFO) ||
-        [ChangeNowModalStep.SWAP_EXPIRED, ChangeNowModalStep.FAILED].includes(step) ? (
-          <StyledSvgAlertsInformative32 isFailed={step === ChangeNowModalStep.FAILED} />
+        [ChangeNowModalStep.SWAP_EXPIRED, ChangeNowModalStep.TIMEOUT, ChangeNowModalStep.FAILED].includes(step) ? (
+          <StyledSvgAlertsInformative32
+            isFailed={[ChangeNowModalStep.FAILED, ChangeNowModalStep.TIMEOUT].includes(step)}
+          />
         ) : type === 'sell' ? (
           'Cashout JOY'
         ) : (
@@ -119,7 +129,14 @@ export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
         )
       }
       show
-      dividers={![ChangeNowModalStep.INFO, ChangeNowModalStep.SWAP_EXPIRED, ChangeNowModalStep.FAILED].includes(step)}
+      dividers={
+        ![
+          ChangeNowModalStep.INFO,
+          ChangeNowModalStep.SWAP_EXPIRED,
+          ChangeNowModalStep.FAILED,
+          ChangeNowModalStep.TIMEOUT,
+        ].includes(step)
+      }
       onExitClick={step === ChangeNowModalStep.SWAP_EXPIRED ? undefined : () => onClose()}
       primaryButton={
         primaryButtonProps
@@ -142,6 +159,9 @@ export const ChangeNowModal = ({ type, onClose }: ChangeNowModalProps) => {
         <ProgressStep {...commonProps} transactionData={transactionData.current} />
       )}
       {step === ChangeNowModalStep.SWAP_EXPIRED && <SwapExpired />}
+      {step === ChangeNowModalStep.TIMEOUT && transactionData.current && (
+        <TransactionTimeout transactionId={transactionData.current.id} />
+      )}
       {step === ChangeNowModalStep.FAILED && transactionData.current && (
         <FailedStep {...commonProps} transactionData={transactionData.current} />
       )}
