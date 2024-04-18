@@ -1,7 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { useGetChannelTokenBalanceQuery } from '@/api/queries/__generated__/creatorTokens.generated'
-import { useMountEffect } from '@/hooks/useMountEffect'
 import { useJoystreamStore } from '@/providers/joystream/joystream.store'
 import { useUser } from '@/providers/user/user.hooks'
 
@@ -28,15 +27,18 @@ export const useGetTokenBalance = (tokenId?: string, memberId?: string) => {
     },
   })
 
-  useMountEffect(() => {
-    if (currentBlock) {
+  useEffect(() => {
+    if (currentBlock && !blockHeight) {
       setBlockHeight(currentBlock)
     }
-  })
+  }, [blockHeight, currentBlock])
 
-  return {
-    tokenBalance: tokenBalance ?? 0,
-    isLoading: loading,
-    refetch,
-  }
+  return useMemo(
+    () => ({
+      tokenBalance: tokenBalance ?? 0,
+      isLoading: loading,
+      refetch,
+    }),
+    [loading, refetch, tokenBalance]
+  )
 }
