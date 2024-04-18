@@ -37,7 +37,7 @@ export const CrtWelcomeView = () => {
             children: 'Learn more',
             size: 'large',
             variant: 'tertiary',
-            to: 'https://joystream.notion.site/Creator-Tokens-afb46f9b7f7444979114fc768eddd820?pvs=4',
+            to: 'https://www.notion.so/joystream/Creator-Tokens-afb46f9b7f7444979114fc768eddd820?pvs=4',
             _textOnly: true,
             icon: <SvgActionPlay />,
           },

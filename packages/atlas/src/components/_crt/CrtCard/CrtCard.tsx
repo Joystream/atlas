@@ -3,12 +3,11 @@ import styled from '@emotion/styled'
 import { ReactElement, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 
-import { SvgActionAuction, SvgActionMarket, SvgActionNotForSale, SvgActionNotifications } from '@/assets/icons'
+import { SvgActionAuction, SvgActionMarket, SvgActionNotForSale } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
 import { FlexBox } from '@/components/FlexBox'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { Text } from '@/components/Text'
-import { Button } from '@/components/_buttons/Button'
 import { CrtMainInfo, CrtMainInfoProps } from '@/components/_crt/CrtBasicInfoWidget'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { DetailsContent, DetailsContentProps } from '@/components/_nft/NftTile'
@@ -177,7 +176,6 @@ export const CrtCard = ({
             loading={false}
             size={isSmall ? 40 : 64}
           />
-          <Button icon={<SvgActionNotifications />} variant="secondary" rounded size={isSmall ? 'medium' : 'small'} />
         </AvatarBox>
       </CrtMainInfo>
       <DetailsWrapper className="crt-card-details" size={size}>

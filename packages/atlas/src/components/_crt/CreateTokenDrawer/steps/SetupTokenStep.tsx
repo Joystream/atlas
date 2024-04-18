@@ -118,7 +118,7 @@ export const SetupTokenStep = ({ setPrimaryButtonProps, onSubmit, form, setPrevi
     <CrtFormWrapper
       title="Set up Token Parameters"
       subtitle="Enter basic token information and settings."
-      learnMoreLink=""
+      learnMoreLink="https://www.notion.so/joystream/Creator-Tokens-afb46f9b7f7444979114fc768eddd820?pvs=4#cd877f1ee0544d7c8cec9bd2e94e8a2d"
     >
       <Controller
         name="name"
