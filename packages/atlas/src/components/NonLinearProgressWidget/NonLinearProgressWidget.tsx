@@ -7,6 +7,7 @@ import {
   SvgActionChevronR,
   SvgActionChevronT,
   SvgActionClose,
+  SvgActionPlay,
 } from '@/assets/icons'
 import { Carousel, SwiperInstance } from '@/components/Carousel'
 import { FlexBox } from '@/components/FlexBox'
@@ -31,6 +32,7 @@ import { getProgressPercentage, responsive } from './NonLinearProgressWidget.uti
 type StepProps = {
   title: string
   description: string
+  link?: string
   finished?: boolean
 }
 
@@ -161,7 +163,7 @@ type StepCardProps = {
 }
 
 const StepCard = ({ step, status, stepNumber, button }: StepCardProps) => {
-  // const smMatch = useMediaMatch('xs')
+  const smMatch = useMediaMatch('xs')
 
   return (
     <StepCardContainer isActive={status === 'active'}>
@@ -181,9 +183,18 @@ const StepCard = ({ step, status, stepNumber, button }: StepCardProps) => {
 
       <RowBox gap={4} wrap>
         {button}
-        {/*<Button variant="tertiary" fullWidth={!smMatch} _textOnly icon={<SvgActionPlay />} iconPlacement="right">*/}
-        {/*  Learn more*/}
-        {/*</Button>*/}
+        {step.link ? (
+          <Button
+            to={step.link}
+            variant="tertiary"
+            fullWidth={!smMatch}
+            _textOnly
+            icon={<SvgActionPlay />}
+            iconPlacement="right"
+          >
+            Learn more
+          </Button>
+        ) : null}
       </RowBox>
     </StepCardContainer>
   )

@@ -20,19 +20,6 @@ import { formatNumber } from '@/utils/number'
 import { getDataBasedOnType } from './TokenIssuanceStep/TokenIssuanceStep.utils'
 import { CommonStepProps } from './types'
 
-// const cliffBanner = (
-//   <Banner
-//     icon={<SvgAlertsInformative24 />}
-//     title="You will not be able to start a sale before the cliff ends"
-//     description="On sale you can sell your own preminted tokens for your own price and receive revenue right after the sale. By putting your tokens under the cliff you won’t be able to use sale until cliff ends. "
-//     // actionButton={{
-//     //   text: 'Learn more',
-//     //   _textOnly: true,
-//     //   onClick: () => undefined,
-//     // }}
-//   />
-// )
-
 const monthDurationToBlocks = (numberOfMonths: number) => numberOfMonths * 30 * 24 * 60 * 6
 export type TokenSummaryStepProps = {
   onSuccess: () => void

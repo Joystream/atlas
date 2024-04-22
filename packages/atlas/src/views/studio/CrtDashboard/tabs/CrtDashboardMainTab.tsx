@@ -45,14 +45,17 @@ const _steps: NonLinearProgressWidgetProps['steps'] = [
   {
     title: 'Edit Public Page',
     description: 'Explain your token purpose on the public token page and share it with community!',
+    link: 'https://www.notion.so/joystream/Creator-Tokens-afb46f9b7f7444979114fc768eddd820?pvs=4#1bf87ab4b5a946f49fe8431ae3da0bcf',
   },
   {
     title: 'Start Token Market',
     description: 'Make your token purchasable by starting the market.',
+    link: 'https://joystream.notion.site/Creator-Tokens-afb46f9b7f7444979114fc768eddd820#72f30dca6d2b44c9bd2186500eb1558b',
   },
   {
     title: 'Start Revenue Share',
     description: 'Claim your channel revenue and share with your investors.',
+    link: 'https://www.notion.so/joystream/Creator-Tokens-afb46f9b7f7444979114fc768eddd820?pvs=4#7b0098034c9844ac9d590e0d36189196',
   },
 ]
 

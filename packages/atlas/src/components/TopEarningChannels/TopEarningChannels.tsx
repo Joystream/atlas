@@ -106,7 +106,7 @@ export const TopEarningChannels = ({ withCrtOnly }: { withCrtOnly?: boolean }) =
       headerProps={{
         start: {
           type: 'title',
-          title: `Top earning channels ${withCrtOnly ? 'with a token' : ''}`,
+          title: `Top earning channels`,
         },
       }}
       contentProps={{

@@ -246,7 +246,7 @@ export const TokenIssuanceStep = ({
   return (
     <CrtFormWrapper
       title="Token Initial Supply"
-      learnMoreLink=""
+      learnMoreLink="https://www.notion.so/joystream/Creator-Tokens-afb46f9b7f7444979114fc768eddd820?pvs=4#e6d320cfccb44b9481c93ab8d7c52fc5"
       subtitle="Choose number of tokens minted for your channel right away and their unlocking period."
     >
       <FormField
