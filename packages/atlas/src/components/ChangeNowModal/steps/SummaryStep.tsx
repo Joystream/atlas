@@ -144,7 +144,7 @@ export const SummaryStep = ({
 
   useEffect(() => {
     setPrimaryButtonProps({
-      text: loading ? 'Next' : 'Waiting...',
+      text: !loading ? 'Next' : 'Waiting...',
       disabled: loading,
       onClick: async () => {
         if (termsAccepted && validUntil) {
