@@ -77,7 +77,7 @@ export const ProgressStep = ({
 
         // if transaction doesn't fail or succeed after 26 min
         // the issue might be on API side, we should not waste more time waiting
-        if (retry && Date.now() - mountTimestamp.current > 26 * 60 * 1000) {
+        if (data.status === 'waiting' && retry && Date.now() - mountTimestamp.current > 26 * 60 * 1000) {
           goToStep(ChangeNowModalStep.TIMEOUT)
         }
       },
