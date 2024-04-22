@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import QRCode from 'qrcode.react'
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { SvgActionChevronR, SvgAlertsSuccess24 } from '@/assets/icons'
@@ -64,6 +64,7 @@ export const ProgressStep = ({
   const steps = isSellingJoy ? sellSteps : buySteps
   const { trackChangenowTokenSold, trackChangenowTokenBought } = useSegmentAnalytics()
   const { memberId } = useUser()
+  const mountTimestamp = useRef(Date.now())
   const { data } = useQuery(
     ['getTransactionStatus', transactionData.id],
     () => changeNowService.getTransactionStatus(transactionData.id).then((res) => res.data),
@@ -72,6 +73,12 @@ export const ProgressStep = ({
       onSuccess: (data) => {
         if (data.status === 'failed') {
           goToStep(ChangeNowModalStep.FAILED)
+        }
+
+        // if transaction doesn't fail or succeed after 26 min
+        // the issue might be on API side, we should not waste more time waiting
+        if (retry && Date.now() - mountTimestamp.current > 26 * 60 * 1000) {
+          goToStep(ChangeNowModalStep.TIMEOUT)
         }
       },
     }
@@ -160,6 +167,7 @@ export const ProgressStep = ({
               hideStepNumberText={currentStep !== idx}
               title={currentStep === idx ? stepText : ''}
               variant={currentStep < idx ? 'future' : currentStep === idx ? 'current' : 'completed'}
+              showOtherStepsOnMobile
             />
           </>
         ))}
@@ -172,10 +180,7 @@ export const ProgressStep = ({
         <Text variant="t200" as="p" color="colorText">
           Exchange ID:
         </Text>
-        <TextButton
-          variant="secondary"
-          onClick={() => window.open(`https://changenow.io/exchange/txs/${transactionData.id}`, '_blank')}
-        >
+        <TextButton variant="secondary" to={`https://changenow.io/exchange/txs/${transactionData.id}`}>
           {transactionData.id}
         </TextButton>
       </FlexBox>
