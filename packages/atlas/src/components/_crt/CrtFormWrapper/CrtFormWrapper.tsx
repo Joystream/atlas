@@ -1,17 +1,19 @@
 import styled from '@emotion/styled'
 import { ReactNode } from 'react'
 
+import { SvgActionPlay } from '@/assets/icons'
 import { Text } from '@/components/Text'
+import { TextButton } from '@/components/_buttons/Button'
 import { sizes } from '@/styles'
 
 type CrtFormWrapperProps = {
   title: string
-  learnMoreLink: string
+  learnMoreLink?: string
   subtitle: string
   children: ReactNode
 }
 
-export const CrtFormWrapper = ({ children, subtitle, title }: CrtFormWrapperProps) => {
+export const CrtFormWrapper = ({ children, subtitle, title, learnMoreLink }: CrtFormWrapperProps) => {
   return (
     <Wrapper>
       <HeaderWrapper>
@@ -19,9 +21,11 @@ export const CrtFormWrapper = ({ children, subtitle, title }: CrtFormWrapperProp
           <Text variant="h500" as="h5">
             {title}
           </Text>
-          {/*<TextButton to={learnMoreLink} icon={<SvgActionPlay />}>*/}
-          {/*  Learn more*/}
-          {/*</TextButton>*/}
+          {learnMoreLink ? (
+            <TextButton to={learnMoreLink} icon={<SvgActionPlay />}>
+              Learn more
+            </TextButton>
+          ) : null}
         </TitleWrapper>
         <Text variant="t300" as="p" color="colorText">
           {subtitle}

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { ReactElement } from 'react'
 
-import { SvgActionCheck } from '@/assets/icons'
+import { SvgActionCheck, SvgActionPlay } from '@/assets/icons'
 import { SvgPatternAngledLines, SvgPatternCircleLines } from '@/assets/illustrations'
 import { FlexBox } from '@/components/FlexBox'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
@@ -79,10 +79,13 @@ export const SaleMarketChoiceDrawer = ({ isOpen, onClose, onMarketChoice }: Sale
               <OptionCard
                 title="Market"
                 titleAccessory={
-                  <div />
-                  // <Button _textOnly icon={<SvgActionPlay />}>
-                  //   Learn more
-                  // </Button>
+                  <Button
+                    _textOnly
+                    icon={<SvgActionPlay />}
+                    to="https://www.notion.so/joystream/Creator-Tokens-afb46f9b7f7444979114fc768eddd820?pvs=4#72f30dca6d2b44c9bd2186500eb1558b"
+                  >
+                    Learn more
+                  </Button>
                 }
                 description="Helps to buy and sell tokens by using price curves which automatically set prices and match buyers and sellers."
                 points={MARKET_POINTS}
