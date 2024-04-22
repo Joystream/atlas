@@ -1,6 +1,8 @@
-import { ReactElement, useMemo } from 'react'
+import { ReactElement, useEffect, useMemo, useRef } from 'react'
 import { Column, useFlexLayout, usePagination, useTable } from 'react-table'
+import useDraggableScroll from 'use-draggable-scroll'
 
+import { TablePagination, TablePaginationProps } from '@/components/TablePagination'
 import { Text } from '@/components/Text'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
@@ -9,8 +11,8 @@ import {
   EmptyTableDescription,
   EmptyTableHeader,
   PageWrapper,
-  StyledPagination,
   TableBase,
+  TableWrapper,
   Td,
   Th,
   Thead,
@@ -19,6 +21,7 @@ import {
 
 export type TableProps<T = object> = {
   columns: Column[]
+  onRowClick?: (rowIdx: number) => void
   data: T[]
   title?: string
   pageSize?: number
@@ -29,26 +32,36 @@ export type TableProps<T = object> = {
     icon: ReactElement
   }
   className?: string
+  pagination?: TablePaginationProps
+  minWidth?: number
 }
 
 export const Table = <T extends object>({
   columns,
   data,
   title,
-  pageSize = 20,
+  pageSize = 10,
   emptyState,
   doubleColumn,
+  onRowClick,
   className,
+  pagination,
+  minWidth = 300,
 }: TableProps<T>) => {
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const { onMouseDown } = useDraggableScroll(scrollRef, { direction: 'horizontal' })
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
     page: rawPage,
+    setPageSize,
     prepareRow,
-    gotoPage,
-    state: { pageIndex },
   } = useTable({ columns, data, initialState: { pageSize } }, usePagination, useFlexLayout)
+
+  useEffect(() => {
+    setPageSize(pageSize)
+  }, [pageSize, setPageSize])
 
   const page = useMemo(() => {
     if (doubleColumn) {
@@ -72,49 +85,57 @@ export const Table = <T extends object>({
         </Text>
       )}
       {data.length ? (
-        <PageWrapper>
-          {page.map((subpage, idx) => (
-            <TableBase className="table-base" {...getTableProps()} key={`table-slice-${idx}`}>
-              <Thead className="table-header">
-                {headerGroups.map((headerGroup) => (
-                  <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.getHeaderGroupProps().key}>
-                    {headerGroup.headers.map((column) => (
-                      <Th
-                        variant="h100"
-                        as="th"
-                        color="colorText"
-                        {...column.getHeaderProps({ style: { width: column.width } })}
-                        key={column.getHeaderProps().key}
-                      >
-                        {column.render('Header')}
-                      </Th>
-                    ))}
-                  </tr>
-                ))}
-              </Thead>
-              <tbody {...getTableBodyProps()}>
-                {subpage.map((row) => {
-                  prepareRow(row)
-                  return (
-                    <tr className="table-row" {...row.getRowProps()} key={row.getRowProps().key}>
-                      {row.cells.map((cell) => (
-                        <Td
-                          variant="t100"
-                          as="td"
-                          {...cell.getCellProps()}
-                          key={cell.getCellProps().key}
-                          className="table-cell"
+        <TableWrapper ref={scrollRef} onMouseDown={onMouseDown}>
+          <PageWrapper minWidth={minWidth}>
+            {page.map((subpage, idx) => (
+              <TableBase className="table-base" {...getTableProps()} key={`table-slice-${idx}`}>
+                <Thead className="table-header">
+                  {headerGroups.map((headerGroup) => (
+                    <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.getHeaderGroupProps().key}>
+                      {headerGroup.headers.map((column) => (
+                        <Th
+                          variant="h100"
+                          as="th"
+                          color="colorText"
+                          {...column.getHeaderProps({ style: { width: column.width } })}
+                          key={column.getHeaderProps().key}
                         >
-                          {cell.render('Cell')}
-                        </Td>
+                          {column.render('Header')}
+                        </Th>
                       ))}
                     </tr>
-                  )
-                })}
-              </tbody>
-            </TableBase>
-          ))}
-        </PageWrapper>
+                  ))}
+                </Thead>
+                <tbody {...getTableBodyProps()}>
+                  {subpage.map((row, idx) => {
+                    prepareRow(row)
+                    return (
+                      <tr
+                        className="table-row"
+                        {...row.getRowProps()}
+                        onClick={() => onRowClick?.(idx)}
+                        key={row.getRowProps().key}
+                      >
+                        {row.cells.map((cell) => (
+                          <Td
+                            variant="t100"
+                            as="td"
+                            {...cell.getCellProps()}
+                            key={cell.getCellProps().key}
+                            className="table-cell"
+                          >
+                            {cell.render('Cell')}
+                          </Td>
+                        ))}
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </TableBase>
+            ))}
+          </PageWrapper>
+          {pagination && <TablePagination {...pagination} />}
+        </TableWrapper>
       ) : emptyState ? (
         <EmptyTableContainer>
           {emptyState.icon}
@@ -126,10 +147,6 @@ export const Table = <T extends object>({
           </EmptyTableDescription>
         </EmptyTableContainer>
       ) : null}
-
-      {data.length > pageSize && (
-        <StyledPagination onChangePage={gotoPage} page={pageIndex} itemsPerPage={pageSize} totalCount={data.length} />
-      )}
     </Wrapper>
   )
 }

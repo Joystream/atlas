@@ -28,6 +28,7 @@ export type GetMembershipsQuery = {
       followsNum: number
       rewardAccount: string
       channelStateBloatBond: string
+      cumulativeRevenue: string
       coverPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -64,6 +65,7 @@ export type GetMembershipsQuery = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
       } | null
+      creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
     }>
     metadata?: {
       __typename?: 'MemberMetadata'

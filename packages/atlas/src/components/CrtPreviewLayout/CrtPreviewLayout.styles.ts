@@ -10,7 +10,7 @@ export const Wrapper = styled(LimitedWidthContainer)`
   margin-top: ${sizes(8)};
 
   ${media.md} {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 2fr 1fr;
     column-gap: ${sizes(6)};
   }
 `
@@ -22,7 +22,6 @@ export const HeaderContainer = styled.div`
 
   svg {
     cursor: pointer;
-    margin-right: ${sizes(4)};
   }
 
   ${media.md} {
@@ -48,6 +47,8 @@ export const FirstColumn = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${sizes(12)};
+  min-width: 0;
+  overflow-x: hidden;
 
   ${media.md} {
     gap: ${sizes(16)};

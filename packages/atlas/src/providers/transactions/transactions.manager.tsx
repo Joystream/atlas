@@ -1,6 +1,7 @@
 import { FC, useEffect, useRef, useState } from 'react'
 
 import { useQueryNodeStateSubscription } from '@/api/hooks/queryNode'
+import { ChangeNowModal } from '@/components/ChangeNowModal/ChangeNowModal'
 import { TransactionModal } from '@/components/_overlays/TransactionModal'
 import { ExtrinsicStatus } from '@/joystream-lib/types'
 import { useSnackbar } from '@/providers/snackbars'
@@ -13,7 +14,8 @@ import { useTransactionManagerStore } from './transactions.store'
 export const TransactionsManager: FC = () => {
   const {
     transactions,
-    actions: { removeOldBlockActions, removeTransaction },
+    changeNowModal,
+    actions: { removeOldBlockActions, removeTransaction, setChangeNowModal },
   } = useTransactionManagerStore((state) => state)
 
   const userWalletName = useWalletStore((state) => state.wallet?.title)
@@ -100,6 +102,7 @@ export const TransactionsManager: FC = () => {
           errorCode={firstNonMinimizedTransaction.errorCode}
         />
       )}
+      {changeNowModal ? <ChangeNowModal type={changeNowModal} onClose={() => setChangeNowModal(null)} /> : null}
     </>
   )
 }

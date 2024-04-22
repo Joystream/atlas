@@ -21,7 +21,6 @@ import { useSearchStore } from '@/providers/search'
 import { useUser } from '@/providers/user/user.hooks'
 import { media, transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
-import { CuratorHomepage } from '@/views/viewer/CuratorHomepage'
 
 const YppLandingView = lazy(() =>
   import('@/views/global/YppLandingView').then((module) => ({ default: module.YppLandingView }))
@@ -41,7 +40,9 @@ const MembershipSettingsView = lazy(() =>
 const NotFoundView = lazy(() => import('./NotFoundView').then((module) => ({ default: module.NotFoundView })))
 const SearchView = lazy(() => import('./SearchView').then((module) => ({ default: module.SearchView })))
 const CuratorView = lazy(() => import('./CuratorView').then((module) => ({ default: module.CuratorView })))
+const CuratorHomepage = lazy(() => import('./CuratorHomepage').then((module) => ({ default: module.CuratorHomepage })))
 const VideoView = lazy(() => import('./VideoView').then((module) => ({ default: module.VideoView })))
+const PortfolioView = lazy(() => import('./PortfolioView').then((module) => ({ default: module.PortfolioView })))
 const ReferralsView = lazy(() =>
   import('@/views/global/ReferralsView').then((module) => ({ default: module.ReferralsView }))
 )
@@ -78,6 +79,7 @@ const locationToPageName = {
   '/member/': 'Member',
   '/notifications': 'Notifications',
   '/marketplace': 'Marketplace',
+  '/portfolio': 'Portfolio',
   '/ypp': 'YPP landing page',
   '/ypp-dashboard': 'YPP Dashboard',
   '/referrals': 'Referrals Landing page',
@@ -148,6 +150,12 @@ export const ViewerLayout: FC = () => {
                       />
                     }
                   />
+                  <Route
+                    path={absoluteRoutes.viewer.portfolio()}
+                    element={
+                      <PrivateRoute showWhen={isLoggedIn} element={<PortfolioView />} redirectTo={ENTRY_POINT_ROUTE} />
+                    }
+                  />
                   <Route path="*" element={<NotFoundView />} />
                 </Routes>
               </Suspense>
@@ -210,11 +218,12 @@ const MiscUtils = () => {
       if (['Channel', 'Category', 'Video'].some((page) => pageName?.includes(page))) {
         return
       }
-      const [query, referrerChannel, utmSource, utmCampaign, gState, gCode] = [
+      const [query, referrerChannel, utmSource, utmCampaign, utmContent, gState, gCode] = [
         searchParams.get('query'),
         searchParams.get('referrerId'),
         searchParams.get('utm_source'),
         searchParams.get('utm_campaign'),
+        searchParams.get('utm_content'),
         searchParams.get('state'),
         searchParams.get('code'),
       ]
@@ -226,13 +235,10 @@ const MiscUtils = () => {
       const trackRequestTimeout = setTimeout(
         () =>
           trackPageView(pageName || 'Unknown page', {
-            ...(location.pathname === absoluteRoutes.viewer.ypp()
-              ? {
-                  referrerChannel: referrerChannel || undefined,
-                  utm_source: utmSource || undefined,
-                  utm_campaign: utmCampaign || undefined,
-                }
-              : {}),
+            referrerChannel: referrerChannel || undefined,
+            utm_source: utmSource || undefined,
+            utm_campaign: utmCampaign || undefined,
+            utm_content: utmContent || undefined,
             ...(location.pathname === absoluteRoutes.viewer.search() ? { searchQuery: query } : {}),
           }),
         1000

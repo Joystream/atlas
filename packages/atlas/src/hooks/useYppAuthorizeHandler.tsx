@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useQuery } from 'react-query'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import { axiosInstance } from '@/api/axios'
 import { atlasConfig } from '@/config'
@@ -15,7 +15,6 @@ export const SINGUP_DAILY_QUOTA = 500 // 2% of the total daily quota
 
 export const useYppAuthorizeHandler = () => {
   const { displaySnackbar } = useSnackbar()
-  const [searchParams] = useSearchParams()
 
   const navigate = useNavigate()
   const { trackYppSignInButtonClick } = useSegmentAnalytics()
@@ -28,11 +27,6 @@ export const useYppAuthorizeHandler = () => {
       .catch((e) => SentryLogger.error('Quota fetch failed', 'YppLandingView', e))
   )
   const isTodaysQuotaReached = data ? data.signupQuotaUsed > SINGUP_DAILY_QUOTA : false
-  const [referrer, utmSource, utmCampaign] = [
-    searchParams.get('referrerId'),
-    searchParams.get('utm_source'),
-    searchParams.get('utm_campaign'),
-  ]
   const { currentChannel } = useGetYppSyncedChannels()
 
   const isYppSigned = !!currentChannel
@@ -54,7 +48,7 @@ export const useYppAuthorizeHandler = () => {
     }
 
     if (!yppModalOpenName) {
-      trackYppSignInButtonClick(referrer, utmSource, utmCampaign)
+      trackYppSignInButtonClick()
       setYppModalOpen('ypp-requirements')
       return true
     }
@@ -65,9 +59,6 @@ export const useYppAuthorizeHandler = () => {
     displaySnackbar,
     navigate,
     trackYppSignInButtonClick,
-    referrer,
-    utmSource,
-    utmCampaign,
     setYppModalOpen,
   ])
 }

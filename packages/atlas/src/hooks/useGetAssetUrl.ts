@@ -101,7 +101,7 @@ export const getSingleAssetUrl = async (
 
 export const useGetAssetUrl = (urls: string[] | undefined | null, type: AssetType | null, opts?: AssetTestOptions) => {
   const [url, setUrl] = useState<string | undefined>(undefined)
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const assetPromise = useRef<Promise<string | undefined> | null>(null)
   const { userBenchmarkTime } = useOperatorsContext()
   const id = urls?.[0]?.split('/').pop()
@@ -110,8 +110,9 @@ export const useGetAssetUrl = (urls: string[] | undefined | null, type: AssetTyp
     if (assetPromise.current) {
       return
     }
+    setIsLoading(true)
 
-    if (!urls) {
+    if (!urls || !urls.length) {
       setUrl(undefined)
       setIsLoading(false)
       return

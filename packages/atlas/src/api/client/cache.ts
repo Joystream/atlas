@@ -9,6 +9,7 @@ import {
   QueryChannelsConnectionArgs,
   QueryCommentsConnectionArgs,
   QueryOwnedNftsConnectionArgs,
+  QueryTokenAccountsArgs,
   QueryVideosConnectionArgs,
   VideosConnection,
 } from '../queries/__generated__/baseTypes.generated'
@@ -41,6 +42,7 @@ const getVideoKeyArgs = (
   const durationLte = args?.where?.duration_gte || ''
   const titleContains = args?.where?.title_contains || ''
   const titleContainsInsensitive = args?.where?.title_containsInsensitive || ''
+  const OR = stringifyValue(args?.where?.OR)
 
   const sortingArray = args?.orderBy != null ? (Array.isArray(args.orderBy) ? args.orderBy : [args.orderBy]) : []
   const sorting = stringifyValue(sortingArray)
@@ -50,7 +52,7 @@ const getVideoKeyArgs = (
     return `${createdAtGte}:${channel}`
   }
 
-  return `${onlyCount}:${channel}:${category}:${nft}:${language}:${createdAtGte}:${createdAtLte}:${isPublic}:${idEq}:${idIn}:${sorting}:${durationGte}:${durationLte}:${titleContains}:${titleContainsInsensitive}:${offset}:${createdAtGt}:${createdAtLt}`
+  return `${onlyCount}:${channel}:${category}:${nft}:${language}:${createdAtGte}:${createdAtLte}:${isPublic}:${idEq}:${idIn}:${sorting}:${durationGte}:${durationLte}:${titleContains}:${titleContainsInsensitive}:${offset}:${createdAtGt}:${createdAtLt}:${OR}`
 }
 
 const getNftKeyArgs = (
@@ -76,6 +78,24 @@ const getNftKeyArgs = (
   const video = stringifyValue(args?.where?.video)
 
   return `${OR}:${AND}:${ownerMember}:${creatorChannel}:${status}:${auctionStatus}:${sorting}:${createdAtGte}:${createdAtLte}:${video}:${offset}:${lastSalePriceGte}:${lastSalePriceLte}`
+}
+
+const getTokenAccountsKeyArgs = (
+  args: Partial<QueryTokenAccountsArgs> | null,
+  ctx: {
+    variables?: Record<string, unknown>
+    fieldName: string
+  }
+) => {
+  const offset = ctx?.variables?.offset ?? ''
+  const limit = ctx?.variables?.limit ?? ''
+  const OR = stringifyValue(args?.where?.OR)
+  const AND = stringifyValue(args?.where?.AND)
+  const sortingArray = args?.orderBy != null ? (Array.isArray(args.orderBy) ? args.orderBy : [args.orderBy]) : []
+  const sorting = stringifyValue(sortingArray)
+  const where = stringifyValue(args?.where ?? {})
+
+  return `${OR}:${AND}:${sorting}:${offset}:${where}:${limit}`
 }
 
 const getChannelKeyArgs = (args: Partial<QueryChannelsConnectionArgs> | null) => {
@@ -220,6 +240,44 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
       existing ||
       toReference({
         __typename: 'OwnedNft',
+        id: args?.id,
+      })
+    )
+  },
+  tokenAccounts: {
+    ...offsetLimitPagination(getTokenAccountsKeyArgs),
+    read(existing, { args, toReference, canRead }) {
+      if (args?.where?.id_eq) {
+        const holderRef = toReference({
+          __typename: 'TokenAccount',
+          id: args?.where.id_eq,
+        })
+        if (canRead(holderRef)) {
+          return [holderRef]
+        } else {
+          return undefined
+        }
+      }
+      const offset = args?.offset ?? 0
+      const limit = args?.limit ?? existing?.length
+      return existing?.slice(offset, offset + limit)
+    },
+  },
+  getAccountTransferrableBalance: (existing, { toReference, args }) => {
+    return (
+      existing ||
+      toReference({
+        __typename: 'GetAccountTransferrableBalanceResult',
+        memberId: args?.memberId,
+        tokenId: args?.tokenId,
+      })
+    )
+  },
+  creatorTokenById: (existing, { toReference, args }) => {
+    return (
+      existing ||
+      toReference({
+        __typename: 'CreatorToken',
         id: args?.id,
       })
     )

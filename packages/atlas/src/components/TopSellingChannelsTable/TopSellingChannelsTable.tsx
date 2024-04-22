@@ -1,6 +1,5 @@
 import BN from 'bn.js'
-import { useMemo, useRef, useState } from 'react'
-import useDraggableScroll from 'use-draggable-scroll'
+import { useMemo, useState } from 'react'
 
 import {
   GetTopSellingChannelsFromThreePeriodsQuery,
@@ -22,7 +21,6 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import {
   JoyAmountWrapper,
   NftSoldText,
-  ScrollWrapper,
   SenderItemIconsWrapper,
   SkeletonChannelContainer,
   StyledLink,
@@ -66,17 +64,17 @@ type TopSellingChannelsQueryPropKey = Exclude<keyof GetTopSellingChannelsFromThr
 
 const MIN_TOP_SELLING_ITEMS = 4
 
-export const TopSellingChannelsTable = () => {
+export const TopSellingChannelsTable = ({ withCrtOnly }: { withCrtOnly?: boolean }) => {
   const [sort, setSort] = useState<TopSellingChannelsQueryPropKey>('topAllTimeSellingChannels')
 
   const { data, loading } = useGetTopSellingChannelsFromThreePeriodsQuery({
     variables: {
       limit: 10,
+      where: {
+        ...(withCrtOnly ? { channel: { creatorToken_isNull: false } } : {}),
+      },
     },
   })
-
-  const ref = useRef<HTMLDivElement>(null)
-  const { onMouseDown } = useDraggableScroll(ref, { direction: 'horizontal' })
 
   const lgMatch = useMediaMatch('lg')
   const mappedData: TableProps['data'] = useMemo(() => {
@@ -160,7 +158,7 @@ export const TopSellingChannelsTable = () => {
       headerProps={{
         start: {
           type: 'title',
-          title: 'Top selling channels',
+          title: `Top selling channels ${withCrtOnly ? 'with a token' : ''}`,
         },
         ...(sortingOptions.length > 1
           ? {
@@ -184,9 +182,14 @@ export const TopSellingChannelsTable = () => {
           },
         },
         children: [
-          <ScrollWrapper key="single" ref={ref} onMouseDown={onMouseDown}>
-            <StyledTable emptyState={tableEmptyState} columns={COLUMNS} data={mappedData} doubleColumn={lgMatch} />
-          </ScrollWrapper>,
+          <StyledTable
+            key="single"
+            minWidth={withCrtOnly ? 400 : 528}
+            emptyState={tableEmptyState}
+            columns={withCrtOnly ? COLUMNS.filter((col) => col.accessor !== 'nftsSold') : COLUMNS}
+            data={mappedData}
+            doubleColumn={lgMatch}
+          />,
         ],
       }}
     />
@@ -194,8 +197,7 @@ export const TopSellingChannelsTable = () => {
 }
 
 const Channel = ({ channel }: { channel: BasicChannelFieldsFragment }) => {
-  // todo to be implemented
-  const creatorToken = false
+  const hasCreatorToken = !!channel.creatorToken?.token.id
   // todo to be implemented
   const verified = false
   return (
@@ -206,7 +208,7 @@ const Channel = ({ channel }: { channel: BasicChannelFieldsFragment }) => {
         isInteractive={false}
         nodeEnd={
           <SenderItemIconsWrapper>
-            {creatorToken && (
+            {hasCreatorToken && (
               <span title="Creator token">
                 <SvgActionCreatorToken />
               </span>

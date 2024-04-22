@@ -23,17 +23,30 @@ export const Header = styled.header`
   ${media.md} {
     display: grid;
     grid-template-rows: auto;
-    grid-template-columns: 1fr minmax(480px, 1fr) 1fr;
+    grid-template-columns: auto 1fr minmax(480px, 1fr) 1fr;
     padding: ${sizes(4)} ${sizes(8)} ${sizes(4)} calc(var(--size-sidenav-width-collapsed) + ${sizes(8)});
   }
 `
 
 export const LogoLink = styled(Link)`
   display: flex;
+  gap: ${sizes(2)};
+  width: fit-content;
   align-items: center;
   text-decoration: none;
 
   /* increase the clickable area */
   padding: 16px;
   margin: -16px;
+  margin-right: ${sizes(-2)};
+
+  h4 {
+    white-space: nowrap;
+  }
+`
+
+export const LogoDivider = styled.div`
+  background-color: ${cVar('colorBackgroundStrongAlpha')};
+  width: 1px;
+  height: 24px;
 `

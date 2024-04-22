@@ -6,7 +6,7 @@ import { CarouselProps } from '@/components/Carousel'
 import { RankingNumberTile } from '@/components/RankingNumberTile'
 import { Section } from '@/components/Section/Section'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
-import { publicChannelFilter, publicCryptoVideoFilter } from '@/config/contentFilter'
+import { getPublicCryptoVideoFilter, publicChannelFilter } from '@/config/contentFilter'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { breakpoints } from '@/styles'
 import { createPlaceholderData } from '@/utils/data'
@@ -51,10 +51,7 @@ export const TopTenVideos: FC<TopTenVideosProps> = ({ period }) => {
       orderBy: VideoOrderByInput.ViewsNumDesc,
       limit: 10,
       periodDays: period === 'week' ? 7 : 30,
-      where: {
-        ...publicCryptoVideoFilter,
-        channel: publicChannelFilter,
-      },
+      where: getPublicCryptoVideoFilter({ channel: publicChannelFilter }),
     },
     { onError: (error) => SentryLogger.error('Failed to fetch most viewed videos', 'TopTenVideos', error) }
   )

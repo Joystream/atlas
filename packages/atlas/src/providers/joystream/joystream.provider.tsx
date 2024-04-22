@@ -8,6 +8,7 @@ import { NODE_URL } from '@/config/env'
 import { HAPI_TO_JOY_RATE } from '@/joystream-lib/config'
 import { JoystreamLib } from '@/joystream-lib/lib'
 import { useEnvironmentStore } from '@/providers/environment/store'
+import { useJoystreamStore } from '@/providers/joystream/joystream.store'
 import { useWalletStore } from '@/providers/wallet/wallet.store'
 import { SentryLogger } from '@/utils/logs'
 
@@ -114,7 +115,8 @@ export const JoystreamProvider: FC<PropsWithChildren> = ({ children }) => {
 }
 
 const useJoystreamUtilFns = () => {
-  const [tokenPrice, setTokenPrice] = useState<undefined>()
+  const [tokenPrice, setTokenPrice] = useState<number | undefined>()
+  const { setSessionTokenPrice } = useJoystreamStore((state) => state.actions)
 
   // fetch token price from the status server
   useEffect(() => {
@@ -126,12 +128,13 @@ const useJoystreamUtilFns = () => {
         const data = await fetch(atlasConfig.joystream.tokenPriceFeedUrl)
         const json = await data.json()
         setTokenPrice(json.price)
+        setSessionTokenPrice(json.price)
       } catch (e) {
         SentryLogger.error(`Failed to fetch ${atlasConfig.joystream.tokenTicker} price`, e)
       }
     }
     getPrice()
-  }, [])
+  }, [setSessionTokenPrice])
 
   return {
     tokenPrice,

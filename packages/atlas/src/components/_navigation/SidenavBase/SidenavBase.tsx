@@ -6,7 +6,9 @@ import { Text } from '@/components/Text'
 import { NavItem, NavItemType } from '@/components/_navigation/NavItem'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
+import { useIsLandscape } from '@/hooks/useIsLandscape'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useBottomNavStore } from '@/providers/bottomNav'
 import { useMiscStore } from '@/providers/misc/store'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { transitions } from '@/styles'
@@ -50,8 +52,10 @@ const SidenavBase: FC<SidenavProps> = ({
   toggleSideNav,
   className,
 }) => {
+  const isLandscape = useIsLandscape()
   const scrollContainer = createRef<HTMLDivElement>()
   const setAdminModalOpen = useMiscStore((store) => store.actions.setAdminModalOpen)
+  const { setOpen } = useBottomNavStore((state) => ({ open: state.open, setOpen: state.actions.setOpen }))
   const { pathname } = useLocation()
   const mdMatch = useMediaMatch('md')
 
@@ -67,6 +71,12 @@ const SidenavBase: FC<SidenavProps> = ({
       decrementOverlaysOpenCount()
     }
   }, [decrementOverlaysOpenCount, expanded, incrementOverlaysOpenCount])
+
+  useEffect(() => {
+    if (expanded) {
+      setOpen(false)
+    }
+  }, [expanded, setOpen])
 
   return (
     <>
@@ -103,59 +113,61 @@ const SidenavBase: FC<SidenavProps> = ({
           </SidebarNavList>
           <div>{additionalContent}</div>
         </ScrollContainer>
-        <CSSTransition
-          in={expanded}
-          unmountOnExit
-          timeout={parseInt(transitions.timings.loading)}
-          classNames={transitions.names.fade}
-        >
-          <SidebarNavFooter>
-            <ButtonGroup>{buttonsContent}</ButtonGroup>
-            <LinksWrapper>
-              <LinksRow>
-                <LegalLink to={absoluteRoutes.legal.termsOfService()} target="_blank">
+        {!isLandscape ? (
+          <CSSTransition
+            in={expanded}
+            unmountOnExit
+            timeout={parseInt(transitions.timings.loading)}
+            classNames={transitions.names.fade}
+          >
+            <SidebarNavFooter>
+              <ButtonGroup>{buttonsContent}</ButtonGroup>
+              <LinksWrapper>
+                <LinksRow>
+                  <LegalLink to={absoluteRoutes.legal.termsOfService()} target="_blank">
+                    <Text as="span" variant="t100" color="inherit">
+                      Terms of Service
+                    </Text>
+                  </LegalLink>
                   <Text as="span" variant="t100" color="inherit">
-                    Terms of Service
+                    •
                   </Text>
-                </LegalLink>
-                <Text as="span" variant="t100" color="inherit">
-                  •
-                </Text>
-                <LegalLink to={absoluteRoutes.legal.copyright()} target="_blank">
+                  <LegalLink to={absoluteRoutes.legal.copyright()} target="_blank">
+                    <Text as="span" variant="t100" color="inherit">
+                      Copyright Policy
+                    </Text>
+                  </LegalLink>
+                </LinksRow>
+                <LinksRow>
+                  <LegalLink to={absoluteRoutes.legal.privacyPolicy()} target="_blank">
+                    <Text as="span" variant="t100" color="inherit">
+                      Privacy Policy
+                    </Text>
+                  </LegalLink>
+                </LinksRow>
+                <LinksRow>
+                  <StyledAnchor href={atlasConfig.general.joystreamLandingPageUrl} target="_blank">
+                    <Text as="span" variant="t100" color="inherit">
+                      Powered by
+                    </Text>
+                    <StyledSvgJoystreamLogoFull />
+                  </StyledAnchor>
                   <Text as="span" variant="t100" color="inherit">
-                    Copyright Policy
+                    •
                   </Text>
-                </LegalLink>
-              </LinksRow>
-              <LinksRow>
-                <LegalLink to={absoluteRoutes.legal.privacyPolicy()} target="_blank">
+                  <StyledAnchor href={atlasConfig.general.appGithubUrl} target="_blank">
+                    <StyledGhLogo />
+                  </StyledAnchor>
                   <Text as="span" variant="t100" color="inherit">
-                    Privacy Policy
+                    •
                   </Text>
-                </LegalLink>
-              </LinksRow>
-              <LinksRow>
-                <StyledAnchor href={atlasConfig.general.joystreamLandingPageUrl} target="_blank">
-                  <Text as="span" variant="t100" color="inherit">
-                    Powered by
-                  </Text>
-                  <StyledSvgJoystreamLogoFull />
-                </StyledAnchor>
-                <Text as="span" variant="t100" color="inherit">
-                  •
-                </Text>
-                <StyledAnchor href={atlasConfig.general.appGithubUrl} target="_blank">
-                  <StyledGhLogo />
-                </StyledAnchor>
-                <Text as="span" variant="t100" color="inherit">
-                  •
-                </Text>
-                <StyledTextButton onClick={() => setAdminModalOpen(true)}>Admin Panel</StyledTextButton>
-                <StyledAnchor />
-              </LinksRow>
-            </LinksWrapper>
-          </SidebarNavFooter>
-        </CSSTransition>
+                  <StyledTextButton onClick={() => setAdminModalOpen(true)}>Admin Panel</StyledTextButton>
+                  <StyledAnchor />
+                </LinksRow>
+              </LinksWrapper>
+            </SidebarNavFooter>
+          </CSSTransition>
+        ) : null}
       </SidebarNav>
       {pathname !== absoluteRoutes.viewer.ypp() || mdMatch ? (
         <StyledHamburgerButton active={expanded} onClick={() => scrollAndToggle(!expanded)} />

@@ -1,8 +1,33 @@
 import styled from '@emotion/styled'
 import { LineSvgProps, Point, ResponsiveLine } from '@nivo/line'
+import { ReactNode } from 'react'
 
-import { Text } from '@/components/Text'
 import { cVar, sizes } from '@/styles'
+
+export const defaultChartTheme = {
+  tooltip: {
+    container: {
+      background: cVar('colorBackgroundStrong'),
+    },
+  },
+
+  axis: {
+    ticks: {
+      line: {
+        stroke: cVar('colorBackgroundAlpha'),
+      },
+      text: {
+        fill: cVar('colorTextMuted'),
+        font: cVar('typographyDesktopT100'),
+      },
+    },
+  },
+  grid: {
+    line: {
+      stroke: cVar('colorBackgroundAlpha'),
+    },
+  },
+}
 
 const defaultJoystreamProps: Omit<LineSvgProps, 'data'> = {
   isInteractive: true,
@@ -29,32 +54,10 @@ const defaultJoystreamProps: Omit<LineSvgProps, 'data'> = {
     tickValues: 6,
   },
   colors: (d) => d.color,
-  theme: {
-    tooltip: {
-      container: {
-        background: cVar('colorBackgroundStrong'),
-      },
-    },
-    axis: {
-      ticks: {
-        line: {
-          stroke: cVar('colorBackgroundAlpha'),
-        },
-        text: {
-          fill: cVar('colorTextMuted'),
-          font: cVar('typographyDesktopT100'),
-        },
-      },
-    },
-    grid: {
-      line: {
-        stroke: cVar('colorBackgroundAlpha'),
-      },
-    },
-  },
+  theme: defaultChartTheme,
 }
 export type LineChartProps = {
-  tooltip?: (point: Point) => string
+  tooltip?: (point: Point) => ReactNode
 } & Omit<LineSvgProps, 'tooltip'>
 export const LineChart = (props: LineChartProps) => {
   return (
@@ -62,11 +65,7 @@ export const LineChart = (props: LineChartProps) => {
       {...defaultJoystreamProps}
       {...props}
       tooltip={(point) => (
-        <ChartTooltip>
-          <Text variant="t100" as="p" color="colorTextStrong">
-            {props.tooltip ? props.tooltip(point.point) : String(point.point.data.y)}
-          </Text>
-        </ChartTooltip>
+        <ChartTooltip>{props.tooltip ? props.tooltip(point.point) : String(point.point.data.y)}</ChartTooltip>
       )}
     />
   )
@@ -75,4 +74,5 @@ export const LineChart = (props: LineChartProps) => {
 const ChartTooltip = styled.div`
   background-color: ${cVar('colorBackgroundStrong')};
   padding: ${sizes(1)} ${sizes(2)};
+  border-radius: ${cVar('radiusSmall')};
 `

@@ -66,6 +66,7 @@ const Template: StoryFn<any> = (args) => {
     memberHandle: args.memberHandle,
     videoId: 'video',
     videoTitle: args.videoTitle,
+    refetchAction: undefined,
   }
 
   const member = { metadata: { avatar: { __typename: 'AvatarUri', avatarUri: args.memberAvatarUrl } } } as Membership
@@ -80,6 +81,7 @@ const Template: StoryFn<any> = (args) => {
     memberId: '0',
     accountId: '0',
     channelId: '0',
+    memberChannels: [],
   }
 
   const mocks = [

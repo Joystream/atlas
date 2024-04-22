@@ -17,6 +17,7 @@ export type BottomDrawerProps = PropsWithChildren<{
   pageTitle?: string
   actionBar?: ActionBarProps
   fixedScrollbar?: boolean
+  className?: string
 }>
 
 export const BottomDrawer: FC<BottomDrawerProps> = ({
@@ -28,6 +29,7 @@ export const BottomDrawer: FC<BottomDrawerProps> = ({
   children,
   actionBar,
   fixedScrollbar,
+  className,
 }) => {
   const headTags = useHeadTags(pageTitle || title)
 
@@ -85,7 +87,7 @@ export const BottomDrawer: FC<BottomDrawerProps> = ({
         timeout={parseInt(cVar('animationTimingSlow', true))}
         classNames="bottom-drawer"
       >
-        <Container role="dialog">
+        <Container role="dialog" className={className}>
           <DrawerHeader title={title} label={titleLabel} onCloseClick={onClose} />
           <Outer>
             <Inner fixedScrollbar={fixedScrollbar} data-scroll-lock-scrollable>

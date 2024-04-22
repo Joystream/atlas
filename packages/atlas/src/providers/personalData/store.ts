@@ -18,6 +18,7 @@ export type PersonalDataStoreState = {
   captionsEnabled: boolean
   captionsLanguage: string | null
   allowMinimizedPleyer: boolean
+  lastUsedChannelId: string | null
 }
 
 const WHITELIST: (keyof PersonalDataStoreState)[] = [
@@ -33,6 +34,7 @@ const WHITELIST: (keyof PersonalDataStoreState)[] = [
   'autoPlayNext',
   'captionsEnabled',
   'captionsLanguage',
+  'lastUsedChannelId',
 ]
 
 export type PersonalDataStoreActions = {
@@ -50,7 +52,7 @@ export type PersonalDataStoreActions = {
   setCaptionsEnabled: (captionsEnabled: boolean) => void
   setMinimizedPlayerAllowed: (allowed: boolean) => void
   setCaptionsLanguage: (captionsLanguage: string | null) => void
-
+  setLastUsedChannelId: (channelId: string | null) => void
   getIsCookiesPopoverVisible: () => boolean
 }
 
@@ -68,12 +70,18 @@ const initialState: PersonalDataStoreState = {
   captionsEnabled: false,
   captionsLanguage: null,
   allowMinimizedPleyer: true,
+  lastUsedChannelId: null,
 }
 
 export const usePersonalDataStore = createStore<PersonalDataStoreState, PersonalDataStoreActions>(
   {
     state: initialState,
     actionsFactory: (set, get) => ({
+      setLastUsedChannelId: (channelId) => {
+        set((state) => {
+          state.lastUsedChannelId = channelId
+        })
+      },
       updateWatchedVideos: (__typename, id, timestamp) => {
         set((state) => {
           const currentVideo = state.watchedVideos.find((v) => v.id === id)

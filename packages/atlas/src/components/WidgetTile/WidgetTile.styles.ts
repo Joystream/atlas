@@ -19,31 +19,34 @@ export const Wrapper = styled.div`
     padding: ${sizes(6)};
   }
 `
-export const Content = styled.div`
+export const Content = styled.div<{ withButton?: boolean }>`
   display: grid;
   align-self: flex-end;
   gap: ${sizes(4)};
+  height: 100%;
   padding-right: ${sizes(2)};
 
   ${media.md} {
     gap: ${sizes(6)};
-    grid-template-columns: 1fr auto;
     align-items: center;
+    ${(props) => (props.withButton ? 'grid-template-columns: 1fr auto;' : '')}
   }
+
   ${media.lg} {
     gap: 0;
   }
 `
 
-export const Title = styled.div<{ hasTooltip: boolean }>`
-  grid-template-columns: 1fr auto;
-  gap: ${({ hasTooltip }) => (hasTooltip ? sizes(2) : 'unset')};
-  margin-bottom: ${({ hasTooltip }) => sizes(hasTooltip ? 0 : 2)};
-  margin-top: ${({ hasTooltip }) => (hasTooltip ? sizes(-2) : 'unset')};
+export const Title = styled.div<{ hasTooltip: boolean; marginBottom?: number }>`
   ${commonGridStyles};
 
+  grid-template-columns: 1fr auto;
+  gap: ${({ hasTooltip }) => (hasTooltip ? sizes(2) : 'unset')};
+  margin-bottom: ${({ hasTooltip, marginBottom }) => sizes(marginBottom ? marginBottom : hasTooltip ? 0 : 2)}!important;
+  margin-top: ${({ hasTooltip }) => (hasTooltip ? sizes(-2) : 'unset')};
+
   ${media.md} {
-    margin-bottom: ${({ hasTooltip }) => sizes(hasTooltip ? 2 : 4)};
+    margin-bottom: ${({ marginBottom, hasTooltip }) => sizes(marginBottom ? marginBottom : hasTooltip ? 2 : 4)};
   }
 `
 

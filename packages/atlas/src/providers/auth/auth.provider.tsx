@@ -261,19 +261,34 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const isWalletUser = useMemo(() => encodedSeed === null && !!currentUser, [currentUser, encodedSeed])
 
+  const refetchCurrentUser = useCallback(async () => {
+    const res = await refetch()
+    setCurrentUser(res.data.accountData)
+    return res
+  }, [refetch])
+
   const contextValue: AuthContextValue = useMemo(
     () => ({
       handleLogin,
       isAuthenticating,
       loggedAddress,
-      refetchCurrentUser: refetch,
+      refetchCurrentUser,
       currentUser,
       isWalletUser,
       handleLogout,
       encodedSeed,
       isLoggedIn: isAuthenticating ? undefined : !!currentUser,
     }),
-    [currentUser, encodedSeed, handleLogin, handleLogout, isAuthenticating, isWalletUser, loggedAddress, refetch]
+    [
+      currentUser,
+      encodedSeed,
+      handleLogin,
+      handleLogout,
+      isAuthenticating,
+      isWalletUser,
+      loggedAddress,
+      refetchCurrentUser,
+    ]
   )
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
@@ -282,7 +297,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 export const useAuthContext = () => {
   const ctx = useContext(AuthContext)
   if (ctx === undefined) {
-    throw new Error('useActiveUserContext must be used within a UserProvider')
+    throw new Error('useActiveUserContext must be used within a AuthProvider')
   }
   return ctx
 }

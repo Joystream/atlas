@@ -1,4 +1,5 @@
 import { useCallback, useRef } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
 import { useSegmentAnalyticsContext } from '@/providers/segmentAnalytics/useSegmentAnalyticsContext'
 import { YppRequirementsErrorCode } from '@/views/global/YppLandingView/YppAuthorizationModal/YppAuthorizationModal.types'
@@ -19,6 +20,7 @@ type PageViewParams = {
   tab?: string
   utm_source?: string
   utm_campaign?: string
+  utm_content?: string
   isYppFlow?: boolean
 } & VideoPageViewParams &
   ChannelPageViewParams
@@ -50,6 +52,7 @@ type YppOptInParams = {
   referrerId?: string
   utmSource?: string
   utmCampaign?: string
+  utmContent?: string
 }
 
 type IdentifyUserParams = {
@@ -64,25 +67,36 @@ type playbackEventType = 'playbackStarted' | 'playbackPaused' | 'playbackResumed
 
 export const useSegmentAnalytics = () => {
   const { analytics } = useSegmentAnalyticsContext()
+  const [searchParams] = useSearchParams()
 
   const playbackEventsQueue = useRef<{ type: playbackEventType; params: videoPlaybackParams }[]>([])
 
+  const getUTMParams = useCallback(() => {
+    const [referrer, utmSource, utmCampaign, utmContent] = [
+      searchParams.get('referrerId'),
+      searchParams.get('utm_source'),
+      searchParams.get('utm_campaign'),
+      searchParams.get('utm_content'),
+    ]
+    return { referrer, utm_source: utmSource, utm_campaign: utmCampaign, utm_content: utmContent }
+  }, [searchParams])
+
   const identifyUser = useCallback(
     (params: IdentifyUserParams) => {
-      analytics.identify(params.email, params)
+      analytics.identify(params.email, { ...params, ...getUTMParams() })
     },
-    [analytics]
+    [analytics, getUTMParams]
   )
 
   const trackPageView = useCallback(
     (name: string, params?: PageViewParams) => {
-      analytics.page(undefined, name, params)
+      analytics.page(undefined, name, { ...params, ...getUTMParams() })
     },
-    [analytics]
+    [analytics, getUTMParams]
   )
 
   const trackYppOptIn = useCallback(
-    ({ handle, email, category, subscribersCount, referrerId, utmSource, utmCampaign }: YppOptInParams) => {
+    ({ handle, email, category, subscribersCount, referrerId, utmSource, utmCampaign, utmContent }: YppOptInParams) => {
       analytics.track('YPP Sign Up Completed', {
         handle,
         email,
@@ -91,6 +105,7 @@ export const useSegmentAnalytics = () => {
         referrerId,
         utm_source: utmSource,
         utm_campaign: utmCampaign,
+        utm_content: utmContent,
       })
     },
     [analytics]
@@ -101,9 +116,10 @@ export const useSegmentAnalytics = () => {
       analytics.track('Membership created', {
         handle,
         email,
+        ...getUTMParams(),
       })
     },
-    [analytics]
+    [analytics, getUTMParams]
   )
 
   const trackChannelCreation = useCallback(
@@ -183,26 +199,17 @@ export const useSegmentAnalytics = () => {
     [analytics]
   )
 
-  const trackClickTopBarSignInButton = useCallback(
-    (utmSource?: string | null, utmCampaign?: string | null) => {
-      analytics.track('Top Nav Sign In Clicked', { utm_source: utmSource, utm_campaign: utmCampaign })
-    },
-    [analytics]
-  )
+  const trackClickTopBarSignInButton = useCallback(() => {
+    analytics.track('Top Nav Sign In Clicked', { ...getUTMParams() })
+  }, [analytics, getUTMParams])
 
-  const trackClickAuthModalSignInButton = useCallback(
-    (utmSource?: string | null, utmCampaign?: string | null) => {
-      analytics.track('YPP Reqs Modal - Sign In Clicked', { utm_source: utmSource, utm_campaign: utmCampaign })
-    },
-    [analytics]
-  )
+  const trackClickAuthModalSignInButton = useCallback(() => {
+    analytics.track('YPP Reqs Modal - Sign In Clicked', { ...getUTMParams() })
+  }, [analytics, getUTMParams])
 
-  const trackClickAuthModalSignUpButton = useCallback(
-    (utmSource?: string | null, utmCampaign?: string | null) => {
-      analytics.track('YPP Reqs Modal - Create Account Clicked', { utm_source: utmSource, utm_campaign: utmCampaign })
-    },
-    [analytics]
-  )
+  const trackClickAuthModalSignUpButton = useCallback(() => {
+    analytics.track('YPP Reqs Modal - Create Account Clicked', { ...getUTMParams() })
+  }, [analytics, getUTMParams])
 
   const trackCommentAdded = useCallback(
     (commentBody: string, videoId: string) => {
@@ -243,20 +250,11 @@ export const useSegmentAnalytics = () => {
     [analytics]
   )
 
-  const trackYppSignInButtonClick = useCallback(
-    (
-      referrer: string | null | undefined,
-      utmSource: string | null | undefined,
-      utmCampaign: string | null | undefined
-    ) => {
-      analytics.track('YPP Landing Sign In w Google Clicked', {
-        referrer,
-        utm_source: utmSource,
-        utm_campaign: utmCampaign,
-      })
-    },
-    [analytics]
-  )
+  const trackYppSignInButtonClick = useCallback(() => {
+    analytics.track('YPP Landing Sign In w Google Clicked', {
+      ...getUTMParams(),
+    })
+  }, [analytics, getUTMParams])
 
   const trackNFTCarouselNext = useCallback(
     (slideId: string, nftId?: string) => {
@@ -355,9 +353,15 @@ export const useSegmentAnalytics = () => {
     (
       errors: YppRequirementsErrorCode[],
       utmSource: string | null | undefined,
-      utmCampaign: string | null | undefined
+      utmCampaign: string | null | undefined,
+      utmContent: string | null | undefined
     ) => {
-      analytics.track('YPP Sign Up Failed - Reqs Not Met', { errors, utmSource, utmCampaign })
+      analytics.track('YPP Sign Up Failed - Reqs Not Met', {
+        errors,
+        utm_source: utmSource,
+        utm_campaign: utmCampaign,
+        utm_content: utmContent,
+      })
     },
     [analytics]
   )
@@ -365,6 +369,152 @@ export const useSegmentAnalytics = () => {
   const trackLogout = useCallback(() => {
     analytics.reset()
   }, [analytics])
+
+  /// CRT events
+
+  const trackTokenMintingStarted = useCallback(
+    (channelId: string) => {
+      analytics.track('Token minting flow started', {
+        channelId,
+      })
+    },
+    [analytics]
+  )
+
+  const trackTokenMintingCompleted = useCallback(
+    (channelId: string, tokenId: string, tokenTicker: string, initSupply: number, safetyOption: string) => {
+      analytics.track('Token minting completed', {
+        channelId,
+        tokenId,
+        tokenTicker,
+        initSupply,
+        safetyOption,
+      })
+    },
+    [analytics]
+  )
+
+  const trackAMMStarted = useCallback(
+    (tokenId: string, tokenTicker: string, channelId: string) => {
+      analytics.track('Token Market Opened', {
+        tokenId,
+        tokenTicker,
+        channelId,
+      })
+    },
+    [analytics]
+  )
+
+  const trackAMMClosed = useCallback(
+    (tokenId: string, tokenTicker: string, channelId: string) => {
+      analytics.track('Token Market Closed', {
+        tokenId,
+        tokenTicker,
+        channelId,
+      })
+    },
+    [analytics]
+  )
+
+  const trackAMMTokensPurchased = useCallback(
+    (tokenId: string, tokenTicker: string, channelId: string, crtAmount: number, joyPaid: number) => {
+      analytics.track('Token Market Purchase', {
+        tokenId,
+        tokenTicker,
+        channelId,
+        crtAmount,
+        joyPaid,
+      })
+    },
+    [analytics]
+  )
+
+  const trackAMMTokensSold = useCallback(
+    (tokenId: string, tokenTicker: string, channelId: string, crtAmount: number, joyReceived: number) => {
+      analytics.track('Token Market Sell', {
+        tokenId,
+        tokenTicker,
+        channelId,
+        crtAmount,
+        joyReceived,
+      })
+    },
+    [analytics]
+  )
+
+  const trackRevenueShareStarted = useCallback(
+    (channelId: string, tokenId: string, tokenTicker: string) => {
+      analytics.track('Revenue Share Started', {
+        channelId,
+        tokenId,
+        tokenTicker,
+      })
+    },
+    [analytics]
+  )
+
+  const trackRevenueShareClosed = useCallback(
+    (channelId: string, tokenId: string, tokenTicker: string) => {
+      analytics.track('Revenue Share Closed', {
+        channelId,
+        tokenId,
+        tokenTicker,
+      })
+    },
+    [analytics]
+  )
+
+  const trackPortfolioBuyTokenClick = useCallback(
+    (tokenName: string, memberId: string) => {
+      analytics.track('Portfolio buy token clicked', {
+        tokenName,
+        memberId,
+      })
+    },
+    [analytics]
+  )
+
+  const trackPortfolioSellTokenClick = useCallback(
+    (tokenName: string, memberId: string) => {
+      analytics.track('Portfolio sell token clicked', {
+        tokenName,
+        memberId,
+      })
+    },
+    [analytics]
+  )
+
+  const trackPortfolioTransferTokenClick = useCallback(
+    (tokenName: string, memberId: string) => {
+      analytics.track('Portfolio transfer token clicked', {
+        tokenName,
+        memberId,
+      })
+    },
+    [analytics]
+  )
+
+  const trackChangenowTokenBought = useCallback(
+    (tokenName: string, memberId: string, amount: number) => {
+      analytics.track('Changenow token bought', {
+        tokenName,
+        memberId,
+        amount,
+      })
+    },
+    [analytics]
+  )
+
+  const trackChangenowTokenSold = useCallback(
+    (tokenName: string, memberId: string, amount: number) => {
+      analytics.track('Changenow token sold', {
+        tokenName,
+        memberId,
+        amount,
+      })
+    },
+    [analytics]
+  )
 
   const runNextQueueEvent = useCallback(async () => {
     const queueEvent = playbackEventsQueue.current.shift()
@@ -404,7 +554,13 @@ export const useSegmentAnalytics = () => {
   return {
     addEventToQueue,
     identifyUser,
+    trackAMMClosed,
+    trackAMMStarted,
+    trackAMMTokensPurchased,
+    trackAMMTokensSold,
     trackAllNftFilterUpdated,
+    trackChangenowTokenBought,
+    trackChangenowTokenSold,
     trackChannelCreation,
     trackChannelFollow,
     trackClickAuthModalSignInButton,
@@ -423,8 +579,15 @@ export const useSegmentAnalytics = () => {
     trackNftMint,
     trackNftSale,
     trackPageView,
+    trackPortfolioBuyTokenClick,
+    trackPortfolioSellTokenClick,
+    trackPortfolioTransferTokenClick,
     trackPublishAndUploadClicked,
     trackReferralLinkGenerated,
+    trackRevenueShareClosed,
+    trackRevenueShareStarted,
+    trackTokenMintingCompleted,
+    trackTokenMintingStarted,
     trackUploadVideoClicked,
     trackVideoPlaybackCompleted,
     trackVideoPlaybackPaused,

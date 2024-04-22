@@ -8,6 +8,12 @@ import { cVar, sizes } from '@/styles'
 export const Wrapper = styled.div`
   background-color: ${cVar('colorBackgroundMuted')};
   overflow: auto;
+
+  * {
+    .pointer {
+      cursor: pointer;
+    }
+  }
 `
 
 export const TableBase = styled.table`
@@ -72,9 +78,10 @@ export const EmptyTableDescription = styled(Text)`
   margin-top: ${sizes(2)};
 `
 
-export const PageWrapper = styled.div`
+export const PageWrapper = styled.div<{ minWidth: number }>`
   display: flex;
   gap: ${sizes(6)};
+  min-width: ${(props) => `${props.minWidth}px`};
 `
 
 export const RightAlignedHeader = styled.div`
@@ -97,11 +104,9 @@ export const ColumnBox = styled.div`
   align-items: center;
 `
 
-export const OverflowTableWrapper = styled.div<{ minWidth: number }>`
-  > * {
-    min-width: ${(props) => `${props.minWidth}px`};
-  }
-
+export const TableWrapper = styled.div`
+  scrollbar-width: none;
+  position: relative;
   overflow-x: auto;
 
   ::-webkit-scrollbar {

@@ -38,6 +38,7 @@ export type AuctionDatePickerProps = {
   onChange: (value: AuctionDatePickerValue) => void
 } & Omit<SelectProps<AuctionDatePickerValue>, 'onChange'>
 
+// TODO shake animation on date picker is very glitchy, for now just disable it
 export const AuctionDatePicker: FC<AuctionDatePickerProps> = ({
   items,
   value,
@@ -136,6 +137,7 @@ export const AuctionDatePicker: FC<AuctionDatePickerProps> = ({
         offset={[0, 8]}
         ref={popOverRef}
         triggerMode="manual"
+        appendTo={document.body}
         triggerTarget={selectRef.current}
         trigger={null}
         onShow={() => {
