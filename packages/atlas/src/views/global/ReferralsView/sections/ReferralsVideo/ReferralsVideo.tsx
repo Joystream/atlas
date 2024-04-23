@@ -67,7 +67,7 @@ export const ReferralsVideo = () => {
       <LayoutGrid>
         <GridItem colSpan={{ base: 12, lg: 10 }} colStart={{ lg: 2 }}>
           <StyledVideoWrapper>
-            <StyledVideo ref={videoRef} autoPlay loop muted>
+            <StyledVideo ref={videoRef} playsInline autoPlay loop muted>
               <source
                 src="https://eu-central-1.linodeobjects.com/atlas-assets/categories/gleev/videos/referrals/Referrals_dashboard.mp4"
                 type="video/mp4"

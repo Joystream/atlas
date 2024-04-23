@@ -106,6 +106,17 @@ export const useNotifications = (opts?: Pick<QueryHookOptions, 'notifyOnNetworkS
         const refetchFn = networkUtils[refetchAction.name]
         refetchedNotifications.set(id, 1)
         refetchFn(...(refetchAction.args as Parameters<typeof refetchFn>))
+        if ('ReactNativeWebView' in window) {
+          // const rNBridge = window.ReactNativeWebView as any
+          // rNBridge.postMessage(
+          //   JSON.stringify({
+          //     type: 'notification',
+          //     payload: {
+          //       title: `new notification ${id}`,
+          //     },
+          //   })
+          // )
+        }
       }
     })
   }, [networkUtils, notifications])

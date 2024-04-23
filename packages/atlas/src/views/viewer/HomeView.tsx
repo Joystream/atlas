@@ -13,6 +13,7 @@ import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { getPublicCryptoVideoFilter } from '@/config/contentFilter'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useInfiniteVideoGrid } from '@/hooks/useInfiniteVideoGrid'
+import { useMountEffect } from '@/hooks/useMountEffect'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { DEFAULT_VIDEO_GRID, sizes } from '@/styles'
 import { createPlaceholderData } from '@/utils/data'
@@ -21,6 +22,27 @@ import { InfiniteLoadingOffsets } from '@/utils/loading.contants'
 export const HomeView: FC = () => {
   const headTags = useHeadTags()
   const { columns, fetchMore, tiles, loading, pageInfo } = useHomeVideos()
+
+  useMountEffect(() => {
+    const id = setInterval(() => {
+      if ('ReactNativeWebView' in window) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const rNBridge = window.ReactNativeWebView as any
+        rNBridge.postMessage(
+          JSON.stringify({
+            type: 'notification',
+            payload: {
+              title: `new notification ${id}`,
+            },
+          })
+        )
+      }
+    }, 30_000)
+
+    return () => {
+      clearInterval(id)
+    }
+  })
 
   return (
     <VideoContentTemplate>
