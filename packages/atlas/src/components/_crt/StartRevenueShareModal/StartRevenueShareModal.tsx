@@ -25,6 +25,7 @@ import { useNetworkUtils } from '@/providers/networkUtils/networkUtils.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
+import { sizes } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 import { pluralizeNoun } from '@/utils/misc'
 import { permillToPercentage } from '@/utils/number'
@@ -51,13 +52,13 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
   const [openClaimShareModal, setOpenClaimShareModal] = useState(false)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
 
-  const { joystream, proxyCallback } = useJoystream()
+  const { joystream, proxyCallback, chainState } = useJoystream()
   const { refetchCreatorTokenData, refetchChannelPayments } = useNetworkUtils()
   const { memberId, channelId, activeChannel } = useUser()
   const { displaySnackbar } = useSnackbar()
   const handleTransaction = useTransaction()
   const { copyToClipboard } = useClipboard()
-  const { convertMsTimestampToBlock } = useBlockTimeEstimation()
+  const { convertMsTimestampToBlock, convertBlocksToDuration } = useBlockTimeEstimation()
   const { tokenBalance } = useGetTokenBalance(token.id, memberId ?? '-1')
   const [refetchToken, { data: localTokenData }] = useGetFullCreatorTokenLazyQuery({
     variables: {
@@ -86,7 +87,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
   })
   const [startDate, endDate] = watch(['startDate', 'endDate'])
   const endDateTimestamp = useMemo(() => {
-    // we need to create new date object to aviod modifying it in addDaystoDate
+    // we need to create new date object to avoid modifying it in addDaysToDate
     const rawStartDate = startDate?.type === 'date' ? new Date(startDate.date.getTime()) : new Date()
     return endDate?.type === 'date'
       ? endDate.date
@@ -320,13 +321,13 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
         }}
       >
         <FlexBox flow="column" gap={8}>
-          <FlexBox equalChildren alignItems="end" gap={6}>
+          <FlexBox equalChildren alignItems="start" gap={6}>
             <Controller
               name="startDate"
               control={control}
               render={({ field: { onChange, value }, fieldState: { error } }) => (
                 <FormField error={error?.message} disableErrorAnimation label="Starts">
-                  <OuterBox>
+                  <OuterBox marginTop={2}>
                     <InnerBox>
                       <AuctionDatePicker
                         error={!!error}
@@ -358,6 +359,29 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
             <Controller
               name="endDate"
               control={control}
+              rules={{
+                validate: (value, formValues) => {
+                  const rawStartDate =
+                    formValues.startDate?.type === 'date' ? new Date(formValues.startDate.date.getTime()) : new Date()
+
+                  const valueTimestamp =
+                    value?.type === 'date'
+                      ? value.date
+                      : value?.durationDays
+                      ? addDaysToDate(value.durationDays, new Date(rawStartDate))
+                      : new Date()
+
+                  const minDurationMs = convertBlocksToDuration(chainState.minRevenueSplitDuration)
+
+                  if (valueTimestamp.getTime() - Date.now() < minDurationMs) {
+                    return `Revenue share must end after ${formatDateTimeAt(
+                      new Date(rawStartDate.getTime() + minDurationMs)
+                    )}`
+                  }
+
+                  return true
+                },
+              }}
               render={({ field: { onChange, value }, fieldState: { error } }) => (
                 <FormField
                   error={error?.message}
@@ -403,9 +427,10 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
   )
 }
 
-const OuterBox = styled.div`
+const OuterBox = styled.div<{ marginTop?: number }>`
   position: relative;
   height: 50px;
+  margin-top: ${(props) => sizes(props.marginTop ?? 0)};
 `
 
 const InnerBox = styled.div`
