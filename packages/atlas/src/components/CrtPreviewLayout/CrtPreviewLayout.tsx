@@ -38,7 +38,35 @@ type CrtPreviewViewProps = {
 }
 
 export const getTokenDetails = (token: FullCreatorTokenFragment, cumulativeRevenue?: string) => {
-  const details = []
+  const details: {
+    caption: string
+    content: string | BN | number
+    tooltipText: string
+    withToken?: boolean
+    withDenomination?: boolean
+    customTicker?: string
+    icon?: ReactElement
+  }[] = [
+    {
+      caption: 'REV. SHARE',
+      content: `${permillToPercentage(token.revenueShareRatioPermill)}%`,
+      tooltipText: `Percentage of the future revenue that channel shares with token holders. Each token holder can claim amount of revenue proportionate to their ownership of the channel tokens supply.`,
+    },
+    {
+      caption: 'INFLATION',
+      content: `${permillToPercentage(token.annualCreatorRewardPermill)}%`,
+      tooltipText:
+        'This percentage of the token supply gets minted every year and paid to creator for channel management.',
+    },
+    {
+      caption: 'TOTAL SUPPLY',
+      content: +token.totalSupply,
+      tooltipText: `Total amount of tokens owned by all holders.`,
+      withToken: true,
+      customTicker: `$${token.symbol}`,
+    },
+  ]
+
   if (cumulativeRevenue)
     details.push({
       caption: 'TOTAL REV.',
@@ -48,29 +76,6 @@ export const getTokenDetails = (token: FullCreatorTokenFragment, cumulativeReven
       withDenomination: true,
     })
 
-  if (token.revenueShareRatioPermill)
-    details.push({
-      caption: 'REV. SHARE',
-      content: `${permillToPercentage(token.revenueShareRatioPermill)}%`,
-      tooltipText: `Percentage of the future revenue that channel shares with token holders. Each token holder can claim amount of revenue proportionate to their ownership of the channel tokens supply.`,
-    })
-
-  if (token.annualCreatorRewardPermill)
-    details.push({
-      caption: 'INFLATION',
-      content: `${permillToPercentage(token.annualCreatorRewardPermill)}%`,
-      tooltipText:
-        'This percentage of the token supply gets minted every year and paid to creator for channel management.',
-    })
-
-  if (token.totalSupply)
-    details.push({
-      caption: 'TOTAL SUPPLY',
-      content: +token.totalSupply,
-      tooltipText: `Total amount of tokens owned by all holders.`,
-      withToken: true,
-      customTicker: `$${token.symbol}`,
-    })
   return details
 }
 
