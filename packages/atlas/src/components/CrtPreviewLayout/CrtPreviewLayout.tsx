@@ -62,8 +62,6 @@ export const getTokenDetails = (token: FullCreatorTokenFragment, cumulativeReven
       caption: 'TOTAL SUPPLY',
       content: +token.totalSupply,
       tooltipText: `Total amount of tokens owned by all holders.`,
-      withToken: true,
-      customTicker: `$${token.symbol}`,
     },
   ]
 
