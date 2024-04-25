@@ -5,7 +5,13 @@ import { Controller, useForm } from 'react-hook-form'
 
 import { useGetFullCreatorTokenLazyQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
-import { SvgActionArrowRight, SvgActionClock, SvgActionCreatorToken, SvgActionLinkUrl } from '@/assets/icons'
+import {
+  SvgActionArrowRight,
+  SvgActionClock,
+  SvgActionCreatorToken,
+  SvgActionLinkUrl,
+  SvgAlertsWarning24,
+} from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox/FlexBox'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
@@ -420,6 +426,12 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
                 {row.content}
               </FlexBox>
             ))}
+            <FlexBox marginTop={3} gap={3} alignItems="start">
+              <SvgAlertsWarning24 />
+              <Text variant="t200" as="span" color="colorTextCaution">
+                Active revenue share will pause all open market transactions for its entire duration.
+              </Text>
+            </FlexBox>
           </FlexBox>
         </FlexBox>
       </DialogModal>
