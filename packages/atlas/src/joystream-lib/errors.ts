@@ -34,6 +34,28 @@ export enum ErrorCode {
   InsufficientBalance = 'InsufficientBalance', // balance to low to send tokens
   InsufficientBalanceForChannelCreation = 'InsufficientBalanceForChannelCreation', // Cannot create the channel: channel creator has insufficient balance, (budget for channel state bloat bond + channel data objs state bloat bonds + data objs storage fees))
   InsufficientBalanceForVideoCreation = ' InsufficientBalanceForVideoCreation,', /// Cannot create the video: video creator has insufficient balance,  (budget for video state bloat bond + video data objs state bloat bonds + data objs storage fees)
+  TokenDoesNotExist = 'TokenDoesNotExist', // Requested token does not exist
+  NoActiveSale = 'NoActiveSale', // The token has no active sale at the moment
+  InsufficientBalanceForTokenPurchase = 'InsufficientBalanceForTokenPurchase', // Account's JOY balance is insufficient to make the token purchase
+  NotEnoughTokensOnSale = 'NotEnoughTokensOnSale', // Amount of tokens to purchase on sale exceeds the quantity of tokens still available on the sale
+  SaleStartingBlockInThePast = 'SaleStartingBlockInThePast', // Specified sale starting block is in the past
+  SaleAccessProofRequired = 'SaleAccessProofRequired', // Only whitelisted participants are allowed to access the sale, therefore access proof is required
+  PreviousSaleNotFinalized = 'PreviousSaleNotFinalized', // Previous sale was still not finalized, finalize it first.
+  SaleDurationTooShort = 'SaleDurationTooShort', // Specified sale duration is shorter than MinSaleDuration
+  CannotInitSaleIfAmmIsActive = 'CannotInitSaleIfAmmIsActive', // No Sale if Amm is active
+  RevenueSplitDurationTooShort = 'RevenueSplitDurationTooShort', // Revenue Split duration is too short
+  RevenueSplitAlreadyActiveForToken = 'RevenueSplitAlreadyActiveForToken', // Attempt to activate split with one ongoing
+  RevenueSplitNotActiveForToken = 'RevenueSplitNotActiveForToken', // Attempt to make revenue split operations with token not in active split state
+  RevenueSplitDidNotEnd = 'RevenueSplitDidNotEnd', // Revenue Split has not ended yet
+  RevenueSplitNotOngoing = 'RevenueSplitNotOngoing', // Revenue Split for token active, but not ongoing
+  UserAlreadyParticipating = 'UserAlreadyParticipating', // User already participating in the revenue split
+  InsufficientBalanceForSplitParticipation = 'InsufficientBalanceForSplitParticipation', // User does not posses enough balance to participate in the revenue split
+  CannotModifySupplyWhenRevenueSplitsAreActive = 'CannotModifySupplyWhenRevenueSplitsAreActive', // Attempt to modify supply when revenue split is active
+  NotInAmmState = 'NotInAmmState', // There is no open market for the token
+  SlippageToleranceExceeded = 'SlippageToleranceExceeded', // There is no open market for the token
+  OutstandingAmmProvidedSupplyTooLarge = 'OutstandingAmmProvidedSupplyTooLarge', // Oustanding AMM-provided supply constitutes too large percentage of the token's total supply
+  NotEnoughTokenMintedByAmmForThisSale = 'NotEnoughTokenMintedByAmmForThisSale', // Attempting to sell more than amm provided supply
+  CurveSlopeParametersTooLow = 'CurveSlopeParametersTooLow', // Curve slope parameters below minimum allowed
 }
 
 // More error codes https://github.com/Joystream/joystream/blob/master/runtime-modules/content/src/errors.rs

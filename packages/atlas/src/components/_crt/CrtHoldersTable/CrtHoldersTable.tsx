@@ -21,13 +21,13 @@ export const tableLoadingData = Array.from({ length: 5 }, () => ({
     </ColumnBox>
   ),
   total: <SkeletonLoader height={20} width="70%" />,
-  vested: <SkeletonLoader height={20} width="100%" />,
+  transferable: <SkeletonLoader height={20} width="100%" />,
 }))
 
 const COLUMNS: TableProps['columns'] = [
   { Header: 'Member', accessor: 'member', width: 4 },
   { Header: 'Total', accessor: 'total', width: 2 },
-  { Header: 'Unlocked', accessor: 'transferable', width: 3 },
+  { Header: 'Unlocked', accessor: 'transferable', width: 2 },
 ]
 
 type CrtHolder = {
@@ -79,12 +79,7 @@ export const CrtHoldersTable = ({
           </FlexBox>
         ),
         transferable: (
-          <StyledTransferableBalance
-            variant="t200"
-            memberId={row.memberId}
-            tokenId={row.tokenId}
-            ticker={`${row.tokenSymbol}`}
-          />
+          <StyledTransferableBalance variant="t200" format="short" memberId={row.memberId} tokenId={row.tokenId} />
         ),
       })),
     [data, ownerId]

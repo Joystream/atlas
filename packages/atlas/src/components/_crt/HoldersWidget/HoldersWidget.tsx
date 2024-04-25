@@ -19,7 +19,7 @@ export type HoldersWidgetProps = {
   totalHolders: number
 }
 
-const TILES_PER_PAGE = 5
+const TILES_PER_PAGE = 10
 
 export const HoldersWidget = ({ tokenId, ownerId, totalSupply, totalHolders, tokenSymbol }: HoldersWidgetProps) => {
   const [showModal, setShowModal] = useState(false)
@@ -29,8 +29,6 @@ export const HoldersWidget = ({ tokenId, ownerId, totalSupply, totalHolders, tok
     totalCount,
     currentPage,
     setCurrentPage,
-    setPerPage,
-    perPage,
   } = useHoldersPagination(tokenId, { initialPageSize: TILES_PER_PAGE })
 
   const holders = useMemo(
@@ -60,11 +58,10 @@ export const HoldersWidget = ({ tokenId, ownerId, totalSupply, totalHolders, tok
         isLoading={isLoading}
         show={showModal}
         onExitClick={() => setShowModal(false)}
-        pageSize={perPage}
+        pageSize={TILES_PER_PAGE}
         pagination={{
-          setPerPage,
           totalCount,
-          itemsPerPage: perPage,
+          itemsPerPage: TILES_PER_PAGE,
           page: currentPage,
           onChangePage: setCurrentPage,
         }}
@@ -115,7 +112,12 @@ type CrtHoldersTableModalProps = {
 const CrtHoldersTableModal = ({ data, onExitClick, show, pagination, isLoading }: CrtHoldersTableModalProps) => {
   return (
     <DialogModal onExitClick={onExitClick} show={show} noContentPadding title="Holders">
-      <StyledHoldersTable data={data} isLoading={isLoading} pagination={pagination} />
+      <StyledHoldersTable
+        data={data}
+        isLoading={isLoading}
+        pageSize={pagination?.itemsPerPage}
+        pagination={pagination}
+      />
     </DialogModal>
   )
 }

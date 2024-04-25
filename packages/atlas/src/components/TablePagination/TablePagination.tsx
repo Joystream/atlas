@@ -31,7 +31,7 @@ const PER_PAGE_ITEMS: SelectItem[] = [
 ]
 
 export type TablePaginationProps = {
-  setPerPage: (perPage: number) => void
+  setPerPage?: (perPage: number) => void
   onChangePage: (page: number) => void
   className?: string
   itemsPerPage: number
@@ -61,7 +61,7 @@ export const TablePagination: FC<TablePaginationProps> = ({
   const handlePerPageChange = useCallback(
     (value?: string | null) => {
       if (value) {
-        setPerPage(+value)
+        setPerPage?.(+value)
         onChangePage(0)
       }
     },
@@ -70,29 +70,31 @@ export const TablePagination: FC<TablePaginationProps> = ({
 
   return (
     <Container className={className}>
-      <HorizontalContainer>
-        <div>
-          <Select
-            icon={
-              <Text as="p" variant={smMatch ? 't200' : 't100'} color="colorText">
-                {smMatch ? 'Rows per page:' : 'Rows:'}
-              </Text>
-            }
-            value={String(itemsPerPage)}
-            onChange={handlePerPageChange}
-            items={PER_PAGE_ITEMS}
-          />
-        </div>
-        <PageInfo as="p" variant={smMatch ? 't200' : 't100'} color="colorTextStrong">
-          {!totalCount
-            ? 0
-            : `${1 + itemsPerPage * page}-${Math.min(
-                itemsPerPage + itemsPerPage * page,
-                totalCount
-              )} of ${totalCount}`}{' '}
-          items
-        </PageInfo>
-      </HorizontalContainer>
+      {setPerPage ? (
+        <HorizontalContainer>
+          <div>
+            <Select
+              icon={
+                <Text as="p" variant={smMatch ? 't200' : 't100'} color="colorText">
+                  {smMatch ? 'Rows per page:' : 'Rows:'}
+                </Text>
+              }
+              value={String(itemsPerPage)}
+              onChange={handlePerPageChange}
+              items={PER_PAGE_ITEMS}
+            />
+          </div>
+          <PageInfo as="p" variant={smMatch ? 't200' : 't100'} color="colorTextStrong">
+            {!totalCount
+              ? 0
+              : `${1 + itemsPerPage * page}-${Math.min(
+                  itemsPerPage + itemsPerPage * page,
+                  totalCount
+                )} of ${totalCount}`}{' '}
+            items
+          </PageInfo>
+        </HorizontalContainer>
+      ) : null}
 
       <HorizontalContainer>
         <FlexBox gap={4} width="auto" alignItems="center">
