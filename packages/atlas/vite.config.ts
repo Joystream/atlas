@@ -14,6 +14,7 @@ import {
   EmbeddedFallbackPlugin,
   OptimizePlugin,
   PolkadotWorkerMetaFixPlugin,
+  VwoScriptPlugin,
 } from './plugins'
 
 // https://vitejs.dev/config/
@@ -75,6 +76,7 @@ export default defineConfig(({ mode }) => {
       AtlasWebmanifestPlugin,
       EmbeddedFallbackPlugin,
       OptimizePlugin,
+      VwoScriptPlugin,
       ViteYaml(),
       react({
         exclude: /\.stories\.[tj]sx?$/,
