@@ -1,6 +1,7 @@
 import BN from 'bn.js'
 import { ReactNode, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
+import { Link } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
 import { getNftStatus } from '@/api/hooks/nfts'
@@ -12,6 +13,7 @@ import {
   Container,
   DetailsContainer,
   InformationContainer,
+  LinkArea,
   StatsContainer,
   StyledLink,
   VideoContainer,
@@ -224,6 +226,7 @@ type VideoCardWrapperProps = {
   mediaUrls: string[]
   thumbnailUrls: string[]
   goNextSlide: () => void
+  to?: string
   details: ReactNode
 }
 
@@ -233,6 +236,7 @@ export const VideoCardWrapper = ({
   thumbnailUrls,
   mediaUrls,
   videoId,
+  to,
   details,
 }: VideoCardWrapperProps) => {
   const [isPaused, setIsPaused] = useState(!active)
@@ -240,6 +244,9 @@ export const VideoCardWrapper = ({
 
   return (
     <Container>
+      <Link to={to ? to : absoluteRoutes.viewer.video(videoId)}>
+        <LinkArea />
+      </Link>
       <VideoContainer>
         {active ? (
           <BackgroundVideoPlayer
@@ -255,6 +262,7 @@ export const VideoCardWrapper = ({
             handleActions={active ? debouncedActive : active}
             videoPlaytime={30}
             onEnded={goNextSlide}
+            customLink={to}
           />
         ) : (
           <VideoWrapper>

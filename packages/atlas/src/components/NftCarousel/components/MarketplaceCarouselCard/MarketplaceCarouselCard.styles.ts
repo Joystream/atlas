@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { cVar, media, sizes } from '@/styles'
+import { cVar, media, sizes, zIndex } from '@/styles'
 
 export const InformationContainer = styled.div<{ isPaused: boolean }>`
   width: 100%;
@@ -33,6 +33,12 @@ export const Container = styled.div`
       opacity: 1;
     }
   }
+`
+
+export const LinkArea = styled.div`
+  position: absolute;
+  inset: 0;
+  z-index: ${zIndex.nearOverlay};
 `
 
 export const VideoContainer = styled.div`
