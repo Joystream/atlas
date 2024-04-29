@@ -52,7 +52,7 @@ const datePickerItemsFactory = (days: number[]) =>
     },
   }))
 
-const endDateItems = datePickerItemsFactory([7, 14, 30])
+const endDateItems = datePickerItemsFactory([7])
 
 export const StartRevenueShare = ({ token, onClose, show }: StartRevenueShareProps) => {
   const [openClaimShareModal, setOpenClaimShareModal] = useState(false)
