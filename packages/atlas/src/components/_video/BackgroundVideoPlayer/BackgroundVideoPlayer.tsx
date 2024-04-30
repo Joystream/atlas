@@ -119,10 +119,7 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
         </ButtonBox>
       )}
       {playing && <VideoProgress video={videoRef.current} isPlaying={isPlaying} tick={10} limit={videoPlaytime} />}
-      <StyledFade
-        withFade={withFade}
-        // to={customLink ? customLink : videoId ? absoluteRoutes.viewer.video(videoId) : ''}
-      >
+      <StyledFade withFade={withFade}>
         <StyledVideo
           resolvedVideoUrls={src}
           autoPlay={autoPlay}
