@@ -23,7 +23,7 @@ export const Pattern = styled.div`
     right: 0;
     width: 108px;
     height: 100%;
-    background: linear-gradient(180deg, rgb(15 17 20 / 0) 0%, ${cVar('colorCoreNeutral900')} 100%);
+    background: linear-gradient(90deg, rgb(15 17 20 / 0) 0%, ${cVar('colorBackgroundMuted')} 100%);
   }
 
   ${media.sm} {
@@ -39,13 +39,13 @@ export const Pattern = styled.div`
       right: unset;
       width: 100%;
       height: 56px;
-      background: linear-gradient(180deg, rgb(15 17 20 / 0) 0%, ${cVar('colorCoreNeutral800')} 100%);
+      background: linear-gradient(180deg, rgb(15 17 20 / 0) 0%, ${cVar('colorBackgroundMuted')} 100%);
     }
   }
 `
 
 export const Wrapper = styled.div<{ variant: Variant }>`
-  background-color: ${({ variant }) => cVar(variant === 'full' ? 'colorBackgroundMuted' : 'colorBackground')};
+  background-color: ${cVar('colorBackground')};
   width: 100%;
   display: grid;
   position: relative;
