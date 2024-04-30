@@ -12,6 +12,7 @@ import { SuccessActionModalTemplate } from '@/components/_crt/SuccessActionModal
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { absoluteRoutes } from '@/config/routes'
 import { useClipboard } from '@/hooks/useClipboard'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { HAPI_TO_JOY_RATE } from '@/joystream-lib/config'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useFee, useJoystream } from '@/providers/joystream'
@@ -38,6 +39,7 @@ export const StartMarketModal = ({ onClose, show, tokenId }: StartMarketModalPro
   const { displaySnackbar } = useSnackbar()
   const handleTransaction = useTransaction()
   const { refetchCreatorTokenData } = useNetworkUtils()
+  const { trackAMMStarted } = useSegmentAnalytics()
   const { data } = useGetFullCreatorTokenQuery({
     variables: {
       id: tokenId ?? '',
@@ -80,6 +82,7 @@ export const StartMarketModal = ({ onClose, show, tokenId }: StartMarketModalPro
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).startAmm(memberId, channelId, joySlopeNumber, proxyCallback(updateStatus)),
       onTxSync: async () => {
+        trackAMMStarted(tokenId, creatorTokenById?.symbol ?? 'N/A', channelId ?? 'N/A')
         setShowSuccessModal(true)
       },
       onError: () => {
@@ -97,6 +100,7 @@ export const StartMarketModal = ({ onClose, show, tokenId }: StartMarketModalPro
     })
   }, [
     channelId,
+    creatorTokenById?.symbol,
     displaySnackbar,
     handleTransaction,
     joySlopeNumber,
@@ -104,7 +108,9 @@ export const StartMarketModal = ({ onClose, show, tokenId }: StartMarketModalPro
     memberId,
     onClose,
     proxyCallback,
+    tokenId,
     tokenPrice,
+    trackAMMStarted,
   ])
 
   const successDetails = useMemo(
