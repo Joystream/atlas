@@ -10,9 +10,9 @@ import { ContenBox, Pattern, Wrapper } from './BenefitCard.styles'
 
 export type BenefitCardProps = {
   title: string
-  description?: string
+  description?: ReactNode
   rewardNode?: ReactNode
-  amountTooltip?: string
+  rewardTooltip?: ReactNode
   className?: string
   actionNode?: ReactNode
 }
@@ -23,7 +23,7 @@ export const BenefitCard: FC<BenefitCardProps> = ({
   rewardNode,
   className,
   actionNode,
-  amountTooltip,
+  rewardTooltip,
 }) => {
   const smMatch = useMediaMatch('sm')
   const lgMatch = useMediaMatch('lg')
@@ -33,7 +33,9 @@ export const BenefitCard: FC<BenefitCardProps> = ({
       <Text variant="h400" as="span">
         {rewardNode}
       </Text>
-      {amountTooltip && <Information text={amountTooltip} placement="top-start" />}
+      {rewardTooltip && (
+        <Information interactive appendTo={document.body} customContent={rewardTooltip} placement="top-start" />
+      )}
     </FlexBox>
   )
 

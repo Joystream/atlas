@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom'
 
 import {
   SvgActionChevronT,
-  SvgActionClose,
   SvgActionNewChannel,
   SvgActionNewTab,
   SvgAlertsInformative24,
@@ -36,13 +35,7 @@ import { YppAuthorizationModal } from '@/views/global/YppLandingView/YppAuthoriz
 import { configYppIconMapper } from '@/views/global/YppLandingView/sections/YppFooter'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
 
-import {
-  StatusDot,
-  StatusDotWrapper,
-  StyledCloseButton,
-  WidgetTileContent,
-  YppSyncStatus,
-} from './YppDashboardTabs.styles'
+import { StatusDot, StatusDotWrapper, WidgetTileContent, YppSyncStatus } from './YppDashboardTabs.styles'
 
 const SIGNUP_MESSAGE = 'YPP_SIGNUP_MESSAGE-'
 
@@ -168,16 +161,8 @@ export const YppDashboardMainTab: FC = () => {
         <BenefitsContainer title="Youtubers">
           {!hasDismissedSignupMessage && !currentChannel?.yppStatus.startsWith('Suspended') && (
             <BenefitCard
-              title={
-                currentChannel?.yppStatus.startsWith('Verified')
-                  ? 'Thank you for signing up!'
-                  : `Sign up to ${atlasConfig.general.appName}`
-              }
-              description={
-                currentChannel?.yppStatus.startsWith('Verified')
-                  ? `You will receive sign up bonus on (Tuesday) ${formatDate(nextPayoutDate)}`
-                  : 'Connect you YouTube channels via a step-by-step flow and get your first reward. You can sign up with multiple channels!'
-              }
+              title="Connect Channel"
+              description="Connect your YouTube channel to obtain rewards tier and qualify for sign up bonus."
               rewardNode={
                 !currentChannel || !currentChannel.yppStatus.startsWith('Verified')
                   ? `Up to +100 USD`
@@ -185,33 +170,28 @@ export const YppDashboardMainTab: FC = () => {
                       (getTierRewards(yppBackendTierToConfig(currentChannel.yppStatus))?.signUp || 0) * rewardMultiplier
                     } USD`
               }
-              amountTooltip="Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity."
+              rewardTooltip={
+                <Text variant="t100" as="span">
+                  Connected channels undergo verification from the DAO content team and assigned tiers based on
+                  production quality. Sign up bonus, sync rewards and access to more earning opportunities are based on
+                  the tier. <TextButton to="xd">Learn more</TextButton>
+                </Text>
+              }
               actionNode={
-                !currentChannel || !currentChannel.yppStatus.startsWith('Verified') ? (
-                  <Button
-                    icon={<SvgActionNewChannel />}
-                    disabled={!!currentChannel}
-                    iconPlacement="right"
-                    fullWidth={!smMatch}
-                    onClick={handleYppSignUpClick}
-                  >
-                    Sign up
-                  </Button>
-                ) : (
-                  <StyledCloseButton
-                    variant="secondary"
-                    fullWidth={!smMatch}
-                    onClick={() => updateDismissedMessages(getMessageIdForChannel(channelId as string))}
-                    icon={smMatch && <SvgActionClose />}
-                  >
-                    {!smMatch ? 'Close' : ''}
-                  </StyledCloseButton>
-                )
+                <Button
+                  icon={<SvgActionNewChannel />}
+                  disabled={!!currentChannel}
+                  iconPlacement="right"
+                  fullWidth={!smMatch}
+                  onClick={handleYppSignUpClick}
+                >
+                  {currentChannel ? 'Connected' : 'Connect'}
+                </Button>
               }
             />
           )}
           <BenefitCard
-            title="Sync videos from YouTube channel"
+            title="Get rewards for auto-sync"
             description="Get paid for every new video published on YouTube after the date of sign up. Minimum video duration has to be 5 minutes. Max videos rewarded are 3 per week."
             rewardNode={
               !currentChannel || !currentChannel.yppStatus.startsWith('Verified')
@@ -220,10 +200,12 @@ export const YppDashboardMainTab: FC = () => {
                   : 'Up to +5 USD'
                 : `+${getTierRewards(yppBackendTierToConfig(currentChannel.yppStatus))?.videoSync} USD`
             }
-            amountTooltip={
-              !currentChannel?.yppStatus.startsWith('Verified')
-                ? 'Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity.'
-                : `Your YouTube channel is being automatically synced with your ${atlasConfig.general.appName} channel. You will be rewarded every time a new video gets synced.`
+            rewardTooltip={
+              <Text variant="t100" as="span">
+                The limit of historical videos and rewards for synced videos are based on the channel rewards tier and
+                paid for weekly basis.
+                <TextButton to="xd">Learn more</TextButton>
+              </Text>
             }
             actionNode={
               currentChannel?.yppStatus.startsWith('Verified') ? (
@@ -253,10 +235,16 @@ export const YppDashboardMainTab: FC = () => {
             }
           />
           <BenefitCard
-            title="Refer another YouTube creator"
+            title="Refer YT creators"
             description="Get rewarded for every new creator who signs up to YPP program using your referral link. Referrals rewards depends on the tier assigned to the invited channel."
             rewardNode={`Up to +${(getTierRewards('diamond')?.referral || 0) * rewardMultiplier} USD`}
-            amountTooltip="Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity."
+            rewardTooltip={
+              <Text variant="t100" as="span">
+                Referrals is the easiest way to ramp up rewards. Top referrers are published to the regularly updated
+                leaderboard.
+                <TextButton to="xd">Learn more</TextButton>
+              </Text>
+            }
             actionNode={<ReferralLinkButton />}
           />
         </BenefitsContainer>
@@ -266,18 +254,40 @@ export const YppDashboardMainTab: FC = () => {
             title="Discord Community"
             description="Connect with other creators on Discord and participate in building the platform with us. Each week 10 new active participants selected by community are rewarded with 20 USD."
             rewardNode="20 USD"
+            rewardTooltip={
+              <Text variant="t100" as="span">
+                We are proud to be building a vibrant community of forward looking creators across a wide set of content
+                categories. To stay ahead of the new opportunities to earn with Gleev and connect with the peers and
+                support team join our Discord. Newcomers are rewarded with JOY tokens for active participation.
+                <TextButton to="xd">Learn more</TextButton>
+              </Text>
+            }
             actionNode={<Button to="https://discord.gg/jEzC5bjD">Join Discord</Button>}
           />
           <BenefitCard
             title="Post on X"
-            description="Tweet about why you signed up to Gleev and follow JoystreamDAO on X. Each week 10 new random channels get paid and featured in our New Joiners post."
+            description="Follow JoystreamDAO on X and post about why you signed up to Gleev."
             rewardNode="20 USD"
+            rewardTooltip={
+              <Text variant="t100" as="span">
+                JoystreamDAO has 50 thousand followers and we are going strong towards our first million. Join the club,
+                get exposure to our growing follower base and get a chance to receive a bonus.
+                <TextButton to="xd">Learn more</TextButton>
+              </Text>
+            }
             actionNode={<Button to="https://discord.gg/jEzC5bjD">Post on X</Button>}
           />
           <BenefitCard
             title="Roundtable events"
-            description="Participate in Creator Roundtable events held on Discord to exchange perspectives on current Gleev opportunities and features in the pipeline. Best 3 questions are rewarded."
+            description={`Participate in Creator Roundtable events held on Discord to exchange perspectives on current ${atlasConfig.general.appName} opportunities and features in the pipeline. Best questions are rewarded.`}
             rewardNode="25 USD"
+            rewardTooltip={
+              <Text variant="t100" as="span">
+                During every event the panelists and hosts vote on selecting 3 best questions from the audience which
+                are rewarded with JOY and other prizes.
+                <TextButton to="xd">Learn more</TextButton>
+              </Text>
+            }
             actionNode={<Button to="https://discord.gg/jEzC5bjD">Learn more</Button>}
           />
         </BenefitsContainer>
@@ -286,14 +296,29 @@ export const YppDashboardMainTab: FC = () => {
           <BenefitsContainer title="Original Creators">
             <BenefitCard
               title="Gleev Original Content"
-              description="Earn more by publishing content to Gleev at least 24 hours ahead of YouTube. Make sure to add hashtag #JostreamOriginal and link to the original video on Gleev to get the reward."
+              description={`Earn more by publishing content to ${atlasConfig.general.appName} at least 24 hours ahead of YouTube. Make sure to add hashtag #JostreamOriginal and link to the original video on ${atlasConfig.general.appName} to get the reward.`}
               rewardNode="x5 per video"
+              rewardTooltip={
+                <Text variant="t100" as="span">
+                  Original content published to Gleev is rewarded at a multiple. We are gathering applicants for the
+                  beta testing of this feature. Apply early for higher multiples.
+                  <TextButton to="xd">Learn more</TextButton>
+                </Text>
+              }
               actionNode={<Button to="to be provided">Sign up</Button>}
             />
             <BenefitCard
               title="Gleev Branding"
-              description="Add Joystream branding to your video and multiply your rewards for original uploads to Gleev."
-              rewardNode="x2 per original video"
+              description={`Add Joystream branding to your video and multiply your rewards for original uploads to ${atlasConfig.general.appName}.`}
+              rewardNode="x5 per original video"
+              rewardTooltip={
+                <Text variant="t100" as="span">
+                  Using branded assets as a preroll for your videos published to Gleev first allow to maximise the
+                  rewards. We are gathering early applicants for the beta test of this feature. Apply early to get
+                  higher multiple.
+                  <TextButton to="xd">Learn more</TextButton>
+                </Text>
+              }
               actionNode={<Button to="to be provided">Sign up</Button>}
             />
           </BenefitsContainer>
@@ -303,16 +328,46 @@ export const YppDashboardMainTab: FC = () => {
           <BenefitsContainer title="Social Promoters">
             <BenefitCard
               title="Share NFT"
-              description="Drop the link of your post to shared NFTs channel on Discord to participate in rewards."
+              description={
+                <>
+                  Drop the link of your post to{' '}
+                  <TextButton as="span" to="xd">
+                    shared NFTs channel
+                  </TextButton>{' '}
+                  on Discord to participate in rewards.
+                </>
+              }
               rewardNode="Up to 100 USD"
+              rewardTooltip={
+                <Text variant="t100" as="span">
+                  Promote your NFTs on social media and get rewarded by the DAO for this. Rewards assigned are based on
+                  peer upvotes held in a dedicated Discord channel.
+                  <TextButton to="xd">Learn more</TextButton>
+                </Text>
+              }
               actionNode={
                 <Button to={absoluteRoutes.viewer.channel(channelId ?? '', { tab: 'NFTs' })}>Share NFTs</Button>
               }
             />
             <BenefitCard
               title="Share Token"
-              description="Drop the link of your post to Shared Tokens channel on Discord to participate in rewards."
+              description={
+                <>
+                  Drop the link of your post to{' '}
+                  <TextButton as="span" to="xd">
+                    shared Tokens channel{' '}
+                  </TextButton>{' '}
+                  on Discord to participate in rewards.
+                </>
+              }
               rewardNode="Up to 100 USD"
+              rewardTooltip={
+                <Text variant="t100" as="span">
+                  Promote your Creator Token on social media and get rewarded by the DAO for this. Rewards assigned are
+                  based on peer upvotes held in a dedicated Discord channel.
+                  <TextButton to="xd">Learn more</TextButton>
+                </Text>
+              }
               actionNode={
                 <Button to={absoluteRoutes.viewer.channel(channelId ?? '', { tab: 'Token' })}>Share token</Button>
               }
@@ -320,7 +375,14 @@ export const YppDashboardMainTab: FC = () => {
             <BenefitCard
               title="Ambassador Program"
               description="Become Joystream ambassador and work with our marketing and product team on growing the platform."
-              rewardNode="Up to 1k USD pm"
+              rewardNode="Up to 1k USD"
+              rewardTooltip={
+                <Text variant="t100" as="span">
+                  Ambassador program is open for creators dedicated to Joystream and entails versatile tasks of your
+                  choice for collaboration and promotion.
+                  <TextButton to="xd">Learn more</TextButton>
+                </Text>
+              }
               actionNode={<Button to="to be provided">Apply</Button>}
             />
           </BenefitsContainer>
