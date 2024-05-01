@@ -1,13 +1,15 @@
+import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 import { FC, ReactNode, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import {
-  SvgActionChevronB,
+  SvgActionChevronT,
   SvgActionClose,
   SvgActionNewChannel,
   SvgActionNewTab,
   SvgAlertsInformative24,
+  SvgLogoDiscordOnDark,
 } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
 import { FlexBox } from '@/components/FlexBox'
@@ -67,6 +69,9 @@ export const YppDashboardMainTab: FC = () => {
     new Date(currentChannel?.createdAt || 0).getTime() > BOOST_TIMESTAMP
       ? atlasConfig.features.ypp.tierBoostMultiplier || 1
       : 1
+  const isSilverOrAbove = ['Verified::Silver', 'Verified::Gold', 'Verified::Diamond'].includes(
+    currentChannel?.yppStatus ?? ''
+  )
   const handleYppSignUpClick = () => {
     const success = _handleYppSignUpClick()
     if (success) {
@@ -160,64 +165,6 @@ export const YppDashboardMainTab: FC = () => {
                 />
               </GridItem>
             ))}
-        {/*{!hasDismissedSignupMessage && !currentChannel?.yppStatus.startsWith('Suspended') && (*/}
-        {/*  <GridItem colSpan={{ xxs: 12 }}>*/}
-        {/*    <BenefitCard*/}
-        {/*      title={*/}
-        {/*        currentChannel?.yppStatus.startsWith('Verified')*/}
-        {/*          ? 'Thank you for signing up!'*/}
-        {/*          : `Sign up to ${atlasConfig.general.appName}`*/}
-        {/*      }*/}
-        {/*      description={*/}
-        {/*        currentChannel?.yppStatus.startsWith('Verified')*/}
-        {/*          ? `You will receive sign up bonus on (Tuesday) ${formatDate(nextPayoutDate)}`*/}
-        {/*          : 'Connect you YouTube channels via a step-by-step flow and get your first reward. You can sign up with multiple channels!'*/}
-        {/*      }*/}
-        {/*      dollarAmount={*/}
-        {/*        !currentChannel || !currentChannel.yppStatus.startsWith('Verified')*/}
-        {/*          ? 100*/}
-        {/*          : (getTierRewards(yppBackendTierToConfig(currentChannel.yppStatus))?.signUp || 0) * rewardMultiplier*/}
-        {/*      }*/}
-        {/*      isRangeAmount={!currentChannel || !currentChannel.yppStatus.startsWith('Verified')}*/}
-        {/*      amountTooltip="Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity."*/}
-        {/*      actionNode={*/}
-        {/*        !currentChannel || !currentChannel.yppStatus.startsWith('Verified') ? (*/}
-        {/*          <Button*/}
-        {/*            icon={<SvgActionNewChannel />}*/}
-        {/*            disabled={!!currentChannel}*/}
-        {/*            iconPlacement="right"*/}
-        {/*            fullWidth={!smMatch}*/}
-        {/*            onClick={handleYppSignUpClick}*/}
-        {/*          >*/}
-        {/*            Sign up*/}
-        {/*          </Button>*/}
-        {/*        ) : (*/}
-        {/*          <StyledCloseButton*/}
-        {/*            variant="secondary"*/}
-        {/*            fullWidth={!smMatch}*/}
-        {/*            onClick={() => updateDismissedMessages(getMessageIdForChannel(channelId as string))}*/}
-        {/*            icon={smMatch && <SvgActionClose />}*/}
-        {/*          >*/}
-        {/*            {!smMatch ? 'Close' : ''}*/}
-        {/*          </StyledCloseButton>*/}
-        {/*        )*/}
-        {/*      }*/}
-        {/*    />*/}
-        {/*  </GridItem>*/}
-        {/*)}*/}
-        {/*<GridItem colSpan={{ xxs: 12 }}>*/}
-        {/*  */}
-        {/*</GridItem>*/}
-        {/*<GridItem colSpan={{ xxs: 12 }}>*/}
-        {/*  <BenefitCard*/}
-        {/*    title="Refer another YouTube creator"*/}
-        {/*    description="Get rewarded for every new creator who signs up to YPP program using your referral link. Referrals rewards depends on the tier assigned to the invited channel."*/}
-        {/*    dollarAmount={(getTierRewards('diamond')?.referral || 0) * rewardMultiplier}*/}
-        {/*    amountTooltip="Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity."*/}
-        {/*    isRangeAmount*/}
-        {/*    actionNode={<ReferralLinkButton />}*/}
-        {/*  />*/}
-        {/*</GridItem>*/}
         <BenefitsContainer title="Youtubers">
           {!hasDismissedSignupMessage && !currentChannel?.yppStatus.startsWith('Suspended') && (
             <BenefitCard
@@ -318,70 +265,84 @@ export const YppDashboardMainTab: FC = () => {
           <BenefitCard
             title="Discord Community"
             description="Connect with other creators on Discord and participate in building the platform with us. Each week 10 new active participants selected by community are rewarded with 20 USD."
-            rewardNode="10 USD"
-            // amountTooltip="Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity."
-            actionNode={<ReferralLinkButton />}
+            rewardNode="20 USD"
+            actionNode={<Button to="https://discord.gg/jEzC5bjD">Join Discord</Button>}
           />
           <BenefitCard
             title="Post on X"
             description="Tweet about why you signed up to Gleev and follow JoystreamDAO on X. Each week 10 new random channels get paid and featured in our New Joiners post."
-            rewardNode="10 USD"
-            // amountTooltip="Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity."
-            actionNode={<ReferralLinkButton />}
+            rewardNode="20 USD"
+            actionNode={<Button to="https://discord.gg/jEzC5bjD">Post on X</Button>}
           />
           <BenefitCard
             title="Roundtable events"
-            description="Participate in Creator Roundtable events held on Discord to exchange perspectives on current Gleev opportunities and features in the pipeline. Best 4 questions are rewarded."
-            rewardNode="10 USD"
-            // amountTooltip="Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity."
-            actionNode={<ReferralLinkButton />}
+            description="Participate in Creator Roundtable events held on Discord to exchange perspectives on current Gleev opportunities and features in the pipeline. Best 3 questions are rewarded."
+            rewardNode="25 USD"
+            actionNode={<Button to="https://discord.gg/jEzC5bjD">Learn more</Button>}
           />
         </BenefitsContainer>
 
-        <BenefitsContainer title="Original Creators">
-          <BenefitCard
-            title="Gleev Original Content"
-            description="Earn more by publishing content to Gleev at least 24 hours ahead of YouTube. Make sure to add hashtag #JostreamOriginal and link to the original video on Gleev to get the reward."
-            rewardNode="x5 per video"
-            // amountTooltip="Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity."
-            actionNode={<ReferralLinkButton />}
-          />
-          <BenefitCard
-            title="Gleev Branding"
-            description="Add Joystream branding to your video and multiply your rewards for original uploads to Gleev."
-            rewardNode="x5 per video"
-            // amountTooltip="Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity."
-            actionNode={<ReferralLinkButton />}
-          />
-        </BenefitsContainer>
+        {isSilverOrAbove ? (
+          <BenefitsContainer title="Original Creators">
+            <BenefitCard
+              title="Gleev Original Content"
+              description="Earn more by publishing content to Gleev at least 24 hours ahead of YouTube. Make sure to add hashtag #JostreamOriginal and link to the original video on Gleev to get the reward."
+              rewardNode="x5 per video"
+              actionNode={<Button to="to be provided">Sign up</Button>}
+            />
+            <BenefitCard
+              title="Gleev Branding"
+              description="Add Joystream branding to your video and multiply your rewards for original uploads to Gleev."
+              rewardNode="x2 per original video"
+              actionNode={<Button to="to be provided">Sign up</Button>}
+            />
+          </BenefitsContainer>
+        ) : null}
 
-        <BenefitsContainer title="Social Promoters">
-          <BenefitCard
-            title="Share NFT"
-            description="Drop the link of your post to shared NFTs channel on Discord to participate in rewards."
-            rewardNode="10 USD"
-            // amountTooltip="Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity."
-            actionNode={<ReferralLinkButton />}
-          />
-          <BenefitCard
-            title="Share Token"
-            description="Drop the link of your post to Shared Tokens channel on Discord to participate in rewards."
-            rewardNode="10 USD"
-            // amountTooltip="Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity."
-            actionNode={<ReferralLinkButton />}
-          />
-          <BenefitCard
-            title="Ambassador Program"
-            description="Become Joystream ambassador and work with our marketing and product team on growing the platform."
-            rewardNode="Up to 1k USD pm"
-            // amountTooltip="Ranks are assigned at discretion of Joystream team based on such factors as content quality and channel popularity."
-            actionNode={<ReferralLinkButton />}
-          />
-        </BenefitsContainer>
+        {isSilverOrAbove ? (
+          <BenefitsContainer title="Social Promoters">
+            <BenefitCard
+              title="Share NFT"
+              description="Drop the link of your post to shared NFTs channel on Discord to participate in rewards."
+              rewardNode="Up to 100 USD"
+              actionNode={
+                <Button to={absoluteRoutes.viewer.channel(channelId ?? '', { tab: 'NFTs' })}>Share NFTs</Button>
+              }
+            />
+            <BenefitCard
+              title="Share Token"
+              description="Drop the link of your post to Shared Tokens channel on Discord to participate in rewards."
+              rewardNode="Up to 100 USD"
+              actionNode={
+                <Button to={absoluteRoutes.viewer.channel(channelId ?? '', { tab: 'Token' })}>Share token</Button>
+              }
+            />
+            <BenefitCard
+              title="Ambassador Program"
+              description="Become Joystream ambassador and work with our marketing and product team on growing the platform."
+              rewardNode="Up to 1k USD pm"
+              actionNode={<Button to="to be provided">Apply</Button>}
+            />
+          </BenefitsContainer>
+        ) : null}
+
+        <StyledGridItem colSpan={{ xxs: 12 }}>
+          <HelpContainer alignItems="center" gap={2}>
+            <SvgLogoDiscordOnDark />
+            <Text variant="t300" as="p">
+              Have a question? Ask for help on{' '}
+              <TextButton to="https://discord.gg/jEzC5bjD" size="large">
+                Discord
+              </TextButton>
+            </Text>
+          </HelpContainer>
+        </StyledGridItem>
       </LayoutGrid>
     </>
   )
 }
+
+const HelpContainer = styled(FlexBox)``
 
 export const BenefitsContainer = ({ children, title }: { children: ReactNode[] | ReactNode; title: string }) => {
   const drawer = useRef<HTMLDivElement>(null)
@@ -393,9 +354,12 @@ export const BenefitsContainer = ({ children, title }: { children: ReactNode[] |
         <Text variant="h500" as="h3">
           {title}
         </Text>
-        <Button onClick={() => setDrawerActive((prev) => !prev)} rounded variant="tertiary">
-          <SvgActionChevronB />
-        </Button>
+        <Button
+          icon={<StyledSvgActionChevronT isDrawerActive={isDrawerActive} />}
+          variant="tertiary"
+          size="small"
+          onClick={() => setDrawerActive((prev) => !prev)}
+        />
       </FlexBox>
       <BenefitsDrawer
         isActive={isDrawerActive}
@@ -429,4 +393,11 @@ export const BenefitsDrawer = styled(FlexBox)<DrawerProps>`
   max-height: ${({ isActive, maxHeight }) => (isActive ? `${maxHeight}px` : '0px')};
   overflow: hidden;
   transition: max-height ${transitions.timings.loading} ${transitions.easing};
+`
+
+export const StyledSvgActionChevronT = styled(SvgActionChevronT, {
+  shouldForwardProp: isPropValid,
+})<{ isDrawerActive: boolean }>`
+  transform: rotate(${({ isDrawerActive }) => (!isDrawerActive ? '-180deg' : '0deg')});
+  transition: transform ${cVar('animationTransitionMedium')};
 `

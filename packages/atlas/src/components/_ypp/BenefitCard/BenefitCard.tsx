@@ -30,22 +30,9 @@ export const BenefitCard: FC<BenefitCardProps> = ({
 
   const rewardContent = (
     <FlexBox justifyContent={lgMatch ? 'end' : 'unset'} alignItems="center">
-      {/*{isRangeAmount ? (*/}
-      {/*  <FlexBox width="fit-content" flow="column" alignItems={smMatch ? 'center' : 'start'}>*/}
-      {/*    <Text variant="h400" as="h1">*/}
-      {/*      Up to +{dollarAmount} USD*/}
-      {/*    </Text>*/}
-      {/*    <Text variant="t200" as="p" color="colorText">*/}
-      {/*      Depending on tier*/}
-      {/*    </Text>*/}
-      {/*  </FlexBox>*/}
-      {/*) : (*/}
-      {/*  <Text variant="h400" as="h1">*/}
-      {/*    {dollarAmount > 0 ? `+${dollarAmount} USD` : 'Not paid'}*/}
-      {/*  </Text>*/}
-      {/*)}*/}
-      {rewardNode}
-
+      <Text variant="h400" as="span">
+        {rewardNode}
+      </Text>
       {amountTooltip && <Information text={amountTooltip} placement="top-start" />}
     </FlexBox>
   )
@@ -67,7 +54,7 @@ export const BenefitCard: FC<BenefitCardProps> = ({
             <FlexGridItem colSpan={{ lg: 2 }} alignItems="center">
               {rewardContent}
             </FlexGridItem>
-            <FlexGridItem colSpan={{ lg: 4 }} alignItems="center" justifyContent="end">
+            <FlexGridItem colSpan={{ lg: 2 }} alignItems="center" justifyContent="end">
               {actionNode}
             </FlexGridItem>
           </>

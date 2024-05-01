@@ -121,4 +121,8 @@ export const ContenBox = styled(LayoutGrid)`
   ${media.sm} {
     padding: ${sizes(6)};
   }
+
+  ${media.md} {
+    padding: ${sizes(8)};
+  }
 `
