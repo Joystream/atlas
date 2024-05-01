@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import QRCode from 'qrcode.react'
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { SvgActionChevronR, SvgAlertsSuccess24 } from '@/assets/icons'
@@ -11,6 +11,8 @@ import { Text } from '@/components/Text'
 import { TextButton } from '@/components/_buttons/Button'
 import { CopyAddressButton } from '@/components/_buttons/CopyAddressButton/CopyAddressButton'
 import { atlasConfig } from '@/config'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
+import { useUser } from '@/providers/user/user.hooks'
 import { cVar, sizes, square } from '@/styles'
 import { changeNowService } from '@/utils/ChangeNowService'
 
@@ -50,10 +52,19 @@ type ProgressStepProps = {
   transactionData: TransactionData
 } & CommonProps
 
-export const ProgressStep = ({ transactionData, type, setPrimaryButtonProps, goToStep }: ProgressStepProps) => {
+export const ProgressStep = ({
+  transactionData,
+  type,
+  setPrimaryButtonProps,
+  goToStep,
+  onClose,
+}: ProgressStepProps) => {
   const [retry, setRetry] = useState(true)
   const isSellingJoy = type === 'sell'
   const steps = isSellingJoy ? sellSteps : buySteps
+  const { trackChangenowTokenSold, trackChangenowTokenBought } = useSegmentAnalytics()
+  const { memberId } = useUser()
+  const mountTimestamp = useRef(Date.now())
   const { data } = useQuery(
     ['getTransactionStatus', transactionData.id],
     () => changeNowService.getTransactionStatus(transactionData.id).then((res) => res.data),
@@ -62,6 +73,12 @@ export const ProgressStep = ({ transactionData, type, setPrimaryButtonProps, goT
       onSuccess: (data) => {
         if (data.status === 'failed') {
           goToStep(ChangeNowModalStep.FAILED)
+        }
+
+        // if transaction doesn't fail or succeed after 26 min
+        // the issue might be on API side, we should not waste more time waiting
+        if (data.status === 'waiting' && retry && Date.now() - mountTimestamp.current > 26 * 60 * 1000) {
+          goToStep(ChangeNowModalStep.TIMEOUT)
         }
       },
     }
@@ -116,15 +133,28 @@ export const ProgressStep = ({ transactionData, type, setPrimaryButtonProps, goT
         break
       case 'finished':
         setRetry(false)
+        isSellingJoy
+          ? trackChangenowTokenSold(atlasConfig.joystream.tokenTicker, memberId || 'N/A', data.amountTo)
+          : trackChangenowTokenBought(atlasConfig.joystream.tokenTicker, memberId || 'N/A', data.amountFrom)
         setPrimaryButtonProps({
           text: 'Close',
-          onClick: () => undefined,
+          onClick: () => onClose(),
         })
         step = steps.length
         extraContent = successText
     }
     return [step, steps[step]?.[1], extraContent]
-  }, [data, isSellingJoy, setPrimaryButtonProps, steps, transactionData.hasAutomaticTransactionSucceeded])
+  }, [
+    data,
+    isSellingJoy,
+    memberId,
+    onClose,
+    setPrimaryButtonProps,
+    steps,
+    trackChangenowTokenBought,
+    trackChangenowTokenSold,
+    transactionData.hasAutomaticTransactionSucceeded,
+  ])
 
   return (
     <FlexBox gap={6} flow="column">
@@ -137,6 +167,7 @@ export const ProgressStep = ({ transactionData, type, setPrimaryButtonProps, goT
               hideStepNumberText={currentStep !== idx}
               title={currentStep === idx ? stepText : ''}
               variant={currentStep < idx ? 'future' : currentStep === idx ? 'current' : 'completed'}
+              showOtherStepsOnMobile
             />
           </>
         ))}
@@ -149,10 +180,7 @@ export const ProgressStep = ({ transactionData, type, setPrimaryButtonProps, goT
         <Text variant="t200" as="p" color="colorText">
           Exchange ID:
         </Text>
-        <TextButton
-          variant="secondary"
-          onClick={() => window.open(`https://changenow.io/exchange/txs/${transactionData.id}`, '_blank')}
-        >
+        <TextButton variant="secondary" to={`https://changenow.io/exchange/txs/${transactionData.id}`}>
           {transactionData.id}
         </TextButton>
       </FlexBox>

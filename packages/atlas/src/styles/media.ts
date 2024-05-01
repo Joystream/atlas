@@ -12,4 +12,5 @@ export const media = {
   lg: buildQuery(breakpoints.lg),
   xl: buildQuery(breakpoints.xl),
   xxl: buildQuery(breakpoints.xxl),
+  landscape: '(orientation: landscape) and (hover: none) and (pointer: coarse)',
 }

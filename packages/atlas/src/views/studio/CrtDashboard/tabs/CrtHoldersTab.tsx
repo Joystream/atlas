@@ -28,11 +28,7 @@ export const CrtHoldersTab = ({ token }: CrtHoldersTabProps) => {
             tokenId: token.id,
             allocation: (+holder.totalAmount / +token.totalSupply) * 100,
             total: +holder.totalAmount,
-            vested: +(
-              holder.vestingSchedules.find(
-                (vesting) => vesting.vestingSource.__typename === 'InitialIssuanceVestingSource'
-              )?.totalVestingAmount ?? 0
-            ),
+            staked: +holder.stakedAmount,
           }))
         : [],
     [holders, token.id, token.totalSupply]

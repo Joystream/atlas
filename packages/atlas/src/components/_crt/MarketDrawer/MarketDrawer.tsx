@@ -1,4 +1,3 @@
-import { useApolloClient } from '@apollo/client'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
@@ -12,6 +11,8 @@ import { SuccessActionModalTemplate } from '@/components/_crt/SuccessActionModal
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useClipboard } from '@/hooks/useClipboard'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
+import { useNetworkUtils } from '@/providers/networkUtils/networkUtils.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { transitions } from '@/styles'
 import { permillToPercentage } from '@/utils/number'
@@ -42,13 +43,14 @@ export const MarketDrawer = ({ show, onClose, tokenId }: CrtMarketSaleViewProps)
     tnc: atlasConfig.legal.crtTnc,
     isChecked: true,
   })
+  const { refetchCreatorTokenData } = useNetworkUtils()
   const [primaryButtonProps, setPrimaryButtonProps] = useState<ActionDialogButtonProps>({ text: 'Continue' })
   const [secondaryButtonProps, setSecondaryButtonProps] = useState<ActionDialogButtonProps>({ text: 'Back' })
   const [isGoingBack, setIsGoingBack] = useState(false)
   const nodeRef = useRef<HTMLDivElement>(null)
   const { channelId } = useUser()
-  const client = useApolloClient()
   const { copyToClipboard } = useClipboard()
+  const { trackAMMStarted } = useSegmentAnalytics()
 
   const handleNextStep = useCallback(
     ({ tnc }: CrtMarketForm) => {
@@ -66,8 +68,9 @@ export const MarketDrawer = ({ show, onClose, tokenId }: CrtMarketSaleViewProps)
   }, [])
 
   const onSuccess = useCallback(() => {
+    trackAMMStarted(tokenId, creatorTokenById?.symbol ?? 'N/A', channelId ?? 'N/A')
     setShowSuccessModal(true)
-  }, [])
+  }, [channelId, creatorTokenById?.symbol, tokenId, trackAMMStarted])
 
   const stepContent = () => {
     switch (activeStep) {
@@ -104,15 +107,15 @@ export const MarketDrawer = ({ show, onClose, tokenId }: CrtMarketSaleViewProps)
   const successDetails = useMemo(
     () => [
       {
-        text: 'You can buy and sell your own tokens on the token market too!',
+        text: 'The more buyers you have had, the higher will be the profit when you are closing the market.',
         icon: <SvgActionMarket />,
       },
       {
-        text: 'You don’t earn any royalties from the transactions of other members on the market.',
+        text: "You are not earning royalties from other people's transactions on your token.",
         icon: <SvgActionWarning />,
       },
       {
-        text: 'Members can now buy and sale your tokens on your token page. Share the link to the market with them to let everyone know about it.',
+        text: 'Share the link to the token page  with an open market so people can go and buy your token.',
         icon: <SvgActionShoppingCart />,
         actionNode: (
           <TextButton
@@ -141,7 +144,7 @@ export const MarketDrawer = ({ show, onClose, tokenId }: CrtMarketSaleViewProps)
         primaryButton={{
           text: 'Continue',
           onClick: () => {
-            client.refetchQueries({ include: 'active' })
+            refetchCreatorTokenData(tokenId)
             setShowSuccessModal(false)
             onClose()
           },

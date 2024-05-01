@@ -13,6 +13,7 @@ export const InformationContainer = styled.div<{ isPaused: boolean }>`
 
   ${media.sm} {
     width: fit-content;
+    max-width: 90%;
     position: absolute;
     margin: 0;
     opacity: ${({ isPaused }) => (isPaused ? 1 : 0.25)};

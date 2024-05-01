@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import { useGetFullCreatorTokenQuery } from '@/api/queries/__generated__/creatorTokens.generated'
@@ -15,6 +15,7 @@ import { Loader } from '@/components/_loaders/Loader'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useMountEffect } from '@/hooks/useMountEffect'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useUser } from '@/providers/user/user.hooks'
 import { SentryLogger } from '@/utils/logs'
 import {
@@ -38,7 +39,7 @@ const getTabIndex = (tabName: TabsNames, allTabs: { name: TabsNames }[]): number
 export const CrtDashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
-  const { activeChannel } = useUser()
+  const { activeChannel, memberId } = useUser()
   const { data } = useGetFullCreatorTokenQuery({
     variables: {
       id: activeChannel?.creatorToken?.token.id ?? '',
@@ -47,22 +48,31 @@ export const CrtDashboard = () => {
       SentryLogger.error('Failed to fetch creator token', 'CrtDashboard', error)
     },
   })
+  const { trackPageView } = useSegmentAnalytics()
 
   const hasOpenMarket = data?.creatorTokenById?.ammCurves.some((curve) => !curve.finalized)
   const mappedTabs = TABS.filter((tab) => (hasOpenMarket ? true : tab !== 'Market')).map((tab) => ({ name: tab }))
-  const currentTab = currentTabName ? getTabIndex(currentTabName, mappedTabs) : 0
+  const currentTab = currentTabName ? Math.max(0, getTabIndex(currentTabName, mappedTabs)) : 0
+
   const handleChangeTab = useCallback(
     (idx: number) => {
       setSearchParams({ tab: mappedTabs[idx].name })
     },
     [mappedTabs, setSearchParams]
   )
+
   useMountEffect(() => {
     if (currentTab === -1) setSearchParams({ 'tab': '0' }, { replace: true })
   })
 
+  useEffect(() => {
+    trackPageView('CRT Dashboard', { tab: TABS[currentTab] })
+  }, [currentTab, trackPageView])
+
   const activeRevenueShare = data?.creatorTokenById?.revenueShares.find((revenueShare) => !revenueShare.finalized)
   const { creatorTokenById } = data ?? {}
+  const userAsStaker = activeRevenueShare?.stakers.find((staker) => staker.account.member.id === memberId)
+  const hasRecoveredStake = userAsStaker ? userAsStaker.recovered : true
 
   return (
     <LimitedWidthContainer big>
@@ -93,28 +103,26 @@ export const CrtDashboard = () => {
                     Edit token page
                   </Button>
                   {!hasOpenMarket ? (
-                    <StartSaleOrMarketButton tokenId={creatorTokenById.id ?? 'N/A'} />
+                    <StartSaleOrMarketButton token={creatorTokenById} />
                   ) : (
-                    <CloseMarketButton
-                      channelId={activeChannel?.id ?? '-1'}
-                      tokenId={data?.creatorTokenById?.id ?? ''}
-                    />
+                    <CloseMarketButton channelId={activeChannel?.id ?? '-1'} tokenId={creatorTokenById?.id ?? ''} />
                   )}
                 </>
               )}
               {currentTab === getTabIndex('Market', mappedTabs) && (
-                <CloseMarketButton channelId={activeChannel?.id ?? '-1'} tokenId={data?.creatorTokenById?.id ?? ''} />
+                <CloseMarketButton channelId={activeChannel?.id ?? '-1'} tokenId={creatorTokenById?.id ?? ''} />
               )}
               {currentTab === getTabIndex('Revenue share', mappedTabs) && (
                 <>
                   {!activeRevenueShare ? (
                     <RevenueShareModalButton token={creatorTokenById} />
-                  ) : (
+                  ) : hasRecoveredStake ? (
                     <CloseRevenueShareButton
+                      token={creatorTokenById}
                       hideOnInactiveRevenue
                       revenueShareEndingBlock={activeRevenueShare.endsAt}
                     />
-                  )}
+                  ) : null}
                 </>
               )}
             </>

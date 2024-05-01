@@ -1,7 +1,11 @@
 import BN from 'bn.js'
-import { ReactElement, useCallback, useState } from 'react'
+import { ReactElement, useCallback } from 'react'
 
-import { GetTokenRevenueSharesQuery } from '@/api/queries/__generated__/creatorTokens.generated'
+import {
+  GetTokenRevenueSharesQuery,
+  useGetCreatorTokenHoldersQuery,
+  useGetFullCreatorTokenQuery,
+} from '@/api/queries/__generated__/creatorTokens.generated'
 import { SvgActionCalendar, SvgActionLock, SvgJoyTokenMonochrome16 } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
 import { FlexBox } from '@/components/FlexBox'
@@ -9,11 +13,10 @@ import { Information } from '@/components/Information'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { ClaimShareModal } from '@/components/_crt/ClaimShareModal'
+import { ClaimRevenueShareButton } from '@/components/_crt/ClaimRevenueShareButton/ClaimRevenueShareButton'
 import { InfoBox, Wrapper } from '@/components/_crt/RevenueShareWidget/RevenueShareWidget.styles'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
-import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
 import { useUnlockTokenStake } from '@/hooks/useUnlockTokenStake'
 import { getRevenueShareStatusForMember } from '@/utils/crts'
 import { SentryLogger } from '@/utils/logs'
@@ -26,11 +29,22 @@ export type RevenueShareWidgetProps = {
   memberId: string
 }
 export const RevenueShareWidget = ({ tokenName, tokenId, revenueShare, memberId }: RevenueShareWidgetProps) => {
-  const [openClaimShareModal, setOpenClaimShareModal] = useState(false)
-  const { tokenBalance } = useGetTokenBalance(tokenId, memberId)
   const { convertBlockToMsTimestamp, currentBlock } = useBlockTimeEstimation()
   const unlockStakeTx = useUnlockTokenStake()
   const memberStake = revenueShare.stakers.find((stakers) => stakers.account.member.id === memberId)
+  const { data } = useGetFullCreatorTokenQuery({ variables: { id: tokenId } })
+  const { data: holderData } = useGetCreatorTokenHoldersQuery({
+    variables: {
+      where: {
+        token: {
+          id_eq: tokenId,
+        },
+        member: {
+          id_eq: memberId,
+        },
+      },
+    },
+  })
   const status = getRevenueShareStatusForMember({
     currentBlock,
     endingAt: revenueShare.endsAt,
@@ -54,7 +68,7 @@ export const RevenueShareWidget = ({ tokenName, tokenId, revenueShare, memberId 
       case 'active':
         return (
           <FlexBox justifyContent="end">
-            <Button onClick={() => setOpenClaimShareModal(true)}>Claim your share</Button>
+            {data?.creatorTokenById ? <ClaimRevenueShareButton token={data.creatorTokenById} /> : null}
           </FlexBox>
         )
       case 'unlock':
@@ -93,10 +107,6 @@ export const RevenueShareWidget = ({ tokenName, tokenId, revenueShare, memberId 
 
   return (
     <>
-      {openClaimShareModal && (
-        <ClaimShareModal onClose={() => setOpenClaimShareModal(false)} show={openClaimShareModal} tokenId={tokenId} />
-      )}
-
       <Wrapper isActive={['active', 'unlock'].includes(status)} gap={2} alignItems="center">
         <InfoBox>
           <Detail title="TOKEN NAME">
@@ -121,7 +131,7 @@ export const RevenueShareWidget = ({ tokenName, tokenId, revenueShare, memberId 
           <Detail title="YOUR TOKENS">
             <FlexBox alignItems="center">
               <NumberFormat
-                value={+(tokenBalance ?? 0)}
+                value={+(holderData?.tokenAccounts[0].totalAmount ?? 0)}
                 as="p"
                 variant="t300"
                 withToken

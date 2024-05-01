@@ -1,4 +1,3 @@
-import { useApolloClient } from '@apollo/client'
 import styled from '@emotion/styled'
 import Long from 'long'
 import { useEffect, useState } from 'react'
@@ -18,6 +17,7 @@ import { MarkdownEditor } from '@/components/_inputs/MarkdownEditor/MarkdownEdit
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useJoystream } from '@/providers/joystream'
+import { useNetworkUtils } from '@/providers/networkUtils/networkUtils.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
@@ -36,8 +36,8 @@ export const CrtTokenEditView = () => {
   const { displaySnackbar } = useSnackbar()
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-  const client = useApolloClient()
-  const { data, loading } = useGetFullCreatorTokenQuery({
+  const { refetchCreatorTokenData } = useNetworkUtils()
+  const { data: tokenData, loading } = useGetFullCreatorTokenQuery({
     variables: {
       id: activeChannel?.creatorToken?.token.id ?? '',
     },
@@ -71,14 +71,14 @@ export const CrtTokenEditView = () => {
   })
 
   useEffect(() => {
-    if (data?.creatorTokenById) {
+    if (tokenData?.creatorTokenById) {
       form.reset({
-        videoId: data?.creatorTokenById?.trailerVideo[0]?.video.id,
-        benefits: data?.creatorTokenById?.benefits,
-        about: data?.creatorTokenById?.description ?? '',
+        videoId: tokenData?.creatorTokenById?.trailerVideo[0]?.video.id,
+        benefits: tokenData?.creatorTokenById?.benefits,
+        about: tokenData?.creatorTokenById?.description ?? '',
       })
     }
-  }, [data?.creatorTokenById, form])
+  }, [tokenData?.creatorTokenById, form])
 
   const handleSubmit = form.handleSubmit((data) => {
     if (!joystream || !memberId || !channelId) {
@@ -106,10 +106,11 @@ export const CrtTokenEditView = () => {
         ),
       onTxSync: async () => {
         displaySnackbar({
-          title: 'Success',
+          title: 'Successfully updated token!',
           iconType: 'success',
         })
-        client.refetchQueries({ include: 'active' })
+
+        refetchCreatorTokenData(tokenData?.creatorTokenById?.id ?? '')
       },
       onError: () => {
         displaySnackbar({
@@ -125,7 +126,7 @@ export const CrtTokenEditView = () => {
         mode={mode}
         isDirty={form.formState.isDirty}
         isLoading={loading}
-        token={data?.creatorTokenById ?? undefined}
+        token={tokenData?.creatorTokenById ?? undefined}
         channelRevenue={channel?.cumulativeRevenue ?? undefined}
         tokenDetails={
           mode === 'edit' ? (

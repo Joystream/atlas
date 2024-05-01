@@ -1,4 +1,3 @@
-import { useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -16,9 +15,12 @@ import { BuyMarketTokenSuccess } from '@/components/_crt/BuyMarketTokenModal/ste
 import { DialogProps } from '@/components/_overlays/Dialog'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { absoluteRoutes } from '@/config/routes'
+import { useDismissibleAction } from '@/hooks/useDismissibleAction'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { useFee, useJoystream, useSubscribeAccountBalance } from '@/providers/joystream'
+import { useNetworkUtils } from '@/providers/networkUtils/networkUtils.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
@@ -26,7 +28,7 @@ import { calcBuyMarketPricePerToken } from '@/utils/crts'
 import { SentryLogger } from '@/utils/logs'
 import { formatSmallDecimal, permillToPercentage } from '@/utils/number'
 
-import { BuyMarketTokenConditions } from './steps/BuyMarketTokenConditions'
+import { BuyMarketTokenConditions, CONDITIONS_ACTION_ID } from './steps/BuyMarketTokenConditions'
 
 export type BuySaleTokenModalProps = {
   tokenId: string
@@ -44,6 +46,9 @@ enum BUY_MARKET_TOKEN_STEPS {
 export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySaleTokenModalProps) => {
   const { memberId, memberChannels } = useUser()
   const navigate = useNavigate()
+  const [hasAcceptedConditions, handleUpdateAction] = useDismissibleAction(CONDITIONS_ACTION_ID)
+  const { refetchAllMemberTokenHolderQueries, refetchCreatorTokenData, refetchAllMemberTokenBalanceData } =
+    useNetworkUtils()
   const [activeStep, setActiveStep] = useState(BUY_MARKET_TOKEN_STEPS.form)
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogProps['primaryButton']>()
   const amountRef = useRef<number | null>(null)
@@ -58,6 +63,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
       SentryLogger.error('Error while fetching creator token', 'BuyMarketTokenModal', error)
     },
   })
+  const hasActiveRevenueShare = data?.creatorTokenById?.revenueShares.some((rS) => !rS.finalized)
   const { data: memberTokenAccount } = useGetCreatorTokenHoldersQuery({
     variables: {
       where: {
@@ -71,12 +77,13 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
     },
     skip: !memberId,
   })
-  const client = useApolloClient()
   const { accountBalance } = useSubscribeAccountBalance()
   const tokenTitle = data?.creatorTokenById?.symbol ?? 'N/A'
   const currentAmm = data?.creatorTokenById?.ammCurves.find((amm) => !amm.finalized)
   const smMatch = useMediaMatch('sm')
   const { displaySnackbar } = useSnackbar()
+  const { channelId } = useUser()
+  const { trackAMMTokensPurchased } = useSegmentAnalytics()
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
 
@@ -164,6 +171,14 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
         ),
       onTxSync: async () => {
         if (memberTokenAccount?.tokenAccounts.length) {
+          trackAMMTokensPurchased(
+            data?.creatorTokenById?.id ?? 'N/A',
+            data?.creatorTokenById?.symbol ?? 'N/A',
+            channelId ?? 'N/A',
+            tokenAmount,
+            priceForAllToken
+          )
+          handleUpdateAction(true)
           displaySnackbar({
             iconType: 'success',
             title: `${tokenAmount} $${tokenTitle} purchased`,
@@ -175,7 +190,10 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
         } else {
           setActiveStep(BUY_MARKET_TOKEN_STEPS.success)
         }
-        client.refetchQueries({ include: 'active' })
+        refetchCreatorTokenData(tokenId)
+        refetchAllMemberTokenHolderQueries().then(() => {
+          refetchAllMemberTokenBalanceData()
+        })
       },
       onError: () => {
         setActiveStep(BUY_MARKET_TOKEN_STEPS.form)
@@ -193,18 +211,26 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
     })
   }, [
     calculateRequiredHapi,
-    client,
-    displaySnackbar,
-    handleTransaction,
     joystream,
     memberId,
-    memberTokenAccount?.tokenAccounts.length,
-    navigate,
-    onClose,
-    proxyCallback,
-    tokenAmount,
+    handleTransaction,
     tokenId,
+    proxyCallback,
+    memberTokenAccount?.tokenAccounts.length,
+    refetchCreatorTokenData,
+    refetchAllMemberTokenHolderQueries,
+    trackAMMTokensPurchased,
+    data?.creatorTokenById?.id,
+    data?.creatorTokenById?.symbol,
+    channelId,
+    tokenAmount,
+    priceForAllToken,
+    handleUpdateAction,
+    displaySnackbar,
     tokenTitle,
+    onClose,
+    navigate,
+    refetchAllMemberTokenBalanceData,
   ])
 
   const formDetails = useMemo(() => {
@@ -281,7 +307,8 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
             withDenomination="before"
           />
         ),
-        tooltipText: 'Price for a single token divided by the token amount.',
+        tooltipText:
+          'Price of each incremental unit purchased or sold depends on overall quantity of tokens transacted, the actual average price per unit for the entire purchase or sale will differ from the price displayed for the first unit transacted.',
       },
       {
         title: 'Fee',
@@ -323,11 +350,19 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
     if (activeStep === BUY_MARKET_TOKEN_STEPS.form) {
       setPrimaryButtonProps({
         text: 'Continue',
-        onClick: () =>
+        onClick: () => {
+          if (hasActiveRevenueShare) {
+            displaySnackbar({
+              iconType: 'error',
+              title: 'You cannot trade tokens during revenue share.',
+            })
+            return
+          }
           handleSubmit((data) => {
             amountRef.current = data.tokenAmount
-            setActiveStep(BUY_MARKET_TOKEN_STEPS.conditions)
-          })(),
+            setActiveStep(hasAcceptedConditions ? BUY_MARKET_TOKEN_STEPS.summary : BUY_MARKET_TOKEN_STEPS.conditions)
+          })()
+        },
       })
     }
 
@@ -337,7 +372,15 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
         onClick: onTransactionSubmit,
       })
     }
-  }, [activeStep, data?.creatorTokenById?.symbol, handleSubmit, onTransactionSubmit])
+  }, [
+    activeStep,
+    data?.creatorTokenById?.symbol,
+    displaySnackbar,
+    handleSubmit,
+    hasAcceptedConditions,
+    hasActiveRevenueShare,
+    onTransactionSubmit,
+  ])
 
   if (!loading && !currentAmm && show) {
     SentryLogger.error('BuyAmmModal invoked on token without active amm', 'BuyMarketTokenModal', {
@@ -365,6 +408,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
           control={control}
           details={formDetails}
           pricePerUnit={pricePerUnit}
+          maxInputValue={10_000_000}
           error={formState.errors.tokenAmount?.message}
           validation={(value) => {
             if (!value || value < 1) return 'You need to buy at least one token'

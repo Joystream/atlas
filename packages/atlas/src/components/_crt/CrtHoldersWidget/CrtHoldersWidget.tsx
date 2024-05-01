@@ -240,7 +240,7 @@ const HoldersLegendEntry = ({
         </Text>
       </FlexBox>
       <Text variant="t100" as="p">
-        {value}%
+        {value < 0.01 ? '<0.01' : value}%
       </Text>
     </FlexBox>
   )

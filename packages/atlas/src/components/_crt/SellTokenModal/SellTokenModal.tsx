@@ -1,4 +1,3 @@
-import { useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
 import { useCallback, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -11,8 +10,10 @@ import { AmmModalSummaryTemplate } from '@/components/_crt/AmmModalTemplates/Amm
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
 import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { useFee, useJoystream } from '@/providers/joystream'
+import { useNetworkUtils } from '@/providers/networkUtils/networkUtils.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
@@ -28,11 +29,13 @@ export type SellTokenModalProps = {
 
 export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenModalProps) => {
   const [step, setStep] = useState<'form' | 'summary'>('form')
+  const { refetchCreatorTokenData, refetchAllMemberTokenBalanceData } = useNetworkUtils()
   const { control, watch, handleSubmit, formState, reset } = useForm<{ tokenAmount: number }>()
-  const { memberId, memberChannels } = useUser()
+  const { memberId, memberChannels, channelId } = useUser()
   const tokenAmount = watch('tokenAmount') || 0
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
+  const { trackAMMTokensSold } = useSegmentAnalytics()
   const { displaySnackbar } = useSnackbar()
   const { fullFee } = useFee('sellTokenOnMarketTx', ['1', '1', '2', '10000000'])
   const { data, loading } = useGetFullCreatorTokenQuery({
@@ -43,9 +46,10 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
       SentryLogger.error('Failed to fetch token data', 'SellTokenModal', { error })
     },
   })
-  const client = useApolloClient()
+  const hasActiveRevenueShare = data?.creatorTokenById?.revenueShares.some((rS) => !rS.finalized)
 
-  const currentAmm = data?.creatorTokenById?.ammCurves.find((amm) => !amm.finalized)
+  const currentAmm = data?.creatorTokenById?.currentAmmSale
+  const ammBalance = currentAmm ? +currentAmm.mintedByAmm - +currentAmm.burnedByAmm : 0
   const title = data?.creatorTokenById?.symbol ?? 'N/A'
   const { tokenBalance: userTokenBalance } = useGetTokenBalance(tokenId)
 
@@ -59,13 +63,13 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
     (amount: number) => {
       const currentAmm = data?.creatorTokenById?.ammCurves.find((amm) => !amm.finalized)
       return calcSellMarketPricePerToken(
-        currentAmm ? +currentAmm.mintedByAmm - +currentAmm.burnedByAmm : undefined,
+        currentAmm ? ammBalance : undefined,
         currentAmm?.ammSlopeParameter,
         currentAmm?.ammInitPrice,
         amount
       )
     },
-    [data?.creatorTokenById]
+    [ammBalance, data?.creatorTokenById?.ammCurves]
   )
 
   const priceForAllToken = useMemo(() => {
@@ -163,7 +167,8 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
             withDenomination="before"
           />
         ),
-        tooltipText: 'Averaged price per token.',
+        tooltipText:
+          'Price of each incremental unit purchased or sold depends on overall quantity of tokens transacted, the actual average price per unit for the entire purchase or sale will differ from the price displayed for the first unit transacted.',
       },
       {
         title: 'Fee',
@@ -187,10 +192,19 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
     [calculateSlippageAmount, fullFee, pricePerUnit, title, tokenAmount]
   )
 
-  const onFormSubmit = () =>
+  const onFormSubmit = () => {
+    if (hasActiveRevenueShare) {
+      displaySnackbar({
+        iconType: 'error',
+        title: 'You cannot trade tokens during revenue share.',
+      })
+      return
+    }
+
     handleSubmit(() => {
       setStep('summary')
     })()
+  }
 
   const onTransactionSubmit = async () => {
     const slippageTolerance = calculateSlippageAmount(tokenAmount)
@@ -213,16 +227,22 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
           iconType: 'error',
         })
       },
-      onTxSync: async () => {
-        // todo add joys from rpc event
+      onTxSync: async ({ receivedAmount }) => {
+        const joyAmountReceived = hapiBnToTokenNumber(new BN(receivedAmount))
+        trackAMMTokensSold(
+          tokenId,
+          data?.creatorTokenById?.symbol ?? 'N/A',
+          channelId ?? 'N/A',
+          tokenAmount,
+          joyAmountReceived
+        )
         displaySnackbar({
           iconType: 'success',
-          title: `${formatNumberShort((tokenAmount * priceForAllToken) / tokenAmount)} ${
-            atlasConfig.joystream.tokenTicker
-          } received`,
+          title: `${formatNumberShort(joyAmountReceived)} ${atlasConfig.joystream.tokenTicker} received`,
           description: `You will find it in your portfolio.`,
         })
-        client.refetchQueries({ include: 'active' })
+        refetchCreatorTokenData(tokenId)
+        refetchAllMemberTokenBalanceData()
         onClose()
       },
     })
@@ -257,15 +277,15 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
           control={control}
           error={formState.errors.tokenAmount?.message}
           pricePerUnit={pricePerUnit}
-          maxValue={Math.min(+(currentAmm?.mintedByAmm ?? 0), userTokenBalance)}
+          maxValue={Math.min(ammBalance, userTokenBalance)}
           details={formDetails}
+          showTresholdButtons
           validation={(value) => {
             if (!value || value < 1) {
-              return 'You need to sell at least one token'
+              return 'You need to sell at least one token.'
             }
-            if (value > +(currentAmm?.mintedByAmm ?? 0))
-              return 'You cannot sell more tokens than available in the market'
-            if (value > userTokenBalance) return 'Amount exceeds your account balance'
+            if (value > ammBalance) return `There is only ${ammBalance} $${title} available in the market.`
+            if (value > userTokenBalance) return `Amount exceeds your account balance of ${userTokenBalance} $${title}.`
             return true
           }}
         />

@@ -441,7 +441,7 @@ export type GetHistoricalTokenAllocationQuery = {
   __typename?: 'Query'
   getCumulativeHistoricalShareAllocation: {
     __typename?: 'GetCumulativeHistoricalShareAllocationResult'
-    cumulativeHistoricalAllocation: number
+    cumulativeHistoricalAllocation: string
   }
 }
 

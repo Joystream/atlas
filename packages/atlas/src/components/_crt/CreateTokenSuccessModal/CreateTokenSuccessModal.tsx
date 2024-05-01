@@ -1,4 +1,3 @@
-import { useApolloClient } from '@apollo/client'
 import styled from '@emotion/styled'
 import { useNavigate } from 'react-router-dom'
 
@@ -19,8 +18,7 @@ export type CreateTokenSuccessModalProps = {
 
 export const CreateTokenSuccessModal = ({ tokenName, show }: CreateTokenSuccessModalProps) => {
   const navigate = useNavigate()
-  const client = useApolloClient()
-  const { channelId } = useUser()
+  const { channelId, refetchUserMemberships } = useUser()
 
   return (
     <DialogModal
@@ -28,7 +26,7 @@ export const CreateTokenSuccessModal = ({ tokenName, show }: CreateTokenSuccessM
       primaryButton={{
         text: 'Go to dashboard',
         onClick: () => {
-          client.refetchQueries({ include: 'active' }).then(() => {
+          refetchUserMemberships().then(() => {
             navigate(absoluteRoutes.studio.crtDashboard())
           })
         },
@@ -39,10 +37,9 @@ export const CreateTokenSuccessModal = ({ tokenName, show }: CreateTokenSuccessM
           icon={<SvgActionNewTab />}
           iconPlacement="right"
           disabled={!channelId}
+          to={absoluteRoutes.viewer.channel(channelId ?? '-1', { tab: 'Token' })}
           onClick={() => {
-            client.refetchQueries({ include: 'active' }).then(() => {
-              navigate(absoluteRoutes.viewer.channel(channelId ?? '-1', { tab: 'Token' }))
-            })
+            refetchUserMemberships()
           }}
         >
           View your token page

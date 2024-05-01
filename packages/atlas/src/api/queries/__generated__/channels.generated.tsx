@@ -636,7 +636,21 @@ export type GetChannelPaymentEventsQuery = {
       | { __typename: 'CreatorTokenMarketBurnEventData' }
       | { __typename: 'CreatorTokenMarketMintEventData' }
       | { __typename: 'CreatorTokenMarketStartedEventData' }
-      | { __typename: 'CreatorTokenRevenueSplitIssuedEventData' }
+      | {
+          __typename: 'CreatorTokenRevenueSplitIssuedEventData'
+          token?: { __typename?: 'CreatorToken'; id: string; revenueShareRatioPermill: number } | null
+          revenueShare?: {
+            __typename?: 'RevenueShare'
+            id: string
+            allocation: string
+            startingAt: number
+            stakers: Array<{
+              __typename?: 'RevenueShareParticipation'
+              earnings: string
+              account: { __typename?: 'TokenAccount'; member: { __typename?: 'Membership'; id: string } }
+            }>
+          } | null
+        }
       | { __typename: 'CreatorTokenSaleMintEventData' }
       | { __typename: 'CreatorTokenSaleStartedEventData' }
       | {
@@ -1513,6 +1527,12 @@ export const GetChannelPaymentEventsDocument = gql`
             }
           }
           { data: { isTypeOf_in: ["ChannelPaymentMadeEventData"], payeeChannel: { id_eq: $channelId } } }
+          {
+            data: {
+              isTypeOf_in: ["CreatorTokenRevenueSplitIssuedEventData"]
+              token: { channel: { channel: { id_eq: $channelId } } }
+            }
+          }
         ]
       }
     ) {
@@ -1637,6 +1657,25 @@ export const GetChannelPaymentEventsDocument = gql`
           rationale
           payer {
             controllerAccount
+          }
+        }
+        ... on CreatorTokenRevenueSplitIssuedEventData {
+          token {
+            id
+            revenueShareRatioPermill
+          }
+          revenueShare {
+            id
+            allocation
+            startingAt
+            stakers {
+              account {
+                member {
+                  id
+                }
+              }
+              earnings
+            }
           }
         }
       }

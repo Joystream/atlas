@@ -9,6 +9,7 @@ import { Table, TableProps } from '@/components/Table'
 import { LoadingMemberRow } from '@/components/Table/Table.cells'
 import { ColumnBox } from '@/components/Table/Table.styles'
 import { Text } from '@/components/Text'
+import { TransferableBalance } from '@/components/_crt/CrtPortfolioTable'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 
@@ -20,19 +21,20 @@ export const tableLoadingData = Array.from({ length: 5 }, () => ({
     </ColumnBox>
   ),
   total: <SkeletonLoader height={20} width="70%" />,
-  vested: <SkeletonLoader height={20} width="100%" />,
+  transferable: <SkeletonLoader height={20} width="100%" />,
 }))
 
 const COLUMNS: TableProps['columns'] = [
-  { Header: 'Member', accessor: 'member', width: 3 },
+  { Header: 'Member', accessor: 'member', width: 4 },
   { Header: 'Total', accessor: 'total', width: 2 },
-  { Header: 'Vested', accessor: 'vested', width: 1 },
+  { Header: 'Unlocked', accessor: 'transferable', width: 2 },
 ]
 
 type CrtHolder = {
   memberId: string
   total: number | BN
-  vested: number | BN
+  tokenSymbol: string
+  tokenId: string
   allocation: number
 }
 
@@ -70,13 +72,15 @@ export const CrtHoldersTable = ({
         ),
         total: (
           <FlexBox width="auto" alignItems="center" gap={1}>
-            <NumberFormat format="short" value={row.total} as="p" variant="t200-strong" />
-            <Text variant="t200" as="p" color="colorText">
+            <NumberFormat format="short" value={row.total} as="p" variant="t200" />
+            <Text variant="t200" as="span" color="colorText">
               ({row.allocation}%)
             </Text>
           </FlexBox>
         ),
-        vested: <NumberFormat format="short" value={row.vested} as="p" variant="t200-strong" />,
+        transferable: (
+          <StyledTransferableBalance variant="t200" format="short" memberId={row.memberId} tokenId={row.tokenId} />
+        ),
       })),
     [data, ownerId]
   )
@@ -84,8 +88,9 @@ export const CrtHoldersTable = ({
   return (
     <StyledTable
       onRowClick={(rowIdx) => {
-        navigate(absoluteRoutes.viewer.member(data[rowIdx].memberId))
+        navigate(absoluteRoutes.viewer.memberById(data[rowIdx].memberId))
       }}
+      minWidth={350}
       columns={COLUMNS}
       data={isLoading ? tableLoadingData : mappedData}
       className={className}
@@ -94,6 +99,11 @@ export const CrtHoldersTable = ({
     />
   )
 }
+
+const StyledTransferableBalance = styled(TransferableBalance)`
+  text-align: right;
+  white-space: nowrap;
+`
 
 export const StyledTable = styled(Table)`
   tr {

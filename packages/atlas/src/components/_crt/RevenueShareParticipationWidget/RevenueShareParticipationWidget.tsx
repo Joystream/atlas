@@ -1,4 +1,3 @@
-import { useApolloClient } from '@apollo/client'
 import styled from '@emotion/styled'
 import BN from 'bn.js'
 import { useNavigate } from 'react-router'
@@ -10,10 +9,12 @@ import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
 import { Button } from '@/components/_buttons/Button'
+import { ClaimRevenueShareButton } from '@/components/_crt/ClaimRevenueShareButton/ClaimRevenueShareButton'
 import { absoluteRoutes } from '@/config/routes'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useJoystream } from '@/providers/joystream'
 import { useJoystreamStore } from '@/providers/joystream/joystream.store'
+import { useNetworkUtils } from '@/providers/networkUtils/networkUtils.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
@@ -25,14 +26,9 @@ import { formatNumber } from '@/utils/number'
 export type RevenueShareParticipationWidgetProps = {
   revenueShare: FullCreatorTokenFragment['revenueShares'][number]
   token: FullCreatorTokenFragment
-  onClaimShare: () => void
 }
 
-export const RevenueShareParticipationWidget = ({
-  revenueShare,
-  onClaimShare,
-  token,
-}: RevenueShareParticipationWidgetProps) => {
+export const RevenueShareParticipationWidget = ({ revenueShare, token }: RevenueShareParticipationWidgetProps) => {
   const { memberId } = useUser()
   const { currentBlock } = useJoystreamStore()
   const hasEnded = revenueShare.endsAt < currentBlock
@@ -40,7 +36,7 @@ export const RevenueShareParticipationWidget = ({
   const { displaySnackbar } = useSnackbar()
   const handleTransaction = useTransaction()
   const navigate = useNavigate()
-  const client = useApolloClient()
+  const { refetchCreatorTokenData, refetchAllMemberTokenBalanceData } = useNetworkUtils()
   const memberStake = revenueShare.stakers.find((staker) => staker.account.member.id === memberId)
   const status = revenueShare
     ? getRevenueShareStatusForMember({
@@ -72,9 +68,10 @@ export const RevenueShareParticipationWidget = ({
           actionText: 'Go to my portfolio',
           onActionClick: () => navigate(absoluteRoutes.viewer.portfolio()),
         })
-        client.refetchQueries({ include: 'active' }).catch(() => {
+        refetchAllMemberTokenBalanceData()
+        refetchCreatorTokenData(token.id).catch(() => {
           displaySnackbar({
-            title: 'Failed to refersh data',
+            title: 'Failed to refresh data',
             description: 'Please reload your page to get latest data.',
             iconType: 'error',
           })
@@ -97,11 +94,7 @@ export const RevenueShareParticipationWidget = ({
   const actionNode = () => {
     switch (status) {
       case 'active':
-        return (
-          <Button size="small" variant="secondary" onClick={onClaimShare}>
-            Stake your tokens
-          </Button>
-        )
+        return <ClaimRevenueShareButton token={token} size="small" />
       case 'unlock':
         return (
           <Button size="small" onClick={handleExitRevenueShare}>
@@ -111,7 +104,7 @@ export const RevenueShareParticipationWidget = ({
       case 'locked':
         return <StyledPill icon={<SvgActionCheck />} size="large" label="Staked your tokens" />
       case 'past':
-        return <StyledPill icon={<SvgActionCheck />} size="large" label="Tokens recovered" />
+        return memberStake ? <StyledPill icon={<SvgActionCheck />} size="large" label="Tokens recovered" /> : null
       case 'inactive':
       case 'finalized':
         return <div />
@@ -200,7 +193,7 @@ export const RevenueShareProgress = ({ revenueShare, hasEnded, token }: RevenueS
 
       <ProgressBar
         color={hasEnded ? cVar('colorCoreNeutral700Lighten') : cVar('colorBackgroundPrimary')}
-        progress={new BN(revenueShare.claimed).muln(100).div(new BN(revenueShare.allocation)).toNumber()}
+        progress={Math.round((revenueShare.stakers.length / token.accountsNum) * 100)}
       />
     </FlexBox>
   )

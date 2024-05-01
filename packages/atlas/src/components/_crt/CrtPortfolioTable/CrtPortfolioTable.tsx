@@ -17,7 +17,7 @@ import {
 } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
 import { FlexBox } from '@/components/FlexBox'
-import { NumberFormat } from '@/components/NumberFormat'
+import { NumberFormat, NumberFormatProps } from '@/components/NumberFormat'
 import { Table, TableProps } from '@/components/Table'
 import { ColumnBox } from '@/components/Table/Table.styles'
 import { Text } from '@/components/Text'
@@ -28,6 +28,7 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { absoluteRoutes } from '@/config/routes'
 import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
+import { usePagination } from '@/views/viewer/ChannelView/ChannelView.hooks'
 
 export const tableLoadingData = Array.from({ length: 5 }, () => ({
   token: (
@@ -38,7 +39,7 @@ export const tableLoadingData = Array.from({ length: 5 }, () => ({
   ),
   status: <SkeletonLoader height={20} width="40%" />,
   transferable: <SkeletonLoader height={20} width="40%" />,
-  vested: <SkeletonLoader height={20} width="40%" />,
+  staked: <SkeletonLoader height={20} width="40%" />,
   total: <SkeletonLoader height={20} width="40%" />,
   utils: null,
 }))
@@ -47,7 +48,7 @@ const COLUMNS: TableProps['columns'] = [
   { Header: 'Token', accessor: 'token', width: 150 },
   { Header: 'Status', accessor: 'status', width: 200 },
   { Header: 'Transferable', accessor: 'transferable', width: 100 },
-  { Header: 'Vested', accessor: 'vested', width: 100 },
+  { Header: 'Staked', accessor: 'staked', width: 100 },
   { Header: 'Total', accessor: 'total', width: 100 },
   { Header: '', accessor: 'utils', width: 70 },
 ]
@@ -57,7 +58,7 @@ export type PortfolioToken = {
   tokenName: string
   isVerified: boolean
   status: TokenStatus
-  vested: number
+  staked: number
   total: number
   tokenId: string
   memberId: string
@@ -72,12 +73,14 @@ export type CrtPortfolioTableProps = {
 }
 
 export const CrtPortfolioTable = ({ data, emptyState, isLoading }: CrtPortfolioTableProps) => {
+  const { currentPage, setCurrentPage } = usePagination(0)
+  const [perPage, setPerPage] = useState(10)
   const [showBuyModal, setShowBuyModal] = useState(false)
   const [showSellModal, setShowSellModal] = useState(false)
   const [tokenId, setTokenId] = useState<string | null>(null)
 
   const mappingData = useMemo(() => {
-    return data.map((row) => ({
+    return [...data].slice(currentPage * perPage, currentPage * perPage + perPage).map((row) => ({
       token: <TokenInfo {...row} />,
       status: <CrtStatus status={row.status} />,
       transferable: (
@@ -86,10 +89,10 @@ export const CrtPortfolioTable = ({ data, emptyState, isLoading }: CrtPortfolioT
           <TransferableBalance memberId={row.memberId} tokenId={row.tokenId} ticker={`${row.tokenTitle}`} />
         </FlexBox>
       ),
-      vested: (
+      staked: (
         <FlexBox width="auto" alignItems="center" gap={1}>
           {row.hasStaked && <SvgActionLock />}
-          <NumberFormat value={row.vested} as="p" withToken customTicker={`$${row.tokenTitle}`} />
+          <NumberFormat value={row.staked} as="p" withToken customTicker={`$${row.tokenTitle}`} />
         </FlexBox>
       ),
       total: (
@@ -115,7 +118,7 @@ export const CrtPortfolioTable = ({ data, emptyState, isLoading }: CrtPortfolioT
         />
       ),
     }))
-  }, [data])
+  }, [currentPage, data, perPage])
 
   return (
     <>
@@ -123,10 +126,18 @@ export const CrtPortfolioTable = ({ data, emptyState, isLoading }: CrtPortfolioT
       {tokenId && <SellTokenModal tokenId={tokenId} show={showSellModal} onClose={() => setShowSellModal(false)} />}
       <StyledTable
         minWidth={730}
-        isEmpty={!mappingData.length}
+        isEmpty={!data.length}
+        pageSize={data.length || undefined}
         columns={COLUMNS}
         data={isLoading ? tableLoadingData : mappingData}
         emptyState={emptyState}
+        pagination={{
+          setPerPage,
+          totalCount: data.length,
+          itemsPerPage: perPage,
+          page: currentPage,
+          onChangePage: setCurrentPage,
+        }}
       />
     </>
   )
@@ -151,7 +162,11 @@ export const TokenInfo = ({
         />
       )}
 
-      <FlexBox alignItems="center">
+      <FlexBox
+        onClick={() => (channelId ? navigate(absoluteRoutes.viewer.channel(channelId, { tab: 'Token' })) : undefined)}
+        className="pointer"
+        alignItems="center"
+      >
         <Text variant="h200" as="h1">
           {tokenTitle}
         </Text>
@@ -250,13 +265,22 @@ export const TransferableBalance = ({
   memberId,
   tokenId,
   ticker,
+  ...rest
 }: {
   memberId: string
   tokenId: string
   ticker?: string
-}) => {
+} & Pick<NumberFormatProps, 'variant' | 'className' | 'format'>) => {
   const { tokenBalance } = useGetTokenBalance(tokenId, memberId)
-  return <NumberFormat value={tokenBalance} as="p" withToken customTicker={`$${ticker}`} />
+  return (
+    <NumberFormat
+      {...rest}
+      value={tokenBalance}
+      as="p"
+      withToken={!!ticker}
+      customTicker={ticker ? `$${ticker}` : undefined}
+    />
+  )
 }
 
 const StyledTable = styled(Table)<{ isEmpty?: boolean }>`

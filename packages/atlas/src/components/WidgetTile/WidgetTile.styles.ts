@@ -13,9 +13,9 @@ export const Wrapper = styled.div`
   padding: ${sizes(4)};
   background-color: ${cVar('colorBackgroundMuted')};
   display: grid;
+  grid-template-rows: auto 1fr;
 
   ${media.md} {
-    grid-template-rows: auto 1fr;
     padding: ${sizes(6)};
   }
 `

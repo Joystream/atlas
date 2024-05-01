@@ -1,7 +1,7 @@
-import { useApolloClient } from '@apollo/client'
 import { useCallback } from 'react'
 
 import { useJoystream } from '@/providers/joystream'
+import { useNetworkUtils } from '@/providers/networkUtils/networkUtils.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { SentryLogger } from '@/utils/logs'
@@ -10,7 +10,8 @@ export const useUnlockTokenStake = () => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()
-  const client = useApolloClient()
+  const { refetchCreatorTokenData, refetchAllMemberTokenBalanceData, refetchAllMemberTokenHolderQueries } =
+    useNetworkUtils()
 
   return useCallback(
     async (memberId: string, tokenId: string, tokenSymbol: string) => {
@@ -21,7 +22,9 @@ export const useUnlockTokenStake = () => {
         txFactory: async (updateStatus) =>
           (await joystream.extrinsics).exitRevenueSplit(tokenId, memberId, proxyCallback(updateStatus)),
         onTxSync: async (data) => {
-          client.refetchQueries({ include: 'active' })
+          refetchCreatorTokenData(tokenId)
+          refetchAllMemberTokenBalanceData()
+          refetchAllMemberTokenHolderQueries()
           displaySnackbar({
             title: `${data.amount} $${tokenSymbol} unlocked`,
             iconType: 'success',
@@ -40,6 +43,14 @@ export const useUnlockTokenStake = () => {
         },
       })
     },
-    [joystream, handleTransaction, proxyCallback, client, displaySnackbar]
+    [
+      joystream,
+      handleTransaction,
+      proxyCallback,
+      refetchCreatorTokenData,
+      refetchAllMemberTokenBalanceData,
+      refetchAllMemberTokenHolderQueries,
+      displaySnackbar,
+    ]
   )
 }

@@ -1,16 +1,17 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { ReactElement, useMemo } from 'react'
+import { Link } from 'react-router-dom'
 
-import { SvgActionAuction, SvgActionMarket, SvgActionNotForSale, SvgActionNotifications } from '@/assets/icons'
+import { SvgActionAuction, SvgActionMarket, SvgActionNotForSale } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
 import { FlexBox } from '@/components/FlexBox'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { Text } from '@/components/Text'
-import { Button } from '@/components/_buttons/Button'
 import { CrtMainInfo, CrtMainInfoProps } from '@/components/_crt/CrtBasicInfoWidget'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { DetailsContent, DetailsContentProps } from '@/components/_nft/NftTile'
+import { absoluteRoutes } from '@/config/routes'
 import { cVar, sizes } from '@/styles'
 
 type SaleProps = {
@@ -27,13 +28,24 @@ export type CrtSaleTypes = MarketProps | SaleProps | { type: 'inactive' }
 
 export type CrtCardProps = {
   marketCap?: number
+  channelId: string
   channelRevenue?: number
   size?: 'medium' | 'small'
   status?: CrtSaleTypes
   isLoading?: boolean
+  className?: string
 } & CrtMainInfoProps
 
-export const CrtCard = ({ channelRevenue, marketCap, size, status, isLoading, ...mainInfoProps }: CrtCardProps) => {
+export const CrtCard = ({
+  channelRevenue,
+  channelId,
+  marketCap,
+  size,
+  status,
+  isLoading,
+  className,
+  ...mainInfoProps
+}: CrtCardProps) => {
   const isSmall = size === 'small'
   const details = useMemo(() => {
     const baseDetails: {
@@ -55,7 +67,7 @@ export const CrtCard = ({ channelRevenue, marketCap, size, status, isLoading, ..
           <FlexBox alignItems="center" width="fit-content">
             <SvgActionNotForSale />
             <Text variant="h300" as="h3" color="colorText">
-              No active sale
+              No sale
             </Text>
           </FlexBox>
         ),
@@ -156,7 +168,7 @@ export const CrtCard = ({ channelRevenue, marketCap, size, status, isLoading, ..
   }
 
   return (
-    <FlexBox flow="column" gap={0}>
+    <Container to={absoluteRoutes.viewer.channel(channelId, { tab: 'Token' })} className={className}>
       <CrtMainInfo size={size} {...mainInfoProps}>
         <AvatarBox width="100%" justifyContent="space-between">
           <Avatar
@@ -164,17 +176,28 @@ export const CrtCard = ({ channelRevenue, marketCap, size, status, isLoading, ..
             loading={false}
             size={isSmall ? 40 : 64}
           />
-          <Button icon={<SvgActionNotifications />} variant="secondary" rounded size={isSmall ? 'medium' : 'small'} />
         </AvatarBox>
       </CrtMainInfo>
-      <DetailsWrapper size={size}>
+      <DetailsWrapper className="crt-card-details" size={size}>
         {details.map((detail, idx) => (
           <StyledDetailsContent key={idx} {...detail} isInactive={status?.type === 'inactive'} tileSize={size} />
         ))}
       </DetailsWrapper>
-    </FlexBox>
+    </Container>
   )
 }
+
+const Container = styled(Link)`
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+
+  :hover {
+    opacity: 0.85;
+  }
+
+  cursor: pointer;
+`
 
 const StyledDetailsContent = styled(DetailsContent)<{ isInactive?: boolean }>`
   display: flex;

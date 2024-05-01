@@ -1,9 +1,15 @@
 import BN from 'bn.js'
 
+import { NetworkUtilsContextValue } from '@/providers/networkUtils/networkUtils.type'
+
 export type NotificationRecord = { id: string; date: Date; read: boolean } & NotificationData
+export type NotificationRefetchActionType<T extends keyof NetworkUtilsContextValue> = {
+  name: T
+  args: Parameters<NetworkUtilsContextValue[T]>
+}
 export type NotificationData =
   // Members
-  | { type: 'ChannelCreated'; channelId: string; channelTitle: string }
+  | { type: 'ChannelCreated'; channelId: string; channelTitle: string; refetchAction: undefined }
   | {
       type: 'CommentReply' | 'ReactionToComment'
       memberId: string
@@ -11,6 +17,7 @@ export type NotificationData =
       videoId: string
       videoTitle: string
       commentId: string
+      refetchAction: undefined
     }
   | {
       type: 'VideoPosted' | 'NewNftOnSale' | 'NewAuction'
@@ -18,15 +25,30 @@ export type NotificationData =
       channelTitle: string
       videoId: string
       videoTitle: string
+      refetchAction: undefined
     }
-  | { type: 'HigherBidPlaced'; newBidderId: string; newBidderHandle: string; videoId: string; videoTitle: string }
-  | { type: 'AuctionWon' | 'AuctionLost'; auction: AuctionType; videoId: string; videoTitle: string }
+  | {
+      type: 'HigherBidPlaced'
+      newBidderId: string
+      newBidderHandle: string
+      videoId: string
+      videoTitle: string
+      refetchAction: undefined
+    }
+  | {
+      type: 'AuctionWon' | 'AuctionLost'
+      auction: AuctionType
+      videoId: string
+      videoTitle: string
+      // we only need it to be defined in one place for TS to be satisfied in notifications.hooks.ts
+      refetchAction: NotificationRefetchActionType<'refetchNftData'>
+    }
 
   // Channels
-  | { type: 'ChannelExcluded' }
-  | { type: 'ChannelFundsWithdrawn'; amount: BN }
-  | { type: 'ChannelSuspended' }
-  | { type: 'ChannelVerified' }
+  | { type: 'ChannelExcluded'; refetchAction: undefined }
+  | { type: 'ChannelFundsWithdrawn'; amount: BN; refetchAction: undefined }
+  | { type: 'ChannelSuspended'; refetchAction: undefined }
+  | { type: 'ChannelVerified'; refetchAction: undefined }
   | {
       type: 'CommentPostedToVideo'
       memberId: string
@@ -34,6 +56,7 @@ export type NotificationData =
       videoId: string
       videoTitle: string
       commentId: string
+      refetchAction: undefined
     }
   | {
       type: 'CreatorReceivesAuctionBid'
@@ -42,27 +65,38 @@ export type NotificationData =
       bidderHandle: string
       videoId: string
       videoTitle: string
+      refetchAction: undefined
     }
-  | { type: 'DirectChannelPaymentByMember'; amount: BN; payerId: string; payerHandle: string }
+  | { type: 'DirectChannelPaymentByMember'; amount: BN; payerId: string; payerHandle: string; refetchAction: undefined }
   // | { type: 'EnglishAuctionSettled'; price: BN; videoId: string; videoTitle: string }
-  | { type: 'NewChannelFollower'; followerId: string; followerHandle: string }
-  | { type: 'NftFeaturedOnMarketPlace'; videoId: string; videoTitle: string }
-  | { type: 'NftPurchased'; buyerId: string; buyerHandle: string; price: BN; videoTitle: string; videoId: string }
-  | { type: 'NftRoyaltyPaid'; amount: BN; videoId: string; videoTitle: string }
+  | { type: 'NewChannelFollower'; followerId: string; followerHandle: string; refetchAction: undefined }
+  | { type: 'NftFeaturedOnMarketPlace'; videoId: string; videoTitle: string; refetchAction: undefined }
+  | {
+      type: 'NftPurchased'
+      buyerId: string
+      buyerHandle: string
+      price: BN
+      videoTitle: string
+      videoId: string
+      refetchAction: undefined
+    }
+  | { type: 'NftRoyaltyPaid'; amount: BN; videoId: string; videoTitle: string; refetchAction: undefined }
   | {
       type: 'VideoLiked' | 'VideoDisliked'
       memberId: string
       memberHandle: string
       videoId: string
       videoTitle: string
+      refetchAction: undefined
     }
-  | { type: 'VideoExcluded'; videoTitle: string }
+  | { type: 'VideoExcluded'; videoTitle: string; refetchAction: undefined }
   | {
       type: 'CreatorTokenRevenueSharePlanned'
       plannedAt: Date
       channelId: string
       tokenSymbol: string
       channelTitle: string
+      refetchAction: undefined
     }
   | {
       type:
@@ -74,6 +108,7 @@ export type NotificationData =
       channelId: string
       tokenSymbol: string
       channelTitle: string
+      refetchAction: undefined
     }
   | {
       type: 'CreatorTokenMarketMint'
@@ -82,6 +117,7 @@ export type NotificationData =
       minterHandle: string
       minterId: string
       paiedJoyAmount: string
+      refetchAction: undefined
     }
   | {
       type: 'CreatorTokenMarketBurn'
@@ -90,6 +126,7 @@ export type NotificationData =
       burnerHandle: string
       burnerId: string
       receivedJoyAmount: string
+      refetchAction: undefined
     }
   | {
       type: 'CreatorTokenSaleMint'
@@ -98,6 +135,7 @@ export type NotificationData =
       minterHandle: string
       minterId: string
       paiedJoyAmount: string
+      refetchAction: undefined
     }
 
 type AuctionType = 'AuctionTypeEnglish' | 'AuctionTypeOpen'

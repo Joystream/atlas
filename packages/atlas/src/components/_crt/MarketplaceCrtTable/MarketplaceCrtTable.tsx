@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import BN from 'bn.js'
 import { useMemo } from 'react'
 
 import { TokenStatus } from '@/api/queries/__generated__/baseTypes.generated'
@@ -44,7 +45,7 @@ export type MarketplaceToken = {
   status: TokenStatus
   createdAt: Date
   marketCap: number
-  totalRevenue: number
+  totalRevenue: BN
   holdersNum: number
   channelId: string
 }
@@ -53,9 +54,15 @@ export type MarketplaceCrtTableProps = {
   data: MarketplaceToken[]
   isLoading: boolean
   emptyState?: TableProps['emptyState']
-}
+} & Pick<TableProps, 'pagination' | 'pageSize'>
 
-export const MarketplaceCrtTable = ({ data, emptyState, isLoading }: MarketplaceCrtTableProps) => {
+export const MarketplaceCrtTable = ({
+  data,
+  emptyState,
+  isLoading,
+  pagination,
+  pageSize,
+}: MarketplaceCrtTableProps) => {
   const mappingData = useMemo(() => {
     return data.map((row) => ({
       token: <TokenInfo {...row} />,
@@ -90,7 +97,7 @@ export const MarketplaceCrtTable = ({ data, emptyState, isLoading }: Marketplace
       ),
     }))
   }, [data])
-  // todo add pagination after qa-v6 is merged
+
   return (
     <>
       <StyledTable
@@ -99,7 +106,8 @@ export const MarketplaceCrtTable = ({ data, emptyState, isLoading }: Marketplace
         columns={COLUMNS}
         data={isLoading ? tableLoadingData : mappingData}
         emptyState={emptyState}
-        pageSize={10}
+        pageSize={pageSize}
+        pagination={pagination}
       />
     </>
   )

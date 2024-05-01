@@ -1,9 +1,5 @@
 import BN from 'bn.js'
 
-import {
-  useGetBasicCreatorTokensQuery,
-  useGetCreatorTokensCountQuery,
-} from '@/api/queries/__generated__/creatorTokens.generated'
 import { FallbackContainer } from '@/components/AllNftSection'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { NumberFormat } from '@/components/NumberFormat'
@@ -12,6 +8,7 @@ import { Button } from '@/components/_buttons/Button'
 import { MarketplaceCrtTable } from '@/components/_crt/MarketplaceCrtTable'
 import { SORTING_FILTERS, useCrtSectionFilters } from '@/hooks/useCrtSectionFilters'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useTokensPagination } from '@/hooks/useTokensPagniation'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 
 export const AllTokensSection = () => {
@@ -24,25 +21,17 @@ export const AllTokensSection = () => {
     actions: { onApplyFilters, setOrder, clearFilters },
   } = useCrtSectionFilters()
 
-  const { data, loading } = useGetBasicCreatorTokensQuery({
-    variables: {
-      where: creatorTokenWhereInput,
-      orderBy: order,
-    },
+  const { tokens, currentPage, setCurrentPage, isLoading, totalCount, setPerPage, perPage } = useTokensPagination({
+    where: creatorTokenWhereInput,
+    orderBy: order,
   })
-  const { data: countData } = useGetCreatorTokensCountQuery({
-    variables: {
-      where: creatorTokenWhereInput,
-    },
-  })
-  const totalCount = countData?.creatorTokensConnection.totalCount
 
   const tableData =
-    data?.creatorTokens.map(({ createdAt, accountsNum, lastPrice, totalSupply, status, symbol, channel }) => ({
+    tokens?.map(({ createdAt, accountsNum, lastPrice, totalSupply, status, symbol, channel }) => ({
       createdAt: new Date(createdAt),
-      totalRevenue: 0,
+      totalRevenue: new BN(channel?.channel.cumulativeRevenue ?? 0),
       holdersNum: accountsNum,
-      isVerified: true,
+      isVerified: false,
       marketCap: lastPrice && totalSupply ? hapiBnToTokenNumber(new BN(lastPrice).mul(new BN(totalSupply))) ?? 0 : 0,
       status,
       channelId: channel?.channel.id ?? '',
@@ -77,8 +66,22 @@ export const AllTokensSection = () => {
         type: 'grid',
         grid: { xxs: { columns: 1 } },
         children:
-          tableData.length || loading
-            ? [<MarketplaceCrtTable key="single-table" data={tableData} isLoading={loading} />]
+          tableData.length || isLoading
+            ? [
+                <MarketplaceCrtTable
+                  key="single-table"
+                  data={tableData}
+                  isLoading={isLoading}
+                  pageSize={perPage}
+                  pagination={{
+                    setPerPage,
+                    totalCount,
+                    itemsPerPage: perPage,
+                    page: currentPage,
+                    onChangePage: setCurrentPage,
+                  }}
+                />,
+              ]
             : [
                 <FallbackContainer key="fallback">
                   <EmptyFallback

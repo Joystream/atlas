@@ -1,4 +1,3 @@
-import { useApolloClient } from '@apollo/client'
 import styled from '@emotion/styled'
 import { BN } from 'bn.js'
 import { useCallback, useMemo, useState } from 'react'
@@ -6,8 +5,13 @@ import { Controller, useForm } from 'react-hook-form'
 
 import { useGetFullCreatorTokenLazyQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
-import { SvgActionClock, SvgActionCreatorToken, SvgActionLinkUrl, SvgActionPayment } from '@/assets/icons'
-import { Banner } from '@/components/Banner'
+import {
+  SvgActionArrowRight,
+  SvgActionClock,
+  SvgActionCreatorToken,
+  SvgActionLinkUrl,
+  SvgAlertsWarning24,
+} from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox/FlexBox'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
@@ -21,10 +25,13 @@ import { absoluteRoutes } from '@/config/routes'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useFee, useJoystream, useSubscribeAccountBalance } from '@/providers/joystream'
+import { useNetworkUtils } from '@/providers/networkUtils/networkUtils.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
+import { sizes } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 import { pluralizeNoun } from '@/utils/misc'
 import { permillToPercentage } from '@/utils/number'
@@ -51,21 +58,23 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
   const [openClaimShareModal, setOpenClaimShareModal] = useState(false)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
 
-  const { joystream, proxyCallback } = useJoystream()
-  const client = useApolloClient()
+  const { joystream, proxyCallback, chainState } = useJoystream()
+  const { refetchCreatorTokenData, refetchChannelPayments } = useNetworkUtils()
   const { memberId, channelId, activeChannel } = useUser()
   const { displaySnackbar } = useSnackbar()
   const handleTransaction = useTransaction()
   const { copyToClipboard } = useClipboard()
-  const { convertMsTimestampToBlock } = useBlockTimeEstimation()
+  const { convertMsTimestampToBlock, convertBlocksToDuration } = useBlockTimeEstimation()
   const { tokenBalance } = useGetTokenBalance(token.id, memberId ?? '-1')
   const [refetchToken, { data: localTokenData }] = useGetFullCreatorTokenLazyQuery({
     variables: {
       id: token.id,
     },
+    notifyOnNetworkStatusChange: true,
     fetchPolicy: 'no-cache',
   })
   const { fullFee } = useFee('issueRevenueSplitTx', ['1', '1', 10000, 10000])
+  const { trackRevenueShareStarted } = useSegmentAnalytics()
 
   const memoizedChannelStateBloatBond = useMemo(() => {
     return new BN(activeChannel?.channelStateBloatBond || 0)
@@ -84,7 +93,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
   })
   const [startDate, endDate] = watch(['startDate', 'endDate'])
   const endDateTimestamp = useMemo(() => {
-    // we need to create new date object to aviod modifying it in addDaystoDate
+    // we need to create new date object to avoid modifying it in addDaysToDate
     const rawStartDate = startDate?.type === 'date' ? new Date(startDate.date.getTime()) : new Date()
     return endDate?.type === 'date'
       ? endDate.date
@@ -127,7 +136,11 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
           : null
 
       if (typeof duration !== 'number' || duration < 0) {
-        displaySnackbar({ title: 'Failed to parse ending date', iconType: 'error', description: 'Please try again.' })
+        displaySnackbar({
+          title: duration && duration < 0 ? 'Revenue share cannot end in the past' : 'Failed to parse ending date',
+          iconType: 'error',
+          description: 'Please try again.',
+        })
         return
       }
 
@@ -141,11 +154,13 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
             proxyCallback(updateStatus)
           ),
         onTxSync: async () => {
+          refetchChannelPayments(channelId!)
           // we need to refetch token locally to avoid unmount parent modal due to revenue share activation
           refetchToken().then(() => {
             onClose()
             setShowSuccessModal(true)
           })
+          trackRevenueShareStarted(channelId, token.id, token.symbol || 'N/A')
         },
         onError: () => {
           displaySnackbar({
@@ -167,11 +182,11 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
     if (localTokenData?.creatorTokenById) {
       return [
         {
-          text: 'If any tokens remain unclaimed at the end of the revenue share period those will be returned to your channel balance.',
-          icon: <SvgActionPayment />,
+          text: 'Your membership account is already credited with your portion of channel revenue.',
+          icon: <SvgActionArrowRight />,
         },
         {
-          text: 'Tell your holders to stake their token on your token page until the end of revenue share.',
+          text: 'Remind your holders to stake in order to claim their part of revenue. This does not happen automatically.',
           icon: <SvgActionClock />,
           actionNode: (
             <TextButton
@@ -188,7 +203,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
           ),
         },
         {
-          text: `Make sure to stake your own ${tokenBalance} $${localTokenData.creatorTokenById.symbol} to receive your share of revenue.`,
+          text: `Make sure to stake ${tokenBalance} $${localTokenData.creatorTokenById.symbol} your membership owns to claim sharable part of revenue.`,
           icon: <SvgActionCreatorToken />,
           variant: 'warning' as const,
           actionNode: (
@@ -224,18 +239,18 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
       },
 
       {
-        title: 'Your holders will receive',
+        title: 'All holders can receive',
         content: (
           <FlexBox alignItems="baseline" width="fit-content">
             <NumberFormat
-              value={channelBalance?.muln(1 - patronageRate) ?? 0}
+              value={channelBalance?.divn(100).muln(patronageRate * 100) ?? 0}
               as="p"
               variant="t200"
               withToken
               withDenomination="before"
             />
             <Text variant="t200" as="p">
-              ({Math.round((1 - patronageRate) * 100)}%)
+              ({Math.round(patronageRate * 100)}%)
             </Text>
           </FlexBox>
         ),
@@ -243,7 +258,6 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
       {
         title: 'Transaction fee',
         content: <NumberFormat value={fullFee} as="p" variant="t200" withDenomination="before" withToken />,
-        tooltipText: 'Lorem ipsum',
       },
       {
         title: 'You will receive',
@@ -251,14 +265,14 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
         content: (
           <FlexBox alignItems="baseline" width="fit-content">
             <NumberFormat
-              value={channelBalance?.muln(patronageRate) ?? 0}
+              value={channelBalance?.divn(100).muln((1 - patronageRate) * 100) ?? 0}
               as="p"
               variant="h300"
               withToken
               withDenomination="before"
             />
             <Text variant="t200" as="p">
-              ({Math.round(patronageRate * 100)}%)
+              ({Math.round((1 - patronageRate) * 100)}%)
             </Text>
           </FlexBox>
         ),
@@ -284,10 +298,10 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
         <ClaimShareModal
           onClose={() => {
             setOpenClaimShareModal(false)
-            client.refetchQueries({ include: 'active' })
+            refetchCreatorTokenData(localTokenData.creatorTokenById?.id ?? '')
           }}
           show={openClaimShareModal}
-          tokenId={localTokenData.creatorTokenById.id}
+          token={localTokenData.creatorTokenById}
         />
       )}
       <SuccessActionModalTemplate
@@ -299,8 +313,7 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
           text: 'Continue',
           onClick: () => {
             setShowSuccessModal(false)
-            // at this point user won't stake tokens, so we can refetch with cache and close modal
-            client.refetchQueries({ include: 'active' })
+            refetchCreatorTokenData(localTokenData?.creatorTokenById?.id ?? '')
           },
         }}
       />
@@ -314,13 +327,13 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
         }}
       >
         <FlexBox flow="column" gap={8}>
-          <FlexBox equalChildren alignItems="end" gap={6}>
+          <FlexBox equalChildren alignItems="start" gap={6}>
             <Controller
               name="startDate"
               control={control}
               render={({ field: { onChange, value }, fieldState: { error } }) => (
                 <FormField error={error?.message} disableErrorAnimation label="Starts">
-                  <OuterBox>
+                  <OuterBox marginTop={2}>
                     <InnerBox>
                       <AuctionDatePicker
                         error={!!error}
@@ -352,6 +365,29 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
             <Controller
               name="endDate"
               control={control}
+              rules={{
+                validate: (value, formValues) => {
+                  const rawStartDate =
+                    formValues.startDate?.type === 'date' ? new Date(formValues.startDate.date.getTime()) : new Date()
+
+                  const valueTimestamp =
+                    value?.type === 'date'
+                      ? value.date
+                      : value?.durationDays
+                      ? addDaysToDate(value.durationDays, new Date(rawStartDate))
+                      : new Date()
+
+                  const minDurationMs = convertBlocksToDuration(chainState.minRevenueSplitDuration)
+
+                  if (valueTimestamp.getTime() - Date.now() < minDurationMs) {
+                    return `Revenue share must end after ${formatDateTimeAt(
+                      new Date(rawStartDate.getTime() + minDurationMs)
+                    )}`
+                  }
+
+                  return true
+                },
+              }}
               render={({ field: { onChange, value }, fieldState: { error } }) => (
                 <FormField
                   error={error?.message}
@@ -379,10 +415,6 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
               )}
             />
           </FlexBox>
-          <Banner
-            title="All tokens will be shared"
-            description="The only way to do the revenue share right now is to share all of your available balance."
-          />
           <FlexBox flow="column" gap={2}>
             {details.map((row) => (
               <FlexBox key={row.title} alignItems="center" justifyContent="space-between">
@@ -394,6 +426,12 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
                 {row.content}
               </FlexBox>
             ))}
+            <FlexBox marginTop={3} gap={3} alignItems="start">
+              <SvgAlertsWarning24 />
+              <Text variant="t200" as="span" color="colorTextCaution">
+                Active revenue share will pause all open market transactions for its entire duration.
+              </Text>
+            </FlexBox>
           </FlexBox>
         </FlexBox>
       </DialogModal>
@@ -401,9 +439,10 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
   )
 }
 
-const OuterBox = styled.div`
+const OuterBox = styled.div<{ marginTop?: number }>`
   position: relative;
   height: 50px;
+  margin-top: ${(props) => sizes(props.marginTop ?? 0)};
 `
 
 const InnerBox = styled.div`

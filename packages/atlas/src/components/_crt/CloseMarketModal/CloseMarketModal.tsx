@@ -1,4 +1,3 @@
-import { useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
 import { useCallback, useMemo } from 'react'
 
@@ -10,8 +9,10 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useJoystream } from '@/providers/joystream'
+import { useNetworkUtils } from '@/providers/networkUtils/networkUtils.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
@@ -25,8 +26,14 @@ export type CloseMarketModalProps = {
   show: boolean
   onClose: () => void
 }
+// Current runtime maximum number of exceeding tokens in AMM is 1% of total supply.
+// Assuming x - supply of tokens beside AMM, y - AMM tokens supply (minted - burned) and at the same time the threshold
+// we get following formula (for this scenario it's enough if it just equals)
+// 1% * (x + y) = y   -->   x / 99 = y
+const TRESHOLD_RATIO = 100
 
 export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMarketModalProps) => {
+  const { refetchCreatorTokenData } = useNetworkUtils()
   const { memberId } = useUser()
   const { data } = useGetFullCreatorTokenQuery({
     variables: {
@@ -40,12 +47,17 @@ export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMar
   const symbol = data?.creatorTokenById?.symbol
   const { joystream, proxyCallback } = useJoystream()
   const { displaySnackbar } = useSnackbar()
+  const { trackAMMClosed } = useSegmentAnalytics()
   const handleTransaction = useTransaction()
-  const client = useApolloClient()
-  const thresholdAmount = data?.creatorTokenById ? Math.floor(+data.creatorTokenById.totalSupply * 0.01) : 0
   const ammBalance = data?.creatorTokenById?.currentAmmSale
     ? +data.creatorTokenById.currentAmmSale.mintedByAmm - +data.creatorTokenById.currentAmmSale.burnedByAmm
     : 0
+  const thresholdAmount =
+    TRESHOLD_RATIO < 100
+      ? data?.creatorTokenById
+        ? Math.floor((+data.creatorTokenById.totalSupply - ammBalance) / TRESHOLD_RATIO)
+        : 0
+      : 0
   const hasSufficientTokens = tokenBalance >= ammBalance - thresholdAmount
   const amountToSell = Math.max(0, Math.floor(ammBalance - thresholdAmount))
 
@@ -76,12 +88,13 @@ export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMar
         txFactory: async (updateStatus) =>
           (await joystream.extrinsics).closeAmm(memberId, channelId, proxyCallback(updateStatus)),
         onTxSync: async () => {
+          trackAMMClosed(tokenId ?? 'N/A', symbol ?? 'N/A', channelId)
           displaySnackbar({
             iconType: 'success',
             title: 'Market closed',
           })
           onClose()
-          client.refetchQueries({ include: 'active' }).catch(() => {
+          refetchCreatorTokenData(tokenId).catch(() => {
             displaySnackbar({
               title: 'Data update failed',
               description: 'Please refresh the page to get live data',
@@ -90,6 +103,7 @@ export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMar
           })
         },
         onError: () => {
+          refetchCreatorTokenData(tokenId)
           SentryLogger.error('Failed to close market', 'CloseMarketModal', { joystream, channelId, memberId })
           displaySnackbar({
             iconType: 'error',
@@ -138,15 +152,17 @@ export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMar
     amountToSell,
     handleTransaction,
     proxyCallback,
-    client,
+    trackAMMClosed,
+    tokenId,
+    symbol,
     displaySnackbar,
     onClose,
+    refetchCreatorTokenData,
     calculateSlippageAmount,
-    tokenId,
   ])
 
   const priceForAllToken = useMemo(() => {
-    return hapiBnToTokenNumber(calculateSlippageAmount(Math.max(amountToSell, 1)) ?? new BN(0))
+    return hapiBnToTokenNumber(calculateSlippageAmount(Math.max(amountToSell, 0)) ?? new BN(0))
   }, [amountToSell, calculateSlippageAmount])
 
   return (
@@ -168,8 +184,7 @@ export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMar
       <FlexBox flow="column" gap={6}>
         <FlexBox flow="column" gap={2}>
           <Text variant="t200" as="p" color="colorText">
-            To close market you or any other member need to sell enough of ${symbol} tokens to the market to balance the
-            amount of tokens minted with this market.
+            To close the market you must sell enough tokens to balance out the purchased amount.
           </Text>
           {/*<TextButton icon={<SvgActionPlay />} iconPlacement="left">*/}
           {/*  Learn more*/}
@@ -188,27 +203,25 @@ export const CloseMarketModal = ({ onClose, show, channelId, tokenId }: CloseMar
         {amountToSell ? (
           <Banner
             icon={<SvgAlertsWarning24 />}
-            description="You will have to sign two transactions, the first one to sell your tokens, the second to close the market"
+            description="Selling and closing will be done in two subsequent transactions."
             borderColor={cVar('colorTextCaution')}
           />
         ) : null}
 
         <FlexBox flow="column" gap={2}>
-          {amountToSell ? (
-            <FlexBox alignItems="center" justifyContent="space-between">
-              <Text variant="t100" as="p" color="colorTextCaution">
-                You need to sell
-              </Text>
-              <NumberFormat
-                value={amountToSell}
-                as="p"
-                variant="t100"
-                withToken
-                customTicker={`$${symbol}`}
-                color="colorTextCaution"
-              />
-            </FlexBox>
-          ) : null}
+          <FlexBox alignItems="center" justifyContent="space-between">
+            <Text variant="t100" as="p" color={amountToSell ? 'colorTextCaution' : 'colorText'}>
+              Tokens to sell for the closure
+            </Text>
+            <NumberFormat
+              value={amountToSell ?? 0}
+              as="p"
+              variant="t100"
+              withToken
+              customTicker={`$${symbol}`}
+              color={amountToSell ? 'colorTextCaution' : 'colorText'}
+            />
+          </FlexBox>
 
           <FlexBox alignItems="center" justifyContent="space-between">
             <Text variant="t100" as="p" color="colorText">

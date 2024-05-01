@@ -23,7 +23,6 @@ import { Drawer, StatisticsContainer, SupplyLine, ToggleContainer, Widget } from
 export type CrtStatusWidgetProps = {
   token: FullCreatorTokenFragment
 }
-// todo: total revenue
 export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({ token }) => {
   const drawer = useRef<HTMLDivElement>(null)
   const [isExpanded, expand] = useState(false)
@@ -48,7 +47,7 @@ export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({ token }) => {
     <Widget
       title={status === 'inactive' ? 'Status' : ''}
       customNode={
-        <>
+        <FlexBox width="100%" flow="column" gap={4}>
           {status === 'inactive' ? <InactiveDetails /> : status === 'market' ? <MarketDetails token={token} /> : null}
 
           <StatisticsContainer>
@@ -85,7 +84,9 @@ export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({ token }) => {
                 avoidIconStyling
                 tileSize={smMatch ? 'big' : 'bigSmall'}
                 caption="Total revenue Shares"
-                content={data?.getCumulativeHistoricalShareAllocation.cumulativeHistoricalAllocation ?? 0}
+                content={hapiBnToTokenNumber(
+                  new BN(data?.getCumulativeHistoricalShareAllocation.cumulativeHistoricalAllocation ?? 0)
+                )}
                 icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
                 withDenomination
               />
@@ -99,7 +100,7 @@ export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({ token }) => {
               />
             </Drawer>
           </StatisticsContainer>
-        </>
+        </FlexBox>
       }
     />
   )
@@ -118,7 +119,7 @@ const MarketDetails = ({ token }: { token: FullCreatorTokenFragment }) => {
     (amount: number) => {
       const currentAmm = token?.ammCurves.find((amm) => !amm.finalized)
       return calcBuyMarketPricePerToken(
-        currentAmm?.mintedByAmm,
+        currentAmm ? +currentAmm?.mintedByAmm - +currentAmm?.burnedByAmm : 0,
         currentAmm?.ammSlopeParameter,
         currentAmm?.ammInitPrice,
         amount
@@ -129,12 +130,12 @@ const MarketDetails = ({ token }: { token: FullCreatorTokenFragment }) => {
   return (
     <FlexBox flow="column" gap={3}>
       <DetailsContent
-        caption="PRICE PER UNIT"
+        caption="PRICE FOR FIRST UNIT"
         content={calculateSlippageAmount(1) ?? 0}
         icon={<SvgJoyTokenSilver24 />}
         withDenomination
         tileSize="big"
-        tooltipText="Price per unit is calculated for current market supply and can quickly change."
+        tooltipText="Price of each incremental unit purchased or sold depends on overall quantity of tokens transacted, the actual average price per unit for the entire purchase or sale will differ from the price displayed for the first unit transacted."
       />
       <FlexBox equalChildren width="100%" gap={2}>
         <SellOnMarketButton tokenId={token.id} />

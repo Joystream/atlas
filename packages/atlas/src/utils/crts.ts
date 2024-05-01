@@ -13,7 +13,7 @@ export const calcBuyMarketPricePerToken = (
     .add(bnAmount)
     .pow(new BN(2))
     .sub(totalSupply.pow(new BN(2)))
-  return new BN(ammSlopeParameter).muln(0.5).mul(allocation).add(new BN(ammInitPrice).mul(bnAmount))
+  return new BN(ammSlopeParameter).mul(allocation).divn(2).add(new BN(ammInitPrice).mul(bnAmount))
 }
 
 export const calcSellMarketPricePerToken = (
@@ -28,7 +28,7 @@ export const calcSellMarketPricePerToken = (
   }
   const totalSupply = new BN(mintedByAmm)
   const allocation = totalSupply.pow(new BN(2)).sub(totalSupply.subn(amount).pow(new BN(2)))
-  return new BN(ammSlopeParameter).muln(0.5).mul(allocation).add(new BN(ammInitPrice).muln(amount))
+  return new BN(ammSlopeParameter).mul(allocation).divn(2).add(new BN(ammInitPrice).muln(amount))
 }
 
 type GetRevenueShareStatusForMemberProps = {
@@ -53,11 +53,12 @@ export const getRevenueShareStatusForMember = ({
   }
 
   if (currentBlock > endingAt) {
-    if (isFinalized) {
-      return 'finalized'
-    }
     if (hasMemberStaked && !hasRecovered) {
       return 'unlock'
+    }
+
+    if (isFinalized) {
+      return 'finalized'
     }
 
     return 'past'

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { ReactElement } from 'react'
 
-import { SvgActionCheck } from '@/assets/icons'
+import { SvgActionCheck, SvgActionPlay } from '@/assets/icons'
 import { SvgPatternAngledLines, SvgPatternCircleLines } from '@/assets/illustrations'
 import { FlexBox } from '@/components/FlexBox'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
@@ -14,24 +14,31 @@ import { cVar, media, sizes, square } from '@/styles'
 
 const SALE_POINTS = [
   {
-    title: 'Direct revenue',
-    description: 'Earn money directly from your sale.',
+    title: 'You sell the tokens that already have',
   },
   {
-    title: 'Clear end date',
-    description:
-      'Create an event with a clear end date to get everyone focused on one big event, get greater participation and excitement.',
+    title: 'Price is set up by creator, same for all buyers and does not change',
+  },
+  {
+    title: 'Has pre-defined duration set by creator',
+  },
+  {
+    title: 'Cannot be active at the same time with the open market',
   },
 ]
 
 const MARKET_POINTS = [
   {
-    title: 'Market revenue',
-    description: 'You, and everyone else, can buy and sell at any time',
+    title: 'Buyers mint new tokens in addition to existing supply.',
   },
   {
-    title: 'Always open',
-    description: "You don't need to figure out how high to price your token - just set it and forget it.",
+    title: 'Price is set up by the market, it goes up when someone buys tokens',
+  },
+  {
+    title: 'Can be closed any time provided closing liquidity conditions are met',
+  },
+  {
+    title: 'Cannot be active at the same time with the public sale',
   },
 ]
 
@@ -58,9 +65,9 @@ export const SaleMarketChoiceDrawer = ({ isOpen, onClose, onMarketChoice }: Sale
             </FlexBox>
             <FlexBox flow={smMatch ? 'row' : 'column'} alignItems="strech" width="100%" gap={6}>
               <OptionCard
-                title="Sale"
+                title="Public Sale"
                 titleAccessory={<Pill label="Comming soon" variant="warning" />}
-                description="A sale is a way to raise money for a new project by selling a certain number of tokens to the public at a set price over a certain period."
+                description="Raise funding by selling a certain number of tokens to the public at a set price over a certain period."
                 points={SALE_POINTS}
                 actionButton={{
                   text: 'Start sale',
@@ -72,12 +79,15 @@ export const SaleMarketChoiceDrawer = ({ isOpen, onClose, onMarketChoice }: Sale
               <OptionCard
                 title="Market"
                 titleAccessory={
-                  <div />
-                  // <Button _textOnly icon={<SvgActionPlay />}>
-                  //   Learn more
-                  // </Button>
+                  <Button
+                    _textOnly
+                    icon={<SvgActionPlay />}
+                    to="https://www.notion.so/joystream/Creator-Tokens-afb46f9b7f7444979114fc768eddd820?pvs=4#72f30dca6d2b44c9bd2186500eb1558b"
+                  >
+                    Learn more
+                  </Button>
                 }
-                description="An automated market maker (AMM) is an algorithm that helps to buy and sell tokens by using price curves which automatically set prices and match buyers and sellers."
+                description="Helps to buy and sell tokens by using price curves which automatically set prices and match buyers and sellers."
                 points={MARKET_POINTS}
                 actionButton={{
                   text: 'Start market',
@@ -98,7 +108,7 @@ type OptionCardProps = {
   description: string
   points: {
     title: string
-    description: string
+    description?: string
   }[]
   actionButton: {
     text: string

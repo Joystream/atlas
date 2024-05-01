@@ -6,8 +6,11 @@ import {
   SvgActionChevronL,
   SvgActionChevronR,
   SvgActionChevronT,
+  SvgActionClose,
+  SvgActionPlay,
 } from '@/assets/icons'
 import { Carousel, SwiperInstance } from '@/components/Carousel'
+import { FlexBox } from '@/components/FlexBox'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { useDebounceValue } from '@/hooks/useDebounceValue'
@@ -23,27 +26,33 @@ import {
   RowBox,
   StepCardContainer,
   StepNumber,
-} from './ProgressWidget.styles'
-import { getProgressPercentage, responsive } from './ProgressWidget.utils'
+} from './NonLinearProgressWidget.styles'
+import { getProgressPercentage, responsive } from './NonLinearProgressWidget.utils'
 
 type StepProps = {
   title: string
   description: string
+  link?: string
+  finished?: boolean
 }
 
-export type ProgressWidgetProps = {
+export type NonLinearProgressWidgetProps = {
   steps: StepProps[]
   activeStep: number
+  header: string
   goalComponent: ReactNode
   renderCurrentStepActionButton: (step: number) => ReactNode
+  onClose?: () => void
 }
 
-export const ProgressWidget = ({
+export const NonLinearProgressWidget = ({
+  header,
   steps,
   activeStep,
   goalComponent,
   renderCurrentStepActionButton,
-}: ProgressWidgetProps) => {
+  onClose,
+}: NonLinearProgressWidgetProps) => {
   const [isVisible, setIsVisible] = useState(true)
   const debouncedVisible = useDebounceValue(isVisible, 100)
   const [glider, setGlider] = useState<SwiperInstance | null>(null)
@@ -51,6 +60,8 @@ export const ProgressWidget = ({
   const xsMatch = useMediaMatch('xs')
   const smMatch = useMediaMatch('sm')
   const isDone = activeStep + 1 > steps.length
+  const numberOfFinishedSteps = steps.filter((step) => step.finished).length
+
   return (
     <MainWrapper>
       <Header progressWidth={debouncedVisible ? '0%' : `${getProgressPercentage(activeStep, steps.length)}%`}>
@@ -60,27 +71,31 @@ export const ProgressWidget = ({
           </Text>
           {!isVisible && (
             <Text variant="t200-strong" as="p">
-              ({isDone ? steps.length : activeStep}/{steps.length})
+              ({isDone ? steps.length : numberOfFinishedSteps}/{steps.length})
             </Text>
           )}
         </RowBox>
-        {xsMatch && (
-          <Button
-            onClick={() => setIsVisible((prev) => !prev)}
-            icon={isVisible ? <SvgActionChevronT /> : <SvgActionChevronB />}
-            iconPlacement="right"
-            variant="tertiary"
-          >
-            {isVisible ? 'Show less' : 'Show more'}
-          </Button>
-        )}
+        <FlexBox width="auto" gap={2} alignItems="center">
+          {xsMatch && (
+            <Button
+              onClick={() => setIsVisible((prev) => !prev)}
+              icon={isVisible ? <SvgActionChevronT /> : <SvgActionChevronB />}
+              iconPlacement="right"
+              variant="tertiary"
+            >
+              {isVisible ? 'Show less' : 'Show more'}
+            </Button>
+          )}
+          {onClose && <Button onClick={onClose} icon={<SvgActionClose />} variant="secondary" />}
+        </FlexBox>
       </Header>
       <DetailsDrawer isActive={isVisible} ref={drawer} maxHeight={drawer?.current?.scrollHeight}>
         <DropdownContainer>
           <RowBox gap={12}>
             <ExtendedProgressBar
+              header={header}
               activeStep={steps[isDone ? steps.length - 1 : activeStep]}
-              activeStepNumber={activeStep}
+              activeStepNumber={numberOfFinishedSteps}
               totalSteps={steps.length}
               goalComponent={goalComponent}
             />
@@ -92,7 +107,7 @@ export const ProgressWidget = ({
             )}
           </RowBox>
           <Carousel
-            initialSlide={activeStep + 1}
+            initialSlide={activeStep}
             spaceBetween={12}
             navigation
             dotsVisible
@@ -103,7 +118,7 @@ export const ProgressWidget = ({
               <StepCard
                 key={step.title}
                 step={step}
-                status={idx === activeStep ? 'active' : idx < activeStep ? 'done' : 'next'}
+                status={idx === activeStep ? 'active' : step.finished ? 'done' : 'next'}
                 stepNumber={idx + 1}
                 button={renderCurrentStepActionButton(idx)}
               />
@@ -119,14 +134,15 @@ type ExtendedProgressBarProps = {
   activeStepNumber: number
   totalSteps: number
   goalComponent: ReactNode
+  header: string
 }
-const ExtendedProgressBar = ({ activeStep, activeStepNumber, totalSteps, goalComponent }: ExtendedProgressBarProps) => {
+const ExtendedProgressBar = ({ activeStepNumber, totalSteps, goalComponent, header }: ExtendedProgressBarProps) => {
   const isDone = activeStepNumber + 1 > totalSteps
 
   return (
     <ColumnBox gap={2}>
       <Text variant="t300-strong" as="p">
-        {activeStep.title}
+        {header}
       </Text>
       <RowBox gap={4}>
         <ProgressBar progress={getProgressPercentage(activeStepNumber, totalSteps)} />
@@ -147,7 +163,7 @@ type StepCardProps = {
 }
 
 const StepCard = ({ step, status, stepNumber, button }: StepCardProps) => {
-  // const smMatch = useMediaMatch('xs')
+  const smMatch = useMediaMatch('xs')
 
   return (
     <StepCardContainer isActive={status === 'active'}>
@@ -167,9 +183,18 @@ const StepCard = ({ step, status, stepNumber, button }: StepCardProps) => {
 
       <RowBox gap={4} wrap>
         {button}
-        {/*<Button variant="tertiary" fullWidth={!smMatch} _textOnly icon={<SvgActionPlay />} iconPlacement="right">*/}
-        {/*  Learn more*/}
-        {/*</Button>*/}
+        {step.link ? (
+          <Button
+            to={step.link}
+            variant="tertiary"
+            fullWidth={!smMatch}
+            _textOnly
+            icon={<SvgActionPlay />}
+            iconPlacement="right"
+          >
+            Learn more
+          </Button>
+        ) : null}
       </RowBox>
     </StepCardContainer>
   )

@@ -1,5 +1,5 @@
 import { ChangeEvent, FC, MouseEvent, useCallback, useEffect, useState } from 'react'
-import { useLocation, useSearchParams } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import shallow from 'zustand/shallow'
 
@@ -37,8 +37,6 @@ import {
 export const TopbarViewer: FC = () => {
   const { activeMembership, isLoggedIn, membershipsLoading } = useUser()
   const { isAuthenticating } = useAuth()
-  const [searchParams] = useSearchParams()
-  const [utmSource, utmCampaign] = [searchParams.get('utm_source'), searchParams.get('utm_campaign')]
   const { trackClickTopBarSignInButton } = useSegmentAnalytics()
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
 
@@ -164,7 +162,7 @@ export const TopbarViewer: FC = () => {
                         iconPlacement="left"
                         size="medium"
                         onClick={() => {
-                          trackClickTopBarSignInButton(utmSource, utmCampaign)
+                          trackClickTopBarSignInButton()
                           setAuthModalOpenName(getCorrectLoginModal())
                         }}
                       >

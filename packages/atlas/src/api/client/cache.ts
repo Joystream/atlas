@@ -263,6 +263,25 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
       return existing?.slice(offset, offset + limit)
     },
   },
+  getAccountTransferrableBalance: (existing, { toReference, args }) => {
+    return (
+      existing ||
+      toReference({
+        __typename: 'GetAccountTransferrableBalanceResult',
+        memberId: args?.memberId,
+        tokenId: args?.tokenId,
+      })
+    )
+  },
+  creatorTokenById: (existing, { toReference, args }) => {
+    return (
+      existing ||
+      toReference({
+        __typename: 'CreatorToken',
+        id: args?.id,
+      })
+    )
+  },
   commentById: (existing, { toReference, args }) => {
     return (
       existing ||

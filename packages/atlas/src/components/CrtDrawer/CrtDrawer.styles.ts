@@ -27,6 +27,7 @@ export const PreviewContainer = styled.div`
   background-color: #000;
   height: 100%;
   overflow: hidden;
+  position: relative;
 
   ${media.md} {
     grid-column: 1;

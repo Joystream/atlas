@@ -51,7 +51,7 @@ export const BuySaleTokenSuccess: FC<SignUpSuccessStepProps> = ({ tokenName, set
         </Text>
         <Text variant="t200" as="p" color="colorText">
           You are now an {tokenName} holder - you can buy, sell, transfer your token. You can also stake when creator
-          opens revenue share to claim your part of it.
+          opens revenue share to claim your part of the channel's revenue.
         </Text>
       </ContentWrapper>
     </>

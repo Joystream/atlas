@@ -8,6 +8,14 @@ export const WidgetPreviewContainer = styled.div`
   width: fit-content;
   margin-top: 100px;
   position: relative;
+  height: 400px;
+`
+
+export const Shadow = styled.div`
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 70px -150px 60px -21px black;
+  z-index: 1;
 `
 
 export const LeftPlaceholder = styled.div`
@@ -23,7 +31,7 @@ export const LeftPlaceholder = styled.div`
 `
 
 export const BottomPlaceholder = styled.div`
-  height: 200px;
+  height: 400px;
   width: 100%;
   background-color: ${cVar('colorBackgroundMuted')};
   padding: ${sizes(4)};

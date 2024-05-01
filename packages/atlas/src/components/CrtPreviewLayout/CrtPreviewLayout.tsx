@@ -38,41 +38,42 @@ type CrtPreviewViewProps = {
 }
 
 export const getTokenDetails = (token: FullCreatorTokenFragment, cumulativeRevenue?: string) => {
-  const details = []
+  const details: {
+    caption: string
+    content: string | BN | number
+    tooltipText: string
+    withToken?: boolean
+    withDenomination?: boolean
+    customTicker?: string
+    icon?: ReactElement
+  }[] = [
+    {
+      caption: 'REV. SHARE',
+      content: `${permillToPercentage(token.revenueShareRatioPermill)}%`,
+      tooltipText: `Percentage of the future revenue that channel shares with token holders. Each token holder can claim amount of revenue proportionate to their ownership of the channel tokens supply.`,
+    },
+    {
+      caption: 'INFLATION',
+      content: `${permillToPercentage(token.annualCreatorRewardPermill)}%`,
+      tooltipText:
+        'This percentage of the token supply gets minted every year and paid to creator for channel management.',
+    },
+    {
+      caption: 'TOTAL SUPPLY',
+      content: +token.totalSupply,
+      tooltipText: `Total amount of tokens owned by all holders.`,
+    },
+  ]
+
   if (cumulativeRevenue)
     details.push({
       caption: 'TOTAL REV.',
       content: new BN(cumulativeRevenue),
       icon: <JoyTokenIcon size={16} variant="silver" />,
-      tooltipText: 'Total revenue this channel made from DAO earnings, NFT sales and royalties.',
+      tooltipText: 'Total cumulative revenue of this channel on Joystream to date.',
       withDenomination: true,
     })
 
-  if (token.revenueShareRatioPermill)
-    details.push({
-      caption: 'REV. SHARE',
-      content: `${permillToPercentage(token.revenueShareRatioPermill)}%`,
-      tooltipText: `This is a percentage of revenue that creator claims after each revenue share - Holders: ${permillToPercentage(
-        token.revenueShareRatioPermill
-      )}%, Channel: ${100 - permillToPercentage(token.revenueShareRatioPermill)}%.`,
-    })
-
-  if (token.annualCreatorRewardPermill)
-    details.push({
-      caption: 'AN. REWARD',
-      content: `${permillToPercentage(token.annualCreatorRewardPermill)}%`,
-      tooltipText:
-        'This is how much creator will be earning annually from their tokens in % terms from the total supply.',
-    })
-
-  if (token.totalSupply)
-    details.push({
-      caption: 'TOTAL SUPPLY',
-      content: +token.totalSupply,
-      tooltipText: `This is a total supply of all $${token.symbol} tokens owned by token holders. `,
-      withToken: true,
-      customTicker: `$${token.symbol}`,
-    })
   return details
 }
 
@@ -152,6 +153,7 @@ export const CrtPreviewLayout = ({
         <HoldersWidget
           totalSupply={+(token?.totalSupply ?? 0)}
           totalHolders={token?.accountsNum ?? 0}
+          tokenSymbol={token?.symbol ?? ''}
           tokenId={token?.id ?? '-1'}
           ownerId={memberId ?? ''}
         />

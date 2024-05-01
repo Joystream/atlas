@@ -1,6 +1,10 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 
-import { GetTokenRevenueSharesQuery } from '@/api/queries/__generated__/creatorTokens.generated'
+import {
+  GetTokenRevenueSharesQuery,
+  useGetCreatorTokenHoldersQuery,
+} from '@/api/queries/__generated__/creatorTokens.generated'
+import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgActionCalendar, SvgActionChevronR } from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox'
 import { Information } from '@/components/Information'
@@ -8,7 +12,7 @@ import { Text } from '@/components/Text'
 import { TextTimer } from '@/components/TextTimer/TextTimer'
 import { WidgetTile } from '@/components/WidgetTile'
 import { Button, TextButton } from '@/components/_buttons/Button'
-import { ClaimShareModal } from '@/components/_crt/ClaimShareModal'
+import { ClaimRevenueShareButton } from '@/components/_crt/ClaimRevenueShareButton/ClaimRevenueShareButton'
 import { absoluteRoutes } from '@/config/routes'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useUnlockTokenStake } from '@/hooks/useUnlockTokenStake'
@@ -19,7 +23,7 @@ type RevenueShareStateWidgetProps = {
   revenueShare?: GetTokenRevenueSharesQuery['revenueShares'][number]
   className?: string
   withLink?: boolean
-  tokenId?: string
+  token?: FullCreatorTokenFragment
   tokenSymbol?: string
 }
 
@@ -27,15 +31,27 @@ export const RevenueShareStateWidget = ({
   className,
   withLink,
   revenueShare,
-  tokenId,
+  token,
   tokenSymbol,
 }: RevenueShareStateWidgetProps) => {
   const { memberId } = useUser()
   const { startingAt, endsAt, stakers } = revenueShare ?? { startingAt: 0, endsAt: 0 }
-  const [openClaimShareModal, setOpenClaimShareModal] = useState(false)
   const { currentBlock } = useBlockTimeEstimation()
   const unlockStakeTx = useUnlockTokenStake()
   const memberStake = stakers?.find((stakers) => stakers.account.member.id === memberId)
+  const { data: tokenHolderData } = useGetCreatorTokenHoldersQuery({
+    variables: {
+      where: {
+        token: {
+          id_eq: token?.id ?? '',
+        },
+        member: {
+          id_eq: memberId,
+        },
+      },
+    },
+    skip: !token?.id || !memberId,
+  })
   const status = revenueShare
     ? getRevenueShareStatusForMember({
         currentBlock,
@@ -47,32 +63,30 @@ export const RevenueShareStateWidget = ({
       })
     : 'inactive'
 
-  const memberStatus = getRevenueShareStatusForMember({
-    startingAt,
-    endingAt: endsAt,
-    hasMemberStaked: !!memberStake,
-    currentBlock: currentBlock,
-    isFinalized: revenueShare?.finalized ?? false,
-    hasRecovered: !!memberStake?.recovered,
-  })
+  const memberStatus = revenueShare
+    ? getRevenueShareStatusForMember({
+        startingAt,
+        endingAt: endsAt,
+        hasMemberStaked: !!memberStake,
+        currentBlock: currentBlock,
+        isFinalized: revenueShare?.finalized ?? false,
+        hasRecovered: !!memberStake?.recovered,
+      })
+    : 'inactive'
 
   const memberActionNode = useMemo(() => {
-    if (!tokenId || !tokenSymbol || !memberId) {
+    if (!token || !tokenSymbol || !memberId || !tokenHolderData?.tokenAccounts[0]) {
       return
     }
     switch (memberStatus) {
       case 'active':
-        return (
-          <Button fullWidth onClick={() => setOpenClaimShareModal(true)}>
-            Claim your share
-          </Button>
-        )
+        return <ClaimRevenueShareButton fullWidth token={token} />
       case 'unlock':
         return (
           <Button
             fullWidth
             onClick={() => {
-              unlockStakeTx(memberId, tokenId, tokenSymbol)
+              unlockStakeTx(memberId, token.id, tokenSymbol)
             }}
           >
             Unlock tokens
@@ -85,7 +99,7 @@ export const RevenueShareStateWidget = ({
             <Text variant="t200-strong" as="p">
               Upcoming
             </Text>
-            <Information text="lorem ipsum" />
+            <Information text="Revenue share was scheduled by the creator. Wait for the start to stake tokens and claim your share of the revenue." />
           </FlexBox>
         )
       case 'locked':
@@ -95,17 +109,14 @@ export const RevenueShareStateWidget = ({
             <Text variant="t200-strong" as="p">
               Locked
             </Text>
-            <Information text="lorem ipsum" />
+            <Information text="Your tokens have been locked and revenue share received. Wait for the revenue share end to unlock tokens." />
           </FlexBox>
         )
     }
-  }, [memberId, memberStatus, tokenId, tokenSymbol, unlockStakeTx])
+  }, [memberId, memberStatus, token, tokenHolderData?.tokenAccounts, tokenSymbol, unlockStakeTx])
 
   return (
     <>
-      {openClaimShareModal && (
-        <ClaimShareModal onClose={() => setOpenClaimShareModal(false)} show={openClaimShareModal} tokenId={tokenId} />
-      )}
       <WidgetTile
         className={className}
         title={
@@ -135,7 +146,7 @@ export const RevenueShareStateWidget = ({
           </FlexBox>
         }
         customTopRightNode={
-          withLink ? (
+          withLink && tokenHolderData?.tokenAccounts[0] ? (
             <TextButton icon={<SvgActionChevronR />} iconPlacement="right" to={absoluteRoutes.viewer.portfolio()}>
               See in portfolio
             </TextButton>
@@ -148,8 +159,8 @@ export const RevenueShareStateWidget = ({
                   status === 'inactive'
                     ? 'There is no active share at this moment. Remember to close market or token sale before you try to start one.'
                     : status === 'past'
-                    ? 'Revenue share ended. You can now unlock your staked tokens!'
-                    : 'Revenue share in progress. Stake your tokens to receive your part of the revenue. Token will be locked till the end of the revenue share, remeber to unlock your tokens after the timer runs out.',
+                    ? 'Revenue share ended. Holders can now unlock staked tokens!'
+                    : 'Revenue share in progress. As a holder stake your tokens to receive your part of the revenue. Token will be locked till the end of the revenue share, remember to unlock your tokens after the timer runs out.',
               }
             : undefined
         }
