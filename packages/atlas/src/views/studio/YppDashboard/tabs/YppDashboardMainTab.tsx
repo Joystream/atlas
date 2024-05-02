@@ -25,6 +25,7 @@ import { YppDashboardTier } from '@/components/_ypp/YppDashboardTier'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useYppAuthorizeHandler } from '@/hooks/useYppAuthorizeHandler'
 import { useUser } from '@/providers/user/user.hooks'
 import { cVar, sizes, transitions } from '@/styles'
@@ -97,6 +98,16 @@ const benefitsMetadata = {
 
 export const YppDashboardMainTab: FC = () => {
   const { channelId } = useUser()
+  const {
+    trackAmbassadorLinkClicked,
+    trackRewardsReferralLinkClicked,
+    trackRewardsBrandingLinkClicked,
+    trackRewardsOriginalCreatorsLinkClicked,
+    trackTwitterPostLinkClicked,
+    trackShareNftLinkClicked,
+    trackJoinDiscordLinkClicked,
+    trackShareTokenLinkClicked,
+  } = useSegmentAnalytics()
   const navigate = useNavigate()
   const _handleYppSignUpClick = useYppAuthorizeHandler()
   const { unsyncedChannels, currentChannel } = useGetYppSyncedChannels()
@@ -294,7 +305,11 @@ export const YppDashboardMainTab: FC = () => {
                 <TextButton to="xd">Learn more</TextButton>
               </Text>
             }
-            actionNode={<ReferralLinkButton />}
+            actionNode={
+              <ReferralLinkButton
+                onClick={() => trackRewardsReferralLinkClicked(channelId ?? '', currentChannel?.yppStatus ?? '')}
+              />
+            }
           />
         </BenefitsContainer>
 
@@ -311,7 +326,14 @@ export const YppDashboardMainTab: FC = () => {
                 <TextButton to={benefitsMetadata.discordCommunity.tooltipLink}>Learn more</TextButton>
               </Text>
             }
-            actionNode={<Button to={benefitsMetadata.discordCommunity.actionLink}>Join Discord</Button>}
+            actionNode={
+              <Button
+                onClick={() => trackJoinDiscordLinkClicked(channelId ?? '', currentChannel?.yppStatus ?? '')}
+                to={benefitsMetadata.discordCommunity.actionLink}
+              >
+                Join Discord
+              </Button>
+            }
           />
           <BenefitCard
             title={benefitsMetadata.twitterPost.title}
@@ -324,7 +346,14 @@ export const YppDashboardMainTab: FC = () => {
                 <TextButton to={benefitsMetadata.twitterPost.tooltipLink}>Learn more</TextButton>
               </Text>
             }
-            actionNode={<Button to={benefitsMetadata.twitterPost.actionLink}>Post on X</Button>}
+            actionNode={
+              <Button
+                onClick={() => trackTwitterPostLinkClicked(channelId ?? '', currentChannel?.yppStatus ?? '')}
+                to={benefitsMetadata.twitterPost.actionLink}
+              >
+                Post on X
+              </Button>
+            }
           />
           <BenefitCard
             title={benefitsMetadata.roundTableEvents.title}
@@ -337,7 +366,14 @@ export const YppDashboardMainTab: FC = () => {
                 <TextButton to={benefitsMetadata.roundTableEvents.tooltipLink}>Learn more</TextButton>
               </Text>
             }
-            actionNode={<Button to={benefitsMetadata.roundTableEvents.actionLink}>Learn more</Button>}
+            actionNode={
+              <Button
+                onClick={() => trackRewardsReferralLinkClicked(channelId ?? '', currentChannel?.yppStatus ?? '')}
+                to={benefitsMetadata.roundTableEvents.actionLink}
+              >
+                Learn more
+              </Button>
+            }
           />
         </BenefitsContainer>
 
@@ -354,7 +390,13 @@ export const YppDashboardMainTab: FC = () => {
               </Text>
             }
             actionNode={
-              <Button disabled={!isSilverOrAbove} to={benefitsMetadata.originalCreatorsContent.actionLink}>
+              <Button
+                onClick={() =>
+                  trackRewardsOriginalCreatorsLinkClicked(channelId ?? '', currentChannel?.yppStatus ?? '')
+                }
+                disabled={!isSilverOrAbove}
+                to={benefitsMetadata.originalCreatorsContent.actionLink}
+              >
                 Sign up
               </Button>
             }
@@ -371,7 +413,11 @@ export const YppDashboardMainTab: FC = () => {
               </Text>
             }
             actionNode={
-              <Button disabled={!isSilverOrAbove} to={benefitsMetadata.branding.actionLink}>
+              <Button
+                onClick={() => trackRewardsBrandingLinkClicked(channelId ?? '', currentChannel?.yppStatus ?? '')}
+                disabled={!isSilverOrAbove}
+                to={benefitsMetadata.branding.actionLink}
+              >
                 Sign up
               </Button>
             }
@@ -399,7 +445,11 @@ export const YppDashboardMainTab: FC = () => {
               </Text>
             }
             actionNode={
-              <Button disabled={!isSilverOrAbove} to={absoluteRoutes.viewer.channel(channelId ?? '', { tab: 'NFTs' })}>
+              <Button
+                onClick={() => trackShareNftLinkClicked(channelId ?? '', currentChannel?.yppStatus ?? '')}
+                disabled={!isSilverOrAbove}
+                to={absoluteRoutes.viewer.channel(channelId ?? '', { tab: 'NFTs' })}
+              >
                 Share NFTs
               </Button>
             }
@@ -424,7 +474,11 @@ export const YppDashboardMainTab: FC = () => {
               </Text>
             }
             actionNode={
-              <Button disabled={!isSilverOrAbove} to={absoluteRoutes.viewer.channel(channelId ?? '', { tab: 'Token' })}>
+              <Button
+                onClick={() => trackShareTokenLinkClicked(channelId ?? '', currentChannel?.yppStatus ?? '')}
+                disabled={!isSilverOrAbove}
+                to={absoluteRoutes.viewer.channel(channelId ?? '', { tab: 'Token' })}
+              >
                 Share token
               </Button>
             }
@@ -441,7 +495,11 @@ export const YppDashboardMainTab: FC = () => {
               </Text>
             }
             actionNode={
-              <Button disabled={!isSilverOrAbove} to={benefitsMetadata.ambassadorProgram.actionLink}>
+              <Button
+                onClick={() => trackAmbassadorLinkClicked(channelId ?? '', currentChannel?.yppStatus ?? '')}
+                disabled={!isSilverOrAbove}
+                to={benefitsMetadata.ambassadorProgram.actionLink}
+              >
                 Apply
               </Button>
             }
