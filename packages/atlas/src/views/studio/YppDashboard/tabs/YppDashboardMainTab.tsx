@@ -72,7 +72,8 @@ const benefitsMetadata = {
     description: `Add Joystream branding to your video and multiply your rewards for original uploads to ${atlasConfig.general.appName}. Branded video description posted to Youtube must contain hashtag #jsb and  #watchOn${atlasConfig.general.appName}.`,
     reward: 'x5 per video',
     actionLink: 'https://athd8d2ml5u.typeform.com/to/jvKcRyCP',
-    tooltipLink: 'sdfaf',
+    tooltipLink:
+      'https://www.notion.so/joystream/Original-Content-de1acdc52ef549119b700df106675ce4?pvs=4#aa1c28df46ff45e0b81be7a84fc18faf',
   },
   shareNft: {
     title: 'Share NFT',
@@ -221,7 +222,8 @@ export const YppDashboardMainTab: FC = () => {
                 <Text variant="t100" as="span">
                   Connected channels undergo verification from the DAO content team and assigned tiers based on
                   production quality. Sign up bonus, sync rewards and access to more earning opportunities are based on
-                  the tier. <TextButton to="xd">Learn more</TextButton>
+                  the tier. {'\n'}
+                  <TextButton to="xd">Learn more</TextButton>
                 </Text>
               }
               actionNode={
@@ -250,7 +252,7 @@ export const YppDashboardMainTab: FC = () => {
             rewardTooltip={
               <Text variant="t100" as="span">
                 The limit of historical videos and rewards for synced videos are based on the channel rewards tier and
-                paid for weekly basis.
+                paid for weekly basis. {'\n'}
                 <TextButton to="xd">Learn more</TextButton>
               </Text>
             }
@@ -288,7 +290,7 @@ export const YppDashboardMainTab: FC = () => {
             rewardTooltip={
               <Text variant="t100" as="span">
                 Referrals is the easiest way to ramp up rewards. Top referrers are published to the regularly updated
-                leaderboard.
+                leaderboard. {'\n'}
                 <TextButton to="xd">Learn more</TextButton>
               </Text>
             }
@@ -305,7 +307,7 @@ export const YppDashboardMainTab: FC = () => {
               <Text variant="t100" as="span">
                 We are proud to be building a vibrant community of forward looking creators across a wide set of content
                 categories. To stay ahead of the new opportunities to earn with Gleev and connect with the peers and
-                support team join our Discord. Newcomers are rewarded with JOY tokens for active participation.
+                support team join our Discord. Newcomers are rewarded with JOY tokens for active participation.{'\n'}
                 <TextButton to={benefitsMetadata.discordCommunity.tooltipLink}>Learn more</TextButton>
               </Text>
             }
@@ -318,7 +320,7 @@ export const YppDashboardMainTab: FC = () => {
             rewardTooltip={
               <Text variant="t100" as="span">
                 JoystreamDAO has 50 thousand followers and we are going strong towards our first million. Join the club,
-                get exposure to our growing follower base and get a chance to receive a bonus.
+                get exposure to our growing follower base and get a chance to receive a bonus.{'\n'}
                 <TextButton to={benefitsMetadata.twitterPost.tooltipLink}>Learn more</TextButton>
               </Text>
             }
@@ -331,7 +333,7 @@ export const YppDashboardMainTab: FC = () => {
             rewardTooltip={
               <Text variant="t100" as="span">
                 During every event the panelists and hosts vote on selecting 3 best questions from the audience which
-                are rewarded with JOY and other prizes.
+                are rewarded with JOY and other prizes.{'\n'}
                 <TextButton to={benefitsMetadata.roundTableEvents.tooltipLink}>Learn more</TextButton>
               </Text>
             }
@@ -347,7 +349,7 @@ export const YppDashboardMainTab: FC = () => {
             rewardTooltip={
               <Text variant="t100" as="span">
                 Original content published to Gleev is rewarded at a multiple. We are gathering applicants for the beta
-                testing of this feature. Apply early for higher multiples.
+                testing of this feature. Apply early for higher multiples.{'\n'}
                 <TextButton to={benefitsMetadata.originalCreatorsContent.tooltipLink}>Learn more</TextButton>
               </Text>
             }
@@ -365,8 +367,7 @@ export const YppDashboardMainTab: FC = () => {
               <Text variant="t100" as="span">
                 Using branded assets as a preroll for your videos published to Gleev first allow to maximise the
                 rewards. We are gathering early applicants for the beta test of this feature. Apply early to get higher
-                multiple.
-                <TextButton to={benefitsMetadata.branding.tooltipLink}>Learn more</TextButton>
+                multiple. <TextButton to={benefitsMetadata.branding.tooltipLink}>Learn more</TextButton>
               </Text>
             }
             actionNode={
@@ -393,7 +394,7 @@ export const YppDashboardMainTab: FC = () => {
             rewardTooltip={
               <Text variant="t100" as="span">
                 Promote your NFTs on social media and get rewarded by the DAO for this. Rewards assigned are based on
-                peer upvotes held in a dedicated Discord channel.
+                peer upvotes held in a dedicated Discord channel.{'\n'}
                 <TextButton to={benefitsMetadata.shareNft.tooltipLink}>Learn more</TextButton>
               </Text>
             }
@@ -418,7 +419,7 @@ export const YppDashboardMainTab: FC = () => {
             rewardTooltip={
               <Text variant="t100" as="span">
                 Promote your Creator Token on social media and get rewarded by the DAO for this. Rewards assigned are
-                based on peer upvotes held in a dedicated Discord channel.
+                based on peer upvotes held in a dedicated Discord channel.{'\n'}
                 <TextButton to={benefitsMetadata.shareToken.tooltipLink}>Learn more</TextButton>
               </Text>
             }
@@ -435,7 +436,7 @@ export const YppDashboardMainTab: FC = () => {
             rewardTooltip={
               <Text variant="t100" as="span">
                 Ambassador program is open for creators dedicated to Joystream and entails versatile tasks of your
-                choice for collaboration and promotion.
+                choice for collaboration and promotion.{'\n'}
                 <TextButton to={benefitsMetadata.ambassadorProgram.tooltipLink}>Learn more</TextButton>
               </Text>
             }
