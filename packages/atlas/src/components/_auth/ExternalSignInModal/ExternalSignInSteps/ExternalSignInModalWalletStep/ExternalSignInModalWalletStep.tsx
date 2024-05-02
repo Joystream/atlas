@@ -1,5 +1,6 @@
 import { Wallet } from '@talismn/connect-wallets'
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
+import shallow from 'zustand/shallow'
 
 import { GetMembershipsQuery, useGetMembershipsLazyQuery } from '@/api/queries/__generated__/memberships.generated'
 import { SvgActionNewTab, SvgAlertsError24, SvgAlertsInformative24, SvgLogoPolkadot } from '@/assets/icons'
@@ -8,8 +9,10 @@ import { AuthenticationModalStepTemplate } from '@/components/_auth/Authenticati
 import { Loader } from '@/components/_loaders/Loader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMountEffect } from '@/hooks/useMountEffect'
+import { useAuthStore } from '@/providers/auth/auth.store'
 import { UnknownWallet, getWalletsList } from '@/providers/wallet/wallet.helpers'
 import { useWallet } from '@/providers/wallet/wallet.hooks'
+import { isWalletConnectWallet } from '@/providers/wallet/wallet.types'
 import { isMobile } from '@/utils/browser'
 import { capitalizeFirstLetter } from '@/utils/misc'
 
@@ -41,15 +44,22 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
   const [selectedWalletIdx, setSelectedWalletIdx] = useState<number>(0)
   const [hasError, setHasError] = useState(false)
   const [isConnecting, setIsConnecting] = useState(false)
-  const { wallet: walletFromStore, signInToWallet } = useWallet()
+  const { wallet: walletFromStore, signInToWallet, signInWithWalletConnect } = useWallet()
   const [fetchMemberships] = useGetMembershipsLazyQuery({})
+  const { setAuthModalOpenName } = useAuthStore(
+    (state) => ({
+      setAuthModalOpenName: state.actions.setAuthModalOpenName,
+    }),
+    shallow
+  )
   const wallets = useMemo(() => {
     const unsortedWallets = getWalletsList().filter((wallet) => wallet.installed)
+
     if (isMobileDevice) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const rawWallets = Object.keys((window as any).injectedWeb3 || {})
 
-      const allMoblieWallets = new Set([
+      const allMobileWallets = new Set([
         'polkawallet',
         ...rawWallets,
         ...unsortedWallets
@@ -58,7 +68,7 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
           .map((wallet) => wallet.extensionName),
       ])
 
-      return Array.from(allMoblieWallets)
+      return Array.from(allMobileWallets)
         .map((walletName) => {
           const possiblyInstalledWallet = unsortedWallets.find(
             (wallet) => wallet.extensionName === walletName && wallet.extensionName === 'subwallet-js'
@@ -75,7 +85,7 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
           return {
             title: capitalizeFirstLetter(walletName),
             extensionName: walletName,
-            installed: rawWallets.some((rawWallet) => rawWallet === walletName),
+            installed: [...rawWallets, 'WalletConnect'].some((rawWallet) => rawWallet === walletName),
             ...(MOBILE_SUPPORTED_WALLETS[walletName as keyof typeof MOBILE_SUPPORTED_WALLETS] ?? { logo: { src: '' } }),
           } as UnknownWallet
         })
@@ -91,10 +101,22 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
 
     setIsConnecting(true)
     setHasError(false)
-    const accounts = await signInToWallet(selectedWallet.extensionName)
+
+    const accounts = isWalletConnectWallet(selectedWallet)
+      ? await signInWithWalletConnect().catch((err) => {
+          const message = err?.message
+          if (message === 'user_action' || err?.code >= 4000) {
+            setIsConnecting(false)
+            return null
+          }
+        })
+      : await signInToWallet(selectedWallet?.extensionName)
 
     if (!accounts) {
-      setHasError(true)
+      if (selectedWallet?.extensionName !== 'WalletConnect') {
+        setHasError(true)
+      }
+      setAuthModalOpenName('externalLogIn')
       // set error state
       return
     }
@@ -106,6 +128,7 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
         },
       },
     })
+
     setIsConnecting(false)
 
     if (res.data?.memberships.length) {
@@ -114,7 +137,15 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
     } else {
       goToStep(ModalSteps.NoMembership)
     }
-  }, [fetchMemberships, goToStep, selectedWallet, setAvailableMemberships, signInToWallet])
+  }, [
+    fetchMemberships,
+    goToStep,
+    selectedWallet,
+    setAuthModalOpenName,
+    setAvailableMemberships,
+    signInToWallet,
+    signInWithWalletConnect,
+  ])
 
   const handleSelectWallet = useCallback((idx: number) => {
     setSelectedWalletIdx(idx)
@@ -126,7 +157,6 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
     if (!walletFromStore) return
 
     const index = wallets.findIndex((w) => w.extensionName === walletFromStore.extensionName)
-
     if (selectedWalletIdx === index) return
 
     setSelectedWalletIdx(index)
@@ -146,7 +176,7 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
       to: selectedWallet?.installed ? undefined : selectedWallet?.installUrl,
       onClick: selectedWallet?.installed ? handleConfirm : undefined,
     })
-  }, [handleConfirm, isConnecting, selectedWallet, setPrimaryButtonProps])
+  }, [handleConfirm, isConnecting, selectedWallet, setPrimaryButtonProps, wallets.length])
 
   return (
     <AuthenticationModalStepTemplate
@@ -171,7 +201,7 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
             key={wallet.title}
             label={wallet.title}
             caption={
-              wallet.installed
+              wallet.installed && wallet.extensionName !== 'WalletConnect'
                 ? 'Installed'
                 : isMobileDevice && wallet.extensionName === 'subwallet-js'
                 ? 'Recommended'
