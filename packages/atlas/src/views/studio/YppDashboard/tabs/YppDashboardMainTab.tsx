@@ -26,7 +26,6 @@ import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useYppAuthorizeHandler } from '@/hooks/useYppAuthorizeHandler'
-import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user/user.hooks'
 import { cVar, sizes, transitions } from '@/styles'
 import { formatDate, getNextWeekday } from '@/utils/time'
@@ -37,20 +36,68 @@ import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYpp
 
 import { StatusDot, StatusDotWrapper, WidgetTileContent, YppSyncStatus } from './YppDashboardTabs.styles'
 
-const SIGNUP_MESSAGE = 'YPP_SIGNUP_MESSAGE-'
-
-const getMessageIdForChannel = (channelId: string) => {
-  return SIGNUP_MESSAGE + channelId
+const benefitsMetadata = {
+  discordCommunity: {
+    title: 'Discord Community',
+    description:
+      'Connect with other creators on Discord and participate in building the platform with us. Each week 5 new active participants selected by community are rewarded with new joiner bonus.',
+    reward: '20 USD',
+    actionLink: 'https://discord.com/channels/811216481340751934/1224709788592767136',
+    tooltipLink: 'https://www.notion.so/joystream/Creators-Discord-bc8df1d87b58435a9ea325b073bea4d6?pvs=4',
+  },
+  twitterPost: {
+    title: 'Post on X',
+    description: 'Follow JoystreamDAO on X and post about why you signed up to Gleev.',
+    reward: '10 USD',
+    actionLink: 'https://twitter.com/joystreamdao?lang=en',
+    tooltipLink:
+      'https://www.notion.so/joystream/Social-Promotions-15a5e2ca49734b2094a7356e49e07b9f?pvs=4#27143338f8f645f0970baa830e0c8b99',
+  },
+  roundTableEvents: {
+    title: 'Roundtable events',
+    description: `Participate in Creator Roundtable events held on Discord to exchange perspectives on current ${atlasConfig.general.appName} opportunities and features in the pipeline. Best questions are rewarded.`,
+    reward: '25 USD',
+    actionLink: 'https://discord.com/channels/811216481340751934/1231911228398637077',
+    tooltipLink: 'https://www.notion.so/joystream/Roundtable-Events-cd106924a7314f75acf8813277fc21a8?pvs=4',
+  },
+  originalCreatorsContent: {
+    title: `${atlasConfig.general.appName} Original Content`,
+    description: `Earn more by publishing content to ${atlasConfig.general.appName} at least 24 hours ahead of YouTube. Make sure to add hashtag "#JoystreamOriginal" and hyperlink to the video uploaded to ${atlasConfig.general.appName}. Text of the link should be "#watchOn${atlasConfig.general.appName}".`,
+    reward: 'x5 per video',
+    actionLink: 'https://athd8d2ml5u.typeform.com/to/jvKcRyCP',
+    tooltipLink: 'https://www.notion.so/joystream/Original-Content-Rewards-de1acdc52ef549119b700df106675ce4?pvs=4',
+  },
+  branding: {
+    title: `${atlasConfig.general.appName} Branding`,
+    description: `Add Joystream branding to your video and multiply your rewards for original uploads to ${atlasConfig.general.appName}. Branded video description posted to Youtube must contain hashtag #jsb and  #watchOn${atlasConfig.general.appName}.`,
+    reward: 'x5 per video',
+    actionLink: 'https://athd8d2ml5u.typeform.com/to/jvKcRyCP',
+    tooltipLink: 'sdfaf',
+  },
+  shareNft: {
+    title: 'Share NFT',
+    reward: '30 USD',
+    tooltipLink: 'https://www.notion.so/joystream/Social-Promotions-15a5e2ca49734b2094a7356e49e07b9f?pvs=4',
+  },
+  shareToken: {
+    title: 'Share Token',
+    reward: '50 USD',
+    tooltipLink: 'https://www.notion.so/joystream/Social-Promotions-15a5e2ca49734b2094a7356e49e07b9f?pvs=4',
+  },
+  ambassadorProgram: {
+    title: 'Ambassador Program',
+    description: 'Become Joystream ambassador and work with our marketing and product team on growing the platform.',
+    reward: 'Up to 1k USD',
+    actionLink: 'https://joystream.notion.site/Ambassador-Program-Space-93dfd2767d6b4729ac7dab79f9970d5b',
+    tooltipLink: 'https://joystream.notion.site/Ambassador-Program-Space-93dfd2767d6b4729ac7dab79f9970d5b',
+  },
+  discordLink: 'https://discord.com/channels/811216481340751934/1053294778529353788',
 }
 
 export const YppDashboardMainTab: FC = () => {
   const { channelId } = useUser()
   const navigate = useNavigate()
   const _handleYppSignUpClick = useYppAuthorizeHandler()
-  const hasDismissedSignupMessage = usePersonalDataStore((state) =>
-    state.dismissedMessages.some((message) => message.id === getMessageIdForChannel(channelId as string))
-  )
-  const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
   const { unsyncedChannels, currentChannel } = useGetYppSyncedChannels()
 
   const mdMatch = useMediaMatch('md')
@@ -159,13 +206,13 @@ export const YppDashboardMainTab: FC = () => {
               </GridItem>
             ))}
         <BenefitsContainer title="Youtubers">
-          {!hasDismissedSignupMessage && !currentChannel?.yppStatus.startsWith('Suspended') && (
+          {!currentChannel?.yppStatus.startsWith('Suspended') && (
             <BenefitCard
               title="Connect Channel"
               description="Connect your YouTube channel to obtain rewards tier and qualify for sign up bonus."
               rewardNode={
                 !currentChannel || !currentChannel.yppStatus.startsWith('Verified')
-                  ? `Up to +100 USD`
+                  ? `Up to 100 USD`
                   : `${
                       (getTierRewards(yppBackendTierToConfig(currentChannel.yppStatus))?.signUp || 0) * rewardMultiplier
                     } USD`
@@ -197,7 +244,7 @@ export const YppDashboardMainTab: FC = () => {
               !currentChannel || !currentChannel.yppStatus.startsWith('Verified')
                 ? currentChannel?.yppStatus.startsWith('Suspended')
                   ? undefined
-                  : 'Up to +5 USD'
+                  : 'Up to 5 USD'
                 : `+${getTierRewards(yppBackendTierToConfig(currentChannel.yppStatus))?.videoSync} USD`
             }
             rewardTooltip={
@@ -237,7 +284,7 @@ export const YppDashboardMainTab: FC = () => {
           <BenefitCard
             title="Refer YT creators"
             description="Get rewarded for every new creator who signs up to YPP program using your referral link. Referrals rewards depends on the tier assigned to the invited channel."
-            rewardNode={`Up to +${(getTierRewards('diamond')?.referral || 0) * rewardMultiplier} USD`}
+            rewardNode={`Up to ${(getTierRewards('diamond')?.referral || 0) * rewardMultiplier} USD`}
             rewardTooltip={
               <Text variant="t100" as="span">
                 Referrals is the easiest way to ramp up rewards. Top referrers are published to the regularly updated
@@ -251,149 +298,161 @@ export const YppDashboardMainTab: FC = () => {
 
         <BenefitsContainer title="Community Builders">
           <BenefitCard
-            title="Discord Community"
-            description="Connect with other creators on Discord and participate in building the platform with us. Each week 10 new active participants selected by community are rewarded with 20 USD."
-            rewardNode="20 USD"
+            title={benefitsMetadata.discordCommunity.title}
+            description={benefitsMetadata.discordCommunity.description}
+            rewardNode={benefitsMetadata.discordCommunity.reward}
             rewardTooltip={
               <Text variant="t100" as="span">
                 We are proud to be building a vibrant community of forward looking creators across a wide set of content
                 categories. To stay ahead of the new opportunities to earn with Gleev and connect with the peers and
                 support team join our Discord. Newcomers are rewarded with JOY tokens for active participation.
-                <TextButton to="xd">Learn more</TextButton>
+                <TextButton to={benefitsMetadata.discordCommunity.tooltipLink}>Learn more</TextButton>
               </Text>
             }
-            actionNode={<Button to="https://discord.gg/jEzC5bjD">Join Discord</Button>}
+            actionNode={<Button to={benefitsMetadata.discordCommunity.actionLink}>Join Discord</Button>}
           />
           <BenefitCard
-            title="Post on X"
-            description="Follow JoystreamDAO on X and post about why you signed up to Gleev."
-            rewardNode="20 USD"
+            title={benefitsMetadata.twitterPost.title}
+            description={benefitsMetadata.twitterPost.description}
+            rewardNode={benefitsMetadata.twitterPost.reward}
             rewardTooltip={
               <Text variant="t100" as="span">
                 JoystreamDAO has 50 thousand followers and we are going strong towards our first million. Join the club,
                 get exposure to our growing follower base and get a chance to receive a bonus.
-                <TextButton to="xd">Learn more</TextButton>
+                <TextButton to={benefitsMetadata.twitterPost.tooltipLink}>Learn more</TextButton>
               </Text>
             }
-            actionNode={<Button to="https://discord.gg/jEzC5bjD">Post on X</Button>}
+            actionNode={<Button to={benefitsMetadata.twitterPost.actionLink}>Post on X</Button>}
           />
           <BenefitCard
-            title="Roundtable events"
-            description={`Participate in Creator Roundtable events held on Discord to exchange perspectives on current ${atlasConfig.general.appName} opportunities and features in the pipeline. Best questions are rewarded.`}
-            rewardNode="25 USD"
+            title={benefitsMetadata.roundTableEvents.title}
+            description={benefitsMetadata.roundTableEvents.description}
+            rewardNode={benefitsMetadata.roundTableEvents.reward}
             rewardTooltip={
               <Text variant="t100" as="span">
                 During every event the panelists and hosts vote on selecting 3 best questions from the audience which
                 are rewarded with JOY and other prizes.
-                <TextButton to="xd">Learn more</TextButton>
+                <TextButton to={benefitsMetadata.roundTableEvents.tooltipLink}>Learn more</TextButton>
               </Text>
             }
-            actionNode={<Button to="https://discord.gg/jEzC5bjD">Learn more</Button>}
+            actionNode={<Button to={benefitsMetadata.roundTableEvents.actionLink}>Learn more</Button>}
           />
         </BenefitsContainer>
 
-        {isSilverOrAbove ? (
-          <BenefitsContainer title="Original Creators">
-            <BenefitCard
-              title="Gleev Original Content"
-              description={`Earn more by publishing content to ${atlasConfig.general.appName} at least 24 hours ahead of YouTube. Make sure to add hashtag #JostreamOriginal and link to the original video on ${atlasConfig.general.appName} to get the reward.`}
-              rewardNode="x5 per video"
-              rewardTooltip={
-                <Text variant="t100" as="span">
-                  Original content published to Gleev is rewarded at a multiple. We are gathering applicants for the
-                  beta testing of this feature. Apply early for higher multiples.
-                  <TextButton to="xd">Learn more</TextButton>
-                </Text>
-              }
-              actionNode={<Button to="to be provided">Sign up</Button>}
-            />
-            <BenefitCard
-              title="Gleev Branding"
-              description={`Add Joystream branding to your video and multiply your rewards for original uploads to ${atlasConfig.general.appName}.`}
-              rewardNode="x5 per original video"
-              rewardTooltip={
-                <Text variant="t100" as="span">
-                  Using branded assets as a preroll for your videos published to Gleev first allow to maximise the
-                  rewards. We are gathering early applicants for the beta test of this feature. Apply early to get
-                  higher multiple.
-                  <TextButton to="xd">Learn more</TextButton>
-                </Text>
-              }
-              actionNode={<Button to="to be provided">Sign up</Button>}
-            />
-          </BenefitsContainer>
-        ) : null}
+        <BenefitsContainer title="Original Creators">
+          <BenefitCard
+            title={benefitsMetadata.originalCreatorsContent.title}
+            description={benefitsMetadata.originalCreatorsContent.description}
+            rewardNode={benefitsMetadata.originalCreatorsContent.reward}
+            rewardTooltip={
+              <Text variant="t100" as="span">
+                Original content published to Gleev is rewarded at a multiple. We are gathering applicants for the beta
+                testing of this feature. Apply early for higher multiples.
+                <TextButton to={benefitsMetadata.originalCreatorsContent.tooltipLink}>Learn more</TextButton>
+              </Text>
+            }
+            actionNode={
+              <Button disabled={!isSilverOrAbove} to={benefitsMetadata.originalCreatorsContent.actionLink}>
+                Sign up
+              </Button>
+            }
+          />
+          <BenefitCard
+            title={benefitsMetadata.branding.title}
+            description={benefitsMetadata.branding.description}
+            rewardNode={benefitsMetadata.branding.reward}
+            rewardTooltip={
+              <Text variant="t100" as="span">
+                Using branded assets as a preroll for your videos published to Gleev first allow to maximise the
+                rewards. We are gathering early applicants for the beta test of this feature. Apply early to get higher
+                multiple.
+                <TextButton to={benefitsMetadata.branding.tooltipLink}>Learn more</TextButton>
+              </Text>
+            }
+            actionNode={
+              <Button disabled={!isSilverOrAbove} to={benefitsMetadata.branding.actionLink}>
+                Sign up
+              </Button>
+            }
+          />
+        </BenefitsContainer>
 
-        {isSilverOrAbove ? (
-          <BenefitsContainer title="Social Promoters">
-            <BenefitCard
-              title="Share NFT"
-              description={
-                <>
-                  Drop the link of your post to{' '}
-                  <TextButton as="span" to="xd">
-                    shared NFTs channel
-                  </TextButton>{' '}
-                  on Discord to participate in rewards.
-                </>
-              }
-              rewardNode="Up to 100 USD"
-              rewardTooltip={
-                <Text variant="t100" as="span">
-                  Promote your NFTs on social media and get rewarded by the DAO for this. Rewards assigned are based on
-                  peer upvotes held in a dedicated Discord channel.
-                  <TextButton to="xd">Learn more</TextButton>
-                </Text>
-              }
-              actionNode={
-                <Button to={absoluteRoutes.viewer.channel(channelId ?? '', { tab: 'NFTs' })}>Share NFTs</Button>
-              }
-            />
-            <BenefitCard
-              title="Share Token"
-              description={
-                <>
-                  Drop the link of your post to{' '}
-                  <TextButton as="span" to="xd">
-                    shared Tokens channel{' '}
-                  </TextButton>{' '}
-                  on Discord to participate in rewards.
-                </>
-              }
-              rewardNode="Up to 100 USD"
-              rewardTooltip={
-                <Text variant="t100" as="span">
-                  Promote your Creator Token on social media and get rewarded by the DAO for this. Rewards assigned are
-                  based on peer upvotes held in a dedicated Discord channel.
-                  <TextButton to="xd">Learn more</TextButton>
-                </Text>
-              }
-              actionNode={
-                <Button to={absoluteRoutes.viewer.channel(channelId ?? '', { tab: 'Token' })}>Share token</Button>
-              }
-            />
-            <BenefitCard
-              title="Ambassador Program"
-              description="Become Joystream ambassador and work with our marketing and product team on growing the platform."
-              rewardNode="Up to 1k USD"
-              rewardTooltip={
-                <Text variant="t100" as="span">
-                  Ambassador program is open for creators dedicated to Joystream and entails versatile tasks of your
-                  choice for collaboration and promotion.
-                  <TextButton to="xd">Learn more</TextButton>
-                </Text>
-              }
-              actionNode={<Button to="to be provided">Apply</Button>}
-            />
-          </BenefitsContainer>
-        ) : null}
+        <BenefitsContainer title="Social Promoters">
+          <BenefitCard
+            title={benefitsMetadata.shareNft.title}
+            rewardNode={benefitsMetadata.shareNft.reward}
+            description={
+              <>
+                Drop the link of your post to{' '}
+                <TextButton as="span" to="https://discord.com/channels/811216481340751934/1224714104552558682">
+                  shared NFTs channel
+                </TextButton>{' '}
+                on Discord to participate in rewards.
+              </>
+            }
+            rewardTooltip={
+              <Text variant="t100" as="span">
+                Promote your NFTs on social media and get rewarded by the DAO for this. Rewards assigned are based on
+                peer upvotes held in a dedicated Discord channel.
+                <TextButton to={benefitsMetadata.shareNft.tooltipLink}>Learn more</TextButton>
+              </Text>
+            }
+            actionNode={
+              <Button disabled={!isSilverOrAbove} to={absoluteRoutes.viewer.channel(channelId ?? '', { tab: 'NFTs' })}>
+                Share NFTs
+              </Button>
+            }
+          />
+          <BenefitCard
+            title={benefitsMetadata.shareToken.title}
+            rewardNode={benefitsMetadata.shareToken.reward}
+            description={
+              <>
+                Drop the link of your post to{' '}
+                <TextButton as="span" to="https://discord.com/channels/811216481340751934/1233002048979603487">
+                  shared Tokens channel{' '}
+                </TextButton>{' '}
+                on Discord to participate in rewards.
+              </>
+            }
+            rewardTooltip={
+              <Text variant="t100" as="span">
+                Promote your Creator Token on social media and get rewarded by the DAO for this. Rewards assigned are
+                based on peer upvotes held in a dedicated Discord channel.
+                <TextButton to={benefitsMetadata.shareToken.tooltipLink}>Learn more</TextButton>
+              </Text>
+            }
+            actionNode={
+              <Button disabled={!isSilverOrAbove} to={absoluteRoutes.viewer.channel(channelId ?? '', { tab: 'Token' })}>
+                Share token
+              </Button>
+            }
+          />
+          <BenefitCard
+            title={benefitsMetadata.ambassadorProgram.title}
+            description={benefitsMetadata.ambassadorProgram.description}
+            rewardNode={benefitsMetadata.ambassadorProgram.reward}
+            rewardTooltip={
+              <Text variant="t100" as="span">
+                Ambassador program is open for creators dedicated to Joystream and entails versatile tasks of your
+                choice for collaboration and promotion.
+                <TextButton to={benefitsMetadata.ambassadorProgram.tooltipLink}>Learn more</TextButton>
+              </Text>
+            }
+            actionNode={
+              <Button disabled={!isSilverOrAbove} to={benefitsMetadata.ambassadorProgram.actionLink}>
+                Apply
+              </Button>
+            }
+          />
+        </BenefitsContainer>
 
         <StyledGridItem colSpan={{ xxs: 12 }}>
           <HelpContainer alignItems="center" gap={2}>
             <SvgLogoDiscordOnDark />
             <Text variant="t300" as="p">
               Have a question? Ask for help on{' '}
-              <TextButton to="https://discord.gg/jEzC5bjD" size="large">
+              <TextButton to={benefitsMetadata.discordLink} size="large">
                 Discord
               </TextButton>
             </Text>

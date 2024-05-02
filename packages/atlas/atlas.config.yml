@@ -116,8 +116,8 @@ features:
         actionButtonText: Get referral link
         actionButtonAction: copyReferral
     widgets: # Widgets on Ypp landing page
-      - title: Program details
-        link: https://www.notion.so/joystream/YPP-programme-d492c2eb88ff4ace955b5f2902ec21fb
+      - title: Creators Wiki
+        link: https://discord.com/channels/811216481340751934/1224709788592767136
         linkText: Go to Notion # Used only on YPP Dashboard - if empty defaults to "Go to {title}"
         label: Notion # Used for YPP Dashboard to inform user which vendor given feature uses - if empty defaults to title
         icon: info # Optional icon to be displayed. Possible icons: message, info, tokenStack
@@ -126,8 +126,8 @@ features:
         linkText: Go to Payments
         label: Studio
         icon: tokenStack
-      - title: Support
-        link: https://discord.com/channels/811216481340751934/1053294778529353788
+      - title: Community
+        link: https://discord.com/channels/811216481340751934/1224709788592767136
         linkText: Go to Discord
         label: Discord
         icon: message
