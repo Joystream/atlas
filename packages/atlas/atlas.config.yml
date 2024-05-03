@@ -117,7 +117,7 @@ features:
         actionButtonAction: copyReferral
     widgets: # Widgets on Ypp landing page
       - title: Creators Wiki
-        link: https://discord.com/channels/811216481340751934/1224709788592767136
+        link: https://www.notion.so/joystream/79e2c624887a4183afa6de8c3dbaf905?v=0b160770d22b4426aaf1f85a1a28f75e&pvs=4
         linkText: Go to Notion # Used only on YPP Dashboard - if empty defaults to "Go to {title}"
         label: Notion # Used for YPP Dashboard to inform user which vendor given feature uses - if empty defaults to title
         icon: info # Optional icon to be displayed. Possible icons: message, info, tokenStack

@@ -21,14 +21,15 @@ import { Button, TextButton } from '@/components/_buttons/Button'
 import { BenefitCard } from '@/components/_ypp/BenefitCard'
 import { ReferralLinkButton } from '@/components/_ypp/ReferralLinkButton'
 import { ServiceStatusWidget } from '@/components/_ypp/ServiceStatusWidget/ServiceStatusWidget'
-import { YppDashboardTier } from '@/components/_ypp/YppDashboardTier'
+import { YppDashboardTier, getTierIcon } from '@/components/_ypp/YppDashboardTier'
+import { TierWrapper } from '@/components/_ypp/YppDashboardTier/YppDashboardTier.styles'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useYppAuthorizeHandler } from '@/hooks/useYppAuthorizeHandler'
 import { useUser } from '@/providers/user/user.hooks'
-import { cVar, sizes, transitions } from '@/styles'
+import { cVar, sizes, square, transitions } from '@/styles'
 import { formatDate, getNextWeekday } from '@/utils/time'
 import { BOOST_TIMESTAMP, getTierRewards, yppBackendTierToConfig } from '@/utils/ypp'
 import { YppAuthorizationModal } from '@/views/global/YppLandingView/YppAuthorizationModal'
@@ -42,7 +43,7 @@ const benefitsMetadata = {
     title: 'Discord Community',
     description:
       'Connect with other creators on Discord and participate in building the platform with us. Each week 5 new active participants selected by community are rewarded with new joiner bonus.',
-    reward: '20 USD',
+    reward: '10 USD',
     actionLink: 'https://discord.com/channels/811216481340751934/1224709788592767136',
     tooltipLink: 'https://www.notion.so/joystream/Creators-Discord-bc8df1d87b58435a9ea325b073bea4d6?pvs=4',
   },
@@ -63,7 +64,7 @@ const benefitsMetadata = {
   },
   originalCreatorsContent: {
     title: `${atlasConfig.general.appName} Original Content`,
-    description: `Earn more by publishing content to ${atlasConfig.general.appName} at least 24 hours ahead of YouTube. Make sure to add hashtag "#JoystreamOriginal" and hyperlink to the video uploaded to ${atlasConfig.general.appName}. Text of the link should be "#watchOn${atlasConfig.general.appName}".`,
+    description: `Earn more by publishing content to ${atlasConfig.general.appName} at least 24 hours ahead of YouTube. Make sure to add hashtag #JoystreamOriginal and hyperlink to the video uploaded to ${atlasConfig.general.appName}. Text of the link should be #watchOn${atlasConfig.general.appName}.`,
     reward: 'x5 per video',
     actionLink: 'https://athd8d2ml5u.typeform.com/to/jvKcRyCP',
     tooltipLink: 'https://www.notion.so/joystream/Original-Content-Rewards-de1acdc52ef549119b700df106675ce4?pvs=4',
@@ -84,7 +85,8 @@ const benefitsMetadata = {
   shareToken: {
     title: 'Share Token',
     reward: '50 USD',
-    tooltipLink: 'https://www.notion.so/joystream/Social-Promotions-15a5e2ca49734b2094a7356e49e07b9f?pvs=4',
+    tooltipLink:
+      'https://www.notion.so/joystream/Social-Promotions-15a5e2ca49734b2094a7356e49e07b9f?pvs=4#8f39e46460e84f74a3dabffa516505f2',
   },
   ambassadorProgram: {
     title: 'Ambassador Program',
@@ -234,7 +236,9 @@ export const YppDashboardMainTab: FC = () => {
                   Connected channels undergo verification from the DAO content team and assigned tiers based on
                   production quality. Sign up bonus, sync rewards and access to more earning opportunities are based on
                   the tier. {'\n'}
-                  <TextButton to="xd">Learn more</TextButton>
+                  <TextButton to="https://www.notion.so/joystream/YouTube-Partners-2164f8685d094984a37cdb1a38e3560d?pvs=4">
+                    Learn more
+                  </TextButton>
                 </Text>
               }
               actionNode={
@@ -264,7 +268,9 @@ export const YppDashboardMainTab: FC = () => {
               <Text variant="t100" as="span">
                 The limit of historical videos and rewards for synced videos are based on the channel rewards tier and
                 paid for weekly basis. {'\n'}
-                <TextButton to="xd">Learn more</TextButton>
+                <TextButton to="https://www.notion.so/joystream/YouTube-Partners-2164f8685d094984a37cdb1a38e3560d?pvs=4">
+                  Learn more
+                </TextButton>
               </Text>
             }
             actionNode={
@@ -302,7 +308,9 @@ export const YppDashboardMainTab: FC = () => {
               <Text variant="t100" as="span">
                 Referrals is the easiest way to ramp up rewards. Top referrers are published to the regularly updated
                 leaderboard. {'\n'}
-                <TextButton to="xd">Learn more</TextButton>
+                <TextButton to="https://www.notion.so/joystream/Referrals-Program-a87e0253ff174d9aa24bd9c393b1d625?pvs=4">
+                  Learn more
+                </TextButton>
               </Text>
             }
             actionNode={
@@ -378,6 +386,7 @@ export const YppDashboardMainTab: FC = () => {
         </BenefitsContainer>
 
         <BenefitsContainer title="Original Creators">
+          {silverTierGroup}
           <BenefitCard
             title={benefitsMetadata.originalCreatorsContent.title}
             description={benefitsMetadata.originalCreatorsContent.description}
@@ -425,6 +434,7 @@ export const YppDashboardMainTab: FC = () => {
         </BenefitsContainer>
 
         <BenefitsContainer title="Social Promoters">
+          {silverTierGroup}
           <BenefitCard
             title={benefitsMetadata.shareNft.title}
             rewardNode={benefitsMetadata.shareNft.reward}
@@ -522,7 +532,28 @@ export const YppDashboardMainTab: FC = () => {
   )
 }
 
-const HelpContainer = styled(FlexBox)``
+const HelpContainer = styled(FlexBox)`
+  padding: ${sizes(4)} 0;
+`
+
+const SilverTierWrapper = styled(TierWrapper)`
+  padding: ${sizes(2)};
+  width: fit-content;
+  border: 1px solid #cbe0f145;
+
+  svg {
+    ${square(20)};
+  }
+`
+
+const silverTierGroup = (
+  <FlexBox gap={3} alignItems="center">
+    <SilverTierWrapper tier="Verified::Silver">{getTierIcon('Verified::Silver')}</SilverTierWrapper>
+    <Text variant="t300" as="p">
+      Offers are valid for silver tiers and above{' '}
+    </Text>
+  </FlexBox>
+)
 
 export const BenefitsContainer = ({ children, title }: { children: ReactNode[] | ReactNode; title: string }) => {
   const drawer = useRef<HTMLDivElement>(null)
@@ -530,17 +561,17 @@ export const BenefitsContainer = ({ children, title }: { children: ReactNode[] |
 
   return (
     <StyledGridItem colSpan={{ xxs: 12 }}>
-      <FlexBox alignItems="start" justifyContent="space-between" width="100%">
+      <DrawerHeader
+        onClick={() => setDrawerActive((prev) => !prev)}
+        alignItems="start"
+        justifyContent="space-between"
+        width="100%"
+      >
         <Text variant="h500" as="h3">
           {title}
         </Text>
-        <Button
-          icon={<StyledSvgActionChevronT isDrawerActive={isDrawerActive} />}
-          variant="tertiary"
-          size="small"
-          onClick={() => setDrawerActive((prev) => !prev)}
-        />
-      </FlexBox>
+        <Button icon={<StyledSvgActionChevronT isDrawerActive={isDrawerActive} />} variant="tertiary" size="small" />
+      </DrawerHeader>
       <BenefitsDrawer
         isActive={isDrawerActive}
         ref={drawer}
@@ -565,7 +596,12 @@ type DrawerProps = {
 
 const StyledGridItem = styled(GridItem)`
   background: ${cVar('colorBackgroundMuted')};
-  padding: ${sizes(4)};
+  padding: 0 ${sizes(4)};
+`
+
+const DrawerHeader = styled(FlexBox)`
+  cursor: pointer;
+  padding: ${sizes(4)} 0;
 `
 
 export const BenefitsDrawer = styled(FlexBox)<DrawerProps>`
@@ -573,6 +609,7 @@ export const BenefitsDrawer = styled(FlexBox)<DrawerProps>`
   max-height: ${({ isActive, maxHeight }) => (isActive ? `${maxHeight}px` : '0px')};
   overflow: hidden;
   transition: max-height ${transitions.timings.loading} ${transitions.easing};
+  margin-bottom: ${({ isActive }) => (isActive ? sizes(4) : '0px')};
 `
 
 export const StyledSvgActionChevronT = styled(SvgActionChevronT, {
