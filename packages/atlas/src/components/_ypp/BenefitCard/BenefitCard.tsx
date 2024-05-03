@@ -10,10 +10,9 @@ import { ContenBox, Pattern, Wrapper } from './BenefitCard.styles'
 
 export type BenefitCardProps = {
   title: string
-  description?: string
-  dollarAmount?: number
-  amountTooltip?: string
-  isRangeAmount?: boolean
+  description?: ReactNode
+  rewardNode?: ReactNode
+  rewardTooltip?: ReactNode
   className?: string
   actionNode?: ReactNode
 }
@@ -21,36 +20,24 @@ export type BenefitCardProps = {
 export const BenefitCard: FC<BenefitCardProps> = ({
   title,
   description,
-  dollarAmount,
+  rewardNode,
   className,
   actionNode,
-  isRangeAmount,
-  amountTooltip,
+  rewardTooltip,
 }) => {
   const smMatch = useMediaMatch('sm')
   const lgMatch = useMediaMatch('lg')
 
-  const rewardContent =
-    typeof dollarAmount === 'number' ? (
-      <FlexBox justifyContent={lgMatch ? 'end' : 'unset'} alignItems="center">
-        {isRangeAmount ? (
-          <FlexBox width="fit-content" flow="column" alignItems={smMatch ? 'center' : 'start'}>
-            <Text variant="h400" as="h1">
-              Up to +{dollarAmount} USD
-            </Text>
-            <Text variant="t200" as="p" color="colorText">
-              Depending on tier
-            </Text>
-          </FlexBox>
-        ) : (
-          <Text variant="h400" as="h1">
-            {dollarAmount > 0 ? `+${dollarAmount} USD` : 'Not paid'}
-          </Text>
-        )}
-
-        {amountTooltip && <Information text={amountTooltip} placement="top-start" />}
-      </FlexBox>
-    ) : null
+  const rewardContent = (
+    <FlexBox justifyContent={lgMatch ? 'end' : 'unset'} alignItems="center">
+      <Text variant="h400" as="span">
+        {rewardNode}
+      </Text>
+      {rewardTooltip && (
+        <Information interactive appendTo={document.body} customContent={rewardTooltip} placement="top-start" />
+      )}
+    </FlexBox>
+  )
 
   return (
     <Wrapper variant="full" className={className}>
@@ -66,16 +53,10 @@ export const BenefitCard: FC<BenefitCardProps> = ({
         </FlexGridItem>
         {lgMatch ? (
           <>
-            {typeof dollarAmount === 'number' && (
-              <FlexGridItem colSpan={{ lg: 2 }} alignItems="center">
-                {rewardContent}
-              </FlexGridItem>
-            )}
-            <FlexGridItem
-              colSpan={{ lg: typeof dollarAmount === 'number' ? 2 : 4 }}
-              alignItems="center"
-              justifyContent="end"
-            >
+            <FlexGridItem colSpan={{ lg: 2 }} alignItems="center">
+              {rewardContent}
+            </FlexGridItem>
+            <FlexGridItem colSpan={{ lg: 2 }} alignItems="center" justifyContent="end">
               {actionNode}
             </FlexGridItem>
           </>
