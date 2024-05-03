@@ -565,6 +565,15 @@ export const useSegmentAnalytics = () => {
     },
     [analytics]
   )
+  const trackRoundtableEventsClicked = useCallback(
+    (channelId: string, channelTier: string) => {
+      analytics.track('Rewards - Roundtable Events Clicked', {
+        channelId,
+        channelTier,
+      })
+    },
+    [analytics]
+  )
 
   const trackShareNftLinkClicked = useCallback(
     (channelId: string, channelTier: string) => {
@@ -686,5 +695,6 @@ export const useSegmentAnalytics = () => {
     trackTwitterPostLinkClicked,
     trackRewardsBrandingLinkClicked,
     trackRewardsReferralLinkClicked,
+    trackRoundtableEventsClicked,
   }
 }

@@ -109,6 +109,7 @@ export const YppDashboardMainTab: FC = () => {
     trackShareNftLinkClicked,
     trackJoinDiscordLinkClicked,
     trackShareTokenLinkClicked,
+    trackRoundtableEventsClicked,
   } = useSegmentAnalytics()
   const navigate = useNavigate()
   const _handleYppSignUpClick = useYppAuthorizeHandler()
@@ -126,6 +127,7 @@ export const YppDashboardMainTab: FC = () => {
   const isSilverOrAbove = ['Verified::Silver', 'Verified::Gold', 'Verified::Diamond'].includes(
     currentChannel?.yppStatus ?? ''
   )
+  const isBronze = currentChannel?.yppStatus === 'Verified::Bronze'
   const handleYppSignUpClick = () => {
     const success = _handleYppSignUpClick()
     if (success) {
@@ -151,6 +153,18 @@ export const YppDashboardMainTab: FC = () => {
         Autosync: {currentChannel?.shouldBeIngested ? 'On' : 'Off'}
       </Text>
     </YppSyncStatus>
+  )
+
+  const silverTierGroup = (
+    <FlexBox gap={3} alignItems="center">
+      <SilverTierWrapper tier="Verified::Silver">{getTierIcon('Verified::Silver')}</SilverTierWrapper>
+      <Text variant="t300" as="p">
+        Offers are valid for silver tiers and above.
+      </Text>
+      {!isBronze ? (
+        <Information text="Connect YouTube channel and wait for verification by the content team to get rewards tier assigned." />
+      ) : null}
+    </FlexBox>
   )
 
   return (
@@ -376,7 +390,7 @@ export const YppDashboardMainTab: FC = () => {
             }
             actionNode={
               <Button
-                onClick={() => trackRewardsReferralLinkClicked(channelId ?? '', currentChannel?.yppStatus ?? '')}
+                onClick={() => trackRoundtableEventsClicked(channelId ?? '', currentChannel?.yppStatus ?? '')}
                 to={benefitsMetadata.roundTableEvents.actionLink}
               >
                 Learn more
@@ -386,7 +400,7 @@ export const YppDashboardMainTab: FC = () => {
         </BenefitsContainer>
 
         <BenefitsContainer title="Original Creators">
-          {silverTierGroup}
+          {isSilverOrAbove ? null : silverTierGroup}
           <BenefitCard
             title={benefitsMetadata.originalCreatorsContent.title}
             description={benefitsMetadata.originalCreatorsContent.description}
@@ -434,7 +448,7 @@ export const YppDashboardMainTab: FC = () => {
         </BenefitsContainer>
 
         <BenefitsContainer title="Social Promoters">
-          {silverTierGroup}
+          {isSilverOrAbove ? null : silverTierGroup}
           <BenefitCard
             title={benefitsMetadata.shareNft.title}
             rewardNode={benefitsMetadata.shareNft.reward}
@@ -545,15 +559,6 @@ const SilverTierWrapper = styled(TierWrapper)`
     ${square(20)};
   }
 `
-
-const silverTierGroup = (
-  <FlexBox gap={3} alignItems="center">
-    <SilverTierWrapper tier="Verified::Silver">{getTierIcon('Verified::Silver')}</SilverTierWrapper>
-    <Text variant="t300" as="p">
-      Offers are valid for silver tiers and above{' '}
-    </Text>
-  </FlexBox>
-)
 
 export const BenefitsContainer = ({ children, title }: { children: ReactNode[] | ReactNode; title: string }) => {
   const drawer = useRef<HTMLDivElement>(null)
