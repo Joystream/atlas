@@ -49,7 +49,7 @@ export const MemberView: FC = () => {
     NftActivityOrderByInput.EventTimestampDesc
   )
   const navigate = useNavigate()
-  const [currentTab, setCurrentTab] = useState<typeof TABS[number] | null>(null)
+  const [currentTab, setCurrentTab] = useState<(typeof TABS)[number] | null>(null)
   const { memberId } = useUser()
   const { handle, id } = useParams()
   const headTags = useHeadTags(handle)

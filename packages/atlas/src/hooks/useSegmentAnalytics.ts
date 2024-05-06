@@ -516,6 +516,95 @@ export const useSegmentAnalytics = () => {
     [analytics]
   )
 
+  const trackRewardsReferralLinkClicked = useCallback(
+    (channelId: string, channelTier: string) => {
+      analytics.track('Rewards - Backlink Generated', {
+        channelId,
+        channelTier,
+      })
+    },
+    [analytics]
+  )
+
+  const trackRewardsOriginalCreatorsLinkClicked = useCallback(
+    (channelId: string, channelTier: string) => {
+      analytics.track('Rewards - Original appl', {
+        channelId,
+        channelTier,
+      })
+    },
+    [analytics]
+  )
+
+  const trackRewardsBrandingLinkClicked = useCallback(
+    (channelId: string, channelTier: string) => {
+      analytics.track('Rewards - Branding appl', {
+        channelId,
+        channelTier,
+      })
+    },
+    [analytics]
+  )
+
+  const trackJoinDiscordLinkClicked = useCallback(
+    (channelId: string, channelTier: string) => {
+      analytics.track('Rewards - Join Discord clicked', {
+        channelId,
+        channelTier,
+      })
+    },
+    [analytics]
+  )
+
+  const trackTwitterPostLinkClicked = useCallback(
+    (channelId: string, channelTier: string) => {
+      analytics.track('Rewards - Post on X clicked', {
+        channelId,
+        channelTier,
+      })
+    },
+    [analytics]
+  )
+  const trackRoundtableEventsClicked = useCallback(
+    (channelId: string, channelTier: string) => {
+      analytics.track('Rewards - Roundtable Events Clicked', {
+        channelId,
+        channelTier,
+      })
+    },
+    [analytics]
+  )
+
+  const trackShareNftLinkClicked = useCallback(
+    (channelId: string, channelTier: string) => {
+      analytics.track('Rewards - Share NFT clicked', {
+        channelId,
+        channelTier,
+      })
+    },
+    [analytics]
+  )
+
+  const trackShareTokenLinkClicked = useCallback(
+    (channelId: string, channelTier: string) => {
+      analytics.track('Rewards - Share Token clicked', {
+        channelId,
+        channelTier,
+      })
+    },
+    [analytics]
+  )
+
+  const trackAmbassadorLinkClicked = useCallback(
+    (channelId: string, channelTier: string) => {
+      analytics.track('Rewards - Ambassador appl', {
+        channelId,
+        channelTier,
+      })
+    },
+    [analytics]
+  )
+
   const runNextQueueEvent = useCallback(async () => {
     const queueEvent = playbackEventsQueue.current.shift()
     if (!queueEvent) {
@@ -598,5 +687,14 @@ export const useSegmentAnalytics = () => {
     trackYppOptIn,
     trackYppReqsNotMet,
     trackYppSignInButtonClick,
+    trackAmbassadorLinkClicked,
+    trackJoinDiscordLinkClicked,
+    trackRewardsOriginalCreatorsLinkClicked,
+    trackShareTokenLinkClicked,
+    trackShareNftLinkClicked,
+    trackTwitterPostLinkClicked,
+    trackRewardsBrandingLinkClicked,
+    trackRewardsReferralLinkClicked,
+    trackRoundtableEventsClicked,
   }
 }

@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import shallow from 'zustand/shallow'
 
+import { FlexBox } from '@/components/FlexBox'
 import { Button, TextButton } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
@@ -101,9 +102,15 @@ export const LogInModal = () => {
       }}
       additionalActionsNode={
         !isLoading && (
-          <Button variant="tertiary" onClick={() => setAuthModalOpenName(undefined)}>
-            Close
-          </Button>
+          <FlexBox justifyContent="space-between">
+            <Button variant="tertiary" onClick={() => setAuthModalOpenName(undefined)}>
+              Close
+            </Button>
+
+            <Button variant="secondary" onClick={() => setAuthModalOpenName('externalLogIn')}>
+              Use local wallet
+            </Button>
+          </FlexBox>
         )
       }
     >
@@ -111,10 +118,12 @@ export const LogInModal = () => {
         <AuthenticationModalStepTemplate
           title="Sign in"
           subtitle={
-            <span>
-              Use your {atlasConfig.general.appName} account.{' '}
-              <TextButton onClick={() => setAuthModalOpenName('signUp')}>Create account</TextButton>
-            </span>
+            <FlexBox flow="column" alignItems="flex-start">
+              <span>
+                Use your {atlasConfig.general.appName} account.{' '}
+                <TextButton onClick={() => setAuthModalOpenName('signUp')}>Create account</TextButton>
+              </span>
+            </FlexBox>
           }
           hasNavigatedBack
         >

@@ -116,8 +116,8 @@ features:
         actionButtonText: Get referral link
         actionButtonAction: copyReferral
     widgets: # Widgets on Ypp landing page
-      - title: Program details
-        link: https://www.notion.so/joystream/YPP-programme-d492c2eb88ff4ace955b5f2902ec21fb
+      - title: Creators Wiki
+        link: https://www.notion.so/joystream/79e2c624887a4183afa6de8c3dbaf905?v=0b160770d22b4426aaf1f85a1a28f75e&pvs=4
         linkText: Go to Notion # Used only on YPP Dashboard - if empty defaults to "Go to {title}"
         label: Notion # Used for YPP Dashboard to inform user which vendor given feature uses - if empty defaults to title
         icon: info # Optional icon to be displayed. Possible icons: message, info, tokenStack
@@ -126,8 +126,8 @@ features:
         linkText: Go to Payments
         label: Studio
         icon: tokenStack
-      - title: Support
-        link: https://discord.com/channels/811216481340751934/1053294778529353788
+      - title: Community
+        link: https://discord.com/channels/811216481340751934/1224709788592767136
         linkText: Go to Discord
         label: Discord
         icon: message
@@ -270,6 +270,12 @@ features:
   members:
     avatarServiceUrl: '$VITE_AVATAR_SERVICE_URL' # URL for avatar service - used to upload member's avatar
     hcaptchaSiteKey: '$VITE_HCAPTCHA_SITE_KEY' # Site key for hCaptcha - used to verify users are not bots when creating memberships - depends on hCaptcha being enabled in the faucet
+  walletConnect:
+    walletConnectProjectId: '$VITE_WALLET_CONNECT_PROJECT_ID' # WalletConnect project ID - used to connect to WalletConnect
+    metadata:
+      name: Atlas
+      description: Web3 video streaming platform
+      icons: ['https://dev.gleev.xyz/favicon.ico']
   playback:
     playbackRates: [2, 1.5, 1.25, 1, 0.5, 0.25] # Playback rates available in the player
   comments:
