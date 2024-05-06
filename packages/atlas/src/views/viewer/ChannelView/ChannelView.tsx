@@ -66,7 +66,7 @@ export const INITIAL_TILES_PER_ROW = 4
 export const ChannelView: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [tilesPerRow, setTilesPerRow] = useState(INITIAL_TILES_PER_ROW)
-  const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
+  const currentTabName = searchParams.get('tab') as (typeof TABS)[number] | null
   const videoRows = useVideoGridRows('main')
   const { trackPageView } = useSegmentAnalytics()
   const navigate = useNavigate()
@@ -134,7 +134,7 @@ export const ChannelView: FC = () => {
   const { channelNftCollectors } = useChannelNftCollectors({ channelId: id || '' })
 
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(id, channel?.title)
-  const [currentTab, setCurrentTab] = useState<typeof TABS[number]>(filteredTabs[0])
+  const [currentTab, setCurrentTab] = useState<(typeof TABS)[number]>(filteredTabs[0])
 
   const { url: avatarPhotoUrl } = useGetAssetUrl(channel?.avatarPhoto?.resolvedUrls, 'avatar')
 
@@ -188,7 +188,7 @@ export const ChannelView: FC = () => {
 
   const mappedTabs = filteredTabs.map((tab) => ({ name: tab, badgeNumber: 0 }))
 
-  const getChannelContent = (tab: typeof TABS[number]) => {
+  const getChannelContent = (tab: (typeof TABS)[number]) => {
     switch (tab) {
       case 'Videos':
         return (

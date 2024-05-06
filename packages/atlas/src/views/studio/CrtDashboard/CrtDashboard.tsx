@@ -31,14 +31,14 @@ import { CrtRevenueTab } from '@/views/studio/CrtDashboard/tabs/CrtRevenueTab'
 
 import { TABS } from './CrtDashboard.types'
 
-type TabsNames = typeof TABS[number]
+type TabsNames = (typeof TABS)[number]
 
 const getTabIndex = (tabName: TabsNames, allTabs: { name: TabsNames }[]): number =>
   allTabs.findIndex((tab) => tab.name === tabName)
 
 export const CrtDashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams()
-  const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
+  const currentTabName = searchParams.get('tab') as (typeof TABS)[number] | null
   const { activeChannel, memberId } = useUser()
   const { data } = useGetFullCreatorTokenQuery({
     variables: {
