@@ -20,7 +20,7 @@ const TABS = ['Dashboard', 'Referrals', 'Settings'] as const
 type Tab = typeof TABS[number]
 
 export const YppDashboard: FC = () => {
-  const headTags = useHeadTags('YouTube Partner Program')
+  const headTags = useHeadTags('Creator Rewards')
   const mdMatch = useMediaMatch('md')
   const xsMatch = useMediaMatch('xs')
   const [searchParams] = useSearchParams()

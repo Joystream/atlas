@@ -163,6 +163,7 @@ const useJoystreamChainConstants = (joystream: Remote<JoystreamLib> | undefined)
     minBidStep: new BN(0),
     minCashoutAllowed: new BN(0),
     maxCashoutAllowed: new BN(0),
+    minRevenueSplitDuration: 0,
   })
 
   useEffect(() => {
@@ -184,6 +185,7 @@ const useJoystreamChainConstants = (joystream: Remote<JoystreamLib> | undefined)
         minBidStep: new BN(chainConstants.minBidStep),
         minCashoutAllowed: new BN(chainConstants.minCashoutAllowed),
         maxCashoutAllowed: new BN(chainConstants.maxCashoutAllowed),
+        minRevenueSplitDuration: chainConstants.minRevenueSplitDuration,
       })
     )
   }, [joystream])

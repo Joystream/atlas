@@ -8,12 +8,11 @@ import {
   SvgSidebarToken,
   SvgSidebarUpload,
   SvgSidebarVideos,
-  SvgSidebarYpp,
 } from '@/assets/icons'
 import { AppLogo } from '@/components/AppLogo'
 import { Button } from '@/components/_buttons/Button'
 import { NavItemType } from '@/components/_navigation/NavItem'
-import { SidenavBase } from '@/components/_navigation/SidenavBase'
+import { SidenavBase, StyledSvgActionMoney } from '@/components/_navigation/SidenavBase'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { chanelUnseenDraftsSelector, useDraftStore } from '@/providers/drafts'
@@ -55,9 +54,9 @@ const studioNavbarItems: NavItemType[] = [
   ...(atlasConfig.features.ypp.googleConsoleClientId
     ? [
         {
-          icon: <SvgSidebarYpp />,
-          name: 'YPP',
-          expandedName: 'YouTube Partner Program',
+          icon: <StyledSvgActionMoney />,
+          name: 'Earn',
+          expandedName: 'Creator Rewards',
           to: absoluteRoutes.studio.yppDashboard(),
         },
       ]

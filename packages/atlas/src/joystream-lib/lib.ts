@@ -172,6 +172,7 @@ export class JoystreamLib {
       this.api.query.content.minBidStep as QueryableStorageMultiArg<'promise'>,
       this.api.query.content.minCashoutAllowed as QueryableStorageMultiArg<'promise'>,
       this.api.query.content.maxCashoutAllowed as QueryableStorageMultiArg<'promise'>,
+      this.api.query.projectToken.minRevenueSplitDuration as QueryableStorageMultiArg<'promise'>,
     ])
 
     const [
@@ -189,6 +190,7 @@ export class JoystreamLib {
       minBidStep,
       minCashoutAllowed,
       maxCashoutAllowed,
+      minRevenueSplitDuration,
     ] = results
 
     const asStringifiedBN = (raw: Codec) => {
@@ -219,6 +221,7 @@ export class JoystreamLib {
       minBidStep: asStringifiedBN(minBidStep),
       minCashoutAllowed: asStringifiedBN(minCashoutAllowed),
       maxCashoutAllowed: asStringifiedBN(maxCashoutAllowed),
+      minRevenueSplitDuration: asNumber(minRevenueSplitDuration),
     } as const
   }
 

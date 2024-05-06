@@ -2,11 +2,11 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { SvgLogoGithubMonochrome } from '@/assets/icons'
+import { SvgActionMoney, SvgLogoGithubMonochrome } from '@/assets/icons'
 import { SvgJoystreamLogoFull } from '@/assets/logos'
 import { TextButton } from '@/components/_buttons/Button'
 import { HamburgerButton } from '@/components/_buttons/HamburgerButton'
-import { cVar, media, sizes, transitions, zIndex } from '@/styles'
+import { cVar, media, sizes, square, transitions, zIndex } from '@/styles'
 
 type ExpandableElementProps = {
   expanded?: boolean
@@ -166,4 +166,8 @@ export const ScrollContainer = styled.div<ScrollContainerProps>`
   overflow-y: ${({ expanded }) => (expanded ? 'auto' : 'hidden')};
   overflow-x: hidden;
   flex-grow: 10;
+`
+
+export const StyledSvgActionMoney = styled(SvgActionMoney)`
+  ${square(24)}
 `

@@ -38,7 +38,7 @@ const COLUMNS: TableProps['columns'] = [
     width: 9,
   },
   {
-    Header: () => <RightAlignedHeader>SALES VOLUME</RightAlignedHeader>,
+    Header: () => <RightAlignedHeader>REVENUE VOLUME</RightAlignedHeader>,
     accessor: 'salesVolume',
     width: 4,
   },
