@@ -39,6 +39,7 @@ type SearchbarProps = {
   controlled?: boolean
   onClick?: () => void
   onClose: () => void
+  placeholder?: string
 } & DetailedHTMLProps<HTMLAttributes<HTMLInputElement>, HTMLInputElement>
 
 export const Searchbar: FC<SearchbarProps> = ({
