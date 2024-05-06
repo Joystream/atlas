@@ -52,6 +52,7 @@ const schema = z.object({
         message: 'Password address has to match.',
       }
     ),
+  [ForgotPasswordStep.LoadingStep]: z.any(),
 })
 
 export const ForgotPasswordModal = () => {
@@ -64,7 +65,9 @@ export const ForgotPasswordModal = () => {
   const [lazyCurrentAccountQuery] = useGetCurrentAccountLazyQuery()
 
   const form = useForm<ForgotPasswordModalForm>({
-    resolver: zodResolver(isLastStep ? schema : schema.pick({ [currentStep]: true })),
+    resolver: zodResolver(
+      isLastStep ? schema : schema.pick({ [currentStep]: true } as Record<ForgotPasswordStep, true | never>)
+    ),
   })
   const { authModalOpenName, setAuthModalOpenName } = useAuthStore(
     (state) => ({
