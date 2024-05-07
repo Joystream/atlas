@@ -260,7 +260,15 @@ const _StudioLayout = () => {
               </Routes>
             </Suspense>
           </MainContainer>
-          {channelSet && <VideoWorkspace />}
+          <Suspense
+            fallback={
+              <LoadingStudioContainer>
+                <Spinner size="large" />
+              </LoadingStudioContainer>
+            }
+          >
+            {channelSet && <VideoWorkspace />}
+          </Suspense>
         </>
       )}
     </>
