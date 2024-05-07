@@ -192,7 +192,7 @@ export const generateVideoSchemaTagsHtml = (
     {
       type: 'regular',
       prop: 'isFamilyFriendly',
-      value: (!(video.isExplicit ?? true)).toString(),
+      value: (!(video.isExplicit ?? false)).toString(),
     },
     {
       type: 'regular',
