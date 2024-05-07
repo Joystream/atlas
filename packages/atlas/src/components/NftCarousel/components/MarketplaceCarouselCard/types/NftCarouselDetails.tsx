@@ -240,7 +240,7 @@ export const VideoCardWrapper = ({
   details,
 }: VideoCardWrapperProps) => {
   const [isPaused, setIsPaused] = useState(!active)
-  const debouncedActive = useDebounceValue(active, 500)
+  const debouncedActive = useDebounceValue(active, 800, true)
 
   return (
     <Container>
@@ -251,15 +251,15 @@ export const VideoCardWrapper = ({
         {active ? (
           <BackgroundVideoPlayer
             videoId={videoId}
-            withFade={active ? debouncedActive : active}
-            playing={active ? debouncedActive : active}
+            withFade={active ? !!debouncedActive : active}
+            playing={active ? !!debouncedActive : active}
             muted={true}
             onPause={() => setIsPaused(true)}
             onPlay={() => setIsPaused(false)}
             preload="auto"
             src={mediaUrls ?? undefined}
             poster={thumbnailUrls ?? undefined}
-            handleActions={active ? debouncedActive : active}
+            handleActions={active ? !!debouncedActive : active}
             videoPlaytime={30}
             onEnded={goNextSlide}
             customLink={to}
