@@ -167,7 +167,7 @@ export const TabsWrapper = styled.div<{ isFiltersOpen: boolean }>`
 `
 
 type TabsContainerProps = {
-  tab: typeof TABS[number]
+  tab: (typeof TABS)[number]
 }
 
 const geTabsContainerGridTemplate = ({ tab }: TabsContainerProps) => {

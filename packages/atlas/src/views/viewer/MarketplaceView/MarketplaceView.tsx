@@ -23,7 +23,7 @@ const TABS = [
     icon: <SvgActionCreatorToken />,
   },
 ] as const
-type TabsNames = typeof TABS[number]['name']
+type TabsNames = (typeof TABS)[number]['name']
 
 const getTabIndex = (tabName: TabsNames, allTabs: typeof TABS): number =>
   allTabs.findIndex((tab) => tab.name === tabName)
@@ -32,7 +32,7 @@ export const MarketplaceView: FC = () => {
   const smMatch = useMediaMatch('sm')
   const [searchParams, setSearchParams] = useSearchParams()
   const { trackPageView } = useSegmentAnalytics()
-  const currentTabName = searchParams.get('tab') as typeof TABS[number]['name'] | null
+  const currentTabName = searchParams.get('tab') as (typeof TABS)[number]['name'] | null
   const currentTab = currentTabName ? getTabIndex(currentTabName, TABS) : 0
 
   useMountEffect(() => {

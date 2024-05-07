@@ -70,7 +70,7 @@ export const useAddVideoView = (opts?: Omit<MutationHookOptions<AddVideoViewMuta
           id: mutationResult.data?.addVideoView.videoId,
         }),
         fields: {
-          viewsNum: () => mutationResult.data?.addVideoView.viewsNum,
+          viewsNum: () => mutationResult.data?.addVideoView.viewsNum ?? 0,
         },
       })
     },

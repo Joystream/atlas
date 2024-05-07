@@ -164,7 +164,7 @@ export const useFollowChannel = (opts?: MutationHookOptions<FollowChannelMutatio
               id,
             }),
             fields: {
-              followsNum: () => mutationResult.data?.followChannel.follows,
+              followsNum: () => mutationResult.data?.followChannel.follows ?? 0,
             },
           })
         },
@@ -195,7 +195,7 @@ export const useUnfollowChannel = (opts?: MutationHookOptions<UnfollowChannelMut
               id,
             }),
             fields: {
-              followsNum: () => mutationResult.data?.unfollowChannel.follows,
+              followsNum: () => mutationResult.data?.unfollowChannel.follows ?? 0,
             },
           })
         },

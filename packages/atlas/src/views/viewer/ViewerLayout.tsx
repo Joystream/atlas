@@ -25,6 +25,9 @@ import { RoutingState } from '@/types/routing'
 const YppLandingView = lazy(() =>
   import('@/views/global/YppLandingView').then((module) => ({ default: module.YppLandingView }))
 )
+const YppLandingViewTest = lazy(() =>
+  import('@/views/global/YppLandingViewTest').then((module) => ({ default: module.YppLandingViewTest }))
+)
 const MemberNotificationsView = lazy(() =>
   import('@/views/notifications').then((module) => ({ default: module.MemberNotificationsView }))
 )
@@ -60,7 +63,10 @@ const viewerRoutes = [
   { path: relativeRoutes.viewer.member(), element: <MemberView /> },
   { path: relativeRoutes.viewer.marketplace(), element: <MarketplaceView /> },
   ...(atlasConfig.features.ypp.googleConsoleClientId
-    ? [{ path: relativeRoutes.viewer.ypp(), element: <YppLandingView /> }]
+    ? [
+        { path: relativeRoutes.viewer.ypp(), element: <YppLandingView /> },
+        { path: relativeRoutes.viewer.yppTest(), element: <YppLandingViewTest /> },
+      ]
     : []),
   { path: relativeRoutes.viewer.referrals(), element: <ReferralsView /> },
 ]
