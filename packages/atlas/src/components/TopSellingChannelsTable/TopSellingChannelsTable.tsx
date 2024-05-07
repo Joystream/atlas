@@ -23,7 +23,6 @@ import {
   NftSoldText,
   SenderItemIconsWrapper,
   SkeletonChannelContainer,
-  StyledLink,
   StyledListItem,
   StyledTable,
 } from './TopSellingChannelsTable.styles'
@@ -77,7 +76,7 @@ export const TopSellingChannelsTable = ({ withCrtOnly }: { withCrtOnly?: boolean
   })
 
   const lgMatch = useMediaMatch('lg')
-  const mappedData: TableProps['data'] = useMemo(() => {
+  const mappedData = useMemo(() => {
     return loading
       ? Array.from({ length: 10 }, () => ({
           index: null,
@@ -89,6 +88,7 @@ export const TopSellingChannelsTable = ({ withCrtOnly }: { withCrtOnly?: boolean
           ),
           nftsSold: <SkeletonLoader width="50%" height={16} />,
           salesVolume: <SkeletonLoader width="100%" height={16} />,
+          channelId: null,
         }))
       : data?.[sort].map((data, index) => ({
           index: (
@@ -116,6 +116,7 @@ export const TopSellingChannelsTable = ({ withCrtOnly }: { withCrtOnly?: boolean
             </NftSoldText>
           ),
           channel: <Channel channel={data.channel} />,
+          channelId: data.channel.id,
         })) ?? []
   }, [data, loading, sort])
 
@@ -188,6 +189,10 @@ export const TopSellingChannelsTable = ({ withCrtOnly }: { withCrtOnly?: boolean
             emptyState={tableEmptyState}
             columns={withCrtOnly ? COLUMNS.filter((col) => col.accessor !== 'nftsSold') : COLUMNS}
             data={mappedData}
+            getRowTo={(idx) =>
+              absoluteRoutes.viewer.channel(mappedData[idx].channelId ?? '', { tab: withCrtOnly ? 'Token' : 'Videos' })
+            }
+            interactive
             doubleColumn={lgMatch}
           />,
         ],
@@ -201,26 +206,24 @@ const Channel = ({ channel }: { channel: BasicChannelFieldsFragment }) => {
   // todo to be implemented
   const verified = false
   return (
-    <StyledLink to={absoluteRoutes.viewer.channel(channel.id)} title={channel.title || ''}>
-      <StyledListItem
-        nodeStart={<Avatar assetUrls={channel.avatarPhoto?.resolvedUrls ?? undefined} />}
-        label={channel.title}
-        isInteractive={false}
-        nodeEnd={
-          <SenderItemIconsWrapper>
-            {hasCreatorToken && (
-              <span title="Creator token">
-                <SvgActionCreatorToken />
-              </span>
-            )}
-            {verified && (
-              <span title="Verified">
-                <SvgActionVerified />
-              </span>
-            )}
-          </SenderItemIconsWrapper>
-        }
-      />
-    </StyledLink>
+    <StyledListItem
+      nodeStart={<Avatar assetUrls={channel.avatarPhoto?.resolvedUrls ?? undefined} />}
+      label={channel.title}
+      isInteractive={false}
+      nodeEnd={
+        <SenderItemIconsWrapper>
+          {hasCreatorToken && (
+            <span title="Creator token">
+              <SvgActionCreatorToken />
+            </span>
+          )}
+          {verified && (
+            <span title="Verified">
+              <SvgActionVerified />
+            </span>
+          )}
+        </SenderItemIconsWrapper>
+      }
+    />
   )
 }
