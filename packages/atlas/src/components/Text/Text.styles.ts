@@ -13,7 +13,7 @@ export type TextBaseProps = {
   truncate?: boolean
 }
 
-type MarginProps =
+export type MarginProps =
   | {
       top?: number
       bottom?: number
@@ -30,7 +30,7 @@ const alignStyles = ({ align }: TextBaseProps) =>
     text-align: ${align};
   `
 
-const marginStyles = ({ margin }: TextBaseProps) =>
+export const marginStyles = ({ margin }: TextBaseProps) =>
   typeof margin !== 'number' && !!margin
     ? css`
         margin: ${sizes(margin.top ?? 0)} ${sizes(margin.right ?? 0)} ${sizes(margin.bottom ?? 0)}

@@ -1,17 +1,16 @@
 import { FC } from 'react'
-import { useParallax } from 'react-scroll-parallax'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
 import { useMostPaidChannels } from '@/api/hooks/channel'
-import { SvgActionChevronR, SvgLogoGoogleWhiteFull, SvgLogoYoutubeWhiteFull } from '@/assets/icons'
-import hero from '@/assets/images/ypp-hero/hero.webp'
+import { SvgActionChevronR, SvgActionNewTab } from '@/assets/icons'
 import yt from '@/assets/images/ypp-hero/yt.webp'
 import { AppLogo } from '@/components/AppLogo'
+import { FlexBox } from '@/components/FlexBox'
+import { GlassDetailsWidget } from '@/components/GlassDetailsWidget'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
-import { Button } from '@/components/_buttons/Button'
-import { GoogleButton } from '@/components/_buttons/GoogleButton'
+import { Button, TextButton } from '@/components/_buttons/Button'
 import { PaidChannelCard } from '@/components/_channel/ChannelCard'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
@@ -20,13 +19,14 @@ import { cVar, transitions } from '@/styles'
 import { useSectionTextVariants } from '@/views/global/YppLandingView/sections/useSectionTextVariants'
 
 import {
-  BackImage,
   ButtonWrapper,
   FrontImage,
-  HeroImageWrapper,
+  ImagesContainer,
+  LeftImage,
   LogosContainer,
-  SelectDifferentChannelButton,
+  RightImage,
   StyledInfiniteCarousel,
+  WidgetsContainer,
 } from './YppHero.styles'
 
 import {
@@ -53,15 +53,13 @@ export const YppHero: FC<YppHeroProps> = ({
   hasAnotherUnsyncedChannel,
   selectedChannelTitle,
 }) => {
-  const smMatch = useMediaMatch('sm')
+  const xsMatch = useMediaMatch('xs')
+  const mdMatch = useMediaMatch('md')
+  const lgMatch = useMediaMatch('lg')
   const { ref, width, height } = useResizeObserver({ box: 'border-box' })
   const [, subtitleVariant, titleVariant] = useSectionTextVariants()
-  const endScroll = smMatch ? window.innerHeight / 3 : window.innerHeight
-  const { ref: heroImageRef } = useParallax<HTMLImageElement>({
-    startScroll: 0,
-    endScroll,
-    translateY: [0, -15],
-  })
+
+  const widgetContentTextVariant = lgMatch ? 'h800' : mdMatch ? 'h700' : 'h600'
 
   const { channels, loading } = useMostPaidChannels()
   const items = !loading
@@ -95,7 +93,7 @@ export const YppHero: FC<YppHeroProps> = ({
               data-aos-offset="80"
               data-aos-easing="atlas-easing"
             >
-              Connect your YouTube channel & get paid
+              Embrace Web3 creator economy
             </Text>
           </GridItem>
           <GridItem colSpan={{ base: 12, sm: 10, md: 8, lg: 6 }} colStart={{ sm: 2, md: 3, lg: 4 }}>
@@ -109,16 +107,11 @@ export const YppHero: FC<YppHeroProps> = ({
               data-aos-offset="40"
               data-aos-easing="atlas-easing"
             >
-              YouTube videos get automatically synced to your {atlasConfig.general.appName} channel, without any
-              additional effort.
+              Connect and discover earning opportunities with {atlasConfig.general.appName}.
             </Text>
           </GridItem>
 
           <GridItem colSpan={{ base: 12, sm: 8 }} colStart={{ sm: 3 }}>
-            <LogosContainer data-aos="fade-up" data-aos-delay="350" data-aos-offset="40" data-aos-easing="atlas-easing">
-              <SvgLogoYoutubeWhiteFull />
-              <SvgLogoGoogleWhiteFull />
-            </LogosContainer>
             <ButtonWrapper data-aos="fade-up" data-aos-delay="450" data-aos-offset="40" data-aos-easing="atlas-easing">
               <SwitchTransition>
                 <CSSTransition
@@ -138,7 +131,12 @@ export const YppHero: FC<YppHeroProps> = ({
                         Go to dashboard
                       </Button>
                     ) : (
-                      <GoogleButton onClick={onSignUpClick} />
+                      <FlexBox gap={4} justifyContent="center">
+                        <Button size="large">Sync from YouTube</Button>
+                        <Button size="large" variant="secondary">
+                          Create New Channel
+                        </Button>
+                      </FlexBox>
                     )
                   ) : (
                     <SkeletonLoader width={190} height={48} />
@@ -149,36 +147,72 @@ export const YppHero: FC<YppHeroProps> = ({
           </GridItem>
         </LayoutGrid>
         <LayoutGrid data-aos="fade-up" data-aos-delay="450" data-aos-offset="40" data-aos-easing="atlas-easing">
-          <GridItem colStart={{ base: 1, sm: 3, md: 4, lg: 5 }} colSpan={{ base: 12, sm: 8, md: 6, lg: 4 }}>
-            <Text
-              as="p"
-              variant="t100"
-              color="colorTextMuted"
-              margin={{ top: hasAnotherUnsyncedChannel && selectedChannelTitle ? 4 : 2 }}
-            >
-              {hasAnotherUnsyncedChannel && selectedChannelTitle && (
-                <>
-                  Your channel "{selectedChannelTitle}" is already part of the YouTube Partner Program.{' '}
-                  <SelectDifferentChannelButton onClick={onSelectChannel} color="colorTextPrimary">
-                    Select a different channel
-                  </SelectDifferentChannelButton>{' '}
-                  to apply again.
-                </>
-              )}
-              {yppAtlasStatus !== 'ypp-signed' && 'It takes under 1 minute and is 100% free.'}
-            </Text>
+          <GridItem
+            margin={{ top: 6 }}
+            colStart={{ base: 1, sm: 3, md: 4, lg: 5 }}
+            colSpan={{ base: 12, sm: 8, md: 6, lg: 4 }}
+          >
+            <TextButton iconPlacement="right" size="large" icon={<SvgActionNewTab />}>
+              Earn as viewer
+            </TextButton>
           </GridItem>
         </LayoutGrid>
-        <HeroImageWrapper data-aos="fade-up" data-aos-delay="550" data-aos-offset="80" data-aos-easing="atlas-easing">
-          <BackImage src={yt} alt="Hero back" width="1152" height="824" />
-          <FrontImage ref={heroImageRef} src={hero} alt="Hero front" width="1152" height="824" />
-        </HeroImageWrapper>
+
+        <LayoutGrid data-aos="fade-up" data-aos-delay="450" data-aos-offset="40" data-aos-easing="atlas-easing">
+          <GridItem margin={{ top: 6 }} colStart={{ base: 1, lg: 2 }} colSpan={{ base: 12, lg: 10 }}>
+            <WidgetsContainer>
+              <Text margin={{ bottom: 6 }} variant="h500" as="h5">
+                Creator Earnings
+              </Text>
+            </WidgetsContainer>
+            <WidgetsContainer justifyContent="space-between" gap={4} width="100%">
+              <GlassDetailsWidget
+                title="Total Rewards Paid"
+                titleVariant="h300"
+                tooltip={{ text: 'xd' }}
+                customNode={
+                  <Text variant={widgetContentTextVariant} as="h2">
+                    204M
+                  </Text>
+                }
+              />
+              <GlassDetailsWidget
+                title="NFTs sold"
+                titleVariant="h300"
+                tooltip={{ text: 'xd' }}
+                customNode={
+                  <Text variant={widgetContentTextVariant} as="h2">
+                    204M
+                  </Text>
+                }
+              />
+              <GlassDetailsWidget
+                title="Creator Tokens Sold"
+                titleVariant="h300"
+                tooltip={{ text: 'xd' }}
+                customNode={
+                  <Text variant={widgetContentTextVariant} as="h2">
+                    204M
+                  </Text>
+                }
+              />
+            </WidgetsContainer>
+          </GridItem>
+        </LayoutGrid>
+
+        {xsMatch && (
+          <ImagesContainer width="100%" justifyContent="center">
+            <FrontImage src={yt} alt="Hero back" width="1152" height="824" />
+            <RightImage src={yt} alt="Hero back" width="1152" height="824" />
+            <LeftImage src={yt} alt="Hero back" width="1152" height="824" />
+          </ImagesContainer>
+        )}
       </StyledLimitedWidthContainerHero>
       {items && items.length >= 7 && (
         <StyledInfiniteCarousel
           headerGridItemProps={{ colStart: { base: 1, lg: 2 }, colSpan: { base: 12, lg: 10 } }}
           carouselHorizonthalOffset={-32}
-          title="Signed up channels"
+          title="Recently paid out channels"
           itemWidth={260}
           items={items}
           subTitle="What is a verified channel?"

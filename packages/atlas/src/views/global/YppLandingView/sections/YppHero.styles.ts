@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 
+import { FlexBox } from '@/components/FlexBox'
 import { InfiniteCarousel } from '@/components/InfiniteCarousel/InfiniteCarousel'
 import { cVar, media, sizes } from '@/styles'
 
@@ -17,6 +18,48 @@ export const HeroImageWrapper = styled.div`
 export const ButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
+`
+
+export const WidgetsContainer = styled(FlexBox)`
+  text-align: left;
+  flex-direction: column;
+
+  > * {
+    flex: 1;
+    width: 100%;
+  }
+
+  ${media.sm} {
+    flex-direction: row;
+  }
+`
+
+export const ImagesContainer = styled(FlexBox)`
+  position: relative;
+`
+
+export const RightImage = styled.img`
+  position: absolute;
+  width: 60%;
+  max-width: 60%;
+  height: auto;
+  display: block;
+  left: 5%;
+  top: 25%;
+  z-index: 10;
+  border-radius: ${cVar('radiusMedium')};
+`
+
+export const LeftImage = styled.img`
+  position: absolute;
+  width: 60%;
+  max-width: 60%;
+  height: auto;
+  display: block;
+  right: 5%;
+  top: 25%;
+  z-index: 10;
+  border-radius: ${cVar('radiusMedium')};
 `
 
 export const LogosContainer = styled.div`
@@ -43,12 +86,13 @@ export const SelectDifferentChannelButton = styled.button`
 `
 
 export const FrontImage = styled.img`
-  width: 100%;
-  max-width: 100%;
+  width: 70%;
+  max-width: 70%;
   height: auto;
   display: block;
   border-radius: ${cVar('radiusMedium')};
   margin-top: 10%;
+  z-index: 20;
   ${imageShadow}
 `
 
