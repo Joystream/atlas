@@ -1,9 +1,12 @@
 import { FC, useRef } from 'react'
 
+import { SvgActionArrowRight } from '@/assets/icons'
+import { FlexBox } from '@/components/FlexBox'
 import { Information } from '@/components/Information'
 import { FlexGridItem, GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { TooltipText } from '@/components/Tooltip/Tooltip.styles'
+import { TextButton } from '@/components/_buttons/Button'
 import { TierCard } from '@/components/_ypp/TierCard'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -64,7 +67,7 @@ export const YppRewardSection: FC = () => {
               data-aos-offset="80"
               data-aos-easing="atlas-easing"
             >
-              Rewards based on quality and popularity
+              Rewards based on quality
             </Text>
           </GridItem>
           <FlexGridItem colSpan={{ base: 12, sm: 10, md: 8, lg: 6 }} colStart={{ sm: 2, md: 3, lg: 4 }}>
@@ -78,8 +81,8 @@ export const YppRewardSection: FC = () => {
               data-aos-offset="40"
               data-aos-easing="atlas-easing"
             >
-              Each participating channel is reviewed by the verification team and assigned to one of the reward tiers
-              below
+              Each participating channel in YouTube partners program is reviewed by the verification team and assigned
+              to one of the reward tiers below
             </Text>
           </FlexGridItem>
         </CenteredLayoutGrid>
@@ -115,25 +118,32 @@ export const YppRewardSection: FC = () => {
             marginTop={mdMatch ? -2 : 0}
             justifyContent="end"
           >
-            <Text variant="t200" as="p" color="colorText">
-              Payments are made in {atlasConfig.joystream.tokenTicker} tokens
-            </Text>
-            <Information
-              interactive
-              customContent={
-                <TooltipText as="span" variant="t100">
-                  {atlasConfig.joystream.tokenTicker} token is a native crypto asset of Joystream blockchain which
-                  powers {atlasConfig.general.appName}. It is used for trading Creator Tokens, NFTs and covering
-                  blockchain processing fees. It is also used for voting on proposals and partaking in council
-                  elections.{' '}
-                  <ColorAnchor href="https://www.joystream.org/token/" target="_blank">
-                    Purchase {atlasConfig.joystream.tokenTicker}
-                  </ColorAnchor>
-                </TooltipText>
-              }
-              multiline
-              reference={ref.current}
-            />
+            <FlexBox width="100%" alignItems="center" justifyContent="space-between">
+              <TextButton icon={<SvgActionArrowRight />} iconPlacement="right">
+                Learn more
+              </TextButton>
+              <FlexBox alignItems="center" width="fit-content" gap={2}>
+                <Text variant="t200" as="p" color="colorText">
+                  Payments are made in {atlasConfig.joystream.tokenTicker} tokens
+                </Text>
+                <Information
+                  interactive
+                  customContent={
+                    <TooltipText as="span" variant="t100">
+                      {atlasConfig.joystream.tokenTicker} token is a native crypto asset of Joystream blockchain which
+                      powers {atlasConfig.general.appName}. It is used for trading Creator Tokens, NFTs and covering
+                      blockchain processing fees. It is also used for voting on proposals and partaking in council
+                      elections.{' '}
+                      <ColorAnchor href="https://www.joystream.org/token/" target="_blank">
+                        Purchase {atlasConfig.joystream.tokenTicker}
+                      </ColorAnchor>
+                    </TooltipText>
+                  }
+                  multiline
+                  reference={ref.current}
+                />
+              </FlexBox>
+            </FlexBox>
           </FlexGridItem>
         </LayoutGrid>
       </StyledLimitedWidthContainer>
