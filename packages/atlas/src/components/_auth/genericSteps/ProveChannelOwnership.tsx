@@ -53,7 +53,7 @@ export const ProveChannelOwnership = ({ onSubmit, setActionButtonHandler }: Prov
   )
 }
 
-export const StyledAppLogo = styled(AppLogo)`
+const StyledAppLogo = styled(AppLogo)`
   height: 36px;
   width: auto;
 
