@@ -125,6 +125,7 @@ export const HeaderGridItem = styled(GridItem, {
 })<HeaderGridItemProps>`
   margin-bottom: ${({ marginBottom = 0 }) => sizes(marginBottom)};
   align-self: center;
+  text-align: center;
 `
 
 type BackgroundContainerProps = {

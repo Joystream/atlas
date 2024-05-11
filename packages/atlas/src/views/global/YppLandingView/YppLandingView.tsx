@@ -10,11 +10,12 @@ import { useHeadTags } from '@/hooks/useHeadTags'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useUser } from '@/providers/user/user.hooks'
 import { useYppStore } from '@/providers/ypp/ypp.store'
-import { YppConnectionDetails } from '@/views/global/YppLandingView/sections/YppConnectionDetails'
+import { CreatorOpportunities } from '@/views/global/YppLandingView/sections/CreatorOpportunities'
+import { JoystreamRoadmap } from '@/views/global/YppLandingView/sections/JoystreamRoadmap'
+import { ViewerOpportunities } from '@/views/global/YppLandingView/sections/ViewerOpportunities'
 
 import { YppAuthorizationModal } from './YppAuthorizationModal'
 import { Wrapper } from './YppLandingView.styles'
-import { YppCardsSections } from './sections/YppCardsSections'
 import { YppFooter } from './sections/YppFooter'
 import { YppHero } from './sections/YppHero'
 import { YppRewardSection } from './sections/YppRewardSection'
@@ -110,10 +111,12 @@ export const YppLandingView: FC = () => {
           hasAnotherUnsyncedChannel={hasAnotherUnsyncedChannel}
           selectedChannelTitle={selectedChannelTitle}
         />
+        <CreatorOpportunities />
         <YppRewardSection />
         <YppSignupVideo />
-        <YppConnectionDetails />
-        <YppCardsSections />
+        <ViewerOpportunities />
+        <JoystreamRoadmap />
+        {/*<YppCardsSections />*/}
         <YppFooter onSignUpClick={handleYppSignUpClick} />
       </ParallaxProvider>
     </Wrapper>

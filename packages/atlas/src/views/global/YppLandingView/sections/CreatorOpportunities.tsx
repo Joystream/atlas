@@ -44,6 +44,7 @@ const earningsOptions = [
 ]
 
 export const CreatorOpportunities = () => {
+  const xsMatch = useMediaMatch('xs')
   const mdMatch = useMediaMatch('md')
   const smMatch = useMediaMatch('sm')
   const [titleVariant, subtitleVariant] = useSectionTextVariants()
@@ -106,9 +107,11 @@ export const CreatorOpportunities = () => {
             colSpan={{ base: 12 }}
             colStart={{ base: 1 }}
           >
-            <FlexBox width="100%" justifyContent="center" gap={4}>
-              <Button size="large">Create New Channel</Button>
-              <Button size="large" variant="secondary">
+            <FlexBox width="100%" flow={xsMatch ? 'row' : 'column'} alignItems="center" justifyContent="center" gap={4}>
+              <Button fullWidth={!xsMatch} size="large">
+                Create New Channel
+              </Button>
+              <Button fullWidth={!xsMatch} size="large" variant="secondary">
                 Sync from YouTube
               </Button>
             </FlexBox>

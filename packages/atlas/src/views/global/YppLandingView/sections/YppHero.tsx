@@ -131,9 +131,11 @@ export const YppHero: FC<YppHeroProps> = ({
                         Go to dashboard
                       </Button>
                     ) : (
-                      <FlexBox gap={4} justifyContent="center">
-                        <Button size="large">Sync from YouTube</Button>
-                        <Button size="large" variant="secondary">
+                      <FlexBox gap={4} flow={xsMatch ? 'row' : 'column'} alignItems="center" justifyContent="center">
+                        <Button fullWidth={!xsMatch} size="large">
+                          Sync from YouTube
+                        </Button>
+                        <Button fullWidth={!xsMatch} size="large" variant="secondary">
                           Create New Channel
                         </Button>
                       </FlexBox>
