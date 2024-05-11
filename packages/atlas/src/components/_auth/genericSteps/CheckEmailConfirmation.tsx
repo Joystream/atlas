@@ -42,7 +42,7 @@ export const CheckEmailConfirmation = ({
   })
 
   return (
-    <FlexBox flow="column" gap={3}>
+    <FlexBox flow="column" gap={2}>
       <StyledAppLogo variant="short-monochrome" />
       <Text variant="h500" as="h3">
         We sent you a confirmation link
