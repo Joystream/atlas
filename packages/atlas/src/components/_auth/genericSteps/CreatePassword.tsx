@@ -16,15 +16,15 @@ import { useMountEffect } from '@/hooks/useMountEffect'
 import { cVar, sizes } from '@/styles'
 import { passwordAndRepeatPasswordSchema } from '@/utils/formValidationOptions'
 
-type PasswordStepForm = {
+type NewPasswordForm = {
   password: string
   confirmPassword: string
   captchaToken?: string
 }
 
 type CreatePasswordProps = {
-  defaultValues: Omit<PasswordStepForm, 'captchaToken'>
-  onSubmit: (data: PasswordStepForm) => void
+  defaultValues?: Omit<NewPasswordForm, 'captchaToken'>
+  onSubmit: (data: NewPasswordForm) => void
   setActionButtonHandler: (fn: () => void | Promise<void>) => void
   dialogContentRef?: RefObject<HTMLDivElement>
 }
@@ -35,7 +35,7 @@ export const CreatePassword = ({
   defaultValues,
   dialogContentRef,
 }: CreatePasswordProps) => {
-  const form = useForm<PasswordStepForm>({
+  const form = useForm<NewPasswordForm>({
     shouldFocusError: true,
     reValidateMode: 'onSubmit',
     defaultValues,
@@ -76,12 +76,14 @@ export const CreatePassword = ({
     <FormProvider {...form}>
       <FlexBox flow="column" gap={6}>
         <StyledAppLogo variant="short-monochrome" />
-        <Text variant="h500" as="h3">
-          Create a password
-        </Text>
-        <Text margin={{ bottom: 2 }} variant="t300" as="span" color="colorText">
-          Please note that there is no option for us to recover your password if you forget it. .
-        </Text>
+        <FlexBox flow="column" gap={2}>
+          <Text variant="h500" as="h3">
+            Create a password
+          </Text>
+          <Text margin={{ bottom: 2 }} variant="t300" as="span" color="colorText">
+            Please note that there is no option for us to recover your password if you forget it.
+          </Text>
+        </FlexBox>
         <StyledSignUpForm>
           <FormField label="Password" error={errors.password?.message}>
             <Input
@@ -143,6 +145,7 @@ const StyledAppLogo = styled(AppLogo)`
 `
 
 const StyledSignUpForm = styled.form<{ additionalPaddingBottom?: boolean }>`
+  width: 100%;
   display: grid;
   gap: ${sizes(6)};
   padding-bottom: ${({ additionalPaddingBottom }) =>
