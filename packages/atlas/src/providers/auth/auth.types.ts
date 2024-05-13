@@ -38,7 +38,7 @@ export type ExternalLogin = {
 
 export type LoginParams = InternalLogin | ExternalLogin
 
-export type AuthModals = 'logIn' | 'externalLogIn' | 'signUp' | 'createChannel' | 'forgotPassword'
+export type AuthModals = 'logIn' | 'externalLogIn' | 'signUp' | 'createChannel' | 'forgotPassword' | 'emailSetup'
 
 type EncryptionArtifacts = {
   id: string

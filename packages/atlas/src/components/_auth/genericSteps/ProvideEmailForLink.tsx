@@ -1,15 +1,19 @@
+import styled from '@emotion/styled'
 import { useForm } from 'react-hook-form'
 
+import { AppLogo } from '@/components/AppLogo'
 import { FlexBox } from '@/components/FlexBox'
 import { Text } from '@/components/Text'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
-import { Loader } from '@/components/_loaders/Loader'
 import { useMountEffect } from '@/hooks/useMountEffect'
+import { cVar } from '@/styles'
+
+import { SetActionButtonHandlerSetter } from './types'
 
 type ProvideEmailForLinkProps = {
   onSubmit: (email: string) => void
-  setActionButtonHandler: (fn: () => void | Promise<void>) => void
+  setActionButtonHandler: SetActionButtonHandlerSetter
   resendEmailHandler?: (email: string) => void | Promise<void>
 }
 
@@ -24,16 +28,16 @@ export const ProvideEmailForLink = ({ setActionButtonHandler, onSubmit }: Provid
   // 2. Email already used (no idea how to check it?) - and allow to resend the link
 
   useMountEffect(() => {
-    setActionButtonHandler(
+    setActionButtonHandler(() => {
       handleSubmit((data) => {
         onSubmit(data.email)
-      })
-    )
+      })()
+    })
   })
 
   return (
     <FlexBox flow="column" gap={6}>
-      <Loader variant="medium" />
+      <StyledAppLogo variant="short-monochrome" />
       <FlexBox flow="column" gap={2}>
         <Text variant="h500" as="h3">
           Enter email address
@@ -48,9 +52,17 @@ export const ProvideEmailForLink = ({ setActionButtonHandler, onSubmit }: Provid
           {...register('email', {
             required: 'Please provide an email.',
           })}
-          placeholder="Enter your YouTube video URL"
+          placeholder="Enter your email"
         />
       </FormField>
     </FlexBox>
   )
 }
+const StyledAppLogo = styled(AppLogo)`
+  height: 36px;
+  width: auto;
+
+  path {
+    fill: ${cVar('colorTextMuted')};
+  }
+`

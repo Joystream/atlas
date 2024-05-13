@@ -9,8 +9,10 @@ import { useSnackbar } from '@/providers/snackbars'
 import { cVar } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
+import { SetActionButtonHandlerSetter } from './types'
+
 type CheckEmailConfirmationProps = {
-  setActionButtonHandler: (fn: () => void | Promise<void>) => void
+  setActionButtonHandler: SetActionButtonHandlerSetter
   onSuccess?: () => void
   onFailure?: () => void
 }
@@ -23,12 +25,13 @@ export const CheckEmailConfirmation = ({
   const { displaySnackbar } = useSnackbar()
   const { mutateAsync } = useMutation({
     mutationKey: 'single',
-    mutationFn: async () => console.log('resending email confimation'),
+    mutationFn: async () => new Promise((res) => setTimeout(res, 5000)),
   })
 
   useMountEffect(() => {
-    const handleMutation = () =>
-      mutateAsync()
+    setActionButtonHandler((setter) => {
+      setter?.(true)
+      return mutateAsync()
         .then(onSuccess)
         .catch((error) => {
           onFailure?.()
@@ -38,16 +41,17 @@ export const CheckEmailConfirmation = ({
           })
           SentryLogger.error('Failed to resend confirmation link', 'CheckEmailConfirmation', error)
         })
-    setActionButtonHandler(() => handleMutation())
+        .finally(() => setter?.(false))
+    })
   })
 
   return (
     <FlexBox flow="column" gap={2}>
       <StyledAppLogo variant="short-monochrome" />
-      <Text variant="h500" as="h3">
+      <Text margin={{ top: 4 }} variant="h500" as="h3">
         We sent you a confirmation link
       </Text>
-      <Text margin={{ bottom: 2 }} variant="t300" as="span" color="colorText">
+      <Text variant="t300" as="span" color="colorText">
         Check your email and click the link we sent you to complete the process.
       </Text>
     </FlexBox>
