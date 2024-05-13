@@ -19,6 +19,11 @@ export const ProveChannelOwnership = ({ onSubmit, setActionButtonHandler }: Prov
     formState: { errors },
     handleSubmit,
   } = useForm<{ videoUrl: string }>()
+  // todo: validation
+  // 1. Not a link
+  // 2. Video has wrong title - show current title in error
+  // 3. Channel that owns the video is already part of the program
+  // 4. Other video conditions not met (not specified in the designs)
 
   useMountEffect(() => {
     setActionButtonHandler(
