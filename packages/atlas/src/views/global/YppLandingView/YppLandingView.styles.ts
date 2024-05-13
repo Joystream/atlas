@@ -65,8 +65,10 @@ export const StyledLimitedWidthContainerHero = styled.div<{ centerText?: boolean
   overflow: hidden;
   border-radius: 24px;
   padding: ${sizes(4)};
+  margin-top: ${sizes(6)};
 
   ${media.md} {
+    margin-top: 0;
     padding: ${sizes(8)};
     border-radius: 32px;
   }

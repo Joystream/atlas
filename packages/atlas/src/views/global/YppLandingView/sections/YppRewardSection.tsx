@@ -1,12 +1,10 @@
 import { FC, useRef } from 'react'
 
-import { SvgActionArrowRight } from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox'
 import { Information } from '@/components/Information'
 import { FlexGridItem, GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { TooltipText } from '@/components/Tooltip/Tooltip.styles'
-import { TextButton } from '@/components/_buttons/Button'
 import { TierCard } from '@/components/_ypp/TierCard'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -119,9 +117,10 @@ export const YppRewardSection: FC = () => {
             justifyContent="end"
           >
             <FlexBox width="100%" alignItems="center" justifyContent="space-between">
-              <TextButton icon={<SvgActionArrowRight />} iconPlacement="right">
-                Learn more
-              </TextButton>
+              {/*<TextButton icon={<SvgActionArrowRight />} iconPlacement="right">*/}
+              {/*  Learn more*/}
+              {/*</TextButton>*/}
+              <div />
               <FlexBox alignItems="center" width="fit-content" gap={2}>
                 <Text variant="t200" as="p" color="colorText">
                   Payments are made in {atlasConfig.joystream.tokenTicker} tokens

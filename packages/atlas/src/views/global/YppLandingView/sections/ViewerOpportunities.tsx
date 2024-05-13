@@ -40,7 +40,7 @@ const viewerEarningsOptions = [
     title: 'Trade NFTs',
     subtitle: (
       <>
-        Own and trade collectibles from wide variety of channels. <TextButton size="large">Learn more</TextButton>
+        Own and trade collectibles from wide variety of channels. {/*<TextButton size="large">Learn more</TextButton>*/}
       </>
     ),
     image: viewer_earnings_nft,
@@ -110,7 +110,12 @@ export const ViewerOpportunities = () => {
             colSpan={{ base: 12, sm: 10 }}
             colStart={{ base: 1, sm: 2 }}
           >
-            <TextButton size="large" icon={<SvgLogoDiscordMonochrome />} iconPlacement="right">
+            <TextButton
+              to={atlasConfig.general.joystreamDiscordUrl}
+              size="large"
+              icon={<SvgLogoDiscordMonochrome />}
+              iconPlacement="right"
+            >
               Connect with us on Discord.
             </TextButton>
           </FlexGridItem>

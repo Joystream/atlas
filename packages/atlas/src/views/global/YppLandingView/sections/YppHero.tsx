@@ -3,14 +3,15 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
 import { useMostPaidChannels } from '@/api/hooks/channel'
-import { SvgActionChevronR, SvgActionNewTab } from '@/assets/icons'
-import yt from '@/assets/images/ypp-hero/yt.webp'
+import { SvgActionChevronR } from '@/assets/icons'
+import crt_card from '@/assets/images/ypp-hero/crt-card-hero.webp'
+import crt_dashboard from '@/assets/images/ypp-hero/crt-dashboard-hero.webp'
+import payments from '@/assets/images/ypp-hero/crt-payments-hero.webp'
 import { AppLogo } from '@/components/AppLogo'
-import { FlexBox } from '@/components/FlexBox'
-import { GlassDetailsWidget } from '@/components/GlassDetailsWidget'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
-import { Button, TextButton } from '@/components/_buttons/Button'
+import { Button } from '@/components/_buttons/Button'
+import { GoogleButton } from '@/components/_buttons/GoogleButton'
 import { PaidChannelCard } from '@/components/_channel/ChannelCard'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
@@ -25,8 +26,8 @@ import {
   LeftImage,
   LogosContainer,
   RightImage,
+  SelectDifferentChannelButton,
   StyledInfiniteCarousel,
-  WidgetsContainer,
 } from './YppHero.styles'
 
 import {
@@ -131,14 +132,15 @@ export const YppHero: FC<YppHeroProps> = ({
                         Go to dashboard
                       </Button>
                     ) : (
-                      <FlexBox gap={4} flow={xsMatch ? 'row' : 'column'} alignItems="center" justifyContent="center">
-                        <Button fullWidth={!xsMatch} size="large">
-                          Sync from YouTube
-                        </Button>
-                        <Button fullWidth={!xsMatch} size="large" variant="secondary">
-                          Create New Channel
-                        </Button>
-                      </FlexBox>
+                      // <FlexBox gap={4} flow={xsMatch ? 'row' : 'column'} alignItems="center" justifyContent="center">
+                      //   <Button fullWidth={!xsMatch} size="large">
+                      //     Sync from YouTube
+                      //   </Button>
+                      //   <Button fullWidth={!xsMatch} size="large" variant="secondary">
+                      //     Create New Channel
+                      //   </Button>
+                      // </FlexBox>
+                      <GoogleButton onClick={onSignUpClick} />
                     )
                   ) : (
                     <SkeletonLoader width={190} height={48} />
@@ -150,65 +152,84 @@ export const YppHero: FC<YppHeroProps> = ({
         </LayoutGrid>
         <LayoutGrid data-aos="fade-up" data-aos-delay="450" data-aos-offset="40" data-aos-easing="atlas-easing">
           <GridItem
-            margin={{ top: 6 }}
+            margin={{ top: 1 }}
             colStart={{ base: 1, sm: 3, md: 4, lg: 5 }}
             colSpan={{ base: 12, sm: 8, md: 6, lg: 4 }}
           >
-            <TextButton iconPlacement="right" size="large" icon={<SvgActionNewTab />}>
-              Earn as viewer
-            </TextButton>
+            {/*<TextButton iconPlacement="right" size="large" icon={<SvgActionNewTab />}>*/}
+            {/*  Earn as viewer*/}
+            {/*</TextButton>*/}
+            <Text
+              as="p"
+              variant="t100"
+              color="colorTextMuted"
+              margin={{ top: hasAnotherUnsyncedChannel && selectedChannelTitle ? 4 : 2 }}
+            >
+              {hasAnotherUnsyncedChannel && selectedChannelTitle && (
+                <>
+                  Your channel "{selectedChannelTitle}" is already part of the YouTube Partner Program.{' '}
+                  <SelectDifferentChannelButton onClick={onSelectChannel} color="colorTextPrimary">
+                    Select a different channel
+                  </SelectDifferentChannelButton>{' '}
+                  to apply again.
+                </>
+              )}
+              {yppAtlasStatus !== 'ypp-signed' && 'It takes under 1 minute and is 100% free.'}
+            </Text>
           </GridItem>
         </LayoutGrid>
 
-        <LayoutGrid data-aos="fade-up" data-aos-delay="450" data-aos-offset="40" data-aos-easing="atlas-easing">
-          <GridItem margin={{ top: 6 }} colStart={{ base: 1, lg: 2 }} colSpan={{ base: 12, lg: 10 }}>
-            <WidgetsContainer>
-              <Text margin={{ bottom: 6 }} variant="h500" as="h5">
-                Creator Earnings
-              </Text>
-            </WidgetsContainer>
-            <WidgetsContainer justifyContent="space-between" gap={4} width="100%">
-              <GlassDetailsWidget
-                title="Total Rewards Paid"
-                titleVariant="h300"
-                tooltip={{ text: 'xd' }}
-                customNode={
-                  <Text variant={widgetContentTextVariant} as="h2">
-                    204M
-                  </Text>
-                }
-              />
-              <GlassDetailsWidget
-                title="NFTs sold"
-                titleVariant="h300"
-                tooltip={{ text: 'xd' }}
-                customNode={
-                  <Text variant={widgetContentTextVariant} as="h2">
-                    204M
-                  </Text>
-                }
-              />
-              <GlassDetailsWidget
-                title="Creator Tokens Sold"
-                titleVariant="h300"
-                tooltip={{ text: 'xd' }}
-                customNode={
-                  <Text variant={widgetContentTextVariant} as="h2">
-                    204M
-                  </Text>
-                }
-              />
-            </WidgetsContainer>
-          </GridItem>
-        </LayoutGrid>
+        {/*<LayoutGrid data-aos="fade-up" data-aos-delay="450" data-aos-offset="40" data-aos-easing="atlas-easing">*/}
+        {/*  <GridItem margin={{ top: 6 }} colStart={{ base: 1, lg: 2 }} colSpan={{ base: 12, lg: 10 }}>*/}
+        {/*    <WidgetsContainer>*/}
+        {/*      <Text margin={{ bottom: 6 }} variant="h500" as="h5">*/}
+        {/*        Creator Earnings*/}
+        {/*      </Text>*/}
+        {/*    </WidgetsContainer>*/}
+        {/*    <WidgetsContainer justifyContent="space-between" gap={4} width="100%">*/}
+        {/*      <GlassDetailsWidget*/}
+        {/*        title="Total Rewards Paid"*/}
+        {/*        titleVariant="h300"*/}
+        {/*        tooltip={{ text: 'xd' }}*/}
+        {/*        customNode={*/}
+        {/*          <Text variant={widgetContentTextVariant} as="h2">*/}
+        {/*            204M*/}
+        {/*          </Text>*/}
+        {/*        }*/}
+        {/*      />*/}
+        {/*      <GlassDetailsWidget*/}
+        {/*        title="NFTs sold"*/}
+        {/*        titleVariant="h300"*/}
+        {/*        tooltip={{ text: 'xd' }}*/}
+        {/*        customNode={*/}
+        {/*          <Text variant={widgetContentTextVariant} as="h2">*/}
+        {/*            204M*/}
+        {/*          </Text>*/}
+        {/*        }*/}
+        {/*      />*/}
+        {/*      <GlassDetailsWidget*/}
+        {/*        title="Creator Tokens Sold"*/}
+        {/*        titleVariant="h300"*/}
+        {/*        tooltip={{ text: 'xd' }}*/}
+        {/*        customNode={*/}
+        {/*          <Text variant={widgetContentTextVariant} as="h2">*/}
+        {/*            204M*/}
+        {/*          </Text>*/}
+        {/*        }*/}
+        {/*      />*/}
+        {/*    </WidgetsContainer>*/}
+        {/*  </GridItem>*/}
+        {/*</LayoutGrid>*/}
 
-        {xsMatch && (
-          <ImagesContainer width="100%" justifyContent="center">
-            <FrontImage src={yt} alt="Hero back" width="1152" height="824" />
-            <RightImage src={yt} alt="Hero back" width="1152" height="824" />
-            <LeftImage src={yt} alt="Hero back" width="1152" height="824" />
-          </ImagesContainer>
-        )}
+        <ImagesContainer width="100%" justifyContent="center">
+          <FrontImage src={crt_dashboard} alt="Hero back" width="1152" height="824" />
+          {xsMatch && (
+            <>
+              <RightImage src={crt_card} alt="Hero back" width="1152" height="824" />
+              <LeftImage src={payments} alt="Hero back" width="1152" height="824" />
+            </>
+          )}
+        </ImagesContainer>
       </StyledLimitedWidthContainerHero>
       {items && items.length >= 7 && (
         <StyledInfiniteCarousel

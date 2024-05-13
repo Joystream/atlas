@@ -8,7 +8,7 @@ import earning_yt from '@/assets/images/earnings/earning-yt.webp'
 import { FlexBox } from '@/components/FlexBox'
 import { FlexGridItem, GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
-import { Button, TextButton } from '@/components/_buttons/Button'
+import { TextButton } from '@/components/_buttons/Button'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { cVar, media, sizes } from '@/styles'
@@ -44,7 +44,7 @@ const earningsOptions = [
 ]
 
 export const CreatorOpportunities = () => {
-  const xsMatch = useMediaMatch('xs')
+  // const xsMatch = useMediaMatch('xs')
   const mdMatch = useMediaMatch('md')
   const smMatch = useMediaMatch('sm')
   const [titleVariant, subtitleVariant] = useSectionTextVariants()
@@ -107,15 +107,20 @@ export const CreatorOpportunities = () => {
             colSpan={{ base: 12 }}
             colStart={{ base: 1 }}
           >
-            <FlexBox width="100%" flow={xsMatch ? 'row' : 'column'} alignItems="center" justifyContent="center" gap={4}>
-              <Button fullWidth={!xsMatch} size="large">
-                Create New Channel
-              </Button>
-              <Button fullWidth={!xsMatch} size="large" variant="secondary">
-                Sync from YouTube
-              </Button>
-            </FlexBox>
-            <TextButton size="large" icon={<SvgLogoDiscordMonochrome />} iconPlacement="right">
+            {/*<FlexBox width="100%" flow={xsMatch ? 'row' : 'column'} alignItems="center" justifyContent="center" gap={4}>*/}
+            {/*  <Button fullWidth={!xsMatch} size="large">*/}
+            {/*    Create New Channel*/}
+            {/*  </Button>*/}
+            {/*  <Button fullWidth={!xsMatch} size="large" variant="secondary">*/}
+            {/*    Sync from YouTube*/}
+            {/*  </Button>*/}
+            {/*</FlexBox>*/}
+            <TextButton
+              to={atlasConfig.general.joystreamDiscordUrl}
+              size="large"
+              icon={<SvgLogoDiscordMonochrome />}
+              iconPlacement="right"
+            >
               Connect with us on Discord.
             </TextButton>
           </FlexGridItem>

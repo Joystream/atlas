@@ -36,16 +36,22 @@ export const WidgetsContainer = styled(FlexBox)`
 
 export const ImagesContainer = styled(FlexBox)`
   position: relative;
+  margin: 40px 0;
+
+  ${media.sm} {
+    margin: 80px 0;
+  }
 `
 
 export const RightImage = styled.img`
   position: absolute;
   width: 60%;
-  max-width: 60%;
+  max-height: 420px;
   height: auto;
+  object-fit: contain;
   display: block;
-  left: 5%;
-  top: 25%;
+  left: 10%;
+  top: 10%;
   z-index: 10;
   border-radius: ${cVar('radiusMedium')};
 `
@@ -53,13 +59,29 @@ export const RightImage = styled.img`
 export const LeftImage = styled.img`
   position: absolute;
   width: 60%;
-  max-width: 60%;
+  max-height: 420px;
   height: auto;
+  object-fit: contain;
   display: block;
-  right: 5%;
-  top: 25%;
+  right: 10%;
+  top: 10%;
   z-index: 10;
   border-radius: ${cVar('radiusMedium')};
+`
+
+export const FrontImage = styled.img`
+  max-height: 520px;
+  width: 90%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  border-radius: ${cVar('radiusMedium')};
+  z-index: 20;
+  ${imageShadow}
+
+  ${media.xs} {
+    width: 70%;
+  }
 `
 
 export const LogosContainer = styled.div`
@@ -83,17 +105,6 @@ export const SelectDifferentChannelButton = styled.button`
   :focus-visible {
     text-decoration: underline;
   }
-`
-
-export const FrontImage = styled.img`
-  width: 70%;
-  max-width: 70%;
-  height: auto;
-  display: block;
-  border-radius: ${cVar('radiusMedium')};
-  margin-top: 10%;
-  z-index: 20;
-  ${imageShadow}
 `
 
 export const BackImage = styled.img`
