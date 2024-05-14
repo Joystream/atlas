@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import BN from 'bn.js'
 import { ReactElement, useMemo } from 'react'
 import { useNavigate } from 'react-router'
@@ -14,8 +15,10 @@ import { HoldersWidget } from '@/components/_crt/HoldersWidget'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUser } from '@/providers/user/user.hooks'
+import { media, square } from '@/styles'
 import { permillToPercentage } from '@/utils/number'
 
 import {
@@ -59,9 +62,14 @@ export const getTokenDetails = (token: FullCreatorTokenFragment, cumulativeReven
         'This percentage of the token supply gets minted every year and paid to creator for channel management.',
     },
     {
-      caption: 'TOTAL SUPPLY',
-      content: +token.totalSupply,
-      tooltipText: `Total amount of tokens owned by all holders.`,
+      caption: 'MARKET CAP',
+      content:
+        token.lastPrice && token.totalSupply
+          ? hapiBnToTokenNumber(new BN(token.lastPrice).muln(+token.totalSupply))
+          : 0,
+      tooltipText: `The total market value of a token's supply.`,
+      icon: <StyledJoyTokenIcon variant="silver" />,
+      withDenomination: true,
     },
   ]
 
@@ -69,7 +77,7 @@ export const getTokenDetails = (token: FullCreatorTokenFragment, cumulativeReven
     details.push({
       caption: 'TOTAL REV.',
       content: new BN(cumulativeRevenue),
-      icon: <JoyTokenIcon size={16} variant="silver" />,
+      icon: <StyledJoyTokenIcon variant="silver" />,
       tooltipText: 'Total cumulative revenue of this channel on Joystream to date.',
       withDenomination: true,
     })
@@ -161,3 +169,11 @@ export const CrtPreviewLayout = ({
     </Wrapper>
   )
 }
+
+export const StyledJoyTokenIcon = styled(JoyTokenIcon)`
+  ${square(16)}
+
+  ${media.sm} {
+    ${square(24)}
+  }
+`

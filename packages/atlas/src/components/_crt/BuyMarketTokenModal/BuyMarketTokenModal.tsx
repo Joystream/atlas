@@ -20,6 +20,7 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { useFee, useJoystream, useSubscribeAccountBalance } from '@/providers/joystream'
+import { useJoystreamStore } from '@/providers/joystream/joystream.store'
 import { useNetworkUtils } from '@/providers/networkUtils/networkUtils.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
@@ -54,6 +55,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
   const amountRef = useRef<number | null>(null)
   const { control, watch, handleSubmit, reset, formState } = useForm<{ tokenAmount: number }>()
   const tokenAmount = watch('tokenAmount') || 0
+  const currentBlockRef = useRef(useJoystreamStore((store) => store.currentBlock))
   const { fullFee } = useFee('purchaseTokenOnMarketTx', ['1', '1', String(tokenAmount ?? 0), '1000000'])
   const { data, loading } = useGetFullCreatorTokenQuery({
     variables: {
@@ -63,7 +65,8 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
       SentryLogger.error('Error while fetching creator token', 'BuyMarketTokenModal', error)
     },
   })
-  const hasActiveRevenueShare = data?.creatorTokenById?.revenueShares.some((rS) => !rS.finalized)
+  const activeRevenueShare = data?.creatorTokenById?.revenueShares.find((rS) => !rS.finalized)
+  const hasActiveRevenueShare = (activeRevenueShare?.endsAt ?? 0) > currentBlockRef.current
   const { data: memberTokenAccount } = useGetCreatorTokenHoldersQuery({
     variables: {
       where: {

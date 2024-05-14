@@ -1,11 +1,12 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
 
 import { Pagination } from '@/components/Pagination'
 import { Text } from '@/components/Text'
 import { cVar, sizes } from '@/styles'
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.div<{ interactive?: boolean }>`
   background-color: ${cVar('colorBackgroundMuted')};
   overflow: auto;
 
@@ -14,6 +15,25 @@ export const Wrapper = styled.div`
       cursor: pointer;
     }
   }
+
+  ${(props) =>
+    props.interactive
+      ? css`
+          .table-row {
+            transition: background-color 300ms ease-in-out;
+            border-radius: ${cVar('radiusMedium')};
+
+            :hover {
+              cursor: pointer;
+              background: ${cVar('colorBackgroundMutedAlpha')};
+            }
+          }
+        `
+      : ''}
+`
+
+export const AnchorRow = styled(Link)`
+  text-decoration: none;
 `
 
 export const TableBase = styled.table`

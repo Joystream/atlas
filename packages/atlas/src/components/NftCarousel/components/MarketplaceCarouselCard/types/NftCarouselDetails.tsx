@@ -1,6 +1,7 @@
 import BN from 'bn.js'
 import { ReactNode, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
+import { Link } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
 import { getNftStatus } from '@/api/hooks/nfts'
@@ -12,6 +13,7 @@ import {
   Container,
   DetailsContainer,
   InformationContainer,
+  LinkArea,
   StatsContainer,
   StyledLink,
   VideoContainer,
@@ -224,6 +226,7 @@ type VideoCardWrapperProps = {
   mediaUrls: string[]
   thumbnailUrls: string[]
   goNextSlide: () => void
+  to?: string
   details: ReactNode
 }
 
@@ -233,28 +236,33 @@ export const VideoCardWrapper = ({
   thumbnailUrls,
   mediaUrls,
   videoId,
+  to,
   details,
 }: VideoCardWrapperProps) => {
   const [isPaused, setIsPaused] = useState(!active)
-  const debouncedActive = useDebounceValue(active, 500)
+  const debouncedActive = useDebounceValue(active, 800, true)
 
   return (
     <Container>
+      <Link to={to ? to : absoluteRoutes.viewer.video(videoId)}>
+        <LinkArea />
+      </Link>
       <VideoContainer>
         {active ? (
           <BackgroundVideoPlayer
             videoId={videoId}
-            withFade={active ? debouncedActive : active}
-            playing={active ? debouncedActive : active}
+            withFade={active ? !!debouncedActive : active}
+            playing={active ? !!debouncedActive : active}
             muted={true}
             onPause={() => setIsPaused(true)}
             onPlay={() => setIsPaused(false)}
             preload="auto"
             src={mediaUrls ?? undefined}
             poster={thumbnailUrls ?? undefined}
-            handleActions={active ? debouncedActive : active}
+            handleActions={active ? !!debouncedActive : active}
             videoPlaytime={30}
             onEnded={goNextSlide}
+            customLink={to}
           />
         ) : (
           <VideoWrapper>

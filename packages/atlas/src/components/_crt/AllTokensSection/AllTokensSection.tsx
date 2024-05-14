@@ -6,6 +6,7 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { Section } from '@/components/Section/Section'
 import { Button } from '@/components/_buttons/Button'
 import { MarketplaceCrtTable } from '@/components/_crt/MarketplaceCrtTable'
+import { absoluteRoutes } from '@/config/routes'
 import { SORTING_FILTERS, useCrtSectionFilters } from '@/hooks/useCrtSectionFilters'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useTokensPagination } from '@/hooks/useTokensPagniation'
@@ -71,6 +72,8 @@ export const AllTokensSection = () => {
                 <MarketplaceCrtTable
                   key="single-table"
                   data={tableData}
+                  getRowTo={(idx) => absoluteRoutes.viewer.channel(tableData[idx]?.channelId ?? '', { tab: 'Token' })}
+                  interactive
                   isLoading={isLoading}
                   pageSize={perPage}
                   pagination={{

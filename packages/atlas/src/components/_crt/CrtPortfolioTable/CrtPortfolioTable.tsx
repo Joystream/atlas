@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import { ReactElement, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router'
 
 import { useBasicChannel } from '@/api/hooks/channel'
 import { TokenStatus } from '@/api/queries/__generated__/baseTypes.generated'
@@ -81,6 +80,7 @@ export const CrtPortfolioTable = ({ data, emptyState, isLoading }: CrtPortfolioT
 
   const mappingData = useMemo(() => {
     return [...data].slice(currentPage * perPage, currentPage * perPage + perPage).map((row) => ({
+      channelId: row.channelId,
       token: <TokenInfo {...row} />,
       status: <CrtStatus status={row.status} />,
       transferable: (
@@ -130,6 +130,8 @@ export const CrtPortfolioTable = ({ data, emptyState, isLoading }: CrtPortfolioT
         pageSize={data.length || undefined}
         columns={COLUMNS}
         data={isLoading ? tableLoadingData : mappingData}
+        getRowTo={(idx) => absoluteRoutes.viewer.channel(mappingData[idx]?.channelId ?? '', { tab: 'Token' })}
+        interactive={!isLoading}
         emptyState={emptyState}
         pagination={{
           setPerPage,
@@ -152,21 +154,10 @@ export const TokenInfo = ({
   customAvatar?: ReactElement
 }) => {
   const { channel } = useBasicChannel(channelId ?? '')
-  const navigate = useNavigate()
   return (
     <FlexBox minWidth="100px" alignItems="center" gap={2}>
-      {customAvatar ?? (
-        <Avatar
-          assetUrls={channel?.avatarPhoto?.resolvedUrls}
-          onClick={() => (channelId ? navigate(absoluteRoutes.viewer.channel(channelId, { tab: 'Token' })) : undefined)}
-        />
-      )}
-
-      <FlexBox
-        onClick={() => (channelId ? navigate(absoluteRoutes.viewer.channel(channelId, { tab: 'Token' })) : undefined)}
-        className="pointer"
-        alignItems="center"
-      >
+      {customAvatar ?? <Avatar assetUrls={channel?.avatarPhoto?.resolvedUrls} />}
+      <FlexBox className="pointer" alignItems="center">
         <Text variant="h200" as="h1">
           {tokenTitle}
         </Text>

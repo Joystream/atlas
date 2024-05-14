@@ -5,6 +5,7 @@ import { useMemo } from 'react'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Table, TableProps } from '@/components/Table'
 import { DateBlockCell, LoadingMemberRow, TokenAmount } from '@/components/Table/Table.cells'
+import { absoluteRoutes } from '@/config/routes'
 
 const COLUMNS: TableProps['columns'] = [
   { Header: 'Date', accessor: 'stakedAt' },
@@ -29,13 +30,23 @@ export const RevenueShareStakersTable = ({ data, tokenSymbol = 'N/A' }: RevenueS
       return {
         stakedAt: <DateBlockCell type="block" block={row.stakedAtBlock} />,
         member: <LoadingMemberRow memberId={row.memberId} />,
+        memberId: row.memberId,
         staked: <NumberFormat value={row.staked} as="p" variant="t100" withToken customTicker={`$${tokenSymbol}`} />,
         earnings: <TokenAmount variant="t100-strong" tokenAmount={row.earnings} />,
       }
     })
   }, [data, tokenSymbol])
 
-  return <StyledTable title="Staked holders" minWidth={610} columns={COLUMNS} data={mappedData} />
+  return (
+    <StyledTable
+      title="Staked holders"
+      minWidth={610}
+      columns={COLUMNS}
+      data={mappedData}
+      getRowTo={(idx) => absoluteRoutes.viewer.memberById(mappedData[idx]?.memberId ?? '')}
+      interactive
+    />
+  )
 }
 
 const StyledTable = styled(Table)`
