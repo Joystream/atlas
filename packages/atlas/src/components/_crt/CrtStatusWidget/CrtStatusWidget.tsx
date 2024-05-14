@@ -71,14 +71,8 @@ export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({ token }) => {
               <DetailsContent
                 avoidIconStyling
                 tileSize={smMatch ? 'big' : 'bigSmall'}
-                caption="Market cap"
-                content={
-                  token.lastPrice && token.totalSupply
-                    ? hapiBnToTokenNumber(new BN(token.lastPrice).muln(+token.totalSupply))
-                    : 0
-                }
-                icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
-                withDenomination
+                caption="Total supply"
+                content={+token.totalSupply}
               />
               <DetailsContent
                 avoidIconStyling

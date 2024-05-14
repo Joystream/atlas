@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 
 import { FullCreatorTokenFragment } from '@/api/queries/__generated__/fragments.generated'
 import { HoldersTable } from '@/components/_crt/HoldersTable/HoldersTable'
+import { absoluteRoutes } from '@/config/routes'
 import { useHoldersPagination } from '@/hooks/useHoldersPagination'
 import { useUser } from '@/providers/user/user.hooks'
 
@@ -37,6 +38,8 @@ export const CrtHoldersTab = ({ token }: CrtHoldersTabProps) => {
   return (
     <HoldersTable
       data={mappedData}
+      getRowTo={(idx) => absoluteRoutes.viewer.memberById(mappedData[idx]?.member.id ?? '')}
+      interactive
       isLoading={isLoading}
       currentMemberId={memberId ?? ''}
       symbol={token.symbol ?? 'N/A'}

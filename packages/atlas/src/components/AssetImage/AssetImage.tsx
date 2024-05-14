@@ -27,10 +27,12 @@ export const AssetImage: FC<AssetImageProps> = ({ resolvedUrls, isLoading, type,
       >
         {loading ? (
           <SkeletonLoader className={imgProps.className} />
-        ) : imagePlaceholder && !url ? (
+        ) : url ? (
+          <img {...imgProps} src={url} />
+        ) : imagePlaceholder ? (
           <>{imagePlaceholder}</>
         ) : (
-          <img {...imgProps} src={url} />
+          <span />
         )}
       </CSSTransition>
     </SwitchTransition>

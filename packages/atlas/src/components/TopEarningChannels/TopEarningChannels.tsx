@@ -38,7 +38,7 @@ const COLUMNS: TableProps['columns'] = [
     width: 9,
   },
   {
-    Header: () => <RightAlignedHeader>REVENUE VOLUME</RightAlignedHeader>,
+    Header: () => <RightAlignedHeader>REVENUE</RightAlignedHeader>,
     accessor: 'salesVolume',
     width: 4,
   },
@@ -61,7 +61,7 @@ export const TopEarningChannels = ({ withCrtOnly }: { withCrtOnly?: boolean }) =
   })
 
   const lgMatch = useMediaMatch('lg')
-  const mappedData: TableProps['data'] = useMemo(() => {
+  const mappedData = useMemo(() => {
     return loading
       ? Array.from({ length: 10 }, () => ({
           index: null,
@@ -72,6 +72,7 @@ export const TopEarningChannels = ({ withCrtOnly }: { withCrtOnly?: boolean }) =
             </SkeletonChannelContainer>
           ),
           salesVolume: <SkeletonLoader width="100%" height={16} />,
+          channelId: null,
         }))
       : channels?.map((data, index) => ({
           index: (
@@ -94,6 +95,7 @@ export const TopEarningChannels = ({ withCrtOnly }: { withCrtOnly?: boolean }) =
             </JoyAmountWrapper>
           ),
           channel: <Channel channel={data} />,
+          channelId: data.id,
         })) ?? []
   }, [channels, loading])
 
@@ -124,6 +126,10 @@ export const TopEarningChannels = ({ withCrtOnly }: { withCrtOnly?: boolean }) =
             columns={COLUMNS}
             data={mappedData}
             doubleColumn={lgMatch}
+            getRowTo={(idx) =>
+              absoluteRoutes.viewer.channel(mappedData[idx].channelId ?? '', { tab: withCrtOnly ? 'Token' : 'Videos' })
+            }
+            interactive
           />,
         ],
       }}
