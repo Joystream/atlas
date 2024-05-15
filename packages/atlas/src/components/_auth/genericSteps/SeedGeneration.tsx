@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { mnemonicGenerate } from '@polkadot/util-crypto'
-import { useCallback, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { AppLogo } from '@/components/AppLogo'
@@ -14,13 +14,13 @@ import { cVar, sizes } from '@/styles'
 
 type SeedGenerationForm = {
   allowDownload: boolean
-  mnemonic: string
+  mnemonic?: string
 }
 
 type SeedGenerationProps = {
-  onSubmit: (data: SeedGenerationForm) => void
+  onSubmit: (data: Pick<SeedGenerationForm, 'mnemonic'>) => void
   setActionButtonHandler: (fn: () => void | Promise<void>) => void
-  defaultValues?: SeedGenerationForm
+  defaultValues?: Pick<SeedGenerationForm, 'mnemonic'>
 }
 
 export const SeedGeneration = ({ setActionButtonHandler, onSubmit, defaultValues }: SeedGenerationProps) => {
@@ -41,29 +41,27 @@ export const SeedGeneration = ({ setActionButtonHandler, onSubmit, defaultValues
     }
   }, [mnemonic, setValue])
 
-  const handleGoToNextStep = useCallback(() => {
-    handleSubmit((data) => {
-      const downloadSeed = () => {
-        const blobText = new Blob([data.mnemonic], { type: 'text/plain' })
-        const url = URL.createObjectURL(blobText)
-        const link = document.createElement('a')
-        link.href = url
-        link.download = 'mnemonic.txt'
-        link.click()
-
-        link.remove()
-        URL.revokeObjectURL(url)
-      }
-
-      onSubmit(data)
-      if (data.allowDownload) {
-        downloadSeed()
-      }
-    })()
-  }, [handleSubmit, onSubmit])
-
   useMountEffect(() => {
-    setActionButtonHandler(() => handleGoToNextStep())
+    setActionButtonHandler(() => {
+      handleSubmit((data) => {
+        const downloadSeed = () => {
+          const blobText = new Blob([data.mnemonic ?? ''], { type: 'text/plain' })
+          const url = URL.createObjectURL(blobText)
+          const link = document.createElement('a')
+          link.href = url
+          link.download = 'mnemonic.txt'
+          link.click()
+
+          link.remove()
+          URL.revokeObjectURL(url)
+        }
+
+        onSubmit(data)
+        if (data.allowDownload) {
+          downloadSeed()
+        }
+      })()
+    })
   })
 
   return (

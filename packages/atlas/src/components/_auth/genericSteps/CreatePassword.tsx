@@ -17,8 +17,8 @@ import { cVar, sizes } from '@/styles'
 import { passwordAndRepeatPasswordSchema } from '@/utils/formValidationOptions'
 
 type NewPasswordForm = {
-  password: string
-  confirmPassword: string
+  password?: string
+  confirmPassword?: string
   captchaToken?: string
 }
 
