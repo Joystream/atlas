@@ -41,15 +41,20 @@ import { StatusDot, StatusDotWrapper, WidgetTileContent, YppSyncStatus } from '.
 const benefitsMetadata = {
   discordCommunity: {
     title: 'Discord Community',
-    description:
-      'Connect with other creators on Discord and participate in building the platform with us. Each week 5 new active participants selected by community are rewarded with new joiner bonus.',
+    description: (
+      <>
+        Introduce yourself to the{' '}
+        <TextButton to="https://discord.com/channels/811216481340751934/1231910540243238932">intros</TextButton> channel
+        and share the link to your {atlasConfig.general.appName} channel page. Five best intros per weeks are rewarded!
+      </>
+    ),
     reward: '10 USD',
     actionLink: 'https://discord.com/channels/811216481340751934/1224709788592767136',
     tooltipLink: 'https://www.notion.so/joystream/Creators-Discord-bc8df1d87b58435a9ea325b073bea4d6?pvs=4',
   },
   twitterPost: {
     title: 'Post on X',
-    description: 'Follow JoystreamDAO on X and post about why you signed up to Gleev.',
+    description: `Follow JoystreamDAO on X and post about why you signed up to ${atlasConfig.general.appName} using hashtag #${atlasConfig.general.appName}Web3Creators mentioning @JoystreamDAO to get a chance of weekly reward.`,
     reward: '10 USD',
     actionLink: 'https://twitter.com/joystreamdao?lang=en',
     tooltipLink:
@@ -65,14 +70,12 @@ const benefitsMetadata = {
   originalCreatorsContent: {
     title: `${atlasConfig.general.appName} Original Content`,
     description: `Earn more by publishing content to ${atlasConfig.general.appName} at least 24 hours ahead of YouTube. Make sure to add hashtag #JoystreamOriginal and hyperlink to the video uploaded to ${atlasConfig.general.appName}. Text of the link should be #watchOn${atlasConfig.general.appName}.`,
-    reward: 'x5 per video',
     actionLink: 'https://athd8d2ml5u.typeform.com/to/jvKcRyCP',
     tooltipLink: 'https://www.notion.so/joystream/Original-Content-Rewards-de1acdc52ef549119b700df106675ce4?pvs=4',
   },
   branding: {
     title: `${atlasConfig.general.appName} Branding`,
     description: `Add Joystream branding to your video and multiply your rewards for original uploads to ${atlasConfig.general.appName}. Branded video description posted to Youtube must contain hashtag #jsb and  #watchOn${atlasConfig.general.appName}.`,
-    reward: 'x5 per video',
     actionLink: 'https://athd8d2ml5u.typeform.com/to/jvKcRyCP',
     tooltipLink:
       'https://www.notion.so/joystream/Original-Content-de1acdc52ef549119b700df106675ce4?pvs=4#aa1c28df46ff45e0b81be7a84fc18faf',
@@ -272,11 +275,20 @@ export const YppDashboardMainTab: FC = () => {
             title="Get rewards for auto-sync"
             description="Get paid for every new video published on YouTube after the date of sign up. Minimum video duration has to be 5 minutes. Max videos rewarded are 3 per week."
             rewardNode={
-              !currentChannel || !currentChannel.yppStatus.startsWith('Verified')
-                ? currentChannel?.yppStatus.startsWith('Suspended')
-                  ? undefined
-                  : 'Up to 5 USD'
-                : `+${getTierRewards(yppBackendTierToConfig(currentChannel.yppStatus))?.videoSync} USD`
+              !currentChannel || !currentChannel.yppStatus.startsWith('Verified') ? (
+                currentChannel?.yppStatus.startsWith('Suspended') ? undefined : (
+                  <FlexBox alignItems="end" flow="column" gap={0}>
+                    <Text variant="h400" as="h3">
+                      Up to 5 USD
+                    </Text>
+                    <Text variant="t200" as="p" color="colorText">
+                      per video
+                    </Text>
+                  </FlexBox>
+                )
+              ) : (
+                `+${getTierRewards(yppBackendTierToConfig(currentChannel.yppStatus))?.videoSync} USD`
+              )
             }
             rewardTooltip={
               <Text variant="t100" as="span">
@@ -343,8 +355,9 @@ export const YppDashboardMainTab: FC = () => {
             rewardTooltip={
               <Text variant="t100" as="span">
                 We are proud to be building a vibrant community of forward looking creators across a wide set of content
-                categories. To stay ahead of the new opportunities to earn with Gleev and connect with the peers and
-                support team join our Discord. Newcomers are rewarded with JOY tokens for active participation.{'\n'}
+                categories. To stay ahead of the new opportunities to earn with {atlasConfig.general.appName} and
+                connect with the peers and support team join our Discord. Newcomers are rewarded with JOY tokens for
+                active participation.{'\n'}
                 <TextButton to={benefitsMetadata.discordCommunity.tooltipLink}>Learn more</TextButton>
               </Text>
             }
@@ -404,11 +417,23 @@ export const YppDashboardMainTab: FC = () => {
           <BenefitCard
             title={benefitsMetadata.originalCreatorsContent.title}
             description={benefitsMetadata.originalCreatorsContent.description}
-            rewardNode={benefitsMetadata.originalCreatorsContent.reward}
+            rewardNode={
+              <FlexBox alignItems="end" flow="column" gap={0}>
+                <Text variant="h400" as="h3">
+                  {currentChannel?.yppStatus
+                    ? (getTierRewards(yppBackendTierToConfig(currentChannel.yppStatus))?.videoSync || 0) * 5
+                    : 'Up to 25'}{' '}
+                  USD
+                </Text>
+                <Text variant="t200" as="p" color="colorText">
+                  per video
+                </Text>
+              </FlexBox>
+            }
             rewardTooltip={
               <Text variant="t100" as="span">
-                Original content published to Gleev is rewarded at a multiple. We are gathering applicants for the beta
-                testing of this feature. Apply early for higher multiples.{'\n'}
+                Original content published to {atlasConfig.general.appName} is rewarded at a multiple. We are gathering
+                applicants for the beta testing of this feature. Apply early for higher multiples.{'\n'}
                 <TextButton to={benefitsMetadata.originalCreatorsContent.tooltipLink}>Learn more</TextButton>
               </Text>
             }
@@ -427,12 +452,25 @@ export const YppDashboardMainTab: FC = () => {
           <BenefitCard
             title={benefitsMetadata.branding.title}
             description={benefitsMetadata.branding.description}
-            rewardNode={benefitsMetadata.branding.reward}
+            rewardNode={
+              <FlexBox alignItems="end" flow="column" gap={0}>
+                <Text variant="h400" as="h3">
+                  {currentChannel?.yppStatus
+                    ? (getTierRewards(yppBackendTierToConfig(currentChannel.yppStatus))?.videoSync || 0) * 5
+                    : 'Up to 25'}{' '}
+                  USD
+                </Text>
+                <Text variant="t200" as="p" color="colorText">
+                  per video
+                </Text>
+              </FlexBox>
+            }
             rewardTooltip={
               <Text variant="t100" as="span">
-                Using branded assets as a preroll for your videos published to Gleev first allow to maximise the
-                rewards. We are gathering early applicants for the beta test of this feature. Apply early to get higher
-                multiple. <TextButton to={benefitsMetadata.branding.tooltipLink}>Learn more</TextButton>
+                Using branded assets as a preroll for your videos published to {atlasConfig.general.appName} first allow
+                to maximise the rewards. We are gathering early applicants for the beta test of this feature. Apply
+                early to get higher multiple.{' '}
+                <TextButton to={benefitsMetadata.branding.tooltipLink}>Learn more</TextButton>
               </Text>
             }
             actionNode={
