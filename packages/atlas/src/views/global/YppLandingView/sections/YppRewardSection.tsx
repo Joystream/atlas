@@ -18,6 +18,7 @@ import { ColorAnchor } from './YppRewardSection.styles'
 import {
   BackgroundContainer,
   CenteredLayoutGrid,
+  RewardsSubText,
   StyledLimitedWidthContainer,
   TierCardWrapper,
 } from '../YppLandingView.styles'
@@ -98,18 +99,10 @@ export const YppRewardSection: FC = () => {
               ]
               return <TierCard key={tier.tier} {...tier} rewards={modifiedRewards} />
             })}
-          </TierCardWrapper>
-          <FlexGridItem
-            colSpan={{ base: 12, sm: 10, md: 12, lg: 10 }}
-            colStart={{ sm: 2, md: 1, lg: 2 }}
-            alignItems="center"
-            marginTop={mdMatch ? -2 : 0}
-            justifyContent="start"
-          >
-            <Text variant="t200" as="p" color="colorTextMuted">
+            <RewardsSubText variant="t200" as="p" color="colorTextMuted">
               *Referral rewards depend on the tier of the invited channel.
-            </Text>
-          </FlexGridItem>
+            </RewardsSubText>
+          </TierCardWrapper>
           <FlexGridItem
             colSpan={{ base: 12, sm: 10, md: 12, lg: 10 }}
             colStart={{ sm: 2, md: 1, lg: 2 }}

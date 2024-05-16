@@ -53,7 +53,7 @@ function QuarterPanel({ data }: QuarterPanelProps) {
 
   useEffect(() => {
     const handleScroll = () => {
-      const timelineItems = document.querySelectorAll<HTMLDivElement>('.QuarterPanel__submain')
+      const timelineItems = document.querySelectorAll<HTMLDivElement>('.quarter-panel-submain')
       const scroll = window.scrollY
       const MOVING_CIRCLE_HEIGHT = 24
       timelineItems.forEach((item, index) => {
@@ -78,7 +78,7 @@ function QuarterPanel({ data }: QuarterPanelProps) {
         }
       })
 
-      const timelineText = document.querySelectorAll<HTMLDivElement>('.QuarterPanel__main__rigth')
+      const timelineText = document.querySelectorAll<HTMLDivElement>('.quarter-panel-main__rigth')
       timelineText.forEach((item, index) => {
         const itemTop = item.offsetTop
         if (scroll > itemTop - offset) {
@@ -128,51 +128,51 @@ function QuarterPanel({ data }: QuarterPanelProps) {
     <Box style={{ width: '100%' }}>
       {data.quarters.map((res, index) => {
         return (
-          <div className="QuarterPanel__main" key={index}>
-            <div className="QuarterPanel__main__rigth">
+          <div className="quarter-panel-main" key={index}>
+            <div className="quarter-panel-main__rigth">
               <div
-                className={cn('QuarterPanel__main__title', {
-                  'QuarterPanel__main__title--active': index === activeText || activeText === data.quarters.length,
+                className={cn('quarter-panel-main__title', {
+                  'quarter-panel-main__title--active': index === activeText || activeText === data.quarters.length,
                 })}
               >
-                <div className="QuarterPanel__main__subtitle">{res.year}</div>
-                <div className="QuarterPanel__main__quarters">{res.id}</div>
+                <div className="quarter-panel-main__subtitle">{res.year}</div>
+                <div className="quarter-panel-main__quarters">{res.id}</div>
               </div>
             </div>
             <div>
               {res.deliveryMilestones.map((milestone, deliveryMilestoneIndex) => {
                 return (
                   <div
-                    className="QuarterPanel__submain"
+                    className="quarter-panel-submain"
                     key={deliveryMilestoneIndex}
                     id={`panel${milestone.generalIndex}`}
                   >
-                    <div className="QuarterPanel__main__timeline">
-                      <div className="QuarterPanel__main__line__line" />
+                    <div className="quarter-panel-main__timeline">
+                      <div className="quarter-panel-main__line__line" />
                       <div
-                        className={cn('QuarterPanel__main__line__dot', {
-                          'QuarterPanel__main__line__dot--active':
+                        className={cn('quarter-panel-main__line__dot', {
+                          'quarter-panel-main__line__dot--active':
                             milestone.generalIndex === activeItem && dotActiveState,
-                          'QuarterPanel__main__line__dot--hide': (milestone.generalIndex ?? 0) < activeItem,
-                          'QuarterPanel__main__line__dot--stick':
+                          'quarter-panel-main__line__dot--hide': (milestone.generalIndex ?? 0) < activeItem,
+                          'quarter-panel-main__line__dot--stick':
                             !dotActiveState && milestone.generalIndex === 0 && activeItem === 0,
                         })}
                       />
                     </div>
 
                     <div
-                      className={cn('QuarterPanel__main__panel', {
-                        'QuarterPanel__main__panel--active': isPanelActive(
+                      className={cn('quarter-panel-main__panel', {
+                        'quarter-panel-main__panel--active': isPanelActive(
                           res.deliveryMilestones,
                           deliveryMilestoneIndex,
                           milestone
                         ),
                       })}
                     >
-                      <div className="QuarterPanel__main__link">
+                      <div className="quarter-panel-main__link">
                         <div
-                          className={cn('QuarterPanel__main__playIcon', {
-                            'QuarterPanel__main__playIcon--active': isPanelActive(
+                          className={cn('quarter-panel-main__playIcon', {
+                            'quarter-panel-main__playIcon--active': isPanelActive(
                               res.deliveryMilestones,
                               deliveryMilestoneIndex,
                               milestone
@@ -180,8 +180,8 @@ function QuarterPanel({ data }: QuarterPanelProps) {
                           })}
                         >
                           <img
-                            className={cn('mileston__icon', {
-                              'mileston__icon--active': isPanelActive(
+                            className={cn('mileston-icon', {
+                              'mileston-icon--active': isPanelActive(
                                 res.deliveryMilestones,
                                 deliveryMilestoneIndex,
                                 milestone
@@ -191,10 +191,10 @@ function QuarterPanel({ data }: QuarterPanelProps) {
                             alt="Mileston icon"
                           />
                         </div>
-                        {/*<div className="QuarterPanel__main__linkIcon">*/}
+                        {/*<div className="quarter-panel-main__linkIcon">*/}
                         {/*  /!*<TooltipPanel text="Copy link to share" activeText="Link copied to the clipboard!">*!/*/}
                         {/*  /!*  <button*!/*/}
-                        {/*  /!*    className="QuarterPanel__main__linkIcon__icon linkBtn"*!/*/}
+                        {/*  /!*    className="quarter-panel-main__linkIcon__icon linkBtn"*!/*/}
                         {/*  /!*    onClick={() => getLink(milestone.generalIndex)}*!/*/}
                         {/*  /!*  />*!/*/}
                         {/*  /!*</TooltipPanel>*!/*/}
@@ -229,25 +229,25 @@ function QuarterPanel({ data }: QuarterPanelProps) {
           </div>
         )
       })}
-      <div className="QuarterPanel__main">
-        <div className="QuarterPanel__main__rigth" style={{ opacity: 0 }}>
-          <div className="QuarterPanel__main__title">
-            <div className="QuarterPanel__main__subtitle" />
-            <div className="QuarterPanel__main__quarters" />
+      <div className="quarter-panel-main">
+        <div className="quarter-panel-main__rigth" style={{ opacity: 0 }}>
+          <div className="quarter-panel-main__title">
+            <div className="quarter-panel-main__subtitle" />
+            <div className="quarter-panel-main__quarters" />
           </div>
         </div>
-        <div className="QuarterPanel__submain">
-          <div className="QuarterPanel__main__timeline">
+        <div className="quarter-panel-submain">
+          <div className="quarter-panel-main__timeline">
             <div
-              className={cn('QuarterPanel__main__line__dot', {
-                'QuarterPanel__main__line__dot--hide': numberOfItems !== activeItem,
-                'QuarterPanel__main__line__dot--active': numberOfItems === activeItem && dotActiveState,
+              className={cn('quarter-panel-main__line__dot', {
+                'quarter-panel-main__line__dot--hide': numberOfItems !== activeItem,
+                'quarter-panel-main__line__dot--active': numberOfItems === activeItem && dotActiveState,
               })}
             />
-            <div className="QuarterPanel__main__line__line" />
+            <div className="quarter-panel-main__line__line" />
             <div
-              className={cn('QuarterPanel__main__line__dotbottom', {
-                'QuarterPanel__main__line__dotbottom--active': 0 !== activeItem && !dotActiveState,
+              className={cn('quarter-panel-main__line__dotbottom', {
+                'quarter-panel-main__line__dotbottom--active': 0 !== activeItem && !dotActiveState,
               })}
             />
           </div>
@@ -287,7 +287,7 @@ export default function cn(def: string, args?: Record<string, boolean>) {
 const Box = styled.div`
   margin: 100px 0;
 
-  .QuarterPanel__submain {
+  .quarter-panel-submain {
     display: grid;
     flex-direction: column;
     gap: 30px;
@@ -340,7 +340,7 @@ const Box = styled.div`
     }
   }
 
-  .QuarterPanel__main {
+  .quarter-panel-main {
     display: grid;
     flex-direction: column;
     width: 1030px;
@@ -553,7 +553,6 @@ const Box = styled.div`
       grid-template-columns: 70px 610px;
 
       &__subtitle {
-        //styleName: h5;
         font-size: 28px;
         font-weight: 400;
         line-height: 36px;
@@ -561,7 +560,6 @@ const Box = styled.div`
       }
 
       &__quarters {
-        //styleName: h6;
         font-size: 24px;
         font-weight: 400;
         line-height: 32px;
@@ -669,7 +667,7 @@ const Box = styled.div`
     }
   }
 
-  .mileston__icon {
+  .mileston-icon {
     width: 24px;
     height: 24px;
 

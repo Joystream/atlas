@@ -6,6 +6,7 @@ import bottomLeftPattern from '@/assets/images/ypp-background-pattern.svg'
 import { FlexBox } from '@/components/FlexBox'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { Text } from '@/components/Text'
 import { cVar, media, sizes } from '@/styles'
 
 export const imageShadow = css`
@@ -165,4 +166,8 @@ export const HeroBackgroundContainer = styled(BackgroundContainer)`
     padding-top: ${sizes(8)};
     ${backgroundPattern};
   }
+`
+
+export const RewardsSubText = styled(Text)`
+  grid-column: 1/3;
 `
