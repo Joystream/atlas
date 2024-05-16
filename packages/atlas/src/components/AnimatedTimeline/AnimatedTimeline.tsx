@@ -251,18 +251,6 @@ function QuarterPanel({ data }: QuarterPanelProps) {
               })}
             />
           </div>
-          <div
-            className={cn('QuarterPanel__main__panel', {
-              'QuarterPanel__main__panel--active':
-                (numberOfItems === activeItem + 1 && isNextItemActive) ||
-                numberOfItems === activeItem ||
-                (activeItem >= 0 && !dotActiveState),
-            })}
-          >
-            <Text variant="t400" as="p" color="colorText">
-              More plans
-            </Text>
-          </div>
         </div>
       </div>
       <DialogModal

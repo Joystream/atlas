@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { MutableRefObject } from 'react'
 
 import { SvgLogoDiscordMonochrome } from '@/assets/icons'
 import viewer_earnings_crt from '@/assets/images/viewer-earnings/viewer-earning-crt-trade.webp'
@@ -47,7 +48,7 @@ const viewerEarningsOptions = [
   },
 ]
 
-export const ViewerOpportunities = () => {
+export const ViewerOpportunities = ({ sectionRef }: { sectionRef: MutableRefObject<HTMLDivElement | null> }) => {
   const mdMatch = useMediaMatch('md')
   const smMatch = useMediaMatch('sm')
   const [titleVariant, subtitleVariant] = useSectionTextVariants()
@@ -56,7 +57,7 @@ export const ViewerOpportunities = () => {
     : (['h500', 't300'] as const)
 
   return (
-    <BackgroundContainer>
+    <BackgroundContainer ref={sectionRef}>
       <StyledLimitedWidthContainer centerText>
         <CenteredLayoutGrid>
           <HeaderGridItem
