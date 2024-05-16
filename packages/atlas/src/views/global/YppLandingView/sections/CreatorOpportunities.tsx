@@ -8,9 +8,12 @@ import earning_yt from '@/assets/images/earnings/earning-yt.webp'
 import { FlexBox } from '@/components/FlexBox'
 import { FlexGridItem, GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
-import { TextButton } from '@/components/_buttons/Button'
+import { Button, TextButton } from '@/components/_buttons/Button'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useAuthStore } from '@/providers/auth/auth.store'
+import { useUser } from '@/providers/user/user.hooks'
+import { useYppStore } from '@/providers/ypp/ypp.store'
 import { cVar, media, sizes } from '@/styles'
 import {
   BackgroundContainer,
@@ -43,8 +46,11 @@ const earningsOptions = [
   },
 ]
 
-export const CreatorOpportunities = () => {
-  // const xsMatch = useMediaMatch('xs')
+export const CreatorOpportunities = ({ onSignUpClick }: { onSignUpClick: () => void }) => {
+  const setIsYppChannelFlow = useYppStore((state) => state.actions.setIsYppChannelFlow)
+  const setAuthModalOpenName = useAuthStore((state) => state.actions.setAuthModalOpenName)
+  const { memberChannels, isLoggedIn } = useUser()
+  const xsMatch = useMediaMatch('xs')
   const mdMatch = useMediaMatch('md')
   const smMatch = useMediaMatch('sm')
   const [titleVariant, subtitleVariant] = useSectionTextVariants()
@@ -69,7 +75,7 @@ export const CreatorOpportunities = () => {
               Creator Earning Opportunities
             </Text>
             <Text
-              variant={mdMatch ? 't500' : subtitleVariant}
+              variant={mdMatch ? 't400' : subtitleVariant}
               as="p"
               color="colorText"
               data-aos="fade-up"
@@ -82,15 +88,15 @@ export const CreatorOpportunities = () => {
               Web3 native features.
             </Text>
           </HeaderGridItem>
-          <EarningsBox colSpan={{ base: 12, sm: 10 }} colStart={{ base: 1, sm: 2 }}>
+          <EarningsBox colSpan={{ base: 12, xs: 10 }} colStart={{ base: 1, xs: 2 }}>
             {earningsOptions.map(({ title, subtitle, image }, idx) => (
-              <FlexBox key={idx} gap={4} flow="column">
+              <FlexBox key={idx} gap={2} flow="column">
                 <ImageBox>
                   <Image alt={`${title} image`} src={image} width="610px" height="420px" />
                   <ImageBorder />
                 </ImageBox>
 
-                <Text margin={{ top: 4 }} variant={earningTitleVariant} as="h3">
+                <Text margin={{ top: 2 }} variant={earningTitleVariant} as="h3">
                   {title}
                 </Text>
                 <Text variant={earningSubtitleVariant} as="p" color="colorText">
@@ -107,14 +113,24 @@ export const CreatorOpportunities = () => {
             colSpan={{ base: 12 }}
             colStart={{ base: 1 }}
           >
-            {/*<FlexBox width="100%" flow={xsMatch ? 'row' : 'column'} alignItems="center" justifyContent="center" gap={4}>*/}
-            {/*  <Button fullWidth={!xsMatch} size="large">*/}
-            {/*    Create New Channel*/}
-            {/*  </Button>*/}
-            {/*  <Button fullWidth={!xsMatch} size="large" variant="secondary">*/}
-            {/*    Sync from YouTube*/}
-            {/*  </Button>*/}
-            {/*</FlexBox>*/}
+            <FlexBox width="100%" flow={xsMatch ? 'row' : 'column'} alignItems="center" justifyContent="center" gap={4}>
+              <Button onClick={onSignUpClick} fullWidth={!xsMatch} size="large">
+                Sync from YouTube
+              </Button>
+              {!memberChannels?.length ? (
+                <Button
+                  onClick={() => {
+                    setIsYppChannelFlow(true)
+                    setAuthModalOpenName(isLoggedIn ? 'createChannel' : 'signUp')
+                  }}
+                  fullWidth={!xsMatch}
+                  size="large"
+                  variant="secondary"
+                >
+                  Create New Channel
+                </Button>
+              ) : null}
+            </FlexBox>
             <TextButton
               to={atlasConfig.general.joystreamDiscordUrl}
               size="large"
@@ -136,7 +152,7 @@ export const EarningsBox = styled(GridItem)`
   text-align: left;
   row-gap: ${sizes(13)};
 
-  ${media.md} {
+  ${media.sm} {
     grid-template-columns: 1fr 1fr;
     column-gap: ${sizes(6)};
     row-gap: ${sizes(24)};

@@ -109,12 +109,12 @@ export const TierCardWrapper = styled(GridItem)`
   ${media.sm} {
     display: grid;
     justify-content: center;
-    grid-template-columns: repeat(2, auto);
+    grid-template-columns: repeat(2, minmax(auto, 250px));
   }
 
   ${media.md} {
     gap: ${sizes(6)};
-    grid-template-columns: repeat(4, auto);
+    grid-template-columns: repeat(4, minmax(auto, 250px));
   }
 `
 

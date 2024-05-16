@@ -85,15 +85,15 @@ export const ViewerOpportunities = () => {
               contributing to {atlasConfig.general.appName} community growth with referrals.
             </Text>
           </HeaderGridItem>
-          <EarningsBox colSpan={{ base: 12, sm: 10 }} colStart={{ base: 1, sm: 2 }}>
+          <EarningsBox colSpan={{ base: 12, xs: 10 }} colStart={{ base: 1, xs: 2 }}>
             {viewerEarningsOptions.map(({ title, subtitle, image }, idx) => (
-              <FlexBox key={idx} gap={4} flow="column">
+              <FlexBox key={idx} gap={2} flow="column">
                 <ImageBox>
                   <Image alt={`${title} image`} src={image} width="529px" height="360" />
                   <ImageBorder />
                 </ImageBox>
 
-                <Text margin={{ top: 4 }} variant={earningTitleVariant} as="h3">
+                <Text margin={{ top: 2 }} variant={earningTitleVariant} as="h3">
                   {title}
                 </Text>
                 <Text variant={earningSubtitleVariant} as="span" color="colorText">
@@ -147,7 +147,7 @@ export const EarningsBox = styled(GridItem)`
   text-align: left;
   row-gap: ${sizes(13)};
 
-  ${media.md} {
+  ${media.sm} {
     grid-template-columns: 1fr 1fr;
     column-gap: ${sizes(6)};
     row-gap: ${sizes(24)};

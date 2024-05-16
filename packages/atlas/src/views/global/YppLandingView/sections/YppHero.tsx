@@ -3,19 +3,22 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
 import { useMostPaidChannels } from '@/api/hooks/channel'
-import { SvgActionChevronR } from '@/assets/icons'
+import { SvgActionChevronR, SvgActionNewTab } from '@/assets/icons'
 import crt_card from '@/assets/images/ypp-hero/crt-card-hero.webp'
 import crt_dashboard from '@/assets/images/ypp-hero/crt-dashboard-hero.webp'
 import payments from '@/assets/images/ypp-hero/crt-payments-hero.webp'
 import { AppLogo } from '@/components/AppLogo'
+import { FlexBox } from '@/components/FlexBox'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
-import { Button } from '@/components/_buttons/Button'
-import { GoogleButton } from '@/components/_buttons/GoogleButton'
+import { Button, TextButton } from '@/components/_buttons/Button'
 import { PaidChannelCard } from '@/components/_channel/ChannelCard'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useAuthStore } from '@/providers/auth/auth.store'
+import { useUser } from '@/providers/user/user.hooks'
+import { useYppStore } from '@/providers/ypp/ypp.store'
 import { cVar, transitions } from '@/styles'
 import { useSectionTextVariants } from '@/views/global/YppLandingView/sections/useSectionTextVariants'
 
@@ -26,7 +29,6 @@ import {
   LeftImage,
   LogosContainer,
   RightImage,
-  SelectDifferentChannelButton,
   StyledInfiniteCarousel,
 } from './YppHero.styles'
 
@@ -47,20 +49,15 @@ type YppHeroProps = {
   selectedChannelTitle?: string | null
 }
 
-export const YppHero: FC<YppHeroProps> = ({
-  onSignUpClick,
-  onSelectChannel,
-  yppAtlasStatus,
-  hasAnotherUnsyncedChannel,
-  selectedChannelTitle,
-}) => {
+export const YppHero: FC<YppHeroProps> = ({ onSignUpClick, yppAtlasStatus }) => {
   const xsMatch = useMediaMatch('xs')
-  const mdMatch = useMediaMatch('md')
-  const lgMatch = useMediaMatch('lg')
+  const xxsMatch = useMediaMatch('xxs')
+  const smMatch = useMediaMatch('sm')
   const { ref, width, height } = useResizeObserver({ box: 'border-box' })
   const [, subtitleVariant, titleVariant] = useSectionTextVariants()
-
-  const widgetContentTextVariant = lgMatch ? 'h800' : mdMatch ? 'h700' : 'h600'
+  const setIsYppChannelFlow = useYppStore((state) => state.actions.setIsYppChannelFlow)
+  const setAuthModalOpenName = useAuthStore((state) => state.actions.setAuthModalOpenName)
+  const { memberChannels, isLoggedIn } = useUser()
 
   const { channels, loading } = useMostPaidChannels()
   const items = !loading
@@ -132,15 +129,28 @@ export const YppHero: FC<YppHeroProps> = ({
                         Go to dashboard
                       </Button>
                     ) : (
-                      // <FlexBox gap={4} flow={xsMatch ? 'row' : 'column'} alignItems="center" justifyContent="center">
-                      //   <Button fullWidth={!xsMatch} size="large">
-                      //     Sync from YouTube
-                      //   </Button>
-                      //   <Button fullWidth={!xsMatch} size="large" variant="secondary">
-                      //     Create New Channel
-                      //   </Button>
-                      // </FlexBox>
-                      <GoogleButton onClick={onSignUpClick} />
+                      <FlexBox gap={4} flow={xsMatch ? 'row' : 'column'} alignItems="center" justifyContent="center">
+                        <Button
+                          onClick={onSignUpClick}
+                          fullWidth={!xsMatch}
+                          size={xxsMatch && !xsMatch ? 'large' : smMatch ? 'large' : 'medium'}
+                        >
+                          Sync from YouTube
+                        </Button>
+                        {!memberChannels?.length ? (
+                          <Button
+                            onClick={() => {
+                              setIsYppChannelFlow(true)
+                              setAuthModalOpenName(isLoggedIn ? 'createChannel' : 'signUp')
+                            }}
+                            fullWidth={!xsMatch}
+                            size={xxsMatch && !xsMatch ? 'large' : smMatch ? 'large' : 'medium'}
+                            variant="secondary"
+                          >
+                            Create New Channel
+                          </Button>
+                        ) : null}
+                      </FlexBox>
                     )
                   ) : (
                     <SkeletonLoader width={190} height={48} />
@@ -152,14 +162,14 @@ export const YppHero: FC<YppHeroProps> = ({
         </LayoutGrid>
         <LayoutGrid data-aos="fade-up" data-aos-delay="450" data-aos-offset="40" data-aos-easing="atlas-easing">
           <GridItem
-            margin={{ top: 1 }}
+            margin={{ top: 4 }}
             colStart={{ base: 1, sm: 3, md: 4, lg: 5 }}
             colSpan={{ base: 12, sm: 8, md: 6, lg: 4 }}
           >
-            {/*<TextButton iconPlacement="right" size="large" icon={<SvgActionNewTab />}>*/}
-            {/*  Earn as viewer*/}
-            {/*</TextButton>*/}
-            <Text
+            <TextButton iconPlacement="right" size="large" icon={<SvgActionNewTab />}>
+              Earn as viewer
+            </TextButton>
+            {/* <Text
               as="p"
               variant="t100"
               color="colorTextMuted"
@@ -175,7 +185,7 @@ export const YppHero: FC<YppHeroProps> = ({
                 </>
               )}
               {yppAtlasStatus !== 'ypp-signed' && 'It takes under 1 minute and is 100% free.'}
-            </Text>
+            </Text> */}
           </GridItem>
         </LayoutGrid>
 

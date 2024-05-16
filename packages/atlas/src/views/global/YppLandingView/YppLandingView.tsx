@@ -111,7 +111,7 @@ export const YppLandingView: FC = () => {
           hasAnotherUnsyncedChannel={hasAnotherUnsyncedChannel}
           selectedChannelTitle={selectedChannelTitle}
         />
-        <CreatorOpportunities />
+        <CreatorOpportunities onSignUpClick={handleYppSignUpClick} />
         <YppRewardSection />
         <YppSignupVideo />
         <ViewerOpportunities />

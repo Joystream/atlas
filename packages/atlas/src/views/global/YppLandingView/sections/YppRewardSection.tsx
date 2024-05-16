@@ -1,10 +1,12 @@
 import { FC, useRef } from 'react'
 
+import { SvgActionArrowRight } from '@/assets/icons'
 import { FlexBox } from '@/components/FlexBox'
 import { Information } from '@/components/Information'
 import { FlexGridItem, GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { TooltipText } from '@/components/Tooltip/Tooltip.styles'
+import { TextButton } from '@/components/_buttons/Button'
 import { TierCard } from '@/components/_ypp/TierCard'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -85,7 +87,7 @@ export const YppRewardSection: FC = () => {
           </FlexGridItem>
         </CenteredLayoutGrid>
         <LayoutGrid>
-          <TierCardWrapper colSpan={{ base: 12, sm: 10, md: 12, lg: 10 }} colStart={{ sm: 2, md: 1, lg: 2 }}>
+          <TierCardWrapper colSpan={{ base: 12, xs: 10, md: 12, lg: 10 }} colStart={{ xs: 2, md: 1, lg: 2 }}>
             {tiers.map((tier) => {
               const signupMultiplier = tier.tier === 'bronze' ? 1 : atlasConfig.features.ypp.tierBoostMultiplier || 1
               const referralMultiplier = atlasConfig.features.ypp.tierBoostMultiplier || 1
@@ -105,8 +107,7 @@ export const YppRewardSection: FC = () => {
             justifyContent="start"
           >
             <Text variant="t200" as="p" color="colorTextMuted">
-              *Referral rewards depend on the tier of the invited channel. Referrer gets half of the sign up rewards for
-              invited channels that are verified.
+              *Referral rewards depend on the tier of the invited channel.
             </Text>
           </FlexGridItem>
           <FlexGridItem
@@ -117,9 +118,13 @@ export const YppRewardSection: FC = () => {
             justifyContent="end"
           >
             <FlexBox width="100%" alignItems="center" justifyContent="space-between">
-              {/*<TextButton icon={<SvgActionArrowRight />} iconPlacement="right">*/}
-              {/*  Learn more*/}
-              {/*</TextButton>*/}
+              <TextButton
+                to="https://www.notion.so/joystream/YouTube-Partners-2164f8685d094984a37cdb1a38e3560d?pvs=4"
+                icon={<SvgActionArrowRight />}
+                iconPlacement="right"
+              >
+                Learn more
+              </TextButton>
               <div />
               <FlexBox alignItems="center" width="fit-content" gap={2}>
                 <Text variant="t200" as="p" color="colorText">

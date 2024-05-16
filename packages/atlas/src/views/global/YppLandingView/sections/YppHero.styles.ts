@@ -45,39 +45,55 @@ export const ImagesContainer = styled(FlexBox)`
 
 export const RightImage = styled.img`
   position: absolute;
-  width: 60%;
-  max-height: 420px;
-  height: auto;
+  width: auto;
+  height: 100%;
   object-fit: contain;
   display: block;
-  left: 10%;
-  top: 10%;
+  left: 0%;
   z-index: 10;
   border-radius: ${cVar('radiusMedium')};
+  padding: 40px 0;
+  box-shadow: 10px blue;
+
+  ${media.lg} {
+    left: unset;
+    right: 40%;
+  }
 `
 
 export const LeftImage = styled.img`
   position: absolute;
-  width: 60%;
-  max-height: 420px;
-  height: auto;
+  width: auto;
+  height: 100%;
   object-fit: contain;
   display: block;
-  right: 10%;
-  top: 10%;
+  right: 0%;
   z-index: 10;
   border-radius: ${cVar('radiusMedium')};
+  padding: 40px 0;
+
+  ${media.xs} {
+    width: auto;
+  }
+
+  ${media.lg} {
+    left: 40%;
+  }
 `
 
 export const FrontImage = styled.img`
   max-height: 520px;
-  width: 90%;
-  height: auto;
+  width: 95%;
+  height: 100%;
   object-fit: contain;
   display: block;
   border-radius: ${cVar('radiusMedium')};
   z-index: 20;
   ${imageShadow}
+
+  ${media.xs} {
+    width: auto;
+  }
 
   ${media.xs} {
     width: 70%;

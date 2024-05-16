@@ -1,6 +1,8 @@
+import { SvgActionChevronR } from '@/assets/icons'
 import { QuartersData, QuartersListData } from '@/components/AnimatedTimeline'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
+import { Button } from '@/components/_buttons/Button'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { HeaderGridItem } from '@/views/global/YppLandingView/YppLandingView.styles'
 import { useSectionTextVariants } from '@/views/global/YppLandingView/sections/useSectionTextVariants'
@@ -32,10 +34,18 @@ export const JoystreamRoadmap = () => {
           data-aos-delay="250"
           data-aos-offset="40"
           data-aos-easing="atlas-easing"
-          margin={{ top: 4 }}
+          margin={{ top: 4, bottom: 8 }}
         >
           The project is constantly evolving with support of the builders and operators from the Joystream DAO.
         </Text>
+        <Button
+          icon={<SvgActionChevronR />}
+          iconPlacement="right"
+          size="large"
+          to="https://www.joystream.org/roadmap?filename=2024%20v3"
+        >
+          Learn more
+        </Button>
       </HeaderGridItem>
       <GridItem colSpan={12}>
         <QuartersListData data={parseQuarters(data)} />
