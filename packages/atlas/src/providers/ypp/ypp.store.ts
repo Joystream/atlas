@@ -12,6 +12,7 @@ type YppStoreState = {
   shouldContinueYppFlowAfterLogin: boolean
   shouldContinueYppFlowAfterCreatingChannel: boolean
   ytResponseData: YtResponseData
+  isYppChannelFlow: boolean
 }
 
 type YppStoreActions = {
@@ -24,6 +25,7 @@ type YppStoreActions = {
   setShouldContinueYppFlowAfterLogin: (shouldContinueYppFlow: boolean) => void
   setShouldContinueYppFlowAfterCreatingChannel: (shouldContinueYppFlow: boolean) => void
   setYtResponseData: (ytResponseData: YtResponseData) => void
+  setIsYppChannelFlow: (value: boolean) => void
 }
 
 export const useYppStore = createStore<YppStoreState, YppStoreActions>(
@@ -38,8 +40,14 @@ export const useYppStore = createStore<YppStoreState, YppStoreActions>(
       shouldContinueYppFlowAfterLogin: false,
       shouldContinueYppFlowAfterCreatingChannel: false,
       ytResponseData: null,
+      isYppChannelFlow: false,
     },
     actionsFactory: (set) => ({
+      setIsYppChannelFlow: (value) => {
+        set((state) => {
+          state.isYppChannelFlow = value
+        })
+      },
       setReferrerId: (referrerId) => {
         set((state) => {
           state.referrerId = referrerId

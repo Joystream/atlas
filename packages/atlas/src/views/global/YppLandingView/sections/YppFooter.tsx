@@ -1,14 +1,21 @@
 import { FC, ReactElement } from 'react'
 
 import { SvgActionInfo, SvgActionSpeech, SvgActionTokensStack } from '@/assets/icons'
+import { FlexBox } from '@/components/FlexBox'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
+import { Button } from '@/components/_buttons/Button'
 import { CallToActionButton, CallToActionWrapper } from '@/components/_buttons/CallToActionButton'
 import { atlasConfig } from '@/config'
 import { YppWidgetIcons } from '@/config/configSchema'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
+import { useAuthStore } from '@/providers/auth/auth.store'
+import { useUser } from '@/providers/user/user.hooks'
+import { useYppStore } from '@/providers/ypp/ypp.store'
 import { useSectionTextVariants } from '@/views/global/YppLandingView/sections/useSectionTextVariants'
 
-import { CtaBanner, StyledButton } from './YppFooter.styles'
+import { CtaBanner } from './YppFooter.styles'
 
 import { StyledLimitedWidthContainer } from '../YppLandingView.styles'
 
@@ -24,7 +31,11 @@ type YppFooterSectionProps = {
 
 export const YppFooter: FC<YppFooterSectionProps> = ({ onSignUpClick }) => {
   const [titleVariant] = useSectionTextVariants()
-
+  const smMatch = useMediaMatch('sm')
+  const setIsYppChannelFlow = useYppStore((state) => state.actions.setIsYppChannelFlow)
+  const setAuthModalOpenName = useAuthStore((state) => state.actions.setAuthModalOpenName)
+  const { trackRewardsCreateChannelButtonClick } = useSegmentAnalytics()
+  const { memberChannels, isLoggedIn } = useUser()
   return (
     <>
       <StyledLimitedWidthContainer
@@ -44,7 +55,32 @@ export const YppFooter: FC<YppFooterSectionProps> = ({ onSignUpClick }) => {
                 Pave the way to Web3 with your YouTube channel right away.
               </Text>
 
-              <StyledButton onClick={onSignUpClick}>Authorize with YouTube</StyledButton>
+              <FlexBox
+                width="100%"
+                flow={smMatch ? 'row' : 'column'}
+                alignItems="center"
+                justifyContent="center"
+                gap={4}
+                marginTop={8}
+              >
+                <Button onClick={onSignUpClick} fullWidth={!smMatch} size="large">
+                  Sync from YouTube
+                </Button>
+                {!memberChannels?.length ? (
+                  <Button
+                    onClick={() => {
+                      trackRewardsCreateChannelButtonClick()
+                      setIsYppChannelFlow(true)
+                      setAuthModalOpenName(isLoggedIn ? 'createChannel' : 'signUp')
+                    }}
+                    fullWidth={!smMatch}
+                    size="large"
+                    variant="secondary"
+                  >
+                    Create New Channel
+                  </Button>
+                ) : null}
+              </FlexBox>
             </CtaBanner>
           </GridItem>
         </LayoutGrid>
