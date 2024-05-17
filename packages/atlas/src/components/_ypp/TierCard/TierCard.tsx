@@ -1,5 +1,4 @@
 import {
-  SvgActionCheck,
   SvgIconRankBronzeMonochrome,
   SvgIconRankDiamondMonochrome,
   SvgIconRankGoldMonochrome,
@@ -9,7 +8,6 @@ import { FlexBox } from '@/components/FlexBox'
 import { Text } from '@/components/Text'
 import { RewardWrapper, TierBanner, Wrapper } from '@/components/_ypp/TierCard/TierCard.styles'
 import { capitalizeFirstLetter } from '@/utils/misc'
-import { TickWrapper } from '@/views/global/YppLandingView/YppAuthorizationModal/YppAuthorizationSteps/YppAuthorizationRequirementsStep/YppAuthorizationRequirementsStep.styles'
 
 export type TierCardProps = {
   tier: 'bronze' | 'silver' | 'gold' | 'diamond'
@@ -44,7 +42,7 @@ const getTierIcon = (tier: TierCardProps['tier']) => {
   }
 }
 
-export const TierCard = ({ reqs, rewards, tier }: TierCardProps) => {
+export const TierCard = ({ rewards, tier }: TierCardProps) => {
   return (
     <Wrapper isDiamond={tier === 'diamond'}>
       <FlexBox flow="column" gap={4}>
@@ -62,18 +60,6 @@ export const TierCard = ({ reqs, rewards, tier }: TierCardProps) => {
             </filter>
           </svg>
         </TierBanner>
-        <FlexBox flow="column" gap={2} width="100%">
-          {reqs.map((req, idx) => (
-            <FlexBox key={idx} gap={1}>
-              <TickWrapper fulfilled>
-                <SvgActionCheck />
-              </TickWrapper>
-              <Text variant="t200" as="p" color="colorText">
-                {req}
-              </Text>
-            </FlexBox>
-          ))}
-        </FlexBox>
       </FlexBox>
       <FlexBox flow="column" gap={2} width="100%">
         <Text variant="t200-strong" as="p">

@@ -2,6 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { FlexBox } from '@/components/FlexBox'
+import { MarginProps, marginStyles } from '@/components/Text/Text.styles'
 import { media, sizes } from '@/styles'
 
 type ReponsivenessObject = Partial<Record<keyof typeof media | 'base', number>>
@@ -24,6 +25,7 @@ export type GridItemProps = {
   colSpan?: number | ReponsivenessObject
   rowStart?: number | 'initial' | ReponsivenessObject
   rowSpan?: number | ReponsivenessObject
+  margin?: MarginProps
 }
 
 function isResponsivenessObject(prop?: number | 'initial' | ReponsivenessObject): prop is ReponsivenessObject {
@@ -32,8 +34,9 @@ function isResponsivenessObject(prop?: number | 'initial' | ReponsivenessObject)
 
 const createBreakpointGridItemRules =
   (breakpointKey: keyof ReponsivenessObject) =>
-  ({ colStart, colSpan, rowStart, rowSpan }: GridItemProps) =>
+  ({ colStart, colSpan, rowStart, rowSpan, margin }: GridItemProps) =>
     css`
+      ${marginStyles({ margin })}
       ${breakpointKey === 'base' ? '@media screen and (min-width: 0px)' : media[breakpointKey]} {
         ${isResponsivenessObject(colStart) &&
         colStart[breakpointKey] &&

@@ -50,7 +50,7 @@ export const relativeRoutes = {
     memberNotifications: () => 'notifications/member',
     marketplace: () => 'marketplace',
     ypp: (query?: { [QUERY_PARAMS.REFERRER_ID]?: string }) => withQueryParameters('ypp', query),
-    yppTest: () => 'ypp/test-variation',
+    yppTest: () => 'ypp/rewards',
     yppDashboard: () => 'ypp-dashboard',
     referrals: () => 'referrals',
   },

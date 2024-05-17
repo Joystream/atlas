@@ -14,6 +14,7 @@ import { useChannelForm } from '@/hooks/useChannelForm'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useSnackbar } from '@/providers/snackbars'
 import { useUser } from '@/providers/user/user.hooks'
+import { useYppStore } from '@/providers/ypp/ypp.store'
 import { media, sizes } from '@/styles'
 
 export const CreateChannelModal = () => {
@@ -24,7 +25,11 @@ export const CreateChannelModal = () => {
   } = useAuthStore()
   const navigate = useNavigate()
   const { setActiveChannel } = useUser()
-  const { refs, actions, form, hasAvatarUploadFailed } = useChannelForm({ type: 'new' })
+  const isYppChannelFlow = useYppStore((state) => state.isYppChannelFlow)
+  const setIsYppChannelFlow = useYppStore((state) => state.actions.setIsYppChannelFlow)
+  const { refs, actions, form, hasAvatarUploadFailed } = useChannelForm({
+    type: 'new',
+  })
   const {
     register,
     control,
@@ -42,8 +47,9 @@ export const CreateChannelModal = () => {
         onClick: () =>
           handleSubmit((channelId) => {
             setActiveChannel(channelId)
-            navigate(absoluteRoutes.viewer.channel(channelId))
+            navigate(isYppChannelFlow ? absoluteRoutes.studio.yppDashboard() : absoluteRoutes.viewer.channel(channelId))
             setAuthModalOpenName(undefined)
+            setIsYppChannelFlow(false)
           }),
       }}
       secondaryButton={{
