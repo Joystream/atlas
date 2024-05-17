@@ -9,6 +9,7 @@ import { CallToActionButton, CallToActionWrapper } from '@/components/_buttons/C
 import { atlasConfig } from '@/config'
 import { YppWidgetIcons } from '@/config/configSchema'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useUser } from '@/providers/user/user.hooks'
 import { useYppStore } from '@/providers/ypp/ypp.store'
@@ -33,6 +34,7 @@ export const YppFooter: FC<YppFooterSectionProps> = ({ onSignUpClick }) => {
   const smMatch = useMediaMatch('sm')
   const setIsYppChannelFlow = useYppStore((state) => state.actions.setIsYppChannelFlow)
   const setAuthModalOpenName = useAuthStore((state) => state.actions.setAuthModalOpenName)
+  const { trackRewardsCreateChannelButtonClick } = useSegmentAnalytics()
   const { memberChannels, isLoggedIn } = useUser()
   return (
     <>
@@ -67,6 +69,7 @@ export const YppFooter: FC<YppFooterSectionProps> = ({ onSignUpClick }) => {
                 {!memberChannels?.length ? (
                   <Button
                     onClick={() => {
+                      trackRewardsCreateChannelButtonClick()
                       setIsYppChannelFlow(true)
                       setAuthModalOpenName(isLoggedIn ? 'createChannel' : 'signUp')
                     }}

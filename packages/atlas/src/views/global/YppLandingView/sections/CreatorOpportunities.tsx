@@ -11,6 +11,7 @@ import { Text } from '@/components/Text'
 import { Button, TextButton } from '@/components/_buttons/Button'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useUser } from '@/providers/user/user.hooks'
 import { useYppStore } from '@/providers/ypp/ypp.store'
@@ -49,6 +50,7 @@ const earningsOptions = [
 export const CreatorOpportunities = ({ onSignUpClick }: { onSignUpClick: () => void }) => {
   const setIsYppChannelFlow = useYppStore((state) => state.actions.setIsYppChannelFlow)
   const setAuthModalOpenName = useAuthStore((state) => state.actions.setAuthModalOpenName)
+  const { trackRewardsCreateChannelButtonClick } = useSegmentAnalytics()
   const { memberChannels, isLoggedIn } = useUser()
   const xsMatch = useMediaMatch('xs')
   const mdMatch = useMediaMatch('md')
@@ -120,6 +122,7 @@ export const CreatorOpportunities = ({ onSignUpClick }: { onSignUpClick: () => v
               {!memberChannels?.length ? (
                 <Button
                   onClick={() => {
+                    trackRewardsCreateChannelButtonClick()
                     setIsYppChannelFlow(true)
                     setAuthModalOpenName(isLoggedIn ? 'createChannel' : 'signUp')
                   }}

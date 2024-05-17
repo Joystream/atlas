@@ -16,6 +16,7 @@ import { PaidChannelCard } from '@/components/_channel/ChannelCard'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useUser } from '@/providers/user/user.hooks'
 import { useYppStore } from '@/providers/ypp/ypp.store'
@@ -59,7 +60,7 @@ export const YppHero: FC<YppHeroProps> = ({ onSignUpClick, yppAtlasStatus, onVie
   const setIsYppChannelFlow = useYppStore((state) => state.actions.setIsYppChannelFlow)
   const setAuthModalOpenName = useAuthStore((state) => state.actions.setAuthModalOpenName)
   const { memberChannels, isLoggedIn } = useUser()
-
+  const { trackRewardsCreateChannelButtonClick } = useSegmentAnalytics()
   const { channels, loading } = useMostPaidChannels()
   const items = !loading
     ? channels?.map((channel) => <PaidChannelCard key={channel.id} channel={channel} />)
@@ -141,6 +142,7 @@ export const YppHero: FC<YppHeroProps> = ({ onSignUpClick, yppAtlasStatus, onVie
                         {!memberChannels?.length ? (
                           <Button
                             onClick={() => {
+                              trackRewardsCreateChannelButtonClick()
                               setIsYppChannelFlow(true)
                               setAuthModalOpenName(isLoggedIn ? 'createChannel' : 'signUp')
                             }}
