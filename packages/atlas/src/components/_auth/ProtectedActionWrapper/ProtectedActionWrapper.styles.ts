@@ -5,6 +5,7 @@ import { cVar, sizes } from '@/styles'
 
 export const UnclickableWrapper = styled.div`
   cursor: pointer;
+  width: auto;
 
   > * {
     pointer-events: none;
