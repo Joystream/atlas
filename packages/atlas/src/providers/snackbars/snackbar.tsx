@@ -95,7 +95,7 @@ export const SnackbarsContainer = styled.div<{ bottomNavType?: 'action' | 'nav' 
   margin-left: ${sizes(4)};
   display: grid;
   z-index: ${zIndex.snackbars};
-  width: calc(100% - ${sizes(8)});
+  min-width: calc(100% - ${sizes(8)});
   transition: bottom ${cVar('animationTransitionMedium')}
     ${({ bottomNavType }) => (bottomNavType ? transitions.timings.routing : '0ms')};
 
@@ -105,6 +105,7 @@ export const SnackbarsContainer = styled.div<{ bottomNavType?: 'action' | 'nav' 
   }
 
   ${media.sm} {
+    min-width: 0;
     bottom: ${({ bottomNavType }) => sizes(bottomNavType ? 20 : 4)};
   }
 `

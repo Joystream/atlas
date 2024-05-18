@@ -14,6 +14,11 @@ export const StyledDialog = styled(Dialog)<{ bottomNavOpen: boolean }>`
     ${({ bottomNavOpen }) => (bottomNavOpen ? transitions.timings.routing : '0ms')};
 
   ${media.xs} {
+    margin-left: 15px;
+    max-width: calc(100% - 60px);
+  }
+
+  ${media.sm} {
     max-width: 320px;
   }
 
