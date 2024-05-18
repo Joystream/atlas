@@ -1,10 +1,11 @@
 import styled from '@emotion/styled'
-import { useMutation } from 'react-query'
+import { useState } from 'react'
 
 import { AppLogo } from '@/components/AppLogo'
 import { FlexBox } from '@/components/FlexBox'
 import { Text } from '@/components/Text'
 import { useMountEffect } from '@/hooks/useMountEffect'
+import { SendEmailTokenErrors, useSendEmailToken } from '@/hooks/useSendEmailToken'
 import { useSnackbar } from '@/providers/snackbars'
 import { cVar } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
@@ -15,33 +16,45 @@ type CheckEmailConfirmationProps = {
   setActionButtonHandler: SetActionButtonHandlerSetter
   onSuccess?: () => void
   onFailure?: () => void
+  email?: string
 }
 
 export const CheckEmailConfirmation = ({
+  email,
   setActionButtonHandler,
   onSuccess,
   onFailure,
 }: CheckEmailConfirmationProps) => {
   const { displaySnackbar } = useSnackbar()
-  const { mutateAsync } = useMutation({
-    mutationKey: 'single',
-    mutationFn: async () => new Promise((res) => setTimeout(res, 5000)),
-  })
+  const { mutateAsync } = useSendEmailToken()
+  const [error, setError] = useState('')
 
   useMountEffect(() => {
-    setActionButtonHandler((setter) => {
-      setter?.(true)
-      return mutateAsync()
-        .then(onSuccess)
-        .catch((error) => {
-          onFailure?.()
-          displaySnackbar({
-            iconType: 'error',
-            title: 'Failed to resend confirmation link',
-          })
-          SentryLogger.error('Failed to resend confirmation link', 'CheckEmailConfirmation', error)
+    setActionButtonHandler(async (setLoading) => {
+      if (!email) {
+        displaySnackbar({
+          iconType: 'error',
+          title: 'Missing email. Please start over.',
         })
-        .finally(() => setter?.(false))
+        return
+      }
+      try {
+        setError('')
+        setLoading?.(true)
+        await mutateAsync(email)
+        onSuccess?.()
+      } catch (e) {
+        onFailure?.()
+        displaySnackbar({
+          iconType: 'error',
+          title: 'Failed to resend confirmation link',
+        })
+        SentryLogger.error('Failed to resend confirmation link', 'CheckEmailConfirmation', error)
+        const handledError = e.message
+        if (handledError === SendEmailTokenErrors.TOO_MANY_REQUESTS) setError('Too many reqests, please wait.')
+      } finally {
+        setLoading?.(false)
+      }
     })
   })
 
@@ -54,6 +67,11 @@ export const CheckEmailConfirmation = ({
       <Text variant="t300" as="span" color="colorText">
         Check your email and click the link we sent you to complete the process.
       </Text>
+      {error ? (
+        <Text variant="t300" as="p" color="colorTextError">
+          {error}
+        </Text>
+      ) : null}
     </FlexBox>
   )
 }

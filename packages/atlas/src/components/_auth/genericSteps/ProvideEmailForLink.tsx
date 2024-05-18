@@ -7,6 +7,7 @@ import { Text } from '@/components/Text'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { useMountEffect } from '@/hooks/useMountEffect'
+import { SendEmailTokenErrors, useSendEmailToken } from '@/hooks/useSendEmailToken'
 import { cVar } from '@/styles'
 
 import { SetActionButtonHandlerSetter } from './types'
@@ -14,23 +15,40 @@ import { SetActionButtonHandlerSetter } from './types'
 type ProvideEmailForLinkProps = {
   onSubmit: (email: string) => void
   setActionButtonHandler: SetActionButtonHandlerSetter
-  resendEmailHandler?: (email: string) => void | Promise<void>
+  defaultEmail?: string
 }
 
-export const ProvideEmailForLink = ({ setActionButtonHandler, onSubmit }: ProvideEmailForLinkProps) => {
+export const ProvideEmailForLink = ({ setActionButtonHandler, onSubmit, defaultEmail }: ProvideEmailForLinkProps) => {
   const {
     register,
     formState: { errors },
+    setError,
     handleSubmit,
-  } = useForm<{ email: string }>()
+  } = useForm<{ email: string }>({
+    defaultValues: {
+      email: defaultEmail,
+    },
+  })
+  const { mutateAsync } = useSendEmailToken()
   // todo: validation
   // 1. Not an email
   // 2. Email already used (no idea how to check it?) - and allow to resend the link
 
   useMountEffect(() => {
-    setActionButtonHandler(() => {
-      handleSubmit((data) => {
-        onSubmit(data.email)
+    setActionButtonHandler((setLoading) => {
+      handleSubmit(async (data) => {
+        try {
+          setLoading?.(true)
+          await mutateAsync(data.email)
+          onSubmit(data.email)
+        } catch (e) {
+          const handledError = e.message
+          if (handledError === SendEmailTokenErrors.INVALID_EMAIL) setError('email', { message: 'Invalid email.' })
+          if (handledError === SendEmailTokenErrors.TOO_MANY_REQUESTS)
+            setError('email', { message: 'Too many reqests, please wait.' })
+        } finally {
+          setLoading?.(false)
+        }
       })()
     })
   })

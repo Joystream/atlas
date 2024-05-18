@@ -62,7 +62,7 @@ export const EmailSetup = () => {
   return (
     <DialogModal
       disableBackdropAnimation
-      show={authModalOpenName === 'emailSetup'}
+      show={authModalOpenName === 'signUp'}
       primaryButton={primaryButton}
       secondaryButton={secondaryButton}
       additionalActionsNode={
@@ -73,6 +73,7 @@ export const EmailSetup = () => {
     >
       {step === EmailSetupStep.email ? (
         <ProvideEmailForLink
+          defaultEmail={formRef.current.email}
           onSubmit={(email) => {
             setStep(EmailSetupStep.confirmationLink)
             formRef.current = {
@@ -85,6 +86,7 @@ export const EmailSetup = () => {
       ) : null}
       {step === EmailSetupStep.confirmationLink ? (
         <CheckEmailConfirmation
+          email={formRef.current.email}
           setActionButtonHandler={(fn) => setPrimaryAction(() => fn)}
           onSuccess={() => {
             const resendTimestamp = new Date()
