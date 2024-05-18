@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { AssetImage } from '@/components/AssetImage'
-import { cVar, square } from '@/styles'
+import { cVar, media, square } from '@/styles'
 
 const sharedOverlayStyles = css`
   position: absolute;
@@ -173,77 +173,79 @@ export const VideoThumbnailContainer = styled(Link, { shouldForwardProp: isPropV
     background-color: ${cVar('colorBackgroundOverlay')};
   }
 
-  :hover,
-  :focus-visible {
-    ${({ clickable }) =>
-      clickable &&
-      css`
-        cursor: pointer;
+  ${media.sm} {
+    :hover,
+    :focus-visible {
+      ${({ clickable }) =>
+        clickable &&
+        css`
+          cursor: pointer;
 
-        ${HoverOverlay}, ${SlotContainer} {
-          opacity: 1;
-        }
-      `}
-    ${({ clickable, isPlaylist }) =>
-      !isPlaylist &&
-      clickable &&
-      css`
-        background-color: ${cVar('colorBackgroundPrimary')};
-
-        ${ContentOverlay}, ${HoverOverlay}, ${SlotsOverlay} {
-          transform: translate(-8px, -8px);
-        }
-      `}
-    ${({ clickable, isPlaylist }) =>
-      isPlaylist &&
-      clickable &&
-      css`
-        &::before {
+          ${HoverOverlay}, ${SlotContainer} {
+            opacity: 1;
+          }
+        `}
+      ${({ clickable, isPlaylist }) =>
+        !isPlaylist &&
+        clickable &&
+        css`
           background-color: ${cVar('colorBackgroundPrimary')};
-          transform: translate(0, 4px);
-        }
 
-        &::after {
-          background-color: ${cVar('colorBackgroundPrimaryMuted')};
-          transform: translate(0, 12px);
-        }
+          ${ContentOverlay}, ${HoverOverlay}, ${SlotsOverlay} {
+            transform: translate(-8px, -8px);
+          }
+        `}
+    ${({ clickable, isPlaylist }) =>
+        isPlaylist &&
+        clickable &&
+        css`
+          &::before {
+            background-color: ${cVar('colorBackgroundPrimary')};
+            transform: translate(0, 4px);
+          }
 
-        ${ContentOverlay}, ${HoverOverlay}, ${PlaylistOverlay}, ${SlotsOverlay} {
-          transform: translate(0, -4px);
-        }
-        ${PlaylistOverlay} {
-          opacity: 0;
-        }
-      `}
-  }
+          &::after {
+            background-color: ${cVar('colorBackgroundPrimaryMuted')};
+            transform: translate(0, 12px);
+          }
 
-  :active {
-    ${({ clickable, isPlaylist, activeDisabled }) =>
-      clickable &&
-      !activeDisabled &&
-      isPlaylist &&
-      css`
-        &::before {
-          transform: translate(0, 4px);
-        }
+          ${ContentOverlay}, ${HoverOverlay}, ${PlaylistOverlay}, ${SlotsOverlay} {
+            transform: translate(0, -4px);
+          }
+          ${PlaylistOverlay} {
+            opacity: 0;
+          }
+        `}
+    }
 
-        &::after {
-          transform: translate(0, 4px);
-        }
+    :active {
+      ${({ clickable, isPlaylist, activeDisabled }) =>
+        clickable &&
+        !activeDisabled &&
+        isPlaylist &&
+        css`
+          &::before {
+            transform: translate(0, 4px);
+          }
 
-        ${ContentOverlay}, ${HoverOverlay}, ${SlotsOverlay} {
-          transform: translate(0, 4px);
-        }
-      `}
-    ${({ clickable, activeDisabled, isPlaylist }) =>
-      clickable &&
-      !activeDisabled &&
-      !isPlaylist &&
-      css`
-        ${ContentOverlay}, ${HoverOverlay}, ${SlotsOverlay} {
-          transform: translate(0, 0);
-        }
-      `}
+          &::after {
+            transform: translate(0, 4px);
+          }
+
+          ${ContentOverlay}, ${HoverOverlay}, ${SlotsOverlay} {
+            transform: translate(0, 4px);
+          }
+        `}
+      ${({ clickable, activeDisabled, isPlaylist }) =>
+        clickable &&
+        !activeDisabled &&
+        !isPlaylist &&
+        css`
+          ${ContentOverlay}, ${HoverOverlay}, ${SlotsOverlay} {
+            transform: translate(0, 0);
+          }
+        `}
+    }
   }
   /* stylelint-enable no-duplicate-selectors */
 `

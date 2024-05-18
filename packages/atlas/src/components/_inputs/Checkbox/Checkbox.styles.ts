@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { SvgActionCheck } from '@/assets/icons'
-import { cVar, sizes, square, zIndex } from '@/styles'
+import { cVar, media, sizes, square, zIndex } from '@/styles'
 
 export const Container = styled.div`
   position: relative;
@@ -43,18 +43,22 @@ type CheckboxInputProps = {
   error: boolean
 }
 const hoverCheckedStyles = ({ error }: CheckboxInputProps) => css`
-  + ${Checkmark} {
-    background-color: ${cVar(error ? 'colorBackgroundErrorStrong' : 'colorBackgroundPrimaryStrong')};
+  ${media.sm} {
+    + ${Checkmark} {
+      background-color: ${cVar(error ? 'colorBackgroundErrorStrong' : 'colorBackgroundPrimaryStrong')};
 
-    ::before {
-      background-color: ${cVar('colorBackgroundStrongAlpha')};
+      ::before {
+        background-color: ${cVar('colorBackgroundStrongAlpha')};
+      }
     }
   }
 `
 const hoverUncheckedStyles = css`
-  + ${Checkmark} {
-    ::before {
-      background-color: ${cVar('colorBackgroundStrongAlpha')};
+  ${media.sm} {
+    + ${Checkmark} {
+      ::before {
+        background-color: ${cVar('colorBackgroundStrongAlpha')};
+      }
     }
   }
 `
