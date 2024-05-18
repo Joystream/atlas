@@ -10,7 +10,7 @@ general:
   pioneerMemberUrlPrefix: 'https://dao.joystream.org/#/members' # URL prefix for Pioneer member profile page - used to link to member details
   joystreamLandingPageUrl: 'https://www.joystream.org' # URL for Joystream landing page - used in the footer and in "Learn more" links
   joystreamDiscordUrl: 'https://discord.gg/DE9UN3YpRP' # URL for Joystream Discord - used for support when errors occur
-  appContentFocus: 'web3 & crypto' # Content focus of given app. Provide a string, for example `web & crypto` or `sport`
+  appContentFocus: '' # Content focus of given app. Provide a string, for example `web & crypto` or `sport`
   crtMaintenanceMode: false
 storage:
   assetResponseTimeout: 2_000 # Timeout for asset response in ms - after this timeout, different distributor will be tried

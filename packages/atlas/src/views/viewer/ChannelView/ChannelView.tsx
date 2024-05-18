@@ -10,7 +10,6 @@ import { SvgActionCheck, SvgActionFilters, SvgActionFlag, SvgActionMore, SvgActi
 import { ChannelTitle } from '@/components/ChannelTitle'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
-import { FlexBox } from '@/components/FlexBox'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { NumberFormat } from '@/components/NumberFormat'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
@@ -43,6 +42,7 @@ import {
   ChannelInfoContainer,
   CollectorsBoxContainer,
   FilterButton,
+  FollowButtonWrapper,
   NotFoundChannelContainer,
   StyledButton,
   StyledButtonContainer,
@@ -366,7 +366,7 @@ export const ChannelView: FC = () => {
               )}
             </StyledButtonContainer>
           ) : (
-            <FlexBox width="100%">
+            <FollowButtonWrapper width="100%">
               <ProtectedActionWrapper
                 title="You want to follow this channel?"
                 description={`Sign in to follow ${channel?.title}`}
@@ -391,7 +391,7 @@ export const ChannelView: FC = () => {
                 ]}
                 trigger={<Button icon={<SvgActionMore />} variant="tertiary" size="large" />}
               />
-            </FlexBox>
+            </FollowButtonWrapper>
           )}
 
           {channel?.id && (

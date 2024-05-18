@@ -4,7 +4,7 @@ import { ReactNode } from 'react'
 import { SvgActionCreatorToken, SvgActionVerified } from '@/assets/icons'
 import { Text, TextVariant } from '@/components/Text'
 import { TextBaseProps } from '@/components/Text/Text.styles'
-import { cVar } from '@/styles'
+import { cVar, media } from '@/styles'
 
 import { FlexBox } from '../FlexBox'
 
@@ -35,7 +35,13 @@ export const ChannelTitleText = styled(Text)`
 `
 
 const StyledFlexBox = styled(FlexBox)`
+  justify-content: center;
+
   path {
     fill: ${cVar('colorText')};
+  }
+
+  ${media.sm} {
+    justify-content: start;
   }
 `

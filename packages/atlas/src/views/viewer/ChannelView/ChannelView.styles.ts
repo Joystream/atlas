@@ -2,6 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { SvgJoyTokenMonochrome16 } from '@/assets/icons'
+import { FlexBox } from '@/components/FlexBox'
 import { Tabs } from '@/components/Tabs'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
@@ -29,6 +30,12 @@ export const TitleSection = styled.div`
   ${media.sm} {
     margin-top: 0;
     grid-template-columns: min-content 1fr auto;
+  }
+`
+
+export const FollowButtonWrapper = styled(FlexBox)`
+  > *:nth-child(1) {
+    width: 100%;
   }
 `
 
@@ -110,6 +117,7 @@ export const StyledChannelLink = styled(ChannelLink)`
   position: relative;
   width: fit-content;
   justify-self: start;
+  margin: 0 auto;
   border: solid 8px ${cVar('colorCoreBaseBlack')};
   border-radius: 100%;
   ${media.sm} {
