@@ -14,6 +14,7 @@ import { SentryLogger } from '@/utils/logs'
 
 import { AppLogo } from './components/AppLogo'
 import { TopbarBase } from './components/_navigation/TopbarBase'
+import { useMountEffect } from './hooks/useMountEffect'
 import { useConfirmationModal } from './providers/confirmationModal'
 import { useOverlayManager } from './providers/overlayManager'
 import { LegalLayout } from './views/legal/LegalLayout'
@@ -125,6 +126,12 @@ const MiscUtils = () => {
       window.scrollTo(0, navigationType !== 'POP' ? 0 : scrollPosition.current)
     }, parseInt(transitions.timings.routing) + ROUTING_ANIMATION_OFFSET)
   }, [location, cachedLocation, locationState, navigationType, clearOverlays])
+
+  useMountEffect(() => {
+    if ('ReactNativeWebView' in window) {
+      ;(window.ReactNativeWebView as { postMessage: (message: string) => void }).postMessage('initialized')
+    }
+  })
 
   return null
 }
