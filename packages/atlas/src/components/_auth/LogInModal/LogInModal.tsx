@@ -11,6 +11,7 @@ import { Input } from '@/components/_inputs/Input'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
 import { useHidePasswordInInput } from '@/hooks/useHidePasswordInInput'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useAuth } from '@/providers/auth/auth.hooks'
 import { useAuthStore } from '@/providers/auth/auth.store'
@@ -28,6 +29,7 @@ export const LogInModal = () => {
   const { displaySnackbar } = useSnackbar()
   const [hidePasswordProps] = useHidePasswordInInput(false)
   const { trackPageView } = useSegmentAnalytics()
+  const smMatch = useMediaMatch('sm')
 
   const setYppModalOpenName = useYppStore((state) => state.actions.setYppModalOpenName)
 
@@ -102,12 +104,12 @@ export const LogInModal = () => {
       }}
       additionalActionsNode={
         !isLoading && (
-          <FlexBox justifyContent="space-between">
-            <Button variant="tertiary" onClick={() => setAuthModalOpenName(undefined)}>
+          <FlexBox justifyContent={smMatch ? 'space-between' : undefined}>
+            <Button variant="tertiary" fullWidth={!smMatch} onClick={() => setAuthModalOpenName(undefined)}>
               Close
             </Button>
 
-            <Button variant="secondary" onClick={() => setAuthModalOpenName('externalLogIn')}>
+            <Button variant="secondary" fullWidth={!smMatch} onClick={() => setAuthModalOpenName('externalLogIn')}>
               Use local wallet
             </Button>
           </FlexBox>
