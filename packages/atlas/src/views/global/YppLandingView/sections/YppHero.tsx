@@ -136,6 +136,7 @@ export const YppHero: FC<YppHeroProps> = ({ onSignUpClick, yppAtlasStatus, onVie
                           onClick={onSignUpClick}
                           fullWidth={!xsMatch}
                           size={xxsMatch && !xsMatch ? 'large' : smMatch ? 'large' : 'medium'}
+                          id="rewards-sync-button"
                         >
                           Sync from YouTube
                         </Button>
