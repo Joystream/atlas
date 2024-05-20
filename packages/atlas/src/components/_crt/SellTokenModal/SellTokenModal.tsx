@@ -3,8 +3,10 @@ import { useCallback, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { useGetFullCreatorTokenQuery } from '@/api/queries/__generated__/creatorTokens.generated'
+import { SvgAlertsWarning24 } from '@/assets/icons'
 import { NumberFormat, formatNumberShort } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
+import { Tooltip } from '@/components/Tooltip'
 import { AmmModalFormTemplate } from '@/components/_crt/AmmModalTemplates'
 import { AmmModalSummaryTemplate } from '@/components/_crt/AmmModalTemplates/AmmModalSummaryTemplate'
 import { DialogModal } from '@/components/_overlays/DialogModal'
@@ -263,6 +265,13 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
       title={`Sell $${title}`}
       show={show}
       onExitClick={onClose}
+      additionalActionsNode={
+        hasActiveRevenueShare ? (
+          <Tooltip text="During revenue share you are unable to trade on market. Please wait until it ends to make new transactions.">
+            <SvgAlertsWarning24 />
+          </Tooltip>
+        ) : null
+      }
       secondaryButton={{
         text: isFormStep ? 'Cancel' : 'Back',
         onClick: isFormStep ? onClose : () => setStep('form'),
@@ -270,6 +279,8 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
       primaryButton={{
         text: isFormStep ? 'Continue' : `Sell $${title}`,
         onClick: isFormStep ? onFormSubmit : onTransactionSubmit,
+        disabled: hasActiveRevenueShare,
+        variant: hasActiveRevenueShare ? 'warning' : undefined,
       }}
     >
       {step === 'form' ? (
