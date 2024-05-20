@@ -41,6 +41,7 @@ const SIGNUP_FORM_DATA_INITIAL_STATE: AccountFormData & MemberFormData = {
   allowDownload: true,
   memberId: '',
   referrerChannelId: undefined,
+  emailConfimationToken: '',
 }
 
 const stepToPageName: Partial<Record<SignUpSteps, string>> = {

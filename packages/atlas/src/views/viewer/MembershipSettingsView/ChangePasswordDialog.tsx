@@ -101,7 +101,7 @@ export const ChangePasswordDialog: FC<ChangePasswordDialogProps> = ({ onClose, s
           mnemonic,
           newPassword: data.password,
           gatewayAccountId: currentUser.id,
-          joystreamAccountId: currentUser.joystreamAccount,
+          joystreamAccountId: currentUser.joystreamAccount.id,
         })
         handleClose()
         displaySnackbar({

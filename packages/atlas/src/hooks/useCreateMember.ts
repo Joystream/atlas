@@ -34,11 +34,10 @@ export type MemberFormData = {
 
 export type AccountFormData = {
   email: string
+  emailConfimationToken: string
   password: string
   mnemonic: string
   confirmedTerms: boolean
-  memberId: string
-  referrerChannelId?: string
 }
 
 type NewMemberResponse = {

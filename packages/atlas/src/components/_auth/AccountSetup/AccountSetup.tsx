@@ -1,7 +1,9 @@
-import { useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import { DialogModal } from '@/components/_overlays/DialogModal'
+import { useCreateMember } from '@/hooks/useCreateMember'
+import { useSnackbar } from '@/providers/snackbars'
 
 import { CreatePassword } from '../genericSteps/CreatePassword'
 import { EmailVerified } from '../genericSteps/EmailVerified'
@@ -20,15 +22,22 @@ type AccountSetupForm = {
   password?: string
   confirmPassword?: string
   mnemonic?: string
+  captchaToken?: string
+  email?: string
 }
 
 export const AccountSetup = () => {
-  const [searchParams] = useSearchParams()
-  const confirmationCode = searchParams.get('email-confirmation')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const confirmationCode = searchParams.get('email-token') // 5y6WUaZ5IxAGf4iLGarc1OHFHBWScJZ4/gxWGn4trq4=
+  console.log('xdd', confirmationCode)
   const [step, setStep] = useState(AccountSetupStep.verification)
   const [loading, setLoading] = useState(true)
   const [primaryAction, setPrimaryAction] = useState<undefined | SetActionButtonHandler>(undefined)
   const formRef = useRef<AccountSetupForm>({})
+  const { createNewMember, createNewOrionAccount } = useCreateMember()
+  const { displaySnackbar } = useSnackbar()
+
+  const resetSearchParams = useCallback(() => setSearchParams(new URLSearchParams()), [setSearchParams])
 
   const primaryButton = useMemo(() => {
     if (step === AccountSetupStep.verification) {
@@ -36,6 +45,14 @@ export const AccountSetup = () => {
         text: loading ? 'Verifying...' : 'Set password',
         onClick: () => setStep(AccountSetupStep.password),
         disabled: loading,
+      }
+    }
+
+    if (step === AccountSetupStep.creation) {
+      return {
+        text: 'Waiting...',
+        onClick: () => setStep(AccountSetupStep.password),
+        disabled: true,
       }
     }
 
@@ -55,10 +72,10 @@ export const AccountSetup = () => {
   }, [loading, primaryAction, step])
 
   const secondaryButton = useMemo(() => {
-    if ([AccountSetupStep.verification, AccountSetupStep.password].includes(step)) {
+    if ([AccountSetupStep.verification, AccountSetupStep.password, AccountSetupStep.creation].includes(step)) {
       return {
         text: 'Cancel',
-        onClick: () => setStep(AccountSetupStep.verification),
+        onClick: () => resetSearchParams(),
       }
     }
 
@@ -66,7 +83,39 @@ export const AccountSetup = () => {
       text: 'Go back',
       onClick: () => setStep((prev) => prev - 1),
     }
-  }, [step])
+  }, [resetSearchParams, step])
+
+  const handleAccountAndMemberCreation = async () => {
+    await createNewOrionAccount({
+      data: {
+        confirmedTerms: true,
+        email: formRef.current.email ?? 'alek12342@gmail.com',
+        mnemonic: formRef.current.mnemonic ?? '',
+        password: formRef.current.password ?? '',
+        emailConfimationToken: confirmationCode ?? '',
+      },
+      onError: () => {
+        resetSearchParams()
+      },
+      onSuccess: async () => {
+        const membershipId = await createNewMember({
+          data: {
+            handle: 'testttt1',
+            captchaToken: formRef.current.captchaToken ?? '',
+            allowDownload: true,
+            mnemonic: formRef.current.mnemonic ?? '',
+          },
+          onError: () => {
+            displaySnackbar({
+              iconType: 'error',
+              title: 'Error during membership creation',
+            })
+            resetSearchParams()
+          },
+        })
+      },
+    })
+  }
 
   if (!confirmationCode) {
     return null
@@ -101,6 +150,7 @@ export const AccountSetup = () => {
               ...formRef.current,
               ...data,
             }
+            handleAccountAndMemberCreation()
           }}
           setActionButtonHandler={(fn) => setPrimaryAction(() => fn)}
         />

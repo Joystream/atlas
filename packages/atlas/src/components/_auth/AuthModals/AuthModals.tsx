@@ -4,6 +4,7 @@ import { LogInModal } from '@/components/_auth/LogInModal'
 import { CreateChannelModal } from '@/components/_channel/CreateChannelModal'
 import { useAuthStore } from '@/providers/auth/auth.store'
 
+import { AccountSetup } from '../AccountSetup'
 import { EmailSetup } from '../EmailSetup'
 import { ForgotPasswordModal } from '../ForgotPasswordModal/ForgotPasswordModal'
 
@@ -19,9 +20,10 @@ export const AuthModals = () => {
         <ForgotPasswordModal />
         <CreateChannelModal />
         <EmailSetup />
+        <AccountSetup />
       </>
     )
   }
 
-  return null
+  return <AccountSetup />
 }

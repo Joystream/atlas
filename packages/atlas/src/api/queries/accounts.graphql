@@ -2,9 +2,13 @@ query GetCurrentAccount {
   accountData {
     email
     id
-    isEmailConfirmed
-    joystreamAccount
-    membershipId
+    joystreamAccount {
+      id
+      memberships {
+        id
+        controllerAccountId
+      }
+    }
     followedChannels {
       channelId
       timestamp

@@ -12,9 +12,11 @@ export type GetCurrentAccountQuery = {
     __typename?: 'AccountData'
     email: string
     id: string
-    isEmailConfirmed: boolean
-    joystreamAccount: string
-    membershipId: string
+    joystreamAccount: {
+      __typename?: 'BlockchainAccountType'
+      id: string
+      memberships: Array<{ __typename?: 'MembershipType'; id: string; controllerAccountId?: string | null }>
+    }
     followedChannels: Array<{ __typename?: 'FollowedChannel'; channelId: string; timestamp: string }>
   }
 }
@@ -40,9 +42,13 @@ export const GetCurrentAccountDocument = gql`
     accountData {
       email
       id
-      isEmailConfirmed
-      joystreamAccount
-      membershipId
+      joystreamAccount {
+        id
+        memberships {
+          id
+          controllerAccountId
+        }
+      }
       followedChannels {
         channelId
         timestamp

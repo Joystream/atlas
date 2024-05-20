@@ -23,18 +23,12 @@ export type Account = {
   id: Scalars['String']
   /** Indicates whether the access to the gateway account is blocked */
   isBlocked: Scalars['Boolean']
-  /** Indicates whether the gateway account's e-mail has been confirmed or not. */
-  isEmailConfirmed: Scalars['Boolean']
   /** Blockchain (joystream) account associated with the gateway account */
-  joystreamAccount: Scalars['String']
-  /** On-chain membership associated with the gateway account */
-  membership: Membership
+  joystreamAccount: BlockchainAccount
   /** notification preferences for the account */
   notificationPreferences: AccountNotificationPreferences
   /** runtime notifications */
   notifications: Array<Notification>
-  /** ID of the channel which referred the user to the platform */
-  referrerChannelId?: Maybe<Scalars['String']>
   /** Time when the gateway account was registered */
   registeredAt: Scalars['DateTime']
   /** The user associated with the gateway account (the Gateway Account Owner) */
@@ -54,9 +48,7 @@ export type AccountData = {
   email: Scalars['String']
   followedChannels: Array<FollowedChannel>
   id: Scalars['String']
-  isEmailConfirmed: Scalars['Boolean']
-  joystreamAccount: Scalars['String']
-  membershipId: Scalars['String']
+  joystreamAccount: BlockchainAccountType
   preferences?: Maybe<AccountNotificationPreferencesOutput>
 }
 
@@ -279,24 +271,8 @@ export enum AccountOrderByInput {
   IdDesc = 'id_DESC',
   IsBlockedAsc = 'isBlocked_ASC',
   IsBlockedDesc = 'isBlocked_DESC',
-  IsEmailConfirmedAsc = 'isEmailConfirmed_ASC',
-  IsEmailConfirmedDesc = 'isEmailConfirmed_DESC',
-  JoystreamAccountAsc = 'joystreamAccount_ASC',
-  JoystreamAccountDesc = 'joystreamAccount_DESC',
-  MembershipControllerAccountAsc = 'membership_controllerAccount_ASC',
-  MembershipControllerAccountDesc = 'membership_controllerAccount_DESC',
-  MembershipCreatedAtAsc = 'membership_createdAt_ASC',
-  MembershipCreatedAtDesc = 'membership_createdAt_DESC',
-  MembershipHandleRawAsc = 'membership_handleRaw_ASC',
-  MembershipHandleRawDesc = 'membership_handleRaw_DESC',
-  MembershipHandleAsc = 'membership_handle_ASC',
-  MembershipHandleDesc = 'membership_handle_DESC',
-  MembershipIdAsc = 'membership_id_ASC',
-  MembershipIdDesc = 'membership_id_DESC',
-  MembershipTotalChannelsCreatedAsc = 'membership_totalChannelsCreated_ASC',
-  MembershipTotalChannelsCreatedDesc = 'membership_totalChannelsCreated_DESC',
-  ReferrerChannelIdAsc = 'referrerChannelId_ASC',
-  ReferrerChannelIdDesc = 'referrerChannelId_DESC',
+  JoystreamAccountIdAsc = 'joystreamAccount_id_ASC',
+  JoystreamAccountIdDesc = 'joystreamAccount_id_DESC',
   RegisteredAtAsc = 'registeredAt_ASC',
   RegisteredAtDesc = 'registeredAt_DESC',
   UserIdAsc = 'user_id_ASC',
@@ -345,50 +321,13 @@ export type AccountWhereInput = {
   isBlocked_eq?: InputMaybe<Scalars['Boolean']>
   isBlocked_isNull?: InputMaybe<Scalars['Boolean']>
   isBlocked_not_eq?: InputMaybe<Scalars['Boolean']>
-  isEmailConfirmed_eq?: InputMaybe<Scalars['Boolean']>
-  isEmailConfirmed_isNull?: InputMaybe<Scalars['Boolean']>
-  isEmailConfirmed_not_eq?: InputMaybe<Scalars['Boolean']>
-  joystreamAccount_contains?: InputMaybe<Scalars['String']>
-  joystreamAccount_containsInsensitive?: InputMaybe<Scalars['String']>
-  joystreamAccount_endsWith?: InputMaybe<Scalars['String']>
-  joystreamAccount_eq?: InputMaybe<Scalars['String']>
-  joystreamAccount_gt?: InputMaybe<Scalars['String']>
-  joystreamAccount_gte?: InputMaybe<Scalars['String']>
-  joystreamAccount_in?: InputMaybe<Array<Scalars['String']>>
+  joystreamAccount?: InputMaybe<BlockchainAccountWhereInput>
   joystreamAccount_isNull?: InputMaybe<Scalars['Boolean']>
-  joystreamAccount_lt?: InputMaybe<Scalars['String']>
-  joystreamAccount_lte?: InputMaybe<Scalars['String']>
-  joystreamAccount_not_contains?: InputMaybe<Scalars['String']>
-  joystreamAccount_not_containsInsensitive?: InputMaybe<Scalars['String']>
-  joystreamAccount_not_endsWith?: InputMaybe<Scalars['String']>
-  joystreamAccount_not_eq?: InputMaybe<Scalars['String']>
-  joystreamAccount_not_in?: InputMaybe<Array<Scalars['String']>>
-  joystreamAccount_not_startsWith?: InputMaybe<Scalars['String']>
-  joystreamAccount_startsWith?: InputMaybe<Scalars['String']>
-  membership?: InputMaybe<MembershipWhereInput>
-  membership_isNull?: InputMaybe<Scalars['Boolean']>
   notificationPreferences?: InputMaybe<AccountNotificationPreferencesWhereInput>
   notificationPreferences_isNull?: InputMaybe<Scalars['Boolean']>
   notifications_every?: InputMaybe<NotificationWhereInput>
   notifications_none?: InputMaybe<NotificationWhereInput>
   notifications_some?: InputMaybe<NotificationWhereInput>
-  referrerChannelId_contains?: InputMaybe<Scalars['String']>
-  referrerChannelId_containsInsensitive?: InputMaybe<Scalars['String']>
-  referrerChannelId_endsWith?: InputMaybe<Scalars['String']>
-  referrerChannelId_eq?: InputMaybe<Scalars['String']>
-  referrerChannelId_gt?: InputMaybe<Scalars['String']>
-  referrerChannelId_gte?: InputMaybe<Scalars['String']>
-  referrerChannelId_in?: InputMaybe<Array<Scalars['String']>>
-  referrerChannelId_isNull?: InputMaybe<Scalars['Boolean']>
-  referrerChannelId_lt?: InputMaybe<Scalars['String']>
-  referrerChannelId_lte?: InputMaybe<Scalars['String']>
-  referrerChannelId_not_contains?: InputMaybe<Scalars['String']>
-  referrerChannelId_not_containsInsensitive?: InputMaybe<Scalars['String']>
-  referrerChannelId_not_endsWith?: InputMaybe<Scalars['String']>
-  referrerChannelId_not_eq?: InputMaybe<Scalars['String']>
-  referrerChannelId_not_in?: InputMaybe<Array<Scalars['String']>>
-  referrerChannelId_not_startsWith?: InputMaybe<Scalars['String']>
-  referrerChannelId_startsWith?: InputMaybe<Scalars['String']>
   registeredAt_eq?: InputMaybe<Scalars['DateTime']>
   registeredAt_gt?: InputMaybe<Scalars['DateTime']>
   registeredAt_gte?: InputMaybe<Scalars['DateTime']>
@@ -781,8 +720,6 @@ export enum AppOrderByInput {
   NameDesc = 'name_DESC',
   OneLinerAsc = 'oneLiner_ASC',
   OneLinerDesc = 'oneLiner_DESC',
-  OwnerMemberControllerAccountAsc = 'ownerMember_controllerAccount_ASC',
-  OwnerMemberControllerAccountDesc = 'ownerMember_controllerAccount_DESC',
   OwnerMemberCreatedAtAsc = 'ownerMember_createdAt_ASC',
   OwnerMemberCreatedAtDesc = 'ownerMember_createdAt_DESC',
   OwnerMemberHandleRawAsc = 'ownerMember_handleRaw_ASC',
@@ -1178,8 +1115,6 @@ export enum AuctionOrderByInput {
   TopBidIndexInBlockDesc = 'topBid_indexInBlock_DESC',
   TopBidIsCanceledAsc = 'topBid_isCanceled_ASC',
   TopBidIsCanceledDesc = 'topBid_isCanceled_DESC',
-  WinningMemberControllerAccountAsc = 'winningMember_controllerAccount_ASC',
-  WinningMemberControllerAccountDesc = 'winningMember_controllerAccount_DESC',
   WinningMemberCreatedAtAsc = 'winningMember_createdAt_ASC',
   WinningMemberCreatedAtDesc = 'winningMember_createdAt_DESC',
   WinningMemberHandleRawAsc = 'winningMember_handleRaw_ASC',
@@ -1389,8 +1324,6 @@ export enum AuctionWhitelistedMemberOrderByInput {
   AuctionStartsAtBlockDesc = 'auction_startsAtBlock_DESC',
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
-  MemberControllerAccountAsc = 'member_controllerAccount_ASC',
-  MemberControllerAccountDesc = 'member_controllerAccount_DESC',
   MemberCreatedAtAsc = 'member_createdAt_ASC',
   MemberCreatedAtDesc = 'member_createdAt_DESC',
   MemberHandleRawAsc = 'member_handleRaw_ASC',
@@ -1561,8 +1494,6 @@ export enum BannedMemberOrderByInput {
   ChannelVideoViewsNumDesc = 'channel_videoViewsNum_DESC',
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
-  MemberControllerAccountAsc = 'member_controllerAccount_ASC',
-  MemberControllerAccountDesc = 'member_controllerAccount_DESC',
   MemberCreatedAtAsc = 'member_createdAt_ASC',
   MemberCreatedAtDesc = 'member_createdAt_DESC',
   MemberHandleRawAsc = 'member_handleRaw_ASC',
@@ -1824,8 +1755,6 @@ export enum BidOrderByInput {
   AuctionStartingPriceDesc = 'auction_startingPrice_DESC',
   AuctionStartsAtBlockAsc = 'auction_startsAtBlock_ASC',
   AuctionStartsAtBlockDesc = 'auction_startsAtBlock_DESC',
-  BidderControllerAccountAsc = 'bidder_controllerAccount_ASC',
-  BidderControllerAccountDesc = 'bidder_controllerAccount_DESC',
   BidderCreatedAtAsc = 'bidder_createdAt_ASC',
   BidderCreatedAtDesc = 'bidder_createdAt_DESC',
   BidderHandleRawAsc = 'bidder_handleRaw_ASC',
@@ -1944,6 +1873,70 @@ export type BidWhereInput = {
 export type BidsConnection = {
   __typename?: 'BidsConnection'
   edges: Array<BidEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type BlockchainAccount = {
+  __typename?: 'BlockchainAccount'
+  /** The blockchain account id/address */
+  id: Scalars['String']
+  /** Membership associated with the blockchain account (controllerAccount) */
+  memberships: Array<Membership>
+}
+
+export type BlockchainAccountMembershipsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<MembershipOrderByInput>>
+  where?: InputMaybe<MembershipWhereInput>
+}
+
+export type BlockchainAccountEdge = {
+  __typename?: 'BlockchainAccountEdge'
+  cursor: Scalars['String']
+  node: BlockchainAccount
+}
+
+export enum BlockchainAccountOrderByInput {
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+}
+
+export type BlockchainAccountType = {
+  __typename?: 'BlockchainAccountType'
+  id: Scalars['String']
+  memberships: Array<MembershipType>
+}
+
+export type BlockchainAccountWhereInput = {
+  AND?: InputMaybe<Array<BlockchainAccountWhereInput>>
+  OR?: InputMaybe<Array<BlockchainAccountWhereInput>>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  memberships_every?: InputMaybe<MembershipWhereInput>
+  memberships_none?: InputMaybe<MembershipWhereInput>
+  memberships_some?: InputMaybe<MembershipWhereInput>
+}
+
+export type BlockchainAccountsConnection = {
+  __typename?: 'BlockchainAccountsConnection'
+  edges: Array<BlockchainAccountEdge>
   pageInfo: PageInfo
   totalCount: Scalars['Int']
 }
@@ -2288,8 +2281,6 @@ export enum ChannelOrderByInput {
   IsPublicDesc = 'isPublic_DESC',
   LanguageAsc = 'language_ASC',
   LanguageDesc = 'language_DESC',
-  OwnerMemberControllerAccountAsc = 'ownerMember_controllerAccount_ASC',
-  OwnerMemberControllerAccountDesc = 'ownerMember_controllerAccount_DESC',
   OwnerMemberCreatedAtAsc = 'ownerMember_createdAt_ASC',
   OwnerMemberCreatedAtDesc = 'ownerMember_createdAt_DESC',
   OwnerMemberHandleRawAsc = 'ownerMember_handleRaw_ASC',
@@ -2929,8 +2920,6 @@ export type CommentEdge = {
 }
 
 export enum CommentOrderByInput {
-  AuthorControllerAccountAsc = 'author_controllerAccount_ASC',
-  AuthorControllerAccountDesc = 'author_controllerAccount_DESC',
   AuthorCreatedAtAsc = 'author_createdAt_ASC',
   AuthorCreatedAtDesc = 'author_createdAt_DESC',
   AuthorHandleRawAsc = 'author_handleRaw_ASC',
@@ -3090,8 +3079,6 @@ export enum CommentReactionOrderByInput {
   CommentTextDesc = 'comment_text_DESC',
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
-  MemberControllerAccountAsc = 'member_controllerAccount_ASC',
-  MemberControllerAccountDesc = 'member_controllerAccount_DESC',
   MemberCreatedAtAsc = 'member_createdAt_ASC',
   MemberCreatedAtDesc = 'member_createdAt_DESC',
   MemberHandleRawAsc = 'member_handleRaw_ASC',
@@ -3397,6 +3384,12 @@ export enum Continent {
   Na = 'NA',
   Oc = 'OC',
   Sa = 'SA',
+}
+
+export type CreateAccountMembershipResult = {
+  __typename?: 'CreateAccountMembershipResult'
+  accountId: Scalars['String']
+  memberId: Scalars['Float']
 }
 
 export type CreatorReceivesAuctionBid = {
@@ -4785,6 +4778,99 @@ export type DistributionBucketsConnection = {
   totalCount: Scalars['Int']
 }
 
+export type EmailConfirmationToken = {
+  __typename?: 'EmailConfirmationToken'
+  /** The email the token was issued for */
+  email: Scalars['String']
+  /** When does the token expire or when has it expired */
+  expiry: Scalars['DateTime']
+  /** The token itself (32-byte string, securely random) */
+  id: Scalars['String']
+  /** When was the token issued */
+  issuedAt: Scalars['DateTime']
+}
+
+export type EmailConfirmationTokenEdge = {
+  __typename?: 'EmailConfirmationTokenEdge'
+  cursor: Scalars['String']
+  node: EmailConfirmationToken
+}
+
+export enum EmailConfirmationTokenOrderByInput {
+  EmailAsc = 'email_ASC',
+  EmailDesc = 'email_DESC',
+  ExpiryAsc = 'expiry_ASC',
+  ExpiryDesc = 'expiry_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  IssuedAtAsc = 'issuedAt_ASC',
+  IssuedAtDesc = 'issuedAt_DESC',
+}
+
+export type EmailConfirmationTokenWhereInput = {
+  AND?: InputMaybe<Array<EmailConfirmationTokenWhereInput>>
+  OR?: InputMaybe<Array<EmailConfirmationTokenWhereInput>>
+  email_contains?: InputMaybe<Scalars['String']>
+  email_containsInsensitive?: InputMaybe<Scalars['String']>
+  email_endsWith?: InputMaybe<Scalars['String']>
+  email_eq?: InputMaybe<Scalars['String']>
+  email_gt?: InputMaybe<Scalars['String']>
+  email_gte?: InputMaybe<Scalars['String']>
+  email_in?: InputMaybe<Array<Scalars['String']>>
+  email_isNull?: InputMaybe<Scalars['Boolean']>
+  email_lt?: InputMaybe<Scalars['String']>
+  email_lte?: InputMaybe<Scalars['String']>
+  email_not_contains?: InputMaybe<Scalars['String']>
+  email_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  email_not_endsWith?: InputMaybe<Scalars['String']>
+  email_not_eq?: InputMaybe<Scalars['String']>
+  email_not_in?: InputMaybe<Array<Scalars['String']>>
+  email_not_startsWith?: InputMaybe<Scalars['String']>
+  email_startsWith?: InputMaybe<Scalars['String']>
+  expiry_eq?: InputMaybe<Scalars['DateTime']>
+  expiry_gt?: InputMaybe<Scalars['DateTime']>
+  expiry_gte?: InputMaybe<Scalars['DateTime']>
+  expiry_in?: InputMaybe<Array<Scalars['DateTime']>>
+  expiry_isNull?: InputMaybe<Scalars['Boolean']>
+  expiry_lt?: InputMaybe<Scalars['DateTime']>
+  expiry_lte?: InputMaybe<Scalars['DateTime']>
+  expiry_not_eq?: InputMaybe<Scalars['DateTime']>
+  expiry_not_in?: InputMaybe<Array<Scalars['DateTime']>>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  issuedAt_eq?: InputMaybe<Scalars['DateTime']>
+  issuedAt_gt?: InputMaybe<Scalars['DateTime']>
+  issuedAt_gte?: InputMaybe<Scalars['DateTime']>
+  issuedAt_in?: InputMaybe<Array<Scalars['DateTime']>>
+  issuedAt_isNull?: InputMaybe<Scalars['Boolean']>
+  issuedAt_lt?: InputMaybe<Scalars['DateTime']>
+  issuedAt_lte?: InputMaybe<Scalars['DateTime']>
+  issuedAt_not_eq?: InputMaybe<Scalars['DateTime']>
+  issuedAt_not_in?: InputMaybe<Array<Scalars['DateTime']>>
+}
+
+export type EmailConfirmationTokensConnection = {
+  __typename?: 'EmailConfirmationTokensConnection'
+  edges: Array<EmailConfirmationTokenEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
 export type EmailDeliveryAttempt = {
   __typename?: 'EmailDeliveryAttempt'
   /** UUID */
@@ -4904,12 +4990,6 @@ export enum EncryptionArtifactsOrderByInput {
   AccountIdDesc = 'account_id_DESC',
   AccountIsBlockedAsc = 'account_isBlocked_ASC',
   AccountIsBlockedDesc = 'account_isBlocked_DESC',
-  AccountIsEmailConfirmedAsc = 'account_isEmailConfirmed_ASC',
-  AccountIsEmailConfirmedDesc = 'account_isEmailConfirmed_DESC',
-  AccountJoystreamAccountAsc = 'account_joystreamAccount_ASC',
-  AccountJoystreamAccountDesc = 'account_joystreamAccount_DESC',
-  AccountReferrerChannelIdAsc = 'account_referrerChannelId_ASC',
-  AccountReferrerChannelIdDesc = 'account_referrerChannelId_DESC',
   AccountRegisteredAtAsc = 'account_registeredAt_ASC',
   AccountRegisteredAtDesc = 'account_registeredAt_DESC',
   CipherIvAsc = 'cipherIv_ASC',
@@ -5905,8 +5985,6 @@ export enum MemberMetadataOrderByInput {
   AvatarIsTypeOfDesc = 'avatar_isTypeOf_DESC',
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
-  MemberControllerAccountAsc = 'member_controllerAccount_ASC',
-  MemberControllerAccountDesc = 'member_controllerAccount_DESC',
   MemberCreatedAtAsc = 'member_createdAt_ASC',
   MemberCreatedAtDesc = 'member_createdAt_DESC',
   MemberHandleRawAsc = 'member_handleRaw_ASC',
@@ -5995,7 +6073,7 @@ export type Membership = {
   /** Channels owned by this member */
   channels: Array<Channel>
   /** Member's controller account id */
-  controllerAccount: Scalars['String']
+  controllerAccount: BlockchainAccount
   /** Timestamp of the block the membership was created at */
   createdAt: Scalars['DateTime']
   /** The handle coming from decoded handleRaw if possible */
@@ -6053,8 +6131,8 @@ export type MembershipEdge = {
 }
 
 export enum MembershipOrderByInput {
-  ControllerAccountAsc = 'controllerAccount_ASC',
-  ControllerAccountDesc = 'controllerAccount_DESC',
+  ControllerAccountIdAsc = 'controllerAccount_id_ASC',
+  ControllerAccountIdDesc = 'controllerAccount_id_DESC',
   CreatedAtAsc = 'createdAt_ASC',
   CreatedAtDesc = 'createdAt_DESC',
   HandleRawAsc = 'handleRaw_ASC',
@@ -6073,6 +6151,12 @@ export enum MembershipOrderByInput {
   TotalChannelsCreatedDesc = 'totalChannelsCreated_DESC',
 }
 
+export type MembershipType = {
+  __typename?: 'MembershipType'
+  controllerAccountId?: Maybe<Scalars['String']>
+  id: Scalars['String']
+}
+
 export type MembershipWhereInput = {
   AND?: InputMaybe<Array<MembershipWhereInput>>
   OR?: InputMaybe<Array<MembershipWhereInput>>
@@ -6082,23 +6166,8 @@ export type MembershipWhereInput = {
   channels_every?: InputMaybe<ChannelWhereInput>
   channels_none?: InputMaybe<ChannelWhereInput>
   channels_some?: InputMaybe<ChannelWhereInput>
-  controllerAccount_contains?: InputMaybe<Scalars['String']>
-  controllerAccount_containsInsensitive?: InputMaybe<Scalars['String']>
-  controllerAccount_endsWith?: InputMaybe<Scalars['String']>
-  controllerAccount_eq?: InputMaybe<Scalars['String']>
-  controllerAccount_gt?: InputMaybe<Scalars['String']>
-  controllerAccount_gte?: InputMaybe<Scalars['String']>
-  controllerAccount_in?: InputMaybe<Array<Scalars['String']>>
+  controllerAccount?: InputMaybe<BlockchainAccountWhereInput>
   controllerAccount_isNull?: InputMaybe<Scalars['Boolean']>
-  controllerAccount_lt?: InputMaybe<Scalars['String']>
-  controllerAccount_lte?: InputMaybe<Scalars['String']>
-  controllerAccount_not_contains?: InputMaybe<Scalars['String']>
-  controllerAccount_not_containsInsensitive?: InputMaybe<Scalars['String']>
-  controllerAccount_not_endsWith?: InputMaybe<Scalars['String']>
-  controllerAccount_not_eq?: InputMaybe<Scalars['String']>
-  controllerAccount_not_in?: InputMaybe<Array<Scalars['String']>>
-  controllerAccount_not_startsWith?: InputMaybe<Scalars['String']>
-  controllerAccount_startsWith?: InputMaybe<Scalars['String']>
   createdAt_eq?: InputMaybe<Scalars['DateTime']>
   createdAt_gt?: InputMaybe<Scalars['DateTime']>
   createdAt_gte?: InputMaybe<Scalars['DateTime']>
@@ -6294,6 +6363,7 @@ export type MetaprotocolTransactionStatusEventData = {
 export type Mutation = {
   __typename?: 'Mutation'
   addVideoView: AddVideoViewResult
+  createAccountMembership: CreateAccountMembershipResult
   excludeChannel: ExcludeChannelResult
   excludeContent: ExcludeContentResult
   excludeVideo: ExcludeVideoInfo
@@ -6330,6 +6400,13 @@ export type Mutation = {
 
 export type MutationAddVideoViewArgs = {
   videoId: Scalars['String']
+}
+
+export type MutationCreateAccountMembershipArgs = {
+  about: Scalars['String']
+  avatar: Scalars['String']
+  handle: Scalars['String']
+  name: Scalars['String']
 }
 
 export type MutationExcludeChannelArgs = {
@@ -6554,8 +6631,6 @@ export enum NftActivityOrderByInput {
   EventTimestampDesc = 'event_timestamp_DESC',
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
-  MemberControllerAccountAsc = 'member_controllerAccount_ASC',
-  MemberControllerAccountDesc = 'member_controllerAccount_DESC',
   MemberCreatedAtAsc = 'member_createdAt_ASC',
   MemberCreatedAtDesc = 'member_createdAt_DESC',
   MemberHandleRawAsc = 'member_handleRaw_ASC',
@@ -7056,12 +7131,6 @@ export enum NotificationOrderByInput {
   AccountIdDesc = 'account_id_DESC',
   AccountIsBlockedAsc = 'account_isBlocked_ASC',
   AccountIsBlockedDesc = 'account_isBlocked_DESC',
-  AccountIsEmailConfirmedAsc = 'account_isEmailConfirmed_ASC',
-  AccountIsEmailConfirmedDesc = 'account_isEmailConfirmed_DESC',
-  AccountJoystreamAccountAsc = 'account_joystreamAccount_ASC',
-  AccountJoystreamAccountDesc = 'account_joystreamAccount_DESC',
-  AccountReferrerChannelIdAsc = 'account_referrerChannelId_ASC',
-  AccountReferrerChannelIdDesc = 'account_referrerChannelId_DESC',
   AccountRegisteredAtAsc = 'account_registeredAt_ASC',
   AccountRegisteredAtDesc = 'account_registeredAt_DESC',
   CreatedAtAsc = 'createdAt_ASC',
@@ -8144,6 +8213,11 @@ export type Query = {
   bidByUniqueInput?: Maybe<Bid>
   bids: Array<Bid>
   bidsConnection: BidsConnection
+  blockchainAccountById?: Maybe<BlockchainAccount>
+  /** @deprecated Use blockchainAccountById */
+  blockchainAccountByUniqueInput?: Maybe<BlockchainAccount>
+  blockchainAccounts: Array<BlockchainAccount>
+  blockchainAccountsConnection: BlockchainAccountsConnection
   channelById?: Maybe<Channel>
   /** @deprecated Use channelById */
   channelByUniqueInput?: Maybe<Channel>
@@ -8221,6 +8295,11 @@ export type Query = {
   distributionBuckets: Array<DistributionBucket>
   distributionBucketsConnection: DistributionBucketsConnection
   dumbPublicFeedVideos: Array<Video>
+  emailConfirmationTokenById?: Maybe<EmailConfirmationToken>
+  /** @deprecated Use emailConfirmationTokenById */
+  emailConfirmationTokenByUniqueInput?: Maybe<EmailConfirmationToken>
+  emailConfirmationTokens: Array<EmailConfirmationToken>
+  emailConfirmationTokensConnection: EmailConfirmationTokensConnection
   emailDeliveryAttemptById?: Maybe<EmailDeliveryAttempt>
   /** @deprecated Use emailDeliveryAttemptById */
   emailDeliveryAttemptByUniqueInput?: Maybe<EmailDeliveryAttempt>
@@ -8648,6 +8727,28 @@ export type QueryBidsConnectionArgs = {
   where?: InputMaybe<BidWhereInput>
 }
 
+export type QueryBlockchainAccountByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryBlockchainAccountByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryBlockchainAccountsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<BlockchainAccountOrderByInput>>
+  where?: InputMaybe<BlockchainAccountWhereInput>
+}
+
+export type QueryBlockchainAccountsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<BlockchainAccountOrderByInput>
+  where?: InputMaybe<BlockchainAccountWhereInput>
+}
+
 export type QueryChannelByIdArgs = {
   id: Scalars['String']
 }
@@ -8988,6 +9089,28 @@ export type QueryDumbPublicFeedVideosArgs = {
   limit?: InputMaybe<Scalars['Int']>
   skipVideoIds?: InputMaybe<Array<Scalars['String']>>
   where?: InputMaybe<VideoWhereInput>
+}
+
+export type QueryEmailConfirmationTokenByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryEmailConfirmationTokenByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryEmailConfirmationTokensArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<EmailConfirmationTokenOrderByInput>>
+  where?: InputMaybe<EmailConfirmationTokenWhereInput>
+}
+
+export type QueryEmailConfirmationTokensConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<EmailConfirmationTokenOrderByInput>
+  where?: InputMaybe<EmailConfirmationTokenWhereInput>
 }
 
 export type QueryEmailDeliveryAttemptByIdArgs = {
@@ -11017,12 +11140,6 @@ export enum SessionOrderByInput {
   AccountIdDesc = 'account_id_DESC',
   AccountIsBlockedAsc = 'account_isBlocked_ASC',
   AccountIsBlockedDesc = 'account_isBlocked_DESC',
-  AccountIsEmailConfirmedAsc = 'account_isEmailConfirmed_ASC',
-  AccountIsEmailConfirmedDesc = 'account_isEmailConfirmed_DESC',
-  AccountJoystreamAccountAsc = 'account_joystreamAccount_ASC',
-  AccountJoystreamAccountDesc = 'account_joystreamAccount_DESC',
-  AccountReferrerChannelIdAsc = 'account_referrerChannelId_ASC',
-  AccountReferrerChannelIdDesc = 'account_referrerChannelId_DESC',
   AccountRegisteredAtAsc = 'account_registeredAt_ASC',
   AccountRegisteredAtDesc = 'account_registeredAt_DESC',
   BrowserAsc = 'browser_ASC',
@@ -12023,6 +12140,8 @@ export type Subscription = {
   benefits: Array<Benefit>
   bidById?: Maybe<Bid>
   bids: Array<Bid>
+  blockchainAccountById?: Maybe<BlockchainAccount>
+  blockchainAccounts: Array<BlockchainAccount>
   channelById?: Maybe<Channel>
   channelFollowById?: Maybe<ChannelFollow>
   channelFollows: Array<ChannelFollow>
@@ -12053,6 +12172,8 @@ export type Subscription = {
   distributionBucketOperatorMetadataById?: Maybe<DistributionBucketOperatorMetadata>
   distributionBucketOperators: Array<DistributionBucketOperator>
   distributionBuckets: Array<DistributionBucket>
+  emailConfirmationTokenById?: Maybe<EmailConfirmationToken>
+  emailConfirmationTokens: Array<EmailConfirmationToken>
   emailDeliveryAttemptById?: Maybe<EmailDeliveryAttempt>
   emailDeliveryAttempts: Array<EmailDeliveryAttempt>
   encryptionArtifacts: Array<EncryptionArtifacts>
@@ -12241,6 +12362,17 @@ export type SubscriptionBidsArgs = {
   where?: InputMaybe<BidWhereInput>
 }
 
+export type SubscriptionBlockchainAccountByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionBlockchainAccountsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<BlockchainAccountOrderByInput>>
+  where?: InputMaybe<BlockchainAccountWhereInput>
+}
+
 export type SubscriptionChannelByIdArgs = {
   id: Scalars['String']
 }
@@ -12404,6 +12536,17 @@ export type SubscriptionDistributionBucketsArgs = {
   offset?: InputMaybe<Scalars['Int']>
   orderBy?: InputMaybe<Array<DistributionBucketOrderByInput>>
   where?: InputMaybe<DistributionBucketWhereInput>
+}
+
+export type SubscriptionEmailConfirmationTokenByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionEmailConfirmationTokensArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<EmailConfirmationTokenOrderByInput>>
+  where?: InputMaybe<EmailConfirmationTokenWhereInput>
 }
 
 export type SubscriptionEmailDeliveryAttemptByIdArgs = {
@@ -12963,8 +13106,6 @@ export enum TokenAccountOrderByInput {
   DeletedDesc = 'deleted_DESC',
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
-  MemberControllerAccountAsc = 'member_controllerAccount_ASC',
-  MemberControllerAccountDesc = 'member_controllerAccount_DESC',
   MemberCreatedAtAsc = 'member_createdAt_ASC',
   MemberCreatedAtDesc = 'member_createdAt_DESC',
   MemberHandleRawAsc = 'member_handleRaw_ASC',
@@ -13279,12 +13420,6 @@ export enum TokenOrderByInput {
   IssuedForIdDesc = 'issuedFor_id_DESC',
   IssuedForIsBlockedAsc = 'issuedFor_isBlocked_ASC',
   IssuedForIsBlockedDesc = 'issuedFor_isBlocked_DESC',
-  IssuedForIsEmailConfirmedAsc = 'issuedFor_isEmailConfirmed_ASC',
-  IssuedForIsEmailConfirmedDesc = 'issuedFor_isEmailConfirmed_DESC',
-  IssuedForJoystreamAccountAsc = 'issuedFor_joystreamAccount_ASC',
-  IssuedForJoystreamAccountDesc = 'issuedFor_joystreamAccount_DESC',
-  IssuedForReferrerChannelIdAsc = 'issuedFor_referrerChannelId_ASC',
-  IssuedForReferrerChannelIdDesc = 'issuedFor_referrerChannelId_DESC',
   IssuedForRegisteredAtAsc = 'issuedFor_registeredAt_ASC',
   IssuedForRegisteredAtDesc = 'issuedFor_registeredAt_DESC',
   TypeAsc = 'type_ASC',
@@ -13642,12 +13777,6 @@ export enum UserOrderByInput {
   AccountIdDesc = 'account_id_DESC',
   AccountIsBlockedAsc = 'account_isBlocked_ASC',
   AccountIsBlockedDesc = 'account_isBlocked_DESC',
-  AccountIsEmailConfirmedAsc = 'account_isEmailConfirmed_ASC',
-  AccountIsEmailConfirmedDesc = 'account_isEmailConfirmed_DESC',
-  AccountJoystreamAccountAsc = 'account_joystreamAccount_ASC',
-  AccountJoystreamAccountDesc = 'account_joystreamAccount_DESC',
-  AccountReferrerChannelIdAsc = 'account_referrerChannelId_ASC',
-  AccountReferrerChannelIdDesc = 'account_referrerChannelId_DESC',
   AccountRegisteredAtAsc = 'account_registeredAt_ASC',
   AccountRegisteredAtDesc = 'account_registeredAt_DESC',
   IdAsc = 'id_ASC',
@@ -15208,8 +15337,6 @@ export enum VideoReactionOrderByInput {
   CreatedAtDesc = 'createdAt_DESC',
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
-  MemberControllerAccountAsc = 'member_controllerAccount_ASC',
-  MemberControllerAccountDesc = 'member_controllerAccount_DESC',
   MemberCreatedAtAsc = 'member_createdAt_ASC',
   MemberCreatedAtDesc = 'member_createdAt_DESC',
   MemberHandleRawAsc = 'member_handleRaw_ASC',

@@ -67,7 +67,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   // keep user used by loggers in sync
   useEffect(() => {
     const user = {
-      accountId: currentUser?.joystreamAccount,
+      accountId: currentUser?.joystreamAccount.id,
       memberId: currentUser?.membershipId,
       channelId: currentMemberships?.[0].channels[0]?.id,
     }
@@ -77,7 +77,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   }, [
     currentMemberships,
     currentUser?.email,
-    currentUser?.joystreamAccount,
+    currentUser?.joystreamAccount.id,
     currentUser?.membershipId,
     setApiActiveAccount,
   ])
@@ -100,7 +100,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       activeChannel,
       refetchUserMemberships,
       memberId: currentUser?.membershipId ?? null,
-      accountId: currentUser?.joystreamAccount ?? null,
+      accountId: currentUser?.joystreamAccount.id ?? null,
       channelId,
       setActiveChannel,
     }),
@@ -111,7 +111,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       activeChannel,
       refetchUserMemberships,
       currentUser?.membershipId,
-      currentUser?.joystreamAccount,
+      currentUser?.joystreamAccount.id,
       channelId,
       setActiveChannel,
     ]

@@ -600,7 +600,7 @@ export type GetChannelPaymentEventsQuery = {
             __typename?: 'Bid'
             id: string
             amount: string
-            bidder: { __typename?: 'Membership'; controllerAccount: string }
+            bidder: { __typename?: 'Membership'; controllerAccount: { __typename?: 'BlockchainAccount'; id: string } }
             nft: {
               __typename?: 'OwnedNft'
               creatorRoyalty?: number | null
@@ -618,13 +618,19 @@ export type GetChannelPaymentEventsQuery = {
           actor:
             | { __typename: 'ContentActorCurator' }
             | { __typename: 'ContentActorLead' }
-            | { __typename: 'ContentActorMember'; member: { __typename?: 'Membership'; controllerAccount: string } }
+            | {
+                __typename: 'ContentActorMember'
+                member: {
+                  __typename?: 'Membership'
+                  controllerAccount: { __typename?: 'BlockchainAccount'; id: string }
+                }
+              }
         }
       | {
           __typename: 'ChannelPaymentMadeEventData'
           amount: string
           rationale?: string | null
-          payer: { __typename?: 'Membership'; controllerAccount: string }
+          payer: { __typename?: 'Membership'; controllerAccount: { __typename?: 'BlockchainAccount'; id: string } }
         }
       | { __typename: 'ChannelPayoutsUpdatedEventData' }
       | { __typename: 'ChannelRewardClaimedAndWithdrawnEventData' }
@@ -664,7 +670,7 @@ export type GetChannelPaymentEventsQuery = {
               creatorRoyalty?: number | null
               video: { __typename?: 'Video'; title?: string | null }
             }
-            bidder: { __typename?: 'Membership'; controllerAccount: string }
+            bidder: { __typename?: 'Membership'; controllerAccount: { __typename?: 'BlockchainAccount'; id: string } }
           }
         }
       | { __typename: 'EnglishAuctionStartedEventData' }
@@ -673,7 +679,7 @@ export type GetChannelPaymentEventsQuery = {
       | {
           __typename: 'NftBoughtEventData'
           price: string
-          buyer: { __typename?: 'Membership'; controllerAccount: string }
+          buyer: { __typename?: 'Membership'; controllerAccount: { __typename?: 'BlockchainAccount'; id: string } }
           nft: {
             __typename?: 'OwnedNft'
             creatorRoyalty?: number | null
@@ -694,7 +700,7 @@ export type GetChannelPaymentEventsQuery = {
               creatorRoyalty?: number | null
               video: { __typename?: 'Video'; title?: string | null }
             }
-            bidder: { __typename?: 'Membership'; controllerAccount: string }
+            bidder: { __typename?: 'Membership'; controllerAccount: { __typename?: 'BlockchainAccount'; id: string } }
           }
           previousNftOwner: { __typename: 'NftOwnerChannel' } | { __typename: 'NftOwnerMember' }
         }
@@ -1543,7 +1549,9 @@ export const GetChannelPaymentEventsDocument = gql`
         ... on NftBoughtEventData {
           price
           buyer {
-            controllerAccount
+            controllerAccount {
+              id
+            }
           }
           nft {
             creatorRoyalty
@@ -1563,7 +1571,9 @@ export const GetChannelPaymentEventsDocument = gql`
             id
             amount
             bidder {
-              controllerAccount
+              controllerAccount {
+                id
+              }
             }
             nft {
               creatorRoyalty
@@ -1572,7 +1582,9 @@ export const GetChannelPaymentEventsDocument = gql`
               }
             }
             bidder {
-              controllerAccount
+              controllerAccount {
+                id
+              }
             }
             amount
           }
@@ -1589,7 +1601,9 @@ export const GetChannelPaymentEventsDocument = gql`
               }
             }
             bidder {
-              controllerAccount
+              controllerAccount {
+                id
+              }
             }
             amount
           }
@@ -1603,7 +1617,9 @@ export const GetChannelPaymentEventsDocument = gql`
               }
             }
             bidder {
-              controllerAccount
+              controllerAccount {
+                id
+              }
             }
             amount
           }
@@ -1615,7 +1631,9 @@ export const GetChannelPaymentEventsDocument = gql`
           winningBid {
             amount
             bidder {
-              controllerAccount
+              controllerAccount {
+                id
+              }
             }
             nft {
               creatorRoyalty
@@ -1640,7 +1658,9 @@ export const GetChannelPaymentEventsDocument = gql`
             }
             ... on ContentActorMember {
               member {
-                controllerAccount
+                controllerAccount {
+                  id
+                }
               }
             }
           }
@@ -1649,14 +1669,18 @@ export const GetChannelPaymentEventsDocument = gql`
           amount
           rationale
           payer {
-            controllerAccount
+            controllerAccount {
+              id
+            }
           }
         }
         ... on ChannelPaymentMadeEventData {
           amount
           rationale
           payer {
-            controllerAccount
+            controllerAccount {
+              id
+            }
           }
         }
         ... on CreatorTokenRevenueSplitIssuedEventData {
