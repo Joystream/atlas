@@ -138,7 +138,7 @@ export const YppHero: FC<YppHeroProps> = ({
                         Go to dashboard
                       </Button>
                     ) : (
-                      <GoogleButton onClick={onSignUpClick} />
+                      <GoogleButton id="rewards-sync-button" onClick={onSignUpClick} />
                     )
                   ) : (
                     <SkeletonLoader width={190} height={48} />
