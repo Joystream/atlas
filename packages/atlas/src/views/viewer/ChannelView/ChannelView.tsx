@@ -5,7 +5,9 @@ import { useNavigate } from 'react-router'
 import { useParams, useSearchParams } from 'react-router-dom'
 
 import { useChannelNftCollectors, useFullChannel } from '@/api/hooks/channel'
+import { useVideoCount } from '@/api/hooks/video'
 import { OwnedNftOrderByInput, VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
+import { useGetNftsCountQuery } from '@/api/queries/__generated__/nfts.generated'
 import { SvgActionCheck, SvgActionFilters, SvgActionFlag, SvgActionMore, SvgActionPlus } from '@/assets/icons'
 import { ChannelTitle } from '@/components/ChannelTitle'
 import { EmptyFallback } from '@/components/EmptyFallback'
@@ -62,6 +64,7 @@ import { ChannelAbout, ChannelNfts, ChannelVideos } from './ChannelViewTabs'
 import { TABS } from './utils'
 
 export const INITIAL_TILES_PER_ROW = 4
+const USER_TIMESTAMP = new Date()
 
 export const ChannelView: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -88,6 +91,35 @@ export const ChannelView: FC = () => {
   const filteredTabs = TABS.filter((tab) =>
     tab === 'Token' ? !!tab && (isChannelOwner || !!channel?.creatorToken?.token.id) : !!tab
   )
+  const { videoCount } = useVideoCount({
+    where: {
+      channel: {
+        id_eq: id,
+      },
+      isPublic_eq: true,
+      createdAt_lt: USER_TIMESTAMP,
+      isCensored_eq: false,
+      thumbnailPhoto: {
+        isAccepted_eq: true,
+      },
+      media: {
+        isAccepted_eq: true,
+      },
+    },
+  })
+  const { data: nftCountData } = useGetNftsCountQuery({
+    variables: {
+      where: {
+        createdAt_lte: USER_TIMESTAMP,
+        video: {
+          channel: {
+            id_eq: id,
+          },
+          isPublic_eq: !isChannelOwner || undefined,
+        },
+      },
+    },
+  })
 
   // At mount set the tab from the search params
   // This hook has to come before useRedirectMigratedContent so it doesn't messes it's navigate call
@@ -186,7 +218,10 @@ export const ChannelView: FC = () => {
 
   const handleOnResizeGrid = (sizes: number[]) => setTilesPerRow(sizes.length)
 
-  const mappedTabs = filteredTabs.map((tab) => ({ name: tab, badgeNumber: 0 }))
+  const mappedTabs = filteredTabs.map((tab) => ({
+    name: tab,
+    pillText: tab === 'Videos' ? videoCount : tab === 'NFTs' ? nftCountData?.ownedNftsConnection.totalCount : undefined,
+  }))
 
   const getChannelContent = (tab: (typeof TABS)[number]) => {
     switch (tab) {

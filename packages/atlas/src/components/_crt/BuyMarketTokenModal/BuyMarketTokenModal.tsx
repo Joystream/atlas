@@ -7,8 +7,10 @@ import {
   useGetCreatorTokenHoldersQuery,
   useGetFullCreatorTokenQuery,
 } from '@/api/queries/__generated__/creatorTokens.generated'
+import { SvgAlertsWarning24 } from '@/assets/icons'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
+import { Tooltip } from '@/components/Tooltip'
 import { AmmModalFormTemplate } from '@/components/_crt/AmmModalTemplates'
 import { AmmModalSummaryTemplate } from '@/components/_crt/AmmModalTemplates/AmmModalSummaryTemplate'
 import { BuyMarketTokenSuccess } from '@/components/_crt/BuyMarketTokenModal/steps/BuyMarketTokenSuccess'
@@ -353,6 +355,8 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
     if (activeStep === BUY_MARKET_TOKEN_STEPS.form) {
       setPrimaryButtonProps({
         text: 'Continue',
+        disabled: hasActiveRevenueShare,
+        variant: hasActiveRevenueShare ? 'warning' : undefined,
         onClick: () => {
           if (hasActiveRevenueShare) {
             displaySnackbar({
@@ -405,6 +409,13 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
       secondaryButton={secondaryButton}
       confetti={activeStep === BUY_MARKET_TOKEN_STEPS.success && smMatch}
       noContentPadding={activeStep === BUY_MARKET_TOKEN_STEPS.conditions}
+      additionalActionsNode={
+        hasActiveRevenueShare ? (
+          <Tooltip text="During revenue share you are unable to trade on market. Please wait until it ends to make new transactions.">
+            <SvgAlertsWarning24 />
+          </Tooltip>
+        ) : null
+      }
     >
       {activeStep === BUY_MARKET_TOKEN_STEPS.form && (
         <AmmModalFormTemplate
