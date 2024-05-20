@@ -1,10 +1,12 @@
 import BN from 'bn.js'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { useGetFullCreatorTokenQuery } from '@/api/queries/__generated__/creatorTokens.generated'
+import { SvgAlertsWarning24 } from '@/assets/icons'
 import { NumberFormat, formatNumberShort } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
+import { Tooltip } from '@/components/Tooltip'
 import { AmmModalFormTemplate } from '@/components/_crt/AmmModalTemplates'
 import { AmmModalSummaryTemplate } from '@/components/_crt/AmmModalTemplates/AmmModalSummaryTemplate'
 import { DialogModal } from '@/components/_overlays/DialogModal'
@@ -13,6 +15,7 @@ import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { useFee, useJoystream } from '@/providers/joystream'
+import { useJoystreamStore } from '@/providers/joystream/joystream.store'
 import { useNetworkUtils } from '@/providers/networkUtils/networkUtils.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
@@ -38,6 +41,7 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
   const { trackAMMTokensSold } = useSegmentAnalytics()
   const { displaySnackbar } = useSnackbar()
   const { fullFee } = useFee('sellTokenOnMarketTx', ['1', '1', '2', '10000000'])
+  const currentBlockRef = useRef(useJoystreamStore((store) => store.currentBlock))
   const { data, loading } = useGetFullCreatorTokenQuery({
     variables: {
       id: tokenId,
@@ -46,7 +50,8 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
       SentryLogger.error('Failed to fetch token data', 'SellTokenModal', { error })
     },
   })
-  const hasActiveRevenueShare = data?.creatorTokenById?.revenueShares.some((rS) => !rS.finalized)
+  const activeRevenueShare = data?.creatorTokenById?.revenueShares.find((rS) => !rS.finalized)
+  const hasActiveRevenueShare = (activeRevenueShare?.endsAt ?? 0) > currentBlockRef.current
 
   const currentAmm = data?.creatorTokenById?.currentAmmSale
   const ammBalance = currentAmm ? +currentAmm.mintedByAmm - +currentAmm.burnedByAmm : 0
@@ -263,6 +268,13 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
       title={`Sell $${title}`}
       show={show}
       onExitClick={onClose}
+      additionalActionsNode={
+        hasActiveRevenueShare ? (
+          <Tooltip text="During revenue share you are unable to trade on market. Please wait until it ends to make new transactions.">
+            <SvgAlertsWarning24 />
+          </Tooltip>
+        ) : null
+      }
       secondaryButton={{
         text: isFormStep ? 'Cancel' : 'Back',
         onClick: isFormStep ? onClose : () => setStep('form'),
@@ -270,6 +282,8 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
       primaryButton={{
         text: isFormStep ? 'Continue' : `Sell $${title}`,
         onClick: isFormStep ? onFormSubmit : onTransactionSubmit,
+        disabled: hasActiveRevenueShare,
+        variant: hasActiveRevenueShare ? 'warning' : undefined,
       }}
     >
       {step === 'form' ? (
