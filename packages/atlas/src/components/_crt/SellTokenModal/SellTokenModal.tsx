@@ -1,5 +1,5 @@
 import BN from 'bn.js'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { useGetFullCreatorTokenQuery } from '@/api/queries/__generated__/creatorTokens.generated'
@@ -15,6 +15,7 @@ import { useGetTokenBalance } from '@/hooks/useGetTokenBalance'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { useFee, useJoystream } from '@/providers/joystream'
+import { useJoystreamStore } from '@/providers/joystream/joystream.store'
 import { useNetworkUtils } from '@/providers/networkUtils/networkUtils.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
@@ -40,6 +41,7 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
   const { trackAMMTokensSold } = useSegmentAnalytics()
   const { displaySnackbar } = useSnackbar()
   const { fullFee } = useFee('sellTokenOnMarketTx', ['1', '1', '2', '10000000'])
+  const currentBlockRef = useRef(useJoystreamStore((store) => store.currentBlock))
   const { data, loading } = useGetFullCreatorTokenQuery({
     variables: {
       id: tokenId,
@@ -48,7 +50,8 @@ export const SellTokenModal = ({ tokenId, onClose: _onClose, show }: SellTokenMo
       SentryLogger.error('Failed to fetch token data', 'SellTokenModal', { error })
     },
   })
-  const hasActiveRevenueShare = data?.creatorTokenById?.revenueShares.some((rS) => !rS.finalized)
+  const activeRevenueShare = data?.creatorTokenById?.revenueShares.find((rS) => !rS.finalized)
+  const hasActiveRevenueShare = (activeRevenueShare?.endsAt ?? 0) > currentBlockRef.current
 
   const currentAmm = data?.creatorTokenById?.currentAmmSale
   const ammBalance = currentAmm ? +currentAmm.mintedByAmm - +currentAmm.burnedByAmm : 0
