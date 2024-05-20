@@ -385,6 +385,12 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
                     )}`
                   }
 
+                  const twoWeeksDate = addDaysToDate(14, new Date())
+
+                  if (valueTimestamp.getTime() > twoWeeksDate.getTime()) {
+                    return 'Maximal revenue share duration is 2 weeks.'
+                  }
+
                   return true
                 },
               }}
