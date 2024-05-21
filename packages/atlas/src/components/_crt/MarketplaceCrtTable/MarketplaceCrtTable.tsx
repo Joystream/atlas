@@ -54,15 +54,9 @@ export type MarketplaceCrtTableProps = {
   data: MarketplaceToken[]
   isLoading: boolean
   emptyState?: TableProps['emptyState']
-} & Pick<TableProps, 'pagination' | 'pageSize'>
+} & Pick<TableProps, 'pagination' | 'pageSize' | 'getRowTo' | 'interactive'>
 
-export const MarketplaceCrtTable = ({
-  data,
-  emptyState,
-  isLoading,
-  pagination,
-  pageSize,
-}: MarketplaceCrtTableProps) => {
+export const MarketplaceCrtTable = ({ data, emptyState, isLoading, ...tableProps }: MarketplaceCrtTableProps) => {
   const mappingData = useMemo(() => {
     return data.map((row) => ({
       token: <TokenInfo {...row} />,
@@ -106,8 +100,7 @@ export const MarketplaceCrtTable = ({
         columns={COLUMNS}
         data={isLoading ? tableLoadingData : mappingData}
         emptyState={emptyState}
-        pageSize={pageSize}
-        pagination={pagination}
+        {...tableProps}
       />
     </>
   )

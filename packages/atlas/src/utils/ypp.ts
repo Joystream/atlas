@@ -2,7 +2,7 @@ import { atlasConfig } from '@/config'
 import { YppChannelStatus } from '@/views/global/YppLandingView/YppLandingView.types'
 
 const configTiers = atlasConfig.features.ypp.tiersDefinition
-type ConfigTier = typeof configTiers[number]['tier']
+type ConfigTier = (typeof configTiers)[number]['tier']
 
 export const yppBackendTierToConfig = (beTier?: YppChannelStatus): ConfigTier | undefined => {
   switch (beTier) {

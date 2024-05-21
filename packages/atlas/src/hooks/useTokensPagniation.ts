@@ -1,12 +1,11 @@
-import { useState } from 'react'
-
 import { CreatorTokenOrderByInput, CreatorTokenWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
 import {
   useGetBasicCreatorTokensQuery,
   useGetCreatorTokensCountQuery,
 } from '@/api/queries/__generated__/creatorTokens.generated'
 import { SentryLogger } from '@/utils/logs'
-import { usePagination } from '@/views/viewer/ChannelView/ChannelView.hooks'
+
+import { useQueryPagination } from './usePagination'
 
 export const useTokensPagination = ({
   where,
@@ -17,16 +16,15 @@ export const useTokensPagination = ({
   orderBy?: CreatorTokenOrderByInput
   initialPageSize?: number
 }) => {
-  const pagination = usePagination(0)
-  const [perPage, setPerPage] = useState(initialPageSize)
+  const pagination = useQueryPagination({ initialPerPage: initialPageSize })
 
   const { data, loading } = useGetBasicCreatorTokensQuery({
     notifyOnNetworkStatusChange: true,
     variables: {
       where,
       orderBy,
-      offset: pagination.currentPage * perPage,
-      limit: perPage,
+      offset: pagination.currentPage * pagination.perPage,
+      limit: pagination.perPage,
     },
     onError: (error) => {
       SentryLogger.error('Failed to fetch tokens query', 'useTokensPagination', error)
@@ -43,7 +41,5 @@ export const useTokensPagination = ({
     tokens: data?.creatorTokens,
     totalCount: countData?.creatorTokensConnection.totalCount ?? 0,
     isLoading: loading || loadingCount,
-    setPerPage,
-    perPage,
   }
 }

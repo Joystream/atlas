@@ -52,7 +52,7 @@ const datePickerItemsFactory = (days: number[]) =>
     },
   }))
 
-const endDateItems = datePickerItemsFactory([7, 14, 30])
+const endDateItems = datePickerItemsFactory([7])
 
 export const StartRevenueShare = ({ token, onClose, show }: StartRevenueShareProps) => {
   const [openClaimShareModal, setOpenClaimShareModal] = useState(false)
@@ -383,6 +383,12 @@ export const StartRevenueShare = ({ token, onClose, show }: StartRevenueSharePro
                     return `Revenue share must end after ${formatDateTimeAt(
                       new Date(rawStartDate.getTime() + minDurationMs)
                     )}`
+                  }
+
+                  const twoWeeksDate = addDaysToDate(14, new Date())
+
+                  if (valueTimestamp.getTime() > twoWeeksDate.getTime()) {
+                    return 'Maximal revenue share duration is 2 weeks.'
                   }
 
                   return true

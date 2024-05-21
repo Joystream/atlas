@@ -9,7 +9,7 @@ general:
   appOgImgPath: '/og-image.webp' # Path to the open graph image - used in open graph meta tags in HTML
   pioneerMemberUrlPrefix: 'https://dao.joystream.org/#/members' # URL prefix for Pioneer member profile page - used to link to member details
   joystreamLandingPageUrl: 'https://www.joystream.org' # URL for Joystream landing page - used in the footer and in "Learn more" links
-  joystreamDiscordUrl: 'https://discord.gg/DE9UN3YpRP' # URL for Joystream Discord - used for support when errors occur
+  joystreamDiscordUrl: 'https://discord.gg/joystream' # URL for Joystream Discord - used for support when errors occur
   appContentFocus: 'web3 & crypto' # Content focus of given app. Provide a string, for example `web & crypto` or `sport`
   crtMaintenanceMode: false
 storage:

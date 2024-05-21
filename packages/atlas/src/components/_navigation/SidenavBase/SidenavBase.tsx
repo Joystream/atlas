@@ -169,7 +169,7 @@ const SidenavBase: FC<SidenavProps> = ({
           </CSSTransition>
         ) : null}
       </SidebarNav>
-      {pathname !== absoluteRoutes.viewer.ypp() || mdMatch ? (
+      {![absoluteRoutes.viewer.ypp(), absoluteRoutes.viewer.yppTest()].includes(pathname) || mdMatch ? (
         <StyledHamburgerButton active={expanded} onClick={() => scrollAndToggle(!expanded)} />
       ) : null}
     </>

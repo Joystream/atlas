@@ -66,7 +66,7 @@ export const SaleMarketChoiceDrawer = ({ isOpen, onClose, onMarketChoice }: Sale
             <FlexBox flow={smMatch ? 'row' : 'column'} alignItems="strech" width="100%" gap={6}>
               <OptionCard
                 title="Public Sale"
-                titleAccessory={<Pill label="Comming soon" variant="warning" />}
+                titleAccessory={<Pill label="Coming soon" variant="warning" />}
                 description="Raise funding by selling a certain number of tokens to the public at a set price over a certain period."
                 points={SALE_POINTS}
                 actionButton={{

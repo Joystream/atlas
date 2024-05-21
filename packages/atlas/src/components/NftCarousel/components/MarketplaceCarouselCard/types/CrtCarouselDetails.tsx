@@ -14,6 +14,7 @@ import { VideoCardWrapper } from '@/components/NftCarousel/components/Marketplac
 import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { DetailsContent, DetailsContentProps } from '@/components/_nft/NftTile'
+import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { pluralizeNoun } from '@/utils/misc'
@@ -131,10 +132,11 @@ export const CrtCarouselDetails = ({
       goNextSlide={slideNext}
       mediaUrls={mediaUrls}
       thumbnailUrls={thumbnailUrls}
+      to={absoluteRoutes.viewer.channel(channel?.channel.id ?? '', { tab: 'Token' })}
       details={
         <FlexBox flow="column" gap={4} width="100%">
           <FlexBox gap={4}>
-            <Avatar size={smMatch ? 64 : 40} />
+            <Avatar assetUrls={channel?.channel.avatarPhoto?.resolvedUrls} size={smMatch ? 64 : 40} />
 
             <FlexBox flow="column">
               <Text variant={smMatch ? 'h600' : 'h500'} as="h5">

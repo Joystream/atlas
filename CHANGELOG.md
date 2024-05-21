@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.2.2] - 2024-05-21
+
+### Added
+
+- Segment metrics
+- New landing page
+
+### Fixed
+
+- Meta server fix
+- CRT UI/UX fixes
+
+
 ## [5.2.1] - 2024-05-06
 
 ### Added

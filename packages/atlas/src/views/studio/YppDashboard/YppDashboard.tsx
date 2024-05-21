@@ -17,7 +17,7 @@ import { Header, TabsWrapper } from './YppDashboard.styles'
 import { YppDashboardMainTab, YppDashboardSettingsTab } from './tabs'
 
 const TABS = ['Dashboard', 'Referrals', 'Settings'] as const
-type Tab = typeof TABS[number]
+type Tab = (typeof TABS)[number]
 
 export const YppDashboard: FC = () => {
   const headTags = useHeadTags('Creator Rewards')

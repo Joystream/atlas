@@ -8,7 +8,7 @@ import { transitions } from '@/styles'
 
 import { Container, NavLink, NavTitle } from './BottomNav.styles'
 
-const Link: FC<typeof viewerNavItems[number]> = ({ to, icon, name }) => {
+const Link: FC<(typeof viewerNavItems)[number]> = ({ to, icon, name }) => {
   const match = useMatch(to)
   return (
     <NavLink to={to} active={match}>

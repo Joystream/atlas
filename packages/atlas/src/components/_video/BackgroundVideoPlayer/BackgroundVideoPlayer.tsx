@@ -4,11 +4,10 @@ import { CSSTransition } from 'react-transition-group'
 import { SvgActionPause, SvgActionPlay, SvgActionSoundOff, SvgActionSoundOn } from '@/assets/icons'
 import { Button } from '@/components/_buttons/Button'
 import { VideoProgress } from '@/components/_video/BackgroundVideoPlayer/VideoProgress'
-import { absoluteRoutes } from '@/config/routes'
 import { transitions } from '@/styles'
 import { ConsoleLogger } from '@/utils/logs'
 
-import { ButtonBox, StyledLink, StyledVideo, VideoPoster, VideoWrapper } from './BackgroundVideoPlayer.styles'
+import { ButtonBox, StyledFade, StyledVideo, VideoPoster, VideoWrapper } from './BackgroundVideoPlayer.styles'
 
 type BackgroundVideoPlayerProps = {
   className?: string
@@ -19,6 +18,7 @@ type BackgroundVideoPlayerProps = {
   withFade?: boolean
   src: string[]
   poster: string[]
+  customLink?: string
 } & Omit<VideoHTMLAttributes<HTMLVideoElement>, 'src' | 'poster'>
 
 export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
@@ -33,6 +33,7 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
   videoPlaytime,
   videoId,
   withFade,
+  customLink,
   ...props
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -118,7 +119,7 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
         </ButtonBox>
       )}
       {playing && <VideoProgress video={videoRef.current} isPlaying={isPlaying} tick={10} limit={videoPlaytime} />}
-      <StyledLink withFade={withFade} to={videoId ? absoluteRoutes.viewer.video(videoId) : ''}>
+      <StyledFade withFade={withFade}>
         <StyledVideo
           resolvedVideoUrls={src}
           autoPlay={autoPlay}
@@ -145,7 +146,7 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
             <VideoPoster resolvedUrls={poster} type="cover" alt="" />
           </CSSTransition>
         )}
-      </StyledLink>
+      </StyledFade>
     </VideoWrapper>
   )
 }

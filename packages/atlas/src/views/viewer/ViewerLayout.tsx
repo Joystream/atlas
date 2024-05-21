@@ -22,11 +22,12 @@ import { useUser } from '@/providers/user/user.hooks'
 import { media, transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
 
-const YppLandingView = lazy(() =>
+// Currently the newest version is at main file and the old one was moved to new file
+const YppLandingViewTest = lazy(() =>
   import('@/views/global/YppLandingView').then((module) => ({ default: module.YppLandingView }))
 )
-const YppLandingViewTest = lazy(() =>
-  import('@/views/global/YppLandingViewTest').then((module) => ({ default: module.YppLandingViewTest }))
+const YppLandingView = lazy(() =>
+  import('@/views/global/YppLandingView/YppLandingViewOld').then((module) => ({ default: module.YppLandingViewOld }))
 )
 const MemberNotificationsView = lazy(() =>
   import('@/views/notifications').then((module) => ({ default: module.MemberNotificationsView }))
@@ -221,7 +222,7 @@ const MiscUtils = () => {
           : Object.entries(locationToPageName).find(([key]) => location.pathname.includes(key))?.[1]
 
       //pages below will be tracked by the view components in order to include the additional params
-      if (['Channel', 'Category', 'Video'].some((page) => pageName?.includes(page))) {
+      if (['Channel', 'Category', 'Video', 'Marketplace'].some((page) => pageName?.includes(page))) {
         return
       }
       const [query, referrerChannel, utmSource, utmCampaign, utmContent, gState, gCode] = [

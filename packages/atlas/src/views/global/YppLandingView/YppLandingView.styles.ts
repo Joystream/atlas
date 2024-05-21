@@ -6,6 +6,7 @@ import bottomLeftPattern from '@/assets/images/ypp-background-pattern.svg'
 import { FlexBox } from '@/components/FlexBox'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { Text } from '@/components/Text'
 import { cVar, media, sizes } from '@/styles'
 
 export const imageShadow = css`
@@ -65,8 +66,10 @@ export const StyledLimitedWidthContainerHero = styled.div<{ centerText?: boolean
   overflow: hidden;
   border-radius: 24px;
   padding: ${sizes(4)};
+  margin-top: ${sizes(6)};
 
   ${media.md} {
+    margin-top: 0;
     padding: ${sizes(8)};
     border-radius: 32px;
   }
@@ -107,12 +110,12 @@ export const TierCardWrapper = styled(GridItem)`
   ${media.sm} {
     display: grid;
     justify-content: center;
-    grid-template-columns: repeat(2, auto);
+    grid-template-columns: repeat(2, minmax(auto, 250px));
   }
 
   ${media.md} {
     gap: ${sizes(6)};
-    grid-template-columns: repeat(4, auto);
+    grid-template-columns: repeat(4, minmax(auto, 250px));
   }
 `
 
@@ -125,6 +128,7 @@ export const HeaderGridItem = styled(GridItem, {
 })<HeaderGridItemProps>`
   margin-bottom: ${({ marginBottom = 0 }) => sizes(marginBottom)};
   align-self: center;
+  text-align: center;
 `
 
 type BackgroundContainerProps = {
@@ -162,4 +166,8 @@ export const HeroBackgroundContainer = styled(BackgroundContainer)`
     padding-top: ${sizes(8)};
     ${backgroundPattern};
   }
+`
+
+export const RewardsSubText = styled(Text)`
+  grid-column: 1/3;
 `

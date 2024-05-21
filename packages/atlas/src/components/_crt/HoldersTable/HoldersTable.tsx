@@ -42,9 +42,9 @@ export type HoldersTableProps = {
   isLoading: boolean
   currentMemberId: string
   symbol?: string
-} & Pick<TableProps, 'pagination' | 'pageSize'>
+} & Pick<TableProps, 'pagination' | 'pageSize' | 'interactive' | 'getRowTo'>
 
-export const HoldersTable = ({ data, currentMemberId, symbol, pagination, pageSize, isLoading }: HoldersTableProps) => {
+export const HoldersTable = ({ data, currentMemberId, symbol, isLoading, ...tableProps }: HoldersTableProps) => {
   const mappedData = useMemo(
     () =>
       data.map((row) => ({
@@ -62,13 +62,7 @@ export const HoldersTable = ({ data, currentMemberId, symbol, pagination, pageSi
     [currentMemberId, data, symbol]
   )
   return (
-    <StyledTable
-      minWidth={750}
-      pageSize={pageSize}
-      columns={COLUMNS}
-      data={isLoading ? tableLoadingData : mappedData}
-      pagination={pagination}
-    />
+    <StyledTable minWidth={750} columns={COLUMNS} data={isLoading ? tableLoadingData : mappedData} {...tableProps} />
   )
 }
 
