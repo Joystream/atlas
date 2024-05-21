@@ -36,6 +36,7 @@ export const configSchema = z.object({
     alternativeNodes: z.array(z.object({ url: z.string(), name: z.string() })),
   }),
   features: z.object({
+    recommendations: z.boolean(),
     ypp: z.object({
       suspensionReasonsLink: z.string().nullable(),
       yppDelayThreshold: z.number().nullable(),

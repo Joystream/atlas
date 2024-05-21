@@ -16,6 +16,7 @@ import { VideoDetailsVariant } from '../VideoTileDetails'
 type VideoTileViewerProps = {
   id?: string
   onClick?: () => void
+  onChannelClick?: () => void
   detailsVariant?: VideoDetailsVariant
   direction?: 'vertical' | 'horizontal'
   showDescription?: boolean
@@ -29,6 +30,7 @@ export const VideoTileViewer: FC<VideoTileViewerProps> = ({
   direction,
   className,
   showDescription,
+  onChannelClick,
 }) => {
   const navigate = useNavigate()
   const { video, loading } = useBasicVideo(id ?? '', {
@@ -74,7 +76,10 @@ export const VideoTileViewer: FC<VideoTileViewerProps> = ({
     [isNft, video?.duration]
   )
 
-  const onAvatarClick = useCallback(() => navigate(channelHref), [channelHref, navigate])
+  const onAvatarClick = useCallback(() => {
+    navigate(channelHref)
+    onChannelClick?.()
+  }, [channelHref, navigate, onChannelClick])
 
   return (
     <VideoTile

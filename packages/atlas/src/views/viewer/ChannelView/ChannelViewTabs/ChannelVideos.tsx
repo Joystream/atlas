@@ -7,7 +7,9 @@ import { EmptyFallback } from '@/components/EmptyFallback'
 import { Grid } from '@/components/Grid'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
+import { usePersonalDataStore } from '@/providers/personalData'
 import { transitions } from '@/styles'
+import { InteractionsService } from '@/utils/InteractionsService'
 import { createPlaceholderData } from '@/utils/data'
 import { SentryLogger } from '@/utils/logs'
 
@@ -38,6 +40,7 @@ export const ChannelVideos: FC<ChannelVideosProps> = ({
   onResize,
 }) => {
   const { currentPage, setCurrentPage, currentSearchPage, setCurrentSearchPage } = usePagination(0)
+  const { lastGlobalRecommendationId } = usePersonalDataStore()
   const {
     videos: data,
     totalCount,
@@ -104,7 +107,22 @@ export const ChannelVideos: FC<ChannelVideosProps> = ({
         )}
         <Grid maxColumns={null} onResize={onResize}>
           {videosWithPlaceholders.map((video, idx) => (
-            <VideoTileViewer key={idx} id={video.id} detailsVariant="withoutChannel" />
+            <VideoTileViewer
+              key={idx}
+              id={video.id}
+              onClick={() => {
+                InteractionsService.channelClicked(
+                  channelId,
+                  lastGlobalRecommendationId ? { recommId: lastGlobalRecommendationId } : undefined
+                )
+                video.id &&
+                  InteractionsService.videoClicked(
+                    video.id,
+                    lastGlobalRecommendationId ? { recommId: lastGlobalRecommendationId } : undefined
+                  )
+              }}
+              detailsVariant="withoutChannel"
+            />
           ))}
         </Grid>
       </VideoSection>

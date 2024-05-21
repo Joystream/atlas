@@ -5,7 +5,10 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { useBasicVideos } from '@/api/hooks/video'
 import { VideoOrderByInput, VideoWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { BasicVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { useGetNextVideoQuery } from '@/api/queries/__generated__/videos.generated'
+import { atlasConfig } from '@/config'
 import { getPublicCryptoVideoFilter } from '@/config/contentFilter'
+import { usePersonalDataStore } from '@/providers/personalData'
 import { cVar, transitions } from '@/styles'
 import { getRandomIntInclusive } from '@/utils/number'
 
@@ -26,6 +29,8 @@ type VideoOverlayProps = {
   hideEndOverlay?: boolean
 }
 
+const usesRecommendations = !!atlasConfig.features.recommendations
+
 export const VideoOverlay: FC<VideoOverlayProps> = ({
   playerState,
   onPlayAgain,
@@ -39,6 +44,9 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
   currentVideoCreatedAt,
   hideEndOverlay = false,
 }) => {
+  const {
+    actions: { setGlobalRecommendationId },
+  } = usePersonalDataStore()
   const [randomNextVideo, setRandomNextVideo] = useState<BasicVideoFieldsFragment | null>(null)
   const commonFiltersFactory = (where?: VideoWhereInput) => ({
     limit: 1,
@@ -51,10 +59,25 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
     }),
   })
   const { videos: newerVideos, loading: loadingNewestVideos } = useBasicVideos(
-    commonFiltersFactory({ createdAt_gt: currentVideoCreatedAt })
+    commonFiltersFactory({ createdAt_gt: currentVideoCreatedAt }),
+    {
+      skip: usesRecommendations,
+    }
   )
   const { videos: olderVideos } = useBasicVideos(commonFiltersFactory({ createdAt_lt: currentVideoCreatedAt }), {
-    skip: loadingNewestVideos || !!newerVideos?.length,
+    skip: loadingNewestVideos || !!newerVideos?.length || usesRecommendations,
+  })
+
+  useGetNextVideoQuery({
+    variables: {
+      videoId: videoId ?? '',
+      where: getPublicCryptoVideoFilter(),
+    },
+    skip: !usesRecommendations || !videoId,
+    onCompleted: (data) => {
+      setRandomNextVideo(data.nextVideo.video[0])
+      setGlobalRecommendationId(data.nextVideo.recommId)
+    },
   })
 
   useEffect(() => {

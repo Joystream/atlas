@@ -11,6 +11,7 @@ import { displayCategoriesLookup } from '@/config/categories'
 import { getPublicCryptoVideoFilter, singlePublicCryptoVideoFilter } from '@/config/contentFilter'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { InteractionsService } from '@/utils/InteractionsService'
 import { createPlaceholderData } from '@/utils/data'
 
 import { MoreFrom, MoreVideosContainer, SeeMoreButton } from './VideoView.styles'
@@ -69,6 +70,11 @@ export const MoreVideos: FC<MoreVideosProps> = ({
             id={video.id}
             detailsVariant="withChannelName"
             direction={lgMatch ? 'horizontal' : 'vertical'}
+            onClick={() => {
+              if (video.id) {
+                InteractionsService.videoClicked(video.id)
+              }
+            }}
           />
         </GridItem>
       ))}

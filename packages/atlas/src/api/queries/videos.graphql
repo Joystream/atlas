@@ -132,6 +132,36 @@ query GetCuratedHompageVideos($limit: Int, $where: VideoWhereInput, $skipVideoId
   }
 }
 
+query GetHomepageVideos($prevRecommId: String, $limit: Int, $where: VideoWhereInput, $orderBy: [VideoOrderByInput!]) {
+  homepageVideos(recommId: $prevRecommId, limit: $limit, where: $where, orderBy: $orderBy) {
+    video {
+      ...BasicVideoFields
+    }
+    numberNextRecommsCalls
+    recommId
+  }
+}
+
+query GetSimiliarVideos($videoId: String!, $prevRecommId: String, $limit: Int, $where: VideoWhereInput, $orderBy: [VideoOrderByInput!]) {
+  similarVideos(recommId: $prevRecommId, videoId: $videoId, limit: $limit, where: $where, orderBy: $orderBy) {
+    video {
+      ...BasicVideoFields
+    }
+    numberNextRecommsCalls
+    recommId
+  }
+}
+
+query GetNextVideo($videoId: String!, $prevRecommId: String, $where: VideoWhereInput) {
+  nextVideo(recommId: $prevRecommId, videoId: $videoId, where: $where) {
+    video {
+      ...BasicVideoFields
+    }
+    numberNextRecommsCalls
+    recommId
+  }
+}
+
 # CHANGE: `channelId` and `categoryId` args were removed, ID is now `String`
 mutation AddVideoView($videoId: String!) {
   addVideoView(videoId: $videoId) {

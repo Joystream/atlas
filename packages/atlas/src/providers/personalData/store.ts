@@ -19,6 +19,7 @@ export type PersonalDataStoreState = {
   captionsLanguage: string | null
   allowMinimizedPleyer: boolean
   lastUsedChannelId: string | null
+  lastGlobalRecommendationId: string | null
 }
 
 const WHITELIST: (keyof PersonalDataStoreState)[] = [
@@ -53,6 +54,7 @@ export type PersonalDataStoreActions = {
   setMinimizedPlayerAllowed: (allowed: boolean) => void
   setCaptionsLanguage: (captionsLanguage: string | null) => void
   setLastUsedChannelId: (channelId: string | null) => void
+  setGlobalRecommendationId: (recommId: string) => void
   getIsCookiesPopoverVisible: () => boolean
 }
 
@@ -71,6 +73,7 @@ const initialState: PersonalDataStoreState = {
   captionsLanguage: null,
   allowMinimizedPleyer: true,
   lastUsedChannelId: null,
+  lastGlobalRecommendationId: null,
 }
 
 export const usePersonalDataStore = createStore<PersonalDataStoreState, PersonalDataStoreActions>(
@@ -80,6 +83,11 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
       setLastUsedChannelId: (channelId) => {
         set((state) => {
           state.lastUsedChannelId = channelId
+        })
+      },
+      setGlobalRecommendationId: (recommId) => {
+        set((state) => {
+          state.lastGlobalRecommendationId = recommId
         })
       },
       updateWatchedVideos: (__typename, id, timestamp) => {
