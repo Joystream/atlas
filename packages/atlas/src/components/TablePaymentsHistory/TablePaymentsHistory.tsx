@@ -107,14 +107,20 @@ const TableText = ({ text, onShowMoreClick }: { text?: string; onShowMoreClick: 
 
 const Sender = ({ sender }: { sender: PaymentHistory['sender'] }) => {
   const { memberships } = useMemberships(
-    { where: { controllerAccount_eq: sender } },
+    {
+      where: {
+        controllerAccount: {
+          id_eq: sender,
+        },
+      },
+    },
     {
       onError: (error) => SentryLogger.error('Failed to fetch memberships', 'ActiveUserProvider', error),
       skip: sender === 'council',
     }
   )
   const { activeChannel } = useUser()
-  const member = memberships?.find((member) => member.controllerAccount === sender)
+  const member = memberships?.find((member) => member.controllerAccount.id === sender)
   const { urls: avatarUrls, isLoadingAsset: avatarLoading } = getMemberAvatar(member)
 
   if (sender === 'council') {

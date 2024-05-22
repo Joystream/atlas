@@ -3,9 +3,13 @@ import { useSearchParams } from 'react-router-dom'
 
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { useCreateMember } from '@/hooks/useCreateMember'
+import { useAuth } from '@/providers/auth/auth.hooks'
 import { useSnackbar } from '@/providers/snackbars'
+import { useUser } from '@/providers/user/user.hooks'
+import { SentryLogger } from '@/utils/logs'
 
-import { CreatePassword } from '../genericSteps/CreatePassword'
+import { CreateHandle, NewHandleForm } from '../genericSteps/CreateHandle'
+import { CreatePassword, NewPasswordForm } from '../genericSteps/CreatePassword'
 import { EmailVerified } from '../genericSteps/EmailVerified'
 import { SeedGeneration } from '../genericSteps/SeedGeneration'
 import { WaitingModal } from '../genericSteps/WaitingModal'
@@ -14,22 +18,22 @@ import { SetActionButtonHandler } from '../genericSteps/types'
 enum AccountSetupStep {
   verification,
   password,
+  member,
   seed,
   creation,
 }
 
 type AccountSetupForm = {
-  password?: string
-  confirmPassword?: string
   mnemonic?: string
-  captchaToken?: string
-  email?: string
-}
+} & NewHandleForm &
+  NewPasswordForm
 
 export const AccountSetup = () => {
   const [searchParams, setSearchParams] = useSearchParams()
-  const confirmationCode = searchParams.get('email-token') // 5y6WUaZ5IxAGf4iLGarc1OHFHBWScJZ4/gxWGn4trq4=
-  console.log('xdd', confirmationCode)
+  const { refetchCurrentUser } = useAuth()
+  const { refetchUserMemberships } = useUser()
+  const confirmationCode = decodeURIComponent(searchParams.get('email-token') ?? '') // 5y6WUaZ5IxAGf4iLGarc1OHFHBWScJZ4/gxWGn4trq4=
+  const email = decodeURIComponent(searchParams.get('email') ?? '')
   const [step, setStep] = useState(AccountSetupStep.verification)
   const [loading, setLoading] = useState(true)
   const [primaryAction, setPrimaryAction] = useState<undefined | SetActionButtonHandler>(undefined)
@@ -86,10 +90,20 @@ export const AccountSetup = () => {
   }, [resetSearchParams, step])
 
   const handleAccountAndMemberCreation = async () => {
+    const { avatar, password, handle, mnemonic } = formRef.current
+
+    if (!(avatar || password || email || handle || mnemonic)) {
+      displaySnackbar({
+        title: 'Creation failed',
+        description: 'Missing required fields to create an account',
+      })
+      SentryLogger.error('Missing fields during account creation', 'AccountSetup', { form: formRef.current })
+      return
+    }
     await createNewOrionAccount({
       data: {
         confirmedTerms: true,
-        email: formRef.current.email ?? 'alek12342@gmail.com',
+        email: email ?? '',
         mnemonic: formRef.current.mnemonic ?? '',
         password: formRef.current.password ?? '',
         emailConfimationToken: confirmationCode ?? '',
@@ -98,21 +112,35 @@ export const AccountSetup = () => {
         resetSearchParams()
       },
       onSuccess: async () => {
-        const membershipId = await createNewMember({
-          data: {
-            handle: 'testttt1',
-            captchaToken: formRef.current.captchaToken ?? '',
-            allowDownload: true,
-            mnemonic: formRef.current.mnemonic ?? '',
+        await new Promise((res) => setTimeout(res, 5000))
+
+        await createNewMember(
+          {
+            data: {
+              handle: formRef.current.handle ?? '',
+              captchaToken: formRef.current.captchaToken ?? '',
+              allowDownload: true,
+              mnemonic: formRef.current.mnemonic ?? '',
+              avatar: formRef.current.avatar,
+            },
+            onError: () => {
+              displaySnackbar({
+                iconType: 'error',
+                title: 'Error during membership creation',
+              })
+              resetSearchParams()
+            },
           },
-          onError: () => {
-            displaySnackbar({
-              iconType: 'error',
-              title: 'Error during membership creation',
-            })
+          async () => {
+            await refetchCurrentUser()
+            await refetchUserMemberships()
             resetSearchParams()
-          },
-        })
+            displaySnackbar({
+              iconType: 'success',
+              title: 'Account created!',
+            })
+          }
+        )
       },
     })
   }
@@ -129,6 +157,20 @@ export const AccountSetup = () => {
 
       {step === AccountSetupStep.password ? (
         <CreatePassword
+          withCaptcha={false}
+          defaultValues={formRef.current}
+          onSubmit={(data) => {
+            setStep(AccountSetupStep.member)
+            formRef.current = {
+              ...formRef.current,
+              ...data,
+            }
+          }}
+          setActionButtonHandler={(fn) => setPrimaryAction(() => fn)}
+        />
+      ) : null}
+      {step === AccountSetupStep.member ? (
+        <CreateHandle
           defaultValues={formRef.current}
           onSubmit={(data) => {
             setStep(AccountSetupStep.seed)

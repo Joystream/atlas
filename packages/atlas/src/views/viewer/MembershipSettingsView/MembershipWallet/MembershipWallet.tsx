@@ -63,12 +63,12 @@ export const MembershipWallet = () => {
   const [isChangePasswordDialogOpen, setIsChangePasswordDialogOpen] = useState(false)
   const [isExportSeedDialogOpen, setIsExportSeedDialogOpen] = useState(false)
   const handleCopyToClipBoard = useCallback(() => {
-    if (!currentUser?.joystreamAccount.id) {
+    if (!currentUser?.joystreamAccountId) {
       return
     }
     setIsCopyClicked(true)
-    copyToClipboard(currentUser?.joystreamAccount.id)
-  }, [copyToClipboard, currentUser?.joystreamAccount.id])
+    copyToClipboard(currentUser?.joystreamAccountId)
+  }, [copyToClipboard, currentUser?.joystreamAccountId])
   return (
     <>
       {!isWalletUser && (
@@ -89,7 +89,7 @@ export const MembershipWallet = () => {
           <FormField label="Membership address">
             <UnEditableInput
               disabled
-              defaultValue={currentUser?.joystreamAccount.id}
+              defaultValue={currentUser?.joystreamAccountId ?? undefined}
               disabledAttributeOnly
               actionButton={{
                 icon: <SvgActionCopy />,

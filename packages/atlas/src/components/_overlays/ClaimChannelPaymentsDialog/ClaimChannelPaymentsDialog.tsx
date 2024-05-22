@@ -23,7 +23,7 @@ export const ClaimChannelPaymentsDialog = ({ onExit, show }: ClaimChannelPayment
   const { activeMembership } = useUser()
   const { availableAward, claimReward, isAwardLoading, txParams } = useChannelPayout(onExit)
   const { fullFee, loading: feeLoading } = useFee('claimRewardTx', txParams)
-  const { totalBalance } = useSubscribeAccountBalance(activeMembership?.controllerAccount)
+  const { totalBalance } = useSubscribeAccountBalance(activeMembership?.controllerAccount.id)
   const mdMatch = useMediaMatch('md')
 
   return (

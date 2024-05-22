@@ -248,7 +248,7 @@ export const MemberView: FC = () => {
           avatarUrls={avatarUrls}
           avatarLoading={avatarLoading}
           handle={member?.handle}
-          address={member?.controllerAccount}
+          address={member?.controllerAccount.id}
           loading={loadingMember}
           isOwner={memberId === member?.id}
         />

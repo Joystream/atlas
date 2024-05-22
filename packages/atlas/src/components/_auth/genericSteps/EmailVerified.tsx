@@ -13,7 +13,7 @@ type EmailVerifiedProps = {
 export const EmailVerified = ({ code, onVerified }: EmailVerifiedProps) => {
   const { isLoading } = useQuery({
     queryKey: code,
-    queryFn: () => new Promise((res) => setTimeout(res, 5000)), // this is not implemented in the orion, it would be good to check if the token is valid before asking user to provide all the info
+    queryFn: () => new Promise((res) => setTimeout(res, 1000)), // this is not implemented in the orion, it would be good to check if the token is valid before asking user to provide all the info
     onSuccess: () => {
       onVerified()
     },

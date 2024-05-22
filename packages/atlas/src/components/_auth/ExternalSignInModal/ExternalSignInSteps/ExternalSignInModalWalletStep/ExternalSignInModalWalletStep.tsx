@@ -124,7 +124,9 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
     const res = await fetchMemberships({
       variables: {
         where: {
-          controllerAccount_in: accounts.map((acc) => acc.address),
+          controllerAccount: {
+            id_in: accounts.map((acc) => acc.address),
+          },
         },
       },
     })

@@ -16,7 +16,7 @@ import { useMountEffect } from '@/hooks/useMountEffect'
 import { cVar, sizes } from '@/styles'
 import { passwordAndRepeatPasswordSchema } from '@/utils/formValidationOptions'
 
-type NewPasswordForm = {
+export type NewPasswordForm = {
   password?: string
   confirmPassword?: string
   captchaToken?: string
@@ -27,6 +27,7 @@ type CreatePasswordProps = {
   onSubmit: (data: NewPasswordForm) => void
   setActionButtonHandler: (fn: () => void | Promise<void>) => void
   dialogContentRef?: RefObject<HTMLDivElement>
+  withCaptcha?: boolean
 }
 
 export const CreatePassword = ({
@@ -34,12 +35,13 @@ export const CreatePassword = ({
   onSubmit,
   defaultValues,
   dialogContentRef,
+  withCaptcha = true,
 }: CreatePasswordProps) => {
   const form = useForm<NewPasswordForm>({
     shouldFocusError: true,
     reValidateMode: 'onSubmit',
     defaultValues,
-    resolver: zodResolver(passwordAndRepeatPasswordSchema),
+    resolver: zodResolver(passwordAndRepeatPasswordSchema(withCaptcha)),
   })
   const {
     handleSubmit,
@@ -108,7 +110,7 @@ export const CreatePassword = ({
             />
           </FormField>
           <PasswordCriterias />
-          {atlasConfig.features.members.hcaptchaSiteKey && (
+          {atlasConfig.features.members.hcaptchaSiteKey && withCaptcha && (
             <Controller
               control={control}
               name="captchaToken"

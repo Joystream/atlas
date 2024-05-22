@@ -62,33 +62,34 @@ export const pastDateValidation = (date: Date | null, required = false) => {
   const currentDate = new Date()
   return currentDate >= date
 }
-export const passwordAndRepeatPasswordSchema = z
-  .object({
-    password: z
-      .string()
-      .min(9, { message: 'Password has to meet requirements.' })
-      .max(64, { message: 'Password has to meet requirements.' }),
-    confirmPassword: z.string(),
-    captchaToken: z.string().optional(),
-  })
-  .refine(
-    (data) => {
-      return data.password === data.confirmPassword
-    },
-    {
-      path: ['confirmPassword'],
-      message: 'Password address has to match.',
-    }
-  )
-  .refine(
-    (data) =>
-      !!data.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/)?.length,
-    {
-      path: ['password'],
-      message: 'Password has to meet requirements.',
-    }
-  )
-  .refine((data) => (atlasConfig.features.members.hcaptchaSiteKey ? !!data.captchaToken : true), {
-    path: ['captchaToken'],
-    message: "Verify that you're not a robot.",
-  })
+export const passwordAndRepeatPasswordSchema = (withCaptcha: boolean) =>
+  z
+    .object({
+      password: z
+        .string()
+        .min(9, { message: 'Password has to meet requirements.' })
+        .max(64, { message: 'Password has to meet requirements.' }),
+      confirmPassword: z.string(),
+      captchaToken: z.string().optional(),
+    })
+    .refine(
+      (data) => {
+        return data.password === data.confirmPassword
+      },
+      {
+        path: ['confirmPassword'],
+        message: 'Password address has to match.',
+      }
+    )
+    .refine(
+      (data) =>
+        !!data.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/)?.length,
+      {
+        path: ['password'],
+        message: 'Password has to meet requirements.',
+      }
+    )
+    .refine((data) => (atlasConfig.features.members.hcaptchaSiteKey && withCaptcha ? !!data.captchaToken : true), {
+      path: ['captchaToken'],
+      message: "Verify that you're not a robot.",
+    })

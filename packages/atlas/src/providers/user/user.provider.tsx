@@ -21,6 +21,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
     actions: { setLastUsedChannelId },
   } = usePersonalDataStore((state) => state)
   const [channelId, setChannelId] = useState<string | null>(lastUsedChannelId)
+  const [membershipId, setMemberId] = useState<string | null>(lastUsedChannelId)
 
   const setActiveChannel = useCallback(
     (channelId: string) => {
@@ -39,20 +40,20 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   } = useMemberships(
     {
       where: {
-        id_eq: currentUser?.membershipId,
+        controllerAccount: {
+          id_eq: currentUser?.joystreamAccountId,
+        },
       },
     },
     {
       onCompleted: (data) => {
-        const activeMembership =
-          (currentUser?.membershipId &&
-            data.memberships?.find((membership) => membership.id === currentUser?.membershipId)) ||
-          null
+        const activeMembership = data.memberships[0] || null
+        setMemberId(activeMembership?.id)
         if (activeMembership && !activeMembership.channels.some((channel) => channel.id === channelId)) {
           setActiveChannel(activeMembership.channels[0].id)
         }
       },
-      skip: !currentUser,
+      skip: !currentUser?.joystreamAccountId,
       onError: (error) =>
         SentryLogger.error('Failed to fetch user memberships', 'UserProvider', error, { user: currentUser ?? {} }),
     }
@@ -60,32 +61,25 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const memberships = currentMemberships ?? previousData?.memberships
 
-  const refetchUserMemberships = useCallback(() => {
-    return refetch()
+  const refetchUserMemberships = useCallback(async () => {
+    const res = await refetch()
+    setMemberId(res.data.memberships[0]?.id)
+    return res
   }, [refetch])
 
   // keep user used by loggers in sync
   useEffect(() => {
     const user = {
-      accountId: currentUser?.joystreamAccount.id,
-      memberId: currentUser?.membershipId,
-      channelId: currentMemberships?.[0].channels[0]?.id,
+      accountId: currentUser?.joystreamAccountId,
+      memberId: membershipId,
+      channelId: currentMemberships?.[0]?.channels[0]?.id,
     }
 
     SentryLogger.setUser(user)
     UserEventsLogger.setUser(user)
-  }, [
-    currentMemberships,
-    currentUser?.email,
-    currentUser?.joystreamAccount.id,
-    currentUser?.membershipId,
-    setApiActiveAccount,
-  ])
+  }, [currentMemberships, currentUser?.email, currentUser?.joystreamAccountId, membershipId, setApiActiveAccount])
 
-  const activeMembership =
-    (currentUser?.membershipId && memberships?.find((membership) => membership.id === currentUser?.membershipId)) ||
-    null
-
+  const activeMembership = (membershipId && memberships?.find((membership) => membership.id === membershipId)) || null
   const activeChannel =
     (channelId
       ? activeMembership?.channels.find((channel) => channel.id === channelId)
@@ -99,8 +93,8 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       activeMembership,
       activeChannel,
       refetchUserMemberships,
-      memberId: currentUser?.membershipId ?? null,
-      accountId: currentUser?.joystreamAccount.id ?? null,
+      memberId: membershipId ?? null,
+      accountId: currentUser?.joystreamAccountId ?? null,
       channelId,
       setActiveChannel,
     }),
@@ -110,8 +104,8 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       membershipsLoading,
       activeChannel,
       refetchUserMemberships,
-      currentUser?.membershipId,
-      currentUser?.joystreamAccount.id,
+      membershipId,
+      currentUser?.joystreamAccountId,
       channelId,
       setActiveChannel,
     ]

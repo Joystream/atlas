@@ -5,6 +5,7 @@ import { useCallback } from 'react'
 import { useMutation } from 'react-query'
 
 import { axiosInstance } from '@/api/axios'
+// import { useCreateAccountMembershipMutation } from '@/api/queries/__generated__/accounts.generated'
 import { ImageInputFile } from '@/components/_inputs/MultiFileSelect'
 import { FAUCET_URL, YPP_FAUCET_URL } from '@/config/env'
 import { keyring } from '@/joystream-lib/lib'
@@ -72,6 +73,7 @@ export enum RegisterError {
   UnknownError = 'UnknownError',
   MembershipNotFound = 'MembershipNotFound',
   SessionRequired = 'SessionRequired',
+  TokenExpired = 'TokenExpired',
 }
 
 type SignUpParams<T, E> = {
@@ -95,6 +97,7 @@ export const useCreateMember = () => {
   const { displaySnackbar } = useSnackbar()
   const { addBlockAction } = useTransactionManagerStore((state) => state.actions)
   const ytResponseData = useYppStore((state) => state.ytResponseData)
+  // const [createAccountMembershipMutation] = useCreateAccountMembershipMutation()
 
   const { mutateAsync: avatarMutation } = useMutation('avatar-post', (croppedBlob: Blob) =>
     uploadAvatarImage(croppedBlob)
@@ -130,6 +133,14 @@ export const useCreateMember = () => {
       try {
         onStart?.()
         const response = await faucetMutation(body)
+        // const res = await createAccountMembershipMutation({
+        //   variables: {
+        //     about: '',
+        //     handle: data.handle,
+        //     avatar: fileUrl ?? '',
+        //     name: '',
+        //   },
+        // })
         onBlockSync && addBlockAction({ callback: onBlockSync, targetBlock: response.data.block })
 
         return String(response.data.memberId)
@@ -233,7 +244,7 @@ export const useCreateMember = () => {
         const { lockedBalance } = await joystream.getAccountBalance(address)
         const amountOfTokens = hapiBnToTokenNumber(new BN(lockedBalance))
         onSuccess?.({ amountOfTokens })
-        handleLogin({ type: 'internal', ...data })
+        await handleLogin({ type: 'internal', ...data })
       } catch (error) {
         if (error instanceof OrionAccountError) {
           const errorCode = error.status
@@ -252,6 +263,14 @@ export const useCreateMember = () => {
             return
           } else if (errorMessage.startsWith("cookie 'session_id' required")) {
             onError?.(RegisterError.SessionRequired)
+            return
+          } else if (errorMessage.includes('Token not found. Possibly expired or already used.')) {
+            onError?.(RegisterError.TokenExpired)
+            displaySnackbar({
+              title: 'Something went wrong',
+              description: `Looks like your token is either invalid or expired. Try to get a new one, if problem persists contact support.`,
+              iconType: 'error',
+            })
             return
           } else {
             displaySnackbar({

@@ -65,7 +65,7 @@ export const ChangePasswordDialog: FC<ChangePasswordDialogProps> = ({ onClose, s
 
   const changePasswordForm = useForm<PasswordStepForm>({
     shouldFocusError: true,
-    resolver: zodResolver(passwordAndRepeatPasswordSchema),
+    resolver: zodResolver(passwordAndRepeatPasswordSchema(true)),
   })
 
   const [hideOldPasswordProps, resetHideOldPassword] = useHidePasswordInInput()
@@ -91,7 +91,7 @@ export const ChangePasswordDialog: FC<ChangePasswordDialogProps> = ({ onClose, s
 
   const handleChangePassword = useCallback(() => {
     changePasswordForm.handleSubmit(async (data) => {
-      if (!currentUser || !mnemonic) {
+      if (!currentUser || !mnemonic || !currentUser.joystreamAccountId) {
         throw Error('Current user is not set or mnemonic is null')
       }
       try {
@@ -101,7 +101,7 @@ export const ChangePasswordDialog: FC<ChangePasswordDialogProps> = ({ onClose, s
           mnemonic,
           newPassword: data.password,
           gatewayAccountId: currentUser.id,
-          joystreamAccountId: currentUser.joystreamAccount.id,
+          joystreamAccountId: currentUser.joystreamAccountId,
         })
         handleClose()
         displaySnackbar({

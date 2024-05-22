@@ -175,14 +175,14 @@ export const useSubscribeAccountBalance = (
   const debt = totalInvitationLock && lockedAccountBalance && totalInvitationLock.sub(lockedAccountBalance)
 
   useEffect(() => {
-    if (!(controllerAccount || activeMembership?.controllerAccount) || !joystream) {
+    if (!(controllerAccount || activeMembership?.controllerAccount.id) || !joystream) {
       return
     }
 
     let unsubscribe: (() => void) | undefined
     const init = async () => {
       unsubscribe = await joystream.subscribeAccountBalance(
-        (controllerAccount || activeMembership?.controllerAccount) ?? '',
+        (controllerAccount || activeMembership?.controllerAccount.id) ?? '',
         proxyCallback(({ availableBalance, lockedBalance, totalInvitationLock }) => {
           setLockedAccountBalance(new BN(lockedBalance))
           setTotalInvitationLock(new BN(totalInvitationLock))

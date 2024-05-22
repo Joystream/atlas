@@ -47,7 +47,6 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const lastUsedWalletName = useWalletStore((store) => store.lastUsedWalletName)
   const currentWallet = useWalletStore((store) => store.wallet)
   const { signInToWallet } = useWallet()
-  console.log(loggedAddress)
   useMountEffect(() => {
     const init = async () => {
       await cryptoWaitReady()
@@ -74,13 +73,13 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         const mnemonic = await decodeSessionEncodedSeedToMnemonic(encodedSeed)
         if (mnemonic) {
           const keypair = keyring.addFromMnemonic(mnemonic)
-          if (keypair.address === data.accountData.joystreamAccount.id) {
+          if (keypair.address === data.accountData.joystreamAccountId ?? '') {
             setLoggedAddress(keypair.address)
             setCurrentUser(data.accountData)
             identifyUser({
               name: 'Sign in',
               email: data.accountData.email,
-              memberId: data.accountData.joystreamAccount.memberships[0]?.id,
+              memberId: 'unknown',
               signInType: 'password',
             })
             setApiActiveAccount('seed', mnemonic)
@@ -94,16 +93,16 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         setTimeout(async () => {
           // add a slight delay - sometimes the extension will not initialize by the time of this call and may appear unavailable
           const res = await signInToWallet(lastUsedWalletName, true)
-          if (res?.find((walletAcc) => walletAcc.address === data.accountData.joystreamAccount.id)) {
-            setLoggedAddress(data.accountData.joystreamAccount.id)
+          if (res?.find((walletAcc) => walletAcc.address === data.accountData.joystreamAccountId ?? '')) {
+            setLoggedAddress(data.accountData.joystreamAccountId ?? '')
             identifyUser({
               name: 'Sign in',
               email: data.accountData.email,
-              memberId: data.accountData.joystreamAccount.memberships[0]?.id,
+              memberId: 'unknown',
               signInType: 'wallet',
             })
             setCurrentUser(data.accountData)
-            setApiActiveAccount('address', data.accountData.joystreamAccount.id)
+            setApiActiveAccount('address', data.accountData.joystreamAccountId ?? '' ?? '')
           }
           setIsAuthenticating(false)
         }, 200)
@@ -211,7 +210,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         identifyUser({
           name: 'Sign in',
           email: res.data.accountData.email,
-          memberId: res.data.accountData.joystreamAccount.memberships[0]?.id,
+          memberId: res.data.accountData.joystreamAccountId ?? '',
           signInType: params.type === 'external' ? 'wallet' : 'password',
         })
 

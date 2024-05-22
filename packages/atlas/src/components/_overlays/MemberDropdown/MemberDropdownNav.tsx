@@ -187,7 +187,9 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
             </div>
             <AddressContainer>
               <CopyAddressButton
-                address={(type === 'member' ? activeMembership?.controllerAccount : activeChannel?.rewardAccount) ?? ''}
+                address={
+                  (type === 'member' ? activeMembership?.controllerAccount.id : activeChannel?.rewardAccount) ?? ''
+                }
                 size="big"
                 truncate={false}
               />

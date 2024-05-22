@@ -42,7 +42,7 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
       password,
       confirmPassword: password,
     },
-    resolver: zodResolver(passwordAndRepeatPasswordSchema),
+    resolver: zodResolver(passwordAndRepeatPasswordSchema(true)),
   })
   const {
     handleSubmit,

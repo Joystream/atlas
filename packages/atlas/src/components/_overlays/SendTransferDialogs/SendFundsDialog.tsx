@@ -102,7 +102,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({
   const isValidJoystreamAddress = (address: string) =>
     isValidAddressPolkadotAddress(address) && address.startsWith(joystreamAddressPrefix)
 
-  const isOwnAccount = account === activeMembership?.controllerAccount
+  const isOwnAccount = account === activeMembership?.controllerAccount.id
 
   const fullFee = isWithdrawalMode ? (isOwnAccount ? withdrawFee : withdrawFee.add(transferFee)) : transferFee
 
@@ -123,7 +123,13 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({
           data: { memberships },
         } = await client.query<GetMembershipsQuery, GetMembershipsQueryVariables>({
           query: GetMembershipsDocument,
-          variables: { where: { controllerAccount_eq: val } },
+          variables: {
+            where: {
+              controllerAccount: {
+                id_eq: val,
+              },
+            },
+          },
         })
         setDestinationAccount(memberships.length ? memberships[0] : undefined)
       } catch (error) {
@@ -169,7 +175,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({
           },
           onTxSync: async () => {
             trackWithdrawnFunds(
-              (isWithdrawalMode ? channelId : activeMembership?.controllerAccount) || undefined,
+              (isWithdrawalMode ? channelId : activeMembership?.controllerAccount.id) || undefined,
               rawAmount?.toString(),
               isOwnAccount
             )

@@ -12,11 +12,7 @@ export type GetCurrentAccountQuery = {
     __typename?: 'AccountData'
     email: string
     id: string
-    joystreamAccount: {
-      __typename?: 'BlockchainAccountType'
-      id: string
-      memberships: Array<{ __typename?: 'MembershipType'; id: string; controllerAccountId?: string | null }>
-    }
+    joystreamAccountId?: string | null
     followedChannels: Array<{ __typename?: 'FollowedChannel'; channelId: string; timestamp: string }>
   }
 }
@@ -37,18 +33,24 @@ export type GetChannelFollowsQuery = {
   }>
 }
 
+export type CreateAccountMembershipMutationVariables = Types.Exact<{
+  about: Types.Scalars['String']
+  avatar: Types.Scalars['String']
+  handle: Types.Scalars['String']
+  name: Types.Scalars['String']
+}>
+
+export type CreateAccountMembershipMutation = {
+  __typename?: 'Mutation'
+  createAccountMembership: { __typename?: 'CreateAccountMembershipResult'; accountId: string; memberId: number }
+}
+
 export const GetCurrentAccountDocument = gql`
   query GetCurrentAccount {
     accountData {
       email
       id
-      joystreamAccount {
-        id
-        memberships {
-          id
-          controllerAccountId
-        }
-      }
+      joystreamAccountId
       followedChannels {
         channelId
         timestamp
@@ -138,3 +140,51 @@ export function useGetChannelFollowsLazyQuery(
 export type GetChannelFollowsQueryHookResult = ReturnType<typeof useGetChannelFollowsQuery>
 export type GetChannelFollowsLazyQueryHookResult = ReturnType<typeof useGetChannelFollowsLazyQuery>
 export type GetChannelFollowsQueryResult = Apollo.QueryResult<GetChannelFollowsQuery, GetChannelFollowsQueryVariables>
+export const CreateAccountMembershipDocument = gql`
+  mutation CreateAccountMembership($about: String!, $avatar: String!, $handle: String!, $name: String!) {
+    createAccountMembership(about: $about, avatar: $avatar, handle: $handle, name: $name) {
+      accountId
+      memberId
+    }
+  }
+`
+export type CreateAccountMembershipMutationFn = Apollo.MutationFunction<
+  CreateAccountMembershipMutation,
+  CreateAccountMembershipMutationVariables
+>
+
+/**
+ * __useCreateAccountMembershipMutation__
+ *
+ * To run a mutation, you first call `useCreateAccountMembershipMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAccountMembershipMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAccountMembershipMutation, { data, loading, error }] = useCreateAccountMembershipMutation({
+ *   variables: {
+ *      about: // value for 'about'
+ *      avatar: // value for 'avatar'
+ *      handle: // value for 'handle'
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useCreateAccountMembershipMutation(
+  baseOptions?: Apollo.MutationHookOptions<CreateAccountMembershipMutation, CreateAccountMembershipMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<CreateAccountMembershipMutation, CreateAccountMembershipMutationVariables>(
+    CreateAccountMembershipDocument,
+    options
+  )
+}
+export type CreateAccountMembershipMutationHookResult = ReturnType<typeof useCreateAccountMembershipMutation>
+export type CreateAccountMembershipMutationResult = Apollo.MutationResult<CreateAccountMembershipMutation>
+export type CreateAccountMembershipMutationOptions = Apollo.BaseMutationOptions<
+  CreateAccountMembershipMutation,
+  CreateAccountMembershipMutationVariables
+>

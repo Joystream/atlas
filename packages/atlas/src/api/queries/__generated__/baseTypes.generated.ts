@@ -48,7 +48,7 @@ export type AccountData = {
   email: Scalars['String']
   followedChannels: Array<FollowedChannel>
   id: Scalars['String']
-  joystreamAccount: BlockchainAccountType
+  joystreamAccountId?: Maybe<Scalars['String']>
   preferences?: Maybe<AccountNotificationPreferencesOutput>
 }
 
