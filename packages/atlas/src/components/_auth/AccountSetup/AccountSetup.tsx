@@ -92,12 +92,14 @@ export const AccountSetup = () => {
   const handleAccountAndMemberCreation = async () => {
     const { avatar, password, handle, mnemonic } = formRef.current
 
-    if (!(avatar || password || email || handle || mnemonic)) {
+    if (!(avatar && password && email && handle && mnemonic)) {
       displaySnackbar({
         title: 'Creation failed',
         description: 'Missing required fields to create an account',
+        iconType: 'error',
       })
       SentryLogger.error('Missing fields during account creation', 'AccountSetup', { form: formRef.current })
+      setStep(AccountSetupStep.password)
       return
     }
     await createNewOrionAccount({
@@ -145,7 +147,7 @@ export const AccountSetup = () => {
     })
   }
 
-  if (!confirmationCode) {
+  if (!confirmationCode || !email) {
     return null
   }
 
