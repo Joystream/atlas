@@ -45,7 +45,7 @@ features:
     googleConsoleClientId: '$VITE_GOOGLE_CONSOLE_CLIENT_ID'
     youtubeSyncApiUrl: '$VITE_YOUTUBE_SYNC_API_URL'
     suspensionReasonsLink: https://joystream.notion.site/My-channel-is-suspended-what-to-do-86a3df16c55c434ab2184d61dfcfc41b # Link with explanation what might be the reason of ypp channel suspension
-    suspendedSupportLink: https://discord.com/channels/811216481340751934/1053294778529353788 # Link that will be displayed for users suspended in YPP
+    suspendedSupportLink: https://discord.gg/joystream # Link that will be displayed for users suspended in YPP
     suspendedLinkText: '#ypp-support channel on our Discord server'
     youtubeCollaboratorMemberId: '$VITE_YOUTUBE_COLLABORATOR_MEMBER_ID'
     enrollmentReward: 5000 # Amount for successful enrollment in YPP in joystream.tokenTicker units.
@@ -127,7 +127,7 @@ features:
         label: Studio
         icon: tokenStack
       - title: Community
-        link: https://discord.com/channels/811216481340751934/1224709788592767136
+        link: https://discord.gg/joystream
         linkText: Go to Discord
         label: Discord
         icon: message

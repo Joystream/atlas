@@ -59,3 +59,11 @@ mutation RequestNftFeatured($nftId: String!, $rationale: String!) {
     createdAt
   }
 }
+
+query GetJoystreamTotalEarnings {
+  totalJoystreamEarnings {
+    crtSaleVolume
+    totalRewardsPaid
+    nftSaleVolume
+  }
+}
