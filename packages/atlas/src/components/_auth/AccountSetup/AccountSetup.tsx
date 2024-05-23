@@ -102,6 +102,34 @@ export const AccountSetup = () => {
       setStep(AccountSetupStep.password)
       return
     }
+    await createNewMember(
+      {
+        data: {
+          handle: formRef.current.handle ?? '',
+          captchaToken: formRef.current.captchaToken ?? '',
+          allowDownload: true,
+          mnemonic: formRef.current.mnemonic ?? '',
+          avatar: formRef.current.avatar,
+        },
+        onError: () => {
+          displaySnackbar({
+            iconType: 'error',
+            title: 'Error during membership creation',
+          })
+          resetSearchParams()
+        },
+      },
+      async () => {
+        await refetchCurrentUser()
+        await refetchUserMemberships()
+        resetSearchParams()
+        displaySnackbar({
+          iconType: 'success',
+          title: 'Account created!',
+        })
+      }
+    )
+    return
     await createNewOrionAccount({
       data: {
         confirmedTerms: true,
@@ -116,33 +144,33 @@ export const AccountSetup = () => {
       onSuccess: async () => {
         await new Promise((res) => setTimeout(res, 5000))
 
-        await createNewMember(
-          {
-            data: {
-              handle: formRef.current.handle ?? '',
-              captchaToken: formRef.current.captchaToken ?? '',
-              allowDownload: true,
-              mnemonic: formRef.current.mnemonic ?? '',
-              avatar: formRef.current.avatar,
-            },
-            onError: () => {
-              displaySnackbar({
-                iconType: 'error',
-                title: 'Error during membership creation',
-              })
-              resetSearchParams()
-            },
-          },
-          async () => {
-            await refetchCurrentUser()
-            await refetchUserMemberships()
-            resetSearchParams()
-            displaySnackbar({
-              iconType: 'success',
-              title: 'Account created!',
-            })
-          }
-        )
+        // await createNewMember(
+        //   {
+        //     data: {
+        //       handle: formRef.current.handle ?? '',
+        //       captchaToken: formRef.current.captchaToken ?? '',
+        //       allowDownload: true,
+        //       mnemonic: formRef.current.mnemonic ?? '',
+        //       avatar: formRef.current.avatar,
+        //     },
+        //     onError: () => {
+        //       displaySnackbar({
+        //         iconType: 'error',
+        //         title: 'Error during membership creation',
+        //       })
+        //       resetSearchParams()
+        //     },
+        //   },
+        //   async () => {
+        //     await refetchCurrentUser()
+        //     await refetchUserMemberships()
+        //     resetSearchParams()
+        //     displaySnackbar({
+        //       iconType: 'success',
+        //       title: 'Account created!',
+        //     })
+        //   }
+        // )
       },
     })
   }

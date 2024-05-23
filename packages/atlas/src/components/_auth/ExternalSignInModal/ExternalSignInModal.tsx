@@ -1,16 +1,13 @@
-import { zodResolver } from '@hookform/resolvers/zod/dist/zod'
 import { FC, useCallback, useEffect, useRef, useState } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
-import { z } from 'zod'
 import shallow from 'zustand/shallow'
 
 import { GetMembershipsQuery } from '@/api/queries/__generated__/memberships.generated'
 import { AuthenticationModalStepTemplate } from '@/components/_auth/AuthenticationModalStepTemplate'
-import { ExternalSignInModalEmailStep } from '@/components/_auth/ExternalSignInModal/ExternalSignInSteps/ExternalSignInModalEmailStep'
 import { Button } from '@/components/_buttons/Button'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useAuthStore } from '@/providers/auth/auth.store'
+import { formatDurationBiggestTick } from '@/utils/time'
 
 import { StyledDialogModal } from './ExternalSignInModal.styles'
 import {
@@ -19,6 +16,9 @@ import {
   ModalSteps,
   SignInStepProps,
 } from './ExternalSignInSteps'
+
+import { CheckEmailConfirmation } from '../genericSteps/CheckEmailConfirmation'
+import { ProvideEmailForLink } from '../genericSteps/ProvideEmailForLink'
 
 const stepToPageName: Partial<Record<ModalSteps, string>> = {
   [ModalSteps.Email]: 'External sign in modal - Add email to existing membership',
@@ -36,13 +36,7 @@ export const ExternalSignInModal: FC = () => {
   const [availableMemberships, setAvailableMemberships] = useState<GetMembershipsQuery['memberships'] | null>(null)
   const dialogContentRef = useRef<HTMLDivElement>(null)
   const { trackPageView } = useSegmentAnalytics()
-  const form = useForm<{ email: string }>({
-    resolver: zodResolver(
-      z.object({
-        email: z.string().regex(/^\S+@\S+\.\S+$/, 'Enter valid email address.'),
-      })
-    ),
-  })
+  const formRef = useRef<{ email?: string }>({})
   const { authModalOpenName, setAuthModalOpenName } = useAuthStore(
     (state) => ({
       authModalOpenName: state.authModalOpenName,
@@ -77,27 +71,89 @@ export const ExternalSignInModal: FC = () => {
 
     switch (currentStep) {
       case ModalSteps.Wallet:
-        return <ExternalSignInModalWalletStep {...commonProps} setAvailableMemberships={setAvailableMemberships} />
+        return (
+          <ExternalSignInModalWalletStep
+            {...commonProps}
+            goToStep={(val) => setCurrentStep(val as ModalSteps)}
+            setAvailableMemberships={setAvailableMemberships}
+          />
+        )
       case ModalSteps.Membership:
         return (
           <ExternalSignInModalMembershipsStep
             {...commonProps}
             memberships={availableMemberships}
+            goToStep={(val) => setCurrentStep(val as ModalSteps)}
             memberId={selectedMembership}
             setMemberId={setSelectedMembership}
+            handleNoAccount={() => setCurrentStep(ModalSteps.Email)}
           />
         )
       case ModalSteps.Email:
-        return <ExternalSignInModalEmailStep {...commonProps} memberId={selectedMembership} />
-      case ModalSteps.Logging:
         return (
-          <AuthenticationModalStepTemplate
-            title="Logging in"
-            subtitle="Please wait while we log you in. This should take about 10 seconds."
-            loader
-            hasNavigatedBack={false}
+          <ProvideEmailForLink
+            onSubmit={(email) => {
+              formRef.current = { email }
+              setCurrentStep(ModalSteps.ConfirmationLink)
+            }}
+            setActionButtonHandler={(fn) =>
+              setPrimaryButtonProps({
+                text: 'Continue',
+                onClick: () => fn(),
+              })
+            }
           />
         )
+      case ModalSteps.ConfirmationLink:
+        return (
+          <CheckEmailConfirmation
+            email={formRef.current.email}
+            setActionButtonHandler={(fn) =>
+              setPrimaryButtonProps({
+                text: 'Resend',
+                onClick: () => fn(),
+              })
+            }
+            onSuccess={() => {
+              const resendTimestamp = new Date()
+
+              const calcRemainingTime = (date: Date) => {
+                const difference = Date.now() - date.getTime()
+                if (difference > 30_000) {
+                  clearInterval(id)
+                  setPrimaryButtonProps((prev) => ({
+                    ...prev,
+                    text: `Resend`,
+                    disabled: false,
+                  }))
+                  return
+                }
+                const duration = formatDurationBiggestTick(Math.floor(30 - difference / 1000))
+                setPrimaryButtonProps((prev) => ({
+                  ...prev,
+                  text: `Resend (${duration.replace('seconds', 's')})`,
+                  disabled: true,
+                }))
+              }
+
+              calcRemainingTime(resendTimestamp)
+
+              const id = setInterval(() => {
+                calcRemainingTime(resendTimestamp)
+              }, 1000)
+            }}
+          />
+        )
+      // return <ExternalSignInModalEmailStep {...commonProps} memberId={selectedMembership} />
+      // case ModalSteps.Logging:
+      //   return (
+      //     <AuthenticationModalStepTemplate
+      //       title="Logging in"
+      //       subtitle="Please wait while we log you in. This should take about 10 seconds."
+      //       loader
+      //       hasNavigatedBack={false}
+      //     />
+      //   )
       case ModalSteps.ExtensionSigning:
         return (
           <AuthenticationModalStepTemplate
@@ -137,7 +193,12 @@ export const ExternalSignInModal: FC = () => {
           : [ModalSteps.Wallet, ModalSteps.NoMembership].includes(currentStep)
           ? { text: 'Use email & password', onClick: () => setAuthModalOpenName('logIn') }
           : undefined,
-        additionalActionsNode: [ModalSteps.Wallet, ModalSteps.Membership, ModalSteps.Email].includes(currentStep) && (
+        additionalActionsNode: [
+          ModalSteps.Wallet,
+          ModalSteps.Membership,
+          ModalSteps.Email,
+          ModalSteps.ConfirmationLink,
+        ].includes(currentStep) && (
           <Button
             variant="tertiary"
             onClick={() => {
@@ -158,7 +219,7 @@ export const ExternalSignInModal: FC = () => {
       dividers={currentStep === ModalSteps.Membership}
       disableBackdropAnimation
     >
-      <FormProvider {...form}>{renderStep()}</FormProvider>
+      {renderStep()}
     </StyledDialogModal>
   )
 }

@@ -1,5 +1,5 @@
 import { Wallet } from '@talismn/connect-wallets'
-import { FC, useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import shallow from 'zustand/shallow'
 
 import { GetMembershipsQuery, useGetMembershipsLazyQuery } from '@/api/queries/__generated__/memberships.generated'
@@ -25,20 +25,21 @@ import {
   StyledTopBanner,
   WalletLogo,
 } from '../ExternalSignInSteps.styles'
-import { ModalSteps, SignInStepProps } from '../ExternalSignInSteps.types'
+import { SignInStepProps } from '../ExternalSignInSteps.types'
 
 export const isMobileDevice = isMobile()
 
-export type ExternalSignInModalWalletStepProps = SignInStepProps & {
+export type ExternalSignInModalWalletStepProps = Omit<SignInStepProps, 'goToStep'> & {
   setAvailableMemberships: (members: GetMembershipsQuery['memberships']) => void
+  goToStep: (step: 'Membership' | 'NoMembership') => void
 }
 
-export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProps> = ({
+export function ExternalSignInModalWalletStep({
   setPrimaryButtonProps,
   goToStep,
   hasNavigatedBack,
   setAvailableMemberships,
-}) => {
+}: ExternalSignInModalWalletStepProps) {
   const smMatch = useMediaMatch('sm')
 
   const [selectedWalletIdx, setSelectedWalletIdx] = useState<number>(0)
@@ -135,9 +136,9 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
 
     if (res.data?.memberships.length) {
       setAvailableMemberships(res.data.memberships)
-      goToStep(ModalSteps.Membership)
+      goToStep('Membership')
     } else {
-      goToStep(ModalSteps.NoMembership)
+      goToStep('NoMembership')
     }
   }, [
     fetchMemberships,

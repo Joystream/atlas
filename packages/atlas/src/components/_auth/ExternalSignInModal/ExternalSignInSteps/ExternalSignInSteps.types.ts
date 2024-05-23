@@ -5,6 +5,7 @@ export enum ModalSteps {
   Membership = 'Membership',
   Logging = 'Logging',
   Email = 'Email',
+  ConfirmationLink = 'ConfirmationLink',
   Register = 'Register',
   ExtensionSigning = 'ExtensionSigning',
   NoMembership = 'NoMembership',

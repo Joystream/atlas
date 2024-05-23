@@ -17,10 +17,12 @@ import { shortenString } from '@/utils/misc'
 import { ListItemsWrapper, StyledListItem } from './ExternalSignInSteps.styles'
 import { ModalSteps, SignInStepProps } from './ExternalSignInSteps.types'
 
-type SignInModalAccountStepProps = SignInStepProps & {
+type SignInModalAccountStepProps = Omit<SignInStepProps, 'goToStep'> & {
   memberId: string | null
   setMemberId: (id: string) => void
+  goToStep: (step: 'Membership' | 'ExtensionSigning') => void
   memberships: GetMembershipsQuery['memberships'] | null
+  handleNoAccount: () => void
 }
 
 export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps> = ({
@@ -30,6 +32,7 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
   setMemberId,
   memberId,
   memberships,
+  handleNoAccount,
 }) => {
   const smMatch = useMediaMatch('sm')
   const { setAuthModalOpenName } = useAuthStore(
@@ -49,7 +52,7 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
 
     if (!member) return
 
-    await setApiActiveAccount('address', member.controllerAccount)
+    await setApiActiveAccount('address', member.controllerAccount.id)
 
     goToStep(ModalSteps.ExtensionSigning)
     await handleLogin({
@@ -59,14 +62,15 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
           type: 'payload',
           data,
         }),
-      address: member.controllerAccount,
+      address: member.controllerAccount.id,
     })
       .then(() => {
         setAuthModalOpenName(undefined)
       })
       .catch((error) => {
         if (error.message === LogInErrors.NoAccountFound) {
-          return goToStep(ModalSteps.Email)
+          handleNoAccount()
+          return
         }
         if (error.message === LogInErrors.InvalidPayload) {
           displaySnackbar({
@@ -95,6 +99,7 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
     displaySnackbar,
     goToStep,
     handleLogin,
+    handleNoAccount,
     joystream,
     memberId,
     memberships,
@@ -128,7 +133,7 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
           <StyledListItem
             key={member.id}
             label={member.handle ?? 'Account'}
-            caption={shortenString(member.controllerAccount, 5)}
+            caption={shortenString(member.controllerAccount.id, 5)}
             size={smMatch ? 'large' : 'medium'}
             selected={memberId === member.id}
             nodeStart={<Avatar size={40} assetUrls={getMemberAvatar(member).urls} />}

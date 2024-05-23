@@ -1,5 +1,7 @@
 import styled from '@emotion/styled'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 import { AppLogo } from '@/components/AppLogo'
 import { FlexBox } from '@/components/FlexBox'
@@ -28,6 +30,11 @@ export const ProvideEmailForLink = ({ setActionButtonHandler, onSubmit, defaultE
     defaultValues: {
       email: defaultEmail,
     },
+    resolver: zodResolver(
+      z.object({
+        email: z.string().regex(/^\S+@\S+\.\S+$/, 'Enter valid email address.'),
+      })
+    ),
   })
   const { mutateAsync } = useSendEmailToken()
   // todo: validation
