@@ -43,13 +43,12 @@ const benefitsMetadata = {
     title: 'Discord Community',
     description: (
       <>
-        Introduce yourself to the{' '}
-        <TextButton to="https://discord.com/channels/811216481340751934/1231910540243238932">intros</TextButton> channel
+        Introduce yourself to the <TextButton to={atlasConfig.general.joystreamDiscordUrl}>#intros</TextButton> channel
         and share the link to your {atlasConfig.general.appName} channel page. Five best intros per weeks are rewarded!
       </>
     ),
     reward: '10 USD',
-    actionLink: 'https://discord.com/channels/811216481340751934/1224709788592767136',
+    actionLink: atlasConfig.general.joystreamDiscordUrl,
     tooltipLink: 'https://www.notion.so/joystream/Creators-Discord-bc8df1d87b58435a9ea325b073bea4d6?pvs=4',
   },
   twitterPost: {
@@ -64,7 +63,7 @@ const benefitsMetadata = {
     title: 'Roundtable events',
     description: `Participate in Creator Roundtable events held on Discord to exchange perspectives on current ${atlasConfig.general.appName} opportunities and features in the pipeline. Best questions are rewarded.`,
     reward: '25 USD',
-    actionLink: 'https://discord.com/channels/811216481340751934/1231911228398637077',
+    actionLink: atlasConfig.general.joystreamDiscordUrl,
     tooltipLink: 'https://www.notion.so/joystream/Roundtable-Events-cd106924a7314f75acf8813277fc21a8?pvs=4',
   },
   originalCreatorsContent: {
@@ -98,7 +97,7 @@ const benefitsMetadata = {
     actionLink: 'https://joystream.notion.site/Ambassador-Program-Space-93dfd2767d6b4729ac7dab79f9970d5b',
     tooltipLink: 'https://joystream.notion.site/Ambassador-Program-Space-93dfd2767d6b4729ac7dab79f9970d5b',
   },
-  discordLink: 'https://discord.com/channels/811216481340751934/1053294778529353788',
+  discordLink: atlasConfig.general.joystreamDiscordUrl,
 }
 
 export const YppDashboardMainTab: FC = () => {
@@ -493,8 +492,8 @@ export const YppDashboardMainTab: FC = () => {
             description={
               <>
                 Drop the link of your post to{' '}
-                <TextButton as="span" to="https://discord.com/channels/811216481340751934/1224714104552558682">
-                  shared NFTs channel
+                <TextButton as="span" to={atlasConfig.general.joystreamDiscordUrl}>
+                  #shared-NFTs
                 </TextButton>{' '}
                 on Discord to participate in rewards.
               </>
@@ -522,8 +521,8 @@ export const YppDashboardMainTab: FC = () => {
             description={
               <>
                 Drop the link of your post to{' '}
-                <TextButton as="span" to="https://discord.com/channels/811216481340751934/1233002048979603487">
-                  shared Tokens channel{' '}
+                <TextButton as="span" to={atlasConfig.general.joystreamDiscordUrl}>
+                  #shared-CRTs
                 </TextButton>{' '}
                 on Discord to participate in rewards.
               </>
