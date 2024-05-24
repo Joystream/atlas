@@ -71,15 +71,9 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       memberId: currentUser?.membershipId,
       channelId: currentMemberships?.[0].channels[0]?.id,
     }
-    const hasCreatedSingleVideo = currentMemberships?.[0]?.channels.some((channel) => channel.totalVideosCreated > 0)
 
     SentryLogger.setUser(user)
     UserEventsLogger.setUser(user)
-    // @ts-ignore custom prop required by usersnap
-    window.Usersnap?.init({
-      ...user,
-      role: hasCreatedSingleVideo ? 'creator' : 'default',
-    })
   }, [
     currentMemberships,
     currentUser?.email,
