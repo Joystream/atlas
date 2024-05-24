@@ -1,15 +1,19 @@
+import BN from 'bn.js'
 import { FC } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
 import { useMostPaidChannels } from '@/api/hooks/channel'
+import { useGetJoystreamTotalEarningsQuery } from '@/api/queries/__generated__/nfts.generated'
 import { SvgActionChevronR, SvgActionNewTab } from '@/assets/icons'
 import crt_card from '@/assets/images/ypp-hero/crt-card-hero.webp'
 import crt_dashboard from '@/assets/images/ypp-hero/crt-dashboard-hero.webp'
 import payments from '@/assets/images/ypp-hero/crt-payments-hero.webp'
 import { AppLogo } from '@/components/AppLogo'
 import { FlexBox } from '@/components/FlexBox'
+import { GlassDetailsWidget } from '@/components/GlassDetailsWidget'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Button, TextButton } from '@/components/_buttons/Button'
 import { PaidChannelCard } from '@/components/_channel/ChannelCard'
@@ -31,6 +35,7 @@ import {
   LogosContainer,
   RightImage,
   StyledInfiniteCarousel,
+  WidgetsContainer,
 } from './YppHero.styles'
 
 import {
@@ -55,6 +60,7 @@ export const YppHero: FC<YppHeroProps> = ({ onSignUpClick, yppAtlasStatus, onVie
   const xsMatch = useMediaMatch('xs')
   const xxsMatch = useMediaMatch('xxs')
   const smMatch = useMediaMatch('sm')
+  const mdMatch = useMediaMatch('md')
   const { ref, width, height } = useResizeObserver({ box: 'border-box' })
   const [, subtitleVariant, titleVariant] = useSectionTextVariants()
   const setIsYppChannelFlow = useYppStore((state) => state.actions.setIsYppChannelFlow)
@@ -62,9 +68,11 @@ export const YppHero: FC<YppHeroProps> = ({ onSignUpClick, yppAtlasStatus, onVie
   const { memberChannels, isLoggedIn } = useUser()
   const { trackRewardsCreateChannelButtonClick } = useSegmentAnalytics()
   const { channels, loading } = useMostPaidChannels()
+  const { data, loading: loadingEarnings } = useGetJoystreamTotalEarningsQuery()
   const items = !loading
     ? channels?.map((channel) => <PaidChannelCard key={channel.id} channel={channel} />)
     : Array.from({ length: 30 }).map((_, idx) => <PaidChannelCard key={idx} loading />)
+  const widgetContentTextVariant = mdMatch ? ('h700' as const) : ('h600' as const)
 
   return (
     <HeroBackgroundContainer noBackground>
@@ -194,51 +202,72 @@ export const YppHero: FC<YppHeroProps> = ({ onSignUpClick, yppAtlasStatus, onVie
                 </>
               )}
               {yppAtlasStatus !== 'ypp-signed' && 'It takes under 1 minute and is 100% free.'}
-            </Text> */}
+            </Text>  */}
           </GridItem>
         </LayoutGrid>
 
-        {/*<LayoutGrid data-aos="fade-up" data-aos-delay="450" data-aos-offset="40" data-aos-easing="atlas-easing">*/}
-        {/*  <GridItem margin={{ top: 6 }} colStart={{ base: 1, lg: 2 }} colSpan={{ base: 12, lg: 10 }}>*/}
-        {/*    <WidgetsContainer>*/}
-        {/*      <Text margin={{ bottom: 6 }} variant="h500" as="h5">*/}
-        {/*        Creator Earnings*/}
-        {/*      </Text>*/}
-        {/*    </WidgetsContainer>*/}
-        {/*    <WidgetsContainer justifyContent="space-between" gap={4} width="100%">*/}
-        {/*      <GlassDetailsWidget*/}
-        {/*        title="Total Rewards Paid"*/}
-        {/*        titleVariant="h300"*/}
-        {/*        tooltip={{ text: 'xd' }}*/}
-        {/*        customNode={*/}
-        {/*          <Text variant={widgetContentTextVariant} as="h2">*/}
-        {/*            204M*/}
-        {/*          </Text>*/}
-        {/*        }*/}
-        {/*      />*/}
-        {/*      <GlassDetailsWidget*/}
-        {/*        title="NFTs sold"*/}
-        {/*        titleVariant="h300"*/}
-        {/*        tooltip={{ text: 'xd' }}*/}
-        {/*        customNode={*/}
-        {/*          <Text variant={widgetContentTextVariant} as="h2">*/}
-        {/*            204M*/}
-        {/*          </Text>*/}
-        {/*        }*/}
-        {/*      />*/}
-        {/*      <GlassDetailsWidget*/}
-        {/*        title="Creator Tokens Sold"*/}
-        {/*        titleVariant="h300"*/}
-        {/*        tooltip={{ text: 'xd' }}*/}
-        {/*        customNode={*/}
-        {/*          <Text variant={widgetContentTextVariant} as="h2">*/}
-        {/*            204M*/}
-        {/*          </Text>*/}
-        {/*        }*/}
-        {/*      />*/}
-        {/*    </WidgetsContainer>*/}
-        {/*  </GridItem>*/}
-        {/*</LayoutGrid>*/}
+        <LayoutGrid data-aos="fade-up" data-aos-delay="450" data-aos-offset="40" data-aos-easing="atlas-easing">
+          <GridItem margin={{ top: 6 }} colStart={{ base: 1, lg: 2 }} colSpan={{ base: 12, lg: 10 }}>
+            <WidgetsContainer>
+              <Text margin={{ bottom: 6 }} variant="h500" as="h5">
+                Creator Earnings
+              </Text>
+            </WidgetsContainer>
+            <WidgetsContainer justifyContent="space-between" gap={4} width="100%">
+              <GlassDetailsWidget
+                title="Total Rewards Paid"
+                titleVariant="h300"
+                customNode={
+                  loadingEarnings ? (
+                    <SkeletonLoader width={120} height={60} />
+                  ) : (
+                    <NumberFormat
+                      as="h2"
+                      format="short"
+                      withDenomination
+                      variant={widgetContentTextVariant}
+                      value={new BN(data?.totalJoystreamEarnings.totalRewardsPaid ?? 0)}
+                    />
+                  )
+                }
+              />
+              <GlassDetailsWidget
+                title="NFTs Sold"
+                titleVariant="h300"
+                customNode={
+                  loadingEarnings ? (
+                    <SkeletonLoader width={120} height={60} />
+                  ) : (
+                    <NumberFormat
+                      as="h2"
+                      format="short"
+                      withDenomination
+                      variant={widgetContentTextVariant}
+                      value={new BN(data?.totalJoystreamEarnings.nftSaleVolume ?? 0)}
+                    />
+                  )
+                }
+              />
+              <GlassDetailsWidget
+                title="Creator Tokens Sold"
+                titleVariant="h300"
+                customNode={
+                  loadingEarnings ? (
+                    <SkeletonLoader width={120} height={60} />
+                  ) : (
+                    <NumberFormat
+                      as="h2"
+                      format="short"
+                      withDenomination
+                      variant={widgetContentTextVariant}
+                      value={new BN(data?.totalJoystreamEarnings.crtSaleVolume ?? 0)}
+                    />
+                  )
+                }
+              />
+            </WidgetsContainer>
+          </GridItem>
+        </LayoutGrid>
 
         <ImagesContainer width="100%" justifyContent="center">
           <FrontImage src={crt_dashboard} alt="Hero back" width="1152" height="824" />

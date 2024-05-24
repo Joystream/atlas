@@ -4785,6 +4785,13 @@ export type DistributionBucketsConnection = {
   totalCount: Scalars['Int']
 }
 
+export type EarningStatsOutput = {
+  __typename?: 'EarningStatsOutput'
+  crtSaleVolume: Scalars['String']
+  nftSaleVolume: Scalars['String']
+  totalRewardsPaid: Scalars['String']
+}
+
 export type EmailDeliveryAttempt = {
   __typename?: 'EmailDeliveryAttempt'
   /** UUID */
@@ -8377,6 +8384,7 @@ export type Query = {
   tokens: Array<Token>
   tokensConnection: TokensConnection
   topSellingChannels: Array<TopSellingChannelsResult>
+  totalJoystreamEarnings: EarningStatsOutput
   trailerVideoById?: Maybe<TrailerVideo>
   /** @deprecated Use trailerVideoById */
   trailerVideoByUniqueInput?: Maybe<TrailerVideo>
