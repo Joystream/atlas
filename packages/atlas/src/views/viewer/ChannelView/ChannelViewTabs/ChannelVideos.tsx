@@ -56,6 +56,7 @@ export const ChannelVideos: FC<ChannelVideosProps> = ({
         isPublic_eq: true,
         createdAt_lt: USER_TIMESTAMP,
         isCensored_eq: false,
+        isShort_eq: false,
         thumbnailPhoto: {
           isAccepted_eq: true,
         },
