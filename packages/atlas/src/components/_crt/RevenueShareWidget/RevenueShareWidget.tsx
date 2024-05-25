@@ -5,6 +5,7 @@ import {
   GetTokenRevenueSharesQuery,
   useGetCreatorTokenHoldersQuery,
   useGetFullCreatorTokenQuery,
+  useGetRevenueShareDividendQuery,
 } from '@/api/queries/__generated__/creatorTokens.generated'
 import { SvgActionCalendar, SvgActionLock, SvgJoyTokenMonochrome16 } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
@@ -44,6 +45,13 @@ export const RevenueShareWidget = ({ tokenName, tokenId, revenueShare, memberId 
         },
       },
     },
+  })
+  const { data: dividendData, loading: loadingDividendData } = useGetRevenueShareDividendQuery({
+    variables: {
+      tokenId: tokenId,
+      stakingAmount: +(holderData?.tokenAccounts[0]?.totalAmount ?? 0),
+    },
+    skip: !holderData?.tokenAccounts[0] || !tokenId,
   })
   const status = getRevenueShareStatusForMember({
     currentBlock,
@@ -119,13 +127,17 @@ export const RevenueShareWidget = ({ tokenName, tokenId, revenueShare, memberId 
           </Detail>
 
           <Detail title="YOUR SHARE">
-            <NumberFormat
-              value={new BN(memberStake?.earnings ?? 0)}
-              as="p"
-              variant="t300"
-              withDenomination="after"
-              icon={<SvgJoyTokenMonochrome16 />}
-            />
+            {loadingDividendData ? (
+              <SkeletonLoader height={30} width={60} />
+            ) : (
+              <NumberFormat
+                value={new BN(dividendData?.getShareDividend.dividendJoyAmount ?? memberStake?.earnings ?? 0)}
+                as="p"
+                variant="t300"
+                withDenomination="after"
+                icon={<SvgJoyTokenMonochrome16 />}
+              />
+            )}
           </Detail>
 
           <Detail title="YOUR TOKENS">
