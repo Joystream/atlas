@@ -99,6 +99,7 @@ export const ChannelView: FC = () => {
       isPublic_eq: true,
       createdAt_lt: USER_TIMESTAMP,
       isCensored_eq: false,
+      isShort_eq: true,
       thumbnailPhoto: {
         isAccepted_eq: true,
       },
