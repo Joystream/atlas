@@ -3,11 +3,19 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { createClient } from 'graphql-ws'
 
-import { ORION_GRAPHQL_URL, QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL } from '@/config/env'
+import {
+  FAUCET_URL,
+  ORION_AUTH_URL,
+  ORION_GRAPHQL_URL,
+  QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL,
+  YPP_FAUCET_URL,
+} from '@/config/env'
 import { useUserLocationStore } from '@/providers/userLocation'
 import { UserEventsLogger } from '@/utils/logs'
 
 import { cache } from './cache'
+
+const followedRequests = [YPP_FAUCET_URL, ORION_GRAPHQL_URL, ORION_AUTH_URL, FAUCET_URL]
 
 const initializePerformanceObserver = () => {
   try {
@@ -17,6 +25,12 @@ const initializePerformanceObserver = () => {
           const queryString = entry.name.split('?')?.[1]
           const params = new URLSearchParams(queryString)
           const queryType = params.get('queryName')
+
+          // Only follow requests to Atlas infra
+          if (!queryType && !followedRequests.some((allowedUrl) => entry.name.includes(allowedUrl))) {
+            return
+          }
+
           UserEventsLogger.logUserEvent('request-response-time', {
             requestName: queryType ?? entry.name,
             timeToComplete: entry.duration,
