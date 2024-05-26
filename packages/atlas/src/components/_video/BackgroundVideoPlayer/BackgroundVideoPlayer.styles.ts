@@ -47,6 +47,7 @@ export const ButtonBox = styled.div`
   z-index: ${zIndex.modals};
   display: flex;
   gap: ${sizes(2)};
+  flex-direction: column-reverse;
 
   ${media.sm} {
     bottom: 32px;

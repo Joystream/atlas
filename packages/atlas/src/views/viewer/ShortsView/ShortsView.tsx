@@ -7,6 +7,9 @@ import {
   GetBasicVideosConnectionLightweightDocument,
   useGetCuratedHompageVideosQuery,
 } from '@/api/queries/__generated__/videos.generated'
+import { FlexBox } from '@/components/FlexBox'
+import { Text } from '@/components/Text'
+import { ChannelLink, FollowButton } from '@/components/_channel/ChannelLink'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { BackgroundVideoPlayer } from '@/components/_video/BackgroundVideoPlayer'
 import { getPublicCryptoVideoFilter } from '@/config/contentFilter'
@@ -36,8 +39,8 @@ export const ShortsView = () => {
           const newIndex = Number(entry.target.dataset.index)
           setActiveIndex(newIndex)
           setNextSlide(entries[newIndex + 1].target)
-
-          if (tiles.length - newIndex < 2) {
+          console.log(tiles.length, tiles.length - newIndex, 'hh')
+          if (tiles.length - newIndex <= 2) {
             console.log('try fetch')
             if (!loading) {
               fetchMore({
@@ -57,9 +60,8 @@ export const ShortsView = () => {
       observerRef.current?.disconnect()
     }
   }, [activeIndex, fetchMore, loading, pageInfo?.endCursor, tiles.length])
-  console.log('enext', nextSlide)
+
   const goNextSlide = useCallback(() => {
-    console.log(nextSlide, 'scroll')
     nextSlide?.scrollIntoView({ behavior: 'smooth' })
   }, [nextSlide])
 
@@ -99,7 +101,8 @@ const Container = styled.div`
   scroll-snap-type: y mandatory;
   align-items: center;
   scrollbar-width: none;
-  width: 100%;
+  width: calc(100% + 36px);
+  margin-left: -16px;
 
   ::-webkit-scrollbar {
     display: none;
@@ -110,14 +113,20 @@ const ShortVideoPlaceholder = styled.div`
   display: grid;
   place-items: center;
   aspect-ratio: 9/16;
-
-  /* background-color: green; */
-  max-height: 90%;
-  width: 400px;
-  text-align: center;
-  vertical-align: middle;
+  max-height: 100%;
+  min-height: 100%;
+  min-width: 300px;
+  width: 100%;
   scroll-snap-stop: always;
   scroll-snap-align: center;
+
+  ${media.xs} {
+    width: 400px;
+  }
+
+  ${media.sm} {
+    width: 500px;
+  }
 
   ${media.xxl} {
     width: 40vw;
@@ -139,13 +148,11 @@ const ShortVideoPlayer = ({
   playNext: () => void
 }) => {
   const { video, loading } = useFullVideo(videoId)
-  const thumbnailUrls: string[] = video?.thumbnailPhoto?.resolvedUrls ?? []
   const mediaUrls: string[] = video?.media?.resolvedUrls ?? []
-  const isLoading = loading
-  console.log(loading)
+
   return (
     <ShortVideoPlayerBox>
-      {!isLoading ? (
+      {!loading ? (
         <StyledBackgroundVideoPlayer
           videoId={videoId}
           playing={isActive}
@@ -163,26 +170,45 @@ const ShortVideoPlayer = ({
         />
       ) : (
         <SkeletonLoader height="100%" width={400} />
-        // <VideoWrapper>
-        //   <VideoPoster resolvedUrls={thumbnailUrls ?? undefined} type="cover" alt="" />
-        // </VideoWrapper>
       )}
+      <DetailsBox flow="column" gap={2}>
+        <FlexBox width="fit-content" gap={4}>
+          <ChannelLink id={video?.channel.id} />
+          <FollowButton isSmall channelId={video?.channel.id} />
+        </FlexBox>
+        <Text variant="t200" as="p">
+          {video?.title}
+        </Text>
+        <Text clampAfterLine={1} variant="t100" as="p" color="colorText">
+          {video?.description}
+        </Text>
+      </DetailsBox>
     </ShortVideoPlayerBox>
   )
 }
 
+const DetailsBox = styled(FlexBox)`
+  position: absolute;
+  bottom: 30px;
+  left: 10px;
+  max-width: 80%;
+  overflow: hidden;
+`
+
 const ShortVideoPlayerBox = styled.div`
   aspect-ratio: 9/16;
-
-  /* background-color: green; */
-  min-height: 90%;
+  min-height: 100%;
   max-height: 100%;
   width: 100%;
   position: relative;
   scroll-snap-stop: always;
   scroll-snap-align: center;
-  border: 1px solid red;
   overflow: hidden;
+
+  ${media.md} {
+    min-height: 95%;
+    max-height: 95%;
+  }
 
   ${media.xxl} {
     width: 40vw;
@@ -201,6 +227,7 @@ export const useHomeVideos = () => {
         isShort_not_eq: undefined,
         isShortDerived_isNull: undefined,
         isShort_eq: true,
+        isShortDerived_eq: true,
       }),
       skipVideoIds: ['-1'],
     },
@@ -209,12 +236,24 @@ export const useHomeVideos = () => {
   const { columns, fetchMore, pageInfo, tiles } = useInfiniteVideoGrid({
     query: GetBasicVideosConnectionLightweightDocument,
     variables: {
-      where: getPublicCryptoVideoFilter({
-        id_not_in: avoidIds,
-        isShort_not_eq: undefined,
-        isShortDerived_isNull: undefined,
-        isShort_eq: true,
-      }),
+      where: {
+        OR: [
+          getPublicCryptoVideoFilter({
+            id_not_in: avoidIds,
+            isShort_not_eq: undefined,
+            isShortDerived_isNull: undefined,
+            isShort_eq: true,
+            orionLanguage_eq: 'en',
+          }),
+          getPublicCryptoVideoFilter({
+            id_not_in: avoidIds,
+            isShort_not_eq: undefined,
+            isShortDerived_isNull: undefined,
+            isShortDerived_eq: true,
+            orionLanguage_eq: 'en',
+          }),
+        ],
+      },
       orderBy: VideoOrderByInput.VideoRelevanceDesc,
     },
     options: {

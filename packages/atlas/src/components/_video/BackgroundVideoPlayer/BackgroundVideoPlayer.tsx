@@ -80,12 +80,9 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
     }
   }, [canPlay])
 
-  console.log('adf', playing, props.muted)
-
   useEffect(() => {
     // show poster again when src changes
     setIsPosterVisible(true)
-    console.log('effect')
     if (!videoRef.current || playing === undefined || !canPlay) {
       return
     }
@@ -107,7 +104,6 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
     onEnded?.(e)
 
     if (loop && videoRef.current) {
-      console.log('xd')
       videoRef.current.currentTime = 0
       return
     }
