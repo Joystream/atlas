@@ -74,8 +74,8 @@ export const ShortsView = () => {
             activeIndex > idx && idx > activeIndex - 2 ? 'prev' : ''
           } ${activeIndex < idx && idx < activeIndex + 2 ? 'next' : ''}`}
         >
-          {!id || activeIndex - 1 > idx || activeIndex + 2 < idx ? (
-            <div style={{ height: '100%', background: 'red', width: 400, aspectRatio: '9/16' }} />
+          {activeIndex - 1 > idx || activeIndex + 2 < idx ? (
+            <div style={{ height: '100%', width: 400, aspectRatio: '9/16' }} />
           ) : (
             <ShortVideoPlayer
               forceMuted={forceMuted}
@@ -141,17 +141,17 @@ const ShortVideoPlayer = ({
   setForceMuted,
 }: {
   isActive: boolean
-  videoId: string
+  videoId?: string
   forceMuted: boolean
   setForceMuted: (val: boolean) => void
   playNext: () => void
 }) => {
-  const { video, loading } = useFullVideo(videoId)
+  const { video, loading } = useFullVideo(videoId ?? '')
   const mediaUrls: string[] = video?.media?.resolvedUrls ?? []
 
   return (
     <ShortVideoPlayerBox>
-      {!loading ? (
+      {!loading && videoId ? (
         <StyledBackgroundVideoPlayer
           videoId={videoId}
           playing={isActive}
@@ -168,20 +168,22 @@ const ShortVideoPlayer = ({
           customLink={absoluteRoutes.viewer.video(videoId)}
         />
       ) : (
-        <SkeletonLoader height="100%" width={400} />
+        <SkeletonLoader height="100%" width="100%" />
       )}
-      <DetailsBox flow="column" gap={2}>
-        <FlexBox width="fit-content" gap={4}>
-          <ChannelLink id={video?.channel.id} />
-          <FollowButton isSmall channelId={video?.channel.id} />
-        </FlexBox>
-        <Text margin={{ top: 4 }} variant="t200" as="p">
-          {video?.title}
-        </Text>
-        <Text clampAfterLine={1} variant="t100" as="p" color="colorText">
-          {video?.description}
-        </Text>
-      </DetailsBox>
+      {video ? (
+        <DetailsBox flow="column" gap={2}>
+          <FlexBox width="fit-content" gap={4}>
+            <ChannelLink id={video?.channel.id} />
+            <FollowButton isSmall channelId={video?.channel.id} />
+          </FlexBox>
+          <Text margin={{ top: 4 }} variant="t200" as="p">
+            {video?.title}
+          </Text>
+          <Text clampAfterLine={1} variant="t100" as="p" color="colorText">
+            {video?.description}
+          </Text>
+        </DetailsBox>
+      ) : null}
     </ShortVideoPlayerBox>
   )
 }
