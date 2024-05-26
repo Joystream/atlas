@@ -39,9 +39,7 @@ export const ShortsView = () => {
           const newIndex = Number(entry.target.dataset.index)
           setActiveIndex(newIndex)
           setNextSlide(entries[newIndex + 1].target)
-          console.log(tiles.length, tiles.length - newIndex, 'hh')
           if (tiles.length - newIndex <= 2) {
-            console.log('try fetch')
             if (!loading) {
               fetchMore({
                 variables: { first: 4 * 4, after: pageInfo?.endCursor },
@@ -176,7 +174,7 @@ const ShortVideoPlayer = ({
           <ChannelLink id={video?.channel.id} />
           <FollowButton isSmall channelId={video?.channel.id} />
         </FlexBox>
-        <Text variant="t200" as="p">
+        <Text margin={{ top: 4 }} variant="t200" as="p">
           {video?.title}
         </Text>
         <Text clampAfterLine={1} variant="t100" as="p" color="colorText">
