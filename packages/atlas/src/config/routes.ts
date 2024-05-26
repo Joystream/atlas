@@ -29,6 +29,7 @@ export const relativeRoutes = {
     video: (id = ':id') => `video/${id}`,
   },
   viewer: {
+    shorts: () => 'shorts',
     curatorView: () => 'curator-view',
     curatorHomepage: () => 'curator-homepage',
     index: () => '',

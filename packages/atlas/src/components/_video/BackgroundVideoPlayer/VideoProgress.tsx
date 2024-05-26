@@ -9,16 +9,23 @@ export type VideoProgressProps = {
   isPlaying?: boolean
   // limit in seconds for video play time
   limit?: number
+  loop?: boolean
 }
 
-export const VideoProgress = ({ tick, video, isPlaying, limit }: VideoProgressProps) => {
+export const VideoProgress = ({ tick, video, isPlaying, limit, loop }: VideoProgressProps) => {
   const [progress, setProgress] = useState(0)
+  const hasVideo = !!video
   useEffect(() => {
-    if ((isPlaying || typeof isPlaying === 'undefined') && video) {
+    if ((isPlaying || typeof isPlaying === 'undefined') && hasVideo) {
       const id = setInterval(() => {
-        const proccessedLimit = limit ? (limit < video.duration ? limit : video.duration) : video.duration
+        const proccessedLimit = limit ? Math.min(limit, video.duration) : video.duration
         if (limit && video.currentTime > proccessedLimit) {
           setProgress(1)
+          if (loop) {
+            video.currentTime = 0
+            video.play()
+            return
+          }
           video.currentTime = video.duration
           clearInterval(id)
           return
@@ -30,7 +37,7 @@ export const VideoProgress = ({ tick, video, isPlaying, limit }: VideoProgressPr
         clearInterval(id)
       }
     }
-  }, [isPlaying, limit, progress, tick, video, video?.duration])
+  }, [hasVideo, isPlaying, limit, loop, progress, tick, video, video?.duration])
 
   const width = useMemo(() => (progress ? `${progress * 100}%` : 1), [progress])
   return (

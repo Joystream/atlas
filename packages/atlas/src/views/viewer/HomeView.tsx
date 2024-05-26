@@ -54,7 +54,7 @@ const StyledSection = styled(Section)`
   padding: ${sizes(8)} 0;
 `
 
-const useHomeVideos = () => {
+export const useHomeVideos = () => {
   const initialRowsToLoad = useVideoGridRows('main')
   const { data, loading } = useGetCuratedHompageVideosQuery({
     notifyOnNetworkStatusChange: true,

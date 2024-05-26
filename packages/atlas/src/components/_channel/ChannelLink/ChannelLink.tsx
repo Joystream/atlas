@@ -105,7 +105,15 @@ export const ChannelLink: FC<ChannelLinkProps> = ({
   )
 }
 
-const FollowButton = ({ title, channelId }: { title?: string; channelId?: string }) => {
+export const FollowButton = ({
+  title,
+  channelId,
+  isSmall,
+}: {
+  title?: string
+  channelId?: string
+  isSmall?: boolean
+}) => {
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(channelId, title)
   const handleFollowButtonClick = (e: MouseEvent) => {
     e.preventDefault()
@@ -115,7 +123,7 @@ const FollowButton = ({ title, channelId }: { title?: string; channelId?: string
   return (
     <FollowButtonWrapper>
       <ProtectedActionWrapper title="You want to follow this channel?" description={`Sign in to follow ${title}`}>
-        <Button variant="secondary" onClick={handleFollowButtonClick}>
+        <Button variant="secondary" size={isSmall ? 'small' : 'medium'} onClick={handleFollowButtonClick}>
           {isFollowing ? 'Unfollow' : 'Follow'}
         </Button>
       </ProtectedActionWrapper>
