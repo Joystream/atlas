@@ -7,6 +7,7 @@ import { EmptyFallback } from '@/components/EmptyFallback'
 import { Grid } from '@/components/Grid'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
+import { getPublicCryptoVideoFilter } from '@/config/contentFilter'
 import { transitions } from '@/styles'
 import { createPlaceholderData } from '@/utils/data'
 import { SentryLogger } from '@/utils/logs'
@@ -49,21 +50,12 @@ export const ChannelVideos: FC<ChannelVideosProps> = ({
       orderBy: sortVideosBy,
       limit: tilesPerPage,
       offset: currentPage * tilesPerPage,
-      where: {
+      where: getPublicCryptoVideoFilter({
         channel: {
           id_eq: channelId,
         },
-        isPublic_eq: true,
         createdAt_lt: USER_TIMESTAMP,
-        isCensored_eq: false,
-        isShort_eq: false,
-        thumbnailPhoto: {
-          isAccepted_eq: true,
-        },
-        media: {
-          isAccepted_eq: true,
-        },
-      },
+      }),
     },
   })
 
