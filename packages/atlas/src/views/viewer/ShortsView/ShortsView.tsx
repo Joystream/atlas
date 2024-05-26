@@ -35,8 +35,9 @@ export const ShortsView = () => {
 
     observerRef.current = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
+        const target = entry.target as HTMLDivElement
         if (entry.isIntersecting) {
-          const newIndex = Number(entry.target.dataset.index)
+          const newIndex = Number(target.dataset.index)
           setActiveIndex(newIndex)
           setNextSlide(entries[newIndex + 1].target)
           if (tiles.length - newIndex <= 2) {
