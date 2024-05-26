@@ -24,6 +24,7 @@ import { CollectorsBox } from '@/components/_channel/CollectorsBox'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { ReportModal } from '@/components/_overlays/ReportModal'
 import { atlasConfig } from '@/config'
+import { getPublicCryptoVideoFilter } from '@/config/contentFilter'
 import { absoluteRoutes } from '@/config/routes'
 import { NFT_SORT_OPTIONS, VIDEO_SORT_OPTIONS } from '@/config/sorting'
 import { useGetAssetUrl } from '@/hooks/useGetAssetUrl'
@@ -92,20 +93,12 @@ export const ChannelView: FC = () => {
     tab === 'Token' ? !!tab && (isChannelOwner || !!channel?.creatorToken?.token.id) : !!tab
   )
   const { videoCount } = useVideoCount({
-    where: {
+    where: getPublicCryptoVideoFilter({
       channel: {
         id_eq: id,
       },
-      isPublic_eq: true,
       createdAt_lt: USER_TIMESTAMP,
-      isCensored_eq: false,
-      thumbnailPhoto: {
-        isAccepted_eq: true,
-      },
-      media: {
-        isAccepted_eq: true,
-      },
-    },
+    }),
   })
   const { data: nftCountData } = useGetNftsCountQuery({
     variables: {
