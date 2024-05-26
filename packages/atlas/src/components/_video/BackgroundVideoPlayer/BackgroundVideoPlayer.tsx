@@ -18,6 +18,8 @@ type BackgroundVideoPlayerProps = {
   withFade?: boolean
   src: string[]
   poster: string[]
+  onMuted?: (newState: boolean) => void
+  loop?: boolean
   customLink?: string
 } & Omit<VideoHTMLAttributes<HTMLVideoElement>, 'src' | 'poster'>
 
@@ -32,14 +34,16 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
   handleActions,
   videoPlaytime,
   videoId,
+  onMuted,
   withFade,
   customLink,
+  loop,
   ...props
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isPosterVisible, setIsPosterVisible] = useState(true)
   const [isPlaying, setIsPlaying] = useState(autoPlay)
-  const [isMuted, setIsMuted] = useState(true)
+  const [isMuted, setIsMuted] = useState(props.muted)
   const [canPlay, setCanPlay] = useState(false)
 
   const initialRender = useRef(true)
@@ -76,9 +80,12 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
     }
   }, [canPlay])
 
+  console.log('adf', playing, props.muted)
+
   useEffect(() => {
     // show poster again when src changes
     setIsPosterVisible(true)
+    console.log('effect')
     if (!videoRef.current || playing === undefined || !canPlay) {
       return
     }
@@ -97,9 +104,15 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
   }
 
   const handleEnded = (e: SyntheticEvent<HTMLVideoElement, Event>) => {
+    onEnded?.(e)
+
+    if (loop && videoRef.current) {
+      console.log('xd')
+      videoRef.current.currentTime = 0
+      return
+    }
     setIsPosterVisible(true)
     setIsPlaying(false)
-    onEnded?.(e)
   }
 
   return (
@@ -112,13 +125,18 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
             variant="tertiary"
           />
           <Button
-            onClick={() => setIsMuted((prev) => !prev)}
+            onClick={() => {
+              onMuted?.(!isMuted)
+              setIsMuted((prev) => !prev)
+            }}
             icon={isMuted ? <SvgActionSoundOff /> : <SvgActionSoundOn />}
             variant="tertiary"
           />
         </ButtonBox>
       )}
-      {playing && <VideoProgress video={videoRef.current} isPlaying={isPlaying} tick={10} limit={videoPlaytime} />}
+      {playing && (
+        <VideoProgress loop={loop} video={videoRef.current} isPlaying={isPlaying} tick={10} limit={videoPlaytime} />
+      )}
       <StyledFade withFade={withFade}>
         <StyledVideo
           resolvedVideoUrls={src}
