@@ -17,7 +17,7 @@ import { shortenString } from '@/utils/misc'
 import { ListItemsWrapper, StyledListItem } from './ExternalSignInSteps.styles'
 import { ModalSteps, SignInStepProps } from './ExternalSignInSteps.types'
 
-type SignInModalAccountStepProps = Omit<SignInStepProps, 'goToStep'> & {
+export type SignInModalAccountStepProps = Omit<SignInStepProps, 'goToStep'> & {
   memberId: string | null
   setMemberId: (id: string) => void
   goToStep: (step: 'Membership' | 'ExtensionSigning') => void

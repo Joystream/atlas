@@ -13,7 +13,9 @@ import { StyledDialogModal } from './ExternalSignInModal.styles'
 import {
   ExternalSignInModalMembershipsStep,
   ExternalSignInModalWalletStep,
+  ExternalSignInModalWalletStepProps,
   ModalSteps,
+  SignInModalAccountStepProps,
   SignInStepProps,
 } from './ExternalSignInSteps'
 
@@ -74,7 +76,7 @@ export const ExternalSignInModal: FC = () => {
         return (
           <ExternalSignInModalWalletStep
             {...commonProps}
-            goToStep={(val) => setCurrentStep(val as ModalSteps)}
+            goToStep={setCurrentStep as ExternalSignInModalWalletStepProps['goToStep']}
             setAvailableMemberships={setAvailableMemberships}
           />
         )
@@ -83,7 +85,7 @@ export const ExternalSignInModal: FC = () => {
           <ExternalSignInModalMembershipsStep
             {...commonProps}
             memberships={availableMemberships}
-            goToStep={(val) => setCurrentStep(val as ModalSteps)}
+            goToStep={setCurrentStep as SignInModalAccountStepProps['goToStep']}
             memberId={selectedMembership}
             setMemberId={setSelectedMembership}
             handleNoAccount={() => setCurrentStep(ModalSteps.Email)}
