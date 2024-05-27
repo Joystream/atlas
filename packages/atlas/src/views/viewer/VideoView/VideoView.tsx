@@ -419,24 +419,29 @@ const DetailsItems = ({
       if (video?.id) {
         setVideoReactionProcessing(true)
         const fee = reactionFee || (await getReactionFee([memberId || '', video?.id, reaction]))
-        const reacted = await likeOrDislikeVideo(video.id, reaction, video.title, fee)
+        const prevReaction = video.reactions.find((reaction) => reaction.member.id === memberId)
+        likeOrDislikeVideo(video.id, reaction, video.title, fee, {
+          prevReactionId: prevReaction?.id,
+          onTxSign: () => setVideoReactionProcessing(false),
+          isRemovingReaction: prevReaction?.reaction === reaction.toUpperCase(),
+        })
         reaction === 'like'
           ? trackLikeAdded(video.id, memberId ?? 'no data')
           : trackDislikeAdded(video.id, memberId ?? 'no data')
-        setVideoReactionProcessing(false)
-        return reacted
+        return true
       }
       return false
     },
     [
-      getReactionFee,
-      likeOrDislikeVideo,
-      memberId,
+      video?.id,
+      video?.reactions,
+      video?.title,
       reactionFee,
+      getReactionFee,
+      memberId,
+      likeOrDislikeVideo,
       trackLikeAdded,
       trackDislikeAdded,
-      video?.id,
-      video?.title,
     ]
   )
 

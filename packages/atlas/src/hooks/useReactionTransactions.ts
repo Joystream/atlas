@@ -10,12 +10,15 @@ import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
+import { useOptimisticActions } from './useOptimisticActions'
+
 export const useReactionTransactions = () => {
   const { memberId } = useUser()
   const { joystream, proxyCallback } = useJoystream()
   const { refetchReactions, refetchComment, refetchCommentsSection, refetchReplies, refetchVideo, refetchEdits } =
     useNetworkUtils()
   const handleTransaction = useTransaction()
+  const { addVideoReaction, removeVideoReaction } = useOptimisticActions()
   const navigate = useNavigate()
 
   const addComment = useCallback(
@@ -198,7 +201,13 @@ export const useReactionTransactions = () => {
   )
 
   const likeOrDislikeVideo = useCallback(
-    (videoId: string, reaction: VideoReaction, videoTitle?: string | null, fee?: BN) => {
+    (
+      videoId: string,
+      reaction: VideoReaction,
+      videoTitle?: string | null,
+      fee?: BN,
+      opts?: { prevReactionId?: string; onTxSign?: () => void; isRemovingReaction?: boolean }
+    ) => {
       if (!joystream || !memberId) {
         ConsoleLogger.error('No joystream instance')
         return Promise.reject(false)
@@ -211,14 +220,20 @@ export const useReactionTransactions = () => {
         minimized: {
           errorMessage: `Reaction to the video "${videoTitle || ''}" was not posted.`,
         },
-        onTxSync: async () => {
-          await refetchVideo(videoId)
+        onTxSign: () => {
+          opts?.onTxSign?.()
+          if (opts?.prevReactionId) {
+            removeVideoReaction({ reactionId: opts?.prevReactionId, videoId })
+          }
+          if (!opts?.isRemovingReaction) {
+            addVideoReaction({ memberId, type: reaction, videoId })
+          }
         },
         unsignedMessage: 'To add your reaction',
         allowMultiple: true,
       })
     },
-    [memberId, handleTransaction, joystream, proxyCallback, refetchVideo]
+    [joystream, memberId, handleTransaction, proxyCallback, addVideoReaction, removeVideoReaction]
   )
 
   return {
