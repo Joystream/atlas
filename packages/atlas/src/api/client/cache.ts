@@ -119,7 +119,7 @@ const getCommentKeyArgs = (
   const parentCommentId = args?.where?.parentComment?.id_eq
   const videoId = args?.where?.video?.id_eq ?? ctx.variables?.videoId
   const orderBy = args?.orderBy || []
-  return `${parentCommentId}:${videoId}:${orderBy}`
+  return `parentId-${parentCommentId}-:id-${videoId}-:${orderBy}`
 }
 
 const createDateHandler = () => ({

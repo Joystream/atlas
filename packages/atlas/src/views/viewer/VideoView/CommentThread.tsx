@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { FC, memo, useState } from 'react'
 
-import { UserCommentReactions, useComment, useCommentRepliesConnection } from '@/api/hooks/comments'
+import { UserCommentReactions, useCommentRepliesConnection } from '@/api/hooks/comments'
 import { SvgActionChevronB } from '@/assets/icons'
 import { TextButton } from '@/components/_buttons/Button'
 import { Comment, CommentProps } from '@/components/_comments/Comment'
@@ -39,14 +39,10 @@ const _CommentThread: FC<CommentThreadProps> = ({
       first: INITIAL_REPLIES_COUNT,
       parentCommentId: commentId || '',
     },
-    notifyOnNetworkStatusChange: true,
+    notifyOnNetworkStatusChange: false,
   })
 
-  const { comment: newReply } = useComment({ commentId: newReplyId || '' }, { skip: !newReplyId })
-
-  const allRepliesContainNewReply = !!replies.find((r) => r.id === newReplyId)
-
-  const placeholderItems = loading ? createPlaceholderData(LOAD_MORE_REPLIES_COUNT) : []
+  const placeholderItems = loading || !newReplyId ? createPlaceholderData(LOAD_MORE_REPLIES_COUNT) : []
 
   const handleLoadMore = () => {
     fetchMore({
@@ -109,22 +105,6 @@ const _CommentThread: FC<CommentThreadProps> = ({
             >
               Load more replies
             </LoadMoreRepliesButton>
-          ) : null}
-          {newReplyId && !allRepliesContainNewReply ? (
-            newReply ? (
-              <Comment
-                key={newReply?.id}
-                highlighted={newReply.id === highlightedCommentId}
-                commentId={newReply.id}
-                video={video}
-                indented
-                setHighlightedCommentId={setHighlightedCommentId}
-                userReactions={userReactionsLookup ? userReactionsLookup[newReply.id] : undefined}
-                isReplyable={false}
-              />
-            ) : (
-              <Comment indented /> // new reply is loading, display an empty skeleton Comment
-            )
           ) : null}
         </>
       )}
