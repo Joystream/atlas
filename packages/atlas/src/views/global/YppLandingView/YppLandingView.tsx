@@ -1,6 +1,6 @@
 import AOS from 'aos'
 import 'aos/dist/aos.css'
-import { FC, useCallback, useEffect, useState } from 'react'
+import { FC, useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ParallaxProvider } from 'react-scroll-parallax'
 
@@ -10,11 +10,12 @@ import { useHeadTags } from '@/hooks/useHeadTags'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useUser } from '@/providers/user/user.hooks'
 import { useYppStore } from '@/providers/ypp/ypp.store'
-import { YppConnectionDetails } from '@/views/global/YppLandingView/sections/YppConnectionDetails'
+import { CreatorOpportunities } from '@/views/global/YppLandingView/sections/CreatorOpportunities'
+import { JoystreamRoadmap } from '@/views/global/YppLandingView/sections/JoystreamRoadmap'
+import { ViewerOpportunities } from '@/views/global/YppLandingView/sections/ViewerOpportunities'
 
 import { YppAuthorizationModal } from './YppAuthorizationModal'
 import { Wrapper } from './YppLandingView.styles'
-import { YppCardsSections } from './sections/YppCardsSections'
 import { YppFooter } from './sections/YppFooter'
 import { YppHero } from './sections/YppHero'
 import { YppRewardSection } from './sections/YppRewardSection'
@@ -30,6 +31,7 @@ export const YppLandingView: FC = () => {
   const navigate = useNavigate()
   const { trackYppSignInButtonClick } = useSegmentAnalytics()
   const selectedChannelTitle = activeMembership?.channels.find((channel) => channel.id === channelId)?.title
+  const viewerEarningsRef = useRef<HTMLDivElement | null>(null)
 
   const [wasSignInTriggered, setWasSignInTriggered] = useState(false)
   const shouldContinueYppFlowAfterCreatingChannel = useYppStore(
@@ -45,6 +47,12 @@ export const YppLandingView: FC = () => {
       duration: 750,
       once: true,
     })
+  }, [])
+
+  const handleViewerEarnings = useCallback(() => {
+    if (viewerEarningsRef.current) {
+      viewerEarningsRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
   }, [])
 
   const handleYppSignUpClick = useCallback(async () => {
@@ -109,11 +117,14 @@ export const YppLandingView: FC = () => {
           yppAtlasStatus={getYppAtlasStatus()}
           hasAnotherUnsyncedChannel={hasAnotherUnsyncedChannel}
           selectedChannelTitle={selectedChannelTitle}
+          onViewerEarnings={handleViewerEarnings}
         />
+        <CreatorOpportunities onSignUpClick={handleYppSignUpClick} />
         <YppRewardSection />
         <YppSignupVideo />
-        <YppConnectionDetails />
-        <YppCardsSections />
+        <ViewerOpportunities sectionRef={viewerEarningsRef} />
+        <JoystreamRoadmap />
+        {/*<YppCardsSections />*/}
         <YppFooter onSignUpClick={handleYppSignUpClick} />
       </ParallaxProvider>
     </Wrapper>

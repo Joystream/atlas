@@ -256,6 +256,12 @@ export const useSegmentAnalytics = () => {
     })
   }, [analytics, getUTMParams])
 
+  const trackRewardsCreateChannelButtonClick = useCallback(() => {
+    analytics.track('YPP Landing Create Channel Clicked', {
+      ...getUTMParams(),
+    })
+  }, [analytics, getUTMParams])
+
   const trackNFTCarouselNext = useCallback(
     (slideId: string, nftId?: string) => {
       analytics.track('Featured NFT carousel next slide', {
@@ -696,5 +702,6 @@ export const useSegmentAnalytics = () => {
     trackRewardsBrandingLinkClicked,
     trackRewardsReferralLinkClicked,
     trackRoundtableEventsClicked,
+    trackRewardsCreateChannelButtonClick,
   }
 }

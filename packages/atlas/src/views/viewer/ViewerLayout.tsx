@@ -22,11 +22,12 @@ import { useUser } from '@/providers/user/user.hooks'
 import { media, transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
 
-const YppLandingView = lazy(() =>
+// Currently the newest version is at main file and the old one was moved to new file
+const YppLandingViewTest = lazy(() =>
   import('@/views/global/YppLandingView').then((module) => ({ default: module.YppLandingView }))
 )
-const YppLandingViewTest = lazy(() =>
-  import('@/views/global/YppLandingViewTest').then((module) => ({ default: module.YppLandingViewTest }))
+const YppLandingView = lazy(() =>
+  import('@/views/global/YppLandingView/YppLandingViewOld').then((module) => ({ default: module.YppLandingViewOld }))
 )
 const MemberNotificationsView = lazy(() =>
   import('@/views/notifications').then((module) => ({ default: module.MemberNotificationsView }))

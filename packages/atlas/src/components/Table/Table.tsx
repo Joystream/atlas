@@ -7,6 +7,7 @@ import { Text } from '@/components/Text'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import {
+  AnchorRow,
   EmptyTableContainer,
   EmptyTableDescription,
   EmptyTableHeader,
@@ -22,6 +23,7 @@ import {
 export type TableProps<T = object> = {
   columns: Column[]
   onRowClick?: (rowIdx: number) => void
+  getRowTo?: (rowIdx: number) => string
   data: T[]
   title?: string
   pageSize?: number
@@ -31,6 +33,7 @@ export type TableProps<T = object> = {
     description: string
     icon: ReactElement
   }
+  interactive?: boolean
   className?: string
   pagination?: TablePaginationProps
   minWidth?: number
@@ -46,6 +49,8 @@ export const Table = <T extends object>({
   onRowClick,
   className,
   pagination,
+  interactive,
+  getRowTo,
   minWidth = 300,
 }: TableProps<T>) => {
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -74,7 +79,7 @@ export const Table = <T extends object>({
 
   const mdMatch = useMediaMatch('md')
   return (
-    <Wrapper className={className}>
+    <Wrapper interactive={interactive} className={className}>
       {title && (
         <Text
           as="h3"
@@ -109,6 +114,33 @@ export const Table = <T extends object>({
                 <tbody {...getTableBodyProps()}>
                   {subpage.map((row, idx) => {
                     prepareRow(row)
+                    const rowTo = getRowTo ? getRowTo(idx) : undefined
+                    const mappedCells = row.cells.map((cell) => (
+                      <Td
+                        variant="t100"
+                        as="td"
+                        {...cell.getCellProps()}
+                        key={cell.getCellProps().key}
+                        className="table-cell"
+                      >
+                        {cell.render('Cell')}
+                      </Td>
+                    ))
+
+                    if (rowTo) {
+                      return (
+                        <AnchorRow
+                          className="table-row"
+                          {...row.getRowProps()}
+                          onClick={() => onRowClick?.(idx)}
+                          key={row.getRowProps().key}
+                          to={rowTo}
+                        >
+                          {mappedCells}
+                        </AnchorRow>
+                      )
+                    }
+
                     return (
                       <tr
                         className="table-row"
@@ -116,17 +148,7 @@ export const Table = <T extends object>({
                         onClick={() => onRowClick?.(idx)}
                         key={row.getRowProps().key}
                       >
-                        {row.cells.map((cell) => (
-                          <Td
-                            variant="t100"
-                            as="td"
-                            {...cell.getCellProps()}
-                            key={cell.getCellProps().key}
-                            className="table-cell"
-                          >
-                            {cell.render('Cell')}
-                          </Td>
-                        ))}
+                        {mappedCells}
                       </tr>
                     )
                   })}

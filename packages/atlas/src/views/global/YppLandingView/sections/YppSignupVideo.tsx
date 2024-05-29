@@ -21,7 +21,7 @@ export const YppSignupVideo = () => {
         <CenteredLayoutGrid data-aos="fade-up" data-aos-delay="0" data-aos-offset="80" data-aos-easing="atlas-easing">
           <GridItem colSpan={{ base: 12, sm: 10, md: 8, lg: 6 }} colStart={{ sm: 2, md: 3, lg: 4 }}>
             <Text variant={titleVariant} as="h1">
-              Sign up in 60 seconds
+              Sync your channel from YouTube in 60 seconds
             </Text>
             <Text
               variant={subtitleVariant}
@@ -30,7 +30,7 @@ export const YppSignupVideo = () => {
               align="center"
               margin={{ top: 4, bottom: mdMatch ? 16 : 12 }}
             >
-              Watch the sign up demo by one of Joystream members.
+              And get paid in JOY tokens for sign up and new videos synced.
             </Text>
           </GridItem>
           <GridItem colSpan={{ base: 12, sm: 10, md: 8, lg: 6 }} colStart={{ sm: 2, md: 3, lg: 4 }}>

@@ -13,14 +13,14 @@ import { MarketplaceNftTab } from './tabs/MarketplaceNftTab'
 
 const TABS = [
   {
-    name: 'Video NFTs',
-    description: 'Explore offers of non-fungible tokens for popular videos',
-    icon: <SvgActionPlay />,
-  },
-  {
     name: 'Creator Tokens',
     description: 'Discover channels you can invest in',
     icon: <SvgActionCreatorToken />,
+  },
+  {
+    name: 'Video NFTs',
+    description: 'Explore offers of non-fungible tokens for popular videos',
+    icon: <SvgActionPlay />,
   },
 ] as const
 type TabsNames = (typeof TABS)[number]['name']
@@ -61,8 +61,8 @@ export const MarketplaceView: FC = () => {
       />
 
       <MarketplaceWrapper>
-        {currentTab === 0 && <MarketplaceNftTab />}
-        {currentTab === 1 && <MarketplaceCrtTab />}
+        {currentTab === 0 && <MarketplaceCrtTab />}
+        {currentTab === 1 && <MarketplaceNftTab />}
       </MarketplaceWrapper>
     </>
   )

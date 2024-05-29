@@ -14,6 +14,7 @@ import { SellOnMarketButton } from '@/components/_crt/SellOnMarketButton/SellOnM
 import { DetailsContent } from '@/components/_nft/NftTile'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
+import { useJoystreamStore } from '@/providers/joystream/joystream.store'
 import { calcBuyMarketPricePerToken } from '@/utils/crts'
 import { SentryLogger } from '@/utils/logs'
 import { formatDate } from '@/utils/time'
@@ -71,14 +72,8 @@ export const CrtStatusWidget: FC<CrtStatusWidgetProps> = ({ token }) => {
               <DetailsContent
                 avoidIconStyling
                 tileSize={smMatch ? 'big' : 'bigSmall'}
-                caption="Market cap"
-                content={
-                  token.lastPrice && token.totalSupply
-                    ? hapiBnToTokenNumber(new BN(token.lastPrice).muln(+token.totalSupply))
-                    : 0
-                }
-                icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
-                withDenomination
+                caption="Total supply"
+                content={+token.totalSupply}
               />
               <DetailsContent
                 avoidIconStyling
@@ -115,6 +110,9 @@ const InactiveDetails = () => {
 }
 
 const MarketDetails = ({ token }: { token: FullCreatorTokenFragment }) => {
+  const currentBlockRef = useRef(useJoystreamStore((store) => store.currentBlock))
+  const activeRevenueShare = token.revenueShares.find((rS) => !rS.finalized)
+  const hasActiveRevenueShare = (activeRevenueShare?.endsAt ?? 0) > currentBlockRef.current
   const calculateSlippageAmount = useCallback(
     (amount: number) => {
       const currentAmm = token?.ammCurves.find((amm) => !amm.finalized)
@@ -138,8 +136,8 @@ const MarketDetails = ({ token }: { token: FullCreatorTokenFragment }) => {
         tooltipText="Price of each incremental unit purchased or sold depends on overall quantity of tokens transacted, the actual average price per unit for the entire purchase or sale will differ from the price displayed for the first unit transacted."
       />
       <FlexBox equalChildren width="100%" gap={2}>
-        <SellOnMarketButton tokenId={token.id} />
-        <BuyFromMarketButton tokenId={token.id} />
+        <SellOnMarketButton hasActiveRevenueShare={hasActiveRevenueShare} tokenId={token.id} />
+        <BuyFromMarketButton hasActiveRevenueShare={hasActiveRevenueShare} tokenId={token.id} />
       </FlexBox>
 
       <SupplyLine>

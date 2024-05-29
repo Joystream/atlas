@@ -74,18 +74,19 @@ export const CrtCard = ({
       })
 
       baseDetails.push({
-        caption: 'Channel revenue',
+        caption: 'Revenue',
         content: channelRevenue ?? 0,
         icon: <JoyTokenIcon size={16} variant="gray" />,
       })
 
       baseDetails.push({
-        caption: 'Transaction vol.',
+        caption: 'Volume',
         content: 0,
         icon: <JoyTokenIcon size={16} variant="gray" />,
       })
     }
 
+    // todo: crt sale
     if (status?.type === 'sale') {
       baseDetails.push({
         caption: 'Sale',
@@ -129,13 +130,13 @@ export const CrtCard = ({
       })
 
       baseDetails.push({
-        caption: 'Channel revenue',
+        caption: 'Revenue',
         content: channelRevenue ?? 0,
         icon: <JoyTokenIcon size={16} variant="regular" />,
       })
 
       baseDetails.push({
-        caption: 'Transaction vol.',
+        caption: 'Volume',
         content: status.transactionVolume,
         icon: <JoyTokenIcon size={16} variant="regular" />,
       })

@@ -1,13 +1,14 @@
+import styled from '@emotion/styled'
 import { FC, useState } from 'react'
 
 import {
   SvgActionAddChannel,
   SvgActionMember,
+  SvgActionMoney,
   SvgActionNewTab,
   SvgSidebarHome,
   SvgSidebarMarketplace,
   SvgSidebarReferrals,
-  SvgSidebarYpp,
 } from '@/assets/icons'
 import { AppLogo } from '@/components/AppLogo'
 import { Button } from '@/components/_buttons/Button'
@@ -16,10 +17,15 @@ import { absoluteRoutes } from '@/config/routes'
 import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useUser } from '@/providers/user/user.hooks'
+import { square } from '@/styles'
 
 import { FollowedChannels } from './FollowedChannels'
 
 import { SidenavBase } from '../SidenavBase'
+
+const StyledSvgActionMoney = styled(SvgActionMoney)`
+  ${square(24)}
+`
 
 export const viewerNavItems = [
   {
@@ -38,9 +44,9 @@ export const viewerNavItems = [
   ...(atlasConfig.features.ypp.googleConsoleClientId
     ? [
         {
-          icon: <SvgSidebarYpp />,
-          name: 'YPP',
-          expandedName: 'YouTube Partner Program',
+          icon: <StyledSvgActionMoney />,
+          name: 'Earn',
+          expandedName: 'Creator Rewards',
           to: absoluteRoutes.viewer.ypp(),
           bottomNav: true,
         },

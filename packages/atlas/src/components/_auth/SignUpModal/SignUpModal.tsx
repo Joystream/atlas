@@ -63,6 +63,7 @@ export const SignUpModal = () => {
   const memberPollingTries = useRef(0)
   const haveTriedCreateSession = useRef(false)
   const ytResponseData = useYppStore((state) => state.ytResponseData)
+  const isYppChannelFlow = useYppStore((state) => state.isYppChannelFlow)
   const setYppModalOpenName = useYppStore((state) => state.actions.setYppModalOpenName)
   const setYtResponseData = useYppStore((state) => state.actions.setYtResponseData)
   const referrerChannelId = useYppStore((state) => state.referrerId)
@@ -175,6 +176,8 @@ export const SignUpModal = () => {
           setYtResponseData({ ...ytResponseData, email: signUpFormData.current.email })
           setAuthModalOpenName(undefined)
           setYppModalOpenName('ypp-sync-options')
+        } else if (isYppChannelFlow) {
+          setAuthModalOpenName('createChannel')
         } else {
           setAmountofTokens(amountOfTokens)
           goToNextStep()
@@ -187,6 +190,7 @@ export const SignUpModal = () => {
     displaySnackbar,
     goToNextStep,
     goToStep,
+    isYppChannelFlow,
     referrerChannelId,
     setAnonymousUserId,
     setAuthModalOpenName,
