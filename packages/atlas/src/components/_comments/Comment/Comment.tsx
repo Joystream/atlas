@@ -102,8 +102,10 @@ export const Comment: FC<CommentProps> = memo(
             closeModal()
             isChannelOwner
               ? await moderateComment(comment.id, video?.channel.id, comment.author.handle, video?.id)
-              : await deleteComment(comment.id, video?.title || '', video?.id)
-            setIsCommentProcessing(false)
+              : await deleteComment(comment.id, video?.title || '', video?.id, {
+                  onUnconfirmed: () => setIsCommentProcessing(false),
+                  onTxSign: () => setIsCommentProcessing(false),
+                })
           },
         },
         secondaryButton: {
@@ -155,19 +157,25 @@ export const Comment: FC<CommentProps> = memo(
       }
 
       setEditCommentInputIsProcessing(true)
-      const success = await updateComment({
+      await updateComment({
         videoId: video.id,
         commentBody: editCommentInputText ?? '',
         commentId: comment.id,
         videoTitle: video.title,
+        opts: {
+          onTxSign: () => {
+            setEditCommentInputIsProcessing(false)
+            setEditCommentInputText('')
+            setHighlightedCommentId?.(comment?.id ?? null)
+            setIsEditingComment(false)
+          },
+          onUnconfirmed: () => {
+            setEditCommentInputIsProcessing(false)
+            setEditCommentInputText('')
+            setIsEditingComment(false)
+          },
+        },
       })
-      setEditCommentInputIsProcessing(false)
-
-      if (success) {
-        setEditCommentInputText('')
-        setHighlightedCommentId?.(comment?.id ?? null)
-        setIsEditingComment(false)
-      }
     }
     const handleCommentReaction = async (commentId: string, reactionId: CommentReaction) => {
       setProcessingReactionsIds((previous) => [...previous, reactionId])
@@ -190,19 +198,23 @@ export const Comment: FC<CommentProps> = memo(
       }
 
       setReplyCommentInputIsProcessing(true)
-      const newCommentId = await addComment({
+      await addComment({
         videoId: video.id,
         commentBody: replyCommentInputText,
         parentCommentId: comment.id,
         videoTitle: video.title,
         commentAuthorHandle: comment.author.handle,
+        opts: {
+          onTxSign: (newCommentId) => {
+            setReplyCommentInputIsProcessing(false)
+            setReplyCommentInputText('')
+            setHighlightedCommentId?.(newCommentId || null)
+            onReplyPosted?.(newCommentId || '')
+            setRepliesOpen?.(true)
+            setReplyInputOpen(false)
+          },
+        },
       })
-      setReplyCommentInputIsProcessing(false)
-      setReplyCommentInputText('')
-      setHighlightedCommentId?.(newCommentId || null)
-      onReplyPosted?.(newCommentId || '')
-      setRepliesOpen?.(true)
-      setReplyInputOpen(false)
     }
 
     const handleReplyClick = () => {

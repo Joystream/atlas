@@ -3,7 +3,8 @@ import { debounce } from 'lodash-es'
 import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { useComment, useCommentSectionComments, useUserCommentsReactions } from '@/api/hooks/comments'
+import { useComment, useUserCommentsReactions } from '@/api/hooks/comments'
+import { useCommentSectionComments } from '@/api/hooks/useCommentSectionComments'
 import { CommentOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { FullVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { EmptyFallback } from '@/components/EmptyFallback'
@@ -75,7 +76,7 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
   const [numberOfComments, setNumberOfComments] = useState(mobileCommentsOpen ? INITIAL_COMMENTS : 1)
   const { comments, loading, fetchMore, pageInfo, networkStatus } = useCommentSectionComments(
     { ...queryVariables, first: mobileCommentsOpen ? INITIAL_COMMENTS : 1 },
-    { skip: disabled || !videoId, notifyOnNetworkStatusChange: true }
+    { skip: disabled || !videoId, notifyOnNetworkStatusChange: false }
   )
   const { userReactions } = useUserCommentsReactions(videoId, memberId)
 
@@ -140,20 +141,21 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
       return
     }
     setCommentInputIsProcessing(true)
-    const newCommentId = await addComment({
+    await addComment({
       videoId,
       commentBody: commentInputText,
       parentCommentId,
       videoTitle: video?.title,
+      opts: {
+        onTxSign: (newCommentId) => {
+          setCommentInputIsProcessing(false)
+          setCommentInputText('')
+          setHighlightedCommentId(newCommentId || null)
+        },
+      },
     })
-    setCommentInputIsProcessing(false)
 
     trackCommentAdded(commentInputText, video?.id ?? 'no data')
-
-    if (newCommentId) {
-      setCommentInputText('')
-      setHighlightedCommentId(newCommentId || null)
-    }
   }
 
   const handleLoadMoreClick = () => {
@@ -208,6 +210,7 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
       </CommentsSectionWrapper>
     )
   }
+
   return (
     <CommentsSectionWrapper>
       <CommentsSectionHeader ref={commentsSectionHeaderRef}>
