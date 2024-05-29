@@ -14,12 +14,12 @@ export enum SendEmailTokenErrors {
 
 export const useSendEmailToken = () => {
   return useMutation({
-    mutationFn: (email: string) =>
-      axiosInstance
+    mutationFn: async (props: { email: string; isExternal?: boolean }) => {
+      const res = await axiosInstance
         .post(
           `${ORION_AUTH_URL}/request-email-confirmation-token`,
           {
-            email,
+            email: props.email,
           },
           {
             withCredentials: true,
@@ -40,6 +40,15 @@ export const useSendEmailToken = () => {
           }
 
           throw e
-        }),
+        })
+      const data = JSON.parse(res.data.payload)
+      alert(
+        `${location.host}?email=${encodeURI(data.email)}&email-token=${encodeURI(data.id)}&account-type=${
+          props.isExternal ? 'external' : 'internal'
+        }`
+      )
+
+      return res
+    },
   })
 }

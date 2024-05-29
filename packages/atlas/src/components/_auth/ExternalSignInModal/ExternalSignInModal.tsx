@@ -94,6 +94,7 @@ export const ExternalSignInModal: FC = () => {
       case ModalSteps.Email:
         return (
           <ProvideEmailForLink
+            isExternal
             onSubmit={(email) => {
               formRef.current = { email }
               setCurrentStep(ModalSteps.ConfirmationLink)
@@ -109,6 +110,7 @@ export const ExternalSignInModal: FC = () => {
       case ModalSteps.ConfirmationLink:
         return (
           <CheckEmailConfirmation
+            isExternal
             email={formRef.current.email}
             setActionButtonHandler={(fn) =>
               setPrimaryButtonProps({

@@ -18,9 +18,15 @@ type ProvideEmailForLinkProps = {
   onSubmit: (email: string) => void
   setActionButtonHandler: SetActionButtonHandlerSetter
   defaultEmail?: string
+  isExternal?: boolean
 }
 
-export const ProvideEmailForLink = ({ setActionButtonHandler, onSubmit, defaultEmail }: ProvideEmailForLinkProps) => {
+export const ProvideEmailForLink = ({
+  setActionButtonHandler,
+  onSubmit,
+  defaultEmail,
+  isExternal,
+}: ProvideEmailForLinkProps) => {
   const {
     register,
     formState: { errors },
@@ -46,7 +52,7 @@ export const ProvideEmailForLink = ({ setActionButtonHandler, onSubmit, defaultE
       handleSubmit(async (data) => {
         try {
           setLoading?.(true)
-          await mutateAsync(data.email)
+          await mutateAsync({ email: data.email, isExternal })
           onSubmit(data.email)
         } catch (e) {
           const handledError = e.message

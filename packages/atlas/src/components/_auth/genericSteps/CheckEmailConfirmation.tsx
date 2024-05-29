@@ -17,6 +17,7 @@ type CheckEmailConfirmationProps = {
   onSuccess?: () => void
   onFailure?: () => void
   email?: string
+  isExternal?: boolean
 }
 
 export const CheckEmailConfirmation = ({
@@ -24,6 +25,7 @@ export const CheckEmailConfirmation = ({
   setActionButtonHandler,
   onSuccess,
   onFailure,
+  isExternal,
 }: CheckEmailConfirmationProps) => {
   const { displaySnackbar } = useSnackbar()
   const { mutateAsync } = useSendEmailToken()
@@ -41,7 +43,7 @@ export const CheckEmailConfirmation = ({
       try {
         setError('')
         setLoading?.(true)
-        await mutateAsync(email)
+        await mutateAsync({ email, isExternal })
         onSuccess?.()
       } catch (e) {
         onFailure?.()
