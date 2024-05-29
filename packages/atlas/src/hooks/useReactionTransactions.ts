@@ -6,11 +6,12 @@ import { absoluteRoutes } from '@/config/routes'
 import { CommentReaction, VideoReaction } from '@/joystream-lib/types'
 import { useJoystream } from '@/providers/joystream'
 import { useNetworkUtils } from '@/providers/networkUtils/networkUtils.hooks'
+import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
-import { useOptimisticActions } from './useOptimisticActions'
+import { UNCONFIRMED, useOptimisticActions } from './useOptimisticActions'
 
 export const useReactionTransactions = () => {
   const { memberId } = useUser()
@@ -18,8 +19,16 @@ export const useReactionTransactions = () => {
   const { refetchReactions, refetchComment, refetchCommentsSection, refetchReplies, refetchVideo, refetchEdits } =
     useNetworkUtils()
   const handleTransaction = useTransaction()
-  const { addVideoReaction, removeVideoReaction } = useOptimisticActions()
+  const {
+    addVideoReaction,
+    deleteVideoComment,
+    removeVideoReaction,
+    addVideoComment,
+    addVideoReplyComment,
+    editVideoComment,
+  } = useOptimisticActions()
   const navigate = useNavigate()
+  const { displaySnackbar } = useSnackbar()
 
   const addComment = useCallback(
     async ({
@@ -28,12 +37,14 @@ export const useReactionTransactions = () => {
       commentBody,
       videoTitle,
       commentAuthorHandle,
+      opts,
     }: {
       parentCommentId?: string
       videoId: string
       commentBody: string
       videoTitle?: string | null
       commentAuthorHandle?: string
+      opts?: { onTxSign?: (newCommentId: string) => void }
     }) => {
       if (!joystream || !memberId) {
         ConsoleLogger.error('no joystream or active member')
@@ -47,6 +58,23 @@ export const useReactionTransactions = () => {
           (
             await joystream.extrinsics
           ).createVideoComment(memberId, videoId, commentBody, parentCommentId || null, proxyCallback(updateStatus)),
+        onTxSign: () => {
+          if (parentCommentId) {
+            newCommentId = addVideoReplyComment({
+              memberId,
+              text: commentBody,
+              videoId,
+              parentCommentId,
+            })
+          } else {
+            newCommentId = addVideoComment({
+              memberId,
+              text: commentBody,
+              videoId,
+            })
+          }
+          opts?.onTxSign?.(newCommentId)
+        },
         onTxSync: async (_, metaStatus) => {
           if (
             !metaStatus?.__typename ||
@@ -79,14 +107,16 @@ export const useReactionTransactions = () => {
       return newCommentId
     },
     [
+      joystream,
       memberId,
       handleTransaction,
-      joystream,
       proxyCallback,
+      addVideoReplyComment,
+      addVideoComment,
       refetchComment,
-      refetchCommentsSection,
       refetchReplies,
       refetchVideo,
+      refetchCommentsSection,
     ]
   )
 
@@ -124,20 +154,35 @@ export const useReactionTransactions = () => {
       videoId,
       commentBody,
       videoTitle,
+      opts,
     }: {
       commentId: string
       videoId: string
       commentBody: string
       videoTitle?: string | null
+      opts?: { onTxSign?: () => void; onUnconfirmed: () => void }
     }) => {
       if (!joystream || !memberId || !videoId) {
         ConsoleLogger.error('no joystream or active member')
         return false
       }
 
+      if (commentId.includes(UNCONFIRMED)) {
+        displaySnackbar({
+          title: "Couldn't edit your comment",
+          description: 'Looks like you comment was not yet confirmed by server. Please retry shortly.',
+        })
+        opts?.onUnconfirmed()
+        return
+      }
+
       return await handleTransaction({
         txFactory: async (updateStatus) =>
           (await joystream.extrinsics).editVideoComment(memberId, commentId, commentBody, proxyCallback(updateStatus)),
+        onTxSign: () => {
+          editVideoComment({ commentId, text: commentBody })
+          opts?.onTxSign?.()
+        },
         onTxSync: async () => refetchEdits(commentId),
         minimized: {
           errorMessage: `Your comment to the video "${videoTitle}" has not been edited.`,
@@ -146,18 +191,43 @@ export const useReactionTransactions = () => {
         allowMultiple: true,
       })
     },
-    [memberId, handleTransaction, joystream, proxyCallback, refetchEdits]
+    [joystream, memberId, handleTransaction, displaySnackbar, proxyCallback, editVideoComment, refetchEdits]
   )
+
   const deleteComment = useCallback(
-    async (commentId: string, videoTitle?: string, videoId?: string) => {
+    async (
+      commentId: string,
+      videoTitle?: string,
+      videoId?: string,
+      opts?: {
+        onUnconfirmed: () => void
+        onTxSign?: () => void
+      }
+    ) => {
       if (!joystream || !memberId) {
         ConsoleLogger.error('no joystream or active member')
+        return
+      }
+
+      if (commentId.includes(UNCONFIRMED)) {
+        displaySnackbar({
+          title: "Couldn't delete your comment",
+          description: 'Looks like you comment was not yet confirmed by server. Please retry shortly.',
+        })
+        opts?.onUnconfirmed()
         return
       }
 
       return handleTransaction({
         txFactory: async (updateStatus) =>
           (await joystream.extrinsics).deleteVideoComment(memberId, commentId, proxyCallback(updateStatus)),
+        onTxSign: () => {
+          deleteVideoComment({ commentId })
+          opts?.onTxSign?.()
+        },
+        onTxSync: async () => {
+          refetchComment(commentId)
+        },
         snackbarSuccessMessage: {
           title: 'Comment deleted',
           description: 'Your comment has been deleted.',
@@ -171,7 +241,16 @@ export const useReactionTransactions = () => {
         allowMultiple: true,
       })
     },
-    [memberId, handleTransaction, joystream, navigate, proxyCallback]
+    [
+      joystream,
+      memberId,
+      handleTransaction,
+      displaySnackbar,
+      proxyCallback,
+      deleteVideoComment,
+      refetchComment,
+      navigate,
+    ]
   )
 
   const moderateComment = useCallback(
