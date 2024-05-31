@@ -22,12 +22,8 @@ import { useUser } from '@/providers/user/user.hooks'
 import { media, transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
 
-// Currently the newest version is at main file and the old one was moved to new file
-const YppLandingViewTest = lazy(() =>
-  import('@/views/global/YppLandingView').then((module) => ({ default: module.YppLandingView }))
-)
 const YppLandingView = lazy(() =>
-  import('@/views/global/YppLandingView/YppLandingViewOld').then((module) => ({ default: module.YppLandingViewOld }))
+  import('@/views/global/YppLandingView').then((module) => ({ default: module.YppLandingView }))
 )
 const MemberNotificationsView = lazy(() =>
   import('@/views/notifications').then((module) => ({ default: module.MemberNotificationsView }))
@@ -70,10 +66,7 @@ const viewerRoutes = [
   { path: relativeRoutes.viewer.crtMarketplace(), element: <CrtMarketplaceView /> },
   { path: relativeRoutes.viewer.nftMarketplace(), element: <NftMarketplaceView /> },
   ...(atlasConfig.features.ypp.googleConsoleClientId
-    ? [
-        { path: relativeRoutes.viewer.ypp(), element: <YppLandingView /> },
-        { path: relativeRoutes.viewer.yppTest(), element: <YppLandingViewTest /> },
-      ]
+    ? [{ path: relativeRoutes.viewer.ypp(), element: <YppLandingView /> }]
     : []),
   { path: relativeRoutes.viewer.referrals(), element: <ReferralsView /> },
 ]
