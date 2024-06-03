@@ -595,7 +595,7 @@ const SilverTierWrapper = styled(TierWrapper)`
 
 export const BenefitsContainer = ({ children, title }: { children: ReactNode[] | ReactNode; title: string }) => {
   const drawer = useRef<HTMLDivElement>(null)
-  const [isDrawerActive, setDrawerActive] = useState(true)
+  const [isDrawerActive, setDrawerActive] = useState(false)
 
   return (
     <StyledGridItem colSpan={{ xxs: 12 }}>
