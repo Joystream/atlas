@@ -9,13 +9,15 @@ import { Section } from '@/components/Section/Section'
 import { TopEarningChannels } from '@/components/TopEarningChannels'
 import { AllTokensSection } from '@/components/_crt/AllTokensSection'
 import { CrtCard, CrtSaleTypes } from '@/components/_crt/CrtCard/CrtCard'
+import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
-import { TableFullWitdhtWrapper } from '@/views/viewer/MarketplaceView/MarketplaceView.styles'
+import { cVar, media, sizes } from '@/styles'
 
-import { responsive } from '../FeaturedNftsSection/FeaturedNftsSection'
+import { responsive } from '../NftMarketplaceView/FeaturedNftsSection/FeaturedNftsSection'
 
-export const MarketplaceCrtTab = () => {
+export const CrtMarketplaceView = () => {
+  const headTags = useHeadTags('CRT - Marketplace')
   const mdMatch = useMediaMatch('md')
   const { data, loading } = useGetBasicCreatorTokensQuery({
     variables: {
@@ -66,7 +68,8 @@ export const MarketplaceCrtTab = () => {
     ) ?? []
 
   return (
-    <>
+    <MarketplaceWrapper>
+      {headTags}
       <MarketplaceCarousel type="crt" crts={filteredTokens ?? []} isLoading={loading} />
 
       {featuredCrts.length > 4 && (
@@ -91,10 +94,31 @@ export const MarketplaceCrtTab = () => {
         </LimitedWidthContainer>
       </TableFullWitdhtWrapper>
       <AllTokensSection />
-    </>
+    </MarketplaceWrapper>
   )
 }
 
 const StyledCrtCard = styled(CrtCard)`
   min-height: 100%;
+`
+
+const MarketplaceWrapper = styled.div`
+  padding: ${sizes(4)} 0;
+  display: grid;
+  gap: ${sizes(8)};
+  ${media.md} {
+    padding: ${sizes(8)} 0;
+    gap: ${sizes(16)};
+  }
+`
+
+const TableFullWitdhtWrapper = styled.div`
+  width: calc(100% + var(--size-global-horizontal-padding) * 2);
+  margin-left: calc(var(--size-global-horizontal-padding) * -1);
+  background-color: ${cVar('colorBackgroundMuted')};
+  padding: ${sizes(8)} var(--size-global-horizontal-padding);
+
+  ${media.md} {
+    padding: ${sizes(16)} var(--size-global-horizontal-padding);
+  }
 `
