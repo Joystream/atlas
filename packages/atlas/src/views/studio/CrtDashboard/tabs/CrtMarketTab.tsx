@@ -100,7 +100,11 @@ export const CrtMarketTab = ({ token }: CrtMarketTabProps) => {
           }}
         />
       </FlexBox>
-      <AmmTransactionsTable loading={loading} data={data?.ammCurves[0].transactions ?? []} />
+      <AmmTransactionsTable
+        symbol={token.symbol ?? 'N/A'}
+        loading={loading}
+        data={data?.ammCurves[0].transactions ?? []}
+      />
     </>
   )
 }
