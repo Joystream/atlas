@@ -64,9 +64,8 @@ export const NftPurchaseBottomDrawer: FC = () => {
   const { userBid, canChangeBid, userBidUnlockDate } = useNftState(nft)
   const thumbnailUrls = nft?.video.thumbnailPhoto?.resolvedUrls
   const creatorAvatarUrls = nft?.video.channel.avatarPhoto?.resolvedUrls
-  const { urls: ownerMemberAvatarUrls } = getMemberAvatar(
-    nft?.owner.__typename === 'NftOwnerMember' ? nft.owner.member : null
-  )
+  const { urls: ownerMemberAvatarUrls } =
+    nft?.owner.__typename === 'NftOwnerMember' ? getMemberAvatar(nft.owner.member) : { urls: creatorAvatarUrls }
   const mdMatch = useMediaMatch('md')
   const { accountBalance } = useSubscribeAccountBalance()
   const timestamp = useMsTimestamp({ shouldStop: !currentAction })
