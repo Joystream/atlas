@@ -84,7 +84,8 @@ export const useOptimisticActions = () => {
       client.cache.modify({
         id: `Comment:${commentId}`,
         fields: {
-          reactionsCountByReactionId: (prev) => {
+          reactionsCountByReactionId: (_prev) => {
+            const prev = _prev ?? []
             const reactionPosition = prev.findIndex(
               (reactionEntry: { reactionId: number; count: number }) => reactionEntry.reactionId === reactionId
             )
