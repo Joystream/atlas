@@ -16,6 +16,7 @@ import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { ReactionsOnboardingPopover } from '@/components/_video/ReactionsOnboardingPopover'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
+import { UNCONFIRMED } from '@/hooks/useOptimisticActions'
 import { useTouchDevice } from '@/hooks/useTouchDevice'
 import { CommentReaction } from '@/joystream-lib/types'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
@@ -113,6 +114,7 @@ export const InternalComment: FC<InternalCommentProps> = ({
   const [tempReactionId, setTempReactionId] = useState<CommentReaction | null>(null)
   const isDeleted = type === 'deleted'
   const isProcessing = type === 'processing'
+  const isUnconfirmed = commentId?.includes(UNCONFIRMED)
   const shouldShowKebabButton = type === 'options' && !loading && !isDeleted
 
   const popoverRef = useRef<PopoverImperativeHandle>(null)
@@ -191,7 +193,7 @@ export const InternalComment: FC<InternalCommentProps> = ({
       onMouseEnter={() => setCommentHover(true)}
       onMouseLeave={() => setCommentHover(false)}
     >
-      <CommentWrapper shouldShowKebabButton={shouldShowKebabButton} ref={domRef}>
+      <CommentWrapper isUnconfirmed={isUnconfirmed} shouldShowKebabButton={shouldShowKebabButton} ref={domRef}>
         <SwitchTransition>
           <CSSTransition
             timeout={parseInt(cVar('animationTimingFast', true))}
@@ -266,7 +268,7 @@ export const InternalComment: FC<InternalCommentProps> = ({
                     onDecline={handleOnboardingPopoverHide}
                     trigger={
                       <ReactionsWrapper>
-                        {hasReactionsAndCommentIsNotDeleted && (
+                        {!isUnconfirmed && hasReactionsAndCommentIsNotDeleted && (
                           <ProtectedActionWrapper
                             title="You want to react to this comment?"
                             description="Sign in to let others know what you think"
@@ -312,18 +314,22 @@ export const InternalComment: FC<InternalCommentProps> = ({
                               {repliesOpen ? 'Hide' : 'Show'} {repliesCount} {repliesCount === 1 ? 'reply' : 'replies'}
                             </TextButton>
                           )}
-                          {onReplyClick && !isDeleted && !isProcessing && (commentHover || isTouchDevice) && (
-                            <ReplyButtonWrapper>
-                              <ProtectedActionWrapper
-                                title="You want to reply to this comment?"
-                                description="Sign in to let others know what you think"
-                              >
-                                <ReplyButton onClick={onReplyClick} variant="tertiary" size="small" _textOnly>
-                                  Reply
-                                </ReplyButton>
-                              </ProtectedActionWrapper>
-                            </ReplyButtonWrapper>
-                          )}
+                          {onReplyClick &&
+                            !isUnconfirmed &&
+                            !isDeleted &&
+                            !isProcessing &&
+                            (commentHover || isTouchDevice) && (
+                              <ReplyButtonWrapper>
+                                <ProtectedActionWrapper
+                                  title="You want to reply to this comment?"
+                                  description="Sign in to let others know what you think"
+                                >
+                                  <ReplyButton onClick={onReplyClick} variant="tertiary" size="small" _textOnly>
+                                    Reply
+                                  </ReplyButton>
+                                </ProtectedActionWrapper>
+                              </ReplyButtonWrapper>
+                            )}
                         </RepliesWrapper>
                       </ReactionsWrapper>
                     }
@@ -333,19 +339,21 @@ export const InternalComment: FC<InternalCommentProps> = ({
             </CommentArticle>
           </CSSTransition>
         </SwitchTransition>
-        <ContextMenu
-          placement="bottom-end"
-          disabled={loading || !shouldShowKebabButton}
-          items={contexMenuItems}
-          trigger={
-            <KebabMenuIconButton
-              icon={<SvgActionMore />}
-              variant="tertiary"
-              size="small"
-              isActive={shouldShowKebabButton}
-            />
-          }
-        />
+        {!isUnconfirmed ? (
+          <ContextMenu
+            placement="bottom-end"
+            disabled={loading || !shouldShowKebabButton}
+            items={contexMenuItems}
+            trigger={
+              <KebabMenuIconButton
+                icon={<SvgActionMore />}
+                variant="tertiary"
+                size="small"
+                isActive={shouldShowKebabButton}
+              />
+            }
+          />
+        ) : null}
       </CommentWrapper>
     </CommentRow>
   )

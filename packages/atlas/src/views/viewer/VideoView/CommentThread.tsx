@@ -41,7 +41,7 @@ const _CommentThread: FC<CommentThreadProps> = ({
     notifyOnNetworkStatusChange: false,
   })
 
-  const placeholderItems = loading || !newReplyId ? createPlaceholderData(LOAD_MORE_REPLIES_COUNT) : []
+  const placeholderItems = loading ? createPlaceholderData(LOAD_MORE_REPLIES_COUNT) : []
 
   const handleLoadMore = () => {
     fetchMore({
