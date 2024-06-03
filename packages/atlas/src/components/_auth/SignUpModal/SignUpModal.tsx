@@ -39,7 +39,6 @@ const SIGNUP_FORM_DATA_INITIAL_STATE: AccountFormData & MemberFormData = {
   captchaToken: undefined,
   confirmedTerms: false,
   allowDownload: true,
-  memberId: '',
   referrerChannelId: undefined,
   emailConfimationToken: '',
 }
@@ -125,7 +124,7 @@ export const SignUpModal = () => {
     return createNewOrionAccount({
       data: {
         ...signUpFormData.current,
-        memberId: memberRef.current,
+        emailConfimationToken: '',
         ...(referrerChannelId ? { referrerChannelId } : {}),
       },
       onError: (error) => {

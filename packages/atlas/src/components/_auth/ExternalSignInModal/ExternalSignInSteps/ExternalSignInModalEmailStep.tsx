@@ -53,7 +53,7 @@ export const ExternalSignInModalEmailStep: FC<SignInModalEmailStepProps> = ({
               type: 'payload',
               data,
             }),
-          memberId,
+          emailConfimationToken: '',
         })
 
         if (address) {

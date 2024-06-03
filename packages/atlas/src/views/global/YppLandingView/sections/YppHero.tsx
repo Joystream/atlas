@@ -1,19 +1,16 @@
-import BN from 'bn.js'
 import { FC } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
 import { useMostPaidChannels } from '@/api/hooks/channel'
-import { useGetJoystreamTotalEarningsQuery } from '@/api/queries/__generated__/nfts.generated'
+// import { useGetJoystreamTotalEarningsQuery } from '@/api/queries/__generated__/nfts.generated'
 import { SvgActionChevronR, SvgActionNewTab } from '@/assets/icons'
 import crt_card from '@/assets/images/ypp-hero/crt-card-hero.webp'
 import crt_dashboard from '@/assets/images/ypp-hero/crt-dashboard-hero.webp'
 import payments from '@/assets/images/ypp-hero/crt-payments-hero.webp'
 import { AppLogo } from '@/components/AppLogo'
 import { FlexBox } from '@/components/FlexBox'
-import { GlassDetailsWidget } from '@/components/GlassDetailsWidget'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
-import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Button, TextButton } from '@/components/_buttons/Button'
 import { PaidChannelCard } from '@/components/_channel/ChannelCard'
@@ -60,7 +57,7 @@ export const YppHero: FC<YppHeroProps> = ({ onSignUpClick, yppAtlasStatus, onVie
   const xsMatch = useMediaMatch('xs')
   const xxsMatch = useMediaMatch('xxs')
   const smMatch = useMediaMatch('sm')
-  const mdMatch = useMediaMatch('md')
+  // const mdMatch = useMediaMatch('md')
   const { ref, width, height } = useResizeObserver({ box: 'border-box' })
   const [, subtitleVariant, titleVariant] = useSectionTextVariants()
   const setIsYppChannelFlow = useYppStore((state) => state.actions.setIsYppChannelFlow)
@@ -68,11 +65,11 @@ export const YppHero: FC<YppHeroProps> = ({ onSignUpClick, yppAtlasStatus, onVie
   const { memberChannels, isLoggedIn } = useUser()
   const { trackRewardsCreateChannelButtonClick } = useSegmentAnalytics()
   const { channels, loading } = useMostPaidChannels()
-  const { data, loading: loadingEarnings } = useGetJoystreamTotalEarningsQuery()
+  // const { data, loading: loadingEarnings } = { data: undefined, loading: false } //useGetJoystreamTotalEarningsQuery()
   const items = !loading
     ? channels?.map((channel) => <PaidChannelCard key={channel.id} channel={channel} />)
     : Array.from({ length: 30 }).map((_, idx) => <PaidChannelCard key={idx} loading />)
-  const widgetContentTextVariant = mdMatch ? ('h700' as const) : ('h600' as const)
+  // const widgetContentTextVariant = mdMatch ? ('h700' as const) : ('h600' as const)
 
   return (
     <HeroBackgroundContainer noBackground>
@@ -214,7 +211,7 @@ export const YppHero: FC<YppHeroProps> = ({ onSignUpClick, yppAtlasStatus, onVie
                 Creator Earnings
               </Text>
             </WidgetsContainer>
-            <WidgetsContainer justifyContent="space-between" gap={4} width="100%">
+            {/* <WidgetsContainer justifyContent="space-between" gap={4} width="100%">
               <GlassDetailsWidget
                 title="Total Rewards Paid"
                 titleVariant="h300"
@@ -266,7 +263,7 @@ export const YppHero: FC<YppHeroProps> = ({ onSignUpClick, yppAtlasStatus, onVie
                   )
                 }
               />
-            </WidgetsContainer>
+            </WidgetsContainer> */}
           </GridItem>
         </LayoutGrid>
 
