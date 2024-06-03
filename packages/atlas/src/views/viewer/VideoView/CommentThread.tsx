@@ -34,7 +34,7 @@ const _CommentThread: FC<CommentThreadProps> = ({
   const [newReplyId, setNewReplyId] = useState<string | null>(null)
 
   const { replies, loading, fetchMore, pageInfo } = useCommentRepliesConnection({
-    skip: !commentId || !video?.id || !repliesOpen || !hasAnyReplies,
+    skip: !commentId || !video?.id,
     variables: {
       first: INITIAL_REPLIES_COUNT,
       parentCommentId: commentId || '',
@@ -42,7 +42,7 @@ const _CommentThread: FC<CommentThreadProps> = ({
     notifyOnNetworkStatusChange: false,
   })
 
-  const placeholderItems = loading || !newReplyId ? createPlaceholderData(LOAD_MORE_REPLIES_COUNT) : []
+  const placeholderItems = loading ? createPlaceholderData(LOAD_MORE_REPLIES_COUNT) : []
 
   const handleLoadMore = () => {
     fetchMore({

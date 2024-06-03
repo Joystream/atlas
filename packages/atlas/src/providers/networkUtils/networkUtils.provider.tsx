@@ -41,7 +41,7 @@ import {
   GetFullVideoQuery,
   GetFullVideoQueryVariables,
 } from '@/api/queries/__generated__/videos.generated'
-import { UNCOFIRMED_COMMENT, UNCOFIRMED_REPLY } from '@/hooks/useOptimisticActions'
+import { UNCOFIRMED_COMMENT, UNCOFIRMED_REACTION, UNCOFIRMED_REPLY } from '@/hooks/useOptimisticActions'
 import { NetworkUtilsContextValue } from '@/providers/networkUtils/networkUtils.type'
 import { useUser } from '@/providers/user/user.hooks'
 
@@ -95,6 +95,7 @@ export const NetworkUtilsProvider = ({ children }: { children: ReactNode }) => {
 
   const refetchComment = useCallback(
     (id: string) => {
+      evictUnconfirmedCache(UNCOFIRMED_COMMENT)
       return client.query<GetCommentQuery, GetCommentQueryVariables>({
         query: GetCommentDocument,
         variables: {
@@ -103,7 +104,7 @@ export const NetworkUtilsProvider = ({ children }: { children: ReactNode }) => {
         fetchPolicy: 'network-only',
       })
     },
-    [client]
+    [client, evictUnconfirmedCache]
   )
 
   const refetchEdits = useCallback(
@@ -121,6 +122,7 @@ export const NetworkUtilsProvider = ({ children }: { children: ReactNode }) => {
 
   const refetchReactions = useCallback(
     (videoId: string, memberId?: string) => {
+      evictUnconfirmedCache(UNCOFIRMED_REACTION)
       return client.query<GetUserCommentsReactionsQuery, GetUserCommentsReactionsQueryVariables>({
         query: GetUserCommentsReactionsDocument,
         variables: {

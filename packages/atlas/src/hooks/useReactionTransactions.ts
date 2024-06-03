@@ -26,6 +26,8 @@ export const useReactionTransactions = () => {
     addVideoComment,
     addVideoReplyComment,
     editVideoComment,
+    increaseVideoCommentReaction,
+    decreaseVideoCommentReaction,
   } = useOptimisticActions()
   const navigate = useNavigate()
   const { displaySnackbar } = useSnackbar()
@@ -37,14 +39,14 @@ export const useReactionTransactions = () => {
       commentBody,
       videoTitle,
       commentAuthorHandle,
-      opts,
+      optimisticOpts,
     }: {
       parentCommentId?: string
       videoId: string
       commentBody: string
       videoTitle?: string | null
       commentAuthorHandle?: string
-      opts?: { onTxSign?: (newCommentId: string) => void }
+      optimisticOpts?: { onTxSign: (newCommentId: string) => void }
     }) => {
       if (!joystream || !memberId) {
         ConsoleLogger.error('no joystream or active member')
@@ -59,6 +61,8 @@ export const useReactionTransactions = () => {
             await joystream.extrinsics
           ).createVideoComment(memberId, videoId, commentBody, parentCommentId || null, proxyCallback(updateStatus)),
         onTxSign: () => {
+          if (!optimisticOpts) return
+
           if (parentCommentId) {
             newCommentId = addVideoReplyComment({
               memberId,
@@ -73,7 +77,7 @@ export const useReactionTransactions = () => {
               videoId,
             })
           }
-          opts?.onTxSign?.(newCommentId)
+          optimisticOpts.onTxSign(newCommentId)
         },
         onTxSync: async (_, metaStatus) => {
           if (
@@ -121,10 +125,31 @@ export const useReactionTransactions = () => {
   )
 
   const reactToComment = useCallback(
-    async (commentId: string, videoId: string, reactionId: CommentReaction, commentAuthorHandle: string, fee?: BN) => {
+    async (
+      commentId: string,
+      videoId: string,
+      reactionId: CommentReaction,
+      commentAuthorHandle: string,
+      fee?: BN,
+      optimisticOpts?: {
+        prevReactionServerId?: string
+        videoId: string
+        onTxSign: () => void
+        onUnconfirmedComment: () => void
+      }
+    ) => {
       if (!joystream || !memberId) {
         ConsoleLogger.error('No joystream instance')
         return
+      }
+
+      if (commentId.includes(UNCONFIRMED)) {
+        displaySnackbar({
+          iconType: 'error',
+          title: 'Ups, something went wrong',
+          description:
+            'Looks like this comment is not yet confirmed by a server. Retry shortly, if the problem persists refresh the page.',
+        })
       }
 
       return handleTransaction({
@@ -136,6 +161,20 @@ export const useReactionTransactions = () => {
             reactionId,
             proxyCallback(updateStatus)
           ),
+        onTxSign: () => {
+          if (!optimisticOpts) return
+          optimisticOpts.onTxSign?.()
+          if (optimisticOpts.prevReactionServerId) {
+            decreaseVideoCommentReaction({
+              commentId,
+              reactionId,
+              reactionDbId: optimisticOpts.prevReactionServerId,
+              videoId: optimisticOpts.videoId,
+            })
+          } else {
+            increaseVideoCommentReaction({ commentId, reactionId, videoId: optimisticOpts.videoId })
+          }
+        },
         minimized: {
           errorMessage: `Your reaction to the comment from "${commentAuthorHandle}" has not been posted.`,
         },
@@ -145,7 +184,17 @@ export const useReactionTransactions = () => {
         unsignedMessage: 'To add your reaction',
       })
     },
-    [memberId, handleTransaction, joystream, proxyCallback, refetchComment, refetchReactions]
+    [
+      joystream,
+      memberId,
+      handleTransaction,
+      displaySnackbar,
+      proxyCallback,
+      decreaseVideoCommentReaction,
+      increaseVideoCommentReaction,
+      refetchComment,
+      refetchReactions,
+    ]
   )
 
   const updateComment = useCallback(
@@ -154,13 +203,13 @@ export const useReactionTransactions = () => {
       videoId,
       commentBody,
       videoTitle,
-      opts,
+      optimisticOpts,
     }: {
       commentId: string
       videoId: string
       commentBody: string
       videoTitle?: string | null
-      opts?: { onTxSign?: () => void; onUnconfirmed: () => void }
+      optimisticOpts?: { onTxSign: () => void; onUnconfirmed: () => void }
     }) => {
       if (!joystream || !memberId || !videoId) {
         ConsoleLogger.error('no joystream or active member')
@@ -172,7 +221,7 @@ export const useReactionTransactions = () => {
           title: "Couldn't edit your comment",
           description: 'Looks like you comment was not yet confirmed by server. Please retry shortly.',
         })
-        opts?.onUnconfirmed()
+        optimisticOpts?.onUnconfirmed()
         return
       }
 
@@ -180,8 +229,10 @@ export const useReactionTransactions = () => {
         txFactory: async (updateStatus) =>
           (await joystream.extrinsics).editVideoComment(memberId, commentId, commentBody, proxyCallback(updateStatus)),
         onTxSign: () => {
+          if (!optimisticOpts) return
+
           editVideoComment({ commentId, text: commentBody })
-          opts?.onTxSign?.()
+          optimisticOpts.onTxSign()
         },
         onTxSync: async () => refetchEdits(commentId),
         minimized: {
@@ -199,9 +250,9 @@ export const useReactionTransactions = () => {
       commentId: string,
       videoTitle?: string,
       videoId?: string,
-      opts?: {
+      optimisticOpts?: {
         onUnconfirmed: () => void
-        onTxSign?: () => void
+        onTxSign: () => void
       }
     ) => {
       if (!joystream || !memberId) {
@@ -214,7 +265,7 @@ export const useReactionTransactions = () => {
           title: "Couldn't delete your comment",
           description: 'Looks like you comment was not yet confirmed by server. Please retry shortly.',
         })
-        opts?.onUnconfirmed()
+        optimisticOpts?.onUnconfirmed()
         return
       }
 
@@ -222,8 +273,10 @@ export const useReactionTransactions = () => {
         txFactory: async (updateStatus) =>
           (await joystream.extrinsics).deleteVideoComment(memberId, commentId, proxyCallback(updateStatus)),
         onTxSign: () => {
+          if (!optimisticOpts) return
+
           deleteVideoComment({ commentId })
-          opts?.onTxSign?.()
+          optimisticOpts.onTxSign()
         },
         onTxSync: async () => {
           refetchComment(commentId)
@@ -285,7 +338,7 @@ export const useReactionTransactions = () => {
       reaction: VideoReaction,
       videoTitle?: string | null,
       fee?: BN,
-      opts?: { prevReactionId?: string; onTxSign?: () => void; isRemovingReaction?: boolean }
+      optimisticOpts?: { prevReactionId?: string; onTxSign: () => void; isRemovingReaction: boolean }
     ) => {
       if (!joystream || !memberId) {
         ConsoleLogger.error('No joystream instance')
@@ -300,11 +353,13 @@ export const useReactionTransactions = () => {
           errorMessage: `Reaction to the video "${videoTitle || ''}" was not posted.`,
         },
         onTxSign: () => {
-          opts?.onTxSign?.()
-          if (opts?.prevReactionId) {
-            removeVideoReaction({ reactionId: opts?.prevReactionId, videoId })
+          if (!optimisticOpts) return
+
+          optimisticOpts.onTxSign()
+          if (optimisticOpts.prevReactionId) {
+            removeVideoReaction({ reactionId: optimisticOpts.prevReactionId, videoId })
           }
-          if (!opts?.isRemovingReaction) {
+          if (!optimisticOpts.isRemovingReaction) {
             addVideoReaction({ memberId, type: reaction, videoId })
           }
         },

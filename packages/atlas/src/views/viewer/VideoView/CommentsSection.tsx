@@ -16,6 +16,7 @@ import { Select } from '@/components/_inputs/Select'
 import { QUERY_PARAMS } from '@/config/routes'
 import { COMMENTS_SORT_OPTIONS } from '@/config/sorting'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { UNCONFIRMED } from '@/hooks/useOptimisticActions'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
@@ -79,7 +80,6 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
     { skip: disabled || !videoId, notifyOnNetworkStatusChange: false }
   )
   const { userReactions } = useUserCommentsReactions(videoId, memberId)
-
   const { addComment } = useReactionTransactions()
 
   const { comment: commentFromUrl, loading: commentFromUrlLoading } = useComment(
@@ -129,12 +129,20 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
     }
   }, [commentsLoading, mobileCommentsOpen, pageInfo?.hasNextPage])
 
+  const hasUnconfirmedComments = comments?.some((comment) => comment.id.includes(UNCONFIRMED))
+
   // fetch more results when user scrolls to end of page
   useEffect(() => {
-    if (pageInfo && numberOfComments !== INITIAL_COMMENTS && comments?.length !== numberOfComments) {
+    return
+    if (
+      pageInfo?.hasNextPage &&
+      numberOfComments !== INITIAL_COMMENTS &&
+      comments?.length !== numberOfComments &&
+      !hasUnconfirmedComments
+    ) {
       fetchMore({ variables: { ...queryVariables, first: numberOfComments } })
     }
-  }, [fetchMore, numberOfComments, pageInfo, queryVariables, comments?.length])
+  }, [fetchMore, numberOfComments, pageInfo, queryVariables, comments?.length, hasUnconfirmedComments])
 
   const handleComment = async (parentCommentId?: string) => {
     if (!videoId || !commentInputText) {
@@ -146,7 +154,7 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
       commentBody: commentInputText,
       parentCommentId,
       videoTitle: video?.title,
-      opts: {
+      optimisticOpts: {
         onTxSign: (newCommentId) => {
           setCommentInputIsProcessing(false)
           setCommentInputText('')

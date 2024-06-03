@@ -8384,7 +8384,6 @@ export type Query = {
   tokens: Array<Token>
   tokensConnection: TokensConnection
   topSellingChannels: Array<TopSellingChannelsResult>
-  totalJoystreamEarnings: EarningStatsOutput
   trailerVideoById?: Maybe<TrailerVideo>
   /** @deprecated Use trailerVideoById */
   trailerVideoByUniqueInput?: Maybe<TrailerVideo>
