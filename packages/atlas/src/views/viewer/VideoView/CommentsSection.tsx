@@ -1,6 +1,5 @@
 import { NetworkStatus } from '@apollo/client'
-import { debounce } from 'lodash-es'
-import { FC, useEffect, useMemo, useRef, useState } from 'react'
+import { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { useComment, useUserCommentsReactions } from '@/api/hooks/comments'
@@ -9,14 +8,12 @@ import { CommentOrderByInput } from '@/api/queries/__generated__/baseTypes.gener
 import { FullVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Text } from '@/components/Text'
-import { LoadMoreButton } from '@/components/_buttons/LoadMoreButton'
 import { Comment } from '@/components/_comments/Comment'
 import { CommentInput } from '@/components/_comments/CommentInput'
 import { Select } from '@/components/_inputs/Select'
 import { QUERY_PARAMS } from '@/config/routes'
 import { COMMENTS_SORT_OPTIONS } from '@/config/sorting'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { UNCONFIRMED } from '@/hooks/useOptimisticActions'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
@@ -24,14 +21,10 @@ import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useFee } from '@/providers/joystream'
 import { useUser } from '@/providers/user/user.hooks'
 import { createPlaceholderData } from '@/utils/data'
+import { InfiniteLoadingOffsets } from '@/utils/loading.contants'
 
 import { CommentThread } from './CommentThread'
-import {
-  CommentWrapper,
-  CommentsSectionHeader,
-  CommentsSectionWrapper,
-  LoadMoreCommentsWrapper,
-} from './VideoView.styles'
+import { CommentsSectionHeader, CommentsSectionWrapper, CommentsStyledSection } from './VideoView.styles'
 
 type CommentsSectionProps = {
   disabled?: boolean
@@ -49,10 +42,10 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
   const [commentInputIsProcessing, setCommentInputIsProcessing] = useState(false)
   const [highlightedCommentId, setHighlightedCommentId] = useState<string | null>(null)
   const [sortCommentsBy, setSortCommentsBy] = useState(COMMENTS_SORT_OPTIONS[0].value)
-  const [commentsOpen, setCommentsOpen] = useState(false)
   const [commentInputActive, setCommentInputActive] = useState(false)
   const commentIdQueryParam = useRouterQuery(QUERY_PARAMS.COMMENT_ID)
   const mdMatch = useMediaMatch('md')
+  const isConsideredMobile = !mdMatch
   const { id: videoId } = useParams()
   const { memberId, activeMembership, isLoggedIn } = useUser()
   const { isLoadingAsset: isMemberAvatarLoading, urls: memberAvatarUrls } = getMemberAvatar(activeMembership)
@@ -73,10 +66,8 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
   )
   const commentsSectionHeaderRef = useRef<HTMLDivElement>(null)
   const commentSectionWrapperRef = useRef<HTMLDivElement>(null)
-  const mobileCommentsOpen = commentsOpen || mdMatch
-  const [numberOfComments, setNumberOfComments] = useState(mobileCommentsOpen ? INITIAL_COMMENTS : 1)
   const { comments, loading, fetchMore, pageInfo, networkStatus } = useCommentSectionComments(
-    { ...queryVariables, first: mobileCommentsOpen ? INITIAL_COMMENTS : 1 },
+    { ...queryVariables, first: isConsideredMobile ? INITIAL_COMMENTS : 1 },
     { skip: disabled || !videoId, notifyOnNetworkStatusChange: false }
   )
   const { userReactions } = useUserCommentsReactions(videoId, memberId)
@@ -108,42 +99,6 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
     }
   }
 
-  const setMoreComments = () => setNumberOfComments((prevState) => prevState + INITIAL_COMMENTS)
-
-  // increase number of comments when user scrolls to the end of page
-  useEffect(() => {
-    if (!mobileCommentsOpen) {
-      return
-    }
-    const scrollHandler = debounce(() => {
-      if (!commentSectionWrapperRef.current) return
-      const scrolledToBottom = document.documentElement.scrollTop >= commentSectionWrapperRef.current.scrollHeight
-      if (scrolledToBottom && pageInfo?.hasNextPage && !commentsLoading) {
-        setMoreComments()
-      }
-    }, 100)
-    window.addEventListener('scroll', scrollHandler)
-
-    return () => {
-      window.removeEventListener('scroll', scrollHandler)
-    }
-  }, [commentsLoading, mobileCommentsOpen, pageInfo?.hasNextPage])
-
-  const hasUnconfirmedComments = comments?.some((comment) => comment.id.includes(UNCONFIRMED))
-
-  // fetch more results when user scrolls to end of page
-  useEffect(() => {
-    return
-    if (
-      pageInfo?.hasNextPage &&
-      numberOfComments !== INITIAL_COMMENTS &&
-      comments?.length !== numberOfComments &&
-      !hasUnconfirmedComments
-    ) {
-      fetchMore({ variables: { ...queryVariables, first: numberOfComments } })
-    }
-  }, [fetchMore, numberOfComments, pageInfo, queryVariables, comments?.length, hasUnconfirmedComments])
-
   const handleComment = async (parentCommentId?: string) => {
     if (!videoId || !commentInputText) {
       return
@@ -164,14 +119,6 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
     })
 
     trackCommentAdded(commentInputText, video?.id ?? 'no data')
-  }
-
-  const handleLoadMoreClick = () => {
-    if (!comments || !comments.length) {
-      return
-    }
-    setCommentsOpen(true)
-    setMoreComments()
   }
 
   const placeholderItems = commentsLoading ? createPlaceholderData(4) : []
@@ -210,7 +157,7 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
   const filteredComments = comments?.filter((comment) => comment.id !== displayedCommentFromUrl?.id) || []
 
   const mappedPlaceholders = placeholderItems.map((_, idx) => <Comment key={idx} />)
-
+  console.log(isConsideredMobile)
   if (disabled) {
     return (
       <CommentsSectionWrapper>
@@ -254,41 +201,72 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
       {comments && !comments.length && !commentsLoading && (
         <EmptyFallback title="Be the first to comment" subtitle="Nobody has left a comment under this video yet." />
       )}
-      <CommentWrapper ref={commentSectionWrapperRef}>
-        {displayedCommentFromUrl && (
-          <CommentThread
-            commentId={displayedCommentFromUrl.id}
-            video={video}
-            hasAnyReplies={displayedCommentFromUrl.repliesCount > 0}
-            userReactionsLookup={userReactions}
-            highlightedCommentId={highlightedCommentId}
-            setHighlightedCommentId={setHighlightedCommentId}
-            linkedReplyId={parentCommentFromUrl ? commentFromUrl?.id : null}
-            repliesCount={displayedCommentFromUrl.repliesCount}
-          />
-        )}
-        {commentsLoading && !isFetchingMore
-          ? mappedPlaceholders
-          : filteredComments
-              ?.map((comment) => (
+      <CommentsStyledSection
+        contentProps={{
+          type: 'grid',
+          grid: {
+            xxs: {
+              columns: 1,
+            },
+          },
+          children: (
+            <>
+              {displayedCommentFromUrl && (
                 <CommentThread
-                  key={comment.id}
-                  commentId={comment.id}
+                  commentId={displayedCommentFromUrl.id}
                   video={video}
-                  hasAnyReplies={comment.repliesCount > 0}
-                  repliesCount={comment.repliesCount}
+                  hasAnyReplies={displayedCommentFromUrl.repliesCount > 0}
                   userReactionsLookup={userReactions}
                   highlightedCommentId={highlightedCommentId}
                   setHighlightedCommentId={setHighlightedCommentId}
+                  linkedReplyId={parentCommentFromUrl ? commentFromUrl?.id : null}
+                  repliesCount={displayedCommentFromUrl.repliesCount}
                 />
-              ))
-              .concat(isFetchingMore && commentsLoading ? mappedPlaceholders : [])}
-      </CommentWrapper>
-      {!mobileCommentsOpen && !commentsLoading && comments && !!comments.length && pageInfo?.hasNextPage && (
-        <LoadMoreCommentsWrapper>
-          <LoadMoreButton label="Show more comments" onClick={handleLoadMoreClick} />
-        </LoadMoreCommentsWrapper>
-      )}
+              )}
+              {commentsLoading && !isFetchingMore
+                ? mappedPlaceholders
+                : filteredComments
+                    ?.map((comment) => (
+                      <CommentThread
+                        key={comment.id}
+                        commentId={comment.id}
+                        video={video}
+                        hasAnyReplies={comment.repliesCount > 0}
+                        repliesCount={comment.repliesCount}
+                        userReactionsLookup={userReactions}
+                        highlightedCommentId={highlightedCommentId}
+                        setHighlightedCommentId={setHighlightedCommentId}
+                      />
+                    ))
+                    .concat(isFetchingMore && commentsLoading ? mappedPlaceholders : [])}
+            </>
+          ) as unknown as ReactElement[],
+        }}
+        footerProps={
+          isConsideredMobile
+            ? {
+                label: 'Load more comments',
+                handleLoadMore: async () => {
+                  if (!loading) {
+                    await fetchMore({ variables: { ...queryVariables, first: (comments?.length ?? 0) + 10 } })
+                  }
+                  return
+                },
+                type: 'link',
+              }
+            : {
+                reachedEnd: !pageInfo?.hasNextPage,
+                fetchMore: async () => {
+                  if (!loading) {
+                    await fetchMore({ variables: { ...queryVariables, first: (comments?.length ?? 0) + 10 } })
+                  }
+                  return
+                },
+                type: 'infinite',
+                loadingTriggerOffset: InfiniteLoadingOffsets.VideoTile,
+              }
+        }
+      />
     </CommentsSectionWrapper>
   )
 }

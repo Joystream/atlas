@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { Section } from '@/components/Section/Section'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { CallToActionWrapper } from '@/components/_buttons/CallToActionButton'
@@ -198,6 +199,17 @@ export const CommentsSectionHeader = styled.div`
 `
 
 export const CommentWrapper = styled.div`
+  display: grid;
+  margin-top: ${sizes(8)};
+  gap: ${sizes(8)};
+  margin-bottom: ${sizes(6)};
+
+  ${media.md} {
+    margin-bottom: 0;
+  }
+`
+
+export const CommentsStyledSection = styled(Section)`
   display: grid;
   margin-top: ${sizes(8)};
   gap: ${sizes(8)};
