@@ -48,7 +48,8 @@ export const relativeRoutes = {
     memberById: (id = ':id', query?: { [QUERY_PARAMS.TAB]?: MemberTabs }) =>
       withQueryParameters(`member/id/${id}`, query),
     memberNotifications: () => 'notifications/member',
-    marketplace: () => 'marketplace',
+    nftMarketplace: () => 'nft-marketplace',
+    crtMarketplace: () => 'crt-marketplace',
     ypp: (query?: { [QUERY_PARAMS.REFERRER_ID]?: string }) => withQueryParameters('ypp', query),
     yppTest: () => 'ypp/rewards',
     yppDashboard: () => 'ypp-dashboard',

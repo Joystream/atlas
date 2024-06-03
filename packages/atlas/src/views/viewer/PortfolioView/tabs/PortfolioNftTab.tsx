@@ -60,7 +60,7 @@ export const PortfolioNftTab = () => {
             title="You don’t own any NFTs yet"
             subtitle="When you buy any NFTs you will be able to manage them and view from this page."
             button={
-              <Button size="large" variant="secondary" to={absoluteRoutes.viewer.marketplace()}>
+              <Button size="large" variant="secondary" to={absoluteRoutes.viewer.nftMarketplace()}>
                 Explore NFTs
               </Button>
             }
