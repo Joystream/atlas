@@ -180,7 +180,6 @@ export const useReactionTransactions = () => {
           errorMessage: `Your reaction to the comment from "${commentAuthorHandle}" has not been posted.`,
         },
         allowMultiple: true,
-        onTxSync: async () => Promise.all([refetchComment(commentId), refetchReactions(videoId)]),
         onError: async () => refetchReactions(videoId),
         unsignedMessage: 'To add your reaction',
       })
@@ -193,7 +192,6 @@ export const useReactionTransactions = () => {
       proxyCallback,
       decreaseVideoCommentReaction,
       increaseVideoCommentReaction,
-      refetchComment,
       refetchReactions,
     ]
   )
