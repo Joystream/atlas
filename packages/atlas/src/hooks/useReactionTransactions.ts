@@ -150,6 +150,7 @@ export const useReactionTransactions = () => {
           description:
             'Looks like this comment is not yet confirmed by a server. Retry shortly, if the problem persists refresh the page.',
         })
+        return
       }
 
       return handleTransaction({

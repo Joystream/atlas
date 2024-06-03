@@ -132,7 +132,7 @@ export const NetworkUtilsProvider = ({ children }: { children: ReactNode }) => {
         fetchPolicy: 'network-only',
       })
     },
-    [activeMemberId, client]
+    [activeMemberId, client, evictUnconfirmedCache]
   )
 
   const refetchReplies = useCallback(

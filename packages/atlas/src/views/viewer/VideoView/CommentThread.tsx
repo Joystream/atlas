@@ -31,7 +31,6 @@ const _CommentThread: FC<CommentThreadProps> = ({
   ...commentProps
 }) => {
   const [repliesOpen, setRepliesOpen] = useState(false)
-  const [newReplyId, setNewReplyId] = useState<string | null>(null)
 
   const { replies, loading, fetchMore, pageInfo } = useCommentRepliesConnection({
     skip: !commentId || !video?.id,
@@ -65,7 +64,6 @@ const _CommentThread: FC<CommentThreadProps> = ({
         userReactions={userReactionsLookup && commentId ? userReactionsLookup[commentId] : undefined}
         {...commentProps}
         isReplyable={true}
-        onReplyPosted={setNewReplyId}
       />
       {linkedReplyId && !repliesOpen && (
         <Comment

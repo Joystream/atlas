@@ -157,7 +157,7 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
   const filteredComments = comments?.filter((comment) => comment.id !== displayedCommentFromUrl?.id) || []
 
   const mappedPlaceholders = placeholderItems.map((_, idx) => <Comment key={idx} />)
-  console.log(isConsideredMobile)
+
   if (disabled) {
     return (
       <CommentsSectionWrapper>
@@ -201,72 +201,74 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
       {comments && !comments.length && !commentsLoading && (
         <EmptyFallback title="Be the first to comment" subtitle="Nobody has left a comment under this video yet." />
       )}
-      <CommentsStyledSection
-        contentProps={{
-          type: 'grid',
-          grid: {
-            xxs: {
-              columns: 1,
+      {comments?.length ? (
+        <CommentsStyledSection
+          contentProps={{
+            type: 'grid',
+            grid: {
+              xxs: {
+                columns: 1,
+              },
             },
-          },
-          children: (
-            <>
-              {displayedCommentFromUrl && (
-                <CommentThread
-                  commentId={displayedCommentFromUrl.id}
-                  video={video}
-                  hasAnyReplies={displayedCommentFromUrl.repliesCount > 0}
-                  userReactionsLookup={userReactions}
-                  highlightedCommentId={highlightedCommentId}
-                  setHighlightedCommentId={setHighlightedCommentId}
-                  linkedReplyId={parentCommentFromUrl ? commentFromUrl?.id : null}
-                  repliesCount={displayedCommentFromUrl.repliesCount}
-                />
-              )}
-              {commentsLoading && !isFetchingMore
-                ? mappedPlaceholders
-                : filteredComments
-                    ?.map((comment) => (
-                      <CommentThread
-                        key={comment.id}
-                        commentId={comment.id}
-                        video={video}
-                        hasAnyReplies={comment.repliesCount > 0}
-                        repliesCount={comment.repliesCount}
-                        userReactionsLookup={userReactions}
-                        highlightedCommentId={highlightedCommentId}
-                        setHighlightedCommentId={setHighlightedCommentId}
-                      />
-                    ))
-                    .concat(isFetchingMore && commentsLoading ? mappedPlaceholders : [])}
-            </>
-          ) as unknown as ReactElement[],
-        }}
-        footerProps={
-          isConsideredMobile
-            ? {
-                label: 'Load more comments',
-                handleLoadMore: async () => {
-                  if (!loading) {
-                    await fetchMore({ variables: { ...queryVariables, first: (comments?.length ?? 0) + 10 } })
-                  }
-                  return
-                },
-                type: 'link',
-              }
-            : {
-                reachedEnd: !pageInfo?.hasNextPage,
-                fetchMore: async () => {
-                  if (!loading) {
-                    await fetchMore({ variables: { ...queryVariables, first: (comments?.length ?? 0) + 10 } })
-                  }
-                  return
-                },
-                type: 'infinite',
-                loadingTriggerOffset: InfiniteLoadingOffsets.VideoTile,
-              }
-        }
-      />
+            children: (
+              <>
+                {displayedCommentFromUrl && (
+                  <CommentThread
+                    commentId={displayedCommentFromUrl.id}
+                    video={video}
+                    hasAnyReplies={displayedCommentFromUrl.repliesCount > 0}
+                    userReactionsLookup={userReactions}
+                    highlightedCommentId={highlightedCommentId}
+                    setHighlightedCommentId={setHighlightedCommentId}
+                    linkedReplyId={parentCommentFromUrl ? commentFromUrl?.id : null}
+                    repliesCount={displayedCommentFromUrl.repliesCount}
+                  />
+                )}
+                {commentsLoading && !isFetchingMore
+                  ? mappedPlaceholders
+                  : filteredComments
+                      ?.map((comment) => (
+                        <CommentThread
+                          key={comment.id}
+                          commentId={comment.id}
+                          video={video}
+                          hasAnyReplies={comment.repliesCount > 0}
+                          repliesCount={comment.repliesCount}
+                          userReactionsLookup={userReactions}
+                          highlightedCommentId={highlightedCommentId}
+                          setHighlightedCommentId={setHighlightedCommentId}
+                        />
+                      ))
+                      .concat(isFetchingMore && commentsLoading ? mappedPlaceholders : [])}
+              </>
+            ) as unknown as ReactElement[],
+          }}
+          footerProps={
+            isConsideredMobile
+              ? {
+                  label: 'Load more comments',
+                  handleLoadMore: async () => {
+                    if (!loading) {
+                      await fetchMore({ variables: { ...queryVariables, first: (comments?.length ?? 0) + 10 } })
+                    }
+                    return
+                  },
+                  type: 'link',
+                }
+              : {
+                  reachedEnd: !pageInfo?.hasNextPage,
+                  fetchMore: async () => {
+                    if (!loading) {
+                      await fetchMore({ variables: { ...queryVariables, first: (comments?.length ?? 0) + 10 } })
+                    }
+                    return
+                  },
+                  type: 'infinite',
+                  loadingTriggerOffset: InfiniteLoadingOffsets.VideoTile,
+                }
+          }
+        />
+      ) : null}
     </CommentsSectionWrapper>
   )
 }
