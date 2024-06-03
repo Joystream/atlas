@@ -649,7 +649,7 @@ const getLink = (type: LinkType, params: string[] = []): string => {
       return absoluteRoutes.viewer.category(params[0])
 
     case 'marketplace-page':
-      return absoluteRoutes.viewer.marketplace()
+      return absoluteRoutes.viewer.nftMarketplace()
 
     case 'payments-page':
       return absoluteRoutes.studio.payments()
