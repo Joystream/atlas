@@ -1378,18 +1378,6 @@ export type RequestNftFeaturedMutation = {
   requestNftFeatured: { __typename?: 'NftFeaturedRequstInfo'; rationale: string; nftId: string; createdAt: Date }
 }
 
-export type GetJoystreamTotalEarningsQueryVariables = Types.Exact<{ [key: string]: never }>
-
-export type GetJoystreamTotalEarningsQuery = {
-  __typename?: 'Query'
-  totalJoystreamEarnings: {
-    __typename?: 'EarningStatsOutput'
-    crtSaleVolume: string
-    totalRewardsPaid: string
-    nftSaleVolume: string
-  }
-}
-
 export const GetNftDocument = gql`
   query GetNft($id: String!) {
     ownedNftById(id: $id) {
@@ -1669,53 +1657,4 @@ export type RequestNftFeaturedMutationResult = Apollo.MutationResult<RequestNftF
 export type RequestNftFeaturedMutationOptions = Apollo.BaseMutationOptions<
   RequestNftFeaturedMutation,
   RequestNftFeaturedMutationVariables
->
-export const GetJoystreamTotalEarningsDocument = gql`
-  query GetJoystreamTotalEarnings {
-    totalJoystreamEarnings {
-      crtSaleVolume
-      totalRewardsPaid
-      nftSaleVolume
-    }
-  }
-`
-
-/**
- * __useGetJoystreamTotalEarningsQuery__
- *
- * To run a query within a React component, call `useGetJoystreamTotalEarningsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetJoystreamTotalEarningsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetJoystreamTotalEarningsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetJoystreamTotalEarningsQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetJoystreamTotalEarningsQuery, GetJoystreamTotalEarningsQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetJoystreamTotalEarningsQuery, GetJoystreamTotalEarningsQueryVariables>(
-    GetJoystreamTotalEarningsDocument,
-    options
-  )
-}
-export function useGetJoystreamTotalEarningsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetJoystreamTotalEarningsQuery, GetJoystreamTotalEarningsQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetJoystreamTotalEarningsQuery, GetJoystreamTotalEarningsQueryVariables>(
-    GetJoystreamTotalEarningsDocument,
-    options
-  )
-}
-export type GetJoystreamTotalEarningsQueryHookResult = ReturnType<typeof useGetJoystreamTotalEarningsQuery>
-export type GetJoystreamTotalEarningsLazyQueryHookResult = ReturnType<typeof useGetJoystreamTotalEarningsLazyQuery>
-export type GetJoystreamTotalEarningsQueryResult = Apollo.QueryResult<
-  GetJoystreamTotalEarningsQuery,
-  GetJoystreamTotalEarningsQueryVariables
 >

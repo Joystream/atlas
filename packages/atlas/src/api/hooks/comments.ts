@@ -30,7 +30,7 @@ export const useComment = (
   }
 }
 
-export type UserCommentReactions = Record<string, number[]>
+export type UserCommentReactions = Record<string, { reactionId: number; reactionServerId: string }[]>
 export const useUserCommentsReactions = (videoId?: string | null, memberId?: string | null) => {
   const { data } = useGetUserCommentsReactionsQuery({
     variables: {
@@ -42,9 +42,15 @@ export const useUserCommentsReactions = (videoId?: string | null, memberId?: str
 
   return useMemo(
     () => ({
-      userReactions: data?.commentReactions.reduce<Record<string, number[]>>((acc, item) => {
+      userReactions: data?.commentReactions.reduce<UserCommentReactions>((acc, item) => {
         if (item) {
-          acc[item.comment.id] = [...(acc[item.comment.id] ? acc[item.comment.id] : []), item.reactionId]
+          acc[item.comment.id] = [
+            ...(acc[item.comment.id] ? acc[item.comment.id] : []),
+            {
+              reactionId: item.reactionId,
+              reactionServerId: item.id,
+            },
+          ]
         }
         return acc
       }, {}),

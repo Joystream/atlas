@@ -25,17 +25,25 @@ type AtlasCacheType = ApolloCache<{
   'ROOT_QUERY': Record<string, unknown>
 }>
 
-const findCacheKey = (cache: AtlasCacheType, videoId: string) => {
+const findCommentCacheKey = (cache: AtlasCacheType, videoId: string) => {
   const cacheKeys = Object.keys(cache.extract()['ROOT_QUERY'])
-  return cacheKeys.find((key) => key.includes(`id-${videoId}-`))
+  return cacheKeys.find((key) => key.includes('comments') && key.includes(`id-${videoId}-`))
 }
+
 const findParentCacheKey = (cache: AtlasCacheType, parentId: string) => {
   const cacheKeys = Object.keys(cache.extract()['ROOT_QUERY'])
-  return cacheKeys.find((key) => key.includes(`parentId-${parentId}-`))
+  return cacheKeys.find((key) => key.includes('comments') && key.includes(`parentId-${parentId}-`))
 }
+
+const findCommentReactionQuery = (cache: AtlasCacheType, videoId: string) => {
+  const cacheKeys = Object.keys(cache.extract()['ROOT_QUERY'])
+  return cacheKeys.find((key) => key.includes('commentReactions') && key.includes(`videoId-${videoId}-`))
+}
+
 export const UNCONFIRMED = 'UNCONFIRMED'
 export const UNCOFIRMED_COMMENT = `${UNCONFIRMED}-COMMENT`
 export const UNCOFIRMED_REPLY = `${UNCONFIRMED}-REPLY`
+export const UNCOFIRMED_REACTION = `${UNCONFIRMED}-REACTION`
 
 const commentFragment = gql`
   fragment CommentFields on Comment {
@@ -58,13 +66,137 @@ const commentFragment = gql`
   }
 `
 
+const reactionFragment = gql`
+  fragment CommentReactionFields on CommentReaction {
+    id
+    reactionId
+    comment {
+      __ref
+    }
+  }
+`
+
 export const useOptimisticActions = () => {
   const client = useApolloClient()
 
+  const increaseVideoCommentReaction = useCallback(
+    ({ commentId, reactionId, videoId }: { commentId: string; reactionId: number; videoId: string }) => {
+      client.cache.modify({
+        id: `Comment:${commentId}`,
+        fields: {
+          reactionsCountByReactionId: (prev) => {
+            const reactionPosition = prev.findIndex(
+              (reactionEntry: { reactionId: number; count: number }) => reactionEntry.reactionId === reactionId
+            )
+            const reaction =
+              reactionPosition === -1
+                ? { __typename: 'CommentReactionsCountByReactionId', reactionId, count: 0 }
+                : prev[reactionPosition]
+            const newPrev = [...prev]
+            newPrev[reactionPosition === -1 ? prev.length : reactionPosition] = {
+              ...reaction,
+              count: 1 + (reaction?.count ?? 0),
+            }
+            console.log('wtf increase', newPrev)
+
+            return newPrev
+          },
+        },
+      })
+
+      const recordId = `${commentId}-${videoId}-${UNCOFIRMED_REACTION}-${Date.now()}`
+
+      client.cache.writeFragment({
+        id: `CommentReaction:${recordId}`,
+        fragment: reactionFragment,
+        data: {
+          __typename: 'CommentReaction',
+          id: recordId,
+          comment: {
+            __ref: `Comment:${commentId}`,
+          },
+          reactionId,
+        },
+      })
+
+      const videoReactionQueryKey = findCommentReactionQuery(client.cache as AtlasCacheType, videoId)
+      if (videoReactionQueryKey) {
+        client.cache.modify({
+          optimistic: true,
+          id: 'ROOT_QUERY',
+          fields: {
+            [videoReactionQueryKey]: (existingResults = []) => {
+              return [...(existingResults as []), { __ref: `CommentReaction:${recordId}` }]
+            },
+          },
+        })
+      }
+    },
+    [client.cache]
+  )
+
+  const decreaseVideoCommentReaction = useCallback(
+    ({
+      commentId,
+      reactionId,
+      reactionDbId,
+      videoId,
+    }: {
+      commentId: string
+      reactionId: number
+      reactionDbId: string
+      videoId: string
+    }) => {
+      client.cache.modify({
+        id: `Comment:${commentId}`,
+        fields: {
+          reactionsCountByReactionId: (prev) => {
+            const reactionPosition = prev.findIndex(
+              (reactionEntry: { reactionId: number; count: number }) => reactionEntry.reactionId === reactionId
+            )
+            const reaction = prev[reactionPosition]
+            const newPrev = [...prev]
+            newPrev[reactionPosition] = {
+              ...reaction,
+              count: reaction?.count ? reaction.count - 1 : 0,
+            }
+            return newPrev
+          },
+        },
+      })
+
+      client.cache.evict({
+        id: `CommentReaction:${reactionDbId}`,
+      })
+
+      const videoReactionQueryKey = findCommentReactionQuery(client.cache as AtlasCacheType, videoId)
+      if (videoReactionQueryKey) {
+        client.cache.modify({
+          optimistic: true,
+          id: 'ROOT_QUERY',
+          fields: {
+            [videoReactionQueryKey]: (existingResults = []) => {
+              const index = (existingResults as { __ref: string }[]).findIndex(
+                (res) => res.__ref === `CommentReaction:${reactionDbId}`
+              )
+              const newRes = [...(existingResults as [])]
+              if (index) newRes[index] = { __ref: 'empty' } as never
+              return newRes as unknown
+            },
+          },
+        })
+      }
+    },
+    [client.cache]
+  )
+
   const deleteVideoComment = useCallback(
     ({ commentId }: { commentId: string }) => {
-      client.cache.evict({
+      client.cache.modify({
         id: `Comment:${commentId}`,
+        fields: {
+          status: () => 'DELETED',
+        },
       })
     },
     [client.cache]
@@ -106,7 +238,6 @@ export const useOptimisticActions = () => {
           parentComment: { __ref: `Comment:${parentCommentId}` },
         },
       })
-
       const parentQuery = findParentCacheKey(client.cache as AtlasCacheType, parentCommentId)
       if (parentQuery) {
         client.cache.modify({
@@ -122,8 +253,10 @@ export const useOptimisticActions = () => {
                 },
               }
               return {
-                ...existingCommentsConnection,
-                edges: [...(existingCommentsConnection.edges ?? []), newEdge],
+                ...(existingCommentsConnection as {
+                  /* */
+                }),
+                edges: [...((existingCommentsConnection as { edges: unknown[] }).edges ?? []), newEdge],
               }
             },
           },
@@ -166,13 +299,13 @@ export const useOptimisticActions = () => {
         },
       })
 
-      const queryKey = findCacheKey(client.cache as AtlasCacheType, videoId)
+      const queryKey = findCommentCacheKey(client.cache as AtlasCacheType, videoId)
       if (queryKey) {
         client.cache.modify({
           optimistic: true,
           id: 'ROOT_QUERY',
           fields: {
-            [queryKey]: (existingCommentsConnection = {}) => {
+            [queryKey]: (existingCommentsConnection = { edges: [] }) => {
               const newEdge = {
                 __typename: 'CommentEdge',
                 cursor: '0', // Generate or use an appropriate cursor value
@@ -181,8 +314,10 @@ export const useOptimisticActions = () => {
                 },
               }
               return {
-                ...existingCommentsConnection,
-                edges: [...(existingCommentsConnection.edges ?? []), newEdge],
+                ...(existingCommentsConnection as {
+                  /* */
+                }),
+                edges: [...((existingCommentsConnection as { edges: unknown[] }).edges ?? []), newEdge],
               }
             },
           },
@@ -259,5 +394,7 @@ export const useOptimisticActions = () => {
     addVideoReplyComment,
     editVideoComment,
     deleteVideoComment,
+    increaseVideoCommentReaction,
+    decreaseVideoCommentReaction,
   }
 }
