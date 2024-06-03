@@ -7,8 +7,9 @@ import {
   SvgActionMoney,
   SvgActionNewTab,
   SvgSidebarHome,
-  SvgSidebarMarketplace,
+  SvgSidebarNft,
   SvgSidebarReferrals,
+  SvgSidebarToken,
 } from '@/assets/icons'
 import { AppLogo } from '@/components/AppLogo'
 import { Button } from '@/components/_buttons/Button'
@@ -35,10 +36,17 @@ export const viewerNavItems = [
     bottomNav: true,
   },
   {
-    icon: <SvgSidebarMarketplace />,
-    expandedName: 'Marketplace',
-    name: 'Market',
-    to: absoluteRoutes.viewer.marketplace(),
+    icon: <SvgSidebarToken />,
+    expandedName: 'Tokens',
+    name: 'Tokens',
+    to: absoluteRoutes.viewer.crtMarketplace(),
+    bottomNav: true,
+  },
+  {
+    icon: <SvgSidebarNft />,
+    expandedName: 'NFTs',
+    name: 'NFTs',
+    to: absoluteRoutes.viewer.nftMarketplace(),
     bottomNav: true,
   },
   ...(atlasConfig.features.ypp.googleConsoleClientId
