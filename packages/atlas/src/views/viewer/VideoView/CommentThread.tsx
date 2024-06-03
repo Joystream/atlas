@@ -34,7 +34,7 @@ const _CommentThread: FC<CommentThreadProps> = ({
   const [newReplyId, setNewReplyId] = useState<string | null>(null)
 
   const { replies, loading, fetchMore, pageInfo } = useCommentRepliesConnection({
-    skip: !commentId || !video?.id || !repliesOpen || !hasAnyReplies,
+    skip: !commentId || !video?.id,
     variables: {
       first: INITIAL_REPLIES_COUNT,
       parentCommentId: commentId || '',

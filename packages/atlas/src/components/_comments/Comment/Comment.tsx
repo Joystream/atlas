@@ -1,7 +1,7 @@
 import BN from 'bn.js'
 import { Dispatch, FC, SetStateAction, memo, useCallback, useRef, useState } from 'react'
 
-import { useComment } from '@/api/hooks/comments'
+import { UserCommentReactions, useComment } from '@/api/hooks/comments'
 import { CommentStatus } from '@/api/queries/__generated__/baseTypes.generated'
 import { CommentFieldsFragment, FullVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { DialogModal } from '@/components/_overlays/DialogModal'
@@ -25,7 +25,7 @@ import { CommentRowProps } from '../CommentRow'
 export type CommentProps = {
   commentId?: string
   video?: FullVideoFieldsFragment | null
-  userReactions?: number[]
+  userReactions?: UserCommentReactions[string]
   isReplyable?: boolean
   setHighlightedCommentId?: Dispatch<SetStateAction<string | null>>
   setRepliesOpen?: Dispatch<SetStateAction<boolean>>
@@ -162,7 +162,7 @@ export const Comment: FC<CommentProps> = memo(
         commentBody: editCommentInputText ?? '',
         commentId: comment.id,
         videoTitle: video.title,
-        opts: {
+        optimisticOpts: {
           onTxSign: () => {
             setEditCommentInputIsProcessing(false)
             setEditCommentInputText('')
@@ -176,14 +176,6 @@ export const Comment: FC<CommentProps> = memo(
           },
         },
       })
-    }
-    const handleCommentReaction = async (commentId: string, reactionId: CommentReaction) => {
-      setProcessingReactionsIds((previous) => [...previous, reactionId])
-      const fee =
-        reactionFee ||
-        (await getReactToVideoCommentFee(memberId && comment?.id ? [memberId, comment.id, reactionId] : undefined))
-      await reactToComment(commentId, video?.id || '', reactionId, comment?.author.handle || '', fee)
-      setProcessingReactionsIds((previous) => previous.filter((r) => r !== reactionId))
     }
 
     const handleOnBoardingPopoverOpen = async (reactionId: number) => {
@@ -204,7 +196,7 @@ export const Comment: FC<CommentProps> = memo(
         parentCommentId: comment.id,
         videoTitle: video.title,
         commentAuthorHandle: comment.author.handle,
-        opts: {
+        optimisticOpts: {
           onTxSign: (newCommentId) => {
             setReplyCommentInputIsProcessing(false)
             setReplyCommentInputText('')
@@ -262,12 +254,27 @@ export const Comment: FC<CommentProps> = memo(
     const reactions =
       (comment &&
         getCommentReactions({
-          userReactionsIds: userReactions,
+          userReactionsIds: userReactions?.map((uR) => uR.reactionId),
           reactionsCount: comment.reactionsCountByReactionId || [],
           processingReactionsIds,
           deleted: commentType === 'deleted',
         })) ||
       undefined
+
+    const handleCommentReaction = async (commentId: string, reactionId: CommentReaction) => {
+      setProcessingReactionsIds((previous) => [...previous, reactionId])
+      const fee =
+        reactionFee ||
+        (await getReactToVideoCommentFee(memberId && comment?.id ? [memberId, comment.id, reactionId] : undefined))
+      await reactToComment(commentId, video?.id || '', reactionId, comment?.author.handle || '', fee, {
+        prevReactionServerId:
+          userReactions?.find((reaction) => reaction.reactionId === reactionId)?.reactionServerId ?? '',
+        videoId: video?.id ?? '',
+        onUnconfirmedComment: () => setProcessingReactionsIds((previous) => previous.filter((r) => r !== reactionId)),
+        onTxSign: () => setProcessingReactionsIds((previous) => previous.filter((r) => r !== reactionId)),
+      })
+      setProcessingReactionsIds((previous) => previous.filter((r) => r !== reactionId))
+    }
 
     if (isEditingComment) {
       return (
