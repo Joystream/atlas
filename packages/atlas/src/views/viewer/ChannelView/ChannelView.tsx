@@ -7,6 +7,7 @@ import { useParams, useSearchParams } from 'react-router-dom'
 import { useChannelNftCollectors, useFullChannel } from '@/api/hooks/channel'
 import { useVideoCount } from '@/api/hooks/video'
 import { OwnedNftOrderByInput, VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
+import { useGetFullCreatorTokenQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { useGetNftsCountQuery } from '@/api/queries/__generated__/nfts.generated'
 import { SvgActionCheck, SvgActionFilters, SvgActionFlag, SvgActionMore, SvgActionPlus } from '@/assets/icons'
 import { ChannelTitle } from '@/components/ChannelTitle'
@@ -91,6 +92,10 @@ export const ChannelView: FC = () => {
   const filteredTabs = TABS.filter((tab) =>
     tab === 'Token' ? !!tab && (isChannelOwner || !!channel?.creatorToken?.token.id) : !!tab
   )
+  const { data: tokenData } = useGetFullCreatorTokenQuery({
+    variables: { id: channel?.creatorToken?.token.id ?? '' },
+    skip: !channel?.creatorToken?.token.id,
+  })
   const { videoCount } = useVideoCount({
     where: {
       channel: {
@@ -220,7 +225,14 @@ export const ChannelView: FC = () => {
 
   const mappedTabs = filteredTabs.map((tab) => ({
     name: tab,
-    pillText: tab === 'Videos' ? videoCount : tab === 'NFTs' ? nftCountData?.ownedNftsConnection.totalCount : undefined,
+    pillText:
+      tab === 'Videos'
+        ? videoCount
+        : tab === 'NFTs'
+        ? nftCountData?.ownedNftsConnection.totalCount
+        : tab === 'Token'
+        ? tokenData?.creatorTokenById?.symbol ?? undefined
+        : undefined,
   }))
 
   const getChannelContent = (tab: (typeof TABS)[number]) => {
