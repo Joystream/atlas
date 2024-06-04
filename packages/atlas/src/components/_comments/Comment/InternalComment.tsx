@@ -98,7 +98,6 @@ export const InternalComment: FC<InternalCommentProps> = ({
   onEditClick,
   onDeleteClick,
   onReactionClick,
-  onOnBoardingPopoverOpen,
   reactions,
   onReplyClick,
   replyAvatars,
@@ -169,15 +168,13 @@ export const InternalComment: FC<InternalCommentProps> = ({
 
   const handleCommentReactionClick = useCallback(
     async (reactionId: CommentReaction) => {
+      onReactionClick?.(reactionId)
+
       if (!reactionPopoverDismissed) {
-        setTempReactionId(reactionId)
-        await onOnBoardingPopoverOpen?.(reactionId)
         popoverRef.current?.show()
-      } else {
-        onReactionClick?.(reactionId)
       }
     },
-    [onOnBoardingPopoverOpen, onReactionClick, reactionPopoverDismissed]
+    [onReactionClick, reactionPopoverDismissed]
   )
 
   const sortedReactions = reactions && [...reactions].sort((a, b) => (b.count || 0) - (a.count || 0))
