@@ -276,6 +276,8 @@ features:
       name: Atlas
       description: Web3 video streaming platform
       icons: ['https://dev.gleev.xyz/favicon.ico']
+  metamask:
+    snapId: '$VITE_METAMASK_SNAP_ID' # Snap ID for Metamask - npm:@chainsafe/polkadot-snap or (`local:http://localhost:8081` for local development)
   playback:
     playbackRates: [2, 1.5, 1.25, 1, 0.5, 0.25] # Playback rates available in the player
   comments:

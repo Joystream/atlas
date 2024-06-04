@@ -99,9 +99,7 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
 
         await selectedWallet.enable(atlasConfig.general.appName)
 
-        // taken from https://github.com/TalismanSociety/talisman-connect/blob/47cfefee9f1333326c0605c159d6ee8ebfba3e84/libs/wallets/src/lib/base-dotsama-wallet/index.ts#L98-L107
-        // should be part of future talisman-connect release
-        const accounts = await selectedWallet.extension.accounts.get()
+        const accounts = await selectedWallet.getAccounts()
 
         const accountsWithWallet = accounts
           .filter(filterUnsupportedAccounts)
