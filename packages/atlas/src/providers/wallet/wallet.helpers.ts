@@ -2,6 +2,8 @@ import { BaseDotsamaWallet, Wallet, getWallets } from '@talismn/connect-wallets'
 
 import { atlasConfig } from '@/config'
 
+import { MetamaskWallet } from './tmpwallet/metamask'
+
 export const getWalletsList = () => {
   const supportedWallets = getWallets()
   const supportedWalletsNames = supportedWallets.map((wallet) => wallet.extensionName)
@@ -26,10 +28,13 @@ export const getWalletsList = () => {
     installed: true,
   } as Wallet
 
+  const metamaskSnapId = atlasConfig.features.metamask.snapId
+
   return [
     ...supportedWallets,
     ...unknownWallets,
     ...(atlasConfig.features.walletConnect.walletConnectProjectId ? [wcWallet] : []),
+    ...(metamaskSnapId ? [new MetamaskWallet(metamaskSnapId)] : []),
   ]
 }
 
