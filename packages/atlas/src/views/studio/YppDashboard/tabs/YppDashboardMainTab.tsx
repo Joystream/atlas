@@ -53,7 +53,7 @@ const benefitsMetadata = {
   },
   twitterPost: {
     title: 'Post on X',
-    description: `Follow JoystreamDAO on X and post about why you signed up to ${atlasConfig.general.appName} using hashtag #${atlasConfig.general.appName}Web3Creators mentioning @JoystreamDAO to get a chance of weekly reward.`,
+    description: `Follow JoystreamDAO on X and post about why you signed up to ${atlasConfig.general.appName} using hashtag #${atlasConfig.general.appName}Web3Creators mentioning @JoystreamDAO and your ${atlasConfig.general.appName} Channel Name to get a chance of weekly reward.`,
     reward: '10 USD',
     actionLink: 'https://twitter.com/joystreamdao?lang=en',
     tooltipLink:
@@ -491,7 +491,7 @@ export const YppDashboardMainTab: FC = () => {
             rewardNode={benefitsMetadata.shareNft.reward}
             description={
               <>
-                Drop the link of your post to{' '}
+                Share NFT from Gleev on social media of your choice and drop the link of your post to{' '}
                 <TextButton to={atlasConfig.general.joystreamDiscordUrl}>#shared-NFTs</TextButton> on Discord to
                 participate in rewards.
               </>
@@ -518,7 +518,7 @@ export const YppDashboardMainTab: FC = () => {
             rewardNode={benefitsMetadata.shareToken.reward}
             description={
               <>
-                Drop the link of your post to{' '}
+                Share your CRT page from Gleev on social media of your choice and drop the link of your post to{' '}
                 <TextButton to={atlasConfig.general.joystreamDiscordUrl}>#shared-CRTs</TextButton> on Discord to
                 participate in rewards.
               </>
@@ -595,7 +595,7 @@ const SilverTierWrapper = styled(TierWrapper)`
 
 export const BenefitsContainer = ({ children, title }: { children: ReactNode[] | ReactNode; title: string }) => {
   const drawer = useRef<HTMLDivElement>(null)
-  const [isDrawerActive, setDrawerActive] = useState(true)
+  const [isDrawerActive, setDrawerActive] = useState(false)
 
   return (
     <StyledGridItem colSpan={{ xxs: 12 }}>

@@ -84,6 +84,7 @@ query GetUserCommentsAndVideoCommentsConnection(
 # CHANGE: ID is now `String`
 query GetUserCommentsReactions($memberId: String!, $videoId: String!) {
   commentReactions(where: { member: { id_eq: $memberId }, video: { id_eq: $videoId } }, limit: 1000) {
+    id
     reactionId
     comment {
       # CHANGE: `commentId` no longer exists, use `comment.id`

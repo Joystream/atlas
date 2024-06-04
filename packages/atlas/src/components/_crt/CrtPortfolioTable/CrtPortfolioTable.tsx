@@ -209,7 +209,12 @@ export const TokenPortfolioUtils = ({
   const [ref, setRef] = useState<HTMLButtonElement | null>(null)
 
   return (
-    <RightAlignedCell>
+    <RightAlignedCell
+      onClick={(e) => {
+        e.stopPropagation()
+        e.preventDefault()
+      }}
+    >
       <Button ref={setRef} icon={<SvgActionMore />} variant="tertiary" size="small" />
       <ContextMenu
         appendTo={document.body}

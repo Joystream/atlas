@@ -22,12 +22,8 @@ import { useUser } from '@/providers/user/user.hooks'
 import { media, transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
 
-// Currently the newest version is at main file and the old one was moved to new file
-const YppLandingViewTest = lazy(() =>
-  import('@/views/global/YppLandingView').then((module) => ({ default: module.YppLandingView }))
-)
 const YppLandingView = lazy(() =>
-  import('@/views/global/YppLandingView/YppLandingViewOld').then((module) => ({ default: module.YppLandingViewOld }))
+  import('@/views/global/YppLandingView').then((module) => ({ default: module.YppLandingView }))
 )
 const MemberNotificationsView = lazy(() =>
   import('@/views/notifications').then((module) => ({ default: module.MemberNotificationsView }))
@@ -36,7 +32,12 @@ const CategoryView = lazy(() => import('./CategoryView').then((module) => ({ def
 const ChannelView = lazy(() => import('./ChannelView').then((module) => ({ default: module.ChannelView })))
 const ChannelsView = lazy(() => import('./ChannelsView').then((module) => ({ default: module.ChannelsView })))
 const HomeView = lazy(() => import('./HomeView').then((module) => ({ default: module.HomeView })))
-const MarketplaceView = lazy(() => import('./MarketplaceView').then((module) => ({ default: module.MarketplaceView })))
+const NftMarketplaceView = lazy(() =>
+  import('./NftMarketplaceView').then((module) => ({ default: module.NftMarketplaceView }))
+)
+const CrtMarketplaceView = lazy(() =>
+  import('./CrtMarketplaceView').then((module) => ({ default: module.CrtMarketplaceView }))
+)
 const MemberView = lazy(() => import('./MemberView').then((module) => ({ default: module.MemberView })))
 const MembershipSettingsView = lazy(() =>
   import('./MembershipSettingsView').then((module) => ({ default: module.MembershipSettingsView }))
@@ -62,12 +63,10 @@ const viewerRoutes = [
   { path: relativeRoutes.viewer.category(), element: <CategoryView /> },
   { path: relativeRoutes.viewer.memberById(), element: <MemberView /> },
   { path: relativeRoutes.viewer.member(), element: <MemberView /> },
-  { path: relativeRoutes.viewer.marketplace(), element: <MarketplaceView /> },
+  { path: relativeRoutes.viewer.crtMarketplace(), element: <CrtMarketplaceView /> },
+  { path: relativeRoutes.viewer.nftMarketplace(), element: <NftMarketplaceView /> },
   ...(atlasConfig.features.ypp.googleConsoleClientId
-    ? [
-        { path: relativeRoutes.viewer.ypp(), element: <YppLandingView /> },
-        { path: relativeRoutes.viewer.yppTest(), element: <YppLandingViewTest /> },
-      ]
+    ? [{ path: relativeRoutes.viewer.ypp(), element: <YppLandingView /> }]
     : []),
   { path: relativeRoutes.viewer.referrals(), element: <ReferralsView /> },
 ]

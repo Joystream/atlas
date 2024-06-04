@@ -17,10 +17,11 @@ export const KebabMenuIconButton = styled(Button)<{ isActive: boolean }>`
   }
 `
 
-export const CommentWrapper = styled.div<{ shouldShowKebabButton: boolean }>`
+export const CommentWrapper = styled.div<{ shouldShowKebabButton: boolean; isUnconfirmed?: boolean }>`
   display: grid;
   gap: ${sizes(3)};
   align-items: start;
+  opacity: ${(props) => (props.isUnconfirmed ? '0.8' : 'unset')};
 
   /* comment content, kebab button */
   grid-template-columns: 1fr auto;

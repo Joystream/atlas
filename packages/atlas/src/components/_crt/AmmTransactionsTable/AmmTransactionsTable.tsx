@@ -49,9 +49,10 @@ const tableEmptyState = {
 type AmmTransactionsTableProps = {
   data: FullAmmCurveFragment['transactions']
   loading: boolean
+  symbol: string
 }
 
-export const AmmTransactionsTable = ({ data, loading }: AmmTransactionsTableProps) => {
+export const AmmTransactionsTable = ({ data, loading, symbol }: AmmTransactionsTableProps) => {
   const mappedData = useMemo(
     () =>
       data.map((row) => ({
@@ -64,10 +65,12 @@ export const AmmTransactionsTable = ({ data, loading }: AmmTransactionsTableProp
           />
         ),
         pricePerUnit: <TokenAmount tokenAmount={new BN(row.pricePerUnit)} />,
-        quantity: <NumberFormat value={+row.quantity} as="p" withToken customTicker="$JBC" variant="t100-strong" />,
+        quantity: (
+          <NumberFormat value={+row.quantity} as="p" withToken customTicker={`$${symbol}`} variant="t100-strong" />
+        ),
         amount: <TokenAmount tokenAmount={new BN(row.pricePaid)} />,
       })),
-    [data]
+    [data, symbol]
   )
 
   return (
