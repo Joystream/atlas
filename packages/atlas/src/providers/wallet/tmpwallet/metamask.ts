@@ -21,7 +21,7 @@ export class MetamaskWallet extends BaseDotsamaWallet {
   protected _txId = 0
 
   public get installed(): boolean {
-    return '_metamask' in window.ethereum
+    return !!window.ethereum && '_metamask' in window.ethereum
   }
 
   constructor(snapId: string) {
