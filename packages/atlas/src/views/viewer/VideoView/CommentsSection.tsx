@@ -1,6 +1,7 @@
 import { NetworkStatus } from '@apollo/client'
 import { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
 import { useComment, useUserCommentsReactions } from '@/api/hooks/comments'
 import { useCommentSectionComments } from '@/api/hooks/useCommentSectionComments'
@@ -211,7 +212,7 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
               },
             },
             children: (
-              <>
+              <TransitionGroup className="comments-list">
                 {displayedCommentFromUrl && (
                   <CommentThread
                     commentId={displayedCommentFromUrl.id}
@@ -228,19 +229,20 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
                   ? mappedPlaceholders
                   : filteredComments
                       ?.map((comment) => (
-                        <CommentThread
-                          key={comment.id}
-                          commentId={comment.id}
-                          video={video}
-                          hasAnyReplies={comment.repliesCount > 0}
-                          repliesCount={comment.repliesCount}
-                          userReactionsLookup={userReactions}
-                          highlightedCommentId={highlightedCommentId}
-                          setHighlightedCommentId={setHighlightedCommentId}
-                        />
+                        <CSSTransition key={comment.id} timeout={500} classNames="comment">
+                          <CommentThread
+                            commentId={comment.id}
+                            video={video}
+                            hasAnyReplies={comment.repliesCount > 0}
+                            repliesCount={comment.repliesCount}
+                            userReactionsLookup={userReactions}
+                            highlightedCommentId={highlightedCommentId}
+                            setHighlightedCommentId={setHighlightedCommentId}
+                          />
+                        </CSSTransition>
                       ))
                       .concat(isFetchingMore && commentsLoading ? mappedPlaceholders : [])}
-              </>
+              </TransitionGroup>
             ) as unknown as ReactElement[],
           }}
           footerProps={

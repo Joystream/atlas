@@ -218,6 +218,34 @@ export const CommentsStyledSection = styled(Section)`
   ${media.md} {
     margin-bottom: 0;
   }
+
+  .comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .comment-enter {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  .comment-enter-active {
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 500ms, transform 500ms;
+  }
+
+  .comment-exit {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .comment-exit-active {
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 500ms, transform 500ms;
+  }
 `
 
 export const LoadMoreCommentsWrapper = styled.div`
