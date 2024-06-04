@@ -60,10 +60,10 @@ mutation RequestNftFeatured($nftId: String!, $rationale: String!) {
   }
 }
 
-#query GetJoystreamTotalEarnings {
-#  totalJoystreamEarnings {
-#    crtSaleVolume
-#    totalRewardsPaid
-#    nftSaleVolume
-#  }
-#}
+query GetJoystreamTotalEarnings {
+  totalJoystreamEarnings {
+    crtSaleVolume
+    totalRewardsPaid
+    nftSaleVolume
+  }
+}
