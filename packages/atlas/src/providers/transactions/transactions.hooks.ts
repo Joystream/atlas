@@ -87,7 +87,7 @@ export const useTransaction = (): HandleTransactionFn => {
         return false
       }
 
-      if (isSignerMetadataOutdated && WALLETS_WITH_METADATA.includes(wallet?.extensionName ?? '')) {
+      if (isSignerMetadataOutdated && wallet?.extensionName && WALLETS_WITH_METADATA.includes(wallet.extensionName)) {
         await new Promise((resolve) => {
           openOngoingTransactionModal({
             title: 'Update Wallet Metadata',
