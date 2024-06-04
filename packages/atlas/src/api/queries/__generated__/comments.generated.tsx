@@ -257,6 +257,7 @@ export type GetUserCommentsReactionsQuery = {
   __typename?: 'Query'
   commentReactions: Array<{
     __typename?: 'CommentReaction'
+    id: string
     reactionId: number
     comment: { __typename?: 'Comment'; id: string }
   }>
@@ -528,6 +529,7 @@ export type GetUserCommentsAndVideoCommentsConnectionQueryResult = Apollo.QueryR
 export const GetUserCommentsReactionsDocument = gql`
   query GetUserCommentsReactions($memberId: String!, $videoId: String!) {
     commentReactions(where: { member: { id_eq: $memberId }, video: { id_eq: $videoId } }, limit: 1000) {
+      id
       reactionId
       comment {
         id

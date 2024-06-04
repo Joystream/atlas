@@ -4,6 +4,7 @@ import { FieldPolicy, FieldReadFunction } from '@apollo/client/cache/inmemory/po
 import { offsetLimitPagination, relayStylePagination } from '@apollo/client/utilities'
 import { parseISO } from 'date-fns'
 
+import { QueryCommentReactionsConnectionArgs } from '../../../../atlas-meta-server/src/api/__generated__/sdk'
 import {
   Query,
   QueryChannelsConnectionArgs,
@@ -119,7 +120,19 @@ const getCommentKeyArgs = (
   const parentCommentId = args?.where?.parentComment?.id_eq
   const videoId = args?.where?.video?.id_eq ?? ctx.variables?.videoId
   const orderBy = args?.orderBy || []
-  return `${parentCommentId}:${videoId}:${orderBy}`
+  return `parentId-${parentCommentId}-:id-${videoId}-:${orderBy}`
+}
+
+const getCommentReactionsKeyArgs = (
+  args: Partial<QueryCommentReactionsConnectionArgs> | null,
+  ctx: {
+    variables?: Record<string, unknown>
+  }
+) => {
+  const memberId = args?.where?.member?.id_eq
+  const videoId = args?.where?.video?.id_eq ?? ctx.variables?.videoId
+  const orderBy = args?.orderBy || []
+  return `memberId-${memberId}-:videoId-${videoId}-:${orderBy}`
 }
 
 const createDateHandler = () => ({
@@ -215,6 +228,9 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
       const limit = args?.limit ?? existing?.length
       return existing?.slice(offset, offset + limit)
     },
+  },
+  commentReactions: {
+    ...offsetLimitPagination(getCommentReactionsKeyArgs),
   },
   commentsConnection: relayStylePagination(getCommentKeyArgs),
   channelById: (existing, { toReference, args }) => {
