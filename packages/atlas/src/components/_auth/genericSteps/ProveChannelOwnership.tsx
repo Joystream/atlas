@@ -36,7 +36,7 @@ export const ProveChannelOwnership = ({ onSubmit, setActionButtonHandler }: Prov
   return (
     <FlexBox flow="column" gap={2}>
       <StyledAppLogo variant="short-monochrome" />
-      <Text variant="h500" as="h3">
+      <Text margin={{ top: 4 }} variant="h500" as="h3">
         Prove channel ownership
       </Text>
       <Text margin={{ bottom: 2 }} variant="t300" as="span" color="colorText">

@@ -1,5 +1,6 @@
-import { FC, useCallback, useEffect, useState } from 'react'
-import { Controller, useFormContext } from 'react-hook-form'
+import styled from '@emotion/styled'
+import { useCallback, useEffect, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import shallow from 'zustand/shallow'
 
 import {
@@ -11,14 +12,19 @@ import {
   ExtendedFullChannelFieldsFragment,
   FullChannelFieldsFragment,
 } from '@/api/queries/__generated__/fragments.generated'
+import { AppLogo } from '@/components/AppLogo'
 import { Avatar } from '@/components/Avatar'
+import { FlexBox } from '@/components/FlexBox'
+import { Text } from '@/components/Text'
 import { FormField } from '@/components/_inputs/FormField'
 import { InputAutocomplete } from '@/components/_inputs/InputAutocomplete'
 import { Select, SelectItem } from '@/components/_inputs/Select'
 import { atlasConfig } from '@/config'
 import { displayCategories } from '@/config/categories'
+import { useMountEffect } from '@/hooks/useMountEffect'
 import { useUser } from '@/providers/user/user.hooks'
 import { useYppStore } from '@/providers/ypp/ypp.store'
+import { cVar } from '@/styles'
 
 import { FormFieldsWrapper } from './YppAuthorizationDetailsFormStep.styles'
 
@@ -34,7 +40,12 @@ const categoriesSelectItems: SelectItem[] =
     value: c.defaultVideoCategory,
   })) || []
 
-export const YppAuthorizationDetailsFormStep: FC = () => {
+type YppDetailsFormStepProps = {
+  onSubmit: (form: DetailsFormData) => void
+  setActionButtonHandler: (fn: () => void | Promise<void>) => void
+}
+
+export const YppDetailsFormStep = ({ onSubmit, setActionButtonHandler }: YppDetailsFormStepProps) => {
   const [foundChannel, setFoundChannel] = useState<FullChannelFieldsFragment | null>()
   const { memberId } = useUser()
   const { referrerId } = useYppStore((store) => store, shallow)
@@ -42,7 +53,16 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
     control,
     formState: { errors },
     setValue,
-  } = useFormContext<DetailsFormData>()
+    handleSubmit,
+  } = useForm<DetailsFormData>()
+
+  useMountEffect(() => {
+    setActionButtonHandler(
+      handleSubmit((data) => {
+        onSubmit(data)
+      })
+    )
+  })
 
   useEffect(() => {
     if (referrerId) {
@@ -65,90 +85,108 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
   )
 
   return (
-    <FormFieldsWrapper>
-      <FormField
-        label="Category for videos"
-        description="Choose one of the categories to be assigned to the imported videos by default. You can change it for each video later."
-        error={errors.videoCategoryId?.message}
-      >
+    <FlexBox flow="column" gap={2}>
+      <StyledAppLogo variant="short-monochrome" />
+      <Text margin={{ top: 4 }} variant="h500" as="h3">
+        YouTube Auto Sync
+      </Text>
+      <Text margin={{ bottom: 4 }} variant="t200" as="p" color="colorText">
+        {atlasConfig.general.appName} automatically syncs all your YouTube videos.
+      </Text>
+      <FormFieldsWrapper>
+        <FormField
+          label="Category for videos"
+          description="Choose one of the categories to be assigned to the imported videos by default. You can change it for each video later."
+          error={errors.videoCategoryId?.message}
+        >
+          <Controller
+            control={control}
+            name="videoCategoryId"
+            rules={{
+              required: {
+                value: true,
+                message: 'Select a video category.',
+              },
+            }}
+            render={({ field: { value, onChange, ref } }) => (
+              <Select items={categoriesSelectItems} onChange={onChange} value={value} ref={ref} />
+            )}
+          />
+        </FormField>
+
         <Controller
+          name="referrerChannelTitle"
           control={control}
-          name="videoCategoryId"
           rules={{
-            required: {
-              value: true,
-              message: 'Select a video category.',
+            validate: (value) => {
+              if (value && !foundChannel) {
+                return 'No channel with this title has been found.'
+              }
+              return true
             },
           }}
-          render={({ field: { value, onChange, ref } }) => (
-            <Select items={categoriesSelectItems} onChange={onChange} value={value} ref={ref} />
+          render={({ field: { onChange, value } }) => (
+            <FormField
+              optional
+              label="Referrer"
+              description={`Enter the title of the ${atlasConfig.general.appName} channel which recommended the program to you.`}
+              error={errors.referrerChannelTitle?.message}
+            >
+              <InputAutocomplete<
+                GetExtendedFullChannelsQuery,
+                GetExtendedFullChannelsQueryVariables,
+                ExtendedFullChannelFieldsFragment
+              >
+                notFoundLabel="Channel with this title not found, please check spelling and try again."
+                documentQuery={GetExtendedBasicChannelsDocument}
+                queryVariablesFactory={queryVariablesFactory}
+                perfectMatcher={(res, val) => {
+                  const initialResults = res.extendedChannels.filter(
+                    (extendedChannel) => extendedChannel.channel.title === val
+                  )
+                  if (initialResults.length === 1 || !referrerId) {
+                    return initialResults[0]
+                  }
+
+                  return (
+                    initialResults.find((extendedChannel) => extendedChannel.channel.id === referrerId) ??
+                    initialResults[0]
+                  )
+                }}
+                renderItem={(result) =>
+                  result.extendedChannels.map((extendedChannel) => ({
+                    ...extendedChannel,
+                    label: extendedChannel.channel.title ?? '',
+                  }))
+                }
+                placeholder="Channel Name"
+                value={value ?? ''}
+                onChange={onChange}
+                onItemSelect={(item) => {
+                  if (item) {
+                    setFoundChannel(item.channel)
+                    onChange({ target: { value: item?.channel.title } })
+                    setValue('referrerChannelId', item.channel.id)
+                  }
+                }}
+                nodeEnd={foundChannel && <Avatar assetUrls={foundChannel.avatarPhoto?.resolvedUrls} size={24} />}
+                clearSelection={() => {
+                  setFoundChannel(undefined)
+                }}
+              />
+            </FormField>
           )}
         />
-      </FormField>
-
-      <Controller
-        name="referrerChannelTitle"
-        control={control}
-        rules={{
-          validate: (value) => {
-            if (value && !foundChannel) {
-              return 'No channel with this title has been found.'
-            }
-            return true
-          },
-        }}
-        render={({ field: { onChange, value } }) => (
-          <FormField
-            optional
-            label="Referrer"
-            description={`Enter the title of the ${atlasConfig.general.appName} channel which recommended the program to you.`}
-            error={errors.referrerChannelTitle?.message}
-          >
-            <InputAutocomplete<
-              GetExtendedFullChannelsQuery,
-              GetExtendedFullChannelsQueryVariables,
-              ExtendedFullChannelFieldsFragment
-            >
-              notFoundLabel="Channel with this title not found, please check spelling and try again."
-              documentQuery={GetExtendedBasicChannelsDocument}
-              queryVariablesFactory={queryVariablesFactory}
-              perfectMatcher={(res, val) => {
-                const initialResults = res.extendedChannels.filter(
-                  (extendedChannel) => extendedChannel.channel.title === val
-                )
-                if (initialResults.length === 1 || !referrerId) {
-                  return initialResults[0]
-                }
-
-                return (
-                  initialResults.find((extendedChannel) => extendedChannel.channel.id === referrerId) ??
-                  initialResults[0]
-                )
-              }}
-              renderItem={(result) =>
-                result.extendedChannels.map((extendedChannel) => ({
-                  ...extendedChannel,
-                  label: extendedChannel.channel.title ?? '',
-                }))
-              }
-              placeholder="Channel Name"
-              value={value ?? ''}
-              onChange={onChange}
-              onItemSelect={(item) => {
-                if (item) {
-                  setFoundChannel(item.channel)
-                  onChange({ target: { value: item?.channel.title } })
-                  setValue('referrerChannelId', item.channel.id)
-                }
-              }}
-              nodeEnd={foundChannel && <Avatar assetUrls={foundChannel.avatarPhoto?.resolvedUrls} size={24} />}
-              clearSelection={() => {
-                setFoundChannel(undefined)
-              }}
-            />
-          </FormField>
-        )}
-      />
-    </FormFieldsWrapper>
+      </FormFieldsWrapper>
+    </FlexBox>
   )
 }
+
+const StyledAppLogo = styled(AppLogo)`
+  height: 36px;
+  width: auto;
+
+  path {
+    fill: ${cVar('colorTextMuted')};
+  }
+`

@@ -37,7 +37,6 @@ import {
 } from './YppAuthorizationModal.styles'
 import {
   DetailsFormData,
-  YppAuthorizationDetailsFormStep,
   YppAuthorizationRequirementsStep,
   YppAuthorizationSelectChannelStep,
   YppSyncStepData,
@@ -456,7 +455,8 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ unSynced
             onClick: () => handleCreateOrUpdateChannel(),
             text: 'Continue',
           },
-          component: <YppAuthorizationDetailsFormStep />,
+          // component: <YppAuthorizationDetailsFormStep />,
+          component: <div />,
         }
       case 'ypp-speaking-to-backend':
         return {
