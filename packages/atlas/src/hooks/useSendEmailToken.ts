@@ -14,7 +14,7 @@ export enum SendEmailTokenErrors {
 
 export const useSendEmailToken = () => {
   return useMutation({
-    mutationFn: async (props: { email: string; isExternal?: boolean }) => {
+    mutationFn: async (props: { email: string; isExternal?: boolean; yppVideoUrl?: string }) => {
       const res = await axiosInstance
         .post(
           `${ORION_AUTH_URL}/request-email-confirmation-token`,
@@ -43,8 +43,10 @@ export const useSendEmailToken = () => {
         })
       const data = JSON.parse(res.data.payload)
       alert(
-        `${location.host}?email=${encodeURI(data.email)}&email-token=${encodeURI(data.id)}&account-type=${
-          props.isExternal ? 'external' : 'internal'
+        `${location.host}?email=${encodeURIComponent(data.email)}&email-token=${encodeURIComponent(
+          data.id
+        )}&account-type=${props.isExternal ? 'external' : props.yppVideoUrl ? 'ypp' : 'internal'}${
+          props.yppVideoUrl ? `&ytVideo=${encodeURIComponent(props.yppVideoUrl)}` : ''
         }`
       )
 

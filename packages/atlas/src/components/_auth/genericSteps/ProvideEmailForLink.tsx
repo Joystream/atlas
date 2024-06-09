@@ -19,6 +19,7 @@ type ProvideEmailForLinkProps = {
   setActionButtonHandler: SetActionButtonHandlerSetter
   defaultEmail?: string
   isExternal?: boolean
+  yppVideoUrl?: string
 }
 
 export const ProvideEmailForLink = ({
@@ -26,6 +27,7 @@ export const ProvideEmailForLink = ({
   onSubmit,
   defaultEmail,
   isExternal,
+  yppVideoUrl,
 }: ProvideEmailForLinkProps) => {
   const {
     register,
@@ -52,7 +54,7 @@ export const ProvideEmailForLink = ({
       handleSubmit(async (data) => {
         try {
           setLoading?.(true)
-          await mutateAsync({ email: data.email, isExternal })
+          await mutateAsync({ email: data.email, isExternal, yppVideoUrl })
           onSubmit(data.email)
         } catch (e) {
           const handledError = e.message

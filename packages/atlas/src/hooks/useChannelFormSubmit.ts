@@ -60,6 +60,7 @@ type CreateEditChannelSubmitParams = {
   data: CreateEditChannelData
   onUploadAssets?: (field: 'avatar.contentId' | 'cover.contentId', data: string) => void
   onCompleted?: () => void
+  onError?: () => void
   onTxSync?: (result: { block: number } & { channelId: string; assetsIds: ChannelAssetsIds }) => void | Promise<void>
   minimized?:
     | {
@@ -87,7 +88,7 @@ export const useCreateEditChannelSubmit = (initialChannelId?: string) => {
   )
 
   return useCallback(
-    async ({ data, onCompleted, onUploadAssets, minimized, onTxSync }: CreateEditChannelSubmitParams) => {
+    async ({ data, onCompleted, onUploadAssets, minimized, onTxSync, onError }: CreateEditChannelSubmitParams) => {
       if (!joystream) {
         ConsoleLogger.error('No Joystream instance! Has webworker been initialized?')
         return
@@ -245,6 +246,7 @@ export const useCreateEditChannelSubmit = (initialChannelId?: string) => {
                 data.collaboratorId,
                 proxyCallback(updateStatus)
               ),
+        onError: onError,
         onTxSync: async (result) => {
           onTxSync?.(result)
           return refetchDataAndUploadAssets(result)

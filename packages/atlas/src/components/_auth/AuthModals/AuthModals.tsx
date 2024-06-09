@@ -10,6 +10,8 @@ import { AccountSetup } from '../AccountSetup'
 import { EmailSetup } from '../EmailSetup'
 import { ExternalAccountSetup } from '../ExternalAccountSetup'
 import { ForgotPasswordModal } from '../ForgotPasswordModal/ForgotPasswordModal'
+import { YppFinishFlowModal } from '../YppFinishFlowModal'
+import { YppFirstFlowModal } from '../YppFirstFlowModal/YppFirstFlowModal'
 
 export const AuthModals = () => {
   const { authModalOpenName } = useAuthStore()
@@ -27,6 +29,7 @@ export const AuthModals = () => {
         <CreateChannelModal />
         <EmailSetup />
         <AccountSetup />
+        <YppFirstFlowModal />
       </>
     )
   }
@@ -35,6 +38,7 @@ export const AuthModals = () => {
     <>
       {accountType === 'internal' ? <AccountSetup /> : null}
       {accountType === 'external' ? <ExternalAccountSetup /> : null}
+      {accountType === 'ypp' ? <YppFinishFlowModal /> : null}
     </>
   )
 }

@@ -38,7 +38,14 @@ export type ExternalLogin = {
 
 export type LoginParams = InternalLogin | ExternalLogin
 
-export type AuthModals = 'logIn' | 'externalLogIn' | 'signUp' | 'createChannel' | 'forgotPassword' | 'emailSetup'
+export type AuthModals =
+  | 'logIn'
+  | 'externalLogIn'
+  | 'signUp'
+  | 'createChannel'
+  | 'forgotPassword'
+  | 'emailSetup'
+  | 'yppFirstFlow'
 
 type EncryptionArtifacts = {
   id: string

@@ -50,7 +50,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
         const activeMembership = data.memberships[0] || null
         setMemberId(activeMembership?.id)
         if (activeMembership && !activeMembership.channels.some((channel) => channel.id === channelId)) {
-          setActiveChannel(activeMembership.channels[0].id)
+          setActiveChannel(activeMembership.channels[0]?.id)
         }
       },
       skip: !currentUser?.joystreamAccountId,
