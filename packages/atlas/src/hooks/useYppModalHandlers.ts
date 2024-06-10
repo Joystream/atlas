@@ -52,14 +52,14 @@ export const useYppModalHandlers = () => {
   const formRef = useRef<YppSetupForm>({})
   const { displaySnackbar } = useSnackbar()
   const { currentUser } = useAuth()
-  const { memberId, refetchUserMemberships, setActiveChannel, channelId, isLoggedIn } = useUser()
+  const { memberId, refetchUserMemberships, setActiveChannel, channelId } = useUser()
   const createOrUpdateChannel = useCreateEditChannelSubmit(undefined)
   const {
     referrerId,
     utmSource,
     utmCampaign,
     utmContent,
-    actions: { setYtResponseData, setUtmSource, setUtmCampaign, setUtmContent },
+    actions: { setYtResponseData },
   } = useYppStore((store) => store, shallow)
   const createdChannelId = useRef<string | null>(null)
   const setReferrerId = useYppStore((store) => store.actions.setReferrerId)
@@ -127,8 +127,6 @@ export const useYppModalHandlers = () => {
         if (!COLLABORATOR_ID) {
           throw Error('Collaborator member id was not provided')
         }
-
-        console.log('hmmm', channelId, COLLABORATOR_ID)
 
         await createOrUpdateChannel({
           minimized: {

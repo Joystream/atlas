@@ -6,11 +6,6 @@ import confettiAnimation from '@/assets/animations/confetti.json'
 import { AppKV } from '@/components/AppKV'
 import { LottiePlayer } from '@/components/LottiePlayer'
 import { Text } from '@/components/Text'
-import {
-  ContentWrapper,
-  IllustrationWrapper,
-  LottieContainer,
-} from '@/components/_auth/SignUpModal/SignUpSteps/SignUpSuccessStep/SignUpSuccessStep.styles'
 import { AnimatedCoin } from '@/components/_crt/AnimatedCoin/AnimatedCoin'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -18,6 +13,8 @@ import { useMountEffect } from '@/hooks/useMountEffect'
 import { useSnackbar } from '@/providers/snackbars'
 
 import { CommonProps } from './types'
+
+import { ContentWrapper, IllustrationWrapper, LottieContainer } from '../../OnboardingProgressModal'
 
 type SignUpSuccessStepProps = {
   tokenName?: string

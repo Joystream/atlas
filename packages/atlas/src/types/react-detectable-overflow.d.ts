@@ -5,6 +5,7 @@ declare module 'react-detectable-overflow' {
     props: useOverflowDetectorProps
   ): {
     overflow: boolean
+    // @ts-ignore not important
     ref: import('react').MutableRefObject<T | null>
   }
 }

@@ -26,7 +26,6 @@ import { useGetYppSyncedChannels } from './useGetYppSyncedChannels'
 
 export const YppLandingView: FC = () => {
   const headTags = useHeadTags('YouTube Partner Program')
-  const yppModalOpenName = useYppStore((state) => state.yppModalOpenName)
   const setYppModalOpen = useYppStore((state) => state.actions.setYppModalOpenName)
   const { activeMembership, channelId } = useUser()
   const { setSelectedChannelId, setShouldContinueYppFlowAfterCreatingChannel } = useYppStore((store) => store.actions)
@@ -69,7 +68,6 @@ export const YppLandingView: FC = () => {
       navigate(absoluteRoutes.studio.yppDashboard())
       return
     }
-    console.log('wtf')
 
     if (!authModalOpenName) {
       trackYppSignInButtonClick()

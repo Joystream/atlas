@@ -8456,6 +8456,7 @@ export type Query = {
   tokens: Array<Token>
   tokensConnection: TokensConnection
   topSellingChannels: Array<TopSellingChannelsResult>
+  // @ts-ignore working branch
   totalJoystreamEarnings: EarningStatsOutput
   trailerVideoById?: Maybe<TrailerVideo>
   /** @deprecated Use trailerVideoById */
@@ -8463,6 +8464,7 @@ export type Query = {
   trailerVideos: Array<TrailerVideo>
   trailerVideosConnection: TrailerVideosConnection
   userById?: Maybe<User>
+
   /** @deprecated Use userById */
   userByUniqueInput?: Maybe<User>
   users: Array<User>

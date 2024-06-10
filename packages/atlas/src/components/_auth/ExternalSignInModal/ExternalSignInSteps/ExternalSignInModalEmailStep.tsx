@@ -47,13 +47,13 @@ export const ExternalSignInModalEmailStep: FC<SignInModalEmailStepProps> = ({
         const address = await registerAccount({
           type: 'external',
           email: data.email,
+          emailConfimationToken: '',
           address: userAddress,
           signature: (data) =>
             joystream?.signMessage({
               type: 'payload',
               data,
             }),
-          memberId,
         })
 
         if (address) {

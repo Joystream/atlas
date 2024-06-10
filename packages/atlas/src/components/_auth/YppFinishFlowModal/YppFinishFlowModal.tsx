@@ -284,7 +284,14 @@ const useYppFinishFlowModalHandlers = () => {
         }
       )
     },
-    [createNewMember, displaySnackbar, email, refetchCurrentUser, refetchUserMemberships]
+    [
+      createNewMember,
+      displaySnackbar,
+      email,
+      refetchCurrentUser,
+      refetchUserMemberships,
+      generateUniqueMemberHandleBasedOnInput,
+    ]
   )
 
   const createAccount = useCallback(
@@ -299,7 +306,6 @@ const useYppFinishFlowModalHandlers = () => {
         SentryLogger.error('Missing fields during account creation', 'AccountSetup', { form: formRef.current })
         return
       }
-      console.log('creating account', email, password, confirmationCode)
 
       await createNewOrionAccount({
         data: {
