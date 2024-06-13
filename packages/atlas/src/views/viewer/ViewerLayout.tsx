@@ -84,7 +84,8 @@ const locationToPageName = {
   '/membership/edit': 'Edit membership',
   '/member/': 'Member',
   '/notifications': 'Notifications',
-  '/marketplace': 'Marketplace',
+  '/crt-marketplace': 'CRT Marketplace',
+  '/nft-marketplace': 'NFT Marketplace',
   '/portfolio': 'Portfolio',
   '/ypp': 'YPP landing page',
   '/ypp-dashboard': 'YPP Dashboard',
@@ -221,7 +222,7 @@ const MiscUtils = () => {
           : Object.entries(locationToPageName).find(([key]) => location.pathname.includes(key))?.[1]
 
       //pages below will be tracked by the view components in order to include the additional params
-      if (['Channel', 'Category', 'Video', 'Marketplace'].some((page) => pageName?.includes(page))) {
+      if (['Channel', 'Category', 'Video'].some((page) => pageName?.includes(page))) {
         return
       }
       const [query, referrerChannel, utmSource, utmCampaign, utmContent, gState, gCode] = [
