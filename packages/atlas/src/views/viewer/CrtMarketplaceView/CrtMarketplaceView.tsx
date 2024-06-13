@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 
 import { CreatorTokenOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { TopMovingTokens } from '@/components/TopCrtMovers'
 import { TopEarningChannels } from '@/components/TopEarningChannels'
 import { AllTokensSection } from '@/components/_crt/AllTokensSection'
 import { FeaturedSection } from '@/components/_crt/FeaturedSection'
@@ -41,9 +42,16 @@ export const CrtMarketplaceView = () => {
 
       <TableFullWitdhtWrapper>
         <LimitedWidthContainer big noBottomPadding>
+          <TopMovingTokens />
+        </LimitedWidthContainer>
+      </TableFullWitdhtWrapper>
+
+      <TableFullWitdhtWrapper>
+        <LimitedWidthContainer big noBottomPadding>
           <TopEarningChannels withCrtOnly />
         </LimitedWidthContainer>
       </TableFullWitdhtWrapper>
+
       <AllTokensSection />
     </MarketplaceWrapper>
   )
