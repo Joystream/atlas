@@ -73,3 +73,63 @@ query GetTokenRevenueSharesCount($where: RevenueShareWhereInput) {
     totalCount
   }
 }
+
+query GetMarketplaceTokensCount($where: MarketplaceTokenWhereInput) {
+  getMarketplaceTokensCount(where: $where) {
+    count
+  }
+}
+
+query GetMarketplaceTokens($where: MarketplaceTokenWhereInput, $limit: Int, $offset: Int, $orderBy: [id_ASC!]) {
+  getMarketplaceTokens(where: $where, limit: $limit, orderBy: $orderBy, offset: $offset) {
+    ammVolume
+    liquidity
+    cumulativeRevenue
+    lastDayPriceChange
+    weeklyLiqChange
+    marketCap
+
+    id
+    accountsNum
+    symbol
+    isInviteOnly
+    deissued
+    status
+    createdAt
+    lastPrice
+    totalSupply
+    description
+    currentAmmSaleId
+    currentSaleId
+    # channelId
+    avatar {
+      ... on TokenAvatarObject {
+        avatarObject {
+          ...StorageDataObjectFields
+        }
+      }
+      ... on TokenAvatarUri {
+        avatarUri
+      }
+    }
+  }
+}
+
+query GetHotAndColdTokens($periodDays: Int!) {
+  hotAndColdTokens(periodDays: $periodDays) {
+    pricePercentageChange
+    resultType
+    creatorToken {
+      ...BasicCreatorToken
+    }
+  }
+}
+
+query GetTopSellingTokens($periodDays: Int!) {
+  topSellingToken(periodDays: $periodDays) {
+    creatorToken {
+      ...BasicCreatorToken
+    }
+    ammVolume
+  }
+}

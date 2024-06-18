@@ -1,13 +1,16 @@
 import { ReactElement, useEffect, useMemo, useRef } from 'react'
-import { Column, useFlexLayout, usePagination, useTable } from 'react-table'
+import { Column, useFlexLayout, usePagination, useSortBy, useTable } from 'react-table'
 import useDraggableScroll from 'use-draggable-scroll'
 
 import { TablePagination, TablePaginationProps } from '@/components/TablePagination'
 import { Text } from '@/components/Text'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useMountEffect } from '@/hooks/useMountEffect'
 
 import {
   AnchorRow,
+  AscIndicator,
+  DescIndicator,
   EmptyTableContainer,
   EmptyTableDescription,
   EmptyTableHeader,
@@ -37,6 +40,9 @@ export type TableProps<T = object> = {
   className?: string
   pagination?: TablePaginationProps
   minWidth?: number
+  onColumnSortClick?: (data?: { id: string; desc: boolean }) => void
+  sortSupportedColumnsIds?: string[]
+  defaultSorting?: [string, boolean] // [columnId, isDesc]
 }
 
 export const Table = <T extends object>({
@@ -52,6 +58,9 @@ export const Table = <T extends object>({
   interactive,
   getRowTo,
   minWidth = 300,
+  onColumnSortClick,
+  sortSupportedColumnsIds,
+  defaultSorting,
 }: TableProps<T>) => {
   const scrollRef = useRef<HTMLDivElement>(null)
   const { onMouseDown } = useDraggableScroll(scrollRef, { direction: 'horizontal' })
@@ -60,9 +69,41 @@ export const Table = <T extends object>({
     getTableBodyProps,
     headerGroups,
     page: rawPage,
+    setSortBy,
     setPageSize,
     prepareRow,
-  } = useTable({ columns, data, initialState: { pageSize } }, usePagination, useFlexLayout)
+    state: { sortBy },
+  } = useTable(
+    {
+      columns,
+      data,
+      initialState: { pageSize },
+      disableSortBy: !onColumnSortClick,
+      disableMultiSort: true,
+      manualSortBy: true,
+    },
+    ...(onColumnSortClick ? [useSortBy] : []),
+    useSortBy,
+    usePagination,
+    useFlexLayout
+  )
+
+  useMountEffect(() => {
+    if (defaultSorting) {
+      setSortBy([
+        {
+          id: defaultSorting[0],
+          desc: defaultSorting[1],
+        },
+      ])
+    }
+  })
+
+  useEffect(() => {
+    if (onColumnSortClick) {
+      onColumnSortClick(sortBy[0] as unknown as { id: string; desc: boolean })
+    }
+  }, [onColumnSortClick, sortBy])
 
   useEffect(() => {
     setPageSize(pageSize)
@@ -97,17 +138,36 @@ export const Table = <T extends object>({
                 <Thead className="table-header">
                   {headerGroups.map((headerGroup) => (
                     <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.getHeaderGroupProps().key}>
-                      {headerGroup.headers.map((column) => (
-                        <Th
-                          variant="h100"
-                          as="th"
-                          color="colorText"
-                          {...column.getHeaderProps({ style: { width: column.width } })}
-                          key={column.getHeaderProps().key}
-                        >
-                          {column.render('Header')}
-                        </Th>
-                      ))}
+                      {headerGroup.headers.map((column) => {
+                        const isSortingSupported =
+                          onColumnSortClick && sortSupportedColumnsIds
+                            ? sortSupportedColumnsIds.includes(column.id)
+                            : true
+
+                        return (
+                          <Th
+                            variant="h100"
+                            as="th"
+                            color="colorText"
+                            {...column.getHeaderProps({
+                              ...(isSortingSupported ? column.getSortByToggleProps({}) : {}),
+                              style: { width: column.width },
+                            })}
+                            key={column.getHeaderProps().key}
+                          >
+                            {column.render('Header')}{' '}
+                            {isSortingSupported ? (
+                              column.isSorted ? (
+                                column.isSortedDesc ? (
+                                  <DescIndicator />
+                                ) : (
+                                  <AscIndicator />
+                                )
+                              ) : null
+                            ) : null}
+                          </Th>
+                        )
+                      })}
                     </tr>
                   ))}
                 </Thead>

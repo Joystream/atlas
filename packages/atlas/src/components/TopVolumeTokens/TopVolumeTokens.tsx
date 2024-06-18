@@ -2,9 +2,8 @@ import styled from '@emotion/styled'
 import BN from 'bn.js'
 import { useMemo } from 'react'
 
-import { useGetHotAndColdTokensQuery } from '@/api/queries/__generated__/creatorTokens.generated'
+import { useGetTopSellingTokensQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { SvgEmptyStateIllustration } from '@/assets/illustrations'
-import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Section } from '@/components/Section/Section'
 import { TableProps } from '@/components/Table'
@@ -14,7 +13,7 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
-import { PercentageChangeIndicator } from '../PercentageChangeIndicator'
+import { JoyTokenIcon } from '../JoyTokenIcon'
 import {
   JoyAmountWrapper,
   SkeletonChannelContainer,
@@ -22,7 +21,7 @@ import {
 } from '../TopSellingChannelsTable/TopSellingChannelsTable.styles'
 import { TokenInfo } from '../_crt/CrtPortfolioTable'
 
-const getColumns = (interval: number): TableProps['columns'] => [
+const COLUMNS: TableProps['columns'] = [
   {
     Header: '',
     accessor: 'index',
@@ -34,13 +33,8 @@ const getColumns = (interval: number): TableProps['columns'] => [
     width: 5,
   },
   {
-    Header: () => <RightAlignedHeader>PRICE % {interval}D</RightAlignedHeader>,
-    accessor: 'weeklyPriceChange',
-    width: 4,
-  },
-  {
-    Header: () => <RightAlignedHeader>PRICE</RightAlignedHeader>,
-    accessor: 'price',
+    Header: () => <RightAlignedHeader>7D Volume</RightAlignedHeader>,
+    accessor: 'ammVolume',
     width: 4,
   },
 ]
@@ -51,14 +45,13 @@ const tableEmptyState = {
   icon: <SvgEmptyStateIllustration />,
 }
 
-export const TopMovingTokens = ({ interval, tableTitle }: { interval: number; tableTitle: string }) => {
-  const { data, loading } = useGetHotAndColdTokensQuery({
+export const TopVolumeTokens = () => {
+  const { data, loading } = useGetTopSellingTokensQuery({
     variables: {
-      periodDays: interval,
+      periodDays: 1,
     },
   })
-  const columns = getColumns(interval)
-  const { hotAndColdTokens } = data ?? {}
+  const { topSellingToken } = data ?? {}
 
   const lgMatch = useMediaMatch('lg')
   const mappedData = useMemo(() => {
@@ -83,29 +76,24 @@ export const TopMovingTokens = ({ interval, tableTitle }: { interval: number; ta
           ),
           channelId: null,
         }))
-      : hotAndColdTokens?.map((data, index) => ({
+      : topSellingToken?.map((data, index) => ({
           index: (
             <IndexText variant="t100" as="p" color="colorTextMuted">
               #{index + 1}{' '}
             </IndexText>
           ),
-          price: (
+          ammVolume: (
             <JoyAmountWrapper>
               <NumberFormat
                 icon={<JoyTokenIcon variant="gray" />}
                 variant="t200-strong"
                 as="p"
-                value={new BN(data.creatorToken.lastPrice ?? 0)}
+                value={new BN(data.ammVolume)}
                 margin={{ left: 1 }}
                 format="short"
                 withDenomination
                 denominationAlign="right"
               />
-            </JoyAmountWrapper>
-          ),
-          weeklyPriceChange: (
-            <JoyAmountWrapper>
-              <PercentageChangeIndicator value={data.pricePercentageChange} />
             </JoyAmountWrapper>
           ),
           token: (
@@ -118,9 +106,9 @@ export const TopMovingTokens = ({ interval, tableTitle }: { interval: number; ta
           ),
           channelId: data.creatorToken.channel?.channel.id,
         })) ?? []
-  }, [hotAndColdTokens, loading])
+  }, [topSellingToken, loading])
 
-  if (!loading && !hotAndColdTokens) {
+  if (!loading && !topSellingToken) {
     return null
   }
 
@@ -129,7 +117,7 @@ export const TopMovingTokens = ({ interval, tableTitle }: { interval: number; ta
       headerProps={{
         start: {
           type: 'title',
-          title: tableTitle,
+          title: `Top traded tokens by volume`,
         },
       }}
       contentProps={{
@@ -144,7 +132,7 @@ export const TopMovingTokens = ({ interval, tableTitle }: { interval: number; ta
             key="single"
             minWidth={350}
             emptyState={tableEmptyState}
-            columns={columns}
+            columns={COLUMNS}
             data={mappedData}
             doubleColumn={lgMatch}
             getRowTo={(idx) => absoluteRoutes.viewer.channel(mappedData[idx].channelId ?? '', { tab: 'Token' })}

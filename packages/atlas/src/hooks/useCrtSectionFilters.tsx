@@ -1,6 +1,9 @@
 import { useCallback, useMemo, useState } from 'react'
 
-import { CreatorTokenOrderByInput, CreatorTokenWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
+import {
+  MarketplaceTokenOrderByInput,
+  MarketplaceTokenWhereInput,
+} from '@/api/queries/__generated__/baseTypes.generated'
 import { SvgActionShoppingCart } from '@/assets/icons'
 import { FilterButtonOption, SectionFilter } from '@/components/FilterButton'
 
@@ -43,20 +46,36 @@ export const FILTERS: SectionFilter[] = [
 export const SORTING_FILTERS = [
   {
     label: 'Newest',
-    value: CreatorTokenOrderByInput.CreatedAtDesc,
+    value: MarketplaceTokenOrderByInput.CreatedAtDesc,
   },
   {
     label: 'Oldest',
-    value: CreatorTokenOrderByInput.CreatedAtAsc,
+    value: MarketplaceTokenOrderByInput.CreatedAtAsc,
   },
 ]
+
+export const sortMappings: Record<string, [MarketplaceTokenOrderByInput, MarketplaceTokenOrderByInput]> = {
+  token: [MarketplaceTokenOrderByInput.SymbolDesc, MarketplaceTokenOrderByInput.SymbolAsc],
+  createdAt: [MarketplaceTokenOrderByInput.CreatedAtDesc, MarketplaceTokenOrderByInput.CreatedAtAsc],
+  dailyPriceChange: [
+    MarketplaceTokenOrderByInput.LastDayPriceChangeDesc,
+    MarketplaceTokenOrderByInput.LastDayPriceChangeAsc,
+  ],
+  price: [MarketplaceTokenOrderByInput.LastPriceDesc, MarketplaceTokenOrderByInput.LastPriceAsc],
+  liquidityChange: [MarketplaceTokenOrderByInput.WeeklyLiqChangeDesc, MarketplaceTokenOrderByInput.WeeklyLiqChangeAsc],
+  liquidity: [MarketplaceTokenOrderByInput.LiquidityDesc, MarketplaceTokenOrderByInput.LiquidityAsc],
+  tradingVolume: [MarketplaceTokenOrderByInput.AmmVolumeDesc, MarketplaceTokenOrderByInput.AmmVolumeAsc],
+  marketCap: [MarketplaceTokenOrderByInput.MarketCapDesc, MarketplaceTokenOrderByInput.MarketCapAsc],
+  totalRevenue: [MarketplaceTokenOrderByInput.CumulativeRevenueDesc, MarketplaceTokenOrderByInput.CumulativeRevenueAsc],
+  holders: [MarketplaceTokenOrderByInput.AccountsNumDesc, MarketplaceTokenOrderByInput.AccountsNumAsc],
+}
 
 export const useCrtSectionFilters = () => {
   const [filters, setFilters] = useState<SectionFilter[]>(FILTERS)
   const [hasAppliedFilters, setHasAppliedFilters] = useState(false)
-  const [order, setOrder] = useState<CreatorTokenOrderByInput>(CreatorTokenOrderByInput.CreatedAtDesc)
+  const [order, _setOrder] = useState<MarketplaceTokenOrderByInput>(MarketplaceTokenOrderByInput.CreatedAtDesc)
 
-  const mappedFilters = useMemo((): CreatorTokenWhereInput => {
+  const mappedFilters = useMemo((): MarketplaceTokenWhereInput => {
     const mappedStatus =
       filters
         .find((filter) => filter.name === 'status')
@@ -65,28 +84,28 @@ export const useCrtSectionFilters = () => {
           switch (option.value) {
             case 'market':
               return {
-                currentAmmSale_isNull: false,
+                currentAmmSaleId_isNull: false,
               }
             case 'sale':
               return {
-                currentSale_isNull: false,
+                currentSaleId_isNull: false,
               }
             case 'inactive':
               return {
-                currentSale_isNull: true,
-                currentAmmSale_isNull: true,
+                currentSaleId_isNull: true,
+                currentAmmSaleId_isNull: true,
               }
             default:
               return {}
           }
-        }, [] as CreatorTokenWhereInput[]) ?? []
+        }, [] as MarketplaceTokenWhereInput[]) ?? []
 
     const otherFilters = filters.find((filter) => filter.name === 'other')
     const isWhitelistedExcluded = otherFilters?.options?.some((option) => option.value === 'open' && option.applied)
 
     setHasAppliedFilters(Boolean(isWhitelistedExcluded || mappedStatus.length))
 
-    const commonFilters: CreatorTokenWhereInput = {
+    const commonFilters: MarketplaceTokenWhereInput = {
       ...(isWhitelistedExcluded ? { isInviteOnly_eq: false } : {}),
     }
 
@@ -100,6 +119,16 @@ export const useCrtSectionFilters = () => {
     }
   }, [filters])
 
+  const setOrder = useCallback((row?: { id: string; desc: boolean }) => {
+    if (row && row.id in sortMappings) {
+      const options = sortMappings[row.id]
+      _setOrder(options[row.desc ? 0 : 1])
+      return
+    }
+
+    _setOrder(MarketplaceTokenOrderByInput.CreatedAtDesc)
+  }, [])
+
   const clearFilters = useCallback(() => {
     setFilters(FILTERS)
   }, [])
@@ -109,6 +138,7 @@ export const useCrtSectionFilters = () => {
     rawFilters: filters,
     order,
     hasAppliedFilters,
+    sortSupportedColumns: Object.keys(sortMappings),
     actions: {
       setOrder,
       onApplyFilters: setFilters,

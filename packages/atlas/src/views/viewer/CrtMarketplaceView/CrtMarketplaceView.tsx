@@ -4,6 +4,7 @@ import { CreatorTokenOrderByInput } from '@/api/queries/__generated__/baseTypes.
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { TopMovingTokens } from '@/components/TopCrtMovers'
 import { TopEarningChannels } from '@/components/TopEarningChannels'
+import { TopVolumeTokens } from '@/components/TopVolumeTokens'
 import { AllTokensSection } from '@/components/_crt/AllTokensSection'
 import { FeaturedSection } from '@/components/_crt/FeaturedSection'
 import { useHeadTags } from '@/hooks/useHeadTags'
@@ -27,22 +28,21 @@ export const CrtMarketplaceView = () => {
         }}
       />
 
-      {/* <FeaturedSection */}
-      {/*   title="Featured token markets" */}
-      {/*   variables={{ */}
-      {/*     where: { */}
-      {/*       currentAmmSale: { */}
-      {/*         id_isNull: false, */}
-      {/*       }, */}
-      {/*     }, */}
-      {/*     orderBy: CreatorTokenOrderByInput.CurrentAmmSaleMintedByAmmDesc, */}
-      {/*   }} */}
-      {/* /> */}
-      {/**/}
+      <TableFullWitdhtWrapper>
+        <LimitedWidthContainer big noBottomPadding>
+          <TopMovingTokens interval={1} tableTitle="Hot tokens" />
+        </LimitedWidthContainer>
+      </TableFullWitdhtWrapper>
 
       <TableFullWitdhtWrapper>
         <LimitedWidthContainer big noBottomPadding>
-          <TopMovingTokens />
+          <TopMovingTokens interval={7} tableTitle="Top Movers" />
+        </LimitedWidthContainer>
+      </TableFullWitdhtWrapper>
+
+      <TableFullWitdhtWrapper>
+        <LimitedWidthContainer big noBottomPadding>
+          <TopVolumeTokens />
         </LimitedWidthContainer>
       </TableFullWitdhtWrapper>
 

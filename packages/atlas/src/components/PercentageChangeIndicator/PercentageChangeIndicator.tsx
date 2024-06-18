@@ -13,25 +13,35 @@ type PercentageChangeIndicatorProps = {
 export const PercentageChangeIndicator = ({ value }: PercentageChangeIndicatorProps) => {
   const isNeg = value < 0
   return (
-    <Container isNeg={isNeg} alignItems="center">
-      {isNeg ? <SvgActionArrowBottom /> : <SvgActionArrowTop />}
+    <Container changeValue={value} alignItems="center">
+      {value === 0 ? null : isNeg ? <SvgActionArrowBottom /> : <SvgActionArrowTop />}
       <Text variant="h200" as="p">
-        {Math.abs(value)}%
+        {Math.abs(value).toPrecision(2)}%
       </Text>
     </Container>
   )
 }
 
-const Container = styled(FlexBox)<{ isNeg?: boolean }>`
+const Container = styled(FlexBox)<{ changeValue: number }>`
   p {
-    color: ${(props) => (props.isNeg ? cVar('colorTextError') : cVar('colorTextSuccess'))};
+    color: ${(props) =>
+      props.changeValue < 0
+        ? cVar('colorTextError')
+        : props.changeValue > 0
+        ? cVar('colorTextSuccess')
+        : cVar('colorText')};
   }
 
   svg {
     ${square(12)};
 
     path {
-      fill: ${(props) => (props.isNeg ? cVar('colorTextError') : cVar('colorTextSuccess'))};
+      fill: ${(props) =>
+        props.changeValue < 0
+          ? cVar('colorTextError')
+          : props.changeValue > 0
+          ? cVar('colorTextSuccess')
+          : cVar('colorText')};
     }
   }
 `

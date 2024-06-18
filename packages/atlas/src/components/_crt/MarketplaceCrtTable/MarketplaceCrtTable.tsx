@@ -5,6 +5,7 @@ import { useMemo } from 'react'
 import { TokenStatus } from '@/api/queries/__generated__/baseTypes.generated'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { NumberFormat } from '@/components/NumberFormat'
+import { PercentageChangeIndicator } from '@/components/PercentageChangeIndicator'
 import { Table, TableProps } from '@/components/Table'
 import { ColumnBox } from '@/components/Table/Table.styles'
 import { Text } from '@/components/Text'
@@ -30,12 +31,17 @@ export const tableLoadingData = Array.from({ length: 10 }, () => ({
 }))
 
 const COLUMNS: TableProps['columns'] = [
-  { Header: 'Token', accessor: 'token', width: 300 },
-  { Header: 'Status', accessor: 'status', width: 100 },
-  { Header: 'Date created', accessor: 'createdAt', width: 100 },
-  { Header: 'Market cap', accessor: 'marketCap', width: 100 },
-  { Header: 'Total rev.', accessor: 'totalRevenue', width: 100 },
-  { Header: 'Holders', accessor: 'holders', width: 100 },
+  { Header: 'Token', accessor: 'token', width: 1 },
+  { Header: 'Date created', accessor: 'createdAt', width: 1 },
+  { Header: 'Price % 24h', accessor: 'dailyPriceChange', width: 1 },
+  { Header: 'Price', accessor: 'price', width: 1 },
+  { Header: 'Liq % 7d', accessor: 'liquidityChange', width: 1 },
+  { Header: 'Liquidity', accessor: 'liquidity', width: 1 },
+  { Header: 'Tranding vol.', accessor: 'tradingVolume', width: 1 },
+  { Header: 'Status', accessor: 'status', width: 1 },
+  { Header: 'Market cap', accessor: 'marketCap', width: 1 },
+  { Header: 'Total rev.', accessor: 'totalRevenue', width: 1 },
+  { Header: 'Holders', accessor: 'holders', width: 1 },
 ]
 
 export type MarketplaceToken = {
@@ -44,28 +50,79 @@ export type MarketplaceToken = {
   isVerified: boolean
   status: TokenStatus
   createdAt: Date
-  marketCap: number
+  marketCap: BN
   totalRevenue: BN
   holdersNum: number
   channelId: string
+  lastDayPriceChange: number
+  ammVolume: BN
+  weeklyLiqChange: number
+  liquidity: number
+  lastPrice: BN
 }
 
 export type MarketplaceCrtTableProps = {
   data: MarketplaceToken[]
   isLoading: boolean
   emptyState?: TableProps['emptyState']
-} & Pick<TableProps, 'pagination' | 'pageSize' | 'getRowTo' | 'interactive'>
+} & Pick<
+  TableProps,
+  | 'pagination'
+  | 'pageSize'
+  | 'getRowTo'
+  | 'interactive'
+  | 'onColumnSortClick'
+  | 'sortSupportedColumnsIds'
+  | 'defaultSorting'
+>
 
 export const MarketplaceCrtTable = ({ data, emptyState, isLoading, ...tableProps }: MarketplaceCrtTableProps) => {
   const mappingData = useMemo(() => {
     return data.map((row) => ({
       token: <TokenInfo {...row} />,
-      status: <CrtStatus status={row.status} />,
       createdAt: (
         <Text variant="t100" as="p">
           {formatDate(row.createdAt)}
         </Text>
       ),
+      dailyPriceChange: (
+        <span>
+          <PercentageChangeIndicator value={row.lastDayPriceChange} />
+        </span>
+      ),
+      price: (
+        <NumberFormat
+          icon={<JoyTokenIcon size={16} variant="gray" />}
+          format="short"
+          withDenomination
+          value={row.lastPrice}
+          as="p"
+        />
+      ),
+      liquidityChange: (
+        <span>
+          <PercentageChangeIndicator value={row.weeklyLiqChange} />
+        </span>
+      ),
+      liquidity: (
+        <NumberFormat
+          icon={<JoyTokenIcon size={16} variant="gray" />}
+          format="short"
+          withDenomination
+          value={row.liquidity}
+          as="p"
+        />
+      ),
+      tradingVolume: (
+        <NumberFormat
+          icon={<JoyTokenIcon size={16} variant="gray" />}
+          format="short"
+          withDenomination
+          value={row.ammVolume}
+          as="p"
+        />
+      ),
+      status: <CrtStatus status={row.status} />,
       marketCap: (
         <NumberFormat
           icon={<JoyTokenIcon size={16} variant="gray" />}
@@ -123,19 +180,27 @@ const StyledTable = styled(Table)<{ isEmpty?: boolean }>`
     background-color: transparent;
   }
 
+  th:nth-child(n + 2),
   th:nth-child(n + 3),
   th:nth-child(n + 4),
-  th:nth-child(n + 5) {
+  th:nth-child(n + 5),
+  th:nth-child(n + 6),
+  th:nth-child(n + 7) {
     justify-content: end;
   }
 
+  td:nth-child(n + 2),
   td:nth-child(n + 3),
   td:nth-child(n + 4),
-  td:nth-child(n + 5) {
+  td:nth-child(n + 5),
+  td:nth-child(n + 6),
+  td:nth-child(n + 7) {
     align-items: end;
+    text-align: right;
 
     > div {
       align-items: end;
+      justify-content: end;
     }
   }
 `
