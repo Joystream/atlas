@@ -101,7 +101,7 @@ query GetMarketplaceTokens($where: MarketplaceTokenWhereInput, $limit: Int, $off
     description
     currentAmmSaleId
     currentSaleId
-    # channelId
+    channelId
     avatar {
       ... on TokenAvatarObject {
         avatarObject {

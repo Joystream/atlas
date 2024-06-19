@@ -555,6 +555,7 @@ export type GetMarketplaceTokensQuery = {
     description?: string | null
     currentAmmSaleId?: string | null
     currentSaleId?: string | null
+    channelId?: string | null
     avatar?:
       | {
           __typename?: 'TokenAvatarObject'
@@ -1463,6 +1464,7 @@ export const GetMarketplaceTokensDocument = gql`
       description
       currentAmmSaleId
       currentSaleId
+      channelId
       avatar {
         ... on TokenAvatarObject {
           avatarObject {

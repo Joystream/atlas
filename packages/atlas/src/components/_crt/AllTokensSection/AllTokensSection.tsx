@@ -44,6 +44,7 @@ export const AllTokensSection = () => {
         weeklyLiqChange,
         lastDayPriceChange,
         marketCap,
+        channelId,
       }) => ({
         createdAt: new Date(createdAt),
         totalRevenue: new BN(cumulativeRevenue ?? 0),
@@ -51,7 +52,7 @@ export const AllTokensSection = () => {
         isVerified: false,
         marketCap: new BN(marketCap ?? 0),
         status,
-        channelId: '', //channel?.channel.id ?? '',
+        channelId,
         lastPrice: new BN(lastPrice ?? 0),
         tokenName: symbol ?? 'N/A',
         tokenTitle: symbol ?? 'N/A',
