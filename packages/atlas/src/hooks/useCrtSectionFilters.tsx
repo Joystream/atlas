@@ -70,10 +70,15 @@ export const sortMappings: Record<string, [MarketplaceTokenOrderByInput, Marketp
   holders: [MarketplaceTokenOrderByInput.AccountsNumDesc, MarketplaceTokenOrderByInput.AccountsNumAsc],
 }
 
-export const useCrtSectionFilters = () => {
+export const useCrtSectionFilters = ({
+  orderBy,
+  setOrderBy: _setOrder,
+}: {
+  orderBy?: MarketplaceTokenOrderByInput
+  setOrderBy: (val: MarketplaceTokenOrderByInput) => void
+}) => {
   const [filters, setFilters] = useState<SectionFilter[]>(FILTERS)
   const [hasAppliedFilters, setHasAppliedFilters] = useState(false)
-  const [order, _setOrder] = useState<MarketplaceTokenOrderByInput>(MarketplaceTokenOrderByInput.CreatedAtDesc)
 
   const mappedFilters = useMemo((): MarketplaceTokenWhereInput => {
     const mappedStatus =
@@ -119,15 +124,18 @@ export const useCrtSectionFilters = () => {
     }
   }, [filters])
 
-  const setOrder = useCallback((row?: { id: string; desc: boolean }) => {
-    if (row && row.id in sortMappings) {
-      const options = sortMappings[row.id]
-      _setOrder(options[row.desc ? 0 : 1])
-      return
-    }
+  const setOrder = useCallback(
+    (row?: { id: string; desc: boolean }) => {
+      if (row && row.id in sortMappings) {
+        const options = sortMappings[row.id]
+        _setOrder(options[row.desc ? 0 : 1])
+        return
+      }
 
-    _setOrder(MarketplaceTokenOrderByInput.CreatedAtDesc)
-  }, [])
+      _setOrder(MarketplaceTokenOrderByInput.CreatedAtDesc)
+    },
+    [_setOrder]
+  )
 
   const clearFilters = useCallback(() => {
     setFilters(FILTERS)
@@ -136,9 +144,9 @@ export const useCrtSectionFilters = () => {
   return {
     creatorTokenWhereInput: mappedFilters,
     rawFilters: filters,
-    order,
+    orderBy,
     hasAppliedFilters,
-    sortSupportedColumns: Object.keys(sortMappings),
+    sortMappings,
     actions: {
       setOrder,
       onApplyFilters: setFilters,

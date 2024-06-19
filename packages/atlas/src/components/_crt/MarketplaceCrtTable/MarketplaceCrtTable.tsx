@@ -31,17 +31,17 @@ export const tableLoadingData = Array.from({ length: 10 }, () => ({
 }))
 
 const COLUMNS: TableProps['columns'] = [
-  { Header: 'Token', accessor: 'token', width: 1 },
-  { Header: 'Date created', accessor: 'createdAt', width: 1 },
-  { Header: 'Price % 24h', accessor: 'dailyPriceChange', width: 1 },
-  { Header: 'Price', accessor: 'price', width: 1 },
-  { Header: 'Liq % 7d', accessor: 'liquidityChange', width: 1 },
-  { Header: 'Liquidity', accessor: 'liquidity', width: 1 },
-  { Header: 'Tranding vol.', accessor: 'tradingVolume', width: 1 },
+  { Header: 'Token', accessor: 'token', width: 2 },
+  { Header: 'Date created', accessor: 'createdAt', width: 2 },
+  { Header: 'Price % 24h', accessor: 'dailyPriceChange', width: 2 },
+  { Header: 'Price', accessor: 'price', width: 2 },
+  { Header: 'Liq % 7d', accessor: 'liquidityChange', width: 2 },
+  { Header: 'Liquidity', accessor: 'liquidity', width: 2 },
+  { Header: 'Tranding vol.', accessor: 'tradingVolume', width: 2 },
   { Header: 'Status', accessor: 'status', width: 1 },
-  { Header: 'Market cap', accessor: 'marketCap', width: 1 },
-  { Header: 'Total rev.', accessor: 'totalRevenue', width: 1 },
-  { Header: 'Holders', accessor: 'holders', width: 1 },
+  { Header: 'Market cap', accessor: 'marketCap', width: 2 },
+  { Header: 'Total rev.', accessor: 'totalRevenue', width: 2 },
+  { Header: 'Holders', accessor: 'holders', width: 2 },
 ]
 
 export type MarketplaceToken = {
@@ -152,7 +152,7 @@ export const MarketplaceCrtTable = ({ data, emptyState, isLoading, ...tableProps
   return (
     <>
       <StyledTable
-        minWidth={730}
+        minWidth={1200}
         isEmpty={!mappingData.length}
         columns={COLUMNS}
         data={isLoading ? tableLoadingData : mappingData}

@@ -1,29 +1,32 @@
-import {
-  MarketplaceTokenOrderByInput,
-  MarketplaceTokenWhereInput,
-} from '@/api/queries/__generated__/baseTypes.generated'
+import { MarketplaceTokenOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import {
   useGetMarketplaceTokensCountQuery,
   useGetMarketplaceTokensQuery,
 } from '@/api/queries/__generated__/creatorTokens.generated'
 import { SentryLogger } from '@/utils/logs'
 
-import { useQueryPagination } from './usePagination'
+import { useCrtSectionFilters } from './useCrtSectionFilters'
+import { useQueryTableState } from './useQueryTableState'
 
-export const useTokensPagination = ({
-  where,
-  orderBy,
-  initialPageSize = 10,
-}: {
-  where?: MarketplaceTokenWhereInput
-  orderBy?: MarketplaceTokenOrderByInput[]
-  initialPageSize?: number
-}) => {
-  const pagination = useQueryPagination({ initialPerPage: initialPageSize })
+export const useTokensPagination = ({ initialPageSize = 10 }: { initialPageSize?: number }) => {
+  // TODO: we should add where clause to url params as well, but currently they are so small that it was omitted
+  const pagination = useQueryTableState<MarketplaceTokenOrderByInput>({
+    initialPerPage: initialPageSize,
+    initialOrderBy: MarketplaceTokenOrderByInput.LastDayPriceChangeDesc,
+  })
+  const { setOrderBy, orderBy } = pagination
+  const {
+    creatorTokenWhereInput,
+    hasAppliedFilters,
+    rawFilters,
+    sortMappings,
+    actions: { onApplyFilters, setOrder, clearFilters },
+  } = useCrtSectionFilters({ orderBy, setOrderBy })
+
   const { data, loading } = useGetMarketplaceTokensQuery({
     variables: {
-      where,
-      orderBy,
+      where: creatorTokenWhereInput,
+      orderBy: [orderBy ?? ''],
       offset: pagination.currentPage * pagination.perPage,
       limit: pagination.perPage,
     },
@@ -31,27 +34,9 @@ export const useTokensPagination = ({
       SentryLogger.error('Failed to fetch tokens query', 'useTokensPagination', error)
     },
   })
-  // const data = useGetMarketplaceTokens({
-  //         where,
-  //     orderBy,
-  //     // offset: pagination.currentPage * pagination.perPage,
-  //     limit: pagination.perPage,
-  // })
-  // const { data, loading } = useGetBasicCreatorTokensQuery({
-  //   notifyOnNetworkStatusChange: true,
-  //   variables: {
-  //     where,
-  //     orderBy,
-  //     offset: pagination.currentPage * pagination.perPage,
-  //     limit: pagination.perPage,
-  //   },
-  //   onError: (error) => {
-  //     SentryLogger.error('Failed to fetch tokens query', 'useTokensPagination', error)
-  //   },
-  // })
   const { data: countData, loading: loadingCount } = useGetMarketplaceTokensCountQuery({
     variables: {
-      where,
+      where: creatorTokenWhereInput,
     },
   })
 
@@ -60,5 +45,13 @@ export const useTokensPagination = ({
     tokens: data?.getMarketplaceTokens,
     totalCount: countData?.getMarketplaceTokensCount.count ?? 0,
     isLoading: loading || loadingCount,
+    creatorTokenWhereInput,
+    order: orderBy,
+    hasAppliedFilters,
+    rawFilters,
+    sortMappings,
+    onApplyFilters,
+    setOrder,
+    clearFilters,
   }
 }

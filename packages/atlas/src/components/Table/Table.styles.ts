@@ -8,22 +8,22 @@ import { Text } from '@/components/Text'
 import { cVar, sizes, square } from '@/styles'
 
 export const DescIndicator = styled(SvgActionArrowBottom)`
-  ${square(12)};
+  ${square(16)};
 
-  maring-left: 4px;
+  margin-right: 2px;
 
   path {
-    fill: ${cVar('colorText')};
+    fill: ${cVar('colorTextPrimary')};
   }
 `
 
 export const AscIndicator = styled(SvgActionArrowTop)`
-  ${square(12)};
+  ${square(16)};
 
-  maring-left: 4px;
+  margin-right: 2px;
 
   path {
-    fill: ${cVar('colorText')};
+    fill: ${cVar('colorTextPrimary')};
   }
 `
 

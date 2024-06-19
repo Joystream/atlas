@@ -100,7 +100,7 @@ export const Table = <T extends object>({
   })
 
   useEffect(() => {
-    if (onColumnSortClick) {
+    if (onColumnSortClick && sortBy.length) {
       onColumnSortClick(sortBy[0] as unknown as { id: string; desc: boolean })
     }
   }, [onColumnSortClick, sortBy])
@@ -155,7 +155,6 @@ export const Table = <T extends object>({
                             })}
                             key={column.getHeaderProps().key}
                           >
-                            {column.render('Header')}{' '}
                             {isSortingSupported ? (
                               column.isSorted ? (
                                 column.isSortedDesc ? (
@@ -165,6 +164,7 @@ export const Table = <T extends object>({
                                 )
                               ) : null
                             ) : null}
+                            {column.render('Header')}
                           </Th>
                         )
                       })}

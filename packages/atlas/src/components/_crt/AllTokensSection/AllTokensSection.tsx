@@ -7,25 +7,28 @@ import { Section } from '@/components/Section/Section'
 import { Button } from '@/components/_buttons/Button'
 import { MarketplaceCrtTable } from '@/components/_crt/MarketplaceCrtTable'
 import { absoluteRoutes } from '@/config/routes'
-import { useCrtSectionFilters } from '@/hooks/useCrtSectionFilters'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useTokensPagination } from '@/hooks/useTokensPagniation'
 
 export const AllTokensSection = () => {
   const smMatch = useMediaMatch('sm')
+
   const {
-    creatorTokenWhereInput,
-    order,
+    tokens,
+    currentPage,
+    setCurrentPage,
+    isLoading,
+    totalCount,
+    setPerPage,
+    perPage,
+    onApplyFilters,
     hasAppliedFilters,
     rawFilters,
-    sortSupportedColumns,
-    actions: { onApplyFilters, setOrder, clearFilters },
-  } = useCrtSectionFilters()
-
-  const { tokens, currentPage, setCurrentPage, isLoading, totalCount, setPerPage, perPage } = useTokensPagination({
-    where: creatorTokenWhereInput,
-    orderBy: [order],
-  })
+    sortMappings,
+    setOrder,
+    orderBy,
+    clearFilters,
+  } = useTokensPagination({})
 
   const tableData =
     tokens?.map(
@@ -54,10 +57,11 @@ export const AllTokensSection = () => {
         tokenTitle: symbol ?? 'N/A',
         ammVolume: new BN(ammVolume ?? 0),
         liquidity: liquidity ?? 0,
-        weeklyLiqChange: +weeklyLiqChange,
-        lastDayPriceChange: +lastDayPriceChange,
+        weeklyLiqChange: +(weeklyLiqChange ?? 0),
+        lastDayPriceChange: +(lastDayPriceChange ?? 0),
       })
     ) ?? []
+  const currentSortingTableColumn = Object.entries(sortMappings).find(([, mapping]) => mapping.includes(orderBy))
 
   return (
     <Section
@@ -86,9 +90,13 @@ export const AllTokensSection = () => {
                   interactive
                   isLoading={isLoading}
                   pageSize={perPage}
+                  defaultSorting={
+                    currentSortingTableColumn
+                      ? [currentSortingTableColumn[0], currentSortingTableColumn[1][0] === orderBy]
+                      : undefined
+                  }
                   onColumnSortClick={setOrder}
-                  defaultSorting={['holders', true]}
-                  sortSupportedColumnsIds={sortSupportedColumns}
+                  sortSupportedColumnsIds={Object.keys(sortMappings)}
                   pagination={{
                     setPerPage,
                     totalCount,
