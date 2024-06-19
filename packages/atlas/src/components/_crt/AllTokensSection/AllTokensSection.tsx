@@ -52,7 +52,7 @@ export const AllTokensSection = () => {
         isVerified: false,
         marketCap: new BN(marketCap ?? 0),
         status,
-        channelId,
+        channelId: channelId ?? '',
         lastPrice: new BN(lastPrice ?? 0),
         tokenName: symbol ?? 'N/A',
         tokenTitle: symbol ?? 'N/A',
