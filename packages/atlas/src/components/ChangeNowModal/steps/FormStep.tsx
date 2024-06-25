@@ -19,7 +19,6 @@ import { useSubscribeAccountBalance } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { square } from '@/styles'
 import {
-  Currency,
   JOYSTREAM_CHANGENOW_LEGACY_TICKER,
   JOYSTREAM_CHANGENOW_TICKER,
   changeNowService,
@@ -339,24 +338,28 @@ export const FormStep = ({ setPrimaryButtonProps, onSubmit, type, initialValues 
   )
 }
 
-type CurrencyInputProps = {
-  currencies: ComboBoxProps<{ value: string } & Currency>['items']
-  initialCurrency?: ComboBoxProps<{ value: string } & Currency>['initialSelectedItem']
+type CurrencyInputProps<T> = {
+  currencies: ComboBoxProps<{ value: string } & T>['items']
+  initialCurrency?: ComboBoxProps<{ value: string } & T>['initialSelectedItem']
+  currency?: string
   lockedCurrency?: string
   onCurrencySelect: (value: string) => void
   isLoading?: boolean
 } & TokenInputProps
 
-const CurrencyInput = ({
+export const CurrencyInput = <T extends { value: string }>({
   currencies,
   onCurrencySelect,
   lockedCurrency,
   isLoading,
+  currency,
   initialCurrency,
   ...tokenProps
-}: CurrencyInputProps) => {
+}: CurrencyInputProps<T>) => {
   const [sel, setSel] = useState<string | undefined>(initialCurrency?.value)
-  const selected = currencies?.find((opt) => opt.value.toLowerCase() === (lockedCurrency ?? sel)?.toLowerCase())
+  const selected = currencies?.find(
+    (opt) => opt.value.toLowerCase() === (lockedCurrency ?? currency ?? sel)?.toLowerCase()
+  )
   return (
     <InputGrid>
       <TokenInput {...tokenProps} nodeStart={<div />} nodeEnd={isLoading ? <StyledSpinner /> : <div />} />
@@ -368,8 +371,8 @@ const CurrencyInput = ({
         disabled={!!lockedCurrency}
         placeholder="BTC"
         onSelectedItemChange={(e) => {
-          setSel(e?.legacyTicker ?? '')
-          onCurrencySelect(e?.legacyTicker ?? '')
+          setSel(e?.value ?? '')
+          onCurrencySelect(e?.value ?? '')
         }}
         items={currencies}
       />
