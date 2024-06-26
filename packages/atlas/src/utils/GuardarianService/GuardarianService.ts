@@ -1,7 +1,12 @@
 import { axiosInstance } from '@/api/axios'
 import { GUARDARIAN_PUBLIC_API_KEY } from '@/config/env'
 
-import { GuardarianCountry, GuardarianCurrencies, GuardarianEstimation } from './GuardarianService.types'
+import {
+  GuardarianCountry,
+  GuardarianCreateTransactionResponse,
+  GuardarianCurrencies,
+  GuardarianEstimation,
+} from './GuardarianService.types'
 
 type TransactionType = 'sell' | 'buy'
 
@@ -109,62 +114,75 @@ class GuardarianService {
     )
   }
 
-  // createExchangeTransaction({
-  //   refundAddress,
-  //   addressToBePaid,
-  //   currency,
-  //   amount,
-  //   type,
-  //   contactEmail,
-  //   rateId,
-  //   userId,
-  // }: {
-  //   amount: number
-  //   currency: Currency
-  //   addressToBePaid: string
-  //   refundAddress?: string
-  //   type: TransactionType
-  //   contactEmail?: string
-  //   rateId: string
-  //   userId?: string
-  // }) {
-  //   const isSellingJoy = type === 'sell'
-  //   const fromCurrency = isSellingJoy ? JOYSTREAM_CHANGENOW_TICKER : currency.ticker
-  //   const toCurrency = isSellingJoy ? currency.ticker : JOYSTREAM_CHANGENOW_TICKER
-  //   const fromNetwork = isSellingJoy ? JOYSTREAM_CHANGENOW_NETWORK : currency.network
-  //   const toNetwork = isSellingJoy ? currency.network : JOYSTREAM_CHANGENOW_NETWORK
-  //
-  //   return axiosInstance.post<ExchangeTransaction>(
-  //     'https://api.changenow.io/v2/exchange',
-  //     {
-  //       fromCurrency,
-  //       fromNetwork,
-  //       toCurrency,
-  //       toNetwork,
-  //       contactEmail,
-  //       fromAmount: String(amount),
-  //       address: addressToBePaid,
-  //       refundAddress,
-  //       flow: 'fixed-rate',
-  //       type: 'direct',
-  //       rateId,
-  //       userId,
-  //     },
-  //     {
-  //       headers: {
-  //         'x-changenow-api-key': this._apiKey,
-  //       },
-  //     }
-  //   )
-  // }
+  createTransaction({
+    from,
+    to,
+    amount,
+    extraId,
+    billingInfo,
+  }: {
+    amount: number
+    from: {
+      currency: string
+      network?: string
+    }
+    to: {
+      currency: string
+      network?: string
+    }
+    extraId?: string
+    billingInfo: {
+      email: string
+      country: string
+      region: string
+      city: string
+      street: string
+      apartment: string
+      postIndex: string
+      firstName: string
+      lastName: string
+      dob: string
+    }
+  }) {
+    console.log('inside', from, to)
+    return axiosInstance.post<GuardarianCreateTransactionResponse>(
+      `${GUARDARIAN_URL}/transaction`,
+      {
+        from_amount: amount,
+        from_currency: from.currency,
+        to_currency: to.currency,
+        from_network: from.network,
+        to_network: to.network,
+        payout_info: {
+          extra_id: extraId,
+        },
+        billing_info: {
+          country_alpha_2: billingInfo.country,
+          region: billingInfo.region,
+          city: billingInfo.city,
+          street_address: billingInfo.street,
+          apt_number: billingInfo.apartment,
+          post_index: billingInfo.postIndex,
+          first_name: billingInfo.firstName,
+          last_name: billingInfo.lastName,
+          date_of_birthday: billingInfo.dob,
+        },
+      },
+      {
+        headers: {
+          'x-api-key': this._apiKey,
+        },
+      }
+    )
+  }
 
-  // getTransactionStatus(id: string) {
-  //   return axiosInstance.get<ExchangeTransactionStatus>(`https://api.changenow.io/v2/exchange/by-id?id=${id}`, {
-  //     headers: {
-  //       'x-changenow-api-key': this._apiKey,
-  //     },
-  //   })
-  // }
+  getTransactionStatus(id: string) {
+    return axiosInstance.get<GuardarianCreateTransactionResponse>(`${GUARDARIAN_URL}/transaction/${id}`, {
+      headers: {
+        'x-api-key': this._apiKey,
+      },
+    })
+  }
 }
 
 export const guardarianService = new GuardarianService(GUARDARIAN_PUBLIC_API_KEY)

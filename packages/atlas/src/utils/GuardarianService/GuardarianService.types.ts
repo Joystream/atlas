@@ -73,3 +73,83 @@ export type GuardarianEstimation = {
   value: string
   estimated_exchange_rate: string
 }
+
+export type GuardarianCreateTransactionResponse = {
+  id: number
+  status: string
+  email: string
+  errors: Error[]
+  status_details: string | null
+  from_currency: string
+  initial_from_currency: string
+  from_network: string
+  from_currency_with_network: string
+  from_amount: number
+  deposit_type: string
+  payout_type: string
+  expected_from_amount: number
+  initial_expected_from_amount: number
+  to_currency: string
+  to_network: string
+  to_currency_with_network: string
+  to_amount: number
+  output_hash: string
+  expected_to_amount: number
+  location: string
+  created_at: string
+  updated_at: string
+  partner_id: number
+  external_partner_link_id: string
+  from_amount_in_eur: number
+  customer_payout_address_changeable: boolean
+  estimate_breakdown: EstimateBreakdown
+  payout: Payout
+  deposit_payment_category: string
+  payout_payment_category: string
+  redirect_url: string
+  preauth_token: string
+  skip_choose_payout_address: boolean
+  skip_choose_payment_category: boolean
+}
+
+export type Error = {
+  code: string
+  reason: string
+}
+
+export type EstimateBreakdown = {
+  toAmount: number
+  fromAmount: number
+  serviceFees: ServiceFee[]
+  convertedAmount: ConvertedAmount
+  estimatedExchangeRate: number
+  networkFee: NetworkFee
+  partnerFee: PartnerFee
+}
+
+export type ServiceFee = {
+  name: string
+  amount: number
+  currency: string
+}
+
+export type ConvertedAmount = {
+  amount: number
+  currency: string
+}
+
+export type NetworkFee = {
+  amount: number
+  currency: string
+}
+
+export type PartnerFee = {
+  amount: number
+  currency: string
+  percentage: string
+}
+
+export type Payout = {
+  address: string
+  extra_id: string
+}
