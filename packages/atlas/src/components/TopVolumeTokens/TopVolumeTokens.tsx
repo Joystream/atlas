@@ -48,7 +48,7 @@ const tableEmptyState = {
 export const TopVolumeTokens = () => {
   const { data, loading } = useGetTopSellingTokensQuery({
     variables: {
-      periodDays: 1,
+      periodDays: 30,
     },
   })
   const { topSellingToken } = data ?? {}
