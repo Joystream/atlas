@@ -79,7 +79,7 @@ export const GuardarianModalFormStep = ({ onSubmit, setActionButtonHandler }: Gu
         const isDirectionFrom = direction === 'from'
         setIsLoadingRate(isDirectionFrom ? 'to' : 'from')
         const { to, from } = getValues()
-        if (!to.currency || !from.currency || !from.amount || !to.amount) {
+        if (!to.currency || !from.currency || !from.amount) {
           setIsLoadingRate(null)
           return
         }

@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { useRef, useState } from 'react'
 import ReactDOM from 'react-dom'
 
+import { SvgActionClose } from '@/assets/icons'
 import { guardarianService } from '@/utils/GuardarianService'
 
 import { GuardarianModalSteps } from './GuardarianModal.types'
@@ -20,6 +21,7 @@ type GuardarianData = GuardarianBillingInfo & GuardarianForm
 export const GuardarianModal = () => {
   const [step, setStep] = useState(GuardarianModalSteps.INFO)
   const [checkoutUrl, setCheckoutUrl] = useState('')
+  const [forceCloseFrame, setForceCloseFrame] = useState(false)
   const [transactionId, setTransactionId] = useState('')
   const [primaryAction, setPrimaryAction] = useState<undefined | SetActionButtonHandler>(undefined)
   const formRef = useRef<GuardarianData>({
@@ -38,10 +40,17 @@ export const GuardarianModal = () => {
       size={step === GuardarianModalSteps.FORM ? 'small' : 'medium'}
       title="Guardarian"
       show
-      primaryButton={{
-        text: 'Continue',
-        onClick: () => primaryAction?.(),
-      }}
+      primaryButton={
+        [GuardarianModalSteps.FORM, GuardarianModalSteps.INFO].includes(step)
+          ? {
+              text: 'Continue',
+              onClick: () => primaryAction?.(),
+            }
+          : {
+              text: 'Close',
+              onClick: undefined,
+            }
+      }
       additionalActionsNode={
         [GuardarianModalSteps.INFO].includes(step) ? <Button variant="secondary">Cancel</Button> : null
       }
@@ -77,6 +86,7 @@ export const GuardarianModal = () => {
             })
 
             setCheckoutUrl(response.data.redirect_url)
+            setTransactionId(String(response.data.id))
 
             setStep(GuardarianModalSteps.PROGRESS)
           }}
@@ -87,11 +97,12 @@ export const GuardarianModal = () => {
       {step === GuardarianModalSteps.SUCCESS ? <div>success</div> : null}
       {step === GuardarianModalSteps.TIMEOUT ? <div>transaction timeouted</div> : null}
       {step === GuardarianModalSteps.PROGRESS && transactionId ? (
-        <GuardarianProgressModal transactionId={transactionId} goToStep={setStep} />
+        <GuardarianProgressModal redirectUrl={checkoutUrl ?? ''} transactionId={transactionId} goToStep={setStep} />
       ) : null}
-      {checkoutUrl
+      {checkoutUrl && !forceCloseFrame
         ? ReactDOM.createPortal(
             <FrameBox>
+              <FrameCloseButton onClick={() => setForceCloseFrame(true)} variant="warning" icon={<SvgActionClose />} />
               <StyledFrame src={checkoutUrl} />
             </FrameBox>,
             document.body
@@ -106,6 +117,13 @@ const FrameBox = styled.div`
   inset: 0;
   display: grid;
   place-items: center;
+`
+
+export const FrameCloseButton = styled(Button)`
+  z-index: 111111111111111111111;
+  position: absolute;
+  top: 10px;
+  right: 10px;
 `
 
 export const StyledFrame = styled.iframe`

@@ -16,6 +16,7 @@ export type GuardarianBillingInfo = {
   email?: string
   firstName?: string
   lastName?: string
+  region?: string
   dob?: Date
   country?: string
   city?: string
@@ -39,15 +40,16 @@ export const GuardarianModalBillingInfoStep = ({
     formState: { errors },
   } = useForm<GuardarianBillingInfo>({
     defaultValues: {
-      country: 'feasf',
-      city: 'feasf',
-      apartment: 'feasf',
-      lastName: 'feasf',
-      firstName: 'feasf',
-      email: 'feasf@fesfs.com',
-      street: 'feasf',
-      postIndex: 'feasf',
-      dob: new Date('11.03.2000'),
+      country: '',
+      city: '',
+      apartment: '',
+      lastName: '',
+      firstName: '',
+      region: '',
+      email: '',
+      street: '',
+      postIndex: '',
+      dob: undefined,
     },
   })
   const { data: countries } = useQuery({

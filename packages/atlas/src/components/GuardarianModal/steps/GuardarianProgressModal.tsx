@@ -11,13 +11,14 @@ import { GuardarianModalSteps } from '../GuardarianModal.types'
 
 type GuardarianProgressModalTypes = {
   transactionId: string
+  redirectUrl: string
   goToStep: (step: GuardarianModalSteps) => void
 }
 
-export const GuardarianProgressModal = ({ transactionId, goToStep }: GuardarianProgressModalTypes) => {
+export const GuardarianProgressModal = ({ transactionId, goToStep, redirectUrl }: GuardarianProgressModalTypes) => {
   const mountTimestamp = useRef(Date.now())
 
-  const { data } = useQuery(
+  useQuery(
     ['getTransactionStatus', transactionId],
     () => guardarianService.getTransactionStatus(transactionId).then((res) => res.data),
     {
@@ -42,13 +43,14 @@ export const GuardarianProgressModal = ({ transactionId, goToStep }: GuardarianP
       },
     }
   )
+
   return (
-    <FlexBox>
-      <Loader variant="small" />
+    <FlexBox flow="column" gap={4}>
+      <Loader variant="medium" />
       <Text variant="h400" as="h1">
-        Please continue in the popup. If you don't see one click on the link below
+        Please continue in the popup. If you don't see one click on the link below.
       </Text>
-      <TextButton to={data?.redirect_url ?? ''}>Finalize your transaction...</TextButton>
+      <TextButton to={redirectUrl}>Finalize your transaction...</TextButton>
     </FlexBox>
   )
 }
