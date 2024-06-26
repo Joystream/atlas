@@ -12,6 +12,7 @@ type TransactionManagerStoreState = {
   blockActions: ProcessedBlockAction[]
   transactions: Record<string, Transaction>
   changeNowModal: TransactionType | null
+  guardarianModal: boolean
 }
 
 type TransactionManagerStoreActions = {
@@ -21,6 +22,7 @@ type TransactionManagerStoreActions = {
   updateTransaction: (id: string, transaction: Transaction) => void
   removeTransaction: (id: string) => void
   setChangeNowModal: (type: TransactionType | null) => void
+  setGuardarianModal: (show: boolean) => void
 }
 
 export const useTransactionManagerStore = createStore<TransactionManagerStoreState, TransactionManagerStoreActions>({
@@ -28,8 +30,14 @@ export const useTransactionManagerStore = createStore<TransactionManagerStoreSta
     blockActions: [],
     transactions: {},
     changeNowModal: null,
+    guardarianModal: false,
   },
+
   actionsFactory: (set) => ({
+    setGuardarianModal: (show) =>
+      set((state) => {
+        state.guardarianModal = show
+      }),
     setChangeNowModal: (type) =>
       set((state) => {
         state.changeNowModal = type

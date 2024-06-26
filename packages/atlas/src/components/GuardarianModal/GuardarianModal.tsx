@@ -18,7 +18,7 @@ export type SetActionButtonHandler = (setLoading?: LoadingSetter) => void | Prom
 
 type GuardarianData = GuardarianBillingInfo & GuardarianForm
 
-export const GuardarianModal = () => {
+export const GuardarianModal = ({ onClose }: { onClose: () => void }) => {
   const [step, setStep] = useState(GuardarianModalSteps.INFO)
   const [checkoutUrl, setCheckoutUrl] = useState('')
   const [forceCloseFrame, setForceCloseFrame] = useState(false)
@@ -46,13 +46,12 @@ export const GuardarianModal = () => {
               text: 'Continue',
               onClick: () => primaryAction?.(),
             }
-          : {
-              text: 'Close',
-              onClick: undefined,
-            }
+          : undefined
       }
       additionalActionsNode={
-        [GuardarianModalSteps.INFO].includes(step) ? <Button variant="secondary">Cancel</Button> : null
+        <Button variant="secondary" onClick={() => onClose()}>
+          Cancel
+        </Button>
       }
     >
       {step === GuardarianModalSteps.INFO ? (
