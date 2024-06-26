@@ -81,6 +81,18 @@ export const GuardarianModal = ({ onClose }: { onClose: () => void }) => {
               to: to as { currency: string },
               billingInfo: {
                 ...billingInfo,
+                dob: billingInfo?.dob?.toISOString() ?? '',
+              } as {
+                email: string
+                country: string
+                region: string
+                city: string
+                street: string
+                apartment: string
+                postIndex: string
+                firstName: string
+                lastName: string
+                dob: string
               },
             })
 

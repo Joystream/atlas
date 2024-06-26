@@ -241,6 +241,19 @@ export const GuardarianModalBillingInfoStep = ({
           )}
         />
       </FlexBox>
+
+      <Controller
+        control={control}
+        name="region"
+        rules={{
+          required: 'Field is required',
+        }}
+        render={({ field: { onChange, value } }) => (
+          <FormField error={errors.postIndex?.message} label="Post index">
+            <TextInput value={value} onChange={onChange} placeholder="Essex" inputSize="large" />
+          </FormField>
+        )}
+      />
     </FlexBox>
   )
 }
