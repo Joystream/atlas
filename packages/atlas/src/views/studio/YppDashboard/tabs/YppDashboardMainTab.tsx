@@ -21,15 +21,14 @@ import { Button, TextButton } from '@/components/_buttons/Button'
 import { BenefitCard } from '@/components/_ypp/BenefitCard'
 import { ReferralLinkButton } from '@/components/_ypp/ReferralLinkButton'
 import { ServiceStatusWidget } from '@/components/_ypp/ServiceStatusWidget/ServiceStatusWidget'
-import { YppDashboardTier, getTierIcon } from '@/components/_ypp/YppDashboardTier'
-import { TierWrapper } from '@/components/_ypp/YppDashboardTier/YppDashboardTier.styles'
+import { YppDashboardTier } from '@/components/_ypp/YppDashboardTier'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useYppAuthorizeHandler } from '@/hooks/useYppAuthorizeHandler'
 import { useUser } from '@/providers/user/user.hooks'
-import { cVar, sizes, square, transitions } from '@/styles'
+import { cVar, sizes, transitions } from '@/styles'
 import { formatDate, getNextWeekday } from '@/utils/time'
 import { BOOST_TIMESTAMP, getTierRewards, yppBackendTierToConfig } from '@/utils/ypp'
 import { YppAuthorizationModal } from '@/views/global/YppLandingView/YppAuthorizationModal'
@@ -105,12 +104,12 @@ export const YppDashboardMainTab: FC = () => {
   const {
     trackAmbassadorLinkClicked,
     trackRewardsReferralLinkClicked,
-    trackRewardsBrandingLinkClicked,
-    trackRewardsOriginalCreatorsLinkClicked,
+    // trackRewardsBrandingLinkClicked,
+    // trackRewardsOriginalCreatorsLinkClicked,
     trackTwitterPostLinkClicked,
-    trackShareNftLinkClicked,
+    // trackShareNftLinkClicked,
     trackJoinDiscordLinkClicked,
-    trackShareTokenLinkClicked,
+    // trackShareTokenLinkClicked,
     trackRoundtableEventsClicked,
   } = useSegmentAnalytics()
   const navigate = useNavigate()
@@ -129,7 +128,7 @@ export const YppDashboardMainTab: FC = () => {
   const isSilverOrAbove = ['Verified::Silver', 'Verified::Gold', 'Verified::Diamond'].includes(
     currentChannel?.yppStatus ?? ''
   )
-  const isBronze = currentChannel?.yppStatus === 'Verified::Bronze'
+  // const isBronze = currentChannel?.yppStatus === 'Verified::Bronze'
   const handleYppSignUpClick = () => {
     const success = _handleYppSignUpClick()
     if (success) {
@@ -157,17 +156,17 @@ export const YppDashboardMainTab: FC = () => {
     </YppSyncStatus>
   )
 
-  const silverTierGroup = (
-    <FlexBox gap={3} alignItems="center">
-      <SilverTierWrapper tier="Verified::Silver">{getTierIcon('Verified::Silver')}</SilverTierWrapper>
-      <Text variant="t300" as="p">
-        Offers are valid for silver tiers and above.
-      </Text>
-      {!isBronze ? (
-        <Information text="Connect YouTube channel and wait for verification by the content team to get rewards tier assigned." />
-      ) : null}
-    </FlexBox>
-  )
+  // const silverTierGroup = (
+  //   <FlexBox gap={3} alignItems="center">
+  //     <SilverTierWrapper tier="Verified::Silver">{getTierIcon('Verified::Silver')}</SilverTierWrapper>
+  //     <Text variant="t300" as="p">
+  //       Offers are valid for silver tiers and above.
+  //     </Text>
+  //     {!isBronze ? (
+  //       <Information text="Connect YouTube channel and wait for verification by the content team to get rewards tier assigned." />
+  //     ) : null}
+  //   </FlexBox>
+  // )
 
   return (
     <>
@@ -409,137 +408,6 @@ export const YppDashboardMainTab: FC = () => {
               </Button>
             }
           />
-        </BenefitsContainer>
-
-        <BenefitsContainer title="Original Creators">
-          {isSilverOrAbove ? null : silverTierGroup}
-          <BenefitCard
-            title={benefitsMetadata.originalCreatorsContent.title}
-            description={benefitsMetadata.originalCreatorsContent.description}
-            rewardNode={
-              <FlexBox alignItems="end" flow="column" gap={0}>
-                <Text variant="h400" as="h3">
-                  {currentChannel?.yppStatus
-                    ? (getTierRewards(yppBackendTierToConfig(currentChannel.yppStatus))?.videoSync || 0) * 5
-                    : 'Up to 25'}{' '}
-                  USD
-                </Text>
-                <Text variant="t200" as="p" color="colorText">
-                  per video
-                </Text>
-              </FlexBox>
-            }
-            rewardTooltip={
-              <Text variant="t100" as="span">
-                Original content published to {atlasConfig.general.appName} is rewarded at a multiple. We are gathering
-                applicants for the beta testing of this feature. Apply early for higher multiples.{'\n'}
-                <TextButton to={benefitsMetadata.originalCreatorsContent.tooltipLink}>Learn more</TextButton>
-              </Text>
-            }
-            actionNode={
-              <Button
-                onClick={() =>
-                  trackRewardsOriginalCreatorsLinkClicked(channelId ?? '', currentChannel?.yppStatus ?? '')
-                }
-                disabled={!isSilverOrAbove}
-                to={benefitsMetadata.originalCreatorsContent.actionLink}
-              >
-                Sign up
-              </Button>
-            }
-          />
-          <BenefitCard
-            title={benefitsMetadata.branding.title}
-            description={benefitsMetadata.branding.description}
-            rewardNode={
-              <FlexBox alignItems="end" flow="column" gap={0}>
-                <Text variant="h400" as="h3">
-                  {currentChannel?.yppStatus
-                    ? (getTierRewards(yppBackendTierToConfig(currentChannel.yppStatus))?.videoSync || 0) * 5
-                    : 'Up to 25'}{' '}
-                  USD
-                </Text>
-                <Text variant="t200" as="p" color="colorText">
-                  per video
-                </Text>
-              </FlexBox>
-            }
-            rewardTooltip={
-              <Text variant="t100" as="span">
-                Using branded assets as a preroll for your videos published to {atlasConfig.general.appName} first allow
-                to maximise the rewards. We are gathering early applicants for the beta test of this feature. Apply
-                early to get higher multiple.{' '}
-                <TextButton to={benefitsMetadata.branding.tooltipLink}>Learn more</TextButton>
-              </Text>
-            }
-            actionNode={
-              <Button
-                onClick={() => trackRewardsBrandingLinkClicked(channelId ?? '', currentChannel?.yppStatus ?? '')}
-                disabled={!isSilverOrAbove}
-                to={benefitsMetadata.branding.actionLink}
-              >
-                Sign up
-              </Button>
-            }
-          />
-        </BenefitsContainer>
-
-        <BenefitsContainer title="Social Promoters">
-          {isSilverOrAbove ? null : silverTierGroup}
-          <BenefitCard
-            title={benefitsMetadata.shareNft.title}
-            rewardNode={benefitsMetadata.shareNft.reward}
-            description={
-              <>
-                Share NFT from Gleev on social media of your choice and drop the link of your post to{' '}
-                <TextButton to={atlasConfig.general.joystreamDiscordUrl}>#shared-NFTs</TextButton> on Discord to
-                participate in rewards.
-              </>
-            }
-            rewardTooltip={
-              <Text variant="t100" as="span">
-                Promote your NFTs on social media and get rewarded by the DAO for this. Rewards assigned are based on
-                peer upvotes held in a dedicated Discord channel.{'\n'}
-                <TextButton to={benefitsMetadata.shareNft.tooltipLink}>Learn more</TextButton>
-              </Text>
-            }
-            actionNode={
-              <Button
-                onClick={() => trackShareNftLinkClicked(channelId ?? '', currentChannel?.yppStatus ?? '')}
-                disabled={!isSilverOrAbove}
-                to={absoluteRoutes.viewer.channel(channelId ?? '', { tab: 'NFTs' })}
-              >
-                Share NFTs
-              </Button>
-            }
-          />
-          <BenefitCard
-            title={benefitsMetadata.shareToken.title}
-            rewardNode={benefitsMetadata.shareToken.reward}
-            description={
-              <>
-                Share your CRT page from Gleev on social media of your choice and drop the link of your post to{' '}
-                <TextButton to={atlasConfig.general.joystreamDiscordUrl}>#shared-CRTs</TextButton> on Discord to
-                participate in rewards.
-              </>
-            }
-            rewardTooltip={
-              <Text variant="t100" as="span">
-                Promote your Creator Token on social media and get rewarded by the DAO for this. Rewards assigned are
-                based on peer upvotes held in a dedicated Discord channel.{'\n'}
-                <TextButton to={benefitsMetadata.shareToken.tooltipLink}>Learn more</TextButton>
-              </Text>
-            }
-            actionNode={
-              <Button
-                onClick={() => trackShareTokenLinkClicked(channelId ?? '', currentChannel?.yppStatus ?? '')}
-                disabled={!isSilverOrAbove}
-                to={absoluteRoutes.viewer.channel(channelId ?? '', { tab: 'Token' })}
-              >
-                Share token
-              </Button>
-            }
-          />
           <BenefitCard
             title={benefitsMetadata.ambassadorProgram.title}
             description={benefitsMetadata.ambassadorProgram.description}
@@ -563,6 +431,158 @@ export const YppDashboardMainTab: FC = () => {
           />
         </BenefitsContainer>
 
+        {/* <BenefitsContainer title="Original Creators"> */}
+        {/*   {isSilverOrAbove ? null : silverTierGroup} */}
+        {/*   <BenefitCard */}
+        {/*     title={benefitsMetadata.originalCreatorsContent.title} */}
+        {/*     description={benefitsMetadata.originalCreatorsContent.description} */}
+        {/*     rewardNode={ */}
+        {/*       <FlexBox alignItems="end" flow="column" gap={0}> */}
+        {/*         <Text variant="h400" as="h3"> */}
+        {/*           {currentChannel?.yppStatus */}
+        {/*             ? (getTierRewards(yppBackendTierToConfig(currentChannel.yppStatus))?.videoSync || 0) * 5 */}
+        {/*             : 'Up to 25'}{' '} */}
+        {/*           USD */}
+        {/*         </Text> */}
+        {/*         <Text variant="t200" as="p" color="colorText"> */}
+        {/*           per video */}
+        {/*         </Text> */}
+        {/*       </FlexBox> */}
+        {/*     } */}
+        {/*     rewardTooltip={ */}
+        {/*       <Text variant="t100" as="span"> */}
+        {/*         Original content published to {atlasConfig.general.appName} is rewarded at a multiple. We are gathering */}
+        {/*         applicants for the beta testing of this feature. Apply early for higher multiples.{'\n'} */}
+        {/*         <TextButton to={benefitsMetadata.originalCreatorsContent.tooltipLink}>Learn more</TextButton> */}
+        {/*       </Text> */}
+        {/*     } */}
+        {/*     actionNode={ */}
+        {/*       <Button */}
+        {/*         onClick={() => */}
+        {/*           trackRewardsOriginalCreatorsLinkClicked(channelId ?? '', currentChannel?.yppStatus ?? '') */}
+        {/*         } */}
+        {/*         disabled={!isSilverOrAbove} */}
+        {/*         to={benefitsMetadata.originalCreatorsContent.actionLink} */}
+        {/*       > */}
+        {/*         Sign up */}
+        {/*       </Button> */}
+        {/*     } */}
+        {/*   /> */}
+        {/*   <BenefitCard */}
+        {/*     title={benefitsMetadata.branding.title} */}
+        {/*     description={benefitsMetadata.branding.description} */}
+        {/*     rewardNode={ */}
+        {/*       <FlexBox alignItems="end" flow="column" gap={0}> */}
+        {/*         <Text variant="h400" as="h3"> */}
+        {/*           {currentChannel?.yppStatus */}
+        {/*             ? (getTierRewards(yppBackendTierToConfig(currentChannel.yppStatus))?.videoSync || 0) * 5 */}
+        {/*             : 'Up to 25'}{' '} */}
+        {/*           USD */}
+        {/*         </Text> */}
+        {/*         <Text variant="t200" as="p" color="colorText"> */}
+        {/*           per video */}
+        {/*         </Text> */}
+        {/*       </FlexBox> */}
+        {/*     } */}
+        {/*     rewardTooltip={ */}
+        {/*       <Text variant="t100" as="span"> */}
+        {/*         Using branded assets as a preroll for your videos published to {atlasConfig.general.appName} first allow */}
+        {/*         to maximise the rewards. We are gathering early applicants for the beta test of this feature. Apply */}
+        {/*         early to get higher multiple.{' '} */}
+        {/*         <TextButton to={benefitsMetadata.branding.tooltipLink}>Learn more</TextButton> */}
+        {/*       </Text> */}
+        {/*     } */}
+        {/*     actionNode={ */}
+        {/*       <Button */}
+        {/*         onClick={() => trackRewardsBrandingLinkClicked(channelId ?? '', currentChannel?.yppStatus ?? '')} */}
+        {/*         disabled={!isSilverOrAbove} */}
+        {/*         to={benefitsMetadata.branding.actionLink} */}
+        {/*       > */}
+        {/*         Sign up */}
+        {/*       </Button> */}
+        {/*     } */}
+        {/*   /> */}
+        {/* </BenefitsContainer> */}
+
+        {/* <BenefitsContainer title="Social Promoters"> */}
+        {/*   {isSilverOrAbove ? null : silverTierGroup} */}
+        {/*   <BenefitCard */}
+        {/*     title={benefitsMetadata.shareNft.title} */}
+        {/*     rewardNode={benefitsMetadata.shareNft.reward} */}
+        {/*     description={ */}
+        {/*       <> */}
+        {/*         Share NFT from Gleev on social media of your choice and drop the link of your post to{' '} */}
+        {/*         <TextButton to={atlasConfig.general.joystreamDiscordUrl}>#shared-NFTs</TextButton> on Discord to */}
+        {/*         participate in rewards. */}
+        {/*       </> */}
+        {/*     } */}
+        {/*     rewardTooltip={ */}
+        {/*       <Text variant="t100" as="span"> */}
+        {/*         Promote your NFTs on social media and get rewarded by the DAO for this. Rewards assigned are based on */}
+        {/*         peer upvotes held in a dedicated Discord channel.{'\n'} */}
+        {/*         <TextButton to={benefitsMetadata.shareNft.tooltipLink}>Learn more</TextButton> */}
+        {/*       </Text> */}
+        {/*     } */}
+        {/*     actionNode={ */}
+        {/*       <Button */}
+        {/*         onClick={() => trackShareNftLinkClicked(channelId ?? '', currentChannel?.yppStatus ?? '')} */}
+        {/*         disabled={!isSilverOrAbove} */}
+        {/*         to={absoluteRoutes.viewer.channel(channelId ?? '', { tab: 'NFTs' })} */}
+        {/*       > */}
+        {/*         Share NFTs */}
+        {/*       </Button> */}
+        {/*     } */}
+        {/*   /> */}
+        {/*   <BenefitCard */}
+        {/*     title={benefitsMetadata.shareToken.title} */}
+        {/*     rewardNode={benefitsMetadata.shareToken.reward} */}
+        {/*     description={ */}
+        {/*       <> */}
+        {/*         Share your CRT page from Gleev on social media of your choice and drop the link of your post to{' '} */}
+        {/*         <TextButton to={atlasConfig.general.joystreamDiscordUrl}>#shared-CRTs</TextButton> on Discord to */}
+        {/*         participate in rewards. */}
+        {/*       </> */}
+        {/*     } */}
+        {/*     rewardTooltip={ */}
+        {/*       <Text variant="t100" as="span"> */}
+        {/*         Promote your Creator Token on social media and get rewarded by the DAO for this. Rewards assigned are */}
+        {/*         based on peer upvotes held in a dedicated Discord channel.{'\n'} */}
+        {/*         <TextButton to={benefitsMetadata.shareToken.tooltipLink}>Learn more</TextButton> */}
+        {/*       </Text> */}
+        {/*     } */}
+        {/*     actionNode={ */}
+        {/*       <Button */}
+        {/*         onClick={() => trackShareTokenLinkClicked(channelId ?? '', currentChannel?.yppStatus ?? '')} */}
+        {/*         disabled={!isSilverOrAbove} */}
+        {/*         to={absoluteRoutes.viewer.channel(channelId ?? '', { tab: 'Token' })} */}
+        {/*       > */}
+        {/*         Share token */}
+        {/*       </Button> */}
+        {/*     } */}
+        {/*   /> */}
+        {/*   <BenefitCard */}
+        {/*     title={benefitsMetadata.ambassadorProgram.title} */}
+        {/*     description={benefitsMetadata.ambassadorProgram.description} */}
+        {/*     rewardNode={benefitsMetadata.ambassadorProgram.reward} */}
+        {/*     rewardTooltip={ */}
+        {/*       <Text variant="t100" as="span"> */}
+        {/*         Ambassador program is open for creators dedicated to Joystream and entails versatile tasks of your */}
+        {/*         choice for collaboration and promotion.{'\n'} */}
+        {/*         <TextButton to={benefitsMetadata.ambassadorProgram.tooltipLink}>Learn more</TextButton> */}
+        {/*       </Text> */}
+        {/*     } */}
+        {/*     actionNode={ */}
+        {/*       <Button */}
+        {/*         onClick={() => trackAmbassadorLinkClicked(channelId ?? '', currentChannel?.yppStatus ?? '')} */}
+        {/*         disabled={!isSilverOrAbove} */}
+        {/*         to={benefitsMetadata.ambassadorProgram.actionLink} */}
+        {/*       > */}
+        {/*         Apply */}
+        {/*       </Button> */}
+        {/*     } */}
+        {/*   /> */}
+        {/* </BenefitsContainer> */}
+
         <StyledGridItem colSpan={{ xxs: 12 }}>
           <HelpContainer alignItems="center" gap={2}>
             <SvgLogoDiscordOnDark />
@@ -583,15 +603,15 @@ const HelpContainer = styled(FlexBox)`
   padding: ${sizes(4)} 0;
 `
 
-const SilverTierWrapper = styled(TierWrapper)`
-  padding: ${sizes(2)};
-  width: fit-content;
-  border: 1px solid #cbe0f145;
-
-  svg {
-    ${square(20)};
-  }
-`
+// const SilverTierWrapper = styled(TierWrapper)`
+//   padding: ${sizes(2)};
+//   width: fit-content;
+//   border: 1px solid #cbe0f145;
+//
+//   svg {
+//     ${square(20)};
+//   }
+// `
 
 export const BenefitsContainer = ({ children, title }: { children: ReactNode[] | ReactNode; title: string }) => {
   const drawer = useRef<HTMLDivElement>(null)
