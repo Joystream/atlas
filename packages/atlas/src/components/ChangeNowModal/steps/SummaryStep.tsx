@@ -62,7 +62,7 @@ export const SummaryStep = ({
       return
     }
     const isSellingJoy = type === 'sell'
-    const refundAddress = isSellingJoy ? activeMembership.controllerAccount : undefined
+    const refundAddress = isSellingJoy ? activeMembership.controllerAccount.id : undefined
     setLoading(true)
     const txData = await changeNowService
       .createExchangeTransaction({
@@ -71,7 +71,7 @@ export const SummaryStep = ({
         amount: isSellingJoy ? from.amount : to.amount,
         currency: isSellingJoy ? toCurrency : fromCurrency,
         contactEmail: currentUser?.email,
-        addressToBePaid: isSellingJoy ? formData.destinationAddress : activeMembership.controllerAccount,
+        addressToBePaid: isSellingJoy ? formData.destinationAddress : activeMembership.controllerAccount.id,
         rateId: rateId,
         userId: currentUser?.id,
       })
@@ -206,7 +206,7 @@ export const SummaryStep = ({
         </Text>
         <Text variant="t200" as="p">
           {shortenString(
-            type === 'sell' ? formData.destinationAddress : activeMembership?.controllerAccount ?? '',
+            type === 'sell' ? formData.destinationAddress : activeMembership?.controllerAccount.id ?? '',
             6,
             6
           )}

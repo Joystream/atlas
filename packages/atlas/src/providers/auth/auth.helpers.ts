@@ -173,12 +173,14 @@ export const registerAccount = async (params: RegisterParams) => {
     const timestamp = (await getAuthEpoch()) - 30_000
     const registerPayload: RegisterPayload = {
       gatewayName: 'Gleev',
-      memberId: params.memberId,
+      // memberId: params.memberId,
       joystreamAccountId: '',
       timestamp,
       action: 'createAccount',
       email: params.email,
+      emailConfirmationToken: params.emailConfimationToken,
     }
+
     let registerSignature = null
     let keypair: KeyringPair | null = null
     if (params.type === 'internal') {

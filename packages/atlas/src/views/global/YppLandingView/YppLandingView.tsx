@@ -3,11 +3,13 @@ import 'aos/dist/aos.css'
 import { FC, useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ParallaxProvider } from 'react-scroll-parallax'
+import shallow from 'zustand/shallow'
 
 import { YppReferralBanner } from '@/components/_ypp/YppReferralBanner'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
+import { useAuthStore } from '@/providers/auth/auth.store'
 import { useUser } from '@/providers/user/user.hooks'
 import { useYppStore } from '@/providers/ypp/ypp.store'
 import { CreatorOpportunities } from '@/views/global/YppLandingView/sections/CreatorOpportunities'
@@ -24,7 +26,6 @@ import { useGetYppSyncedChannels } from './useGetYppSyncedChannels'
 
 export const YppLandingView: FC = () => {
   const headTags = useHeadTags('YouTube Partner Program')
-  const yppModalOpenName = useYppStore((state) => state.yppModalOpenName)
   const setYppModalOpen = useYppStore((state) => state.actions.setYppModalOpenName)
   const { activeMembership, channelId } = useUser()
   const { setSelectedChannelId, setShouldContinueYppFlowAfterCreatingChannel } = useYppStore((store) => store.actions)
@@ -32,6 +33,13 @@ export const YppLandingView: FC = () => {
   const { trackYppSignInButtonClick } = useSegmentAnalytics()
   const selectedChannelTitle = activeMembership?.channels.find((channel) => channel.id === channelId)?.title
   const viewerEarningsRef = useRef<HTMLDivElement | null>(null)
+  const { authModalOpenName, setAuthModalOpenName } = useAuthStore(
+    (state) => ({
+      authModalOpenName: state.authModalOpenName,
+      setAuthModalOpenName: state.actions.setAuthModalOpenName,
+    }),
+    shallow
+  )
 
   const [wasSignInTriggered, setWasSignInTriggered] = useState(false)
   const shouldContinueYppFlowAfterCreatingChannel = useYppStore(
@@ -61,12 +69,12 @@ export const YppLandingView: FC = () => {
       return
     }
 
-    if (!yppModalOpenName) {
+    if (!authModalOpenName) {
       trackYppSignInButtonClick()
-      setYppModalOpen('ypp-requirements')
+      setAuthModalOpenName('yppFirstFlow')
       return
     }
-  }, [isYppSigned, yppModalOpenName, navigate, trackYppSignInButtonClick, setYppModalOpen])
+  }, [isYppSigned, authModalOpenName, navigate, trackYppSignInButtonClick, setAuthModalOpenName])
 
   useEffect(() => {
     // rerun handleYppSignUpClick after sign in flow

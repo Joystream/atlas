@@ -91,7 +91,9 @@ fragment BasicMembershipFields on Membership {
 # No changes
 fragment FullMembershipFields on Membership {
   ...BasicMembershipFields
-  controllerAccount
+  controllerAccount {
+    id
+  }
   createdAt
   totalChannelsCreated
   channels {

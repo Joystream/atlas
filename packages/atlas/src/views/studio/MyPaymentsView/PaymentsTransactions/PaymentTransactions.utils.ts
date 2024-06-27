@@ -70,17 +70,19 @@ const getAmount = (eventData: EventData, memberId: string): BN => {
 const getSender = (eventData: EventData) => {
   switch (eventData.__typename) {
     case 'NftBoughtEventData':
-      return eventData.buyer.controllerAccount
+      return eventData.buyer.controllerAccount.id
     case 'BidMadeCompletingAuctionEventData':
     case 'OpenAuctionBidAcceptedEventData':
     case 'EnglishAuctionSettledEventData':
-      return eventData.winningBid.bidder.controllerAccount
+      return eventData.winningBid.bidder.controllerAccount.id
     case 'ChannelRewardClaimedEventData':
       return 'council'
     case 'ChannelFundsWithdrawnEventData':
-      return eventData.actor.__typename === 'ContentActorMember' ? eventData.actor.member.controllerAccount : 'council'
+      return eventData.actor.__typename === 'ContentActorMember'
+        ? eventData.actor.member.controllerAccount.id
+        : 'council'
     case 'ChannelPaymentMadeEventData':
-      return eventData.payer.controllerAccount
+      return eventData.payer.controllerAccount.id
     case 'CreatorTokenRevenueSplitIssuedEventData':
       return 'own-channel'
     default:

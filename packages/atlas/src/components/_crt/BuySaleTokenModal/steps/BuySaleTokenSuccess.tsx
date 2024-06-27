@@ -4,15 +4,16 @@ import confettiAnimation from '@/assets/animations/confetti.json'
 import { AppKV } from '@/components/AppKV'
 import { LottiePlayer } from '@/components/LottiePlayer'
 import { Text } from '@/components/Text'
-import {
-  ContentWrapper,
-  IllustrationWrapper,
-  LottieContainer,
-} from '@/components/_auth/SignUpModal/SignUpSteps/SignUpSuccessStep/SignUpSuccessStep.styles'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMountEffect } from '@/hooks/useMountEffect'
 
 import { CommonProps } from './types'
+
+import {
+  ContentWrapper,
+  IllustrationWrapper,
+  LottieContainer,
+} from '../../OnboardingProgressModal/OnboardingProgressModal'
 
 type SignUpSuccessStepProps = {
   tokenName?: string

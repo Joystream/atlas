@@ -298,11 +298,11 @@ export type BasicMembershipFieldsFragment = {
 
 export type FullMembershipFieldsFragment = {
   __typename?: 'Membership'
-  controllerAccount: string
   createdAt: Date
   totalChannelsCreated: number
   id: string
   handle: string
+  controllerAccount: { __typename?: 'BlockchainAccount'; id: string }
   channels: Array<{
     __typename?: 'Channel'
     totalVideosCreated: number
@@ -2725,7 +2725,9 @@ export const ExtendedBasicChannelFieldsFragmentDoc = gql`
 export const FullMembershipFieldsFragmentDoc = gql`
   fragment FullMembershipFields on Membership {
     ...BasicMembershipFields
-    controllerAccount
+    controllerAccount {
+      id
+    }
     createdAt
     totalChannelsCreated
     channels {

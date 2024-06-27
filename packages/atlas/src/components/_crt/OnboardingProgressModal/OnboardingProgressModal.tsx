@@ -1,19 +1,16 @@
+import styled from '@emotion/styled'
 import { useState } from 'react'
 
 import { confettiAnimation } from '@/assets/animations'
 import { AppKV } from '@/components/AppKV'
 import { LottiePlayer } from '@/components/LottiePlayer'
 import { Text } from '@/components/Text'
-import {
-  ContentWrapper,
-  IllustrationWrapper,
-  LottieContainer,
-} from '@/components/_auth/SignUpModal/SignUpSteps/SignUpSuccessStep/SignUpSuccessStep.styles'
 import { TextButton } from '@/components/_buttons/Button'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMountEffect } from '@/hooks/useMountEffect'
 import { useOverlayManager } from '@/providers/overlayManager'
+import { cVar, media, sizes, zIndex } from '@/styles'
 
 const data = {
   master: {
@@ -86,3 +83,38 @@ export const OnboardingProgressModal = ({ onContinue, type, show }: OnboardingPr
     </DialogModal>
   )
 }
+
+export const IllustrationWrapper = styled.div`
+  margin: calc(var(--local-size-dialog-padding) * -1) calc(var(--local-size-dialog-padding) * -1) ${sizes(6)}
+    calc(var(--local-size-dialog-padding) * -1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  background-color: ${cVar('colorBackgroundMuted')};
+
+  > * {
+    width: 100%;
+    height: 208px;
+
+    ${media.sm} {
+      height: 264px;
+    }
+  }
+`
+
+export const LottieContainer = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: ${zIndex.nearOverlay};
+  display: flex;
+  justify-content: center;
+`
+
+export const ContentWrapper = styled.div`
+  text-align: center;
+`

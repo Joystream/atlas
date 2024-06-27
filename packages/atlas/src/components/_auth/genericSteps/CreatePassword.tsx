@@ -1,48 +1,47 @@
+import styled from '@emotion/styled'
 import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { FC, RefObject, useCallback, useEffect, useRef } from 'react'
+import { RefObject, useEffect, useRef } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 
-import { AuthenticationModalStepTemplate } from '@/components/_auth/AuthenticationModalStepTemplate'
+import { AppLogo } from '@/components/AppLogo'
+import { FlexBox } from '@/components/FlexBox'
+import { Text } from '@/components/Text'
 import { PasswordCriterias } from '@/components/_auth/PasswordCriterias'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { atlasConfig } from '@/config'
-import { AccountFormData } from '@/hooks/useCreateMember'
 import { useHidePasswordInInput } from '@/hooks/useHidePasswordInInput'
+import { useMountEffect } from '@/hooks/useMountEffect'
+import { cVar, sizes } from '@/styles'
 import { passwordAndRepeatPasswordSchema } from '@/utils/formValidationOptions'
 
-import { StyledSignUpForm } from '../SignUpSteps.styles'
-import { SignUpStepsCommonProps } from '../SignUpSteps.types'
-
-type PasswordStepForm = {
-  password: string
-  confirmPassword: string
+export type NewPasswordForm = {
+  password?: string
+  confirmPassword?: string
   captchaToken?: string
 }
 
-type SignUpPasswordStepProps = {
-  onPasswordSubmit: (password: string, captchaToken?: string) => void
-  password?: string
+type CreatePasswordProps = {
+  defaultValues?: Omit<NewPasswordForm, 'captchaToken'>
+  onSubmit: (data: NewPasswordForm) => void
+  setActionButtonHandler: (fn: () => void | Promise<void>) => void
   dialogContentRef?: RefObject<HTMLDivElement>
-} & SignUpStepsCommonProps &
-  Pick<AccountFormData, 'password'>
+  withCaptcha?: boolean
+}
 
-export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
-  setPrimaryButtonProps,
-  hasNavigatedBack,
-  password,
+export const CreatePassword = ({
+  setActionButtonHandler,
+  onSubmit,
+  defaultValues,
   dialogContentRef,
-  onPasswordSubmit,
-}) => {
-  const form = useForm<PasswordStepForm>({
+  withCaptcha = true,
+}: CreatePasswordProps) => {
+  const form = useForm<NewPasswordForm>({
     shouldFocusError: true,
     reValidateMode: 'onSubmit',
-    defaultValues: {
-      password,
-      confirmPassword: password,
-    },
-    resolver: zodResolver(passwordAndRepeatPasswordSchema),
+    defaultValues,
+    resolver: zodResolver(passwordAndRepeatPasswordSchema(withCaptcha)),
   })
   const {
     handleSubmit,
@@ -57,19 +56,14 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
   const captchaRef = useRef<HCaptcha | null>(null)
   const captchaInputRef = useRef<HTMLDivElement | null>(null)
 
-  const handleGoToNextStep = useCallback(() => {
-    handleSubmit((data) => {
-      onPasswordSubmit(data.password, data.captchaToken)
-    })()
-    captchaRef.current?.resetCaptcha()
-  }, [handleSubmit, onPasswordSubmit])
-
-  useEffect(() => {
-    setPrimaryButtonProps({
-      text: 'Sign up',
-      onClick: handleGoToNextStep,
+  useMountEffect(() => {
+    setActionButtonHandler(() => {
+      handleSubmit((data) => {
+        onSubmit(data)
+      })()
+      captchaRef.current?.resetCaptcha()
     })
-  }, [handleGoToNextStep, setPrimaryButtonProps])
+  })
 
   useEffect(() => {
     if (errors.captchaToken) {
@@ -82,11 +76,16 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
 
   return (
     <FormProvider {...form}>
-      <AuthenticationModalStepTemplate
-        title="Sign up"
-        hasNavigatedBack={hasNavigatedBack}
-        subtitle="Please note that there is no option for us to recover your password if you forget it."
-      >
+      <FlexBox flow="column" gap={6}>
+        <StyledAppLogo variant="short-monochrome" />
+        <FlexBox flow="column" gap={2}>
+          <Text variant="h500" as="h3">
+            Create a password
+          </Text>
+          <Text margin={{ bottom: 2 }} variant="t300" as="span" color="colorText">
+            Please note that there is no option for us to recover your password if you forget it.
+          </Text>
+        </FlexBox>
         <StyledSignUpForm>
           <FormField label="Password" error={errors.password?.message}>
             <Input
@@ -111,7 +110,7 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
             />
           </FormField>
           <PasswordCriterias />
-          {atlasConfig.features.members.hcaptchaSiteKey && (
+          {atlasConfig.features.members.hcaptchaSiteKey && withCaptcha && (
             <Controller
               control={control}
               name="captchaToken"
@@ -133,7 +132,24 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
             />
           )}
         </StyledSignUpForm>
-      </AuthenticationModalStepTemplate>
+      </FlexBox>
     </FormProvider>
   )
 }
+
+const StyledAppLogo = styled(AppLogo)`
+  height: 36px;
+  width: auto;
+
+  path {
+    fill: ${cVar('colorTextMuted')};
+  }
+`
+
+const StyledSignUpForm = styled.form<{ additionalPaddingBottom?: boolean }>`
+  width: 100%;
+  display: grid;
+  gap: ${sizes(6)};
+  padding-bottom: ${({ additionalPaddingBottom }) =>
+    additionalPaddingBottom ? 'var(--local-size-dialog-padding)' : 0};
+`

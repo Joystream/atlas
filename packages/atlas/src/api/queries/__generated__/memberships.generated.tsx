@@ -13,11 +13,11 @@ export type GetMembershipsQuery = {
   __typename?: 'Query'
   memberships: Array<{
     __typename?: 'Membership'
-    controllerAccount: string
     createdAt: Date
     totalChannelsCreated: number
     id: string
     handle: string
+    controllerAccount: { __typename?: 'BlockchainAccount'; id: string }
     channels: Array<{
       __typename?: 'Channel'
       totalVideosCreated: number

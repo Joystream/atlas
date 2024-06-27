@@ -38,7 +38,14 @@ export type ExternalLogin = {
 
 export type LoginParams = InternalLogin | ExternalLogin
 
-export type AuthModals = 'logIn' | 'externalLogIn' | 'signUp' | 'createChannel' | 'forgotPassword'
+export type AuthModals =
+  | 'logIn'
+  | 'externalLogIn'
+  | 'signUp'
+  | 'createChannel'
+  | 'forgotPassword'
+  | 'emailSetup'
+  | 'yppFirstFlow'
 
 type EncryptionArtifacts = {
   id: string
@@ -51,25 +58,25 @@ export type RegisterPayload = {
   gatewayName: string
   timestamp: number
   action: 'createAccount'
-  memberId: string
   email: string
   encryptionArtifacts?: EncryptionArtifacts
+  emailConfirmationToken: string
 }
 
 type ExtensionParams = {
   type: 'external'
   signature: (payload: string) => Promise<string | undefined>
   email: string
+  emailConfimationToken: string
   address: string
-  memberId: string
 }
 
 type EmailPasswordParams = {
   type: 'internal'
   email: string
+  emailConfimationToken: string
   password: string
   mnemonic: string
-  memberId: string
 }
 
 export type RegisterParams = ExtensionParams | EmailPasswordParams

@@ -179,7 +179,9 @@ query GetChannelPaymentEvents($channelId: String) {
       ... on NftBoughtEventData {
         price
         buyer {
-          controllerAccount
+          controllerAccount {
+            id
+          }
         }
         nft {
           creatorRoyalty
@@ -199,7 +201,9 @@ query GetChannelPaymentEvents($channelId: String) {
           id
           amount
           bidder {
-            controllerAccount
+            controllerAccount {
+              id
+            }
           }
           nft {
             creatorRoyalty
@@ -208,7 +212,9 @@ query GetChannelPaymentEvents($channelId: String) {
             }
           }
           bidder {
-            controllerAccount
+            controllerAccount {
+              id
+            }
           }
           amount
         }
@@ -225,7 +231,9 @@ query GetChannelPaymentEvents($channelId: String) {
             }
           }
           bidder {
-            controllerAccount
+            controllerAccount {
+              id
+            }
           }
           amount
         }
@@ -239,7 +247,9 @@ query GetChannelPaymentEvents($channelId: String) {
             }
           }
           bidder {
-            controllerAccount
+            controllerAccount {
+              id
+            }
           }
           amount
         }
@@ -251,7 +261,9 @@ query GetChannelPaymentEvents($channelId: String) {
         winningBid {
           amount
           bidder {
-            controllerAccount
+            controllerAccount {
+              id
+            }
           }
           nft {
             creatorRoyalty
@@ -277,7 +289,9 @@ query GetChannelPaymentEvents($channelId: String) {
           }
           ... on ContentActorMember {
             member {
-              controllerAccount
+              controllerAccount {
+                id
+              }
             }
           }
         }
@@ -286,14 +300,18 @@ query GetChannelPaymentEvents($channelId: String) {
         amount
         rationale
         payer {
-          controllerAccount
+          controllerAccount {
+            id
+          }
         }
       }
       ... on ChannelPaymentMadeEventData {
         amount
         rationale
         payer {
-          controllerAccount
+          controllerAccount {
+            id
+          }
         }
       }
       ... on CreatorTokenRevenueSplitIssuedEventData {

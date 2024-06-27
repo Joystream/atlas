@@ -2,9 +2,7 @@ query GetCurrentAccount {
   accountData {
     email
     id
-    isEmailConfirmed
-    joystreamAccount
-    membershipId
+    joystreamAccountId
     followedChannels {
       channelId
       timestamp
@@ -20,5 +18,12 @@ query GetChannelFollows($where: ChannelFollowWhereInput, $limit: Int) {
     user {
       id
     }
+  }
+}
+
+mutation CreateAccountMembership($about: String!, $avatar: String!, $handle: String!, $name: String!) {
+  createAccountMembership(about: $about, avatar: $avatar, handle: $handle, name: $name) {
+    accountId
+    memberId
   }
 }
