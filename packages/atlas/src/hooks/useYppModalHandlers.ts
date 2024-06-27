@@ -94,7 +94,9 @@ export const useYppModalHandlers = () => {
         displaySnackbar({
           iconType: 'error',
           title: 'Ops, something went wrong',
-          description: e.response.data.message ?? `We couldn't verify your ownership. Please, try again.`,
+          description:
+            JSON.stringify(e.response.data.message.map((err: { message: string }) => err.message).join(', \n')) ??
+            `We couldn't verify your ownership. Please, try again.`,
         })
         SentryLogger.error('Error validating YT ownership', 'useYppSetupModalHandlers', e)
         throw e
