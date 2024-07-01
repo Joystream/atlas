@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 
 import { CreatorTokenOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
+import { LastestCrtTrades } from '@/components/LastestCrtTrades'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { TopMovingTokens } from '@/components/TopCrtMovers'
-import { TopEarningChannels } from '@/components/TopEarningChannels'
 import { TopVolumeTokens } from '@/components/TopVolumeTokens'
 import { AllTokensSection } from '@/components/_crt/AllTokensSection'
 import { FeaturedSection } from '@/components/_crt/FeaturedSection'
@@ -14,46 +14,45 @@ export const CrtMarketplaceView = () => {
   const headTags = useHeadTags('CRT - Marketplace')
 
   return (
-    <MarketplaceWrapper>
-      {headTags}
-      <FeaturedSection
-        title="Featured liquid tokens"
-        variables={{
-          where: {
-            currentAmmSale: {
-              id_isNull: false,
+    <>
+      <LastestCrtTrades />
+
+      <MarketplaceWrapper>
+        {headTags}
+
+        <TableFullWitdhtWrapper>
+          <LimitedWidthContainer big noBottomPadding>
+            <TopMovingTokens interval={30} tableTitle="Hot tokens" />
+          </LimitedWidthContainer>
+        </TableFullWitdhtWrapper>
+
+        <TableFullWitdhtWrapper>
+          <LimitedWidthContainer big noBottomPadding>
+            <TopMovingTokens interval={30} tableTitle="Top Movers" />
+          </LimitedWidthContainer>
+        </TableFullWitdhtWrapper>
+
+        <FeaturedSection
+          title="Featured liquid tokens"
+          variables={{
+            where: {
+              currentAmmSale: {
+                id_isNull: false,
+              },
             },
-          },
-          orderBy: CreatorTokenOrderByInput.TotalSupplyDesc,
-        }}
-      />
+            orderBy: CreatorTokenOrderByInput.TotalSupplyDesc,
+          }}
+        />
 
-      <TableFullWitdhtWrapper>
-        <LimitedWidthContainer big noBottomPadding>
-          <TopMovingTokens interval={30} tableTitle="Hot tokens" />
-        </LimitedWidthContainer>
-      </TableFullWitdhtWrapper>
+        <TableFullWitdhtWrapper>
+          <LimitedWidthContainer big noBottomPadding>
+            <TopVolumeTokens />
+          </LimitedWidthContainer>
+        </TableFullWitdhtWrapper>
 
-      <TableFullWitdhtWrapper>
-        <LimitedWidthContainer big noBottomPadding>
-          <TopMovingTokens interval={60} tableTitle="Top Movers" />
-        </LimitedWidthContainer>
-      </TableFullWitdhtWrapper>
-
-      <TableFullWitdhtWrapper>
-        <LimitedWidthContainer big noBottomPadding>
-          <TopVolumeTokens />
-        </LimitedWidthContainer>
-      </TableFullWitdhtWrapper>
-
-      <TableFullWitdhtWrapper>
-        <LimitedWidthContainer big noBottomPadding>
-          <TopEarningChannels withCrtOnly />
-        </LimitedWidthContainer>
-      </TableFullWitdhtWrapper>
-
-      <AllTokensSection />
-    </MarketplaceWrapper>
+        <AllTokensSection />
+      </MarketplaceWrapper>
+    </>
   )
 }
 
