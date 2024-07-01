@@ -28,6 +28,8 @@ export const AllTokensSection = () => {
     setOrder,
     orderBy,
     clearFilters,
+    search,
+    setSearch,
   } = useTokensPagination({})
 
   const tableData =
@@ -68,6 +70,10 @@ export const AllTokensSection = () => {
     <Section
       headerProps={{
         onApplyFilters,
+        search: {
+          value: search,
+          onChange: (e) => setSearch(e.target.value),
+        },
         start: {
           type: 'title',
           title: 'All Creator Tokens',

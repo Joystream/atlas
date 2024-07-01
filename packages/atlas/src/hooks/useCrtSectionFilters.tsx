@@ -7,6 +7,8 @@ import {
 import { SvgActionShoppingCart } from '@/assets/icons'
 import { FilterButtonOption, SectionFilter } from '@/components/FilterButton'
 
+import { useDebounceValue } from './useDebounceValue'
+
 export const CRT_STATUSES: FilterButtonOption[] = [
   {
     value: 'market',
@@ -77,8 +79,10 @@ export const useCrtSectionFilters = ({
   orderBy?: MarketplaceTokenOrderByInput
   setOrderBy: (val: MarketplaceTokenOrderByInput) => void
 }) => {
+  const [search, setSearch] = useState('')
   const [filters, setFilters] = useState<SectionFilter[]>(FILTERS)
   const [hasAppliedFilters, setHasAppliedFilters] = useState(false)
+  const debouncedSearch = useDebounceValue(search, 400)
 
   const mappedFilters = useMemo((): MarketplaceTokenWhereInput => {
     const mappedStatus =
@@ -112,6 +116,7 @@ export const useCrtSectionFilters = ({
 
     const commonFilters: MarketplaceTokenWhereInput = {
       ...(isWhitelistedExcluded ? { isInviteOnly_eq: false } : {}),
+      symbol_containsInsensitive: debouncedSearch,
     }
 
     return {
@@ -122,7 +127,7 @@ export const useCrtSectionFilters = ({
           }))
         : [commonFilters],
     }
-  }, [filters])
+  }, [filters, debouncedSearch])
 
   const setOrder = useCallback(
     (row?: { id: string; desc: boolean }) => {
@@ -147,7 +152,9 @@ export const useCrtSectionFilters = ({
     orderBy,
     hasAppliedFilters,
     sortMappings,
+    search,
     actions: {
+      setSearch,
       setOrder,
       onApplyFilters: setFilters,
       clearFilters,

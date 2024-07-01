@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 
 import { SvgActionArrowBottom, SvgActionArrowTop } from '@/assets/icons'
 import { cVar, square } from '@/styles'
+import { formatNumber } from '@/utils/number'
 
 import { FlexBox } from '../FlexBox'
 import { Text } from '../Text'
@@ -16,7 +17,7 @@ export const PercentageChangeIndicator = ({ value }: PercentageChangeIndicatorPr
     <Container changeValue={value} alignItems="center">
       {value === 0 ? null : isNeg ? <SvgActionArrowBottom /> : <SvgActionArrowTop />}
       <Text variant="h200" as="p">
-        {Math.abs(value).toPrecision(2)}%
+        {formatNumber(Math.abs(value))}%
       </Text>
     </Container>
   )

@@ -20,7 +20,8 @@ export const useTokensPagination = ({ initialPageSize = 10 }: { initialPageSize?
     hasAppliedFilters,
     rawFilters,
     sortMappings,
-    actions: { onApplyFilters, setOrder, clearFilters },
+    search,
+    actions: { onApplyFilters, setOrder, clearFilters, setSearch },
   } = useCrtSectionFilters({ orderBy, setOrderBy })
 
   const { data, loading } = useGetMarketplaceTokensQuery({
@@ -30,6 +31,7 @@ export const useTokensPagination = ({ initialPageSize = 10 }: { initialPageSize?
       offset: pagination.currentPage * pagination.perPage,
       limit: pagination.perPage,
     },
+    notifyOnNetworkStatusChange: true,
     onError: (error) => {
       SentryLogger.error('Failed to fetch tokens query', 'useTokensPagination', error)
     },
@@ -42,6 +44,8 @@ export const useTokensPagination = ({ initialPageSize = 10 }: { initialPageSize?
 
   return {
     ...pagination,
+    search,
+    setSearch,
     tokens: data?.getMarketplaceTokens,
     totalCount: countData?.getMarketplaceTokensCount.count ?? 0,
     isLoading: loading || loadingCount,
