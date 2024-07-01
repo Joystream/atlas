@@ -3,6 +3,7 @@ import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
 import {
+  BasicAmmTransactionFragmentDoc,
   BasicCreatorTokenFragmentDoc,
   BasicCreatorTokenHolderFragmentDoc,
   BasicRevenueShareFragmentDoc,
@@ -842,6 +843,82 @@ export type GetTopSellingTokensQuery = {
   }>
 }
 
+export type GetAmmTransactionsQueryVariables = Types.Exact<{
+  where?: Types.InputMaybe<Types.AmmTransactionWhereInput>
+  orderBy?: Types.InputMaybe<Array<Types.AmmTransactionOrderByInput> | Types.AmmTransactionOrderByInput>
+  limit?: Types.InputMaybe<Types.Scalars['Int']>
+}>
+
+export type GetAmmTransactionsQuery = {
+  __typename?: 'Query'
+  ammTransactions: Array<{
+    __typename?: 'AmmTransaction'
+    id: string
+    quantity: string
+    pricePaid: string
+    pricePerUnit: string
+    transactionType: Types.AmmTransactionType
+    createdIn: number
+    amm: {
+      __typename?: 'AmmCurve'
+      id: string
+      token: {
+        __typename?: 'CreatorToken'
+        id: string
+        symbol?: string | null
+        channel?: {
+          __typename?: 'TokenChannel'
+          channel: {
+            __typename?: 'Channel'
+            id: string
+            avatarPhoto?: {
+              __typename?: 'StorageDataObject'
+              resolvedUrls: Array<string>
+              storageBag: { __typename?: 'StorageBag'; id: string }
+            } | null
+          }
+        } | null
+      }
+    }
+    account: {
+      __typename?: 'TokenAccount'
+      member: {
+        __typename?: 'Membership'
+        id: string
+        handle: string
+        metadata?: {
+          __typename?: 'MemberMetadata'
+          about?: string | null
+          avatar?:
+            | {
+                __typename?: 'AvatarObject'
+                avatarObject: {
+                  __typename?: 'StorageDataObject'
+                  id: string
+                  resolvedUrls: Array<string>
+                  createdAt: Date
+                  size: string
+                  isAccepted: boolean
+                  ipfsHash: string
+                  storageBag: { __typename?: 'StorageBag'; id: string }
+                  type?:
+                    | { __typename: 'DataObjectTypeChannelAvatar' }
+                    | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                    | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+                    | { __typename: 'DataObjectTypeVideoMedia' }
+                    | { __typename: 'DataObjectTypeVideoSubtitle' }
+                    | { __typename: 'DataObjectTypeVideoThumbnail' }
+                    | null
+                }
+              }
+            | { __typename?: 'AvatarUri'; avatarUri: string }
+            | null
+        } | null
+      }
+    }
+  }>
+}
+
 export const GetBasicCreatorTokensDocument = gql`
   query GetBasicCreatorTokens(
     $where: CreatorTokenWhereInput
@@ -1627,4 +1704,52 @@ export type GetTopSellingTokensLazyQueryHookResult = ReturnType<typeof useGetTop
 export type GetTopSellingTokensQueryResult = Apollo.QueryResult<
   GetTopSellingTokensQuery,
   GetTopSellingTokensQueryVariables
+>
+export const GetAmmTransactionsDocument = gql`
+  query GetAmmTransactions($where: AmmTransactionWhereInput, $orderBy: [AmmTransactionOrderByInput!], $limit: Int) {
+    ammTransactions(where: $where, orderBy: $orderBy, limit: $limit) {
+      ...BasicAmmTransaction
+    }
+  }
+  ${BasicAmmTransactionFragmentDoc}
+`
+
+/**
+ * __useGetAmmTransactionsQuery__
+ *
+ * To run a query within a React component, call `useGetAmmTransactionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAmmTransactionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAmmTransactionsQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useGetAmmTransactionsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetAmmTransactionsQuery, GetAmmTransactionsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetAmmTransactionsQuery, GetAmmTransactionsQueryVariables>(GetAmmTransactionsDocument, options)
+}
+export function useGetAmmTransactionsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetAmmTransactionsQuery, GetAmmTransactionsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetAmmTransactionsQuery, GetAmmTransactionsQueryVariables>(
+    GetAmmTransactionsDocument,
+    options
+  )
+}
+export type GetAmmTransactionsQueryHookResult = ReturnType<typeof useGetAmmTransactionsQuery>
+export type GetAmmTransactionsLazyQueryHookResult = ReturnType<typeof useGetAmmTransactionsLazyQuery>
+export type GetAmmTransactionsQueryResult = Apollo.QueryResult<
+  GetAmmTransactionsQuery,
+  GetAmmTransactionsQueryVariables
 >

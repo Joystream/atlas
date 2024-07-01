@@ -133,3 +133,9 @@ query GetTopSellingTokens($periodDays: Int!) {
     ammVolume
   }
 }
+
+query GetAmmTransactions($where: AmmTransactionWhereInput, $orderBy: [AmmTransactionOrderByInput!], $limit: Int) {
+  ammTransactions(where: $where, orderBy: $orderBy, limit: $limit) {
+    ...BasicAmmTransaction
+  }
+}
