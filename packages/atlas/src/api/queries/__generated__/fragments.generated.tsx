@@ -2606,6 +2606,73 @@ export type FullAmmCurveFragment = {
   }>
 }
 
+export type BasicAmmTransactionFragment = {
+  __typename?: 'AmmTransaction'
+  id: string
+  quantity: string
+  pricePaid: string
+  pricePerUnit: string
+  transactionType: Types.AmmTransactionType
+  createdIn: number
+  amm: {
+    __typename?: 'AmmCurve'
+    id: string
+    token: {
+      __typename?: 'CreatorToken'
+      id: string
+      symbol?: string | null
+      channel?: {
+        __typename?: 'TokenChannel'
+        channel: {
+          __typename?: 'Channel'
+          id: string
+          avatarPhoto?: {
+            __typename?: 'StorageDataObject'
+            resolvedUrls: Array<string>
+            storageBag: { __typename?: 'StorageBag'; id: string }
+          } | null
+        }
+      } | null
+    }
+  }
+  account: {
+    __typename?: 'TokenAccount'
+    member: {
+      __typename?: 'Membership'
+      id: string
+      handle: string
+      metadata?: {
+        __typename?: 'MemberMetadata'
+        about?: string | null
+        avatar?:
+          | {
+              __typename?: 'AvatarObject'
+              avatarObject: {
+                __typename?: 'StorageDataObject'
+                id: string
+                resolvedUrls: Array<string>
+                createdAt: Date
+                size: string
+                isAccepted: boolean
+                ipfsHash: string
+                storageBag: { __typename?: 'StorageBag'; id: string }
+                type?:
+                  | { __typename: 'DataObjectTypeChannelAvatar' }
+                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+                  | { __typename: 'DataObjectTypeVideoMedia' }
+                  | { __typename: 'DataObjectTypeVideoSubtitle' }
+                  | { __typename: 'DataObjectTypeVideoThumbnail' }
+                  | null
+              }
+            }
+          | { __typename?: 'AvatarUri'; avatarUri: string }
+          | null
+      } | null
+    }
+  }
+}
+
 export const ExtendedVideoCategoryFieldsFragmentDoc = gql`
   fragment ExtendedVideoCategoryFields on ExtendedVideoCategory {
     category {
@@ -3317,4 +3384,38 @@ export const FullAmmCurveFragmentDoc = gql`
       }
     }
   }
+`
+export const BasicAmmTransactionFragmentDoc = gql`
+  fragment BasicAmmTransaction on AmmTransaction {
+    id
+    quantity
+    pricePaid
+    pricePerUnit
+    amm {
+      id
+      token {
+        id
+        symbol
+        channel {
+          channel {
+            id
+            avatarPhoto {
+              resolvedUrls
+              storageBag {
+                id
+              }
+            }
+          }
+        }
+      }
+    }
+    account {
+      member {
+        ...BasicMembershipFields
+      }
+    }
+    transactionType
+    createdIn
+  }
+  ${BasicMembershipFieldsFragmentDoc}
 `

@@ -132,8 +132,8 @@ export function SectionHeader<T>(props: SectionHeaderProps<T>) {
         {start.type === 'title' && <SectionTitleComponent {...start} />}
         {start.type === 'tabs' && <Tabs {...start.tabsProps} />}
       </StartWrapper>
-      {search && <DynamicSearch search={search} isOpen={isSearchInputOpen} onSearchToggle={setIsSearchInputOpen} />}
       <OverflowHiddenWrapper>
+        {search && <DynamicSearch search={search} isOpen={isSearchInputOpen} onSearchToggle={setIsSearchInputOpen} />}
         {filters && shouldShowFilters && <SectionFilters filters={filters} onApplyFilters={onApplyFilters} />}
       </OverflowHiddenWrapper>
       {sort?.type === 'toggle-button' && <ToggleButtonGroup {...sort.toggleButtonOptionTypeProps} />}

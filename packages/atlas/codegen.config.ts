@@ -24,6 +24,8 @@ const config: CodegenConfig = {
     scalars: {
       DateTime: 'Date',
       BigInt: 'string',
+      BigDecimal: 'string',
+      id_ASC: 'string',
     },
     preResolveTypes: true, // avoid using Pick
   },

@@ -51,8 +51,11 @@ export const StyledButton = styled(Button)`
 `
 
 export const OverflowHiddenWrapper = styled.div`
+  display: flex;
+  align-items: center;
   overflow: hidden;
   margin-left: auto;
+  gap: ${sizes(2)};
 `
 
 export const StyledSelect = styled(Select)`

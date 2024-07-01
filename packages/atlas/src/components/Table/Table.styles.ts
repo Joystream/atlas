@@ -2,9 +2,30 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
+import { SvgActionArrowBottom, SvgActionArrowTop } from '@/assets/icons'
 import { Pagination } from '@/components/Pagination'
 import { Text } from '@/components/Text'
-import { cVar, sizes } from '@/styles'
+import { cVar, sizes, square } from '@/styles'
+
+export const DescIndicator = styled(SvgActionArrowBottom)`
+  ${square(16)};
+
+  margin-right: 2px;
+
+  path {
+    fill: ${cVar('colorTextPrimary')};
+  }
+`
+
+export const AscIndicator = styled(SvgActionArrowTop)`
+  ${square(16)};
+
+  margin-right: 2px;
+
+  path {
+    fill: ${cVar('colorTextPrimary')};
+  }
+`
 
 export const Wrapper = styled.div<{ interactive?: boolean }>`
   background-color: ${cVar('colorBackgroundMuted')};
