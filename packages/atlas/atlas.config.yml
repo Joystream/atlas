@@ -1,16 +1,16 @@
 general:
   appName: Gleev # Application name - used in the copy throughout the app, in index.html, open graph meta tags, etc. Don't use env variables here
   appDescription: 'The streaming platform empowering viewers, creators, and builders. Built on and operated by the Joystream blockchain and DAO.' # Application description - used in index.html meta tags
-  appTagline: 'The streaming platform empowering viewers, creators, and builders. Built on and operated by the Joystream blockchain and DAO.'
   appId: '$VITE_APP_ID' # App ID for Apps as first-class citizens
-  appTwitterId: '@JoystreamDAO' # Twitter handle for the app - used in open graph meta tags in HTML
-  appUrl: 'https://play.joystream.org' # URL at which the app is hosted - used in open graph meta tags in HTML
-  appGithubUrl: 'https://github.com/Joystream/atlas' # URL for Atlas GitHub repository - used in the footer
-  appOgImgPath: '/og-image.webp' # Path to the open graph image - used in open graph meta tags in HTML
+  appTwitterId: '@Gleevapp' # Twitter handle for the app - used in open graph meta tags in HTML
+  appTagline: 'Gleev brings together the like-minded creators and viewers around the shared passion of the present and the future of Crypto affairs.'
+  appUrl: 'https://gleev.xyz' # URL at which the app is hosted - used in open graph meta tags in HTML
+  appGithubUrl: 'https://github.com/Joystream/gleev' # URL for Atlas GitHub repository - used in the footer
+  appOgImgPath: 'https://gleev.xyz/og-image.webp' # Path to the open graph image - used in open graph meta tags in HTML
   pioneerMemberUrlPrefix: 'https://dao.joystream.org/#/members' # URL prefix for Pioneer member profile page - used to link to member details
   joystreamLandingPageUrl: 'https://www.joystream.org' # URL for Joystream landing page - used in the footer and in "Learn more" links
   joystreamDiscordUrl: 'https://discord.gg/joystream' # URL for Joystream Discord - used for support when errors occur
-  appContentFocus: 'web3 & crypto' # Content focus of given app. Provide a string, for example `web & crypto` or `sport`
+  appContentFocus: '' # Content focus of given app. Provide a string, for example `web & crypto` or `sport`
   crtMaintenanceMode: false
 storage:
   assetResponseTimeout: 2_000 # Timeout for asset response in ms - after this timeout, different distributor will be tried
@@ -39,9 +39,9 @@ joystream:
 features:
   ypp:
     yppDelayThreshold: 300 # When the YPP sync backlog exceeds the threshold, Atlas will consider the YPP sync delayed.
-    landingPageOgTitle: null # Open graph title for YPP landing page - used in open graph meta tags in HTML
-    landingPageOgDescription: null # Open graph description for YPP landing page - used in open graph meta tags in HTML
-    landingPageOgImgPath: null # Path to the open graph image for the YPP landing page - if not set, the default image will be used
+    landingPageOgTitle: 'Gleev Creator Rewards Program' # Open graph title for YPP landing page - used in open graph meta tags in HTML
+    landingPageOgDescription: 'Connect and monetize your content with Web3 native features on Gleev, the video streaming dApp built on Joystream blockchain.' # Open graph description for YPP landing page - used in open graph meta tags in HTML
+    landingPageOgImgPath: 'https://gleev.xyz/og-image-ypp.webp' # Path to the open graph image for the YPP landing page - if not set, the default image will be used
     googleConsoleClientId: '$VITE_GOOGLE_CONSOLE_CLIENT_ID'
     youtubeSyncApiUrl: '$VITE_YOUTUBE_SYNC_API_URL'
     suspensionReasonsLink: https://joystream.notion.site/My-channel-is-suspended-what-to-do-86a3df16c55c434ab2184d61dfcfc41b # Link with explanation what might be the reason of ypp channel suspension
@@ -51,16 +51,16 @@ features:
     enrollmentReward: 5000 # Amount for successful enrollment in YPP in joystream.tokenTicker units.
     enrollmentUsdReward: 5 # Amount for successful enrollment in YPP in USD.
     referralBaseReward: 2.5 # Self-explanatory, it should match `baseUsdAmount.min` value in last `rewards` entry
-    tierBoostMultiplier: 2 # Multiplier to boost specific tiers for certain conditions
+    tierBoostMultiplier: 1 # Multiplier to boost specific tiers for certain conditions
     tiersDefinition: # Tiers for YouTube partner program rewards. You can provide maximum three tiers. Each tier should has own multiplier.
       - tier: 'bronze'
         reqs:
           - Lower effort production.
           - Growing subscriber base of channel supporters.
         rewards:
-          - 0 # Reward for signup in USD
+          - 1 # Reward for signup in USD
           - 0 # Reward for synced video
-          - 0 # Reward for referral
+          - 1 # Reward for referral
       - tier: 'silver'
         reqs:
           - Original good quality of content.
@@ -68,15 +68,15 @@ features:
         rewards:
           - 25
           - 1
-          - 10
+          - 25
       - tier: 'gold'
         reqs:
           - Great quality of content.
           - Large subscriber base of fans active in the comments section.
         rewards:
           - 50
-          - 3
-          - 25
+          - 2
+          - 50
       - tier: 'diamond'
         reqs:
           - Top tier professional quality.
@@ -84,7 +84,7 @@ features:
         rewards:
           - 100
           - 5
-          - 50
+          - 100
     rewards:
       - title: Sign Up to YouTube Partner Program
         showInDashboard: false # Optional. If false the reward will be shown only on YouTube partner program landing page. Default true
@@ -106,7 +106,7 @@ features:
         stepsDescription: Earn when another YouTube creator signs up to the program by using your your referral link.
         steps:
           - Copy your link with get referral link button.
-          - Send it to as many Web3 YouTube creators as you want.
+          - Send it to as many YouTube creators as you want.
           - Get rewarded for every new successful sign up, that uses your referral link. Referral reward depends on their popularity tier.
           - If signed up without the link they can simply add your channel name to the referral field in the registration flow.
         baseAmount: null
@@ -304,29 +304,29 @@ content:
       color: '#D92E61' # Color used in the UI for this category
       iconUrl: '' # URL for category icon SVG
       coverImgUrl: '' # URL for category cover image
-      videoCategories: ['3142434-2'] # List of metaprotocol category IDs that should be included in this display category
-      defaultVideoCategory: '3142434-2'
+      videoCategories: ['4209396-2'] # List of metaprotocol category IDs that should be included in this display category
+      defaultVideoCategory: '4209396-2'
     - id: '2'
       name: 'Animation and Film'
       color: '#E7BE2D'
       iconUrl: ''
       coverImgUrl: ''
-      videoCategories: ['3142437-2']
-      defaultVideoCategory: '3142437-2'
+      videoCategories: ['4209546-2']
+      defaultVideoCategory: '4209546-2'
     - id: '3'
       name: 'Autos and Vehicles'
       color: '#BD4BE4'
       iconUrl: ''
       coverImgUrl: ''
-      videoCategories: ['3142440-2']
-      defaultVideoCategory: '3142440-2'
+      videoCategories: ['4209572-2']
+      defaultVideoCategory: '4209572-2'
     - id: '4'
       name: 'Business and Finance'
       color: '#BDE933'
       iconUrl: ''
       coverImgUrl: ''
-      videoCategories: ['3142443-2']
-      defaultVideoCategory: '3142443-2'
+      videoCategories: ['4209583-2']
+      defaultVideoCategory: '4209583-2'
     - id: '5'
       name: 'Crypto'
       color: '#54A7F0'
@@ -334,133 +334,129 @@ content:
       coverImgUrl: ''
       videoCategories:
         [
-          '3142446-2',
-          '57-2',
-          '59-2',
-          '61-2',
-          '63-2',
-          '848-2',
-          '852-2',
-          '856-2',
-          '860-2',
-          '864-2',
-          '868-2',
-          '873-2',
-          '878-2',
-          '883-2',
-          '888-2',
-          '893-2',
-          '898-2',
-          '905-2',
-          '910-2',
-          '915-2',
+          '4209591-2',
+          '254423-2',
+          '254433-2',
+          '254434-2',
+          '254435-2',
+          '254436-2',
+          '254437-2',
+          '254438-2',
+          '254441-2',
+          '254445-2',
+          '254446-2',
+          '254449-2',
+          '887567-2',
+          '254450-2',
         ]
-      defaultVideoCategory: '3142446-2'
+      defaultVideoCategory: '4209591-2'
     - id: '6'
       name: 'DIY'
       color: '#DD379D'
       iconUrl: ''
       coverImgUrl: ''
-      videoCategories: ['3142448-2']
-      defaultVideoCategory: '3142448-2'
+      videoCategories: ['4209595-2']
+      defaultVideoCategory: '4209595-2'
     - id: '7'
       name: 'Education'
       color: '#5A7AEE'
       iconUrl: ''
       coverImgUrl: ''
-      videoCategories: ['3142451-2']
-      defaultVideoCategory: '3142451-2'
+      videoCategories: ['4209603-2']
+      defaultVideoCategory: '4209603-2'
     - id: '8'
       name: 'Entertainment'
       color: '#41EE5A'
       iconUrl: ''
       coverImgUrl: ''
-      videoCategories: ['3142456-2']
-      defaultVideoCategory: '3142456-2'
+      videoCategories: ['4209609-2']
+      defaultVideoCategory: '4209609-2'
     - id: '9'
       name: 'Lifestyle'
       color: '#9455E8'
       iconUrl: ''
       coverImgUrl: ''
-      videoCategories: ['3142459-4']
-      defaultVideoCategory: '"3142459-4'
+      videoCategories: ['4209637-2']
+      defaultVideoCategory: '4209637-2'
     - id: '10'
       name: 'Memes and Humour'
       color: '#4FE1F2'
       iconUrl: ''
       coverImgUrl: ''
-      videoCategories: ['3142468-2']
-      defaultVideoCategory: '3142468-2'
+      videoCategories: ['4209643-2']
+      defaultVideoCategory: '4209643-2'
     - id: '11'
       name: 'Music and Music Videos'
       color: '#6E5FEC'
       iconUrl: ''
       coverImgUrl: ''
-      videoCategories: ['3142471-2']
-      defaultVideoCategory: '3142471-2'
+      videoCategories: ['4209650-2']
+      defaultVideoCategory: '4209650-2'
     - id: '12'
       name: 'Nature'
       color: '#E57827'
       iconUrl: ''
       coverImgUrl: ''
-      videoCategories: ['3142475-2']
-      defaultVideoCategory: '3142475-2'
+      videoCategories: ['4209658-2']
+      defaultVideoCategory: '4209658-2'
     - id: '13'
       name: 'News and Current Affairs'
       color: '#6EEC3A'
       iconUrl: ''
       coverImgUrl: ''
-      videoCategories: ['3142484-2']
-      defaultVideoCategory: '3142484-2'
+      videoCategories: ['4209664-2']
+      defaultVideoCategory: '4209664-2'
     - id: '14'
       name: 'People and Blogs'
       color: '#E141D6'
       iconUrl: ''
       coverImgUrl: ''
-      videoCategories: ['3142490-2']
-      defaultVideoCategory: '3142490-2'
+      videoCategories: ['4209674-2']
+      defaultVideoCategory: '4209674-2'
     - id: '15'
       name: 'Pets and Animals'
       color: '#48F0B3'
       iconUrl: ''
       coverImgUrl: ''
-      videoCategories: ['3142493-2']
-      defaultVideoCategory: '3142493-2'
+      videoCategories: ['4209679-2']
+      defaultVideoCategory: '4209679-2'
     - id: '16'
       name: 'Sports'
       color: '#B0E839'
       iconUrl: ''
       coverImgUrl: ''
-      videoCategories: ['3142501-3']
-      defaultVideoCategory: '3142501-3'
+      videoCategories: ['4209685-2']
+      defaultVideoCategory: '4209685-2'
     - id: '17'
       name: 'Technology'
       color: '#3EE7B4'
       iconUrl: ''
       coverImgUrl: ''
-      videoCategories: ['3142503-2']
-      defaultVideoCategory: '3142503-2'
+      videoCategories: ['4209691-2']
+      defaultVideoCategory: '4209691-2'
     - id: '18'
       name: 'Travel'
       color: '#68FA63'
       iconUrl: ''
       coverImgUrl: ''
-      videoCategories: ['3142506-2']
-      defaultVideoCategory: '3142506-2'
+      videoCategories: ['4209700-2']
+      defaultVideoCategory: '4209700-2'
     - id: '19'
       name: 'Unboxing'
       color: '#EE4BB7'
       iconUrl: ''
       coverImgUrl: ''
-      videoCategories: ['3142509-2']
-      defaultVideoCategory: '3142509-2'
+      videoCategories: ['4209707-2']
+      defaultVideoCategory: '4209707-2'
     - id: '20'
       name: 'Video Games'
       color: '#FCAC4D'
       iconUrl: ''
       coverImgUrl: ''
-      videoCategories: ['3142511-2']
-      defaultVideoCategory: '3142511-2'
+      videoCategories: ['4209721-2']
+      defaultVideoCategory: '4209721-2'
+
+  showAllContent: false # With this disabled, Atlas will display only content from display categories defined above. If you want your app to display all Joystream content, set this to true.
 
   languages: # List of languages to be used in the app. Those will be used when setting video's language, for adding subtitles, etc.
     - isoCode: ar
@@ -724,7 +720,7 @@ legal:
     Licenses supported may be updated at any time and full set of licenses that are available for selection in the App upon video upload or uploaded via Command Line interface are contained in [this file](https://github.com/Joystream/atlas/blob/master/packages/atlas/src/data/knownLicenses.json)
   privacyPolicy: |
     # 1. Privacy Policy
-    Last updated on the 9th of June 2023
+    Last updated on the 4th of December 2023
 
     ## 1.1 Agreement to the Policy
 
