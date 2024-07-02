@@ -8,6 +8,8 @@ import {
   GuardarianEstimation,
 } from './GuardarianService.types'
 
+import { formatDateGuardarian } from '../time'
+
 type TransactionType = 'sell' | 'buy'
 
 // export const JOYSTREAM_CHANGENOW_TICKER = 'joystream'
@@ -144,7 +146,6 @@ class GuardarianService {
       dob: string
     }
   }) {
-    console.log('inside', from, to)
     return axiosInstance.post<GuardarianCreateTransactionResponse>(
       `${GUARDARIAN_URL}/transaction`,
       {
@@ -156,16 +157,21 @@ class GuardarianService {
         payout_info: {
           extra_id: extraId,
         },
-        billing_info: {
-          country_alpha_2: billingInfo.country,
-          region: billingInfo.region,
-          city: billingInfo.city,
-          street_address: billingInfo.street,
-          apt_number: billingInfo.apartment,
-          post_index: billingInfo.postIndex,
-          first_name: billingInfo.firstName,
-          last_name: billingInfo.lastName,
-          date_of_birthday: billingInfo.dob,
+        customer: {
+          contact_info: {
+            email: billingInfo.email,
+          },
+          billing_info: {
+            country_alpha_2: billingInfo.country,
+            region: billingInfo.region,
+            city: billingInfo.city,
+            street_address: billingInfo.street,
+            apt_number: billingInfo.apartment,
+            post_index: billingInfo.postIndex,
+            first_name: billingInfo.firstName,
+            last_name: billingInfo.lastName,
+            date_of_birthday: formatDateGuardarian(new Date(billingInfo.dob)),
+          },
         },
       },
       {

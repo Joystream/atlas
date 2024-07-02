@@ -168,7 +168,7 @@ export const GuardarianModalBillingInfoStep = ({
             required: 'Field is required',
           }}
           render={({ field: { onChange, value } }) => {
-            const selected = countriesOptions?.find((row) => row.code_iso_alpha_3 === value)
+            const selected = countriesOptions?.find((row) => row.code_iso_alpha_2 === value)
             return (
               <FormField error={errors.country?.message} label="Select your country">
                 <ComboBox
@@ -177,7 +177,7 @@ export const GuardarianModalBillingInfoStep = ({
                   selectedItem={selected}
                   placeholder="Poland"
                   onSelectedItemChange={(e) => {
-                    onChange(e?.code_iso_alpha_3)
+                    onChange(e?.code_iso_alpha_2)
                   }}
                   items={countriesOptions}
                 />
