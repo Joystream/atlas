@@ -13,6 +13,7 @@ import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { sendUserInteraction } from '@/utils/interactions'
 
 import { PercentageChangeIndicator } from '../PercentageChangeIndicator'
 import {
@@ -147,7 +148,16 @@ export const TopMovingTokens = ({ interval, tableTitle }: { interval: number; ta
             columns={columns}
             data={mappedData}
             doubleColumn={lgMatch}
-            getRowTo={(idx) => absoluteRoutes.viewer.channel(mappedData[idx].channelId ?? '', { tab: 'Token' })}
+            onRowClick={(idx) => {
+              if (hotAndColdTokens?.[idx].creatorToken.id) {
+                sendUserInteraction('MarketplaceTokenEntry', hotAndColdTokens[idx].creatorToken.id).catch(
+                  () => undefined
+                )
+              }
+            }}
+            getRowTo={(idx) => {
+              return absoluteRoutes.viewer.channel(mappedData[idx].channelId ?? '', { tab: 'Token' })
+            }}
             interactive
           />,
         ],

@@ -51,6 +51,7 @@ export const FeaturedSection = ({
           <StyledCrtCard
             key={id}
             status={status}
+            id={id}
             channelId={channel?.channel.id ?? ''}
             symbol={symbol ?? 'N/A'}
             avatar={channel?.channel.avatarPhoto?.resolvedUrls[0]}

@@ -12,6 +12,7 @@ import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { sendUserInteraction } from '@/utils/interactions'
 
 import { JoyTokenIcon } from '../JoyTokenIcon'
 import {
@@ -135,6 +136,13 @@ export const TopVolumeTokens = () => {
             columns={COLUMNS}
             data={mappedData}
             doubleColumn={lgMatch}
+            onRowClick={(idx) => {
+              if (topSellingToken?.[idx].creatorToken.id) {
+                sendUserInteraction('MarketplaceTokenEntry', topSellingToken[idx].creatorToken.id).catch(
+                  () => undefined
+                )
+              }
+            }}
             getRowTo={(idx) => absoluteRoutes.viewer.channel(mappedData[idx].channelId ?? '', { tab: 'Token' })}
             interactive
           />,

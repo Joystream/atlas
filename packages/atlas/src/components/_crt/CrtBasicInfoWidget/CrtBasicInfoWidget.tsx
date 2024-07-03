@@ -41,6 +41,7 @@ export const CrtBasicInfoWidget = ({
 }
 
 export type CrtMainInfoProps = {
+  id?: string
   name?: string
   symbol?: string
   isVerified?: boolean

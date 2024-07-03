@@ -13,6 +13,7 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { DetailsContent, DetailsContentProps } from '@/components/_nft/NftTile'
 import { absoluteRoutes } from '@/config/routes'
 import { cVar, sizes } from '@/styles'
+import { sendUserInteraction } from '@/utils/interactions'
 
 type SaleProps = {
   type: 'sale'
@@ -169,7 +170,15 @@ export const CrtCard = ({
   }
 
   return (
-    <Container to={absoluteRoutes.viewer.channel(channelId, { tab: 'Token' })} className={className}>
+    <Container
+      onClick={() => {
+        if (mainInfoProps.id) {
+          sendUserInteraction('MarketplaceTokenEntry', mainInfoProps.id).catch(() => undefined)
+        }
+      }}
+      to={absoluteRoutes.viewer.channel(channelId, { tab: 'Token' })}
+      className={className}
+    >
       <CrtMainInfo size={size} {...mainInfoProps}>
         <AvatarBox width="100%" justifyContent="space-between">
           <Avatar

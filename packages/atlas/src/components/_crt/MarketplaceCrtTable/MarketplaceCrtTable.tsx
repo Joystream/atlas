@@ -74,6 +74,7 @@ export type MarketplaceCrtTableProps = {
   | 'onColumnSortClick'
   | 'sortSupportedColumnsIds'
   | 'defaultSorting'
+  | 'onRowClick'
 >
 
 export const MarketplaceCrtTable = ({ data, emptyState, isLoading, ...tableProps }: MarketplaceCrtTableProps) => {

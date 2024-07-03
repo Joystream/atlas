@@ -9,6 +9,7 @@ import { MarketplaceCrtTable } from '@/components/_crt/MarketplaceCrtTable'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useTokensPagination } from '@/hooks/useTokensPagniation'
+import { sendUserInteraction } from '@/utils/interactions'
 
 export const AllTokensSection = () => {
   const smMatch = useMediaMatch('sm')
@@ -94,6 +95,11 @@ export const AllTokensSection = () => {
                   key="single-table"
                   data={tableData}
                   getRowTo={(idx) => absoluteRoutes.viewer.channel(tableData[idx]?.channelId ?? '', { tab: 'Token' })}
+                  onRowClick={(idx) => {
+                    if (tokens?.[idx].id) {
+                      sendUserInteraction('MarketplaceTokenEntry', tokens[idx].id).catch(() => undefined)
+                    }
+                  }}
                   interactive
                   isLoading={isLoading}
                   pageSize={perPage}
