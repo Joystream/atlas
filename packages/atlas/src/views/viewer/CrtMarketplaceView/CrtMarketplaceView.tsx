@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 
 import { CreatorTokenOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
+import { HotCreatorTokens } from '@/components/HotCreatorTokens'
 import { LastestCrtTrades } from '@/components/LastestCrtTrades'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { TopMovingTokens } from '@/components/TopCrtMovers'
@@ -22,7 +23,7 @@ export const CrtMarketplaceView = () => {
 
         <TableFullWitdhtWrapper>
           <LimitedWidthContainer big noBottomPadding>
-            <TopMovingTokens interval={30} tableTitle="Hot tokens" />
+            <HotCreatorTokens interval={30} tableTitle="Hot tokens" />
           </LimitedWidthContainer>
         </TableFullWitdhtWrapper>
 

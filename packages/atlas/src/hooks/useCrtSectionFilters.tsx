@@ -59,12 +59,9 @@ export const SORTING_FILTERS = [
 export const sortMappings: Record<string, [MarketplaceTokenOrderByInput, MarketplaceTokenOrderByInput]> = {
   token: [MarketplaceTokenOrderByInput.SymbolDesc, MarketplaceTokenOrderByInput.SymbolAsc],
   createdAt: [MarketplaceTokenOrderByInput.CreatedAtDesc, MarketplaceTokenOrderByInput.CreatedAtAsc],
-  dailyPriceChange: [
-    MarketplaceTokenOrderByInput.LastDayPriceChangeDesc,
-    MarketplaceTokenOrderByInput.LastDayPriceChangeAsc,
-  ],
+  priceChange: [MarketplaceTokenOrderByInput.PriceChangeDesc, MarketplaceTokenOrderByInput.PriceChangeAsc],
   price: [MarketplaceTokenOrderByInput.LastPriceDesc, MarketplaceTokenOrderByInput.LastPriceAsc],
-  liquidityChange: [MarketplaceTokenOrderByInput.WeeklyLiqChangeDesc, MarketplaceTokenOrderByInput.WeeklyLiqChangeAsc],
+  liquidityChange: [MarketplaceTokenOrderByInput.LiquidityChangeDesc, MarketplaceTokenOrderByInput.LiquidityChangeAsc],
   liquidity: [MarketplaceTokenOrderByInput.LiquidityDesc, MarketplaceTokenOrderByInput.LiquidityAsc],
   tradingVolume: [MarketplaceTokenOrderByInput.AmmVolumeDesc, MarketplaceTokenOrderByInput.AmmVolumeAsc],
   marketCap: [MarketplaceTokenOrderByInput.MarketCapDesc, MarketplaceTokenOrderByInput.MarketCapAsc],
