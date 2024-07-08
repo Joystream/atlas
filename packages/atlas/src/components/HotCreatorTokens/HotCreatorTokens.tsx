@@ -1,7 +1,8 @@
 import styled from '@emotion/styled'
 import BN from 'bn.js'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 
+import { useGetMostInteractedEntityByTypeQuery } from '@/api/queries/__generated__/admin.generated'
 import { useGetHotAndColdTokensQuery } from '@/api/queries/__generated__/creatorTokens.generated'
 import { SvgEmptyStateIllustration } from '@/assets/illustrations'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
@@ -36,7 +37,7 @@ const getColumns = (interval: number): TableProps['columns'] => [
   },
   {
     Header: () => <RightAlignedHeader>PRICE % {interval}D</RightAlignedHeader>,
-    accessor: 'weeklyPriceChange',
+    accessor: 'priceChange',
     width: 4,
   },
   {
@@ -52,15 +53,23 @@ const tableEmptyState = {
   icon: <SvgEmptyStateIllustration />,
 }
 
-export const TopMovingTokens = ({ interval, tableTitle }: { interval: number; tableTitle: string }) => {
-  const [orderDesc, setOrderDesc] = useState(true)
+export const HotCreatorTokens = ({ interval, tableTitle }: { interval: number; tableTitle: string }) => {
+  const { data: topInteractedTokens } = useGetMostInteractedEntityByTypeQuery({
+    variables: {
+      period: interval,
+      type: 'MarketplaceTokenEntry',
+    },
+  })
   const { data, loading } = useGetHotAndColdTokensQuery({
     variables: {
       periodDays: interval,
-      priceDesc: orderDesc,
       limit: 10,
+      where: {
+        id_in: topInteractedTokens?.getTopInteractedEnities.map((entity) => entity.entityId),
+      },
     },
   })
+
   const columns = getColumns(interval)
   const { tokensWithPriceChange: _tokensWithPriceChange } = data ?? {}
   const tokensWithPriceChange = _tokensWithPriceChange?.filter((token) => token.pricePercentageChange != 0)
@@ -108,7 +117,7 @@ export const TopMovingTokens = ({ interval, tableTitle }: { interval: number; ta
               />
             </JoyAmountWrapper>
           ),
-          weeklyPriceChange: (
+          priceChange: (
             <JoyAmountWrapper>
               <PercentageChangeIndicator value={data.pricePercentageChange} />
             </JoyAmountWrapper>
@@ -135,24 +144,6 @@ export const TopMovingTokens = ({ interval, tableTitle }: { interval: number; ta
         start: {
           type: 'title',
           title: tableTitle,
-        },
-        sort: {
-          type: 'toggle-button',
-          toggleButtonOptionTypeProps: {
-            onChange: (val) => setOrderDesc(val),
-            value: orderDesc,
-            type: 'options',
-            options: [
-              {
-                label: 'Winners',
-                value: true,
-              },
-              {
-                label: 'Losers',
-                value: false,
-              },
-            ],
-          },
         },
       }}
       contentProps={{

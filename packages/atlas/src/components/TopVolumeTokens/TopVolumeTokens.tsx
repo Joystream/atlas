@@ -34,7 +34,7 @@ const COLUMNS: TableProps['columns'] = [
     width: 5,
   },
   {
-    Header: () => <RightAlignedHeader>7D Volume</RightAlignedHeader>,
+    Header: () => <RightAlignedHeader>30D Volume</RightAlignedHeader>,
     accessor: 'ammVolume',
     width: 4,
   },
@@ -50,6 +50,8 @@ export const TopVolumeTokens = () => {
   const { data, loading } = useGetTopSellingTokensQuery({
     variables: {
       periodDays: 30,
+      volumeDesc: true,
+      limit: 10,
     },
   })
   const { topSellingToken } = data ?? {}

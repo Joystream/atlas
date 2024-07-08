@@ -44,8 +44,8 @@ export const AllTokensSection = () => {
         cumulativeRevenue,
         ammVolume,
         liquidity,
-        weeklyLiqChange,
-        lastDayPriceChange,
+        liquidityChange,
+        priceChange,
         marketCap,
         channelId,
       }) => ({
@@ -61,8 +61,8 @@ export const AllTokensSection = () => {
         tokenTitle: symbol ?? 'N/A',
         ammVolume: new BN(ammVolume ?? 0),
         liquidity: liquidity ?? 0,
-        weeklyLiqChange: +(weeklyLiqChange ?? 0),
-        lastDayPriceChange: +(lastDayPriceChange ?? 0),
+        liquidityChange: +(liquidityChange ?? 0),
+        priceChange: +(priceChange ?? 0),
       })
     ) ?? []
   const currentSortingTableColumn = Object.entries(sortMappings).find(([, mapping]) => mapping.includes(orderBy))

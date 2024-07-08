@@ -33,9 +33,9 @@ export const tableLoadingData = Array.from({ length: 10 }, () => ({
 const COLUMNS: TableProps['columns'] = [
   { Header: 'Token', accessor: 'token', width: 2 },
   { Header: 'Date created', accessor: 'createdAt', width: 2 },
-  { Header: 'Price % 24h', accessor: 'dailyPriceChange', width: 2 },
+  { Header: 'Price % 30d', accessor: 'priceChange', width: 2 },
   { Header: 'Price', accessor: 'price', width: 2 },
-  { Header: 'Liq % 7d', accessor: 'liquidityChange', width: 2 },
+  { Header: 'Liq % 30d', accessor: 'liquidityChange', width: 2 },
   { Header: 'Liquidity', accessor: 'liquidity', width: 2 },
   { Header: 'Tranding vol.', accessor: 'tradingVolume', width: 2 },
   { Header: 'Status', accessor: 'status', width: 1 },
@@ -54,9 +54,9 @@ export type MarketplaceToken = {
   totalRevenue: BN
   holdersNum: number
   channelId: string
-  lastDayPriceChange: number
+  priceChange: number
   ammVolume: BN
-  weeklyLiqChange: number
+  liquidityChange: number
   liquidity: number
   lastPrice: BN
 }
@@ -86,9 +86,9 @@ export const MarketplaceCrtTable = ({ data, emptyState, isLoading, ...tableProps
           {formatDate(row.createdAt)}
         </Text>
       ),
-      dailyPriceChange: (
+      priceChange: (
         <span>
-          <PercentageChangeIndicator value={row.lastDayPriceChange} />
+          <PercentageChangeIndicator value={row.priceChange} />
         </span>
       ),
       price: (
@@ -102,7 +102,7 @@ export const MarketplaceCrtTable = ({ data, emptyState, isLoading, ...tableProps
       ),
       liquidityChange: (
         <span>
-          <PercentageChangeIndicator value={row.weeklyLiqChange} />
+          <PercentageChangeIndicator value={row.liquidityChange} />
         </span>
       ),
       liquidity: (
