@@ -5895,15 +5895,16 @@ export type MarketplaceToken = {
   isFeatured: Scalars['Boolean']
   /** access status invite only vs anyone */
   isInviteOnly: Scalars['Boolean']
-  lastDayPriceChange?: Maybe<Scalars['BigDecimal']>
   /** last unit price available */
   lastPrice?: Maybe<Scalars['BigInt']>
   liquidity?: Maybe<Scalars['Int']>
+  liquidityChange?: Maybe<Scalars['BigDecimal']>
   marketCap?: Maybe<Scalars['BigInt']>
   /** number of revenue shares issued */
   numberOfRevenueShareActivations: Scalars['Int']
   /** number of vested transfer completed */
   numberOfVestedTransferIssued: Scalars['Int']
+  priceChange?: Maybe<Scalars['BigDecimal']>
   /** revenue share ratio between creator and holder */
   revenueShareRatioPermill: Scalars['Int']
   /** status sale / market / idle */
@@ -5912,7 +5913,6 @@ export type MarketplaceToken = {
   symbol?: Maybe<Scalars['String']>
   /** total supply */
   totalSupply: Scalars['BigInt']
-  weeklyLiqChange?: Maybe<Scalars['BigDecimal']>
   /** link for creator to member interested in joining the whitelist */
   whitelistApplicantLink?: Maybe<Scalars['String']>
   /** note from creator to member interested in joining the whitelist */
@@ -5963,10 +5963,10 @@ export enum MarketplaceTokenOrderByInput {
   IsFeaturedDesc = 'isFeatured_DESC',
   IsInviteOnlyAsc = 'isInviteOnly_ASC',
   IsInviteOnlyDesc = 'isInviteOnly_DESC',
-  LastDayPriceChangeAsc = 'lastDayPriceChange_ASC',
-  LastDayPriceChangeDesc = 'lastDayPriceChange_DESC',
   LastPriceAsc = 'lastPrice_ASC',
   LastPriceDesc = 'lastPrice_DESC',
+  LiquidityChangeAsc = 'liquidityChange_ASC',
+  LiquidityChangeDesc = 'liquidityChange_DESC',
   LiquidityAsc = 'liquidity_ASC',
   LiquidityDesc = 'liquidity_DESC',
   MarketCapAsc = 'marketCap_ASC',
@@ -5975,6 +5975,8 @@ export enum MarketplaceTokenOrderByInput {
   NumberOfRevenueShareActivationsDesc = 'numberOfRevenueShareActivations_DESC',
   NumberOfVestedTransferIssuedAsc = 'numberOfVestedTransferIssued_ASC',
   NumberOfVestedTransferIssuedDesc = 'numberOfVestedTransferIssued_DESC',
+  PriceChangeAsc = 'priceChange_ASC',
+  PriceChangeDesc = 'priceChange_DESC',
   RevenueShareRatioPermillAsc = 'revenueShareRatioPermill_ASC',
   RevenueShareRatioPermillDesc = 'revenueShareRatioPermill_DESC',
   StatusAsc = 'status_ASC',
@@ -5983,8 +5985,6 @@ export enum MarketplaceTokenOrderByInput {
   SymbolDesc = 'symbol_DESC',
   TotalSupplyAsc = 'totalSupply_ASC',
   TotalSupplyDesc = 'totalSupply_DESC',
-  WeeklyLiqChangeAsc = 'weeklyLiqChange_ASC',
-  WeeklyLiqChangeDesc = 'weeklyLiqChange_DESC',
   WhitelistApplicantLinkAsc = 'whitelistApplicantLink_ASC',
   WhitelistApplicantLinkDesc = 'whitelistApplicantLink_DESC',
   WhitelistApplicantNoteAsc = 'whitelistApplicantNote_ASC',
@@ -6152,15 +6152,6 @@ export type MarketplaceTokenWhereInput = {
   isInviteOnly_eq?: InputMaybe<Scalars['Boolean']>
   isInviteOnly_isNull?: InputMaybe<Scalars['Boolean']>
   isInviteOnly_not_eq?: InputMaybe<Scalars['Boolean']>
-  lastDayPriceChange_eq?: InputMaybe<Scalars['BigDecimal']>
-  lastDayPriceChange_gt?: InputMaybe<Scalars['BigDecimal']>
-  lastDayPriceChange_gte?: InputMaybe<Scalars['BigDecimal']>
-  lastDayPriceChange_in?: InputMaybe<Array<Scalars['BigDecimal']>>
-  lastDayPriceChange_isNull?: InputMaybe<Scalars['Boolean']>
-  lastDayPriceChange_lt?: InputMaybe<Scalars['BigDecimal']>
-  lastDayPriceChange_lte?: InputMaybe<Scalars['BigDecimal']>
-  lastDayPriceChange_not_eq?: InputMaybe<Scalars['BigDecimal']>
-  lastDayPriceChange_not_in?: InputMaybe<Array<Scalars['BigDecimal']>>
   lastPrice_eq?: InputMaybe<Scalars['BigInt']>
   lastPrice_gt?: InputMaybe<Scalars['BigInt']>
   lastPrice_gte?: InputMaybe<Scalars['BigInt']>
@@ -6170,6 +6161,15 @@ export type MarketplaceTokenWhereInput = {
   lastPrice_lte?: InputMaybe<Scalars['BigInt']>
   lastPrice_not_eq?: InputMaybe<Scalars['BigInt']>
   lastPrice_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  liquidityChange_eq?: InputMaybe<Scalars['BigDecimal']>
+  liquidityChange_gt?: InputMaybe<Scalars['BigDecimal']>
+  liquidityChange_gte?: InputMaybe<Scalars['BigDecimal']>
+  liquidityChange_in?: InputMaybe<Array<Scalars['BigDecimal']>>
+  liquidityChange_isNull?: InputMaybe<Scalars['Boolean']>
+  liquidityChange_lt?: InputMaybe<Scalars['BigDecimal']>
+  liquidityChange_lte?: InputMaybe<Scalars['BigDecimal']>
+  liquidityChange_not_eq?: InputMaybe<Scalars['BigDecimal']>
+  liquidityChange_not_in?: InputMaybe<Array<Scalars['BigDecimal']>>
   liquidity_eq?: InputMaybe<Scalars['Int']>
   liquidity_gt?: InputMaybe<Scalars['Int']>
   liquidity_gte?: InputMaybe<Scalars['Int']>
@@ -6206,6 +6206,15 @@ export type MarketplaceTokenWhereInput = {
   numberOfVestedTransferIssued_lte?: InputMaybe<Scalars['Int']>
   numberOfVestedTransferIssued_not_eq?: InputMaybe<Scalars['Int']>
   numberOfVestedTransferIssued_not_in?: InputMaybe<Array<Scalars['Int']>>
+  priceChange_eq?: InputMaybe<Scalars['BigDecimal']>
+  priceChange_gt?: InputMaybe<Scalars['BigDecimal']>
+  priceChange_gte?: InputMaybe<Scalars['BigDecimal']>
+  priceChange_in?: InputMaybe<Array<Scalars['BigDecimal']>>
+  priceChange_isNull?: InputMaybe<Scalars['Boolean']>
+  priceChange_lt?: InputMaybe<Scalars['BigDecimal']>
+  priceChange_lte?: InputMaybe<Scalars['BigDecimal']>
+  priceChange_not_eq?: InputMaybe<Scalars['BigDecimal']>
+  priceChange_not_in?: InputMaybe<Array<Scalars['BigDecimal']>>
   revenueShareRatioPermill_eq?: InputMaybe<Scalars['Int']>
   revenueShareRatioPermill_gt?: InputMaybe<Scalars['Int']>
   revenueShareRatioPermill_gte?: InputMaybe<Scalars['Int']>
@@ -6246,15 +6255,6 @@ export type MarketplaceTokenWhereInput = {
   totalSupply_lte?: InputMaybe<Scalars['BigInt']>
   totalSupply_not_eq?: InputMaybe<Scalars['BigInt']>
   totalSupply_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-  weeklyLiqChange_eq?: InputMaybe<Scalars['BigDecimal']>
-  weeklyLiqChange_gt?: InputMaybe<Scalars['BigDecimal']>
-  weeklyLiqChange_gte?: InputMaybe<Scalars['BigDecimal']>
-  weeklyLiqChange_in?: InputMaybe<Array<Scalars['BigDecimal']>>
-  weeklyLiqChange_isNull?: InputMaybe<Scalars['Boolean']>
-  weeklyLiqChange_lt?: InputMaybe<Scalars['BigDecimal']>
-  weeklyLiqChange_lte?: InputMaybe<Scalars['BigDecimal']>
-  weeklyLiqChange_not_eq?: InputMaybe<Scalars['BigDecimal']>
-  weeklyLiqChange_not_in?: InputMaybe<Array<Scalars['BigDecimal']>>
   whitelistApplicantLink_contains?: InputMaybe<Scalars['String']>
   whitelistApplicantLink_containsInsensitive?: InputMaybe<Scalars['String']>
   whitelistApplicantLink_endsWith?: InputMaybe<Scalars['String']>
@@ -6302,8 +6302,6 @@ export type MarketplaceTokensReturnType = {
   __typename?: 'MarketplaceTokensReturnType'
   creatorToken: CreatorToken
   pricePercentageChange: Scalars['Float']
-  /** Type of the result: hot | cold */
-  resultType: Scalars['String']
 }
 
 export type MaxAttemptsOnMailDelivery = {
@@ -8705,7 +8703,7 @@ export type Query = {
   getMarketplaceTokens: Array<MarketplaceToken>
   getMarketplaceTokensCount: MarketplaceTokenCount
   getShareDividend: GetShareDividendsResult
-  hotAndColdTokens: Array<MarketplaceTokensReturnType>
+  getTopInteractedEnities: Array<TopInteractedEntity>
   licenseById?: Maybe<License>
   /** @deprecated Use licenseById */
   licenseByUniqueInput?: Maybe<License>
@@ -8834,6 +8832,7 @@ export type Query = {
   tokenChannelsConnection: TokenChannelsConnection
   tokens: Array<Token>
   tokensConnection: TokensConnection
+  tokensWithPriceChange: Array<MarketplaceTokensReturnType>
   topSellingChannels: Array<TopSellingChannelsResult>
   topSellingToken: Array<TopSellingTokensReturnType>
   totalJoystreamEarnings: EarningStatsOutput
@@ -8845,6 +8844,11 @@ export type Query = {
   userById?: Maybe<User>
   /** @deprecated Use userById */
   userByUniqueInput?: Maybe<User>
+  userInteractionCountById?: Maybe<UserInteractionCount>
+  /** @deprecated Use userInteractionCountById */
+  userInteractionCountByUniqueInput?: Maybe<UserInteractionCount>
+  userInteractionCounts: Array<UserInteractionCount>
+  userInteractionCountsConnection: UserInteractionCountsConnection
   users: Array<User>
   usersConnection: UsersConnection
   vestedAccountById?: Maybe<VestedAccount>
@@ -9598,9 +9602,9 @@ export type QueryGetShareDividendArgs = {
   tokenId: Scalars['String']
 }
 
-export type QueryHotAndColdTokensArgs = {
-  periodDays: Scalars['Int']
-  where?: InputMaybe<CreatorTokenWhereInput>
+export type QueryGetTopInteractedEnitiesArgs = {
+  period: Scalars['Int']
+  type: Scalars['String']
 }
 
 export type QueryLicenseByIdArgs = {
@@ -10169,6 +10173,13 @@ export type QueryTokensConnectionArgs = {
   where?: InputMaybe<TokenWhereInput>
 }
 
+export type QueryTokensWithPriceChangeArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  orderByPriceDesc?: InputMaybe<Scalars['Boolean']>
+  periodDays: Scalars['Int']
+  where?: InputMaybe<CreatorTokenWhereInput>
+}
+
 export type QueryTopSellingChannelsArgs = {
   limit: Scalars['Int']
   periodDays: Scalars['Int']
@@ -10176,6 +10187,8 @@ export type QueryTopSellingChannelsArgs = {
 }
 
 export type QueryTopSellingTokenArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  orderByPriceDesc?: InputMaybe<Scalars['Boolean']>
   periodDays: Scalars['Int']
   where?: InputMaybe<CreatorTokenWhereInput>
 }
@@ -10208,6 +10221,28 @@ export type QueryUserByIdArgs = {
 
 export type QueryUserByUniqueInputArgs = {
   where: WhereIdInput
+}
+
+export type QueryUserInteractionCountByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryUserInteractionCountByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryUserInteractionCountsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<UserInteractionCountOrderByInput>>
+  where?: InputMaybe<UserInteractionCountWhereInput>
+}
+
+export type QueryUserInteractionCountsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<UserInteractionCountOrderByInput>
+  where?: InputMaybe<UserInteractionCountWhereInput>
 }
 
 export type QueryUsersArgs = {
@@ -12620,6 +12655,8 @@ export type Subscription = {
   trailerVideoById?: Maybe<TrailerVideo>
   trailerVideos: Array<TrailerVideo>
   userById?: Maybe<User>
+  userInteractionCountById?: Maybe<UserInteractionCount>
+  userInteractionCounts: Array<UserInteractionCount>
   users: Array<User>
   vestedAccountById?: Maybe<VestedAccount>
   vestedAccounts: Array<VestedAccount>
@@ -13256,6 +13293,17 @@ export type SubscriptionUserByIdArgs = {
   id: Scalars['String']
 }
 
+export type SubscriptionUserInteractionCountByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionUserInteractionCountsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<UserInteractionCountOrderByInput>>
+  where?: InputMaybe<UserInteractionCountWhereInput>
+}
+
 export type SubscriptionUsersArgs = {
   limit?: InputMaybe<Scalars['Int']>
   offset?: InputMaybe<Scalars['Int']>
@@ -13871,6 +13919,12 @@ export type TokensConnection = {
   totalCount: Scalars['Int']
 }
 
+export type TopInteractedEntity = {
+  __typename?: 'TopInteractedEntity'
+  entityId: Scalars['String']
+  interactionCount: Scalars['Float']
+}
+
 export type TopSellingChannelsResult = {
   __typename?: 'TopSellingChannelsResult'
   amount: Scalars['String']
@@ -14155,6 +14209,120 @@ export type UserEdge = {
   __typename?: 'UserEdge'
   cursor: Scalars['String']
   node: User
+}
+
+export type UserInteractionCount = {
+  __typename?: 'UserInteractionCount'
+  /** Count of the interactions */
+  count: Scalars['Int']
+  /** Timestamp of the day that is used to count the interactions */
+  dayTimestamp: Scalars['DateTime']
+  /** ID of the entity that the event is related to for 'tokenMarketplaceEntry' it would be token ID */
+  entityId?: Maybe<Scalars['String']>
+  /** Autoincremented ID */
+  id: Scalars['String']
+  /** Type of the user interaction eg. 'tokenMarketplaceEntry' */
+  type?: Maybe<Scalars['String']>
+}
+
+export type UserInteractionCountEdge = {
+  __typename?: 'UserInteractionCountEdge'
+  cursor: Scalars['String']
+  node: UserInteractionCount
+}
+
+export enum UserInteractionCountOrderByInput {
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
+  DayTimestampAsc = 'dayTimestamp_ASC',
+  DayTimestampDesc = 'dayTimestamp_DESC',
+  EntityIdAsc = 'entityId_ASC',
+  EntityIdDesc = 'entityId_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+}
+
+export type UserInteractionCountWhereInput = {
+  AND?: InputMaybe<Array<UserInteractionCountWhereInput>>
+  OR?: InputMaybe<Array<UserInteractionCountWhereInput>>
+  count_eq?: InputMaybe<Scalars['Int']>
+  count_gt?: InputMaybe<Scalars['Int']>
+  count_gte?: InputMaybe<Scalars['Int']>
+  count_in?: InputMaybe<Array<Scalars['Int']>>
+  count_isNull?: InputMaybe<Scalars['Boolean']>
+  count_lt?: InputMaybe<Scalars['Int']>
+  count_lte?: InputMaybe<Scalars['Int']>
+  count_not_eq?: InputMaybe<Scalars['Int']>
+  count_not_in?: InputMaybe<Array<Scalars['Int']>>
+  dayTimestamp_eq?: InputMaybe<Scalars['DateTime']>
+  dayTimestamp_gt?: InputMaybe<Scalars['DateTime']>
+  dayTimestamp_gte?: InputMaybe<Scalars['DateTime']>
+  dayTimestamp_in?: InputMaybe<Array<Scalars['DateTime']>>
+  dayTimestamp_isNull?: InputMaybe<Scalars['Boolean']>
+  dayTimestamp_lt?: InputMaybe<Scalars['DateTime']>
+  dayTimestamp_lte?: InputMaybe<Scalars['DateTime']>
+  dayTimestamp_not_eq?: InputMaybe<Scalars['DateTime']>
+  dayTimestamp_not_in?: InputMaybe<Array<Scalars['DateTime']>>
+  entityId_contains?: InputMaybe<Scalars['String']>
+  entityId_containsInsensitive?: InputMaybe<Scalars['String']>
+  entityId_endsWith?: InputMaybe<Scalars['String']>
+  entityId_eq?: InputMaybe<Scalars['String']>
+  entityId_gt?: InputMaybe<Scalars['String']>
+  entityId_gte?: InputMaybe<Scalars['String']>
+  entityId_in?: InputMaybe<Array<Scalars['String']>>
+  entityId_isNull?: InputMaybe<Scalars['Boolean']>
+  entityId_lt?: InputMaybe<Scalars['String']>
+  entityId_lte?: InputMaybe<Scalars['String']>
+  entityId_not_contains?: InputMaybe<Scalars['String']>
+  entityId_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  entityId_not_endsWith?: InputMaybe<Scalars['String']>
+  entityId_not_eq?: InputMaybe<Scalars['String']>
+  entityId_not_in?: InputMaybe<Array<Scalars['String']>>
+  entityId_not_startsWith?: InputMaybe<Scalars['String']>
+  entityId_startsWith?: InputMaybe<Scalars['String']>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  type_contains?: InputMaybe<Scalars['String']>
+  type_containsInsensitive?: InputMaybe<Scalars['String']>
+  type_endsWith?: InputMaybe<Scalars['String']>
+  type_eq?: InputMaybe<Scalars['String']>
+  type_gt?: InputMaybe<Scalars['String']>
+  type_gte?: InputMaybe<Scalars['String']>
+  type_in?: InputMaybe<Array<Scalars['String']>>
+  type_isNull?: InputMaybe<Scalars['Boolean']>
+  type_lt?: InputMaybe<Scalars['String']>
+  type_lte?: InputMaybe<Scalars['String']>
+  type_not_contains?: InputMaybe<Scalars['String']>
+  type_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  type_not_endsWith?: InputMaybe<Scalars['String']>
+  type_not_eq?: InputMaybe<Scalars['String']>
+  type_not_in?: InputMaybe<Array<Scalars['String']>>
+  type_not_startsWith?: InputMaybe<Scalars['String']>
+  type_startsWith?: InputMaybe<Scalars['String']>
+}
+
+export type UserInteractionCountsConnection = {
+  __typename?: 'UserInteractionCountsConnection'
+  edges: Array<UserInteractionCountEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
 }
 
 export enum UserOrderByInput {

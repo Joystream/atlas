@@ -85,8 +85,8 @@ query GetMarketplaceTokens($where: MarketplaceTokenWhereInput, $limit: Int, $off
     ammVolume
     liquidity
     cumulativeRevenue
-    lastDayPriceChange
-    weeklyLiqChange
+    priceChange
+    liquidityChange
     marketCap
 
     id
@@ -115,18 +115,17 @@ query GetMarketplaceTokens($where: MarketplaceTokenWhereInput, $limit: Int, $off
   }
 }
 
-query GetHotAndColdTokens($periodDays: Int!) {
-  hotAndColdTokens(periodDays: $periodDays) {
+query GetHotAndColdTokens($where: CreatorTokenWhereInput, $periodDays: Int!, $priceDesc: Boolean, $limit: Int) {
+  tokensWithPriceChange(periodDays: $periodDays, orderByPriceDesc: $priceDesc, limit: $limit, where: $where) {
     pricePercentageChange
-    resultType
     creatorToken {
       ...BasicCreatorToken
     }
   }
 }
 
-query GetTopSellingTokens($periodDays: Int!) {
-  topSellingToken(periodDays: $periodDays) {
+query GetTopSellingTokens($periodDays: Int!, $volumeDesc: Boolean, $limit: Int) {
+  topSellingToken(periodDays: $periodDays, orderByPriceDesc: $volumeDesc, limit: $limit) {
     creatorToken {
       ...BasicCreatorToken
     }
