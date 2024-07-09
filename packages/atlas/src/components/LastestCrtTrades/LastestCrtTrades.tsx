@@ -103,7 +103,9 @@ const InnerContainer = styled(FlexBox)`
   gap: ${sizes(8)};
   width: fit-content;
   align-items: center;
-  animation: ${ScrollSide} 40s linear infinite;
+  animation: ${ScrollSide} 80s linear infinite;
+  scrollbar-width: none;
+  scrollbar-height: none;
 
   :hover {
     animation-play-state: paused;
@@ -113,6 +115,7 @@ const InnerContainer = styled(FlexBox)`
 const RibbonContainer = styled(FlexBox)`
   overflow-x: auto;
   scrollbar-width: none;
+  scrollbar-height: none;
   background-color: ${cVar('colorBackgroundMuted')};
   padding: ${sizes(3)} ${sizes(4)};
   width: calc(100% + var(--size-global-horizontal-padding) * 2);

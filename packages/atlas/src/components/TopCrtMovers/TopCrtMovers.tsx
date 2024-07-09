@@ -144,7 +144,7 @@ export const TopMovingTokens = ({ interval, tableTitle }: { interval: number; ta
             type: 'options',
             options: [
               {
-                label: 'Winners',
+                label: 'Gainers',
                 value: true,
               },
               {

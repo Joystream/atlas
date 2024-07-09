@@ -80,9 +80,9 @@ export const Table = <T extends object>({
       initialState: { pageSize },
       disableSortBy: !onColumnSortClick,
       disableMultiSort: true,
+      disableSortRemove: true,
       manualSortBy: true,
     },
-    ...(onColumnSortClick ? [useSortBy] : []),
     useSortBy,
     usePagination,
     useFlexLayout

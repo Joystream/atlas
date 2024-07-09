@@ -29,7 +29,7 @@ export const CrtMarketplaceView = () => {
 
         <TableFullWitdhtWrapper>
           <LimitedWidthContainer big noBottomPadding>
-            <TopMovingTokens interval={30} tableTitle="Top Movers" />
+            <TopMovingTokens interval={30} tableTitle="Top Gainers" />
           </LimitedWidthContainer>
         </TableFullWitdhtWrapper>
 

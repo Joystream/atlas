@@ -20,14 +20,19 @@ export const tableLoadingData = Array.from({ length: 10 }, () => ({
   token: (
     <ColumnBox>
       <SkeletonLoader rounded height={32} width={32} />
-      <SkeletonLoader height={20} width="40%" />
+      <SkeletonLoader height={20} width="60%" />
     </ColumnBox>
   ),
-  status: <SkeletonLoader height={20} width="60%" />,
-  createdAt: <SkeletonLoader height={20} width="50%" />,
-  marketCap: <SkeletonLoader height={20} width="50%" />,
-  totalRevenue: <SkeletonLoader height={20} width="50%" />,
-  holders: <SkeletonLoader height={20} width="50%" />,
+  status: <SkeletonLoader height={32} width="80%" />,
+  priceChange: <SkeletonLoader height={32} width="80%" />,
+  price: <SkeletonLoader height={32} width="80%" />,
+  liquidityChange: <SkeletonLoader height={32} width="80%" />,
+  liquidity: <SkeletonLoader height={32} width="80%" />,
+  tradingVolume: <SkeletonLoader height={32} width="80%" />,
+  createdAt: <SkeletonLoader height={32} width="80%" />,
+  marketCap: <SkeletonLoader height={32} width="80%" />,
+  totalRevenue: <SkeletonLoader height={32} width="80%" />,
+  holders: <SkeletonLoader height={42} width="80%" />,
 }))
 
 const COLUMNS: TableProps['columns'] = [
