@@ -6,17 +6,17 @@ import { BuyMarketTokenModal } from '@/components/_crt/BuyMarketTokenModal'
 
 type BuyFromMarketButtonProps = {
   tokenId: string
-  hasActiveRevenueShare?: boolean
+  isTokenLocked?: boolean
 }
 
-export const BuyFromMarketButton = ({ tokenId, hasActiveRevenueShare }: BuyFromMarketButtonProps) => {
+export const BuyFromMarketButton = ({ tokenId, isTokenLocked }: BuyFromMarketButtonProps) => {
   const [showModal, setShowModal] = useState(false)
   return (
     <>
       <BuyMarketTokenModal tokenId={tokenId} show={showModal} onClose={() => setShowModal(false)} />
       <ProtectedActionWrapper title="You want to buy tokens?" description="Sign in to buy">
         <Button
-          variant={hasActiveRevenueShare ? 'warning' : 'primary'}
+          variant={isTokenLocked ? 'warning' : 'primary'}
           size="large"
           fullWidth
           onClick={() => setShowModal(true)}
