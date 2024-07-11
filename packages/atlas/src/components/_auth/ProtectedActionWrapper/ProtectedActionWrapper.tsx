@@ -38,6 +38,7 @@ export const ProtectedActionWrapper = ({
       <Popover
         ref={popperRef}
         boundariesElement={document.body}
+        appendTo={document.body}
         trigger={<UnclickableWrapper className={className}>{children}</UnclickableWrapper>}
       >
         <Wrapper>

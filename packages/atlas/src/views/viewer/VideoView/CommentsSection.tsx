@@ -6,8 +6,11 @@ import { useComment, useUserCommentsReactions } from '@/api/hooks/comments'
 import { useCommentSectionComments } from '@/api/hooks/useCommentSectionComments'
 import { CommentOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { FullVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { CssDrawer, StyledSvgActionChevronT } from '@/components/CssDrawer'
 import { EmptyFallback } from '@/components/EmptyFallback'
+import { FlexBox } from '@/components/FlexBox'
 import { Text } from '@/components/Text'
+import { Button } from '@/components/_buttons/Button'
 import { Comment } from '@/components/_comments/Comment'
 import { CommentInput } from '@/components/_comments/CommentInput'
 import { Select } from '@/components/_inputs/Select'
@@ -31,13 +34,23 @@ type CommentsSectionProps = {
   video?: FullVideoFieldsFragment | null
   videoLoading: boolean
   videoAuthorId?: string
+  isCollapsable?: boolean
+  disableSorting?: boolean
   onCommentInputFocus?: (arg: boolean) => void
 }
 
 const SCROLL_TO_COMMENT_TIMEOUT = 300
 const INITIAL_COMMENTS = 10
 
-export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, videoLoading, onCommentInputFocus }) => {
+export const CommentsSection: FC<CommentsSectionProps> = ({
+  disabled,
+  video,
+  videoLoading,
+  disableSorting,
+  onCommentInputFocus,
+  isCollapsable,
+}) => {
+  const [isDrawerActive, setDrawerActive] = useState(false)
   const [commentInputText, setCommentInputText] = useState('')
   const [commentInputIsProcessing, setCommentInputIsProcessing] = useState(false)
   const [highlightedCommentId, setHighlightedCommentId] = useState<string | null>(null)
@@ -46,7 +59,8 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
   const commentIdQueryParam = useRouterQuery(QUERY_PARAMS.COMMENT_ID)
   const mdMatch = useMediaMatch('md')
   const isConsideredMobile = !mdMatch
-  const { id: videoId } = useParams()
+  const { id: _videoId } = useParams()
+  const videoId = video?.id ?? _videoId
   const { memberId, activeMembership, isLoggedIn } = useUser()
   const { isLoadingAsset: isMemberAvatarLoading, urls: memberAvatarUrls } = getMemberAvatar(activeMembership)
   const { trackCommentAdded } = useSegmentAnalytics()
@@ -166,21 +180,8 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
     )
   }
 
-  return (
-    <CommentsSectionWrapper>
-      <CommentsSectionHeader ref={commentsSectionHeaderRef}>
-        <Text as="p" variant="h400">
-          {loading || !video?.commentsCount ? 'Comments' : `${video.commentsCount} comments`}
-        </Text>
-        <Select
-          size="medium"
-          inlineLabel={mdMatch ? 'Sort by' : ''}
-          value={sortCommentsBy}
-          items={COMMENTS_SORT_OPTIONS}
-          onChange={handleSorting}
-          disabled={loading}
-        />
-      </CommentsSectionHeader>
+  const content = (
+    <>
       <CommentInput
         memberAvatarUrls={memberAvatarUrls}
         isMemberAvatarLoading={isLoggedIn ? isMemberAvatarLoading : false}
@@ -269,6 +270,41 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
           }
         />
       ) : null}
+    </>
+  )
+
+  return (
+    <CommentsSectionWrapper>
+      <CommentsSectionHeader
+        isCollapsable={isCollapsable}
+        onClick={() => setDrawerActive((prev) => !prev)}
+        ref={commentsSectionHeaderRef}
+      >
+        <FlexBox alignItems="center">
+          {isCollapsable ? (
+            <Button
+              icon={<StyledSvgActionChevronT isDrawerActive={isDrawerActive} />}
+              variant="tertiary"
+              size="small"
+            />
+          ) : null}
+          <Text as="p" variant="h400">
+            {loading || !video?.commentsCount ? 'Comments' : `${video.commentsCount} comments`}
+          </Text>
+        </FlexBox>
+        {disableSorting ? null : (
+          <Select
+            size="medium"
+            inlineLabel={mdMatch ? 'Sort by' : ''}
+            value={sortCommentsBy}
+            items={COMMENTS_SORT_OPTIONS}
+            onChange={handleSorting}
+            disabled={loading}
+          />
+        )}
+      </CommentsSectionHeader>
+
+      {isCollapsable ? <CssDrawer isActive={isDrawerActive}>{content}</CssDrawer> : content}
     </CommentsSectionWrapper>
   )
 }
