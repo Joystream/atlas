@@ -9,6 +9,7 @@ import { Benefit } from '@/components/_inputs/BenefitInput'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { cVar, sizes } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
+import { CommentsSection } from '@/views/viewer/VideoView/CommentsSection'
 import { PlayerSkeletonLoader } from '@/views/viewer/VideoView/VideoView.styles'
 
 type TokenDetailsProps = {
@@ -37,6 +38,7 @@ export const TokenDetails = ({ about, videoId, benefits }: TokenDetailsProps) =>
       },
     }
   )
+
   const isEmpty = !loading && !video && !benefits?.length && !about
 
   if (isEmpty) {
@@ -72,6 +74,11 @@ export const TokenDetails = ({ about, videoId, benefits }: TokenDetailsProps) =>
           <PlayerSkeletonLoader />
         </VideoBox>
       )}
+      {video ? (
+        <FlexBox flow="column" width="100%">
+          <CommentsSection isCollapsable disableSorting video={video} videoLoading={false} />
+        </FlexBox>
+      ) : null}
       {benefits?.length ? (
         <FlexBox gap={6} flow="column">
           <Text variant="h500" as="h5">
