@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { isPropValid } from '@storybook/theming'
-import { ReactNode, useRef } from 'react'
+import { ReactNode } from 'react'
+import useResizeObserver from 'use-resize-observer'
 
 import { SvgActionChevronT } from '@/assets/icons'
 import { cVar, sizes, transitions } from '@/styles'
@@ -14,15 +15,13 @@ type CssDrawerProps = {
 }
 
 export const CssDrawer = ({ children, isActive, className }: CssDrawerProps) => {
-  const drawer = useRef<HTMLDivElement>(null)
+  const { ref, height } = useResizeObserver<HTMLDivElement>({
+    // this is here to trigger the rerender when the children grows in height
+    onResize: () => undefined,
+  })
+
   return (
-    <Drawer
-      flow="column"
-      isActive={isActive}
-      ref={drawer}
-      maxHeight={drawer?.current?.scrollHeight}
-      className={className}
-    >
+    <Drawer flow="column" isActive={isActive} ref={ref} maxHeight={height} className={className}>
       {children}
     </Drawer>
   )

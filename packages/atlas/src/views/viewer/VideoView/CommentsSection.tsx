@@ -24,7 +24,6 @@ import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useFee } from '@/providers/joystream'
 import { useUser } from '@/providers/user/user.hooks'
 import { createPlaceholderData } from '@/utils/data'
-import { InfiniteLoadingOffsets } from '@/utils/loading.contants'
 
 import { CommentThread } from './CommentThread'
 import { CommentsSectionHeader, CommentsSectionWrapper, CommentsStyledSection } from './VideoView.styles'
@@ -265,7 +264,6 @@ export const CommentsSection: FC<CommentsSectionProps> = ({
                     return
                   },
                   type: 'infinite',
-                  loadingTriggerOffset: InfiniteLoadingOffsets.VideoTile,
                 }
           }
         />
