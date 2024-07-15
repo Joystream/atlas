@@ -133,8 +133,8 @@ export const Table = <T extends object>({
       {data.length ? (
         <TableWrapper ref={scrollRef} onMouseDown={onMouseDown}>
           <PageWrapper minWidth={minWidth}>
-            {page.map((subpage, idx) => (
-              <TableBase className="table-base" {...getTableProps()} key={`table-slice-${idx}`}>
+            {page.map((subpage, subpageIdx) => (
+              <TableBase className="table-base" {...getTableProps()} key={`table-slice-${subpageIdx}`}>
                 <Thead className="table-header">
                   {headerGroups.map((headerGroup) => (
                     <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.getHeaderGroupProps().key}>
@@ -174,7 +174,8 @@ export const Table = <T extends object>({
                 <tbody {...getTableBodyProps()}>
                   {subpage.map((row, idx) => {
                     prepareRow(row)
-                    const rowTo = getRowTo ? getRowTo(idx) : undefined
+                    const realRowIndex = page[0].length * subpageIdx + idx
+                    const rowTo = getRowTo ? getRowTo(realRowIndex) : undefined
                     const mappedCells = row.cells.map((cell) => (
                       <Td
                         variant="t100"
@@ -192,7 +193,9 @@ export const Table = <T extends object>({
                         <AnchorRow
                           className="table-row"
                           {...row.getRowProps()}
-                          onClick={() => onRowClick?.(idx)}
+                          onClick={() => {
+                            onRowClick?.(realRowIndex)
+                          }}
                           key={row.getRowProps().key}
                           to={rowTo}
                         >
@@ -205,7 +208,9 @@ export const Table = <T extends object>({
                       <tr
                         className="table-row"
                         {...row.getRowProps()}
-                        onClick={() => onRowClick?.(idx)}
+                        onClick={() => {
+                          onRowClick?.(realRowIndex)
+                        }}
                         key={row.getRowProps().key}
                       >
                         {mappedCells}
