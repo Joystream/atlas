@@ -21,43 +21,101 @@ import { DEFAULT_VIDEO_GRID, sizes } from '@/styles'
 import { createPlaceholderData } from '@/utils/data'
 import { InfiniteLoadingOffsets } from '@/utils/loading.contants'
 
-const options = [
-  {
-    label: 'All',
-    value: 'all',
-    queryValue: undefined,
-  },
+const _options = [
   {
     label: 'Crypto',
+    configLabel: 'Crypto',
     value: '5',
     queryValue: atlasConfig.content.categories.find((category) => category.name === 'Crypto')?.videoCategories ?? [],
   },
   {
+    label: 'Entertainment',
+    configLabel: 'Entertainment',
+    value: '8',
+    queryValue:
+      atlasConfig.content.categories.find((category) => category.name === 'Entertainment')?.videoCategories ?? [],
+  },
+  {
     label: 'Gaming',
+    configLabel: 'Video Games',
     value: '20',
     queryValue:
       atlasConfig.content.categories.find((category) => category.name === 'Video Games')?.videoCategories ?? [],
   },
   {
+    label: 'Education',
+    configLabel: 'Education',
+    value: '7',
+    queryValue: atlasConfig.content.categories.find((category) => category.name === 'Education')?.videoCategories ?? [],
+  },
+  {
     label: 'Music',
+    configLabel: 'Music and Music Videos',
     value: '11',
     queryValue:
       atlasConfig.content.categories.find((category) => category.name === 'Music and Music Videos')?.videoCategories ??
       [],
   },
   {
-    label: 'Entertainment',
-    value: '8',
+    label: 'Blogs',
+    configLabel: 'People and Blogs',
+    value: '14',
     queryValue:
-      atlasConfig.content.categories.find((category) => category.name === 'Entertainment')?.videoCategories ?? [],
+      atlasConfig.content.categories.find((category) => category.name === 'People and Blogs')?.videoCategories ?? [],
   },
+  {
+    label: 'Business',
+    configLabel: 'Business and Finance',
+    value: '4',
+    queryValue:
+      atlasConfig.content.categories.find((category) => category.name === 'Business and Finance')?.videoCategories ??
+      [],
+  },
+  {
+    label: 'Animation',
+    configLabel: 'Animation and Film',
+    value: '2',
+    queryValue:
+      atlasConfig.content.categories.find((category) => category.name === 'Animation and Film')?.videoCategories ?? [],
+  },
+  {
+    label: 'Lifestyle',
+    configLabel: 'Lifestyle',
+    value: '9',
+    queryValue: atlasConfig.content.categories.find((category) => category.name === 'Lifestyle')?.videoCategories ?? [],
+  },
+  {
+    label: 'Technology',
+    configLabel: 'Technology',
+    value: '17',
+    queryValue:
+      atlasConfig.content.categories.find((category) => category.name === 'Technology')?.videoCategories ?? [],
+  },
+  {
+    label: 'Art',
+    configLabel: 'Art',
+    value: '1',
+    queryValue: atlasConfig.content.categories.find((category) => category.name === 'Art')?.videoCategories ?? [],
+  },
+  {
+    label: 'Memes',
+    configLabel: 'Memes and Humour',
+    value: '10',
+    queryValue:
+      atlasConfig.content.categories.find((category) => category.name === 'Memes and Humour')?.videoCategories ?? [],
+  },
+]
+
+const options = [
+  ..._options,
   {
     label: 'Other',
     value: 'other',
     queryValue:
       atlasConfig.content.categories
         .filter(
-          (category) => !['Crypto', 'Entertainment', 'Music and Music Videos', 'Video Games'].includes(category.name)
+          (category) =>
+            !_options.reduce((prev, next) => [...prev, next.configLabel], [] as string[]).includes(category.name)
         )
         .map((cat) => cat.videoCategories)
         .flat() ?? [],
@@ -67,7 +125,7 @@ const options = [
 export const HomeView: FC = () => {
   const headTags = useHeadTags()
   const [searchParams, setSearchParams] = useSearchParams()
-  const category = searchParams.get('category') ?? 'all'
+  const category = searchParams.get('category') ?? '5'
   const { columns, fetchMore, tiles, loading, pageInfo } = useHomeVideos(
     options.find((opt) => opt.value === category)?.queryValue
   )
