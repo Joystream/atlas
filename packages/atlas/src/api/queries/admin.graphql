@@ -30,7 +30,7 @@ mutation GetAppActionSignature(
 }
 
 query GetMostInteractedEntityByType($type: String!, $period: Int!) {
-  getTopInteractedEnities(type: $type, period: $period) {
+  getTopInteractedEntities(type: $type, period: $period) {
     entityId
     interactionCount
   }

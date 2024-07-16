@@ -40,7 +40,7 @@ export type GetMostInteractedEntityByTypeQueryVariables = Types.Exact<{
 
 export type GetMostInteractedEntityByTypeQuery = {
   __typename?: 'Query'
-  getTopInteractedEnities: Array<{ __typename?: 'TopInteractedEntity'; entityId: string; interactionCount: number }>
+  getTopInteractedEntities: Array<{ __typename?: 'TopInteractedEntity'; entityId: string; interactionCount: number }>
 }
 
 export const GetKillSwitchDocument = gql`
@@ -181,7 +181,7 @@ export type GetAppActionSignatureMutationOptions = Apollo.BaseMutationOptions<
 >
 export const GetMostInteractedEntityByTypeDocument = gql`
   query GetMostInteractedEntityByType($type: String!, $period: Int!) {
-    getTopInteractedEnities(type: $type, period: $period) {
+    getTopInteractedEntities(type: $type, period: $period) {
       entityId
       interactionCount
     }

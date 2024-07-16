@@ -2312,7 +2312,7 @@ export type BasicCreatorTokenFragment = {
   lastPrice?: string | null
   totalSupply: string
   description?: string | null
-  trailerVideo: Array<{
+  trailerVideo?: {
     __typename?: 'TrailerVideo'
     id: string
     video: {
@@ -2355,7 +2355,7 @@ export type BasicCreatorTokenFragment = {
           | null
       } | null
     }
-  }>
+  } | null
   currentAmmSale?: { __typename?: 'AmmCurve'; id: string; burnedByAmm: string; mintedByAmm: string } | null
   currentSale?: { __typename?: 'Sale'; id: string; tokensSold: string; endsAt: number } | null
   channel?: {
@@ -2457,7 +2457,7 @@ export type FullCreatorTokenFragment = {
     displayOrder: number
     emojiCode?: string | null
   }>
-  trailerVideo: Array<{
+  trailerVideo?: {
     __typename?: 'TrailerVideo'
     id: string
     video: {
@@ -2501,7 +2501,7 @@ export type FullCreatorTokenFragment = {
           | null
       } | null
     }
-  }>
+  } | null
   revenueShares: Array<{
     __typename?: 'RevenueShare'
     id: string

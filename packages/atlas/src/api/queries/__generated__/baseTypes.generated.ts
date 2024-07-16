@@ -3468,7 +3468,7 @@ export type CreatorToken = {
   /** total supply */
   totalSupply: Scalars['BigInt']
   /** video for the token presentation page */
-  trailerVideo: Array<TrailerVideo>
+  trailerVideo?: Maybe<TrailerVideo>
   /** link for creator to member interested in joining the whitelist */
   whitelistApplicantLink?: Maybe<Scalars['String']>
   /** note from creator to member interested in joining the whitelist */
@@ -3508,13 +3508,6 @@ export type CreatorTokenSalesArgs = {
   offset?: InputMaybe<Scalars['Int']>
   orderBy?: InputMaybe<Array<SaleOrderByInput>>
   where?: InputMaybe<SaleWhereInput>
-}
-
-export type CreatorTokenTrailerVideoArgs = {
-  limit?: InputMaybe<Scalars['Int']>
-  offset?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<TrailerVideoOrderByInput>>
-  where?: InputMaybe<TrailerVideoWhereInput>
 }
 
 export type CreatorTokenEdge = {
@@ -3700,6 +3693,8 @@ export enum CreatorTokenOrderByInput {
   SymbolDesc = 'symbol_DESC',
   TotalSupplyAsc = 'totalSupply_ASC',
   TotalSupplyDesc = 'totalSupply_DESC',
+  TrailerVideoIdAsc = 'trailerVideo_id_ASC',
+  TrailerVideoIdDesc = 'trailerVideo_id_DESC',
   WhitelistApplicantLinkAsc = 'whitelistApplicantLink_ASC',
   WhitelistApplicantLinkDesc = 'whitelistApplicantLink_DESC',
   WhitelistApplicantNoteAsc = 'whitelistApplicantNote_ASC',
@@ -3969,9 +3964,8 @@ export type CreatorTokenWhereInput = {
   totalSupply_lte?: InputMaybe<Scalars['BigInt']>
   totalSupply_not_eq?: InputMaybe<Scalars['BigInt']>
   totalSupply_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-  trailerVideo_every?: InputMaybe<TrailerVideoWhereInput>
-  trailerVideo_none?: InputMaybe<TrailerVideoWhereInput>
-  trailerVideo_some?: InputMaybe<TrailerVideoWhereInput>
+  trailerVideo?: InputMaybe<TrailerVideoWhereInput>
+  trailerVideo_isNull?: InputMaybe<Scalars['Boolean']>
   whitelistApplicantLink_contains?: InputMaybe<Scalars['String']>
   whitelistApplicantLink_containsInsensitive?: InputMaybe<Scalars['String']>
   whitelistApplicantLink_endsWith?: InputMaybe<Scalars['String']>
@@ -8703,7 +8697,7 @@ export type Query = {
   getMarketplaceTokens: Array<MarketplaceToken>
   getMarketplaceTokensCount: MarketplaceTokenCount
   getShareDividend: GetShareDividendsResult
-  getTopInteractedEnities: Array<TopInteractedEntity>
+  getTopInteractedEntities: Array<TopInteractedEntity>
   licenseById?: Maybe<License>
   /** @deprecated Use licenseById */
   licenseByUniqueInput?: Maybe<License>
@@ -9602,7 +9596,7 @@ export type QueryGetShareDividendArgs = {
   tokenId: Scalars['String']
 }
 
-export type QueryGetTopInteractedEnitiesArgs = {
+export type QueryGetTopInteractedEntitiesArgs = {
   period: Scalars['Int']
   type: Scalars['String']
 }

@@ -34,7 +34,7 @@ export type GetBasicCreatorTokensQuery = {
     lastPrice?: string | null
     totalSupply: string
     description?: string | null
-    trailerVideo: Array<{
+    trailerVideo?: {
       __typename?: 'TrailerVideo'
       id: string
       video: {
@@ -77,7 +77,7 @@ export type GetBasicCreatorTokensQuery = {
             | null
         } | null
       }
-    }>
+    } | null
     currentAmmSale?: { __typename?: 'AmmCurve'; id: string; burnedByAmm: string; mintedByAmm: string } | null
     currentSale?: { __typename?: 'Sale'; id: string; tokensSold: string; endsAt: number } | null
     channel?: {
@@ -186,7 +186,7 @@ export type GetFullCreatorTokenQuery = {
       displayOrder: number
       emojiCode?: string | null
     }>
-    trailerVideo: Array<{
+    trailerVideo?: {
       __typename?: 'TrailerVideo'
       id: string
       video: {
@@ -230,7 +230,7 @@ export type GetFullCreatorTokenQuery = {
             | null
         } | null
       }
-    }>
+    } | null
     revenueShares: Array<{
       __typename?: 'RevenueShare'
       id: string
@@ -608,7 +608,7 @@ export type GetHotAndColdTokensQuery = {
       lastPrice?: string | null
       totalSupply: string
       description?: string | null
-      trailerVideo: Array<{
+      trailerVideo?: {
         __typename?: 'TrailerVideo'
         id: string
         video: {
@@ -651,7 +651,7 @@ export type GetHotAndColdTokensQuery = {
               | null
           } | null
         }
-      }>
+      } | null
       currentAmmSale?: { __typename?: 'AmmCurve'; id: string; burnedByAmm: string; mintedByAmm: string } | null
       currentSale?: { __typename?: 'Sale'; id: string; tokensSold: string; endsAt: number } | null
       channel?: {
@@ -739,7 +739,7 @@ export type GetTopSellingTokensQuery = {
       lastPrice?: string | null
       totalSupply: string
       description?: string | null
-      trailerVideo: Array<{
+      trailerVideo?: {
         __typename?: 'TrailerVideo'
         id: string
         video: {
@@ -782,7 +782,7 @@ export type GetTopSellingTokensQuery = {
               | null
           } | null
         }
-      }>
+      } | null
       currentAmmSale?: { __typename?: 'AmmCurve'; id: string; burnedByAmm: string; mintedByAmm: string } | null
       currentSale?: { __typename?: 'Sale'; id: string; tokensSold: string; endsAt: number } | null
       channel?: {
