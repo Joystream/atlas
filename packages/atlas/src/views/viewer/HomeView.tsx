@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { shuffle } from 'lodash-es'
 import { FC, useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
@@ -16,6 +17,7 @@ import { atlasConfig } from '@/config'
 import { getPublicCryptoVideoFilter } from '@/config/contentFilter'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useInfiniteVideoGrid } from '@/hooks/useInfiniteVideoGrid'
+import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { DEFAULT_VIDEO_GRID, sizes } from '@/styles'
 import { createPlaceholderData } from '@/utils/data'
@@ -107,7 +109,7 @@ const _options = [
 ]
 
 const options = [
-  ..._options,
+  ...shuffle(_options),
   {
     label: 'Other',
     value: 'other',
@@ -125,16 +127,22 @@ const options = [
 export const HomeView: FC = () => {
   const headTags = useHeadTags()
   const [searchParams, setSearchParams] = useSearchParams()
-  const category = searchParams.get('category') ?? '5'
+  const category = searchParams.get('category') ?? options[0].value
   const { columns, fetchMore, tiles, loading, pageInfo } = useHomeVideos(
     options.find((opt) => opt.value === category)?.queryValue
   )
+  const { trackHomepageCategorySelection } = useSegmentAnalytics()
 
   const setCategory = useCallback(
     (value: string) => {
+      const categoryLabel = options.find((category) => category.value === value)?.label
+      if (categoryLabel) {
+        trackHomepageCategorySelection(categoryLabel)
+      }
+
       setSearchParams({ category: value })
     },
-    [setSearchParams]
+    [setSearchParams, trackHomepageCategorySelection]
   )
 
   return (
