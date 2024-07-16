@@ -73,7 +73,7 @@ export const CrtTokenEditView = () => {
   useEffect(() => {
     if (tokenData?.creatorTokenById) {
       form.reset({
-        videoId: tokenData?.creatorTokenById?.trailerVideo[0]?.video.id,
+        videoId: tokenData?.creatorTokenById?.trailerVideo?.video.id,
         benefits: tokenData?.creatorTokenById?.benefits,
         about: tokenData?.creatorTokenById?.description ?? '',
       })

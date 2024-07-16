@@ -65,7 +65,7 @@ export const HotCreatorTokens = ({ interval, tableTitle }: { interval: number; t
       periodDays: interval,
       limit: 10,
       where: {
-        id_in: topInteractedTokens?.getTopInteractedEnities.map((entity) => entity.entityId),
+        id_in: topInteractedTokens?.getTopInteractedEntities.map((entity) => entity.entityId),
       },
     },
   })
