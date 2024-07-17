@@ -111,6 +111,16 @@ export const useSegmentAnalytics = () => {
     [analytics]
   )
 
+  const trackHomepageCategorySelection = useCallback(
+    (categoryName: string) => {
+      analytics.track('Homepage Category Clicked', {
+        categoryName,
+        ...getUTMParams(),
+      })
+    },
+    [analytics, getUTMParams]
+  )
+
   const trackMembershipCreation = useCallback(
     (handle: string, email: string) => {
       analytics.track('Membership created', {
@@ -703,5 +713,6 @@ export const useSegmentAnalytics = () => {
     trackRewardsReferralLinkClicked,
     trackRoundtableEventsClicked,
     trackRewardsCreateChannelButtonClick,
+    trackHomepageCategorySelection,
   }
 }

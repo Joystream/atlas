@@ -42,10 +42,13 @@ export type ToggleButtonFilterTypeProps = {
   filters: FilterButtonProps[]
 } & SharedToggleButtonProps
 
-export type ToggleButtonGroupProps<T = string> = ToggleButtonFilterTypeProps | ToggleButtonOptionTypeProps<T>
+export type ToggleButtonGroupProps<T = string> =
+  | {
+      size?: 'small' | 'medium' | 'large'
+    } & (ToggleButtonFilterTypeProps | ToggleButtonOptionTypeProps<T>)
 
 export function ToggleButtonGroup<T = string>(props: ToggleButtonGroupProps<T>) {
-  const { type, label, width = 'auto', className } = props
+  const { type, label, width = 'auto', className, size = 'small' } = props
   const optionWrapperRef = useRef<HTMLDivElement>(null)
 
   const { handleArrowScroll, handleMouseDown, isOverflow, visibleShadows } = useHorizonthalFade(optionWrapperRef)
@@ -74,7 +77,7 @@ export function ToggleButtonGroup<T = string>(props: ToggleButtonGroupProps<T>) 
                   fullWidth
                   variant={option.value !== props.value ? 'tertiary' : 'secondary'}
                   onClick={() => props.onChange(option.value)}
-                  size="small"
+                  size={size}
                   disabled={option.disabled}
                 >
                   {option.label}
