@@ -663,3 +663,35 @@ fragment FullAmmCurve on AmmCurve {
     }
   }
 }
+
+fragment BasicAmmTransaction on AmmTransaction {
+  id
+  quantity
+  pricePaid
+  pricePerUnit
+  amm {
+    id
+    token {
+      id
+      symbol
+      channel {
+        channel {
+          id
+          avatarPhoto {
+            resolvedUrls
+            storageBag {
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+  account {
+    member {
+      ...BasicMembershipFields
+    }
+  }
+  transactionType
+  createdIn
+}

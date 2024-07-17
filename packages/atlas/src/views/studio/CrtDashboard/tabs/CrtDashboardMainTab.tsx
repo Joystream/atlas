@@ -184,14 +184,14 @@ const DashboardTokenProgress = ({ token }: Pick<CrtDashboardMainTabProps, 'token
     : ''
 
   const currentMemberStep = useMemo((): number => {
-    if (!(token.description || token.benefits.length || token.trailerVideo.length)) return 1
+    if (!(token.description || token.benefits.length || token.trailerVideo)) return 1
     if (!token.ammCurves.length && !token.sales.length) return 2
     if (!token.revenueShares.length) return 3
     return 4
   }, [
     token.description,
     token.benefits.length,
-    token.trailerVideo.length,
+    token.trailerVideo,
     token.ammCurves.length,
     token.sales.length,
     token.revenueShares.length,
@@ -234,7 +234,7 @@ const DashboardTokenProgress = ({ token }: Pick<CrtDashboardMainTabProps, 'token
         let isFinished = idx === 0
 
         if (idx === 1) {
-          isFinished = !!(token.description || token.benefits.length || token.trailerVideo.length)
+          isFinished = !!(token.description || token.benefits.length || token.trailerVideo)
         }
 
         if (idx === 2) {
@@ -256,7 +256,7 @@ const DashboardTokenProgress = ({ token }: Pick<CrtDashboardMainTabProps, 'token
       token.description,
       token.revenueShares.length,
       token.sales.length,
-      token.trailerVideo.length,
+      token.trailerVideo,
     ]
   )
   const numberOfFinishedSteps = steps.filter((step) => step.finished).length

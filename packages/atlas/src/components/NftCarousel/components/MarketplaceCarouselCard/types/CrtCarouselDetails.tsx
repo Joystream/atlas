@@ -39,7 +39,7 @@ export const CrtCarouselDetails = ({
     currentSale,
     channel,
   } = crt
-  const { video } = trailerVideo[0] ?? {}
+  const { video } = trailerVideo ?? {}
   const thumbnailUrls: string[] = video?.thumbnailPhoto?.resolvedUrls ?? []
   const mediaUrls: string[] = video?.media?.resolvedUrls ?? []
   const isLoading = !thumbnailUrls || !mediaUrls
@@ -127,7 +127,7 @@ export const CrtCarouselDetails = ({
 
   return (
     <VideoCardWrapper
-      videoId={video?.id}
+      videoId={video?.id ?? ''}
       active={active}
       goNextSlide={slideNext}
       mediaUrls={mediaUrls}
