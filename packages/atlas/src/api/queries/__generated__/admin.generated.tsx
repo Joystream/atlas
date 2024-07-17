@@ -33,6 +33,16 @@ export type GetAppActionSignatureMutation = {
   signAppActionCommitment: { __typename?: 'GeneratedSignature'; signature: string }
 }
 
+export type GetMostInteractedEntityByTypeQueryVariables = Types.Exact<{
+  type: Types.Scalars['String']
+  period: Types.Scalars['Int']
+}>
+
+export type GetMostInteractedEntityByTypeQuery = {
+  __typename?: 'Query'
+  getTopInteractedEntities: Array<{ __typename?: 'TopInteractedEntity'; entityId: string; interactionCount: number }>
+}
+
 export const GetKillSwitchDocument = gql`
   query GetKillSwitch {
     getKillSwitch {
@@ -168,4 +178,59 @@ export type GetAppActionSignatureMutationResult = Apollo.MutationResult<GetAppAc
 export type GetAppActionSignatureMutationOptions = Apollo.BaseMutationOptions<
   GetAppActionSignatureMutation,
   GetAppActionSignatureMutationVariables
+>
+export const GetMostInteractedEntityByTypeDocument = gql`
+  query GetMostInteractedEntityByType($type: String!, $period: Int!) {
+    getTopInteractedEntities(type: $type, period: $period) {
+      entityId
+      interactionCount
+    }
+  }
+`
+
+/**
+ * __useGetMostInteractedEntityByTypeQuery__
+ *
+ * To run a query within a React component, call `useGetMostInteractedEntityByTypeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMostInteractedEntityByTypeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMostInteractedEntityByTypeQuery({
+ *   variables: {
+ *      type: // value for 'type'
+ *      period: // value for 'period'
+ *   },
+ * });
+ */
+export function useGetMostInteractedEntityByTypeQuery(
+  baseOptions: Apollo.QueryHookOptions<GetMostInteractedEntityByTypeQuery, GetMostInteractedEntityByTypeQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetMostInteractedEntityByTypeQuery, GetMostInteractedEntityByTypeQueryVariables>(
+    GetMostInteractedEntityByTypeDocument,
+    options
+  )
+}
+export function useGetMostInteractedEntityByTypeLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetMostInteractedEntityByTypeQuery,
+    GetMostInteractedEntityByTypeQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetMostInteractedEntityByTypeQuery, GetMostInteractedEntityByTypeQueryVariables>(
+    GetMostInteractedEntityByTypeDocument,
+    options
+  )
+}
+export type GetMostInteractedEntityByTypeQueryHookResult = ReturnType<typeof useGetMostInteractedEntityByTypeQuery>
+export type GetMostInteractedEntityByTypeLazyQueryHookResult = ReturnType<
+  typeof useGetMostInteractedEntityByTypeLazyQuery
+>
+export type GetMostInteractedEntityByTypeQueryResult = Apollo.QueryResult<
+  GetMostInteractedEntityByTypeQuery,
+  GetMostInteractedEntityByTypeQueryVariables
 >

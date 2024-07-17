@@ -1,106 +1,61 @@
 import styled from '@emotion/styled'
-import BN from 'bn.js'
 
 import { CreatorTokenOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
-import { useGetBasicCreatorTokensQuery } from '@/api/queries/__generated__/creatorTokens.generated'
+import { HotCreatorTokens } from '@/components/HotCreatorTokens'
+import { LastestCrtTrades } from '@/components/LastestCrtTrades'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-import { MarketplaceCarousel } from '@/components/NftCarousel/MarketplaceCarousel'
-import { Section } from '@/components/Section/Section'
-import { TopEarningChannels } from '@/components/TopEarningChannels'
+import { TopMovingTokens } from '@/components/TopCrtMovers'
+import { TopVolumeTokens } from '@/components/TopVolumeTokens'
 import { AllTokensSection } from '@/components/_crt/AllTokensSection'
-import { CrtCard, CrtSaleTypes } from '@/components/_crt/CrtCard/CrtCard'
+import { FeaturedSection } from '@/components/_crt/FeaturedSection'
 import { useHeadTags } from '@/hooks/useHeadTags'
-import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { cVar, media, sizes } from '@/styles'
-
-import { responsive } from '../NftMarketplaceView/FeaturedNftsSection/FeaturedNftsSection'
 
 export const CrtMarketplaceView = () => {
   const headTags = useHeadTags('CRT - Marketplace')
-  const mdMatch = useMediaMatch('md')
-  const { data, loading } = useGetBasicCreatorTokensQuery({
-    variables: {
-      where: {
-        isFeatured_eq: true,
-      },
-      orderBy: CreatorTokenOrderByInput.CurrentAmmSaleMintedByAmmDesc,
-    },
-  })
-
-  const filteredTokens = data?.creatorTokens.filter((token) => !!token.trailerVideo.length).slice(0, 10) ?? []
-
-  const featuredCrts =
-    data?.creatorTokens.map(
-      ({ id, symbol, channel, totalSupply, accountsNum, lastPrice, currentAmmSale, description, currentSale }) => {
-        const status: CrtSaleTypes = currentSale
-          ? {
-              type: 'sale' as const,
-              tokensSoldPercentage: 69,
-            }
-          : currentAmmSale
-          ? {
-              type: 'market' as const,
-              transactionVolume: Number(currentAmmSale.burnedByAmm) + Number(currentAmmSale.mintedByAmm),
-            }
-          : {
-              type: 'inactive' as const,
-            }
-
-        return (
-          <StyledCrtCard
-            key={id}
-            status={status}
-            channelId={channel?.channel.id ?? ''}
-            symbol={symbol ?? 'N/A'}
-            avatar={channel?.channel.avatarPhoto?.resolvedUrls[0]}
-            marketCap={
-              lastPrice && totalSupply ? hapiBnToTokenNumber(new BN(lastPrice).mul(new BN(totalSupply))) ?? 0 : 0
-            }
-            description={description ?? ''}
-            isVerified={false}
-            name={symbol ?? 'N/A'}
-            channelRevenue={hapiBnToTokenNumber(new BN(channel?.channel.cumulativeRevenue ?? 0))}
-            accountsNum={accountsNum}
-          />
-        )
-      }
-    ) ?? []
 
   return (
-    <MarketplaceWrapper>
-      {headTags}
-      <MarketplaceCarousel type="crt" crts={filteredTokens ?? []} isLoading={loading} />
+    <>
+      <LastestCrtTrades />
 
-      {featuredCrts.length > 4 && (
-        <Section
-          headerProps={{
-            start: {
-              type: 'title',
-              title: 'Featured',
+      <MarketplaceWrapper>
+        {headTags}
+
+        <TableFullWitdhtWrapper>
+          <LimitedWidthContainer big noBottomPadding>
+            <HotCreatorTokens interval={30} tableTitle="Hot Tokens" />
+          </LimitedWidthContainer>
+        </TableFullWitdhtWrapper>
+
+        <TableFullWitdhtWrapper>
+          <LimitedWidthContainer big noBottomPadding>
+            <TopMovingTokens interval={30} tableTitle="Top Movers" />
+          </LimitedWidthContainer>
+        </TableFullWitdhtWrapper>
+
+        <FeaturedSection
+          title="Featured liquid tokens"
+          variables={{
+            where: {
+              currentAmmSale: {
+                id_isNull: false,
+              },
             },
-          }}
-          contentProps={{
-            type: 'carousel',
-            children: featuredCrts,
-            spaceBetween: mdMatch ? 24 : 16,
-            breakpoints: responsive,
+            orderBy: CreatorTokenOrderByInput.TotalSupplyDesc,
           }}
         />
-      )}
-      <TableFullWitdhtWrapper>
-        <LimitedWidthContainer big noBottomPadding>
-          <TopEarningChannels withCrtOnly />
-        </LimitedWidthContainer>
-      </TableFullWitdhtWrapper>
-      <AllTokensSection />
-    </MarketplaceWrapper>
+
+        <TableFullWitdhtWrapper>
+          <LimitedWidthContainer big noBottomPadding>
+            <TopVolumeTokens />
+          </LimitedWidthContainer>
+        </TableFullWitdhtWrapper>
+
+        <AllTokensSection />
+      </MarketplaceWrapper>
+    </>
   )
 }
-
-const StyledCrtCard = styled(CrtCard)`
-  min-height: 100%;
-`
 
 const MarketplaceWrapper = styled.div`
   padding: ${sizes(4)} 0;

@@ -1,13 +1,16 @@
 import { ReactElement, useEffect, useMemo, useRef } from 'react'
-import { Column, useFlexLayout, usePagination, useTable } from 'react-table'
+import { Column, useFlexLayout, usePagination, useSortBy, useTable } from 'react-table'
 import useDraggableScroll from 'use-draggable-scroll'
 
 import { TablePagination, TablePaginationProps } from '@/components/TablePagination'
 import { Text } from '@/components/Text'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useMountEffect } from '@/hooks/useMountEffect'
 
 import {
   AnchorRow,
+  AscIndicator,
+  DescIndicator,
   EmptyTableContainer,
   EmptyTableDescription,
   EmptyTableHeader,
@@ -37,6 +40,9 @@ export type TableProps<T = object> = {
   className?: string
   pagination?: TablePaginationProps
   minWidth?: number
+  onColumnSortClick?: (data?: { id: string; desc: boolean }) => void
+  sortSupportedColumnsIds?: string[]
+  defaultSorting?: [string, boolean] // [columnId, isDesc]
 }
 
 export const Table = <T extends object>({
@@ -52,6 +58,9 @@ export const Table = <T extends object>({
   interactive,
   getRowTo,
   minWidth = 300,
+  onColumnSortClick,
+  sortSupportedColumnsIds,
+  defaultSorting,
 }: TableProps<T>) => {
   const scrollRef = useRef<HTMLDivElement>(null)
   const { onMouseDown } = useDraggableScroll(scrollRef, { direction: 'horizontal' })
@@ -60,9 +69,41 @@ export const Table = <T extends object>({
     getTableBodyProps,
     headerGroups,
     page: rawPage,
+    setSortBy,
     setPageSize,
     prepareRow,
-  } = useTable({ columns, data, initialState: { pageSize } }, usePagination, useFlexLayout)
+    state: { sortBy },
+  } = useTable(
+    {
+      columns,
+      data,
+      initialState: { pageSize },
+      disableSortBy: !onColumnSortClick,
+      disableMultiSort: true,
+      disableSortRemove: true,
+      manualSortBy: true,
+    },
+    useSortBy,
+    usePagination,
+    useFlexLayout
+  )
+
+  useMountEffect(() => {
+    if (defaultSorting) {
+      setSortBy([
+        {
+          id: defaultSorting[0],
+          desc: defaultSorting[1],
+        },
+      ])
+    }
+  })
+
+  useEffect(() => {
+    if (onColumnSortClick && sortBy.length) {
+      onColumnSortClick(sortBy[0] as unknown as { id: string; desc: boolean })
+    }
+  }, [onColumnSortClick, sortBy])
 
   useEffect(() => {
     setPageSize(pageSize)
@@ -92,29 +133,49 @@ export const Table = <T extends object>({
       {data.length ? (
         <TableWrapper ref={scrollRef} onMouseDown={onMouseDown}>
           <PageWrapper minWidth={minWidth}>
-            {page.map((subpage, idx) => (
-              <TableBase className="table-base" {...getTableProps()} key={`table-slice-${idx}`}>
+            {page.map((subpage, subpageIdx) => (
+              <TableBase className="table-base" {...getTableProps()} key={`table-slice-${subpageIdx}`}>
                 <Thead className="table-header">
                   {headerGroups.map((headerGroup) => (
                     <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.getHeaderGroupProps().key}>
-                      {headerGroup.headers.map((column) => (
-                        <Th
-                          variant="h100"
-                          as="th"
-                          color="colorText"
-                          {...column.getHeaderProps({ style: { width: column.width } })}
-                          key={column.getHeaderProps().key}
-                        >
-                          {column.render('Header')}
-                        </Th>
-                      ))}
+                      {headerGroup.headers.map((column) => {
+                        const isSortingSupported =
+                          onColumnSortClick && sortSupportedColumnsIds
+                            ? sortSupportedColumnsIds.includes(column.id)
+                            : true
+
+                        return (
+                          <Th
+                            variant="h100"
+                            as="th"
+                            color="colorText"
+                            {...column.getHeaderProps({
+                              ...(isSortingSupported ? column.getSortByToggleProps({}) : {}),
+                              style: { width: column.width },
+                            })}
+                            key={column.getHeaderProps().key}
+                          >
+                            {isSortingSupported ? (
+                              column.isSorted ? (
+                                column.isSortedDesc ? (
+                                  <DescIndicator />
+                                ) : (
+                                  <AscIndicator />
+                                )
+                              ) : null
+                            ) : null}
+                            {column.render('Header')}
+                          </Th>
+                        )
+                      })}
                     </tr>
                   ))}
                 </Thead>
                 <tbody {...getTableBodyProps()}>
                   {subpage.map((row, idx) => {
                     prepareRow(row)
-                    const rowTo = getRowTo ? getRowTo(idx) : undefined
+                    const realRowIndex = page[0].length * subpageIdx + idx
+                    const rowTo = getRowTo ? getRowTo(realRowIndex) : undefined
                     const mappedCells = row.cells.map((cell) => (
                       <Td
                         variant="t100"
@@ -132,7 +193,9 @@ export const Table = <T extends object>({
                         <AnchorRow
                           className="table-row"
                           {...row.getRowProps()}
-                          onClick={() => onRowClick?.(idx)}
+                          onClick={() => {
+                            onRowClick?.(realRowIndex)
+                          }}
                           key={row.getRowProps().key}
                           to={rowTo}
                         >
@@ -145,7 +208,9 @@ export const Table = <T extends object>({
                       <tr
                         className="table-row"
                         {...row.getRowProps()}
-                        onClick={() => onRowClick?.(idx)}
+                        onClick={() => {
+                          onRowClick?.(realRowIndex)
+                        }}
                         key={row.getRowProps().key}
                       >
                         {mappedCells}

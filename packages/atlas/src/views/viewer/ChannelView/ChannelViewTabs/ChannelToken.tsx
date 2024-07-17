@@ -85,7 +85,7 @@ export const ChannelToken = ({ tokenId, memberId, cumulativeRevenue }: ChannelTo
           <TokenDetails
             about={token?.description ?? ''}
             benefits={token?.benefits}
-            videoId={token?.trailerVideo?.[0]?.video.id}
+            videoId={token?.trailerVideo?.video.id}
           />
         )}
       </GridItem>
