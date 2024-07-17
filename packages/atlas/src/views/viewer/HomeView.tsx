@@ -45,12 +45,6 @@ const _options = [
       atlasConfig.content.categories.find((category) => category.name === 'Video Games')?.videoCategories ?? [],
   },
   {
-    label: 'Education',
-    configLabel: 'Education',
-    value: '7',
-    queryValue: atlasConfig.content.categories.find((category) => category.name === 'Education')?.videoCategories ?? [],
-  },
-  {
     label: 'Music',
     configLabel: 'Music and Music Videos',
     value: '11',
@@ -66,25 +60,11 @@ const _options = [
       atlasConfig.content.categories.find((category) => category.name === 'People and Blogs')?.videoCategories ?? [],
   },
   {
-    label: 'Business',
-    configLabel: 'Business and Finance',
-    value: '4',
-    queryValue:
-      atlasConfig.content.categories.find((category) => category.name === 'Business and Finance')?.videoCategories ??
-      [],
-  },
-  {
     label: 'Animation',
     configLabel: 'Animation and Film',
     value: '2',
     queryValue:
       atlasConfig.content.categories.find((category) => category.name === 'Animation and Film')?.videoCategories ?? [],
-  },
-  {
-    label: 'Lifestyle',
-    configLabel: 'Lifestyle',
-    value: '9',
-    queryValue: atlasConfig.content.categories.find((category) => category.name === 'Lifestyle')?.videoCategories ?? [],
   },
   {
     label: 'Technology',
