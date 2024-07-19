@@ -12,9 +12,9 @@ import { ExpandButton } from '@/components/_buttons/ExpandButton'
 import { BuyFromMarketButton } from '@/components/_crt/BuyFromMarketButton/BuyFromMarketButton'
 import { SellOnMarketButton } from '@/components/_crt/SellOnMarketButton/SellOnMarketButton'
 import { DetailsContent } from '@/components/_nft/NftTile'
+import { useIsTokenInLockedMode } from '@/hooks/useIsTokenInLockedMode'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
-import { useJoystreamStore } from '@/providers/joystream/joystream.store'
 import { calcBuyMarketPricePerToken } from '@/utils/crts'
 import { SentryLogger } from '@/utils/logs'
 import { formatDate } from '@/utils/time'
@@ -110,9 +110,7 @@ const InactiveDetails = () => {
 }
 
 const MarketDetails = ({ token }: { token: FullCreatorTokenFragment }) => {
-  const currentBlockRef = useRef(useJoystreamStore((store) => store.currentBlock))
-  const activeRevenueShare = token.revenueShares.find((rS) => !rS.finalized)
-  const hasActiveRevenueShare = (activeRevenueShare?.endsAt ?? 0) > currentBlockRef.current
+  const isTokenLocked = useIsTokenInLockedMode(token)
   const calculateSlippageAmount = useCallback(
     (amount: number) => {
       const currentAmm = token?.ammCurves.find((amm) => !amm.finalized)
@@ -136,8 +134,8 @@ const MarketDetails = ({ token }: { token: FullCreatorTokenFragment }) => {
         tooltipText="Price of each incremental unit purchased or sold depends on overall quantity of tokens transacted, the actual average price per unit for the entire purchase or sale will differ from the price displayed for the first unit transacted."
       />
       <FlexBox equalChildren width="100%" gap={2}>
-        <SellOnMarketButton hasActiveRevenueShare={hasActiveRevenueShare} tokenId={token.id} />
-        <BuyFromMarketButton hasActiveRevenueShare={hasActiveRevenueShare} tokenId={token.id} />
+        <SellOnMarketButton isTokenLocked={isTokenLocked} tokenId={token.id} />
+        <BuyFromMarketButton isTokenLocked={isTokenLocked} tokenId={token.id} />
       </FlexBox>
 
       <SupplyLine>
