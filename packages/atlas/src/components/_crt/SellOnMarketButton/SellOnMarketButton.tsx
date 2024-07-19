@@ -6,17 +6,17 @@ import { SellTokenModal } from '@/components/_crt/SellTokenModal'
 
 type SellOnMarketButtonProps = {
   tokenId: string
-  hasActiveRevenueShare?: boolean
+  isTokenLocked?: boolean
 }
 
-export const SellOnMarketButton = ({ tokenId, hasActiveRevenueShare }: SellOnMarketButtonProps) => {
+export const SellOnMarketButton = ({ tokenId, isTokenLocked }: SellOnMarketButtonProps) => {
   const [showModal, setShowModal] = useState(false)
   return (
     <>
       <SellTokenModal tokenId={tokenId} show={showModal} onClose={() => setShowModal(false)} />
       <ProtectedActionWrapper title="You want to sell tokens?" description="Sign in to sell">
         <Button
-          variant={hasActiveRevenueShare ? 'warning-secondary' : 'secondary'}
+          variant={isTokenLocked ? 'warning-secondary' : 'secondary'}
           fullWidth
           size="large"
           onClick={() => setShowModal(true)}
