@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.4.0] - 2024-07-19
+
+### Added
+
+- Token comments
+- CRT Marketplace
+- Categorized home view
+- Language filtering
+
+### Fixed
+
+- Marketplace segment tracking
+- Synchronize AMM restrictions with runtime state
+- Notifications with dispatch block in the future
+
 ## [5.3.0] - 2024-06-04
 
 ### Added
