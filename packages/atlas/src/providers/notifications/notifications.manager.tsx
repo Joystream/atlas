@@ -1,11 +1,21 @@
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useRef } from 'react'
 
 import { atlasConfig } from '@/config'
 
 import { useNotifications } from './notifications.hooks'
 
+import { useJoystreamStore } from '../joystream/joystream.store'
+
 export const NotificationsManager: FC = () => {
   const { fetchMore, unseenNotificationsCounts, recipient } = useNotifications()
+  const { currentBlock } = useJoystreamStore()
+  const currentBlockRef = useRef(currentBlock)
+
+  useEffect(() => {
+    if (currentBlock) {
+      currentBlockRef.current = currentBlock
+    }
+  }, [currentBlock])
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -15,6 +25,9 @@ export const NotificationsManager: FC = () => {
 
       unseenNotificationsCounts.fetchMore()
       fetchMore({
+        variables: {
+          dispatchBlock: currentBlockRef.current,
+        },
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!Object.keys(prev).length) {
             return fetchMoreResult
