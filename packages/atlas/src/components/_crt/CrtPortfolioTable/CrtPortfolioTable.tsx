@@ -168,7 +168,7 @@ export const TokenInfo = ({
 }
 
 export const CrtStatus = ({ status }: { status: TokenStatus }) => {
-  const [icon, text] = useMemo(() => {
+  const [icon] = useMemo(() => {
     switch (status) {
       case TokenStatus.Market:
         return [<SvgActionMarket key={1} />, 'On market']
@@ -182,9 +182,6 @@ export const CrtStatus = ({ status }: { status: TokenStatus }) => {
   return (
     <FlexBox alignItems="center" gap={2}>
       {icon}
-      <Text variant="t100" as="p">
-        {text}
-      </Text>
     </FlexBox>
   )
 }

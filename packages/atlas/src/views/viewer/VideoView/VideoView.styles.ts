@@ -181,10 +181,16 @@ export const DescriptionLink = styled(Button)`
 `
 
 export const CommentsSectionWrapper = styled.div`
+  width: 100%;
+
+  > div > div {
+    width: 100%;
+  }
+
   margin-top: ${sizes(16)};
 `
 
-export const CommentsSectionHeader = styled.div`
+export const CommentsSectionHeader = styled.div<{ isCollapsable?: boolean }>`
   display: grid;
   grid-template-rows: auto;
   grid-template-columns: 1fr 220px;
@@ -192,9 +198,10 @@ export const CommentsSectionHeader = styled.div`
   margin-bottom: ${sizes(12)};
   padding-bottom: ${sizes(4)};
   box-shadow: ${cVar('effectDividersBottom')};
+  cursor: ${(props) => (props.isCollapsable ? 'pointer' : 'unset')};
 
   ${media.md} {
-    padding-left: ${sizes(14)};
+    padding-left: ${(props) => (props.isCollapsable ? 'unset' : sizes(14))};
   }
 `
 

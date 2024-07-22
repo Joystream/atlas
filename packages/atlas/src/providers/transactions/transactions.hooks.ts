@@ -39,7 +39,7 @@ type HandleTransactionOpts<T extends ExtrinsicResult> = {
   onTxFinalize?: (data: T) => Promise<unknown>
   onTxSuccess?: (data: T) => Promise<unknown>
   onTxSync?: (data: T, metaStatus?: MetaprotocolTransactionResultFieldsFragment) => Promise<unknown>
-  onError?: () => void
+  onError?: (error: unknown) => void
   snackbarSuccessMessage?: DisplaySnackbarArgs
   minimized?: {
     errorMessage: string
@@ -87,7 +87,7 @@ export const useTransaction = (): HandleTransactionFn => {
         return false
       }
 
-      if (isSignerMetadataOutdated && WALLETS_WITH_METADATA.includes(wallet?.extensionName ?? '')) {
+      if (isSignerMetadataOutdated && wallet?.extensionName && WALLETS_WITH_METADATA.includes(wallet.extensionName)) {
         await new Promise((resolve) => {
           openOngoingTransactionModal({
             title: 'Update Wallet Metadata',
@@ -265,7 +265,7 @@ export const useTransaction = (): HandleTransactionFn => {
 
         return true
       } catch (error) {
-        onError?.()
+        onError?.(error)
 
         const errorName = error.name as JoystreamLibErrorType
 

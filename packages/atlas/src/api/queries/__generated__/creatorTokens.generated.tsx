@@ -3,11 +3,13 @@ import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
 import {
+  BasicAmmTransactionFragmentDoc,
   BasicCreatorTokenFragmentDoc,
   BasicCreatorTokenHolderFragmentDoc,
   BasicRevenueShareFragmentDoc,
   FullAmmCurveFragmentDoc,
   FullCreatorTokenFragmentDoc,
+  StorageDataObjectFieldsFragmentDoc,
 } from './fragments.generated'
 
 const defaultOptions = {} as const
@@ -32,7 +34,7 @@ export type GetBasicCreatorTokensQuery = {
     lastPrice?: string | null
     totalSupply: string
     description?: string | null
-    trailerVideo: Array<{
+    trailerVideo?: {
       __typename?: 'TrailerVideo'
       id: string
       video: {
@@ -75,7 +77,7 @@ export type GetBasicCreatorTokensQuery = {
             | null
         } | null
       }
-    }>
+    } | null
     currentAmmSale?: { __typename?: 'AmmCurve'; id: string; burnedByAmm: string; mintedByAmm: string } | null
     currentSale?: { __typename?: 'Sale'; id: string; tokensSold: string; endsAt: number } | null
     channel?: {
@@ -184,7 +186,7 @@ export type GetFullCreatorTokenQuery = {
       displayOrder: number
       emojiCode?: string | null
     }>
-    trailerVideo: Array<{
+    trailerVideo?: {
       __typename?: 'TrailerVideo'
       id: string
       video: {
@@ -228,7 +230,7 @@ export type GetFullCreatorTokenQuery = {
             | null
         } | null
       }
-    }>
+    } | null
     revenueShares: Array<{
       __typename?: 'RevenueShare'
       id: string
@@ -514,6 +516,411 @@ export type GetTokenRevenueSharesCountQueryVariables = Types.Exact<{
 export type GetTokenRevenueSharesCountQuery = {
   __typename?: 'Query'
   revenueSharesConnection: { __typename?: 'RevenueSharesConnection'; totalCount: number }
+}
+
+export type GetMarketplaceTokensCountQueryVariables = Types.Exact<{
+  where?: Types.InputMaybe<Types.MarketplaceTokenWhereInput>
+}>
+
+export type GetMarketplaceTokensCountQuery = {
+  __typename?: 'Query'
+  getMarketplaceTokensCount: { __typename?: 'MarketplaceTokenCount'; count: number }
+}
+
+export type GetMarketplaceTokensQueryVariables = Types.Exact<{
+  where?: Types.InputMaybe<Types.MarketplaceTokenWhereInput>
+  limit?: Types.InputMaybe<Types.Scalars['Int']>
+  offset?: Types.InputMaybe<Types.Scalars['Int']>
+  orderBy?: Types.InputMaybe<Array<Types.Scalars['id_ASC']> | Types.Scalars['id_ASC']>
+}>
+
+export type GetMarketplaceTokensQuery = {
+  __typename?: 'Query'
+  getMarketplaceTokens: Array<{
+    __typename?: 'MarketplaceToken'
+    ammVolume?: string | null
+    liquidity?: number | null
+    cumulativeRevenue?: string | null
+    priceChange?: string | null
+    liquidityChange?: string | null
+    marketCap?: string | null
+    id: string
+    accountsNum: number
+    symbol?: string | null
+    isInviteOnly: boolean
+    deissued: boolean
+    status: Types.TokenStatus
+    createdAt: Date
+    lastPrice?: string | null
+    totalSupply: string
+    description?: string | null
+    currentAmmSaleId?: string | null
+    currentSaleId?: string | null
+    channelId?: string | null
+    avatar?:
+      | {
+          __typename?: 'TokenAvatarObject'
+          avatarObject: {
+            __typename?: 'StorageDataObject'
+            id: string
+            resolvedUrls: Array<string>
+            createdAt: Date
+            size: string
+            isAccepted: boolean
+            ipfsHash: string
+            storageBag: { __typename?: 'StorageBag'; id: string }
+            type?:
+              | { __typename: 'DataObjectTypeChannelAvatar' }
+              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+              | { __typename: 'DataObjectTypeVideoMedia' }
+              | { __typename: 'DataObjectTypeVideoSubtitle' }
+              | { __typename: 'DataObjectTypeVideoThumbnail' }
+              | null
+          }
+        }
+      | { __typename?: 'TokenAvatarUri'; avatarUri: string }
+      | null
+  }>
+}
+
+export type GetHotAndColdTokensQueryVariables = Types.Exact<{
+  where?: Types.InputMaybe<Types.CreatorTokenWhereInput>
+  periodDays: Types.Scalars['Int']
+  priceDesc?: Types.InputMaybe<Types.Scalars['Boolean']>
+  limit?: Types.InputMaybe<Types.Scalars['Int']>
+}>
+
+export type GetHotAndColdTokensQuery = {
+  __typename?: 'Query'
+  tokensWithPriceChange: Array<{
+    __typename?: 'MarketplaceTokensReturnType'
+    pricePercentageChange: number
+    creatorToken: {
+      __typename?: 'CreatorToken'
+      id: string
+      accountsNum: number
+      symbol?: string | null
+      isInviteOnly: boolean
+      deissued: boolean
+      status: Types.TokenStatus
+      createdAt: Date
+      lastPrice?: string | null
+      totalSupply: string
+      description?: string | null
+      trailerVideo?: {
+        __typename?: 'TrailerVideo'
+        id: string
+        video: {
+          __typename?: 'Video'
+          id: string
+          media?: {
+            __typename?: 'StorageDataObject'
+            id: string
+            resolvedUrls: Array<string>
+            createdAt: Date
+            size: string
+            isAccepted: boolean
+            ipfsHash: string
+            storageBag: { __typename?: 'StorageBag'; id: string }
+            type?:
+              | { __typename: 'DataObjectTypeChannelAvatar' }
+              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+              | { __typename: 'DataObjectTypeVideoMedia' }
+              | { __typename: 'DataObjectTypeVideoSubtitle' }
+              | { __typename: 'DataObjectTypeVideoThumbnail' }
+              | null
+          } | null
+          thumbnailPhoto?: {
+            __typename?: 'StorageDataObject'
+            id: string
+            resolvedUrls: Array<string>
+            createdAt: Date
+            size: string
+            isAccepted: boolean
+            ipfsHash: string
+            storageBag: { __typename?: 'StorageBag'; id: string }
+            type?:
+              | { __typename: 'DataObjectTypeChannelAvatar' }
+              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+              | { __typename: 'DataObjectTypeVideoMedia' }
+              | { __typename: 'DataObjectTypeVideoSubtitle' }
+              | { __typename: 'DataObjectTypeVideoThumbnail' }
+              | null
+          } | null
+        }
+      } | null
+      currentAmmSale?: { __typename?: 'AmmCurve'; id: string; burnedByAmm: string; mintedByAmm: string } | null
+      currentSale?: { __typename?: 'Sale'; id: string; tokensSold: string; endsAt: number } | null
+      channel?: {
+        __typename?: 'TokenChannel'
+        id: string
+        channel: {
+          __typename?: 'Channel'
+          id: string
+          title?: string | null
+          description?: string | null
+          createdAt: Date
+          followsNum: number
+          rewardAccount: string
+          channelStateBloatBond: string
+          cumulativeRevenue: string
+          avatarPhoto?: {
+            __typename?: 'StorageDataObject'
+            id: string
+            resolvedUrls: Array<string>
+            createdAt: Date
+            size: string
+            isAccepted: boolean
+            ipfsHash: string
+            storageBag: { __typename?: 'StorageBag'; id: string }
+            type?:
+              | { __typename: 'DataObjectTypeChannelAvatar' }
+              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+              | { __typename: 'DataObjectTypeVideoMedia' }
+              | { __typename: 'DataObjectTypeVideoSubtitle' }
+              | { __typename: 'DataObjectTypeVideoThumbnail' }
+              | null
+          } | null
+          creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
+        }
+      } | null
+      avatar?:
+        | {
+            __typename?: 'TokenAvatarObject'
+            avatarObject: {
+              __typename?: 'StorageDataObject'
+              id: string
+              resolvedUrls: Array<string>
+              createdAt: Date
+              size: string
+              isAccepted: boolean
+              ipfsHash: string
+              storageBag: { __typename?: 'StorageBag'; id: string }
+              type?:
+                | { __typename: 'DataObjectTypeChannelAvatar' }
+                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+                | { __typename: 'DataObjectTypeVideoMedia' }
+                | { __typename: 'DataObjectTypeVideoSubtitle' }
+                | { __typename: 'DataObjectTypeVideoThumbnail' }
+                | null
+            }
+          }
+        | { __typename?: 'TokenAvatarUri'; avatarUri: string }
+        | null
+    }
+  }>
+}
+
+export type GetTopSellingTokensQueryVariables = Types.Exact<{
+  periodDays: Types.Scalars['Int']
+  volumeDesc?: Types.InputMaybe<Types.Scalars['Boolean']>
+  limit?: Types.InputMaybe<Types.Scalars['Int']>
+}>
+
+export type GetTopSellingTokensQuery = {
+  __typename?: 'Query'
+  topSellingToken: Array<{
+    __typename?: 'TopSellingTokensReturnType'
+    ammVolume: string
+    creatorToken: {
+      __typename?: 'CreatorToken'
+      id: string
+      accountsNum: number
+      symbol?: string | null
+      isInviteOnly: boolean
+      deissued: boolean
+      status: Types.TokenStatus
+      createdAt: Date
+      lastPrice?: string | null
+      totalSupply: string
+      description?: string | null
+      trailerVideo?: {
+        __typename?: 'TrailerVideo'
+        id: string
+        video: {
+          __typename?: 'Video'
+          id: string
+          media?: {
+            __typename?: 'StorageDataObject'
+            id: string
+            resolvedUrls: Array<string>
+            createdAt: Date
+            size: string
+            isAccepted: boolean
+            ipfsHash: string
+            storageBag: { __typename?: 'StorageBag'; id: string }
+            type?:
+              | { __typename: 'DataObjectTypeChannelAvatar' }
+              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+              | { __typename: 'DataObjectTypeVideoMedia' }
+              | { __typename: 'DataObjectTypeVideoSubtitle' }
+              | { __typename: 'DataObjectTypeVideoThumbnail' }
+              | null
+          } | null
+          thumbnailPhoto?: {
+            __typename?: 'StorageDataObject'
+            id: string
+            resolvedUrls: Array<string>
+            createdAt: Date
+            size: string
+            isAccepted: boolean
+            ipfsHash: string
+            storageBag: { __typename?: 'StorageBag'; id: string }
+            type?:
+              | { __typename: 'DataObjectTypeChannelAvatar' }
+              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+              | { __typename: 'DataObjectTypeVideoMedia' }
+              | { __typename: 'DataObjectTypeVideoSubtitle' }
+              | { __typename: 'DataObjectTypeVideoThumbnail' }
+              | null
+          } | null
+        }
+      } | null
+      currentAmmSale?: { __typename?: 'AmmCurve'; id: string; burnedByAmm: string; mintedByAmm: string } | null
+      currentSale?: { __typename?: 'Sale'; id: string; tokensSold: string; endsAt: number } | null
+      channel?: {
+        __typename?: 'TokenChannel'
+        id: string
+        channel: {
+          __typename?: 'Channel'
+          id: string
+          title?: string | null
+          description?: string | null
+          createdAt: Date
+          followsNum: number
+          rewardAccount: string
+          channelStateBloatBond: string
+          cumulativeRevenue: string
+          avatarPhoto?: {
+            __typename?: 'StorageDataObject'
+            id: string
+            resolvedUrls: Array<string>
+            createdAt: Date
+            size: string
+            isAccepted: boolean
+            ipfsHash: string
+            storageBag: { __typename?: 'StorageBag'; id: string }
+            type?:
+              | { __typename: 'DataObjectTypeChannelAvatar' }
+              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+              | { __typename: 'DataObjectTypeVideoMedia' }
+              | { __typename: 'DataObjectTypeVideoSubtitle' }
+              | { __typename: 'DataObjectTypeVideoThumbnail' }
+              | null
+          } | null
+          creatorToken?: { __typename?: 'TokenChannel'; token: { __typename?: 'CreatorToken'; id: string } } | null
+        }
+      } | null
+      avatar?:
+        | {
+            __typename?: 'TokenAvatarObject'
+            avatarObject: {
+              __typename?: 'StorageDataObject'
+              id: string
+              resolvedUrls: Array<string>
+              createdAt: Date
+              size: string
+              isAccepted: boolean
+              ipfsHash: string
+              storageBag: { __typename?: 'StorageBag'; id: string }
+              type?:
+                | { __typename: 'DataObjectTypeChannelAvatar' }
+                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+                | { __typename: 'DataObjectTypeVideoMedia' }
+                | { __typename: 'DataObjectTypeVideoSubtitle' }
+                | { __typename: 'DataObjectTypeVideoThumbnail' }
+                | null
+            }
+          }
+        | { __typename?: 'TokenAvatarUri'; avatarUri: string }
+        | null
+    }
+  }>
+}
+
+export type GetAmmTransactionsQueryVariables = Types.Exact<{
+  where?: Types.InputMaybe<Types.AmmTransactionWhereInput>
+  orderBy?: Types.InputMaybe<Array<Types.AmmTransactionOrderByInput> | Types.AmmTransactionOrderByInput>
+  limit?: Types.InputMaybe<Types.Scalars['Int']>
+}>
+
+export type GetAmmTransactionsQuery = {
+  __typename?: 'Query'
+  ammTransactions: Array<{
+    __typename?: 'AmmTransaction'
+    id: string
+    quantity: string
+    pricePaid: string
+    pricePerUnit: string
+    transactionType: Types.AmmTransactionType
+    createdIn: number
+    amm: {
+      __typename?: 'AmmCurve'
+      id: string
+      token: {
+        __typename?: 'CreatorToken'
+        id: string
+        symbol?: string | null
+        channel?: {
+          __typename?: 'TokenChannel'
+          channel: {
+            __typename?: 'Channel'
+            id: string
+            avatarPhoto?: {
+              __typename?: 'StorageDataObject'
+              resolvedUrls: Array<string>
+              storageBag: { __typename?: 'StorageBag'; id: string }
+            } | null
+          }
+        } | null
+      }
+    }
+    account: {
+      __typename?: 'TokenAccount'
+      member: {
+        __typename?: 'Membership'
+        id: string
+        handle: string
+        metadata?: {
+          __typename?: 'MemberMetadata'
+          about?: string | null
+          avatar?:
+            | {
+                __typename?: 'AvatarObject'
+                avatarObject: {
+                  __typename?: 'StorageDataObject'
+                  id: string
+                  resolvedUrls: Array<string>
+                  createdAt: Date
+                  size: string
+                  isAccepted: boolean
+                  ipfsHash: string
+                  storageBag: { __typename?: 'StorageBag'; id: string }
+                  type?:
+                    | { __typename: 'DataObjectTypeChannelAvatar' }
+                    | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                    | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+                    | { __typename: 'DataObjectTypeVideoMedia' }
+                    | { __typename: 'DataObjectTypeVideoSubtitle' }
+                    | { __typename: 'DataObjectTypeVideoThumbnail' }
+                    | null
+                }
+              }
+            | { __typename?: 'AvatarUri'; avatarUri: string }
+            | null
+        } | null
+      }
+    }
+  }>
 }
 
 export const GetBasicCreatorTokensDocument = gql`
@@ -1068,4 +1475,289 @@ export type GetTokenRevenueSharesCountLazyQueryHookResult = ReturnType<typeof us
 export type GetTokenRevenueSharesCountQueryResult = Apollo.QueryResult<
   GetTokenRevenueSharesCountQuery,
   GetTokenRevenueSharesCountQueryVariables
+>
+export const GetMarketplaceTokensCountDocument = gql`
+  query GetMarketplaceTokensCount($where: MarketplaceTokenWhereInput) {
+    getMarketplaceTokensCount(where: $where) {
+      count
+    }
+  }
+`
+
+/**
+ * __useGetMarketplaceTokensCountQuery__
+ *
+ * To run a query within a React component, call `useGetMarketplaceTokensCountQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMarketplaceTokensCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMarketplaceTokensCountQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetMarketplaceTokensCountQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetMarketplaceTokensCountQuery, GetMarketplaceTokensCountQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetMarketplaceTokensCountQuery, GetMarketplaceTokensCountQueryVariables>(
+    GetMarketplaceTokensCountDocument,
+    options
+  )
+}
+export function useGetMarketplaceTokensCountLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetMarketplaceTokensCountQuery, GetMarketplaceTokensCountQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetMarketplaceTokensCountQuery, GetMarketplaceTokensCountQueryVariables>(
+    GetMarketplaceTokensCountDocument,
+    options
+  )
+}
+export type GetMarketplaceTokensCountQueryHookResult = ReturnType<typeof useGetMarketplaceTokensCountQuery>
+export type GetMarketplaceTokensCountLazyQueryHookResult = ReturnType<typeof useGetMarketplaceTokensCountLazyQuery>
+export type GetMarketplaceTokensCountQueryResult = Apollo.QueryResult<
+  GetMarketplaceTokensCountQuery,
+  GetMarketplaceTokensCountQueryVariables
+>
+export const GetMarketplaceTokensDocument = gql`
+  query GetMarketplaceTokens($where: MarketplaceTokenWhereInput, $limit: Int, $offset: Int, $orderBy: [id_ASC!]) {
+    getMarketplaceTokens(where: $where, limit: $limit, orderBy: $orderBy, offset: $offset) {
+      ammVolume
+      liquidity
+      cumulativeRevenue
+      priceChange
+      liquidityChange
+      marketCap
+      id
+      accountsNum
+      symbol
+      isInviteOnly
+      deissued
+      status
+      createdAt
+      lastPrice
+      totalSupply
+      description
+      currentAmmSaleId
+      currentSaleId
+      channelId
+      avatar {
+        ... on TokenAvatarObject {
+          avatarObject {
+            ...StorageDataObjectFields
+          }
+        }
+        ... on TokenAvatarUri {
+          avatarUri
+        }
+      }
+    }
+  }
+  ${StorageDataObjectFieldsFragmentDoc}
+`
+
+/**
+ * __useGetMarketplaceTokensQuery__
+ *
+ * To run a query within a React component, call `useGetMarketplaceTokensQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMarketplaceTokensQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMarketplaceTokensQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useGetMarketplaceTokensQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetMarketplaceTokensQuery, GetMarketplaceTokensQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetMarketplaceTokensQuery, GetMarketplaceTokensQueryVariables>(
+    GetMarketplaceTokensDocument,
+    options
+  )
+}
+export function useGetMarketplaceTokensLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetMarketplaceTokensQuery, GetMarketplaceTokensQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetMarketplaceTokensQuery, GetMarketplaceTokensQueryVariables>(
+    GetMarketplaceTokensDocument,
+    options
+  )
+}
+export type GetMarketplaceTokensQueryHookResult = ReturnType<typeof useGetMarketplaceTokensQuery>
+export type GetMarketplaceTokensLazyQueryHookResult = ReturnType<typeof useGetMarketplaceTokensLazyQuery>
+export type GetMarketplaceTokensQueryResult = Apollo.QueryResult<
+  GetMarketplaceTokensQuery,
+  GetMarketplaceTokensQueryVariables
+>
+export const GetHotAndColdTokensDocument = gql`
+  query GetHotAndColdTokens($where: CreatorTokenWhereInput, $periodDays: Int!, $priceDesc: Boolean, $limit: Int) {
+    tokensWithPriceChange(periodDays: $periodDays, orderByPriceDesc: $priceDesc, limit: $limit, where: $where) {
+      pricePercentageChange
+      creatorToken {
+        ...BasicCreatorToken
+      }
+    }
+  }
+  ${BasicCreatorTokenFragmentDoc}
+`
+
+/**
+ * __useGetHotAndColdTokensQuery__
+ *
+ * To run a query within a React component, call `useGetHotAndColdTokensQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetHotAndColdTokensQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetHotAndColdTokensQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      periodDays: // value for 'periodDays'
+ *      priceDesc: // value for 'priceDesc'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useGetHotAndColdTokensQuery(
+  baseOptions: Apollo.QueryHookOptions<GetHotAndColdTokensQuery, GetHotAndColdTokensQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetHotAndColdTokensQuery, GetHotAndColdTokensQueryVariables>(
+    GetHotAndColdTokensDocument,
+    options
+  )
+}
+export function useGetHotAndColdTokensLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetHotAndColdTokensQuery, GetHotAndColdTokensQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetHotAndColdTokensQuery, GetHotAndColdTokensQueryVariables>(
+    GetHotAndColdTokensDocument,
+    options
+  )
+}
+export type GetHotAndColdTokensQueryHookResult = ReturnType<typeof useGetHotAndColdTokensQuery>
+export type GetHotAndColdTokensLazyQueryHookResult = ReturnType<typeof useGetHotAndColdTokensLazyQuery>
+export type GetHotAndColdTokensQueryResult = Apollo.QueryResult<
+  GetHotAndColdTokensQuery,
+  GetHotAndColdTokensQueryVariables
+>
+export const GetTopSellingTokensDocument = gql`
+  query GetTopSellingTokens($periodDays: Int!, $volumeDesc: Boolean, $limit: Int) {
+    topSellingToken(periodDays: $periodDays, orderByPriceDesc: $volumeDesc, limit: $limit) {
+      creatorToken {
+        ...BasicCreatorToken
+      }
+      ammVolume
+    }
+  }
+  ${BasicCreatorTokenFragmentDoc}
+`
+
+/**
+ * __useGetTopSellingTokensQuery__
+ *
+ * To run a query within a React component, call `useGetTopSellingTokensQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTopSellingTokensQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTopSellingTokensQuery({
+ *   variables: {
+ *      periodDays: // value for 'periodDays'
+ *      volumeDesc: // value for 'volumeDesc'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useGetTopSellingTokensQuery(
+  baseOptions: Apollo.QueryHookOptions<GetTopSellingTokensQuery, GetTopSellingTokensQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetTopSellingTokensQuery, GetTopSellingTokensQueryVariables>(
+    GetTopSellingTokensDocument,
+    options
+  )
+}
+export function useGetTopSellingTokensLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetTopSellingTokensQuery, GetTopSellingTokensQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetTopSellingTokensQuery, GetTopSellingTokensQueryVariables>(
+    GetTopSellingTokensDocument,
+    options
+  )
+}
+export type GetTopSellingTokensQueryHookResult = ReturnType<typeof useGetTopSellingTokensQuery>
+export type GetTopSellingTokensLazyQueryHookResult = ReturnType<typeof useGetTopSellingTokensLazyQuery>
+export type GetTopSellingTokensQueryResult = Apollo.QueryResult<
+  GetTopSellingTokensQuery,
+  GetTopSellingTokensQueryVariables
+>
+export const GetAmmTransactionsDocument = gql`
+  query GetAmmTransactions($where: AmmTransactionWhereInput, $orderBy: [AmmTransactionOrderByInput!], $limit: Int) {
+    ammTransactions(where: $where, orderBy: $orderBy, limit: $limit) {
+      ...BasicAmmTransaction
+    }
+  }
+  ${BasicAmmTransactionFragmentDoc}
+`
+
+/**
+ * __useGetAmmTransactionsQuery__
+ *
+ * To run a query within a React component, call `useGetAmmTransactionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAmmTransactionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAmmTransactionsQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useGetAmmTransactionsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetAmmTransactionsQuery, GetAmmTransactionsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetAmmTransactionsQuery, GetAmmTransactionsQueryVariables>(GetAmmTransactionsDocument, options)
+}
+export function useGetAmmTransactionsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetAmmTransactionsQuery, GetAmmTransactionsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetAmmTransactionsQuery, GetAmmTransactionsQueryVariables>(
+    GetAmmTransactionsDocument,
+    options
+  )
+}
+export type GetAmmTransactionsQueryHookResult = ReturnType<typeof useGetAmmTransactionsQuery>
+export type GetAmmTransactionsLazyQueryHookResult = ReturnType<typeof useGetAmmTransactionsLazyQuery>
+export type GetAmmTransactionsQueryResult = Apollo.QueryResult<
+  GetAmmTransactionsQuery,
+  GetAmmTransactionsQueryVariables
 >

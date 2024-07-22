@@ -18,11 +18,11 @@ import { DialogProps } from '@/components/_overlays/Dialog'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { absoluteRoutes } from '@/config/routes'
 import { useDismissibleAction } from '@/hooks/useDismissibleAction'
+import { useIsTokenInLockedMode } from '@/hooks/useIsTokenInLockedMode'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { useFee, useJoystream, useSubscribeAccountBalance } from '@/providers/joystream'
-import { useJoystreamStore } from '@/providers/joystream/joystream.store'
 import { useNetworkUtils } from '@/providers/networkUtils/networkUtils.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
@@ -57,7 +57,6 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
   const amountRef = useRef<number | null>(null)
   const { control, watch, handleSubmit, reset, formState } = useForm<{ tokenAmount: number }>()
   const tokenAmount = watch('tokenAmount') || 0
-  const currentBlockRef = useRef(useJoystreamStore((store) => store.currentBlock))
   const { fullFee } = useFee('purchaseTokenOnMarketTx', ['1', '1', String(tokenAmount ?? 0), '1000000'])
   const { data, loading } = useGetFullCreatorTokenQuery({
     variables: {
@@ -67,8 +66,8 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
       SentryLogger.error('Error while fetching creator token', 'BuyMarketTokenModal', error)
     },
   })
-  const activeRevenueShare = data?.creatorTokenById?.revenueShares.find((rS) => !rS.finalized)
-  const hasActiveRevenueShare = (activeRevenueShare?.endsAt ?? 0) > currentBlockRef.current
+  const isTokenLocked = useIsTokenInLockedMode(data?.creatorTokenById ?? undefined)
+
   const { data: memberTokenAccount } = useGetCreatorTokenHoldersQuery({
     variables: {
       where: {
@@ -355,10 +354,10 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
     if (activeStep === BUY_MARKET_TOKEN_STEPS.form) {
       setPrimaryButtonProps({
         text: 'Continue',
-        disabled: hasActiveRevenueShare,
-        variant: hasActiveRevenueShare ? 'warning' : undefined,
+        disabled: isTokenLocked,
+        variant: isTokenLocked ? 'warning' : undefined,
         onClick: () => {
-          if (hasActiveRevenueShare) {
+          if (isTokenLocked) {
             displaySnackbar({
               iconType: 'error',
               title: 'You cannot trade tokens during revenue share.',
@@ -385,7 +384,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
     displaySnackbar,
     handleSubmit,
     hasAcceptedConditions,
-    hasActiveRevenueShare,
+    isTokenLocked,
     onTransactionSubmit,
   ])
 
@@ -410,7 +409,7 @@ export const BuyMarketTokenModal = ({ tokenId, onClose: _onClose, show }: BuySal
       confetti={activeStep === BUY_MARKET_TOKEN_STEPS.success && smMatch}
       noContentPadding={activeStep === BUY_MARKET_TOKEN_STEPS.conditions}
       additionalActionsNode={
-        hasActiveRevenueShare ? (
+        isTokenLocked ? (
           <Tooltip text="During revenue share you are unable to trade on market. Please wait until it ends to make new transactions.">
             <SvgAlertsWarning24 />
           </Tooltip>
