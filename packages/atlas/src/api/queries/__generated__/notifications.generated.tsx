@@ -22,6 +22,7 @@ export type GetNotificationsConnectionQueryVariables = Types.Exact<{
   recipient: Types.RecipientTypeWhereInput
   first: Types.Scalars['Int']
   after?: Types.InputMaybe<Types.Scalars['String']>
+  dispatchBlock: Types.Scalars['Int']
 }>
 
 export type GetNotificationsConnectionQuery = {
@@ -3183,12 +3184,17 @@ export type GetNotificationsCountQueryResult = Apollo.QueryResult<
   GetNotificationsCountQueryVariables
 >
 export const GetNotificationsConnectionDocument = gql`
-  query GetNotificationsConnection($recipient: RecipientTypeWhereInput!, $first: Int!, $after: String) {
+  query GetNotificationsConnection(
+    $recipient: RecipientTypeWhereInput!
+    $first: Int!
+    $after: String
+    $dispatchBlock: Int!
+  ) {
     notificationsConnection(
       first: $first
       after: $after
-      orderBy: createdAt_DESC
-      where: { inApp_eq: true, recipient: $recipient }
+      orderBy: [dispatchBlock_DESC, id_DESC]
+      where: { inApp_eq: true, recipient: $recipient, dispatchBlock_lte: $dispatchBlock }
     ) {
       pageInfo {
         hasNextPage
@@ -3412,6 +3418,7 @@ export const GetNotificationsConnectionDocument = gql`
  *      recipient: // value for 'recipient'
  *      first: // value for 'first'
  *      after: // value for 'after'
+ *      dispatchBlock: // value for 'dispatchBlock'
  *   },
  * });
  */
