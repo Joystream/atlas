@@ -1,4 +1,5 @@
 import { QueryHookOptions } from '@apollo/client'
+import { useRef } from 'react'
 
 import {
   GetNftActivitiesCountQuery,
@@ -10,6 +11,7 @@ import {
   useGetNotificationsConnectionQuery,
   useMarkNotificationsAsReadMutation,
 } from '@/api/queries/__generated__/notifications.generated'
+import { useJoystreamStore } from '@/providers/joystream/joystream.store'
 
 import { NftActivityOrderByInput, RecipientTypeWhereInput } from '../queries/__generated__/baseTypes.generated'
 
@@ -17,8 +19,13 @@ export const useRawNotifications = (
   recipient: RecipientTypeWhereInput | undefined,
   opts?: Pick<QueryHookOptions, 'notifyOnNetworkStatusChange'>
 ) => {
+  const currentBlockRef = useRef(useJoystreamStore((store) => store.currentBlock))
   const { data, ...rest } = useGetNotificationsConnectionQuery({
-    variables: { first: 10, recipient: recipient as RecipientTypeWhereInput },
+    variables: {
+      first: 10,
+      recipient: recipient as RecipientTypeWhereInput,
+      dispatchBlock: currentBlockRef.current ?? 0,
+    },
     ...opts,
     skip: !recipient,
   })
