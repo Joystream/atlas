@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 import { AmmTransactionOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { useGetAmmTransactionsQuery } from '@/api/queries/__generated__/creatorTokens.generated'
-import { SvgActionArrowTop } from '@/assets/icons'
+import { SvgActionArrowBottom, SvgActionArrowTop } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
 import { FlexBox } from '@/components/FlexBox'
 import { Text } from '@/components/Text'
@@ -32,7 +32,7 @@ export const LastestCrtTrades = () => {
                 ${tx.amm.token.symbol}
               </Text>
               <AmountBox isBuy={tx.transactionType === 'BUY'} alignItems="center">
-                <SvgActionArrowTop />
+                {tx.transactionType === 'BUY' ? <SvgActionArrowTop /> : <SvgActionArrowBottom />}
                 <Text
                   variant="h200"
                   as="h1"
