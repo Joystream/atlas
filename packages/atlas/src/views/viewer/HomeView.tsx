@@ -187,12 +187,15 @@ const useHomeVideos = (categories?: string[]) => {
   const { columns, fetchMore, pageInfo, tiles } = useInfiniteVideoGrid({
     query: GetBasicVideosConnectionLightweightDocument,
     variables: {
-      where: getPublicCryptoVideoFilter({
-        id_not_in: avoidIds,
-        category: {
-          id_in: categories,
+      where: getPublicCryptoVideoFilter(
+        {
+          id_not_in: avoidIds,
+          category: {
+            id_in: categories,
+          },
         },
-      }),
+        true
+      ),
       orderBy: VideoOrderByInput.VideoRelevanceDesc,
     },
     options: {
