@@ -178,12 +178,14 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                       unseenNotificationsCounts={unseenNotificationsCounts}
                       onSignOut={handleLogout}
                       onShowFundsDialog={() => {
-                        if (activeChannel?.creatorToken?.token.id) {
-                          setOpenRevenueShareModal(true)
+                        if (dropdownType === 'channel') {
+                          activeChannel?.creatorToken?.token.id
+                            ? setOpenRevenueShareModal(true)
+                            : setShowWithdrawDialog(true)
                           return
                         }
 
-                        dropdownType === 'channel' ? setShowWithdrawDialog(true) : setShowSendDialog(true)
+                        setShowSendDialog(true)
                       }}
                       accountBalance={accountBalance}
                       onAddNewChannel={handleAddNewChannel}
