@@ -52,6 +52,7 @@ export const VideoTile: FC<VideoTileProps> = memo(
     type = 'video',
     playlistUrl,
     isPublisher,
+    hasCreatorToken,
   }) => {
     const [tileSize, setTileSize] = useState<'small' | 'medium'>()
     const { ref: thumbnailRef } = useResizeObserver<HTMLAnchorElement>({
@@ -112,6 +113,7 @@ export const VideoTile: FC<VideoTileProps> = memo(
           views={views}
           createdAt={createdAt}
           channelTitle={channelTitle}
+          hasCreatorToken={hasCreatorToken}
           loading={loadingDetails}
           loadingAvatar={loadingAvatar}
           kebabMenuItems={kebabMenuItems}
