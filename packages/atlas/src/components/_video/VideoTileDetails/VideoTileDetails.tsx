@@ -35,6 +35,7 @@ export type VideoTileDetailsProps = {
   views?: number | null
   createdAt?: Date | null
   channelTitle?: string | null
+  hasCreatorToken?: boolean
   channelAvatarUrls?: string[] | null
   channelHref?: string
   onChannelAvatarClick?: () => void
@@ -70,6 +71,7 @@ export const VideoTileDetails: FC<VideoTileDetailsProps> = ({
   type = 'playlist',
   playlistUrl,
   isPublisher,
+  hasCreatorToken,
 }) => {
   return (
     <VideoDetailsContainer>
@@ -109,7 +111,7 @@ export const VideoTileDetails: FC<VideoTileDetailsProps> = ({
                   <SkeletonLoader height={16} width="100%" bottomSpace={8} />
                 ) : (
                   <LinkWrapper to={channelHref}>
-                    <ChannelTitle variant="t200" color="colorText" as="p">
+                    <ChannelTitle hasToken={hasCreatorToken} variant="t200" color="colorText" as="p">
                       {channelTitle}
                     </ChannelTitle>
                   </LinkWrapper>
