@@ -10169,6 +10169,7 @@ export type QueryTokensConnectionArgs = {
 
 export type QueryTokensWithPriceChangeArgs = {
   limit?: InputMaybe<Scalars['Int']>
+  minVolume?: InputMaybe<Scalars['BigInt']>
   orderByPriceDesc?: InputMaybe<Scalars['Boolean']>
   periodDays: Scalars['Int']
   where?: InputMaybe<CreatorTokenWhereInput>
@@ -10182,6 +10183,7 @@ export type QueryTopSellingChannelsArgs = {
 
 export type QueryTopSellingTokenArgs = {
   limit?: InputMaybe<Scalars['Int']>
+  minVolume?: InputMaybe<Scalars['BigInt']>
   orderByPriceDesc?: InputMaybe<Scalars['Boolean']>
   periodDays: Scalars['Int']
   where?: InputMaybe<CreatorTokenWhereInput>

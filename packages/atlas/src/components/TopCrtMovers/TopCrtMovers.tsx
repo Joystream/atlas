@@ -52,13 +52,22 @@ const tableEmptyState = {
   icon: <SvgEmptyStateIllustration />,
 }
 
-export const TopMovingTokens = ({ interval, tableTitle }: { interval: number; tableTitle: string }) => {
+export const TopMovingTokens = ({
+  interval,
+  tableTitle,
+  minVolumeJoy,
+}: {
+  interval: number
+  tableTitle: string
+  minVolumeJoy: number
+}) => {
   const [orderDesc, setOrderDesc] = useState(true)
   const { data, loading } = useGetHotAndColdTokensQuery({
     variables: {
       periodDays: interval,
       priceDesc: orderDesc,
       limit: 10,
+      minVolume: BigInt(minVolumeJoy * 10_000_000_000).toString(),
     },
   })
   const columns = getColumns(interval)

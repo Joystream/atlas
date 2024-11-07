@@ -129,7 +129,7 @@ export const MarketplaceCrtTable = ({ data, emptyState, isLoading, ...tableProps
         />
       ),
       status: <CrtStatus status={row.status} />,
-      marketCap: (
+      marketCap: !row.marketCap.isZero() ? (
         <NumberFormat
           icon={<JoyTokenIcon size={16} variant="gray" />}
           format="short"
@@ -137,6 +137,8 @@ export const MarketplaceCrtTable = ({ data, emptyState, isLoading, ...tableProps
           value={row.marketCap}
           as="p"
         />
+      ) : (
+        '–'
       ),
       totalRevenue: (
         <NumberFormat
