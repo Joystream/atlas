@@ -13,6 +13,7 @@ import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { sendUserInteraction } from '@/utils/interactions'
 
 import { PercentageChangeIndicator } from '../PercentageChangeIndicator'
@@ -67,7 +68,7 @@ export const TopMovingTokens = ({
       periodDays: interval,
       priceDesc: orderDesc,
       limit: 10,
-      minVolume: BigInt(minVolumeJoy * 10_000_000_000).toString(),
+      minVolume: tokenNumberToHapiBn(minVolumeJoy).toString(),
     },
   })
   const columns = getColumns(interval)
