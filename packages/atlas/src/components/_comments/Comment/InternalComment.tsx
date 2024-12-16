@@ -3,6 +3,7 @@ import { format } from 'date-fns'
 import { FC, useCallback, useEffect, useRef, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { CommentTipTier } from '@/api/queries/__generated__/baseTypes.generated'
 import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgActionChevronB, SvgActionChevronT, SvgActionEdit, SvgActionMore, SvgActionTrash } from '@/assets/icons'
 import { AvatarGroupUrlAvatar } from '@/components/Avatar/AvatarGroup'
@@ -19,6 +20,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { UNCONFIRMED } from '@/hooks/useOptimisticActions'
 import { useTouchDevice } from '@/hooks/useTouchDevice'
 import { CommentReaction } from '@/joystream-lib/types'
+import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { cVar, transitions } from '@/styles'
 import { createPlaceholderData } from '@/utils/data'
@@ -43,6 +45,7 @@ import {
   StyledLink,
   StyledSvgActionTrash,
 } from './Comment.styles'
+import { CommentTierBadge } from './CommentTierBadge'
 
 import { CommentBody } from '../CommentBody'
 import { CommentRow, CommentRowProps } from '../CommentRow'
@@ -70,6 +73,8 @@ export type InternalCommentProps = {
   videoId: string | undefined
   commentId: string | undefined
   reactionFee: BN | undefined
+  tipTier: CommentTipTier | null | undefined
+  tipAmount: string | undefined
   onEditedLabelClick: (() => void) | undefined
   onEditClick: (() => void) | undefined
   onDeleteClick: (() => void) | undefined
@@ -107,6 +112,8 @@ export const InternalComment: FC<InternalCommentProps> = ({
   isCommentFromUrl,
   videoId,
   commentId,
+  tipAmount,
+  tipTier,
 }) => {
   const [commentHover, setCommentHover] = useState(false)
   // tempReactionId is used to show processing state on the reaction when the onboarding popover is opened for it
@@ -187,6 +194,7 @@ export const InternalComment: FC<InternalCommentProps> = ({
       isMemberAvatarLoading={loading || isMemberAvatarLoading}
       memberUrl={memberUrl}
       memberAvatarUrls={memberAvatarUrls}
+      tipTier={tipTier}
       onMouseEnter={() => setCommentHover(true)}
       onMouseLeave={() => setCommentHover(false)}
     >
@@ -212,6 +220,12 @@ export const InternalComment: FC<InternalCommentProps> = ({
                         {memberHandle}
                       </Text>
                     </StyledLink>
+                    {!!(tipTier && tipAmount) && (
+                      <>
+                        <CommentHeaderDot />
+                        <CommentTierBadge tier={tipTier} amount={Math.floor(hapiBnToTokenNumber(new BN(tipAmount)))} />
+                      </>
+                    )}
                     <CommentHeaderDot />
                     <Tooltip text={tooltipDate} placement="top" offsetY={4} delay={[1000, null]}>
                       <StyledLink
@@ -219,7 +233,7 @@ export const InternalComment: FC<InternalCommentProps> = ({
                         isProcessing={isProcessing}
                         onClick={(e) => e.preventDefault()}
                       >
-                        <HighlightableText as="span" variant="t200" color="colorText" margin={{ left: 2, right: 2 }}>
+                        <HighlightableText as="span" variant="t100" color="colorText" margin={{ left: 2, right: 2 }}>
                           {formatDateAgo(createdAt || new Date())}
                         </HighlightableText>
                       </StyledLink>
@@ -229,7 +243,7 @@ export const InternalComment: FC<InternalCommentProps> = ({
                         <CommentHeaderDot />
                         <HighlightableText
                           as="span"
-                          variant="t200"
+                          variant="t100"
                           color="colorText"
                           margin={{ left: 2 }}
                           onClick={onEditedLabelClick}
@@ -240,7 +254,7 @@ export const InternalComment: FC<InternalCommentProps> = ({
                     )}
                   </CommentHeader>
                   {isDeleted ? (
-                    <DeletedComment as="span" variant="t200" color="colorTextMuted">
+                    <DeletedComment as="span" variant="t100" color="colorTextMuted">
                       <StyledSvgActionTrash /> Comment deleted by {deletedBy}
                     </DeletedComment>
                   ) : (

@@ -316,6 +316,15 @@ export const useFee = <TFnName extends TxMethodName, TArgs extends Parameters<Jo
     updateFullFee(args)
   }, [args, updateFullFee])
 
+  // Prevents a render with `loading: false` and an old `fullFee`
+  if (argsRef.current && !isEqual(args, argsRef.current)) {
+    return {
+      fullFee: new BN(0),
+      getTxFee,
+      loading: true,
+    }
+  }
+
   return {
     fullFee,
     getTxFee,

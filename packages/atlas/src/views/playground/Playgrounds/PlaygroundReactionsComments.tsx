@@ -166,6 +166,7 @@ const CreateComment: FC<CommonProps> = ({ videoId }) => {
           videoId,
           commentBody,
           parentCommentId || null,
+          undefined,
           proxyCallback(updateStatus)
         ),
       minimized: {

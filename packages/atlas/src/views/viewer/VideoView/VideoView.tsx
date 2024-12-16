@@ -6,6 +6,7 @@ import { FC, RefObject, useCallback, useEffect, useMemo, useRef, useState } from
 import { useInView } from 'react-intersection-observer'
 import { useParams } from 'react-router-dom'
 
+import { useGetTipTiers } from '@/api/hooks/comments'
 import { useAddVideoView, useFullVideo } from '@/api/hooks/video'
 import { SvgActionFlag, SvgActionMore, SvgActionShare } from '@/assets/icons'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
@@ -23,6 +24,7 @@ import { ReportModal } from '@/components/_overlays/ReportModal'
 import { AvailableTrack } from '@/components/_video/VideoPlayer/SettingsButtonWithPopover'
 import { atlasConfig } from '@/config'
 import { displayCategories } from '@/config/categories'
+import { CHANGENOW_PUBLIC_API_KEY } from '@/config/env'
 import { getSingleAssetUrl } from '@/hooks/useGetAssetUrl'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -31,10 +33,12 @@ import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
 import { VideoReaction } from '@/joystream-lib/types'
+import { useEnvironmentStore } from '@/providers/environment'
 import { useFee } from '@/providers/joystream'
 import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { usePersonalDataStore } from '@/providers/personalData'
+import { useTransactionManagerStore } from '@/providers/transactions/transactions.store'
 import { useUser } from '@/providers/user/user.hooks'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
@@ -84,6 +88,17 @@ export const VideoView: FC = () => {
         },
       },
     }
+  )
+  const { tipTiers } = useGetTipTiers()
+  const { nodeOverride, defaultDataEnv } = useEnvironmentStore((state) => state)
+  const isChangeNowApiKeySet = !!CHANGENOW_PUBLIC_API_KEY
+  const isChangeNowAvailable =
+    isChangeNowApiKeySet && (defaultDataEnv === 'production' || nodeOverride === 'production')
+  const { changeNowModal, setChangeNowModal } = useTransactionManagerStore(
+    ({ changeNowModal, actions: { setChangeNowModal } }) => ({
+      changeNowModal,
+      setChangeNowModal,
+    })
   )
   const [isInView, ref] = useIntersectionObserver()
   const [isCommenting, setIsCommenting] = useState<boolean>(false)
@@ -152,10 +167,19 @@ export const VideoView: FC = () => {
   const headTags = useHeadTags(video?.title, videoMetaTags)
 
   const [isShareDialogOpen, setShareDialogOpen] = useState(false)
+  const [isSupportDialogOpen, setSupportDialogOpen] = useState(false)
 
   const handleShare = useCallback(() => {
     setShareDialogOpen(true)
   }, [])
+
+  const handleSupport = useCallback(() => {
+    setSupportDialogOpen(true)
+  }, [])
+
+  const handleBuyJoy = useCallback(() => {
+    setChangeNowModal('buy')
+  }, [setChangeNowModal])
 
   const savedVideoTimestamp = watchedVideos?.find((v) => v.id === video?.id)?.timestamp
   const startTimestamp = useVideoStartTimestamp(video?.duration, savedVideoTimestamp)
@@ -224,6 +248,11 @@ export const VideoView: FC = () => {
   }
 
   const isCinematic = cinematicView || !mdMatch
+  const supportDialogProps = {
+    show: isSupportDialogOpen && !changeNowModal,
+    onClose: () => setSupportDialogOpen(false),
+    onBuyJoy: isChangeNowAvailable ? handleBuyJoy : undefined,
+  }
   return (
     <>
       {headTags}
@@ -264,7 +293,11 @@ export const VideoView: FC = () => {
             {!isCinematic && (
               <>
                 {!videoNotAvailable ? (
-                  <DetailsItems video={video} handleShare={handleShare} />
+                  <DetailsItems
+                    video={video}
+                    handleShare={handleShare}
+                    handleSupport={tipTiers ? handleSupport : undefined}
+                  />
                 ) : mdMatch ? (
                   <BlockedVideoGradientPlaceholder />
                 ) : null}
@@ -274,6 +307,8 @@ export const VideoView: FC = () => {
                     videoLoading={loading}
                     disabled={video ? !video?.isCommentSectionEnabled : undefined}
                     onCommentInputFocus={setIsCommenting}
+                    supportDialog={supportDialogProps}
+                    tipTiers={tipTiers}
                   />
                 )}
               </>
@@ -287,7 +322,11 @@ export const VideoView: FC = () => {
           <LayoutGrid>
             <GridItem className={transitions.names.slide} colSpan={{ xxs: 12, md: cinematicView ? 8 : 12 }}>
               {!videoNotAvailable ? (
-                <DetailsItems video={video} handleShare={handleShare} />
+                <DetailsItems
+                  video={video}
+                  handleShare={handleShare}
+                  handleSupport={tipTiers ? handleSupport : undefined}
+                />
               ) : mdMatch ? (
                 <BlockedVideoGradientPlaceholder />
               ) : null}
@@ -297,6 +336,8 @@ export const VideoView: FC = () => {
                   videoLoading={loading}
                   disabled={video ? !video?.isCommentSectionEnabled : undefined}
                   onCommentInputFocus={setIsCommenting}
+                  supportDialog={supportDialogProps}
+                  tipTiers={tipTiers}
                 />
               )}
             </GridItem>
@@ -364,9 +405,11 @@ const SideItems = ({ video, loading }: { video: ReturnType<typeof useFullVideo>[
 const DetailsItems = ({
   video,
   handleShare,
+  handleSupport,
 }: {
   video: ReturnType<typeof useFullVideo>['video']
   handleShare: () => void
+  handleSupport?: () => void
 }) => {
   const mdMatch = useMediaMatch('md')
 
@@ -514,7 +557,13 @@ const DetailsItems = ({
         </VideoUtils>
       </TitleContainer>
       <ChannelContainer>
-        <ChannelLink followButton id={channelId} textVariant="h300" avatarSize={40} />
+        <ChannelLink
+          followButton
+          supportButton={video?.isCommentSectionEnabled ? { onClick: handleSupport } : undefined}
+          id={channelId}
+          textVariant="h300"
+          avatarSize={40}
+        />
       </ChannelContainer>
       <VideoDetails video={video} categoryData={belongsToCategories} />
     </>

@@ -4,13 +4,14 @@ import { useParams } from 'react-router-dom'
 
 import { useComment, useUserCommentsReactions } from '@/api/hooks/comments'
 import { useCommentSectionComments } from '@/api/hooks/useCommentSectionComments'
-import { CommentOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
+import { CommentOrderByInput, CommentTipTier } from '@/api/queries/__generated__/baseTypes.generated'
 import { FullVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { CssDrawer, StyledSvgActionChevronT } from '@/components/CssDrawer'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FlexBox } from '@/components/FlexBox'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
+import { SupportChannelModal } from '@/components/_channel/SupportChannelModal/SupportChannelModal'
 import { Comment } from '@/components/_comments/Comment'
 import { CommentInput } from '@/components/_comments/CommentInput'
 import { Select } from '@/components/_inputs/Select'
@@ -35,6 +36,12 @@ type CommentsSectionProps = {
   videoAuthorId?: string
   isCollapsable?: boolean
   disableSorting?: boolean
+  supportDialog?: {
+    show: boolean
+    onClose: () => void
+    onBuyJoy?: () => void
+  }
+  tipTiers?: { [k in CommentTipTier]: number }
   onCommentInputFocus?: (arg: boolean) => void
 }
 
@@ -48,6 +55,8 @@ export const CommentsSection: FC<CommentsSectionProps> = ({
   disableSorting,
   onCommentInputFocus,
   isCollapsable,
+  supportDialog,
+  tipTiers,
 }) => {
   const [isDrawerActive, setDrawerActive] = useState(false)
   const [commentInputText, setCommentInputText] = useState('')
@@ -73,7 +82,7 @@ export const CommentsSection: FC<CommentsSectionProps> = ({
     () => ({
       memberId,
       videoId,
-      orderBy: sortCommentsBy,
+      orderBy: [CommentOrderByInput.SortPriorityDesc, ...sortCommentsBy],
     }),
     [memberId, sortCommentsBy, videoId]
   )
@@ -132,6 +141,11 @@ export const CommentsSection: FC<CommentsSectionProps> = ({
     })
 
     trackCommentAdded(commentInputText, video?.id ?? 'no data')
+  }
+
+  const handleTipComment = (newCommentId: string) => {
+    supportDialog?.onClose()
+    setHighlightedCommentId(newCommentId)
   }
 
   const placeholderItems = commentsLoading ? createPlaceholderData(4) : []
@@ -272,37 +286,49 @@ export const CommentsSection: FC<CommentsSectionProps> = ({
   )
 
   return (
-    <CommentsSectionWrapper>
-      <CommentsSectionHeader
-        isCollapsable={isCollapsable}
-        onClick={() => setDrawerActive((prev) => !prev)}
-        ref={commentsSectionHeaderRef}
-      >
-        <FlexBox alignItems="center">
-          {isCollapsable ? (
-            <Button
-              icon={<StyledSvgActionChevronT isDrawerActive={isDrawerActive} />}
-              variant="tertiary"
-              size="small"
+    <>
+      {tipTiers && video && isLoggedIn && supportDialog && (
+        <SupportChannelModal
+          video={video}
+          onClose={supportDialog.onClose}
+          onBuyJoy={supportDialog.onBuyJoy}
+          onTxSign={handleTipComment}
+          show={supportDialog.show}
+          tipTierAmounts={tipTiers}
+        />
+      )}
+      <CommentsSectionWrapper>
+        <CommentsSectionHeader
+          isCollapsable={isCollapsable}
+          onClick={() => setDrawerActive((prev) => !prev)}
+          ref={commentsSectionHeaderRef}
+        >
+          <FlexBox alignItems="center">
+            {isCollapsable ? (
+              <Button
+                icon={<StyledSvgActionChevronT isDrawerActive={isDrawerActive} />}
+                variant="tertiary"
+                size="small"
+              />
+            ) : null}
+            <Text as="p" variant="h400">
+              {loading || !video?.commentsCount ? 'Comments' : `${video.commentsCount} comments`}
+            </Text>
+          </FlexBox>
+          {disableSorting ? null : (
+            <Select
+              size="medium"
+              inlineLabel={mdMatch ? 'Sort by' : ''}
+              value={sortCommentsBy}
+              items={COMMENTS_SORT_OPTIONS}
+              onChange={handleSorting}
+              disabled={loading}
             />
-          ) : null}
-          <Text as="p" variant="h400">
-            {loading || !video?.commentsCount ? 'Comments' : `${video.commentsCount} comments`}
-          </Text>
-        </FlexBox>
-        {disableSorting ? null : (
-          <Select
-            size="medium"
-            inlineLabel={mdMatch ? 'Sort by' : ''}
-            value={sortCommentsBy}
-            items={COMMENTS_SORT_OPTIONS}
-            onChange={handleSorting}
-            disabled={loading}
-          />
-        )}
-      </CommentsSectionHeader>
+          )}
+        </CommentsSectionHeader>
 
-      {isCollapsable ? <CssDrawer isActive={isDrawerActive}>{content}</CssDrawer> : content}
-    </CommentsSectionWrapper>
+        {isCollapsable ? <CssDrawer isActive={isDrawerActive}>{content}</CssDrawer> : content}
+      </CommentsSectionWrapper>
+    </>
   )
 }

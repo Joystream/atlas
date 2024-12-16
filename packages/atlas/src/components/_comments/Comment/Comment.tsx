@@ -326,6 +326,8 @@ export const Comment: FC<CommentProps> = memo(
             reactionFee={reactionFee}
             memberUrl={comment ? absoluteRoutes.viewer.member(comment.author.handle) : undefined}
             type={commentType}
+            tipAmount={comment?.tipAmount}
+            tipTier={comment?.tipTier}
             onEditClick={handleOnEditClick}
             onDeleteClick={() => video && comment && handleDeleteComment(comment)}
             onEditedLabelClick={handleOnEditLabelClick}

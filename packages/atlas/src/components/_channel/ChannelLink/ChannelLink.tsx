@@ -14,7 +14,7 @@ import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
-import { Container, FollowButtonWrapper, StyledAvatar, StyledLink, TitleWrapper } from './ChannelLink.styles'
+import { ActionButtons, Container, StyledAvatar, StyledLink } from './ChannelLink.styles'
 
 export type ChannelLinkProps = {
   id?: string
@@ -30,6 +30,7 @@ export type ChannelLinkProps = {
   textSecondary?: boolean
   customTitle?: string
   followButton?: boolean
+  supportButton?: { onClick?: () => void }
 }
 
 export const ChannelLink: FC<ChannelLinkProps> = ({
@@ -46,6 +47,7 @@ export const ChannelLink: FC<ChannelLinkProps> = ({
   textSecondary,
   customTitle,
   followButton = false,
+  supportButton,
 }) => {
   const { channel } = useBasicChannel(id || '', {
     skip: !id,
@@ -76,7 +78,7 @@ export const ChannelLink: FC<ChannelLinkProps> = ({
             timeout={parseInt(transitions.timings.regular)}
           >
             {displayedChannel ? (
-              <TitleWrapper followButton={followButton}>
+              <>
                 <StyledLink onClick={onClick} to={absoluteRoutes.viewer.channel(id)} disabled={!id || noLink}>
                   <ChannelTitle
                     variant={_textVariant}
@@ -91,10 +93,15 @@ export const ChannelLink: FC<ChannelLinkProps> = ({
                     </Text>
                   )}
                 </StyledLink>
-                {followButton && (
-                  <FollowButton channelId={displayedChannel?.id} title={displayedChannel?.title ?? undefined} />
+                {(followButton || supportButton) && (
+                  <ActionButtons>
+                    {followButton && (
+                      <FollowButton channelId={displayedChannel?.id} title={displayedChannel?.title ?? undefined} />
+                    )}
+                    {supportButton && <SupportButton {...supportButton} title={displayedChannel?.title ?? undefined} />}
+                  </ActionButtons>
                 )}
-              </TitleWrapper>
+              </>
             ) : (
               <SkeletonLoader height={16} width={150} />
             )}
@@ -113,12 +120,31 @@ const FollowButton = ({ title, channelId }: { title?: string; channelId?: string
   }
 
   return (
-    <FollowButtonWrapper>
-      <ProtectedActionWrapper title="You want to follow this channel?" description={`Sign in to follow ${title}`}>
-        <Button variant="secondary" onClick={handleFollowButtonClick}>
-          {isFollowing ? 'Unfollow' : 'Follow'}
-        </Button>
-      </ProtectedActionWrapper>
-    </FollowButtonWrapper>
+    <ProtectedActionWrapper
+      title="You want to follow this channel?"
+      description={`Sign in to follow ${title || 'this channel'}`}
+    >
+      <Button variant="primary" onClick={handleFollowButtonClick}>
+        {isFollowing ? 'Unfollow' : 'Follow'}
+      </Button>
+    </ProtectedActionWrapper>
+  )
+}
+
+type SupportButtonProps = {
+  onClick?: () => void
+  title?: string
+}
+
+const SupportButton = ({ onClick, title }: SupportButtonProps) => {
+  return (
+    <ProtectedActionWrapper
+      title="You want to support this channel?"
+      description={`Sign in to support ${title || 'this channel'}`}
+    >
+      <Button variant="secondary" onClick={onClick} disabled={!onClick}>
+        Support
+      </Button>
+    </ProtectedActionWrapper>
   )
 }

@@ -374,6 +374,8 @@ fragment CommentFields on Comment {
   repliesCount
   text
   status
+  tipTier
+  tipAmount
 }
 
 # CHANGE: Replacement for `MetaprotocolTransactionSuccessFields`
