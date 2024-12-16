@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
+import { useGetFullCreatorTokenQuery } from '@/api/queries/__generated__/creatorTokens.generated'
+import { StartRevenueShare } from '@/components/_crt/StartRevenueShareModal'
 import { absoluteRoutes } from '@/config/routes'
 import { useAuth } from '@/providers/auth/auth.hooks'
 import { useAuthStore } from '@/providers/auth/auth.store'
@@ -37,9 +39,16 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     } = useAuthStore()
     const [showWithdrawDialog, setShowWithdrawDialog] = useState(false)
     const [disableScrollDuringAnimation, setDisableScrollDuringAnimation] = useState(true)
+    const [openRevenueShareModal, setOpenRevenueShareModal] = useState(false)
 
     const [showSendDialog, setShowSendDialog] = useState(false)
     const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
+    const { data: tokenData } = useGetFullCreatorTokenQuery({
+      variables: {
+        id: activeChannel?.creatorToken?.token.id ?? '',
+      },
+      skip: !activeChannel?.creatorToken?.token.id,
+    })
     const memoizedChannelStateBloatBond = useMemo(() => {
       return new BN(selectedChannel?.channelStateBloatBond || 0)
     }, [selectedChannel?.channelStateBloatBond])
@@ -131,6 +140,13 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
           totalBalance={totalBalance}
           channelId={channelId}
         />
+        {tokenData?.creatorTokenById ? (
+          <StartRevenueShare
+            show={openRevenueShareModal}
+            token={tokenData.creatorTokenById}
+            onClose={() => setOpenRevenueShareModal(false)}
+          />
+        ) : null}
         <SendFundsDialog show={showSendDialog} onExitClick={toggleSendDialog} accountBalance={accountBalance} />
 
         <CSSTransition classNames={transitions.names.dropdown} in={isActive} timeout={0} mountOnEnter unmountOnExit>
@@ -161,9 +177,16 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                       channelId={channelId}
                       unseenNotificationsCounts={unseenNotificationsCounts}
                       onSignOut={handleLogout}
-                      onShowFundsDialog={() =>
-                        dropdownType === 'channel' ? setShowWithdrawDialog(true) : setShowSendDialog(true)
-                      }
+                      onShowFundsDialog={() => {
+                        if (dropdownType === 'channel') {
+                          activeChannel?.creatorToken?.token.id
+                            ? setOpenRevenueShareModal(true)
+                            : setShowWithdrawDialog(true)
+                          return
+                        }
+
+                        setShowSendDialog(true)
+                      }}
                       accountBalance={accountBalance}
                       onAddNewChannel={handleAddNewChannel}
                       channelBalance={channelBalance}

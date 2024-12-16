@@ -589,6 +589,7 @@ export type GetHotAndColdTokensQueryVariables = Types.Exact<{
   periodDays: Types.Scalars['Int']
   priceDesc?: Types.InputMaybe<Types.Scalars['Boolean']>
   limit?: Types.InputMaybe<Types.Scalars['Int']>
+  minVolume?: Types.InputMaybe<Types.Scalars['BigInt']>
 }>
 
 export type GetHotAndColdTokensQuery = {
@@ -1605,8 +1606,20 @@ export type GetMarketplaceTokensQueryResult = Apollo.QueryResult<
   GetMarketplaceTokensQueryVariables
 >
 export const GetHotAndColdTokensDocument = gql`
-  query GetHotAndColdTokens($where: CreatorTokenWhereInput, $periodDays: Int!, $priceDesc: Boolean, $limit: Int) {
-    tokensWithPriceChange(periodDays: $periodDays, orderByPriceDesc: $priceDesc, limit: $limit, where: $where) {
+  query GetHotAndColdTokens(
+    $where: CreatorTokenWhereInput
+    $periodDays: Int!
+    $priceDesc: Boolean
+    $limit: Int
+    $minVolume: BigInt
+  ) {
+    tokensWithPriceChange(
+      periodDays: $periodDays
+      orderByPriceDesc: $priceDesc
+      limit: $limit
+      minVolume: $minVolume
+      where: $where
+    ) {
       pricePercentageChange
       creatorToken {
         ...BasicCreatorToken
@@ -1632,6 +1645,7 @@ export const GetHotAndColdTokensDocument = gql`
  *      periodDays: // value for 'periodDays'
  *      priceDesc: // value for 'priceDesc'
  *      limit: // value for 'limit'
+ *      minVolume: // value for 'minVolume'
  *   },
  * });
  */

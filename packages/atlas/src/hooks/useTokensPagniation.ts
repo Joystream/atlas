@@ -12,7 +12,7 @@ export const useTokensPagination = ({ initialPageSize = 10 }: { initialPageSize?
   // TODO: we should add where clause to url params as well, but currently they are so small that it was omitted
   const pagination = useQueryTableState<MarketplaceTokenOrderByInput>({
     initialPerPage: initialPageSize,
-    initialOrderBy: MarketplaceTokenOrderByInput.PriceChangeDesc,
+    initialOrderBy: MarketplaceTokenOrderByInput.LiquidityDesc,
   })
   const { setOrderBy, orderBy } = pagination
 

@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.5.0] - 2024-11-07
+
+**IMPORTANT:** Depends on Orion release `4.1.0`.
+
+### Changed
+
+- Removed _Hot tokens_ section from `CrtMarketplaceView`
+- Updated Orion schema following `4.1.0` release
+- Added minimum volume requirement for `TopCrtMovers`
+- Changed default sorting of _All creator tokens_ from _Price % 30D_ to _Liquidity_
+
 ## [5.4.0] - 2024-07-19
 
 ### Added

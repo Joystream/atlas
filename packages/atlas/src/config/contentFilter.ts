@@ -33,19 +33,31 @@ export const singlePublicCryptoVideoFilter: VideoWhereInput = {
   },
 }
 
-export const getPublicCryptoVideoFilter = (extraWhere?: VideoWhereInput): VideoWhereInput => ({
-  OR: [
-    {
-      ...singlePublicCryptoVideoFilter,
-      isShort_not_eq: true,
-      isShortDerived_isNull: true,
-      ...(extraWhere ?? {}),
-    },
-    {
-      ...singlePublicCryptoVideoFilter,
-      isShort_isNull: true,
-      isShortDerived_isNull: true,
-      ...(extraWhere ?? {}),
-    },
-  ],
-})
+export const getPublicCryptoVideoFilter = (
+  extraWhere?: VideoWhereInput,
+  enableLanguageFiltering = false
+): VideoWhereInput => {
+  const singlePublicCryptoVideoFilterCopy = {
+    ...singlePublicCryptoVideoFilter,
+  }
+  if (!enableLanguageFiltering) {
+    delete singlePublicCryptoVideoFilterCopy.orionLanguage_in
+  }
+
+  return {
+    OR: [
+      {
+        ...singlePublicCryptoVideoFilterCopy,
+        isShort_not_eq: true,
+        isShortDerived_isNull: true,
+        ...(extraWhere ?? {}),
+      },
+      {
+        ...singlePublicCryptoVideoFilterCopy,
+        isShort_isNull: true,
+        isShortDerived_isNull: true,
+        ...(extraWhere ?? {}),
+      },
+    ],
+  }
+}
