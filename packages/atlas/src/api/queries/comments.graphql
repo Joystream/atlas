@@ -113,3 +113,11 @@ query GetCommentEdits($commentId: String!) {
     }
   }
 }
+
+query GetTipTiers {
+  tipTiers {
+    SILVER
+    GOLD
+    DIAMOND
+  }
+}

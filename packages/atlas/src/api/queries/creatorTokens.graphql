@@ -115,8 +115,20 @@ query GetMarketplaceTokens($where: MarketplaceTokenWhereInput, $limit: Int, $off
   }
 }
 
-query GetHotAndColdTokens($where: CreatorTokenWhereInput, $periodDays: Int!, $priceDesc: Boolean, $limit: Int) {
-  tokensWithPriceChange(periodDays: $periodDays, orderByPriceDesc: $priceDesc, limit: $limit, where: $where) {
+query GetHotAndColdTokens(
+  $where: CreatorTokenWhereInput
+  $periodDays: Int!
+  $priceDesc: Boolean
+  $limit: Int
+  $minVolume: BigInt
+) {
+  tokensWithPriceChange(
+    periodDays: $periodDays
+    orderByPriceDesc: $priceDesc
+    limit: $limit
+    minVolume: $minVolume
+    where: $where
+  ) {
     pricePercentageChange
     creatorToken {
       ...BasicCreatorToken

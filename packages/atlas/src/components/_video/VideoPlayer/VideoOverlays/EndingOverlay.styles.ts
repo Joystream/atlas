@@ -117,7 +117,7 @@ export const StyledChannelLink = styled(ChannelLink)<StyledChannelLinkProps>`
     }
   }
 
-  > a {
+  > a:first-child {
     width: ${sizes(6)};
     min-height: ${sizes(6)};
     min-width: ${sizes(6)};

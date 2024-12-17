@@ -1,6 +1,14 @@
-import { ApolloCache, gql, useApolloClient } from '@apollo/client'
+import { ApolloCache, DocumentNode, gql, useApolloClient } from '@apollo/client'
+import BN from 'bn.js'
+import { FragmentDefinitionNode, Kind } from 'graphql'
 import { useCallback } from 'react'
 
+import { CommentStatus, CommentTipTier } from '@/api/queries/__generated__/baseTypes.generated'
+import {
+  BasicMembershipFieldsFragmentDoc,
+  CommentFieldsFragment,
+  CommentFieldsFragmentDoc,
+} from '@/api/queries/__generated__/fragments.generated'
 import { VideoReaction } from '@/joystream-lib/types'
 
 type AddReactionActionParams = {
@@ -14,11 +22,18 @@ type RemoveReactionActionParams = {
   videoId: string
 }
 
+export type TipDetails = {
+  amount: BN
+  tier: CommentTipTier
+  dest: string
+}
+
 type AddCommentActionParams = {
   memberId: string
   videoId: string
   parentCommentId: string
   text: string
+  tip?: TipDetails
 }
 
 type AtlasCacheType = ApolloCache<{
@@ -40,31 +55,14 @@ const findCommentReactionQuery = (cache: AtlasCacheType, videoId: string) => {
   return cacheKeys.find((key) => key.includes('commentReactions') && key.includes(`videoId-${videoId}-`))
 }
 
+const fragmentName = (d: DocumentNode): string | undefined => {
+  return d.definitions.find((d): d is FragmentDefinitionNode => d.kind === Kind.FRAGMENT_DEFINITION)?.name.value
+}
+
 export const UNCONFIRMED = 'UNCONFIRMED'
 export const UNCOFIRMED_COMMENT = `${UNCONFIRMED}-COMMENT`
 export const UNCOFIRMED_REPLY = `${UNCONFIRMED}-REPLY`
 export const UNCOFIRMED_REACTION = `${UNCONFIRMED}-REACTION`
-
-const commentFragment = gql`
-  fragment CommentFields on Comment {
-    id
-    isExcluded
-    author {
-      __ref
-    }
-    createdAt
-    isEdited
-    reactionsCountByReactionId {
-      __ref
-    }
-    parentComment {
-      __ref
-    }
-    repliesCount
-    text
-    status
-  }
-`
 
 const reactionFragment = gql`
   fragment CommentReactionFields on CommentReaction {
@@ -219,23 +217,31 @@ export const useOptimisticActions = () => {
     ({ memberId, videoId, text, parentCommentId }: AddCommentActionParams) => {
       const commentId = Date.now()
       const recordId = `${commentId}-${videoId}-${UNCOFIRMED_REPLY}`
-      client.cache.writeFragment({
+      client.cache.writeFragment<CommentFieldsFragment>({
         id: `Comment:${recordId}`,
-        fragment: commentFragment,
+        fragment: CommentFieldsFragmentDoc,
+        fragmentName: fragmentName(CommentFieldsFragmentDoc),
         data: {
           __typename: 'Comment',
           id: recordId,
           isExcluded: false,
-          author: {
-            __ref: `Membership:${memberId}`,
-          },
-          createdAt: new Date().toISOString(),
+          author: client.cache.readFragment({
+            fragment: BasicMembershipFieldsFragmentDoc,
+            fragmentName: fragmentName(BasicMembershipFieldsFragmentDoc),
+            id: `Membership:${memberId}`,
+          })!,
+          createdAt: new Date().toISOString() as unknown as Date,
           isEdited: false,
           reactionsCountByReactionId: null,
           repliesCount: 0,
           text: text,
-          status: 'VISIBLE',
-          parentComment: { __ref: `Comment:${parentCommentId}` },
+          status: CommentStatus.Visible,
+          parentComment: {
+            __typename: 'Comment',
+            id: parentCommentId,
+          },
+          tipAmount: '0',
+          tipTier: null,
         },
       })
       const parentQuery = findParentCacheKey(client.cache as AtlasCacheType, parentCommentId)
@@ -276,26 +282,31 @@ export const useOptimisticActions = () => {
   )
 
   const addVideoComment = useCallback(
-    ({ memberId, videoId, text }: Omit<AddCommentActionParams, 'parentCommentId'>) => {
+    ({ memberId, videoId, text, tip }: Omit<AddCommentActionParams, 'parentCommentId'>) => {
       const commentId = Date.now()
       const recordId = `${commentId}-${videoId}-${UNCOFIRMED_COMMENT}`
-      client.cache.writeFragment({
+      client.cache.writeFragment<CommentFieldsFragment>({
         id: `Comment:${recordId}`,
-        fragment: commentFragment,
+        fragment: CommentFieldsFragmentDoc,
+        fragmentName: fragmentName(CommentFieldsFragmentDoc),
         data: {
           __typename: 'Comment',
           id: recordId,
           isExcluded: false,
-          author: {
-            __ref: `Membership:${memberId}`,
-          },
-          createdAt: new Date().toISOString(),
+          author: client.cache.readFragment({
+            id: `Membership:${memberId}`,
+            fragment: BasicMembershipFieldsFragmentDoc,
+            fragmentName: fragmentName(BasicMembershipFieldsFragmentDoc),
+          })!,
+          createdAt: new Date(),
           isEdited: false,
           reactionsCountByReactionId: null,
           parentComment: null,
           repliesCount: 0,
           text: text,
-          status: 'VISIBLE',
+          status: CommentStatus.Visible,
+          tipAmount: tip?.amount.toString() || '0',
+          tipTier: tip?.tier || null,
         },
       })
 
