@@ -1652,6 +1652,8 @@ export type CommentFieldsFragment = {
   repliesCount: number
   text: string
   status: Types.CommentStatus
+  tipTier?: Types.CommentTipTier | null
+  tipAmount: string
   author: {
     __typename?: 'Membership'
     id: string
@@ -1708,6 +1710,8 @@ export type MetaprotocolTransactionResultFields_MetaprotocolTransactionResultCom
     repliesCount: number
     text: string
     status: Types.CommentStatus
+    tipTier?: Types.CommentTipTier | null
+    tipAmount: string
     author: {
       __typename?: 'Membership'
       id: string
@@ -1761,6 +1765,8 @@ export type MetaprotocolTransactionResultFields_MetaprotocolTransactionResultCom
     repliesCount: number
     text: string
     status: Types.CommentStatus
+    tipTier?: Types.CommentTipTier | null
+    tipAmount: string
     author: {
       __typename?: 'Membership'
       id: string
@@ -1814,6 +1820,8 @@ export type MetaprotocolTransactionResultFields_MetaprotocolTransactionResultCom
     repliesCount: number
     text: string
     status: Types.CommentStatus
+    tipTier?: Types.CommentTipTier | null
+    tipAmount: string
     author: {
       __typename?: 'Membership'
       id: string
@@ -1867,6 +1875,8 @@ export type MetaprotocolTransactionResultFields_MetaprotocolTransactionResultCom
     repliesCount: number
     text: string
     status: Types.CommentStatus
+    tipTier?: Types.CommentTipTier | null
+    tipAmount: string
     author: {
       __typename?: 'Membership'
       id: string
@@ -3074,6 +3084,8 @@ export const CommentFieldsFragmentDoc = gql`
     repliesCount
     text
     status
+    tipTier
+    tipAmount
   }
   ${BasicMembershipFieldsFragmentDoc}
   ${CommentReactionsCountByReactionIdFieldsFragmentDoc}

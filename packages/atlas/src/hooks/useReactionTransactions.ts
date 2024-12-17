@@ -11,7 +11,7 @@ import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
-import { UNCONFIRMED, useOptimisticActions } from './useOptimisticActions'
+import { TipDetails, UNCONFIRMED, useOptimisticActions } from './useOptimisticActions'
 
 export const useReactionTransactions = () => {
   const { memberId } = useUser()
@@ -40,6 +40,7 @@ export const useReactionTransactions = () => {
       videoTitle,
       commentAuthorHandle,
       optimisticOpts,
+      tip,
     }: {
       parentCommentId?: string
       videoId: string
@@ -47,6 +48,7 @@ export const useReactionTransactions = () => {
       videoTitle?: string | null
       commentAuthorHandle?: string
       optimisticOpts?: { onTxSign: (newCommentId: string) => void }
+      tip?: TipDetails
     }) => {
       if (!joystream || !memberId) {
         ConsoleLogger.error('no joystream or active member')
@@ -55,11 +57,31 @@ export const useReactionTransactions = () => {
 
       let newCommentId = '' // this should be always populated in onTxSync
 
+      const refetch = async () => {
+        if (parentCommentId) {
+          await Promise.all([
+            refetchComment(parentCommentId), // need to refetch parent as its replyCount will change
+            refetchReplies(parentCommentId),
+            refetchVideo(videoId),
+          ])
+        } else {
+          // if the comment was top-level, refetch the comments section query (will take care of separating user comments)
+          await Promise.all([refetchCommentsSection(videoId, memberId), refetchVideo(videoId)])
+        }
+      }
+
       await handleTransaction({
         txFactory: async (updateStatus) =>
           (
             await joystream.extrinsics
-          ).createVideoComment(memberId, videoId, commentBody, parentCommentId || null, proxyCallback(updateStatus)),
+          ).createVideoComment(
+            memberId,
+            videoId,
+            commentBody,
+            parentCommentId || null,
+            tip && [tip.dest, tip.amount.toString()],
+            proxyCallback(updateStatus)
+          ),
         onTxSign: () => {
           if (!optimisticOpts) return
 
@@ -75,6 +97,7 @@ export const useReactionTransactions = () => {
               memberId,
               text: commentBody,
               videoId,
+              tip,
             })
           }
           optimisticOpts.onTxSign(newCommentId)
@@ -88,17 +111,9 @@ export const useReactionTransactions = () => {
             return
           }
           newCommentId = metaStatus.commentCreated?.id
-          if (parentCommentId) {
-            await Promise.all([
-              refetchComment(parentCommentId), // need to refetch parent as its replyCount will change
-              refetchReplies(parentCommentId),
-              refetchVideo(videoId),
-            ])
-          } else {
-            // if the comment was top-level, refetch the comments section query (will take care of separating user comments)
-            await Promise.all([refetchCommentsSection(videoId, memberId), refetchVideo(videoId)])
-          }
+          await refetch()
         },
+        onError: refetch,
         minimized: {
           errorMessage: parentCommentId
             ? `Your reply to the comment from "${commentAuthorHandle}" was not posted.`

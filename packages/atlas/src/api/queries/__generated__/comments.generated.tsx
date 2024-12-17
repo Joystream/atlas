@@ -20,6 +20,8 @@ export type GetCommentQuery = {
     repliesCount: number
     text: string
     status: Types.CommentStatus
+    tipTier?: Types.CommentTipTier | null
+    tipAmount: string
     author: {
       __typename?: 'Membership'
       id: string
@@ -85,6 +87,8 @@ export type GetCommentRepliesConnectionQuery = {
         repliesCount: number
         text: string
         status: Types.CommentStatus
+        tipTier?: Types.CommentTipTier | null
+        tipAmount: string
         author: {
           __typename?: 'Membership'
           id: string
@@ -149,6 +153,8 @@ export type GetUserCommentsAndVideoCommentsConnectionQuery = {
     repliesCount: number
     text: string
     status: Types.CommentStatus
+    tipTier?: Types.CommentTipTier | null
+    tipAmount: string
     author: {
       __typename?: 'Membership'
       id: string
@@ -203,6 +209,8 @@ export type GetUserCommentsAndVideoCommentsConnectionQuery = {
         repliesCount: number
         text: string
         status: Types.CommentStatus
+        tipTier?: Types.CommentTipTier | null
+        tipAmount: string
         author: {
           __typename?: 'Membership'
           id: string
@@ -311,6 +319,13 @@ export type GetCommentEditsQuery = {
       | { __typename?: 'VideoCreatedEventData' }
       | { __typename?: 'VideoReactionEventData' }
   }>
+}
+
+export type GetTipTiersQueryVariables = Types.Exact<{ [key: string]: never }>
+
+export type GetTipTiersQuery = {
+  __typename?: 'Query'
+  tipTiers: { __typename?: 'CommentTipTiers'; SILVER: number; GOLD: number; DIAMOND: number }
 }
 
 export const GetCommentDocument = gql`
@@ -634,3 +649,43 @@ export function useGetCommentEditsLazyQuery(
 export type GetCommentEditsQueryHookResult = ReturnType<typeof useGetCommentEditsQuery>
 export type GetCommentEditsLazyQueryHookResult = ReturnType<typeof useGetCommentEditsLazyQuery>
 export type GetCommentEditsQueryResult = Apollo.QueryResult<GetCommentEditsQuery, GetCommentEditsQueryVariables>
+export const GetTipTiersDocument = gql`
+  query GetTipTiers {
+    tipTiers {
+      SILVER
+      GOLD
+      DIAMOND
+    }
+  }
+`
+
+/**
+ * __useGetTipTiersQuery__
+ *
+ * To run a query within a React component, call `useGetTipTiersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTipTiersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTipTiersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetTipTiersQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetTipTiersQuery, GetTipTiersQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetTipTiersQuery, GetTipTiersQueryVariables>(GetTipTiersDocument, options)
+}
+export function useGetTipTiersLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetTipTiersQuery, GetTipTiersQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetTipTiersQuery, GetTipTiersQueryVariables>(GetTipTiersDocument, options)
+}
+export type GetTipTiersQueryHookResult = ReturnType<typeof useGetTipTiersQuery>
+export type GetTipTiersLazyQueryHookResult = ReturnType<typeof useGetTipTiersLazyQuery>
+export type GetTipTiersQueryResult = Apollo.QueryResult<GetTipTiersQuery, GetTipTiersQueryVariables>
