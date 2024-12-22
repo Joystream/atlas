@@ -249,6 +249,11 @@ export const useOptimisticActions = () => {
                     '__ref' in e.node ? e.node.__ref === unconfirmedId : e.node.id === recordId
                   )
                 })
+                .filter(
+                  (unconfirmedId) =>
+                    unconfirmedId.split('/')[1] === videoId &&
+                    unconfirmedId.split('/')[2] === (parentCommentId || 'none')
+                )
                 .map((unconfirmedId) => ({
                   __typename: 'CommentEdge',
                   cursor: '0',
@@ -288,7 +293,7 @@ export const useOptimisticActions = () => {
       tip,
     }: Omit<AddCommentActionParams, 'parentCommentId'> & { parentCommentId?: string }) => {
       const commentId = Date.now()
-      const recordId = `${commentId}-${videoId}-${UNCONFIRMED_COMMENT}`
+      const recordId = `${commentId}/${videoId}/${parentCommentId || 'none'}/${UNCONFIRMED_COMMENT}`
       client.cache.writeFragment<CommentFieldsFragment>({
         id: `Comment:${recordId}`,
         fragment: CommentFieldsFragmentDoc,
