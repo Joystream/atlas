@@ -41,7 +41,6 @@ import {
   GetFullVideoQuery,
   GetFullVideoQueryVariables,
 } from '@/api/queries/__generated__/videos.generated'
-import { UNCOFIRMED_COMMENT, UNCOFIRMED_REACTION, UNCOFIRMED_REPLY } from '@/hooks/useOptimisticActions'
 import { NetworkUtilsContextValue } from '@/providers/networkUtils/networkUtils.type'
 import { useUser } from '@/providers/user/user.hooks'
 
@@ -51,17 +50,6 @@ NetworkUtilsContext.displayName = 'NetworkUtilsContext'
 export const NetworkUtilsProvider = ({ children }: { children: ReactNode }) => {
   const client = useApolloClient()
   const { memberId: activeMemberId } = useUser()
-
-  const evictUnconfirmedCache = useCallback(
-    (keyPart: string) => {
-      Object.keys(client.cache.extract()).forEach((key) => {
-        if (key.includes(keyPart)) {
-          client.cache.evict({ id: key })
-        }
-      })
-    },
-    [client.cache]
-  )
 
   /*      Channel        */
 
@@ -95,7 +83,6 @@ export const NetworkUtilsProvider = ({ children }: { children: ReactNode }) => {
 
   const refetchComment = useCallback(
     (id: string) => {
-      evictUnconfirmedCache(UNCOFIRMED_COMMENT)
       return client.query<GetCommentQuery, GetCommentQueryVariables>({
         query: GetCommentDocument,
         variables: {
@@ -104,7 +91,7 @@ export const NetworkUtilsProvider = ({ children }: { children: ReactNode }) => {
         fetchPolicy: 'network-only',
       })
     },
-    [client, evictUnconfirmedCache]
+    [client]
   )
 
   const refetchEdits = useCallback(
@@ -122,7 +109,6 @@ export const NetworkUtilsProvider = ({ children }: { children: ReactNode }) => {
 
   const refetchReactions = useCallback(
     (videoId: string, memberId?: string) => {
-      evictUnconfirmedCache(UNCOFIRMED_REACTION)
       return client.query<GetUserCommentsReactionsQuery, GetUserCommentsReactionsQueryVariables>({
         query: GetUserCommentsReactionsDocument,
         variables: {
@@ -132,12 +118,11 @@ export const NetworkUtilsProvider = ({ children }: { children: ReactNode }) => {
         fetchPolicy: 'network-only',
       })
     },
-    [activeMemberId, client, evictUnconfirmedCache]
+    [activeMemberId, client]
   )
 
   const refetchReplies = useCallback(
     (parentCommentId: string) => {
-      evictUnconfirmedCache(UNCOFIRMED_REPLY)
       return client.query<GetCommentRepliesConnectionQuery, GetCommentRepliesConnectionQueryVariables>({
         query: GetCommentRepliesConnectionDocument,
         variables: {
@@ -146,13 +131,11 @@ export const NetworkUtilsProvider = ({ children }: { children: ReactNode }) => {
         fetchPolicy: 'network-only',
       })
     },
-    [client, evictUnconfirmedCache]
+    [client]
   )
 
   const refetchCommentsSection = useCallback(
     (videoId: string, memberId?: string) => {
-      evictUnconfirmedCache(UNCOFIRMED_COMMENT)
-
       return client.query<
         GetUserCommentsAndVideoCommentsConnectionQuery,
         GetUserCommentsAndVideoCommentsConnectionQueryVariables
@@ -165,7 +148,7 @@ export const NetworkUtilsProvider = ({ children }: { children: ReactNode }) => {
         fetchPolicy: 'network-only',
       })
     },
-    [activeMemberId, client, evictUnconfirmedCache]
+    [activeMemberId, client]
   )
 
   const refetchAllCommentsSections = useCallback(async () => {
