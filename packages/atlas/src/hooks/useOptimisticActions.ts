@@ -1,6 +1,14 @@
-import { ApolloCache, gql, useApolloClient } from '@apollo/client'
+import { ApolloCache, DocumentNode, gql, useApolloClient } from '@apollo/client'
+import BN from 'bn.js'
+import { FragmentDefinitionNode, Kind } from 'graphql'
 import { useCallback } from 'react'
 
+import { CommentEdge, CommentStatus, CommentTipTier } from '@/api/queries/__generated__/baseTypes.generated'
+import {
+  BasicMembershipFieldsFragmentDoc,
+  CommentFieldsFragment,
+  CommentFieldsFragmentDoc,
+} from '@/api/queries/__generated__/fragments.generated'
 import { VideoReaction } from '@/joystream-lib/types'
 
 type AddReactionActionParams = {
@@ -14,11 +22,18 @@ type RemoveReactionActionParams = {
   videoId: string
 }
 
+export type TipDetails = {
+  amount: BN
+  tier: CommentTipTier
+  dest: string
+}
+
 type AddCommentActionParams = {
   memberId: string
   videoId: string
   parentCommentId: string
   text: string
+  tip?: TipDetails
 }
 
 type AtlasCacheType = ApolloCache<{
@@ -40,31 +55,13 @@ const findCommentReactionQuery = (cache: AtlasCacheType, videoId: string) => {
   return cacheKeys.find((key) => key.includes('commentReactions') && key.includes(`videoId-${videoId}-`))
 }
 
-export const UNCONFIRMED = 'UNCONFIRMED'
-export const UNCOFIRMED_COMMENT = `${UNCONFIRMED}-COMMENT`
-export const UNCOFIRMED_REPLY = `${UNCONFIRMED}-REPLY`
-export const UNCOFIRMED_REACTION = `${UNCONFIRMED}-REACTION`
+const fragmentName = (d: DocumentNode): string | undefined => {
+  return d.definitions.find((d): d is FragmentDefinitionNode => d.kind === Kind.FRAGMENT_DEFINITION)?.name.value
+}
 
-const commentFragment = gql`
-  fragment CommentFields on Comment {
-    id
-    isExcluded
-    author {
-      __ref
-    }
-    createdAt
-    isEdited
-    reactionsCountByReactionId {
-      __ref
-    }
-    parentComment {
-      __ref
-    }
-    repliesCount
-    text
-    status
-  }
-`
+export const UNCONFIRMED = 'UNCONFIRMED'
+export const UNCONFIRMED_COMMENT = `${UNCONFIRMED}-COMMENT`
+export const UNCONFIRMED_REACTION = `${UNCONFIRMED}-REACTION`
 
 const reactionFragment = gql`
   fragment CommentReactionFields on CommentReaction {
@@ -104,7 +101,7 @@ export const useOptimisticActions = () => {
         },
       })
 
-      const recordId = `${commentId}-${videoId}-${UNCOFIRMED_REACTION}-${Date.now()}`
+      const recordId = `${commentId}-${videoId}-${UNCONFIRMED_REACTION}-${Date.now()}`
 
       client.cache.writeFragment({
         id: `CommentReaction:${recordId}`,
@@ -131,6 +128,8 @@ export const useOptimisticActions = () => {
           },
         })
       }
+
+      return recordId
     },
     [client.cache]
   )
@@ -190,6 +189,15 @@ export const useOptimisticActions = () => {
     [client.cache]
   )
 
+  const evictUnconfirmedReaction = useCallback(
+    (id: string) => {
+      if (id.includes(UNCONFIRMED_REACTION)) {
+        client.cache.evict({ id: `CommentReaction:${id}` })
+      }
+    },
+    [client.cache]
+  )
+
   const deleteVideoComment = useCallback(
     ({ commentId }: { commentId: string }) => {
       client.cache.modify({
@@ -215,116 +223,119 @@ export const useOptimisticActions = () => {
     [client.cache]
   )
 
-  const addVideoReplyComment = useCallback(
-    ({ memberId, videoId, text, parentCommentId }: AddCommentActionParams) => {
-      const commentId = Date.now()
-      const recordId = `${commentId}-${videoId}-${UNCOFIRMED_REPLY}`
-      client.cache.writeFragment({
-        id: `Comment:${recordId}`,
-        fragment: commentFragment,
-        data: {
-          __typename: 'Comment',
-          id: recordId,
-          isExcluded: false,
-          author: {
-            __ref: `Membership:${memberId}`,
-          },
-          createdAt: new Date().toISOString(),
-          isEdited: false,
-          reactionsCountByReactionId: null,
-          repliesCount: 0,
-          text: text,
-          status: 'VISIBLE',
-          parentComment: { __ref: `Comment:${parentCommentId}` },
-        },
-      })
-      const parentQuery = findParentCacheKey(client.cache as AtlasCacheType, parentCommentId)
-      if (parentQuery) {
+  /**
+   * cached commentsConnection query results need to be updated manually to include unconfirmed comments
+   * (contrary to `comments` query results which get updated automatically when a new entity is added)
+   */
+  const refreshCommentsCache = useCallback(
+    (videoId: string, parentCommentId?: string) => {
+      const unconfirmedCommentIds = Object.keys(client.cache.extract()).filter((k) => k.includes(UNCONFIRMED_COMMENT))
+      const queryCacheKey = parentCommentId
+        ? findParentCacheKey(client.cache as AtlasCacheType, parentCommentId)
+        : findCommentCacheKey(client.cache as AtlasCacheType, videoId)
+
+      if (queryCacheKey) {
+        let addedUnconfirmedComments = 0
         client.cache.modify({
           optimistic: true,
           id: 'ROOT_QUERY',
           fields: {
-            [parentQuery]: (existingCommentsConnection = {}) => {
-              const newEdge = {
-                __typename: 'CommentEdge',
-                cursor: '0',
-                node: {
-                  __ref: `Comment:${recordId}`,
-                },
-              }
+            [queryCacheKey]: (existingConnection = {}) => {
+              const existingEdges: (CommentEdge | { node: { __ref: string } })[] = existingConnection.edges || []
+              const unconfirmedEdges = unconfirmedCommentIds
+                .filter((unconfirmedId) => {
+                  const recordId = unconfirmedId.split(':')[1]
+                  return !existingEdges.find((e) =>
+                    '__ref' in e.node ? e.node.__ref === unconfirmedId : e.node.id === recordId
+                  )
+                })
+                .filter(
+                  (unconfirmedId) =>
+                    unconfirmedId.split('/')[1] === videoId &&
+                    unconfirmedId.split('/')[2] === (parentCommentId || 'none')
+                )
+                .map((unconfirmedId) => ({
+                  __typename: 'CommentEdge',
+                  cursor: '0',
+                  node: {
+                    __ref: unconfirmedId,
+                  },
+                }))
+              addedUnconfirmedComments = unconfirmedEdges.length
               return {
-                ...(existingCommentsConnection as {
-                  /* */
-                }),
-                edges: [...((existingCommentsConnection as { edges: unknown[] }).edges ?? []), newEdge],
+                ...existingConnection,
+                edges: [...existingEdges, ...unconfirmedEdges],
               }
             },
           },
         })
 
-        client.cache.modify({
-          optimistic: true,
-          id: `Comment:${parentCommentId}`,
-          fields: {
-            repliesCount: (prev) => prev + 1,
-          },
-        })
+        if (parentCommentId) {
+          client.cache.modify({
+            optimistic: true,
+            id: `Comment:${parentCommentId}`,
+            fields: {
+              repliesCount: (prevCount) => prevCount + addedUnconfirmedComments,
+            },
+          })
+        }
       }
-      return recordId
     },
     [client.cache]
   )
 
   const addVideoComment = useCallback(
-    ({ memberId, videoId, text }: Omit<AddCommentActionParams, 'parentCommentId'>) => {
+    ({
+      memberId,
+      videoId,
+      parentCommentId,
+      text,
+      tip,
+    }: Omit<AddCommentActionParams, 'parentCommentId'> & { parentCommentId?: string }) => {
       const commentId = Date.now()
-      const recordId = `${commentId}-${videoId}-${UNCOFIRMED_COMMENT}`
-      client.cache.writeFragment({
+      const recordId = `${commentId}/${videoId}/${parentCommentId || 'none'}/${UNCONFIRMED_COMMENT}`
+      client.cache.writeFragment<CommentFieldsFragment>({
         id: `Comment:${recordId}`,
-        fragment: commentFragment,
+        fragment: CommentFieldsFragmentDoc,
+        fragmentName: fragmentName(CommentFieldsFragmentDoc),
         data: {
           __typename: 'Comment',
           id: recordId,
           isExcluded: false,
-          author: {
-            __ref: `Membership:${memberId}`,
-          },
-          createdAt: new Date().toISOString(),
+          author: client.cache.readFragment({
+            id: `Membership:${memberId}`,
+            fragment: BasicMembershipFieldsFragmentDoc,
+            fragmentName: fragmentName(BasicMembershipFieldsFragmentDoc),
+          })!,
+          createdAt: new Date(),
           isEdited: false,
           reactionsCountByReactionId: null,
-          parentComment: null,
+          parentComment: parentCommentId
+            ? {
+                __typename: 'Comment',
+                id: parentCommentId,
+              }
+            : null,
           repliesCount: 0,
           text: text,
-          status: 'VISIBLE',
+          status: CommentStatus.Visible,
+          tipAmount: tip?.amount.toString() || '0',
+          tipTier: tip?.tier || null,
         },
       })
 
-      const queryKey = findCommentCacheKey(client.cache as AtlasCacheType, videoId)
-      if (queryKey) {
-        client.cache.modify({
-          optimistic: true,
-          id: 'ROOT_QUERY',
-          fields: {
-            [queryKey]: (existingCommentsConnection = { edges: [] }) => {
-              const newEdge = {
-                __typename: 'CommentEdge',
-                cursor: '0', // Generate or use an appropriate cursor value
-                node: {
-                  __ref: `Comment:${recordId}`,
-                },
-              }
-              return {
-                ...(existingCommentsConnection as {
-                  /* */
-                }),
-                edges: [...((existingCommentsConnection as { edges: unknown[] }).edges ?? []), newEdge],
-              }
-            },
-          },
-        })
-      }
+      refreshCommentsCache(videoId, parentCommentId)
 
       return recordId
+    },
+    [client.cache, refreshCommentsCache]
+  )
+
+  const evictUnconfirmedComment = useCallback(
+    (id: string) => {
+      if (id.includes(UNCONFIRMED_COMMENT)) {
+        client.cache.evict({ id: `Comment:${id}` })
+      }
     },
     [client.cache]
   )
@@ -391,10 +402,12 @@ export const useOptimisticActions = () => {
     addVideoReaction,
     removeVideoReaction,
     addVideoComment,
-    addVideoReplyComment,
     editVideoComment,
     deleteVideoComment,
     increaseVideoCommentReaction,
     decreaseVideoCommentReaction,
+    evictUnconfirmedReaction,
+    evictUnconfirmedComment,
+    refreshCommentsCache,
   }
 }

@@ -57,6 +57,8 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
                   repliesCount: number
                   text: string
                   status: Types.CommentStatus
+                  tipTier?: Types.CommentTipTier | null
+                  tipAmount: string
                   author: {
                     __typename?: 'Membership'
                     id: string
@@ -109,6 +111,8 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
                   repliesCount: number
                   text: string
                   status: Types.CommentStatus
+                  tipTier?: Types.CommentTipTier | null
+                  tipAmount: string
                   author: {
                     __typename?: 'Membership'
                     id: string
@@ -161,6 +165,8 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
                   repliesCount: number
                   text: string
                   status: Types.CommentStatus
+                  tipTier?: Types.CommentTipTier | null
+                  tipAmount: string
                   author: {
                     __typename?: 'Membership'
                     id: string
@@ -213,6 +219,8 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
                   repliesCount: number
                   text: string
                   status: Types.CommentStatus
+                  tipTier?: Types.CommentTipTier | null
+                  tipAmount: string
                   author: {
                     __typename?: 'Membership'
                     id: string

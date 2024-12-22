@@ -309,17 +309,22 @@ export const useTransaction = (): HandleTransactionFn => {
           return false
         }
 
-        const handleError = () => {
+        const handleError = (code?: ErrorCode | undefined) => {
           if (minimized) {
+            const title =
+              code === ErrorCode.InsufficientBalanceToCoverPayment
+                ? 'Insufficient balance to perform this action.'
+                : 'Something went wrong'
+
             displaySnackbar({
-              title: 'Something went wrong',
+              title,
               description: minimized.errorMessage,
               iconType: 'error',
               timeout: MINIMIZED_SIGN_CANCELLED_SNACKBAR_TIMEOUT,
             })
             removeTransaction(transactionId) // if it's a regular transaction, it will get removed by TransactionsManager when the transaction modal is closed
           } else {
-            updateStatus(ExtrinsicStatus.Error)
+            updateStatus(ExtrinsicStatus.Error, code)
           }
         }
 
@@ -343,7 +348,7 @@ export const useTransaction = (): HandleTransactionFn => {
             error.message.split(' ').find((word: string) => word === key)
           ) as ErrorCode | undefined
 
-          updateStatus(ExtrinsicStatus.Error, errorCode)
+          handleError(errorCode)
           return false
         }
 

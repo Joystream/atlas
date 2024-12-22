@@ -11,7 +11,7 @@ import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
-import { UNCONFIRMED, useOptimisticActions } from './useOptimisticActions'
+import { TipDetails, UNCONFIRMED, useOptimisticActions } from './useOptimisticActions'
 
 export const useReactionTransactions = () => {
   const { memberId } = useUser()
@@ -24,10 +24,12 @@ export const useReactionTransactions = () => {
     deleteVideoComment,
     removeVideoReaction,
     addVideoComment,
-    addVideoReplyComment,
     editVideoComment,
     increaseVideoCommentReaction,
     decreaseVideoCommentReaction,
+    evictUnconfirmedComment,
+    evictUnconfirmedReaction,
+    refreshCommentsCache,
   } = useOptimisticActions()
   const navigate = useNavigate()
   const { displaySnackbar } = useSnackbar()
@@ -40,46 +42,73 @@ export const useReactionTransactions = () => {
       videoTitle,
       commentAuthorHandle,
       optimisticOpts,
+      tip,
     }: {
       parentCommentId?: string
       videoId: string
       commentBody: string
       videoTitle?: string | null
       commentAuthorHandle?: string
-      optimisticOpts?: { onTxSign: (newCommentId: string) => void }
+      optimisticOpts?: { onTxSign: (unconfirmedCommentId: string) => void }
+      tip?: TipDetails
     }) => {
       if (!joystream || !memberId) {
         ConsoleLogger.error('no joystream or active member')
         return
       }
 
+      let unconfirmedCommentId: string | undefined // this should be always populated in onTxSign
       let newCommentId = '' // this should be always populated in onTxSync
+
+      const cleanup = async () => {
+        // In all cases:
+        // Evict unconfirmed comment (if exists)
+        if (unconfirmedCommentId) {
+          evictUnconfirmedComment(unconfirmedCommentId)
+        }
+        if (parentCommentId) {
+          // if the comment was a reply - refetch parent comment's replies
+          // and the parent comment itself (as its replyCount will change)
+          await Promise.all([refetchReplies(parentCommentId), refetchComment(parentCommentId)])
+        } else {
+          // if the comment was top-level - refetch the comments section query
+          // (will take care of separating user comments)
+          await refetchCommentsSection(videoId, memberId)
+        }
+        // In all cases:
+        // Re-add other unconfirmed comments (if exist) to cached commentsConnection query results
+        // and update replyCount of parent comment (if needed)
+        refreshCommentsCache(videoId, parentCommentId)
+        // Refetch the video
+        await refetchVideo(videoId)
+      }
 
       await handleTransaction({
         txFactory: async (updateStatus) =>
           (
             await joystream.extrinsics
-          ).createVideoComment(memberId, videoId, commentBody, parentCommentId || null, proxyCallback(updateStatus)),
+          ).createVideoComment(
+            memberId,
+            videoId,
+            commentBody,
+            parentCommentId || null,
+            tip && [tip.dest, tip.amount.toString()],
+            proxyCallback(updateStatus)
+          ),
         onTxSign: () => {
           if (!optimisticOpts) return
 
-          if (parentCommentId) {
-            newCommentId = addVideoReplyComment({
-              memberId,
-              text: commentBody,
-              videoId,
-              parentCommentId,
-            })
-          } else {
-            newCommentId = addVideoComment({
-              memberId,
-              text: commentBody,
-              videoId,
-            })
-          }
-          optimisticOpts.onTxSign(newCommentId)
+          unconfirmedCommentId = addVideoComment({
+            memberId,
+            text: commentBody,
+            videoId,
+            parentCommentId,
+            tip,
+          })
+          optimisticOpts.onTxSign(unconfirmedCommentId)
         },
         onTxSync: async (_, metaStatus) => {
+          await cleanup()
           if (
             !metaStatus?.__typename ||
             !(metaStatus?.__typename === 'MetaprotocolTransactionResultCommentCreated' && metaStatus.commentCreated?.id)
@@ -88,17 +117,8 @@ export const useReactionTransactions = () => {
             return
           }
           newCommentId = metaStatus.commentCreated?.id
-          if (parentCommentId) {
-            await Promise.all([
-              refetchComment(parentCommentId), // need to refetch parent as its replyCount will change
-              refetchReplies(parentCommentId),
-              refetchVideo(videoId),
-            ])
-          } else {
-            // if the comment was top-level, refetch the comments section query (will take care of separating user comments)
-            await Promise.all([refetchCommentsSection(videoId, memberId), refetchVideo(videoId)])
-          }
         },
+        onError: cleanup,
         minimized: {
           errorMessage: parentCommentId
             ? `Your reply to the comment from "${commentAuthorHandle}" was not posted.`
@@ -115,12 +135,13 @@ export const useReactionTransactions = () => {
       memberId,
       handleTransaction,
       proxyCallback,
-      addVideoReplyComment,
       addVideoComment,
       refetchComment,
       refetchReplies,
       refetchVideo,
       refetchCommentsSection,
+      evictUnconfirmedComment,
+      refreshCommentsCache,
     ]
   )
 
@@ -153,6 +174,15 @@ export const useReactionTransactions = () => {
         return
       }
 
+      let unconfirmedReactionId: string | undefined
+
+      const cleanup = async () => {
+        if (unconfirmedReactionId) {
+          evictUnconfirmedReaction(unconfirmedReactionId)
+        }
+        await refetchReactions(videoId)
+      }
+
       return handleTransaction({
         fee,
         txFactory: async (updateStatus) =>
@@ -173,14 +203,24 @@ export const useReactionTransactions = () => {
               videoId: optimisticOpts.videoId,
             })
           } else {
-            increaseVideoCommentReaction({ commentId, reactionId, videoId: optimisticOpts.videoId })
+            unconfirmedReactionId = increaseVideoCommentReaction({
+              commentId,
+              reactionId,
+              videoId: optimisticOpts.videoId,
+            })
+          }
+        },
+        onTxSync: async (_, metaStatus) => {
+          await cleanup()
+          if (!metaStatus?.__typename || !(metaStatus?.__typename === 'MetaprotocolTransactionResultOK')) {
+            SentryLogger.error('Comment reaction metaprotocol failure', 'useReactionTransactions')
           }
         },
         minimized: {
           errorMessage: `Your reaction to the comment from "${commentAuthorHandle}" has not been posted.`,
         },
         allowMultiple: true,
-        onError: async () => refetchReactions(videoId),
+        onError: cleanup,
         unsignedMessage: 'To add your reaction',
       })
     },
@@ -193,6 +233,7 @@ export const useReactionTransactions = () => {
       decreaseVideoCommentReaction,
       increaseVideoCommentReaction,
       refetchReactions,
+      evictUnconfirmedReaction,
     ]
   )
 
@@ -234,6 +275,7 @@ export const useReactionTransactions = () => {
           optimisticOpts.onTxSign()
         },
         onTxSync: async () => refetchEdits(commentId),
+        onError: async () => refetchEdits(commentId),
         minimized: {
           errorMessage: `Your comment to the video "${videoTitle}" has not been edited.`,
         },
@@ -278,6 +320,9 @@ export const useReactionTransactions = () => {
           optimisticOpts.onTxSign()
         },
         onTxSync: async () => {
+          refetchComment(commentId)
+        },
+        onError: async () => {
           refetchComment(commentId)
         },
         snackbarSuccessMessage: {

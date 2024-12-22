@@ -2901,10 +2901,16 @@ export type Comment = {
   reactionsCountByReactionId?: Maybe<Array<CommentReactionsCountByReactionId>>
   /** How many comments has replied to this comment */
   repliesCount: Scalars['Int']
+  /** Base sort priority of the comment (can be increased by a tip) */
+  sortPriority: Scalars['Int']
   /** Status of the comment; either it is visible, deleted, or moderated (deleted by moderator) */
   status: CommentStatus
   /** Comment text */
   text: Scalars['String']
+  /** Tip included when adding the comment (in HAPI) */
+  tipAmount: Scalars['BigInt']
+  /** Tier received for adding a tip to the comment (if any) */
+  tipTier?: Maybe<CommentTipTier>
   /** Video the comment was added to */
   video: Video
 }
@@ -2965,20 +2971,32 @@ export enum CommentOrderByInput {
   ParentCommentReactionsCountDesc = 'parentComment_reactionsCount_DESC',
   ParentCommentRepliesCountAsc = 'parentComment_repliesCount_ASC',
   ParentCommentRepliesCountDesc = 'parentComment_repliesCount_DESC',
+  ParentCommentSortPriorityAsc = 'parentComment_sortPriority_ASC',
+  ParentCommentSortPriorityDesc = 'parentComment_sortPriority_DESC',
   ParentCommentStatusAsc = 'parentComment_status_ASC',
   ParentCommentStatusDesc = 'parentComment_status_DESC',
   ParentCommentTextAsc = 'parentComment_text_ASC',
   ParentCommentTextDesc = 'parentComment_text_DESC',
+  ParentCommentTipAmountAsc = 'parentComment_tipAmount_ASC',
+  ParentCommentTipAmountDesc = 'parentComment_tipAmount_DESC',
+  ParentCommentTipTierAsc = 'parentComment_tipTier_ASC',
+  ParentCommentTipTierDesc = 'parentComment_tipTier_DESC',
   ReactionsAndRepliesCountAsc = 'reactionsAndRepliesCount_ASC',
   ReactionsAndRepliesCountDesc = 'reactionsAndRepliesCount_DESC',
   ReactionsCountAsc = 'reactionsCount_ASC',
   ReactionsCountDesc = 'reactionsCount_DESC',
   RepliesCountAsc = 'repliesCount_ASC',
   RepliesCountDesc = 'repliesCount_DESC',
+  SortPriorityAsc = 'sortPriority_ASC',
+  SortPriorityDesc = 'sortPriority_DESC',
   StatusAsc = 'status_ASC',
   StatusDesc = 'status_DESC',
   TextAsc = 'text_ASC',
   TextDesc = 'text_DESC',
+  TipAmountAsc = 'tipAmount_ASC',
+  TipAmountDesc = 'tipAmount_DESC',
+  TipTierAsc = 'tipTier_ASC',
+  TipTierDesc = 'tipTier_DESC',
   VideoCommentsCountAsc = 'video_commentsCount_ASC',
   VideoCommentsCountDesc = 'video_commentsCount_DESC',
   VideoCreatedAtAsc = 'video_createdAt_ASC',
@@ -3086,10 +3104,16 @@ export enum CommentReactionOrderByInput {
   CommentReactionsCountDesc = 'comment_reactionsCount_DESC',
   CommentRepliesCountAsc = 'comment_repliesCount_ASC',
   CommentRepliesCountDesc = 'comment_repliesCount_DESC',
+  CommentSortPriorityAsc = 'comment_sortPriority_ASC',
+  CommentSortPriorityDesc = 'comment_sortPriority_DESC',
   CommentStatusAsc = 'comment_status_ASC',
   CommentStatusDesc = 'comment_status_DESC',
   CommentTextAsc = 'comment_text_ASC',
   CommentTextDesc = 'comment_text_DESC',
+  CommentTipAmountAsc = 'comment_tipAmount_ASC',
+  CommentTipAmountDesc = 'comment_tipAmount_DESC',
+  CommentTipTierAsc = 'comment_tipTier_ASC',
+  CommentTipTierDesc = 'comment_tipTier_DESC',
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
   MemberControllerAccountAsc = 'member_controllerAccount_ASC',
@@ -3238,6 +3262,19 @@ export type CommentTextUpdatedEventData = {
   newText: Scalars['String']
 }
 
+export enum CommentTipTier {
+  Diamond = 'DIAMOND',
+  Gold = 'GOLD',
+  Silver = 'SILVER',
+}
+
+export type CommentTipTiers = {
+  __typename?: 'CommentTipTiers'
+  DIAMOND: Scalars['Int']
+  GOLD: Scalars['Int']
+  SILVER: Scalars['Int']
+}
+
 export type CommentWhereInput = {
   AND?: InputMaybe<Array<CommentWhereInput>>
   OR?: InputMaybe<Array<CommentWhereInput>>
@@ -3308,6 +3345,15 @@ export type CommentWhereInput = {
   repliesCount_lte?: InputMaybe<Scalars['Int']>
   repliesCount_not_eq?: InputMaybe<Scalars['Int']>
   repliesCount_not_in?: InputMaybe<Array<Scalars['Int']>>
+  sortPriority_eq?: InputMaybe<Scalars['Int']>
+  sortPriority_gt?: InputMaybe<Scalars['Int']>
+  sortPriority_gte?: InputMaybe<Scalars['Int']>
+  sortPriority_in?: InputMaybe<Array<Scalars['Int']>>
+  sortPriority_isNull?: InputMaybe<Scalars['Boolean']>
+  sortPriority_lt?: InputMaybe<Scalars['Int']>
+  sortPriority_lte?: InputMaybe<Scalars['Int']>
+  sortPriority_not_eq?: InputMaybe<Scalars['Int']>
+  sortPriority_not_in?: InputMaybe<Array<Scalars['Int']>>
   status_eq?: InputMaybe<CommentStatus>
   status_in?: InputMaybe<Array<CommentStatus>>
   status_isNull?: InputMaybe<Scalars['Boolean']>
@@ -3330,6 +3376,20 @@ export type CommentWhereInput = {
   text_not_in?: InputMaybe<Array<Scalars['String']>>
   text_not_startsWith?: InputMaybe<Scalars['String']>
   text_startsWith?: InputMaybe<Scalars['String']>
+  tipAmount_eq?: InputMaybe<Scalars['BigInt']>
+  tipAmount_gt?: InputMaybe<Scalars['BigInt']>
+  tipAmount_gte?: InputMaybe<Scalars['BigInt']>
+  tipAmount_in?: InputMaybe<Array<Scalars['BigInt']>>
+  tipAmount_isNull?: InputMaybe<Scalars['Boolean']>
+  tipAmount_lt?: InputMaybe<Scalars['BigInt']>
+  tipAmount_lte?: InputMaybe<Scalars['BigInt']>
+  tipAmount_not_eq?: InputMaybe<Scalars['BigInt']>
+  tipAmount_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  tipTier_eq?: InputMaybe<CommentTipTier>
+  tipTier_in?: InputMaybe<Array<CommentTipTier>>
+  tipTier_isNull?: InputMaybe<Scalars['Boolean']>
+  tipTier_not_eq?: InputMaybe<CommentTipTier>
+  tipTier_not_in?: InputMaybe<Array<CommentTipTier>>
   video?: InputMaybe<VideoWhereInput>
   video_isNull?: InputMaybe<Scalars['Boolean']>
 }
@@ -4007,6 +4067,11 @@ export type CreatorTokensConnection = {
   edges: Array<CreatorTokenEdge>
   pageInfo: PageInfo
   totalCount: Scalars['Int']
+}
+
+export type CrtMarketCapMinVolume = {
+  __typename?: 'CrtMarketCapMinVolume'
+  minVolumeJoy: Scalars['Int']
 }
 
 export type Curator = {
@@ -6752,6 +6817,7 @@ export type Mutation = {
   setAppNameAlt: SetNewAppNameAltResult
   setCategoryFeaturedVideos: SetCategoryFeaturedVideosResult
   setChannelsWeights: Array<ChannelWeight>
+  setCrtMarketCapMinVolume: CrtMarketCapMinVolume
   setFeaturedCrts: SetFeaturedCrtsResult
   setFeaturedNfts: SetFeaturedNftsResult
   setKillSwitch: KillSwitch
@@ -6761,6 +6827,7 @@ export type Mutation = {
   setNewNotificationCenterPath: Scalars['Int']
   setOrUnsetPublicFeedVideos: SetOrUnsetPublicFeedResult
   setSupportedCategories: SetSupportedCategoriesResult
+  setTipTierAmounts: CommentTipTiers
   setVideoHero: SetVideoHeroResult
   setVideoViewPerUserTimeLimit: VideoViewPerUserTimeLimit
   setVideoWeights: VideoWeights
@@ -6848,6 +6915,10 @@ export type MutationSetChannelsWeightsArgs = {
   inputs: Array<ChannelWeightInput>
 }
 
+export type MutationSetCrtMarketCapMinVolumeArgs = {
+  minVolumeJoy: Scalars['Int']
+}
+
 export type MutationSetFeaturedCrtsArgs = {
   featuredCrtsIds: Array<Scalars['String']>
 }
@@ -6885,6 +6956,12 @@ export type MutationSetSupportedCategoriesArgs = {
   supportNewCategories?: InputMaybe<Scalars['Boolean']>
   supportNoCategoryVideos?: InputMaybe<Scalars['Boolean']>
   supportedCategoriesIds?: InputMaybe<Array<Scalars['String']>>
+}
+
+export type MutationSetTipTierAmountsArgs = {
+  DIAMOND?: InputMaybe<Scalars['Int']>
+  GOLD?: InputMaybe<Scalars['Int']>
+  SILVER?: InputMaybe<Scalars['Int']>
 }
 
 export type MutationSetVideoHeroArgs = {
@@ -8270,11 +8347,13 @@ export enum OperatorPermission {
   RevokeOperatorPermissions = 'REVOKE_OPERATOR_PERMISSIONS',
   SetCategoryFeaturedVideos = 'SET_CATEGORY_FEATURED_VIDEOS',
   SetChannelWeights = 'SET_CHANNEL_WEIGHTS',
+  SetCrtMarketcapMinVolume = 'SET_CRT_MARKETCAP_MIN_VOLUME',
   SetFeaturedCrts = 'SET_FEATURED_CRTS',
   SetFeaturedNfts = 'SET_FEATURED_NFTS',
   SetKillSwitch = 'SET_KILL_SWITCH',
   SetPublicFeedVideos = 'SET_PUBLIC_FEED_VIDEOS',
   SetSupportedCategories = 'SET_SUPPORTED_CATEGORIES',
+  SetTipTiers = 'SET_TIP_TIERS',
   SetVideoHero = 'SET_VIDEO_HERO',
   SetVideoViewPerUserTimeLimit = 'SET_VIDEO_VIEW_PER_USER_TIME_LIMIT',
   SetVideoWeights = 'SET_VIDEO_WEIGHTS',
@@ -8811,6 +8890,7 @@ export type Query = {
   storageDataObjectByUniqueInput?: Maybe<StorageDataObject>
   storageDataObjects: Array<StorageDataObject>
   storageDataObjectsConnection: StorageDataObjectsConnection
+  tipTiers: CommentTipTiers
   tokenAccountById?: Maybe<TokenAccount>
   /** @deprecated Use tokenAccountById */
   tokenAccountByUniqueInput?: Maybe<TokenAccount>
@@ -15812,10 +15892,16 @@ export enum VideoOrderByInput {
   PinnedCommentReactionsCountDesc = 'pinnedComment_reactionsCount_DESC',
   PinnedCommentRepliesCountAsc = 'pinnedComment_repliesCount_ASC',
   PinnedCommentRepliesCountDesc = 'pinnedComment_repliesCount_DESC',
+  PinnedCommentSortPriorityAsc = 'pinnedComment_sortPriority_ASC',
+  PinnedCommentSortPriorityDesc = 'pinnedComment_sortPriority_DESC',
   PinnedCommentStatusAsc = 'pinnedComment_status_ASC',
   PinnedCommentStatusDesc = 'pinnedComment_status_DESC',
   PinnedCommentTextAsc = 'pinnedComment_text_ASC',
   PinnedCommentTextDesc = 'pinnedComment_text_DESC',
+  PinnedCommentTipAmountAsc = 'pinnedComment_tipAmount_ASC',
+  PinnedCommentTipAmountDesc = 'pinnedComment_tipAmount_DESC',
+  PinnedCommentTipTierAsc = 'pinnedComment_tipTier_ASC',
+  PinnedCommentTipTierDesc = 'pinnedComment_tipTier_DESC',
   PublishedBeforeJoystreamAsc = 'publishedBeforeJoystream_ASC',
   PublishedBeforeJoystreamDesc = 'publishedBeforeJoystream_DESC',
   ReactionsCountAsc = 'reactionsCount_ASC',

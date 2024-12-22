@@ -1,7 +1,9 @@
 import { FC, MouseEvent, PropsWithChildren, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 
+import { CommentTipTier } from '@/api/queries/__generated__/baseTypes.generated'
 import { Avatar, AvatarSize } from '@/components/Avatar'
+import { AvatarContainer } from '@/components/_comments/Comment/Comment.styles'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { ContentWrapper, OutlineBox } from './CommentRow.styles'
@@ -15,6 +17,7 @@ export type CommentRowProps = PropsWithChildren<{
   memberUrl?: string
   className?: string
   isInput?: boolean
+  tipTier?: CommentTipTier | null
   onMouseEnter?: (event: MouseEvent<HTMLDivElement>) => void
   onMouseLeave?: (event: MouseEvent<HTMLDivElement>) => void
 }>
@@ -29,6 +32,7 @@ export const CommentRow: FC<CommentRowProps> = ({
   memberUrl = '',
   className,
   isInput = false,
+  tipTier,
   onMouseEnter,
   onMouseLeave,
 }) => {
@@ -61,10 +65,14 @@ export const CommentRow: FC<CommentRowProps> = ({
         <div>
           {memberUrl ? (
             <Link to={memberUrl}>
-              <Avatar assetUrls={memberAvatarUrls} size={avatarSize} loading={isMemberAvatarLoading} clickable />
+              <AvatarContainer tier={tipTier}>
+                <Avatar assetUrls={memberAvatarUrls} size={avatarSize} loading={isMemberAvatarLoading} clickable />
+              </AvatarContainer>
             </Link>
           ) : (
-            <Avatar assetUrls={memberAvatarUrls} size={avatarSize} loading={isMemberAvatarLoading} />
+            <AvatarContainer tier={tipTier}>
+              <Avatar assetUrls={memberAvatarUrls} size={avatarSize} loading={isMemberAvatarLoading} />
+            </AvatarContainer>
           )}
         </div>
         <div className={className}>{children}</div>
