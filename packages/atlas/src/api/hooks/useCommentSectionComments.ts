@@ -22,6 +22,7 @@ export const useCommentSectionComments = (
   const unconfirmedComments = data?.videoCommentsConnection.edges
     .map((edge) => edge.node)
     .filter((node) => node.id.includes(UNCONFIRMED))
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
   const unconfirmedCommentLookup = unconfirmedComments && createLookup(unconfirmedComments)
 
   const videoComments = data?.videoCommentsConnection?.edges
