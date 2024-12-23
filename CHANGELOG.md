@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.6.0] - 2024-12-23
+
+**IMPORTANT:** Depends on Orion release `4.2.0`.
+
+### Added
+
+- Video tipping functionality (https://github.com/Joystream/atlas/issues/6291)
+
+### Fixed
+
+- Improved error handling for optimistic transactions:
+  - Added hadling for `ExtrinsicFailed` errors
+  - Added adequate cleanup of cached optimistic state on error
+- Fixed optimistic actions to be able to handle situations when there are multiple comments in `UNCONFIRMED` state
+- Fixed a bug with invalid condition inside `transactions.manager.tsx` causing `onTxSync` to errously timeout in some cases. 
+
 ## [5.5.0] - 2024-11-07
 
 **IMPORTANT:** Depends on Orion release `4.1.0`.

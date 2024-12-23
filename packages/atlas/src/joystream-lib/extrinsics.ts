@@ -37,6 +37,7 @@ import {
   wrapMetadata,
 } from './metadata'
 import {
+  AccountId,
   AtlasSigner,
   ChannelExtrinsicResult,
   ChannelId,
@@ -168,11 +169,15 @@ export class JoystreamLibExtrinsics {
     }
   }
 
-  async metaprotocolMemberExtrinsicTx(memberId: MemberId, msg: IMemberRemarked) {
+  async metaprotocolMemberExtrinsicTx(
+    memberId: MemberId,
+    msg: IMemberRemarked,
+    payment?: [AccountId, StringifiedNumber]
+  ) {
     await this.ensureApi()
 
     const metadata = wrapMetadata(MemberRemarked.encode(msg).finish()).unwrap()
-    const tx = this.api.tx.members.memberRemark(memberId, metadata, null)
+    const tx = this.api.tx.members.memberRemark(memberId, metadata, payment || null)
     return tx
   }
 
@@ -881,7 +886,8 @@ export class JoystreamLibExtrinsics {
     memberId: MemberId,
     videoId: VideoId,
     commentBody: string,
-    parentCommentId: string | null
+    parentCommentId: string | null,
+    tip?: [AccountId, StringifiedNumber]
   ) => {
     await this.ensureApi()
 
@@ -892,7 +898,7 @@ export class JoystreamLibExtrinsics {
         parentCommentId,
       },
     }
-    return this.metaprotocolMemberExtrinsicTx(memberId, msg)
+    return this.metaprotocolMemberExtrinsicTx(memberId, msg, tip)
   }
 
   createVideoComment: PublicExtrinsic<typeof this.createVideoCommentTx, MetaprotcolExtrinsicResult> = async (
@@ -900,9 +906,10 @@ export class JoystreamLibExtrinsics {
     videoId,
     commentBody,
     parentCommentId,
+    tip,
     cb
   ) => {
-    const tx = await this.createVideoCommentTx(memberId, videoId, commentBody, parentCommentId)
+    const tx = await this.createVideoCommentTx(memberId, videoId, commentBody, parentCommentId, tip)
     return this.sendMetaprotocolExtrinsic(tx, cb)
   }
 

@@ -1,4 +1,5 @@
 import { QueryHookOptions } from '@apollo/client'
+import { omit } from 'lodash-es'
 import { useMemo } from 'react'
 
 import {
@@ -13,6 +14,7 @@ import {
   useGetCommentEditsQuery,
   useGetCommentQuery,
   useGetCommentRepliesConnectionQuery,
+  useGetTipTiersQuery,
   useGetUserCommentsAndVideoCommentsConnectionQuery,
   useGetUserCommentsReactionsQuery,
 } from '@/api/queries/__generated__/comments.generated'
@@ -126,6 +128,15 @@ export const useCommentEdits = (
 
   return {
     commentEdits: commentEdits && originalComment && [originalComment, ...commentEdits],
+    ...rest,
+  }
+}
+
+export const useGetTipTiers = () => {
+  const { data, ...rest } = useGetTipTiersQuery()
+
+  return {
+    tipTiers: data ? omit(data.tipTiers, ['__typename']) : undefined,
     ...rest,
   }
 }
