@@ -26,7 +26,6 @@ export const useMarketTransactionsPagination = ({
   const { data, loading } = useGetFullAmmCurveQuery({
     variables: {
       where: {
-        // TODO: Change this:
         id_eq: ammId,
       },
     },
