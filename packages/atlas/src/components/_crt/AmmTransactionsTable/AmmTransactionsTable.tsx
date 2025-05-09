@@ -50,9 +50,9 @@ type AmmTransactionsTableProps = {
   data: FullAmmCurveFragment['transactions']
   loading: boolean
   symbol: string
-}
+} & Pick<TableProps, 'pagination'>
 
-export const AmmTransactionsTable = ({ data, loading, symbol }: AmmTransactionsTableProps) => {
+export const AmmTransactionsTable = ({ data, loading, symbol, pagination }: AmmTransactionsTableProps) => {
   const mappedData = useMemo(
     () =>
       data.map((row) => ({
@@ -80,6 +80,8 @@ export const AmmTransactionsTable = ({ data, loading, symbol }: AmmTransactionsT
       data={loading ? tableLoadingData : mappedData ?? []}
       columns={COLUMNS}
       emptyState={tableEmptyState}
+      pagination={pagination}
+      pageSize={pagination?.itemsPerPage}
     />
   )
 }
