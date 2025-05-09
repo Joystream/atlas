@@ -29,7 +29,7 @@ export const useMarketTransactionsPagination = ({
         id_eq: ammId,
       },
     },
-    skip: false,
+    skip: !ammId,
     onError: (error) => {
       SentryLogger.error('Failed to fetch AMM curve', 'CrtMarketTab', error)
     },
