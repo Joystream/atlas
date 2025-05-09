@@ -1,40 +1,18 @@
-import { useMemo } from 'react'
-import { useQuery } from 'react-query'
-
-import { axiosInstance } from '@/api/axios'
 import { SvgActionLinkUrl } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
-import { YppReferral, YppReferralTable } from '@/components/YppReferralTable/YppReferralTable'
+import { YppReferralTable } from '@/components/YppReferralTable/YppReferralTable'
 import { ReferralLinkButton } from '@/components/_ypp/ReferralLinkButton'
-import { atlasConfig } from '@/config'
-import { useUser } from '@/providers/user/user.hooks'
-import { YppSyncedChannel } from '@/views/global/YppLandingView/YppLandingView.types'
+import { useYppReferralPagination } from '@/hooks/useYppReferralPagination'
 
 import { FallbackContainer } from '../YppDashboardTabs.styles'
 
-const YPP_SYNC_URL = atlasConfig.features.ypp.youtubeSyncApiUrl
+const TILES_PER_PAGE = 10
 
 export const YppDashboardReferralsTab = () => {
-  const { channelId } = useUser()
-  const { isLoading, data } = useQuery(
-    ['referralsTable', channelId],
-    () => axiosInstance.get<YppSyncedChannel[]>(`${YPP_SYNC_URL}/channels/${channelId}/referrals`),
-    { enabled: !!channelId }
-  )
+  const { isLoading, yppReferrals, currentPage, setCurrentPage, perPage, setPerPage, totalCount } =
+    useYppReferralPagination({ initialPageSize: TILES_PER_PAGE })
 
-  const mappedData: YppReferral[] = useMemo(
-    () =>
-      data?.data.map((channelData) => {
-        return {
-          date: new Date(channelData.createdAt),
-          channelId: String(channelData.joystreamChannelId),
-          status: channelData.yppStatus,
-        }
-      }) ?? [],
-    [data?.data]
-  )
-
-  if (!isLoading && !mappedData?.length) {
+  if (!isLoading && totalCount === 0) {
     return (
       <FallbackContainer>
         <EmptyFallback
@@ -47,5 +25,11 @@ export const YppDashboardReferralsTab = () => {
     )
   }
 
-  return <YppReferralTable data={mappedData} isLoading={isLoading} />
+  return (
+    <YppReferralTable
+      data={yppReferrals}
+      isLoading={isLoading}
+      pagination={{ page: currentPage, setPerPage, totalCount, itemsPerPage: perPage, onChangePage: setCurrentPage }}
+    />
+  )
 }

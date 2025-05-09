@@ -22,9 +22,9 @@ export type YppReferral = {
 type YppReferralTableProps = {
   isLoading: boolean
   data: YppReferral[]
-}
+} & Pick<TableProps, 'pagination'>
 
-export const YppReferralTable = ({ isLoading, data }: YppReferralTableProps) => {
+export const YppReferralTable = ({ isLoading, data, pagination }: YppReferralTableProps) => {
   const mappedData: TableProps['data'] = useMemo(
     () =>
       data.map((entry) => ({
@@ -41,6 +41,8 @@ export const YppReferralTable = ({ isLoading, data }: YppReferralTableProps) => 
       title="Channels you referred"
       columns={COLUMNS}
       data={isLoading ? tableLoadingData : mappedData}
+      pagination={pagination}
+      pageSize={pagination?.itemsPerPage}
     />
   )
 }
