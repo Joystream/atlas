@@ -130,6 +130,9 @@ export const configSchema = z.object({
         icons: z.array(z.string()).nullable(),
       }),
     }),
+    metamask: z.object({
+      snapId: z.string().nullable(),
+    }),
     playback: z.object({ playbackRates: z.array(z.number()) }),
     comments: z.object({
       reactions: z.array(z.object({ id: z.number(), emoji: z.string(), name: z.string() })),

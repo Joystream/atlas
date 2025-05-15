@@ -37,6 +37,7 @@ export const ORION_GRAPHQL_URL = readEnv('ORION_URL')
 export const ORION_AUTH_URL = readEnv('ORION_AUTH_URL')
 export const QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL = readEnv('QUERY_NODE_SUBSCRIPTION_URL')
 export const NODE_URL = readEnv('NODE_URL')
+export const NODE_HTTP_URL = readEnv('NODE_HTTP_URL')
 export const FAUCET_URL = readEnv('FAUCET_URL')
 export const YPP_FAUCET_URL = readEnv('YPP_FAUCET_URL')
 
