@@ -96,6 +96,7 @@ export const VideoTileViewer: FC<VideoTileViewerProps> = ({
       videoTitle={video?.title}
       kebabMenuItems={contextMenuItems}
       direction={direction}
+      hasCreatorToken={!!video?.channel.creatorToken?.token.id}
       description={showDescription ? video?.description ?? undefined : undefined}
     />
   )
