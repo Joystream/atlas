@@ -12,11 +12,13 @@ import {
   SvgSidebarToken,
 } from '@/assets/icons'
 import { AppLogo } from '@/components/AppLogo'
+import { FlexBox } from '@/components/FlexBox'
 import { Button } from '@/components/_buttons/Button'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
 import { useAuthStore } from '@/providers/auth/auth.store'
+import { useTransactionManagerStore } from '@/providers/transactions/transactions.store'
 import { useUser } from '@/providers/user/user.hooks'
 import { square } from '@/styles'
 
@@ -76,6 +78,7 @@ export const SidenavViewer: FC = () => {
   } = useAuthStore()
   const hasAtLeastOneChannel = !!activeMembership?.channels.length && activeMembership?.channels.length >= 1
 
+  const setGuardarianModal = useTransactionManagerStore((state) => state.actions.setGuardarianModal)
   const { isLoggedIn } = useUser()
 
   const closeAndSignIn = () => {
@@ -83,9 +86,14 @@ export const SidenavViewer: FC = () => {
     setAuthModalOpenName(getCorrectLoginModal())
   }
   const buttonsContent = !isLoggedIn ? (
-    <Button icon={<SvgActionMember />} onClick={closeAndSignIn}>
-      Sign in
-    </Button>
+    <FlexBox gap={4} width="100%" flow="column">
+      <Button fullWidth variant="secondary" icon={<SvgActionMoney />} onClick={() => setGuardarianModal(true)}>
+        Guardarian
+      </Button>
+      <Button fullWidth icon={<SvgActionMember />} onClick={closeAndSignIn}>
+        Sign in
+      </Button>
+    </FlexBox>
   ) : hasAtLeastOneChannel ? (
     <Button
       variant="secondary"

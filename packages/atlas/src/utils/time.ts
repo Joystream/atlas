@@ -6,6 +6,7 @@ const MINUTES_IN_HOUR = 60
 const SECONDS_IN_HOUR = MINUTES_IN_HOUR * 60
 
 export const formatDate = (date: Date) => format(date, 'd MMM yyyy')
+export const formatDateGuardarian = (date: Date) => format(date, 'dd:MM:yyyy')
 export const formatTime = (date: Date) => format(date, 'HH:mm')
 export const formatDateTime = (date: Date) => format(date, 'd MMM yyyy, HH:mm')
 export const formatDateTimeAt = (date: Date) => format(date, "d MMM yyyy 'at' HH:mm")
