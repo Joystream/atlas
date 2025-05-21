@@ -252,7 +252,7 @@ Query Node (QN) is a service that processes blockchain events and stores them in
 
 ### RPC Node
 
-RPC nodes are Joystream blockchain nodes that are responsible for running the network. Whether you need your own instance of RPC node depends on your setup. If you are running your own QN, you probably also want to run RPC node alongside for speed of synching and indexing. If you make that RPC endpoint public, you can pass it as `VITE_PRODUCTION_NODE_URL` environment variable, meaning that all user-initiated transactions would be sent to your RPC node. However, you can also use a publicly available node, like `wss://rpc.joystream.org:9944`.
+RPC nodes are Joystream blockchain nodes that are responsible for running the network. Whether you need your own instance of RPC node depends on your setup. If you are running your own QN, you probably also want to run RPC node alongside for speed of synching and indexing. If you make that RPC endpoint public, you can pass it as `VITE_PRODUCTION_NODE_URL` environment variable, meaning that all user-initiated transactions would be sent to your RPC node. However, you can also use a publicly available node, like `wss://rpc.joystream.org`.
 
 ### Member faucet
 
