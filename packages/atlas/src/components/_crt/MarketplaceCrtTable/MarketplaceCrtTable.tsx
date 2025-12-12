@@ -42,7 +42,7 @@ const COLUMNS: TableProps['columns'] = [
   { Header: 'Price', accessor: 'price', width: 2 },
   { Header: 'Liq % 30d', accessor: 'liquidityChange', width: 2 },
   { Header: 'Liquidity', accessor: 'liquidity', width: 2 },
-  { Header: 'Tranding vol.', accessor: 'tradingVolume', width: 2 },
+  { Header: 'Trading vol.', accessor: 'tradingVolume', width: 2 },
   { Header: 'Status', accessor: 'status', width: 1 },
   { Header: 'Market cap', accessor: 'marketCap', width: 2 },
   { Header: 'Total rev.', accessor: 'totalRevenue', width: 2 },
